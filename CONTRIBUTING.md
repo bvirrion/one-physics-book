@@ -90,11 +90,13 @@ automatically within the chapter):
    ("admitted at this level"), ideally pointing to where it will be derived.
 2. **Concision**: no filler. An example after each substantial definition or
    law; a `method` box for each standard technique.
-3. **Exercises**: 8–12 per chapter, graded `$\star$` (direct application) to
+3. **Exercises**: 8–15 per chapter (high school volumes target ~15), graded
+   `$\star$` (direct application) to
    `$\star\star\star$` (challenging); **every exercise must have a full
-   solution** in the matching solutions file. University chapters add one
-   `problem` (weekend problem set) whose full solution likewise lives in
-   the solutions file, keyed by the `pb:` label.
+   solution** in the matching solutions file. High school and university
+   chapters add one `problem` (weekend problem set, ~20 questions in
+   parts) whose full solution likewise lives in the solutions file, keyed
+   by the `pb:` label.
 4. **English text** (canonical edition), written for readers anywhere in
    the world: avoid references to any particular country's educational
    system or curriculum-specific terminology. SI units throughout.
