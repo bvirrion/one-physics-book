@@ -1,0 +1,55 @@
+name: Build and Release PDFs
+
+on:
+  push:
+    tags:
+      - 'v*'            # triggers on tags like v0.0.1, v1.2.3
+
+permissions:
+  contents: write       # needed to create releases and upload assets
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0            # need the tag's metadata for its date
+
+      - name: Generate version info
+        run: |
+          DATE=$(git for-each-ref --format='%(creatordate:short)' "refs/tags/${GITHUB_REF_NAME}")
+          printf '\\renewcommand{\\bookdate}{%s}\n'    "$DATE"            >  version.tex
+          printf '\\renewcommand{\\bookversion}{%s}\n' "$GITHUB_REF_NAME" >> version.tex
+
+      - name: Compile LaTeX
+        uses: xu-cheng/latex-action@v3
+        with:
+          # One entry file per book of the series.
+          root_file: |
+            one_physics_book_1_primary_middle_school.tex
+            one_physics_book_2_high_school.tex
+            one_physics_book_3_university_year_1.tex
+            one_physics_book_4_university_year_2.tex
+            one_physics_book_5_university_year_3.tex
+          latexmk_use_lualatex: false
+          # latexmkrc in the repo sets pdflatex mode and build/ output.
+
+      - name: Check for undefined references
+        run: |
+          ! grep -E "(Reference|Citation).*undefined" build/*.log
+
+      - name: Name the PDFs with the version
+        run: |
+          # Glob, not a hardcoded slug list: a new edition is then picked up by
+          # registering it in root_file: above and nowhere else.
+          for pdf in build/one_physics_book_*.pdf
+          do
+            slug="$(basename "$pdf" .pdf)"
+            cp "$pdf" "${slug}_${GITHUB_REF_NAME}.pdf"
+          done
+
+      - name: Create release and attach PDFs
+        uses: softprops/action-gh-release@v2
+        with:
+          files: one_physics_book_*_${{ github.ref_name }}.pdf

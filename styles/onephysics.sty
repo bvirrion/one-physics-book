@@ -1,0 +1,605 @@
+% ============================================================================
+% onephysics.sty — shared style for the One Physics Book project
+%
+% All packages, theorem environments and macros live here. Chapter files must
+% not load packages or define macros: if you need something new, add it here
+% and document it in CONTRIBUTING.md.
+%
+% Language: set \booklang before loading (default en). UI strings and part
+% titles live in styles/lang/<lang>.tex. Chapter bodies for non-English
+% languages live under parts/<year>/<lang>/ (see \ominput / \ominputsol).
+% ============================================================================
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{onephysics}[2026/07/11 v0.2 One Physics Book common style]
+
+% ----------------------------------------------------------------------------
+% Language selection (default: English)
+% ----------------------------------------------------------------------------
+\providecommand{\booklang}{en}
+
+% ----------------------------------------------------------------------------
+% Core packages
+% ----------------------------------------------------------------------------
+\RequirePackage[T1]{fontenc}
+\RequirePackage[utf8]{inputenc}
+\RequirePackage{lmodern}
+\RequirePackage{microtype}
+\RequirePackage[a4paper,inner=2.2cm,outer=2.2cm,top=2.4cm,bottom=2.6cm,headheight=14pt]{geometry}
+
+% babel: only for non-English editions (keeps English builds unchanged).
+% Compare expanded token lists so \newcommand{\booklang}{fr} matches.
+% Load language babel only when the .ldf is installed; UI strings still
+% come from styles/lang/<lang>.tex either way.
+\edef\om@booklang@exp{\booklang}%
+\def\om@lang@fr{fr}%
+\def\om@lang@nl{nl}%
+% shorthands=off: French (and Dutch) babel makes characters such as ":"
+% active for punctuation spacing. Our labels use colons throughout
+% (type:year:slug:name) and cleveref cannot parse active characters in
+% label names — CI with full TeX Live would fail at the first \cref.
+% French/Dutch sources already use ~ before :;!? for spacing.
+\ifx\om@booklang@exp\om@lang@fr
+  \IfFileExists{french.ldf}{%
+    \RequirePackage[french,shorthands=off]{babel}%
+  }{%
+    \PackageWarning{onephysics}{%
+      french.ldf not found; building French without babel.
+      Install texlive-lang-french for hyphenation}%
+  }%
+\fi
+\ifx\om@booklang@exp\om@lang@nl
+  \IfFileExists{dutch.ldf}{%
+    \RequirePackage[dutch,shorthands=off]{babel}%
+  }{%
+    \PackageWarning{onephysics}{%
+      dutch.ldf not found; building Dutch without babel.
+      Install texlive-lang-european (or babel-dutch) for hyphenation}%
+  }%
+\fi
+
+\RequirePackage{amsmath}
+\RequirePackage{amssymb}
+\RequirePackage{amsthm}
+\RequirePackage{mathtools}
+\RequirePackage{enumitem}
+\RequirePackage{graphicx}
+\RequirePackage{tikz}
+\RequirePackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usepgfplotslibrary{fillbetween}
+\usetikzlibrary{arrows.meta,calc,angles,quotes,patterns}
+% Unbreakable in-text figure block: keeps a picture and its caption line
+% on the same page. Use in place of "center" around tikzpicture figures.
+\newenvironment{omfigure}
+  {\par\medskip\noindent\begin{minipage}{\linewidth}\centering}
+  {\end{minipage}\par\medskip}
+
+% Shared axis style for in-text figures: use with \begin{axis}[omaxis, ...].
+\pgfplotsset{
+  omaxis/.style={
+    axis lines=middle,
+    tick label style={font=\small},
+    label style={font=\small},
+    xlabel={$x$}, ylabel={$y$},
+    xlabel style={below right}, ylabel style={above left},
+    samples=100,
+  },
+}
+\RequirePackage[most]{tcolorbox}
+\RequirePackage{imakeidx}
+\makeindex[intoc]
+\RequirePackage[colorlinks=true,linkcolor=blue!50!black,urlcolor=blue!50!black]{hyperref}
+\RequirePackage[nameinlink,capitalize]{cleveref}
+\RequirePackage{etoolbox}
+
+\setlist[enumerate]{itemsep=1pt,topsep=3pt}
+\setlist[itemize]{itemsep=1pt,topsep=3pt}
+
+% ----------------------------------------------------------------------------
+% Language strings (theorem names, cover, part titles, …)
+% ----------------------------------------------------------------------------
+\input{styles/lang/\booklang.tex}
+
+% Lookup structural string defined in the lang file via \@namedef{omstr@KEY}.
+\newcommand{\omstr}[1]{\csname omstr@#1\endcsname}
+
+% ----------------------------------------------------------------------------
+% Language-aware content paths
+%
+% \ominput{grade-1}{01-counting-to-20}
+%   → parts/grade-1/<lang>/01-counting-to-20.tex if it exists
+%   → else parts/grade-1/01-counting-to-20.tex (English canonical)
+%
+% \ominputsol{grade-1}{01-counting-to-20} — same rule under solutions/
+% ----------------------------------------------------------------------------
+\newcommand{\ominput}[2]{%
+  \IfFileExists{parts/#1/\booklang/#2.tex}%
+    {\input{parts/#1/\booklang/#2}}%
+    {\input{parts/#1/#2}}%
+}
+\newcommand{\ominputsol}[2]{%
+  \IfFileExists{parts/#1/solutions/\booklang/#2.tex}%
+    {\input{parts/#1/solutions/\booklang/#2}}%
+    {\input{parts/#1/solutions/#2}}%
+}
+
+% ----------------------------------------------------------------------------
+% Page layout details
+% ----------------------------------------------------------------------------
+% Chapters/parts open on any page (class option "openany" in main.tex);
+% also drop the forced blank page at the front/back matter boundaries.
+\patchcmd{\mainmatter}{\cleardoublepage}{\clearpage}{}{}
+\patchcmd{\backmatter}{\cleardoublepage}{\clearpage}{}{}
+
+% The book has more than 99 chapters: widen the number boxes in the table
+% of contents so three-digit chapter numbers (and their section numbers,
+% like "102.4") do not run into the titles.
+\patchcmd{\l@chapter}{1.5em}{2.3em}{}{}
+\renewcommand*\l@section{\@dottedtocline{1}{2.3em}{3.2em}}
+
+% Running headers: small italics, no uppercase, so long chapter titles fit.
+\RequirePackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[LE]{\thepage\quad{\small\itshape\nouppercase{\leftmark}}}
+\fancyhead[RO]{{\small\itshape\nouppercase{\rightmark}}\quad\thepage}
+\renewcommand{\headrulewidth}{0.2pt}
+
+% ----------------------------------------------------------------------------
+% Colors (sober)
+% ----------------------------------------------------------------------------
+\definecolor{omDef}{RGB}{0,84,147}      % definitions: blue
+\definecolor{omThm}{RGB}{150,20,30}     % theorems: dark red
+\definecolor{omProp}{RGB}{190,90,20}    % propositions/lemmas/corollaries: orange
+\definecolor{omMeth}{RGB}{20,110,60}    % methods: green
+\definecolor{omExo}{RGB}{80,80,80}      % exercises: gray
+
+% ----------------------------------------------------------------------------
+% One Course brand (title page and shared product theme — see THEME.md)
+% ----------------------------------------------------------------------------
+\definecolor{ocMint}{HTML}{06D6A0}      % brand quad: mint
+\definecolor{ocYellow}{HTML}{FFD166}    % brand quad: yellow
+\definecolor{ocRed}{HTML}{EF476F}       % brand quad: red
+\definecolor{ocBlue}{HTML}{118AB2}      % brand quad: blue
+\definecolor{ocInk}{HTML}{1F2430}       % near-black text on light grounds
+\colorlet{ocPaleBlue}{ocBlue!14!white}  % pale blue-gray ground / band tint
+\colorlet{ocDarkBlue}{ocBlue!80!black}  % titles and the "1" of the rosette
+
+% \ocQuadLine{x0}{x1}{y}{h}: horizontal bar from x0 to x1 at height y,
+% thickness h, split into four equal segments in the brand quad colors.
+% Coordinates in the surrounding tikzpicture's units (cm on the cover).
+\newcommand{\ocQuadLine}[4]{%
+  \pgfmathsetmacro{\ocqSeg}{(#2-#1)/4}%
+  \fill[ocMint]   (#1,#3) rectangle ({#1+\ocqSeg},{#3+#4});
+  \fill[ocYellow] ({#1+\ocqSeg},#3) rectangle ({#1+2*\ocqSeg},{#3+#4});
+  \fill[ocRed]    ({#1+2*\ocqSeg},#3) rectangle ({#1+3*\ocqSeg},{#3+#4});
+  \fill[ocBlue]   ({#1+3*\ocqSeg},#3) rectangle (#2,{#3+#4});}
+
+% \ocRosette{x}{y}{R}{pt}: the One Course rosette logo centered at (x,y),
+% radius R cm, with the "1" set at pt points. Four quadrant wedges (mint on
+% top, yellow left, red bottom, blue right) separated by white diagonals,
+% around a white core circle. The diagonal line width scales with R.
+\newcommand{\ocRosette}[4]{%
+  \pgfmathsetmacro{\ocrCut}{#3*1.02}%
+  \pgfmathsetlengthmacro{\ocrLW}{#3*1.4}%
+  \fill[ocMint]   (#1,#2) -- ([shift={(#1,#2)}]45:#3)
+    arc[start angle=45, end angle=135, radius=#3] -- cycle;
+  \fill[ocYellow] (#1,#2) -- ([shift={(#1,#2)}]135:#3)
+    arc[start angle=135, end angle=225, radius=#3] -- cycle;
+  \fill[ocRed]    (#1,#2) -- ([shift={(#1,#2)}]225:#3)
+    arc[start angle=225, end angle=315, radius=#3] -- cycle;
+  \fill[ocBlue]   (#1,#2) -- ([shift={(#1,#2)}]315:#3)
+    arc[start angle=315, end angle=405, radius=#3] -- cycle;
+  \draw[white, line width=\ocrLW]
+    ([shift={(#1,#2)}]45:\ocrCut) -- ([shift={(#1,#2)}]225:\ocrCut);
+  \draw[white, line width=\ocrLW]
+    ([shift={(#1,#2)}]135:\ocrCut) -- ([shift={(#1,#2)}]315:\ocrCut);
+  \fill[white] (#1,#2) circle ({#3*0.58});
+  \node[text=ocDarkBlue, font=\fontsize{#4}{#4}\selectfont\bfseries]
+    at (#1,#2) {1};}
+
+% ----------------------------------------------------------------------------
+% Branded running header (opt-in: a book's entry file calls \ombrandheader
+% after loading this package; see one_physics_book_5_university_year_3.tex).
+%
+% Even (left) pages carry the brand and the book title, on two lines:
+%
+%     .           (rosette) ONE-COURSE.COM            .
+%     116  Chapter 11. Sequences     Book 5: ... -- Year 3
+%     ----------------------------------------------------
+%
+% Odd (right) pages keep the plain navigation line (section mark + page
+% number): the brand travels with the chapter mark, and leaving the odd side
+% clear is what lets even the longest section titles print unclipped. Their
+% empty first header line keeps the rule level across a spread.
+%
+% The rosette is drawn once into a box, not on every page. The wordmark sits
+% two font steps below the running mark: all-caps bold sans reads optically
+% larger than the italic serif mark at equal size.
+% ----------------------------------------------------------------------------
+\newsavebox{\omHeadRosette}
+\AtBeginDocument{\savebox{\omHeadRosette}{%
+  \begin{tikzpicture}[baseline=-0.5ex]
+    \ocRosette{0}{0}{0.135}{3.1}%
+  \end{tikzpicture}}}
+% The brand mark links out to the site. \href would recolor it (hyperref's
+% urlcolor), so the ink is restated inside the link.
+\newcommand{\omSiteURL}{https://one-course.com}
+\newcommand{\omHeadBrand}{%
+  \href{\omSiteURL}{\textcolor{ocInk}{\usebox{\omHeadRosette}\hspace{0.3em}%
+    {\scriptsize\sffamily\bfseries\textls[40]{ONE-COURSE.COM}}}}}
+\newcommand{\omHeadBook}{{\small\bookline}}
+
+% The chapter mark links back to its own line in the table of contents; both
+% halves of the mechanism are armed by \ombrandheader, so books that do not
+% opt in keep the stock marks.
+%
+% Anchors: hyperref hands \contentsline the destination name of the entry it is
+% typesetting (#4, e.g. "chapter.11" or "appendix.A"). Wrapping it lets us drop
+% a target, "toc.<that name>", on the contents line itself. \Hy@raisedlink keeps
+% the anchor from displacing the line.
+%
+% Marks: \@currentHref holds the current chapter's destination name at
+% \chaptermark time, so the mark carries the anchor alongside the title
+% (\omTocMark{anchor}{title}), and the header builds the link at shipout -- on
+% whichever chapter owns the page.
+%
+% The header must NOT put the link inside \truncate: truncate typesets its
+% argument into a box to measure it, and a hyperlink opened inside a box that
+% is then discarded leaks pdfTeX's link stack ("TeX capacity exceeded [pdf link
+% stack size=10]"). So the mark is first split into anchor and title, the title
+% alone is truncated, and the finished box is wrapped in one link.
+\newcommand{\omTocMark}[2]{#2}          % plain text outside the header
+\newcommand{\om@anchor}{}
+\newcommand{\om@title}{}
+\newcommand{\om@splitmark}[1]{%
+  \begingroup
+    \def\omTocMark##1##2{\gdef\om@anchor{##1}\gdef\om@title{##2}}%
+    \gdef\om@anchor{}\gdef\om@title{}%
+    #1%
+  \endgroup}
+\newcommand{\om@tocbacklinks}{%
+  \AtBeginDocument{%
+    \let\om@orig@contentsline\contentsline
+    \renewcommand{\contentsline}[4]{%
+      \Hy@raisedlink{\hypertarget{toc.##4}{}}%
+      \om@orig@contentsline{##1}{##2}{##3}{##4}}%
+  }%
+  \renewcommand{\chaptermark}[1]{%
+    \markboth{\protect\omTocMark{\@currentHref}{%
+      \ifnum\c@secnumdepth>\m@ne\if@mainmatter
+        \@chapapp\ \thechapter. \ %
+      \fi\fi ##1}}{}}%
+  % Same for the section mark, which is what the odd pages show.
+  \renewcommand{\sectionmark}[1]{%
+    \markright{\protect\omTocMark{\@currentHref}{%
+      \ifnum\c@secnumdepth>\z@ \thesection. \ \fi ##1}}}%
+}
+\newcommand{\omHeadMark}[1]{{\small\itshape\nouppercase{#1}}}
+% On even pages the chapter mark shares its line with the book title, and some
+% chapter titles are long ("Product Measures, Fubini, Change of Variables"):
+% cap the mark at whatever width the book title leaves, ending it with an
+% ellipsis, so the two never touch.
+\RequirePackage{truncate}
+\newlength{\omHeadBookWd}
+\newcommand{\omHeadMarkCapped}[1]{%
+  \settowidth{\omHeadBookWd}{\omHeadBook}%
+  \truncate[\,\dots]{\dimexpr\headwidth-\omHeadBookWd-1.5em\relax}{%
+    \omHeadMark{#1}}}
+% Split the mark, truncate the title, wrap the result in the link to the
+% contents line (nothing linked inside the measured box -- see above).
+\newcommand{\omHeadChapMark}{%
+  \om@splitmark{\leftmark}%
+  \ifx\om@anchor\@empty
+    \omHeadMarkCapped{\om@title}%
+  \else
+    \hyperlink{toc.\om@anchor}{\textcolor{ocInk}{%
+      \omHeadMarkCapped{\om@title}}}%
+  \fi}
+% The section mark, shown on odd pages, links the same way. It has the line to
+% itself, so it needs no width cap.
+\newcommand{\omHeadSectMark}{%
+  \om@splitmark{\rightmark}%
+  \ifx\om@anchor\@empty
+    \omHeadMark{\om@title}%
+  \else
+    \hyperlink{toc.\om@anchor}{\textcolor{ocInk}{\omHeadMark{\om@title}}}%
+  \fi}
+\newcommand{\ombrandheader}{%
+  % The two-line head needs 40.3pt (fancyhdr's own figure); the body block is
+  % unchanged, so page counts do not move.
+  \geometry{headheight=41pt,headsep=12pt}%
+  \om@tocbacklinks
+  \fancyhead[LE]{\parbox[b]{\headwidth}{%
+    \hfill\omHeadBrand\hfill\null\\[2pt]
+    \omHeadChapMark\hfill\omHeadBook}}%
+  \fancyhead[RO]{\parbox[b]{\headwidth}{%
+    \strut\\[2pt]
+    \hfill\omHeadSectMark}}%
+  % Page number at the foot, centered -- which is also where the `plain' style
+  % puts it on chapter-opening pages, so every page of the book agrees.
+  \fancyfoot[C]{\thepage}%
+}
+
+% ----------------------------------------------------------------------------
+% Theorem environments
+%
+% amsthm owns numbering, labels and cleveref support; tcolorbox only
+% decorates. All statement environments share one counter, numbered within
+% chapter. Exercises have their own counter.
+%
+% Titles come from styles/lang/<lang>.tex (\omnameDefinition, …).
+% Usage: \begin{theorem}[Monotone convergence]\label{thm:tle:seq:monotone}
+% ----------------------------------------------------------------------------
+\theoremstyle{definition}                 % upright body text, bold heading
+\newtheorem{definition}{\omnameDefinition}[chapter]
+\newtheorem{theorem}[definition]{\omnameTheorem}
+\newtheorem{proposition}[definition]{\omnameProposition}
+\newtheorem{lemma}[definition]{\omnameLemma}
+\newtheorem{corollary}[definition]{\omnameCorollary}
+\newtheorem{method}[definition]{\omnameMethod}
+\newtheorem{example}[definition]{\omnameExample}
+\newtheorem{notation}[definition]{\omnameNotation}
+\theoremstyle{remark}
+\newtheorem{remark}[definition]{\omnameRemark}
+
+\newtheorem{exercise}{\omnameExercise}[chapter]
+% Weekend problem sets ("devoir maison"): one long, structured problem per
+% chapter at university level, with its own counter.
+\newtheorem{problem}{\omnameProblem}[chapter]
+
+% Decoration: colored left rule + light background.
+% "lines before break" forces boxes with no room for their first lines to
+% move to the next page instead of attempting a zero-height first part,
+% which would silently discard any \label written there. (Raised from 3
+% to 5 after a recurrence: a box starting very close to the page bottom
+% could still produce a discarded zero-height first part. If a label that
+% plainly exists still reports as undefined, move it to just before the
+% environment's \end -- the counter is unchanged and the write survives.)
+\newcommand{\omdecorate}[2]{%
+  \tcolorboxenvironment{#1}{%
+    enhanced jigsaw, breakable, frame hidden,
+    boxrule=0pt, sharp corners,
+    borderline west={2pt}{0pt}{#2},
+    left=8pt, right=4pt, top=4pt, bottom=4pt,
+    before skip=10pt, after skip=10pt,
+    lines before break=5,
+    colback=#2!4!white}%
+}
+\omdecorate{definition}{omDef}
+\omdecorate{theorem}{omThm}
+\omdecorate{proposition}{omProp}
+\omdecorate{lemma}{omProp}
+\omdecorate{corollary}{omProp}
+\omdecorate{method}{omMeth}
+\omdecorate{exercise}{omExo}
+\omdecorate{problem}{omExo}
+
+% amsthm's proof environment prints \proofname, which is English unless babel
+% localises it — and babel is optional here (see above). Without this, a French
+% chapter opens every proof with "Proof." instead of "Démonstration.".
+\renewcommand{\proofname}{\omnameProof}
+
+% Results stated without proof
+\newcommand{\admitted}{\begin{proof}[\omnameProof]\emph{\omadmittedtext}\end{proof}}
+
+% cleveref names. Every referenceable environment needs one: cleveref's built-in
+% names are English, and babel (which would localise them) is optional here — so
+% without these a French book reads "d'apres le Theorem 3.1" and "Chapter 5" in
+% the middle of its French prose. The names come from styles/lang/<lang>.tex, so
+% English output is unchanged and each translation gets its own.
+\crefname{definition}{\omnameDefinition}{\omnameDefinitions}
+\Crefname{definition}{\omnameDefinition}{\omnameDefinitions}
+\crefname{theorem}{\omnameTheorem}{\omnameTheorems}
+\Crefname{theorem}{\omnameTheorem}{\omnameTheorems}
+\crefname{proposition}{\omnameProposition}{\omnamePropositions}
+\Crefname{proposition}{\omnameProposition}{\omnamePropositions}
+\crefname{lemma}{\omnameLemma}{\omnameLemmas}
+\Crefname{lemma}{\omnameLemma}{\omnameLemmas}
+\crefname{corollary}{\omnameCorollary}{\omnameCorollarys}
+\Crefname{corollary}{\omnameCorollary}{\omnameCorollarys}
+\crefname{method}{\omnameMethod}{\omnameMethods}
+\Crefname{method}{\omnameMethod}{\omnameMethods}
+\crefname{example}{\omnameExample}{\omnameExamples}
+\Crefname{example}{\omnameExample}{\omnameExamples}
+\crefname{notation}{\omnameNotation}{\omnameNotations}
+\Crefname{notation}{\omnameNotation}{\omnameNotations}
+\crefname{remark}{\omnameRemark}{\omnameRemarks}
+\Crefname{remark}{\omnameRemark}{\omnameRemarks}
+\crefname{chapter}{\omnameChapter}{\omnameChapters}
+\Crefname{chapter}{\omnameChapter}{\omnameChapters}
+\crefname{exercise}{\omnameExercise}{\omnameExercises}
+\Crefname{exercise}{\omnameExercise}{\omnameExercises}
+\crefname{problem}{\omnameProblem}{\omnameProblems}
+\Crefname{problem}{\omnameProblem}{\omnameProblems}
+
+% ----------------------------------------------------------------------------
+% Solutions appendix
+% Usage: \begin{solution}{exo:tle:seq:1} ... \end{solution}
+% Prints "Solution of Exercise <n> (page <p>)." / French equivalent.
+% Every solution is also a hyperlink target labelled sol:<key>, so that
+% exercises can link forward to their solutions (see \omsolutionlinks).
+% ----------------------------------------------------------------------------
+% Under \omlinkpadding (below) the sol: anchor is put after \noindent, i.e. into
+% the line of type rather than into the vertical list, which is the only place
+% hyperref can raise it from. A book with no padding keeps the anchor, and so
+% its appendix keeps the page breaks, exactly where they were.
+\newcommand{\om@solutionanchor}[1]{%
+  \ifdim\omlinkpad=\z@
+    \phantomsection\label{sol:#1}\noindent
+  \else
+    \noindent\phantomsection\label{sol:#1}%
+  \fi
+}
+\newenvironment{solution}[1]{%
+  \par\medskip\om@solutionanchor{#1}%
+  \textbf{\omsolutionof~\cref{#1}} (\ompage~\pageref{#1}).\par\nopagebreak\smallskip
+  \noindent\ignorespaces
+}{\par\medskip}
+
+% ----------------------------------------------------------------------------
+% Defined terms: \omterm{def:...}{text} links a term used in the course, an
+% exercise, a problem or a solution back to the definition that introduces it.
+%
+% The wrapping is generated, not hand-written: a term earns a link only if it
+% is introduced as \emph{term}\index{...} inside a definition (the convention
+% in CONTRIBUTING.md), and it is linked at its first use in each chapter and
+% again inside each exercise, problem and solution -- enough for a reader who
+% lands mid-chapter, without turning every paragraph blue. Terms defined twice
+% (\emph{compact} as a space and as an operator) are deliberately not linked:
+% an automatic link would point at the wrong one half the time.
+% ----------------------------------------------------------------------------
+\newcommand{\omterm}[2]{\hyperref[#1]{#2}}
+
+% ----------------------------------------------------------------------------
+% Where a clicked link lands
+%
+% hyperref writes an XYZ destination at exactly the anchor's position and the
+% viewer puts that point at the top of the window, so following \omterm, \cref
+% or a "Solution p. N" pointer used to leave the definition box flush against
+% the top edge, with nothing above it. Every book therefore raises the
+% destination of every statement (and of every solution) by three lines, so the
+% reader lands just above the target instead. \omlinkpadding{<len>} overrides
+% the amount for one book; \omlinkpadding{0pt} restores hyperref's placement.
+%
+% How the raise is applied: hyperref raises an anchor written in HORIZONTAL
+% mode (\Hy@raisedlink smashes it into a \raise'd box, which costs no space)
+% and lets a package add to that raise through \HyperRaiseLinkHook -- so an
+% anchor sitting in a line of type is free to move. In VERTICAL mode it raises
+% nothing, and there is no room to raise anything: a box put into the vertical
+% list to carry the anchor upwards is itself an item in that list, and it
+% breaks the \addvspace glue merging around it (measurably: the contents grew
+% by a page, and \@item's \addvspace stopped absorbing \parskip before every
+% statement).
+%
+% A theorem anchor is written in vertical mode -- \hyper@refstepcounter runs
+% inside amsthm's \trivlist. But amsthm boxes the theorem head immediately
+% afterwards (\sbox\@labels in \deferred@thm@head), in horizontal mode. So the
+% anchor is caught as it is written, held, and released inside that box: it
+% ends up in the head's line of type, where hyperref's own raise carries it up
+% by \HyperRaiseLinkDefault + \omlinkpad and the page does not move at all.
+% Chapter, section and contents anchors are left exactly where hyperref puts
+% them (a heading at the top of the window reads fine, and a raised anchor
+% before a heading's \addvspace risks landing on the previous page).
+% ----------------------------------------------------------------------------
+\newlength{\omlinkpad}
+\setlength{\omlinkpad}{3\baselineskip}
+\newcommand{\omlinkpadding}[1]{\setlength{\omlinkpad}{#1}}
+\renewcommand{\HyperRaiseLinkHook}{\addtolength{\HyperRaiseLinkLength}{\omlinkpad}}
+
+\newif\ifom@holdanchor
+\newcommand{\om@heldanchor}{}
+\newcommand{\om@holdanchor}{\ifdim\omlinkpad=\z@\else\om@holdanchortrue\fi}
+\newcommand{\om@flushanchor}{%
+  \ifdefempty{\om@heldanchor}{}{%
+    \Hy@raisedlink{\om@heldanchor}\gdef\om@heldanchor{}%
+  }%
+}
+\let\om@raisedlink\Hy@raisedlink
+\def\Hy@raisedlink#1{%
+  \ifom@holdanchor
+    \gdef\om@heldanchor{#1}%
+    \om@holdanchorfalse
+  \else
+    \om@raisedlink{#1}%
+  \fi
+}
+% Hold the anchor \refstepcounter writes from the moment a statement opens
+% (\@thm is cleveref's wrapper around amsthm's, so hook its front, not its
+% body) ...
+\pretocmd{\@thm}{\om@holdanchor}{}%
+  {\PackageWarning{onephysics}{Cannot hold statement anchors: \string\@thm\space
+    not patchable, \string\omlinkpadding\space does nothing for statements}}
+% ... and release it into the head box a moment later. The \om@holdanchorfalse
+% is for the statement that writes no anchor at all (an unnumbered one): the
+% hold must not outlive it and swallow somebody else's anchor.
+\pretocmd{\deferred@thm@head}{\om@holdanchorfalse}{}%
+  {\PackageWarning{onephysics}{Cannot disarm statement anchor hold}}
+\patchcmd{\deferred@thm@head}{\sbox\@labels{\normalfont#1}}%
+  {\sbox\@labels{\normalfont\om@flushanchor#1}}{}%
+  {\PackageWarning{onephysics}{Cannot release statement anchors: \string
+    \deferred@thm@head\space not patchable}}
+
+% ----------------------------------------------------------------------------
+% Forward links exercise -> solution (opt-in per book)
+% A book whose entry file calls \omsolutionlinks (after loading this
+% package, before any chapter) gets, at the end of every exercise and
+% problem, a right-aligned pointer "Solution p. <n>" hyperlinked to the
+% sol:<key> target above, where <key> is the first \label written inside
+% the environment. Books that do not opt in are typeset unchanged.
+% ----------------------------------------------------------------------------
+\newif\ifomsollinks
+\newcommand{\omsolutionlinks}{\omsollinkstrue}
+\gdef\omsollink@key{}
+\newcommand{\omsollink@arm}{%
+  \gdef\omsollink@key{}%
+  \let\omsollink@origlabel\label
+  \renewcommand{\label}[1]{%
+    \omsollink@origlabel{##1}%
+    \ifdefempty{\omsollink@key}{\gdef\omsollink@key{##1}}{}%
+  }%
+}
+\newcommand{\omsollink@emit}{%
+  \ifdefempty{\omsollink@key}{}{%
+    \par\nopagebreak\smallskip
+    \noindent\hfill{\footnotesize\itshape
+      \hyperref[sol:\omsollink@key]{\omnameGotoSolution~\pageref{sol:\omsollink@key}}}%
+    \par
+  }%
+}
+\AtBeginEnvironment{exercise}{\ifomsollinks\omsollink@arm\fi}
+\AtEndEnvironment{exercise}{\ifomsollinks\omsollink@emit\fi}
+\AtBeginEnvironment{problem}{\ifomsollinks\omsollink@arm\fi}
+\AtEndEnvironment{problem}{\ifomsollinks\omsollink@emit\fi}
+
+% ----------------------------------------------------------------------------
+% Math macros
+% ----------------------------------------------------------------------------
+% Number sets
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\C}{\mathbb{C}}
+
+% Delimiters
+\DeclarePairedDelimiter{\abs}{\lvert}{\rvert}
+\DeclarePairedDelimiter{\norm}{\lVert}{\rVert}
+\DeclarePairedDelimiter{\floor}{\lfloor}{\rfloor}
+
+% Intervals (international convention): \intcc{a}{b} = [a, b], \intoo = (a, b)
+\newcommand{\intcc}[2]{\left[#1,\,#2\right]}
+\newcommand{\intoo}[2]{\left(#1,\,#2\right)}
+\newcommand{\intco}[2]{\left[#1,\,#2\right)}
+\newcommand{\intoc}[2]{\left(#1,\,#2\right]}
+% Integer interval \intint{a}{b} = [[a, b]] = {a, a+1, ..., b}
+\newcommand{\intint}[2]{[\![#1,\,#2]\!]}
+% Triple bar (operator norm) |||u|||
+\newcommand{\vertiii}[1]{{\left\vert\kern-0.3ex\left\vert\kern-0.3ex\left\vert
+  #1 \right\vert\kern-0.3ex\right\vert\kern-0.3ex\right\vert}}
+
+% Calculus
+\newcommand{\dd}{\mathop{}\!\mathrm{d}}
+\newcommand{\eu}{\mathrm{e}}
+\newcommand{\iu}{\mathrm{i}}
+
+% Vectors and geometry
+\newcommand{\vect}[1]{\overrightarrow{#1}}
+\newcommand{\scal}[2]{\vect{#1}\cdot\vect{#2}}
+
+% Complex numbers
+\newcommand{\conj}[1]{\overline{#1}}
+\DeclareMathOperator{\Rea}{Re}
+\DeclareMathOperator{\Ima}{Im}
+\DeclareMathOperator{\Arg}{arg}
+
+% Probability
+\renewcommand{\P}{\mathbb{P}}
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\V}{\mathbb{V}}
+\newcommand{\pcond}[2]{\P_{#1}\!\left(#2\right)}
+
+% Arithmetic
+\DeclareMathOperator{\lcm}{lcm}
+
+% Misc: \st is defined in styles/lang/<lang>.tex

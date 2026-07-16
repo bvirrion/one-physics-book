@@ -1,0 +1,35 @@
+name: Build PDFs
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Compile LaTeX
+        uses: xu-cheng/latex-action@v3
+        with:
+          # One entry file per book of the series.
+          root_file: |
+            one_physics_book_1_primary_middle_school.tex
+            one_physics_book_2_high_school.tex
+            one_physics_book_3_university_year_1.tex
+            one_physics_book_4_university_year_2.tex
+            one_physics_book_5_university_year_3.tex
+          latexmk_use_lualatex: false
+          # latexmkrc in the repo sets pdflatex mode and build/ output
+
+      - name: Check for undefined references
+        run: |
+          ! grep -E "(Reference|Citation).*undefined" build/*.log
+
+      - name: Upload PDFs
+        uses: actions/upload-artifact@v4
+        with:
+          name: one-physics-book
+          path: build/one_physics_book_*.pdf
