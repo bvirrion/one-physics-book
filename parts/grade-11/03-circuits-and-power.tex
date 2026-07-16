@@ -1,6 +1,460 @@
 \chapter{Electric Circuits and Power}\label{ch:g11:circuits-and-power}
 
-% TODO: course, examples, figures, and 8--12 graded exercises
-% (see CONTRIBUTING.md). Placeholder until written.
+Flip a switch: a lamp lights, because a generator many kilometres away
+pushes charge around a loop of copper through your wall. Middle school
+mapped the circuit --- current, voltage, Ohm's law. This chapter reopens
+it with the account book of \cref{ch:g10:energy-conservation}: what the
+meter charges, why thin wires glow, why the grid runs at \qty{400}{kV}.
 
-\emph{This chapter has not been written yet.}
+\section{Charge on the move}
+
+\begin{definition}[Current and the coulomb]\label{def:g11:circuits-and-power:current}
+An \emph{electric current}\index{electric current} is an ordered flow of
+charge (electrons, in a metal). Its intensity $I$, in
+\emph{amperes}\index{ampere} (\unit{A}), is the charge passing through a
+cross-section of the wire per second: a steady current $I$ flowing for a
+time $t$ transports the charge
+\[ q = I\,t , \]
+in \emph{coulombs}\index{coulomb} (\unit{C}), with $\qty{1}{C} =
+\qty{1}{A.s}$. The elementary charge is $e = \qty{1.6e-19}{C}$. Current
+is measured by an ammeter, inserted in series.
+\end{definition}
+
+\begin{example}[Lightning versus phone]\label{ex:g11:circuits-and-power:coulomb}
+A lightning stroke carries some $\qty{3.0e4}{A}$ for about
+$\qty{1.0e-4}{s}$: $q = 3.0\times10^{4} \times 10^{-4} = \qty{3.0}{C}$.
+Your phone, at \qty{2.0}{A}, moves the same charge every $1.5$ seconds.
+\end{example}
+
+\begin{definition}[Voltage and the volt]\label{def:g11:circuits-and-power:voltage}
+The \emph{voltage}\index{voltage} $U$ between two points of a circuit, in
+\emph{volts}\index{volt} (\unit{V}), is the energy exchanged per unit of
+charge travelling between them: $\qty{1}{V} = \qty{1}{J/C}$, so a charge
+$q$ crossing a device under voltage $U$ exchanges the energy $E = qU$
+with it. A voltmeter, connected in parallel, measures it.
+\end{definition}
+
+\begin{proposition}[Circuit laws]\label{prop:g11:circuits-and-power:laws}
+In a circuit running steadily:
+\begin{enumerate}
+  \item \emph{junction law:} the currents arriving at a junction add up
+        to the currents leaving it;
+  \item \emph{series law:} voltages along a path add up:
+        $U_{AC} = U_{AB} + U_{BC}$;
+  \item \emph{parallel law:} two branches joining the same two points
+        carry the same voltage.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+In a steady state charge does not pile up anywhere, so what flows into a
+junction flows out. Energy per coulomb is additive along a path and
+depends only on its endpoints --- not on the branch taken between them.
+\end{proof}
+
+\section{Ohm's law and resistor networks}
+
+\begin{definition}[Resistance]\label{def:g11:circuits-and-power:resistance}
+The \emph{resistance}\index{resistance} of a conductor is the ratio
+$R = U/I$ of the voltage across it to the current through it, measured in
+\emph{ohms}\index{ohm} (\unit{\ohm}): $\qty{1}{\ohm} = \qty{1}{V/A}$.
+\end{definition}
+
+\begin{proposition}[Ohm's law]\label{prop:g11:circuits-and-power:ohm}
+\index{Ohm's law}
+For a metallic conductor held at fixed temperature, $R$ is constant:
+voltage and current are proportional,
+\[ U = R\,I . \]
+\end{proposition}
+\admitted
+
+\begin{remark}\label{rem:g11:circuits-and-power:ohm-limits}
+An experimental law, not a universal one: a diode, a heating lamp
+filament or your own skin do not obey it. Why metals do is derived in the
+university volumes.
+\end{remark}
+
+\begin{proposition}[Series and parallel resistors]\label{prop:g11:circuits-and-power:networks}
+\index{equivalent resistance}
+Two resistors in series are equivalent to one resistor $R_{\text{s}} =
+R_1 + R_2$; two in parallel, to one resistor $R_{\text{p}}$ given by
+\[
+\frac{1}{R_{\text{p}}} = \frac{1}{R_1} + \frac{1}{R_2} ,
+\qquad\text{i.e.}\quad
+R_{\text{p}} = \frac{R_1 R_2}{R_1 + R_2} < \min(R_1, R_2) .
+\]
+\end{proposition}
+
+\begin{proof}
+Series: the same $I$ crosses both and voltages add
+(\cref{prop:g11:circuits-and-power:laws}), so $U = (R_1 + R_2)\,I$.
+Parallel: both sit under the same $U$ and currents add, so
+$I = \frac{U}{R_1} + \frac{U}{R_2}$.
+\end{proof}
+
+\begin{omfigure}
+\begin{circuitikz}[font=\small]
+  \draw (0,0) to[battery1, l=$U$] (0,2.2)
+        to[ammeter] (1.9,2.2)
+        to[R=$R_1$] (3.7,2.2)
+        to[R=$R_2$] (5.5,2.2) -- (5.5,0) -- (0,0);
+  \draw (3.7,2.2) -- (3.7,3.3) to[voltmeter] (5.5,3.3) -- (5.5,2.2);
+\end{circuitikz}\qquad
+\begin{circuitikz}[font=\small]
+  \draw (0,0) to[battery1, l=$U$] (0,2.2)
+        to[ammeter, l=$I$] (2.2,2.2);
+  \draw (2.2,2.2) to[R=$R_1$, i=$I_1$] (2.2,0) -- (0,0);
+  \draw (2.2,2.2) -- (4.0,2.2) to[R=$R_2$, i=$I_2$] (4.0,0) -- (2.2,0);
+\end{circuitikz}
+
+{\small Series (left): one current, voltages add. Parallel (right): one
+voltage, currents add.}
+\end{omfigure}
+
+\begin{example}[Equivalent resistance]\label{ex:g11:circuits-and-power:networks}
+$R_1 = \qty{100}{\ohm}$ and $R_2 = \qty{150}{\ohm}$: in series,
+\qty{250}{\ohm}; in parallel, $\frac{100 \times 150}{250} =
+\qty{60}{\ohm}$ --- less than either: the current gets a second road.
+\end{example}
+
+\section{Energy and power in a circuit}
+
+\begin{proposition}[Electrical power]\label{prop:g11:circuits-and-power:power}
+\index{electrical power}
+A device under voltage $U$ crossed by a current $I$ receives energy at
+the rate
+\[ P = U\,I , \qquad\text{i.e.}\quad E = U\,I\,t \ \text{in a time } t . \]
+\end{proposition}
+
+\begin{proof}
+In a time $t$ the charge $q = It$ crosses the device
+(\cref{def:g11:circuits-and-power:current}) and each coulomb hands over
+$U$ joules (\cref{def:g11:circuits-and-power:voltage}): $E = qU = UIt$.
+\end{proof}
+
+\begin{proposition}[Power in a resistor]\label{prop:g11:circuits-and-power:ri2}
+A resistor $R$ carrying a current $I$ dissipates
+\[ P = R\,I^2 = \frac{U^2}{R} . \]
+\end{proposition}
+
+\begin{proof}
+Substitute Ohm's law into $P = UI$: $P = (RI)I = RI^2 = U(U/R) = U^2/R$.
+\end{proof}
+
+\begin{example}[Reading a nameplate]\label{ex:g11:circuits-and-power:nameplate}
+A kettle marked ``\qty{230}{V} -- \qty{2200}{W}'' draws $I = P/U =
+2200/230 = \qty{9.6}{A}$ and has resistance $R = U^2/P = 230^2/2200 =
+\qty{24}{\ohm}$. Running \qty{150}{s} it uses $E = 2200 \times 150 =
+\qty{3.3e5}{J} \approx \qty{0.09}{kW.h}$ --- about two cents.
+\end{example}
+
+\begin{remark}[Joules and kilowatt-hours]\label{rem:g11:circuits-and-power:kwh}
+The meter counts kilowatt-hours (\cref{def:g10:energy-conservation:kwh}):
+$\qty{1}{kW.h} = \qty{3.6e6}{J}$. Joules price physics; it prices bills.
+\end{remark}
+
+\begin{omfigure}
+\begin{tikzpicture}[font=\small, x=1.5cm, y=0.42cm]
+  \draw[-Stealth] (0,0) -- (4.6,0) node[right] {$P$};
+  \foreach \x/\t in {1/\qty{10}{W}, 2/\qty{100}{W}, 3/\qty{1}{kW}, 4/\qty{10}{kW}}
+    {\draw (\x,-0.3) -- (\x,0.3); \node[below, font=\footnotesize] at (\x,-0.35) {\t};}
+  \fill[omDef!70] (0,1) rectangle (1.0,1.75);
+  \node[right] at (1.05,1.4) {LED lamp (\qty{10}{W})};
+  \fill[omDef!70] (0,2.35) rectangle (1.78,3.1);
+  \node[right] at (1.83,2.75) {laptop (\qty{60}{W})};
+  \fill[omThm!70] (0,3.7) rectangle (2.95,4.45);
+  \node[right] at (3.0,4.1) {toaster (\qty{900}{W})};
+  \fill[omThm!70] (0,5.05) rectangle (3.34,5.8);
+  \node[right] at (3.39,5.45) {kettle (\qty{2.2}{kW})};
+  \fill[omThm!70] (0,6.4) rectangle (3.95,7.15);
+  \node[right] at (4.0,6.8) {electric shower (\qty{9}{kW})};
+\end{tikzpicture}
+
+{\small Appliance powers on a logarithmic axis: everything that heats
+(red) lives a factor of ten above everything that computes or shines
+(blue).}
+\end{omfigure}
+
+\section{The Joule effect: from toaster to pylon}
+
+\begin{definition}[Joule effect]\label{def:g11:circuits-and-power:joule}
+The dissipation $P = RI^2$ turning electrical energy into heat in every
+resistor is the \emph{Joule effect}\index{Joule effect}. Heaters,
+kettles, toasters and old-style bulbs are resistors by design; a
+\emph{fuse}\index{fuse} is a thin wire calibrated to melt --- opening the
+circuit --- when the current exceeds its rating.
+\end{definition}
+
+\begin{example}[Why pylons run high]\label{ex:g11:circuits-and-power:transmission}
+A village needs $P = \qty{100}{kW}$ through a line of resistance
+$R_\ell = \qty{5.0}{\ohm}$. Delivered at $U = \qty{500}{V}$: $I = P/U =
+\qty{200}{A}$ and the line wastes $R_\ell I^2 = \qty{200}{kW}$ --- twice
+the delivery: absurd. At $U = \qty{20}{kV}$: $I = \qty{5.0}{A}$ and
+$R_\ell I^2 = \qty{125}{W}$. Forty times less current, $1600$ times less
+loss.
+\end{example}
+
+\begin{omfigure}
+\begin{circuitikz}[font=\small]
+  \draw (0,0) to[sV, l=plant] (0,2)
+        to[R, l_=$R_\ell$, i=$I$] (3.4,2) -- (4.8,2)
+        to[lamp, l=village] (4.8,0) -- (0,0);
+  \node[font=\footnotesize, omThm] at (1.7,2.75) {loss $R_\ell I^2$};
+\end{circuitikz}
+
+{\small The delivery of \cref{ex:g11:circuits-and-power:transmission}:
+raising $U$ at fixed $P = UI$ shrinks $I$, and the loss falls with $I^2$.}
+\end{omfigure}
+
+\begin{remark}[The grid's iron rule]\label{rem:g11:circuits-and-power:grid}
+At fixed delivered power $P = UI$, the line loss $R_\ell I^2 = R_\ell
+P^2/U^2$ falls as the \emph{square} of the transport voltage. Hence:
+transform up (\qty{400}{kV}) to travel, down (\qty{230}{V}) to live with.
+\end{remark}
+
+\begin{remark}[Household safety]\label{rem:g11:circuits-and-power:safety}
+A \qty{230}{V} line fused at \qty{16}{A} supplies at most $230 \times 16
+\approx \qty{3.7}{kW}$: two kettles at once melt the fuse --- by design
+the thinnest, weakest link, far cheaper than a fire inside the wall.
+\end{remark}
+
+\section{Real batteries: electromotive force}
+
+\begin{definition}[EMF and internal resistance]\label{def:g11:circuits-and-power:emf}
+A battery converts chemical into electrical energy. Its
+\emph{electromotive force}\index{electromotive force} (EMF)
+$\mathcal{E}$, in volts, is the energy it hands each coulomb crossing it;
+its \emph{internal resistance}\index{internal resistance} $r$ accounts
+for the Joule effect inside its own chemistry. Model: an ideal source
+$\mathcal{E}$ in series with $r$ (curly $\mathcal{E}$: $E$ is energy).
+\end{definition}
+
+\begin{proposition}[Terminal voltage]\label{prop:g11:circuits-and-power:terminal}
+A battery delivering a current $I$ shows at its terminals
+\[ U = \mathcal{E} - r\,I . \]
+\end{proposition}
+
+\begin{proof}
+The chemistry supplies $\mathcal{E}I$, the internal resistance eats
+$rI^2$, the circuit receives $UI$: energy conservation
+(\cref{ch:g10:energy-conservation}) gives $UI = \mathcal{E}I - rI^2$.
+\end{proof}
+
+\begin{example}[A battery under load]\label{ex:g11:circuits-and-power:discharge}
+A battery ($\mathcal{E} = \qty{9.0}{V}$, $r = \qty{1.0}{\ohm}$) feeds a
+bulb of resistance $R = \qty{8.0}{\ohm}$. The loop obeys $\mathcal{E} =
+rI + RI$, so $I = \mathcal{E}/(R + r) = \qty{1.0}{A}$ and $U = 9.0 -
+1.0 \times 1.0 = \qty{8.0}{V}$: the bulb receives \qty{8.0}{W} while the
+battery wastes \qty{1.0}{W} warming itself.
+\end{example}
+
+\begin{omfigure}
+\begin{tikzpicture}
+\begin{axis}[omaxis, width=8cm, height=5cm,
+    xlabel={$I$ (\unit{A})}, ylabel={$U$ (\unit{V})},
+    xmin=0, xmax=4.6, ymin=0, ymax=10.8,
+    xtick={0,1,2,3,4}, ytick={0,3,6,9}]
+  \addplot[omThm, thick, domain=0:4.3] {9 - x};
+  \addplot[omDef, only marks, mark=*, mark size=1.5pt]
+    coordinates {(0.5,8.5) (1.0,8.0) (2.0,7.0) (3.0,6.0) (4.0,5.0)};
+  \node[font=\small, anchor=west] at (axis cs:0.2,10.1)
+    {intercept $\mathcal{E} = \qty{9.0}{V}$};
+\end{axis}
+\end{tikzpicture}
+
+{\small Discharge characteristic of the battery of
+\cref{ex:g11:circuits-and-power:discharge}: measured points sit on the
+line $U = \mathcal{E} - rI$, of slope $-r = \qty{-1.0}{V/A}$.}
+\end{omfigure}
+
+\begin{remark}[Receivers]\label{rem:g11:circuits-and-power:receivers}
+A motor or a charging battery runs the conversion backwards: it absorbs
+under $U = \mathcal{E}' + r'I$, converting $\mathcal{E}'I$ into motion or
+chemistry and losing $r'I^2$. Sources push, receivers push back.
+\end{remark}
+
+\begin{example}[Efficiency of a battery]\label{ex:g11:circuits-and-power:efficiency}
+The efficiency (\cref{def:g10:energy-conservation:efficiency}) of the
+discharge above: useful $UI = \qty{8.0}{W}$ out of $\mathcal{E}I =
+\qty{9.0}{W}$, so $\eta = U/\mathcal{E} = 8/9 \approx 0.89$ --- dropping
+as the current climbs: hard-working batteries run hot.
+\end{example}
+
+\section{Exercises}
+
+\begin{exercise}[$\star$]\label{exo:g11:circuits-and-power:1}
+A phone battery charges at a steady \qty{2.0}{A} for \qty{90}{min}. What
+charge passes through the cable, in coulombs? How many elementary charges
+is that ($e = \qty{1.6e-19}{C}$)?
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:g11:circuits-and-power:2}
+A \qty{220}{\ohm} resistor across \qty{12}{V}: what current flows? A
+heating element draws \qty{0.50}{A} at \qty{230}{V}: what resistance?
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:g11:circuits-and-power:3}
+Compute the equivalent resistance of $R_1 = \qty{120}{\ohm}$ and $R_2 =
+\qty{60}{\ohm}$ in series, then in parallel. Which is smaller than both,
+and why?
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:g11:circuits-and-power:4}
+A travel iron draws \qty{8.7}{A} at \qty{230}{V}. Compute its power, then
+the energy it uses in \qty{4.0}{min}, in joules and in kilowatt-hours.
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:g11:circuits-and-power:5}
+A laptop charger delivers \qty{60}{W} for \qty{5.0}{h} a day: daily
+energy in kilowatt-hours and joules, and cost at $0.25$ euros per
+\unit{kW.h}?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:g11:circuits-and-power:6}
+An electric heater is rated \qty{1200}{W} at \qty{230}{V}.
+\begin{enumerate}
+  \item Compute its resistance and the current it draws.
+  \item Plugged (same resistance) into a \qty{115}{V} supply, what power
+        does it deliver? Why not half?
+\end{enumerate}
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:g11:circuits-and-power:7}
+$R_1 = \qty{40}{\ohm}$ and $R_2 = \qty{20}{\ohm}$ in series across
+\qty{12}{V}. Compute the current, the voltage across each resistor, and
+the power dissipated in each; check the powers add up to $UI$.
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:g11:circuits-and-power:8}
+$R_1 = \qty{60}{\ohm}$ and $R_2 = \qty{30}{\ohm}$ in parallel across
+\qty{12}{V}. Compute each branch current, the total current, and the
+equivalent resistance two ways.
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:g11:circuits-and-power:9}
+A battery delivers $U = \qty{5.5}{V}$ at $I = \qty{0.50}{A}$, and
+$U = \qty{4.0}{V}$ at $I = \qty{2.0}{A}$. Find its EMF $\mathcal{E}$ and
+internal resistance $r$, then the short-circuit current $\mathcal{E}/r$.
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:g11:circuits-and-power:10}
+A \qty{230}{V} kitchen line is protected by a \qty{16}{A} fuse. A
+\qty{2.2}{kW} kettle and a \qty{1.0}{kW} toaster run together: does the
+fuse hold? Someone adds a \qty{1.5}{kW} heater: show that it blows.
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:g11:circuits-and-power:11}
+A workshop needs \qty{10}{kW} through a feeder cable of resistance
+\qty{2.0}{\ohm}. Compute the current and the Joule loss if the power is
+delivered at \qty{200}{V}, then at \qty{4.0}{kV}. Compare the two losses
+and explain the ratio.
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:g11:circuits-and-power:12}
+Using all of three identical \qty{60}{\ohm} resistors, list every
+distinct equivalent resistance (series, parallel, mixed); compute each.
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:g11:circuits-and-power:13}
+A battery ($\mathcal{E} = \qty{4.5}{V}$, $r = \qty{1.5}{\ohm}$) feeds a
+resistor $R = \qty{6.0}{\ohm}$.
+\begin{enumerate}
+  \item Compute $I$, $U$, the useful power in $R$, the power lost in $r$,
+        and the efficiency.
+  \item Show that the power received by a variable $R$,
+        $P = \mathcal{E}^2 R/(R+r)^2$, is greatest when $R = r$ (hint:
+        $(R+r)^2/R = (R-r)^2/R + 4r$), and compute that maximum.
+\end{enumerate}
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:g11:circuits-and-power:14}
+A \qty{2.2}{kW} kettle of efficiency $0.90$ brings \qty{1.0}{kg} of water
+from \qty{20}{\degreeCelsius} to the boil (heating water takes
+\qty{4180}{J} per kilogram per degree). Compute the heat required, the
+electrical energy drawn, the heating time, and the cost at $0.25$ euros
+per \unit{kW.h}.
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:g11:circuits-and-power:15}
+A car battery: $\mathcal{E} = \qty{12.7}{V}$, $r = \qty{0.020}{\ohm}$,
+capacity \qty{60}{A.h}.
+\begin{enumerate}
+  \item Convert the capacity to coulombs, and estimate the stored energy
+        ($E \approx \mathcal{E} q$) in joules and kilowatt-hours.
+  \item The starter draws \qty{150}{A}: compute the terminal voltage, the
+        power delivered, and the power lost inside.
+  \item Explain why the headlights dim while the engine cranks.
+\end{enumerate}
+\end{exercise}
+
+\section{Problem: From the dam to the toaster}
+
+\begin{problem}[{Weekend problem --- the thousand-kilometre journey of a
+kilowatt-hour, from falling water to browning bread, with the full bill
+of the trip}]
+\label{pb:g11:circuits-and-power:1}
+A mountain dam holds water \qty{200}{m} above its turbines, which swallow
+\qty{50}{m^3} --- \qty{5.0e4}{kg} --- per second; turbine and alternator
+convert with efficiency $0.90$. Through a line of total resistance
+$R_\ell = \qty{32}{\ohm}$ (\qty{1000}{km} there and back) the plant feeds
+a city where your \qty{900}{W} toaster waits at \qty{230}{V}. The
+alternator outputs \qty{20}{kV}; transformers (efficiency $0.99$ each)
+convert voltages at will. Electricity sells at $0.25$ euros per
+\unit{kW.h}; $g = \qty{9.81}{N/kg}$.
+
+\medskip
+\noindent\textbf{Part I --- At the dam.}
+\begin{enumerate}
+  \item How much potential energy does the falling water release each
+        second? Deduce the power available to the turbines.
+  \item What electrical power leaves the alternator?
+  \item At \qty{20}{kV} straight from the alternator, what current flows?
+  \item Compute the Joule loss $R_\ell I^2$ at that current and compare
+        it with the plant's output. Conclude.
+  \item The city's power $P = UI$ is fixed by demand. What is the only
+        way to shrink $I$, and which device performs it?
+\end{enumerate}
+
+\medskip
+\noindent\textbf{Part II --- On the line.}
+\begin{enumerate}[resume]
+  \item An ideal transformer steps the \qty{88}{MW} up to \qty{400}{kV}:
+        what current flows now?
+  \item Compute the new line loss, in megawatts.
+  \item What fraction of the plant's output is lost in the line?
+  \item Show that the lost fraction equals $R_\ell P/U^2$, and check that
+        it explains the factor between questions 4 and 7.
+  \item Compute the voltage drop $R_\ell I$ along the line at
+        \qty{400}{kV}. Is it consistent with question 8?
+\end{enumerate}
+
+\medskip
+\noindent\textbf{Part III --- In the kitchen.}
+\begin{enumerate}[resume]
+  \item Convert \qty{1}{kW.h} to joules; what does the meter multiply?
+  \item Compute the toaster's current and resistance at \qty{230}{V}.
+  \item Three minutes of toasting: the energy in joules and
+        kilowatt-hours, and its price.
+  \item The toaster dissipates $RI^2$: explain in one sentence why the
+        same formula is the loss on the line, the product in the kitchen.
+  \item The toaster shares a \qty{16}{A} fuse with a \qty{2.2}{kW}
+        kettle: does the fuse hold? A \qty{2.0}{kW} heater joins: and now?
+\end{enumerate}
+
+\medskip
+\noindent\textbf{Part IV --- The audit.}
+\begin{enumerate}[resume]
+  \item The house's own wiring, resistance \qty{0.05}{\ohm}, carries the
+        \qty{13.5}{A} of question 15: compute the loss and its fraction
+        of the roughly \qty{3.1}{kW} delivered.
+  \item Chain the efficiencies (turbine--alternator, step-up, line,
+        step-down, house wiring) into one overall grid efficiency.
+  \item How many kilograms (and cubic metres) of dam water must fall for
+        \emph{one} kilowatt-hour to reach your toaster?
+  \item Evaluate the lost fraction $R_\ell P/U^2$ of question 9 at
+        $U = \qty{20}{kV}$. What does a value above $1$ mean?
+  \item The punchline --- \emph{the price of distance}: in two sentences,
+        what does one toasted kilowatt-hour cost the mountain, what
+        fraction dies en route, and which single trick makes it possible?
+\end{enumerate}
+\end{problem}
