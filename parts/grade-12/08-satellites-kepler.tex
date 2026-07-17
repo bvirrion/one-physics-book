@@ -1,6 +1,440 @@
 \chapter{Satellites and Planetary Motion}\label{ch:g12:satellites-kepler}
 
-% TODO: course, examples, figures, and 8--12 graded exercises
-% (see CONTRIBUTING.md). Placeholder until written.
+The dish on the balcony is bolted down, yet all day it stares at one
+fixed point of the sky, \qty{36000}{km} up; the space station
+crosses the evening sky in minutes; a constellation of flying clocks
+tells your phone where you stand. None of these machines has an
+engine running: they are all simply \emph{falling}. This chapter
+computes how fast and how high each must fall --- then weighs
+planets with the same law.
 
-\emph{This chapter has not been written yet.}
+\section{Falling around the Earth}
+
+Everything rests on the law measured earlier
+(\cref{ch:g10:universal-gravitation}): the Earth, of mass $M$, pulls
+a satellite of mass $m$ whose center is a distance $r$ from its own
+with a force directed toward the Earth's center, of magnitude
+\[ F = G\,\frac{m M}{r^2}, \qquad G = \qty{6.67e-11}{N.m^2/kg^2}. \]
+Mind what $r$ is: the distance \emph{between centers}. A satellite at
+altitude $h$ has $r = R + h$, with $R = \qty{6.37e6}{m}$ the Earth's
+radius --- forgetting the $R$ is the classic blunder of this chapter.
+
+\begin{remark}[Newton's cannon, revisited]\label{rem:g12:satellites-kepler:cannon}
+Fired horizontally, a cannonball lands; faster, it lands farther;
+at the right speed the ground curves away exactly as fast as the
+ball falls, and the fall closes on itself: an orbit. A satellite
+needs no engine --- only the right \emph{sideways} speed.
+\end{remark}
+
+\begin{omfigure}
+\begin{tikzpicture}[scale=1.0, font=\small]
+  \fill[omExo!15] (0,0) circle (1.5); \draw[omExo, thick] (0,0) circle (1.5);
+  \fill[omExo!60] (-0.22,1.44) -- (0,1.85) -- (0.22,1.44) -- cycle;
+  \coordinate (L) at (0,1.85);
+  \draw[omProp, thick] (L) .. controls (0.7,1.85) .. (50:1.5);
+  \draw[omProp, thick] (L) .. controls (1.4,1.85) and (2.0,0.9) .. (0:1.5);
+  \draw[-Stealth, omDef, thick] (0,1.85) arc (90:-260:1.85);
+  \draw[-Stealth, omThm, thick] (L) .. controls (1.7,2.0) and (3.2,2.2)
+    .. (4.3,2.9);
+  \node[omDef, anchor=east] at (-1.85,1.1) {orbit};
+  \node[omThm, anchor=west] at (3.35,2.35) {escape};
+  \node[omProp, anchor=west] at (1.35,0.55) {falls};
+\end{tikzpicture}
+
+{\small Newton's cannon: fired ever faster, the ball lands farther
+(orange); at about \qty{7.9}{km/s} its fall matches the Earth's
+curvature and it orbits (blue); faster still, it escapes (red).}
+\end{omfigure}
+
+\section{The circular orbit: one speed, one period}
+
+\begin{theorem}[Orbital speed]\label{thm:g12:satellites-kepler:speed}
+A satellite in uniform circular orbit of radius $r$ around a body of
+mass $M$ travels at the speed
+\[ v = \sqrt{\frac{G M}{r}}, \]
+which does not depend on the satellite's mass.
+\end{theorem}
+
+\begin{proof}
+Gravity is the only force, so Newton's second law
+(\cref{thm:g12:newtons-laws:second}) reads $m\vect a = \vect F$;
+project it on the Frenet frame (\cref{def:g12:kinematics-2d:frenet}).
+The force aims at the center: its tangential component is zero, so
+the speed is constant; its normal component is the whole $GmM/r^2$,
+and circular motion has $a_n = v^2/r$
+(\cref{thm:g12:kinematics-2d:centripetal}). Hence $m v^2/r =
+GmM/r^2$, and --- $m$ dividing out --- $v^2 = GM/r$.
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}[scale=1.0, font=\small]
+  \fill[omExo!15] (0,0) circle (0.85); \draw[omExo, thick] (0,0) circle (0.85);
+  \node at (0,0) {Earth}; \draw[dashed, omExo] (0,0) circle (2.3);
+  \draw[thin] (0,0) -- (40:2.3) node[midway, above left] {$r$};
+  \fill (40:2.3) circle (2.2pt) node[above right] {$S$};
+  \draw[-Stealth, omThm, very thick] (40:2.3) -- (40:1.35)
+    node[pos=0.85, below right] {$\vect F$};
+  \draw[-Stealth, omDef, thick] (40:2.3) -- ++(130:1.15)
+    node[above] {$\vect v$};
+\end{tikzpicture}
+
+{\small The whole mechanism of an orbit: velocity tangent, force
+toward the center --- gravity never slows the satellite, it only
+bends its path, forever.}
+\end{omfigure}
+
+\begin{proposition}[Orbital period]\label{prop:g12:satellites-kepler:period}
+The satellite completes its orbit in the period
+\[ T = \frac{2\pi r}{v} = 2\pi \sqrt{\frac{r^3}{G M}}. \]
+\end{proposition}
+
+\begin{proof}
+One lap is the circumference $2\pi r$ at constant speed; insert
+$v = \sqrt{GM/r}$: $T = 2\pi r\sqrt{r/(GM)} = 2\pi\sqrt{r^3/(GM)}$.
+\end{proof}
+
+Neither $v$ nor $T$ contains $m$: a screw shaken loose from the
+space station orbits right alongside it. And both fall with $r$:
+\emph{the higher the orbit, the slower the satellite}, in speed
+($v \propto 1/\sqrt r$) and in angle ($T \propto r^{3/2}$).
+
+\begin{example}[The space station]\label{ex:g12:satellites-kepler:iss}
+The International Space Station flies at altitude
+$h \approx \qty{400}{km}$, so $r = \num{6.37e6} + \num{4.0e5} =
+\qty{6.77e6}{m}$; with $GM = \num{6.67e-11} \times \num{5.97e24} =
+\qty{3.98e14}{m^3/s^2}$, $v = \sqrt{\num{3.98e14}/\num{6.77e6}}
+\approx \qty{7.7e3}{m/s}$ and $T = 2\pi r/v \approx \qty{5.5e3}{s}
+\approx \qty{92}{min}$: a lap of the planet every hour and a half,
+about sixteen sunrises a day for the astronauts.
+\end{example}
+
+\begin{example}[The Moon falls like the apple]\label{ex:g12:satellites-kepler:moon}
+The Moon, at $r = \qty{3.84e8}{m}$, orbits in $T = \qty{27.3}{d} =
+\qty{2.36e6}{s}$, so $v = 2\pi r/T \approx \qty{1.02e3}{m/s}$ and
+$a = v^2/r \approx \qty{2.7e-3}{m/s^2}$ --- precisely $g/60^2$, and
+the Moon sits $60$ Earth radii away: the pull that drops the apple
+bends the Moon, weakened by the inverse square. Each second the
+Moon ``falls'' about \qty{1.4}{mm} toward us, its sideways
+kilometer carrying it around --- the check Newton made in 1666.
+\end{example}
+
+\section{Kepler's laws}
+
+Newton did not guess the inverse square: he extracted it from three
+regularities that Johannes Kepler distilled, between 1609 and 1619,
+from Tycho Brahe's twenty years of naked-eye planet positions ---
+the best data of the pre-telescope world.
+
+\begin{definition}[Ellipse]\label{def:g12:satellites-kepler:ellipse}
+An \emph{ellipse}\index{ellipse} is the set of points whose
+distances to two fixed points, the \emph{foci}\index{focus (of an
+ellipse)}, have a constant sum; half its longest diameter is the
+\emph{semi-major axis}\index{semi-major axis} $a$, and a circle is
+the case where the foci merge. A planet's orbit points nearest and
+farthest from the Sun are its \emph{perihelion}\index{perihelion}
+and \emph{aphelion}\index{aphelion}.
+\end{definition}
+
+\begin{theorem}[Kepler's laws]\label{thm:g12:satellites-kepler:kepler}
+\index{Kepler's laws}%
+For the planets orbiting the Sun (mass $M$):
+\begin{enumerate}
+  \item each orbit is an ellipse with the Sun at one focus;
+  \item the Sun--planet segment sweeps equal areas in equal times;
+  \item the ratio of squared period to cubed semi-major axis is the
+        same for all planets: $T^2/a^3 = 4\pi^2/(G M)$.
+\end{enumerate}
+The same laws govern any family of satellites around any central
+body, with $M$ the central mass. \admitted
+\end{theorem}
+
+\begin{remark}[What we can prove this year]\label{rem:g12:satellites-kepler:proof}
+For a \emph{circular} orbit the third law is ours: squaring
+\cref{prop:g12:satellites-kepler:period} gives
+$T^2/r^3 = 4\pi^2/(GM)$ --- one constant for every satellite of the
+same center. That ellipses, equal areas and the general $a$ follow
+from the inverse square is shown, with more calculus, in the Year~1
+volume. Meanwhile the second law can be read: the planet moves
+fastest at perihelion, where the short sweep segment must hurry.
+\end{remark}
+
+\begin{omfigure}
+\begin{tikzpicture}[scale=0.85, font=\small,
+    declare function={re(\t)=2.025/(1+0.5*cos(\t));}]
+  \draw[thick] plot[domain=0:360, samples=120, smooth]
+    ({1.35+re(\x)*cos(\x)}, {re(\x)*sin(\x)});
+  \fill[omDef!30] (1.35,0) -- plot[domain=-40:40, samples=25]
+    ({1.35+re(\x)*cos(\x)}, {re(\x)*sin(\x)}) -- cycle;
+  \fill[omDef!30] (1.35,0) -- plot[domain=175:185, samples=10]
+    ({1.35+re(\x)*cos(\x)}, {re(\x)*sin(\x)}) -- cycle;
+  \fill[omThm] (1.35,0) circle (2.6pt) node[below=2pt] {Sun};
+  \draw[-Stealth, omDef, thick]
+    ({1.35+re(40)*cos(40)}, {re(40)*sin(40)}) -- ++(-0.55,0.42);
+  \draw[-Stealth, omDef, thick]
+    ({1.35+re(175)*cos(175)}, {re(175)*sin(175)}) -- ++(-0.12,-0.5);
+  \node[right] at (2.75,0) {$P$}; \node[left] at (-2.72,0) {$A$};
+\end{tikzpicture}
+
+{\small Kepler's second law: in one month near perihelion $P$ the
+planet sweeps a short, fat sector; near aphelion $A$, a long, thin
+one --- equal areas: it hurries when close, dawdles when far.}
+\end{omfigure}
+
+\begin{omfigure}
+\begin{tikzpicture}
+\begin{axis}[omaxis, width=8.8cm, height=5.8cm,
+    xmode=log, ymode=log,
+    xlabel={semi-major axis $a$ (astronomical units)},
+    ylabel={period $T$ (years)},
+    xmin=0.25, xmax=50, ymin=0.15, ymax=400]
+  \addplot[omThm, thick] coordinates {(0.3,0.1643) (40,253)};
+  \addplot[only marks, mark=*, mark size=1.7pt, omDef] coordinates
+    {(0.387,0.241) (0.723,0.615) (1,1) (1.524,1.881) (5.203,11.86)
+     (9.537,29.46) (19.19,84.02) (30.07,164.8)};
+  \node[below right, font=\scriptsize] at (axis cs:0.387,0.241) {Mercury};
+  \node[below right, font=\scriptsize] at (axis cs:1,1) {Earth};
+  \node[below right, font=\scriptsize] at (axis cs:5.203,11.86) {Jupiter};
+  \node[below right, font=\scriptsize] at (axis cs:30.07,164.8) {Neptune};
+\end{axis}
+\end{tikzpicture}
+
+{\small The eight planets on log--log axes: a straight line of slope
+$3/2$, i.e.\ $T^2 \propto a^3$ --- Kepler's third law, which in
+these units (astronomical units, years) reads simply $T^2 = a^3$.}
+\end{omfigure}
+
+\section{Orbits at work}
+
+\begin{definition}[Geostationary orbit]\label{def:g12:satellites-kepler:geo}
+A satellite is \emph{geostationary}\index{geostationary orbit} when
+it hangs over one fixed point of the ground. Its orbit must be
+circular, equatorial, and of period one \emph{sidereal
+day}\index{sidereal day}, $T = \qty{86164}{s}$ (\qty{23}{h}
+\qty{56}{min} \qty{4}{s}): the time the Earth takes to turn once
+\emph{relative to the stars}. (The \qty{24}{h} day is relative to
+the Sun, toward which the Earth also advances a degree a day.)
+\end{definition}
+
+\begin{example}[The geostationary altitude]\label{ex:g12:satellites-kepler:geoalt}
+Kepler's third law, read backward, dictates the radius:
+$r = \left(GMT^2/4\pi^2\right)^{1/3} =
+\left(\num{3.98e14} \times (\num{86164})^2/4\pi^2\right)^{1/3}
+\approx \qty{4.22e7}{m}$ --- an altitude $h = r - R \approx
+\qty{3.58e7}{m} \approx \qty{35800}{km}$, traveled at $v = 2\pi r/T
+\approx \qty{3.1}{km/s}$. Every relay that ``hangs still'' sits on
+this one circle over the equator --- there is no other.
+\end{example}
+
+\begin{example}[The navigation constellation]\label{ex:g12:satellites-kepler:gps}
+Satellite-navigation systems fly some thirty satellites at
+$r \approx \qty{2.66e7}{m}$ (altitude $\approx \qty{20200}{km}$),
+where \cref{prop:g12:satellites-kepler:period} gives $T \approx
+\qty{4.31e4}{s}$: half a sidereal day, so each satellite retraces
+its ground track daily. Your receiver compares the arrival times of
+their clock signals against orbits known to meters.
+\end{example}
+
+\begin{method}[Weighing a world from its satellite]\label{met:g12:satellites-kepler:weigh}
+\index{weighing a planet}%
+To measure the mass of a planet or a star: find any satellite of it
+(a moon, a probe, a planet), measure its orbit radius $r$ and period
+$T$, and invert the third law:
+\[ M = \frac{4\pi^2 r^3}{G\,T^2}. \]
+This weighs the \emph{central} body only --- the satellite's mass
+cancelled in \cref{thm:g12:satellites-kepler:speed}. Every data-card
+mass came this way: the Earth from the Moon, the Sun from the
+Earth's own orbit.
+\end{method}
+
+\begin{remark}[Higher is slower --- but costs more]\label{rem:g12:satellites-kepler:energy}
+Since $v = \sqrt{GM/r}$, the Moon crawls at \qty{1}{km/s} while the
+station races at \qty{7.7}{km/s}. Yet the higher orbit is the more
+\emph{expensive}: climbing against gravity stores potential energy
+(the account is settled in \cref{ch:g12:work-and-energy}), and the
+gain in $E_p$ outweighs the loss in $E_k$. Hence a rocket burns
+\emph{forward} to reach a higher, slower orbit --- and a satellite
+braked by thin air spirals \emph{down} and speeds up.
+\end{remark}
+
+\begin{remark}[Data card]\label{rem:g12:satellites-kepler:data}
+Unless stated otherwise: $G = \qty{6.67e-11}{N.m^2/kg^2}$; Earth:
+$M = \qty{5.97e24}{kg}$, $R = \qty{6.37e6}{m}$, sidereal day
+\qty{86164}{s}; Moon's orbit: $r = \qty{3.84e8}{m}$, $T =
+\qty{27.3}{d}$; Sun: $M = \qty{1.99e30}{kg}$; Earth--Sun distance
+\qty{1.496e11}{m}; one year $= \qty{3.156e7}{s}$; Mars: $M =
+\qty{6.42e23}{kg}$, $R = \qty{3.39e6}{m}$.
+\end{remark}
+
+\section{Exercises}
+
+\begin{exercise}[$\star$]\label{exo:g12:satellites-kepler:1}
+A \qty{1000}{kg} satellite sits on the launch pad, then flies at
+altitude \qty{400}{km}. Compute the Earth's pull in both places:
+what percentage survives aloft --- and why do occupants float?
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:g12:satellites-kepler:2}
+For a (theoretical) satellite skimming the Earth's surface
+($r = R$), compute the orbital speed and the period. Compare with
+Newton's cannonball (\cref{rem:g12:satellites-kepler:cannon}).
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:g12:satellites-kepler:3}
+A satellite is moved from a circular orbit of radius $r$ to one of
+radius $2r$. By what factor do its speed and period change? Do the
+answers depend on its mass?
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:g12:satellites-kepler:4}
+Redo the station's numbers: from $r = \qty{6.77e6}{m}$, compute
+$v$, $T$, and the number of orbits completed in \qty{24}{h}.
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:g12:satellites-kepler:5}
+State Kepler's three laws. Where along its very stretched ellipse
+is a comet fastest, and which law says so? Does a satellite's
+period depend on its own mass?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:g12:satellites-kepler:6}
+Weigh the Earth: from the Moon's orbit radius and period (data
+card), compute the Earth's mass and compare with the card's value.
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:g12:satellites-kepler:7}
+A company proposes a satellite hovering permanently above Paris
+(latitude $49^\circ$ north). From the direction of gravity, explain
+why every circular orbit is centered on the Earth's center; conclude
+the proposal is impossible. Where \emph{can} a satellite hover?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:g12:satellites-kepler:8}
+Phobos circles Mars at $r = \qty{9.38e6}{m}$ in $T = \qty{7}{h}
+\qty{39}{min}$. Deduce the mass of Mars; compare with the data card.
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:g12:satellites-kepler:9}
+Mars orbits the Sun at $a = \qty{2.279e11}{m}$ in \qty{687}{d}.
+Compute $T^2/a^3$ for Mars and for the Earth (data card), check
+Kepler's third law, and deduce the mass of the Sun.
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:g12:satellites-kepler:10}
+Newton's Moon test: from the data card, compute the Moon's speed and
+its centripetal acceleration $a = v^2/r$. Show it equals $g/60^2$,
+and say why that convinced Newton that one law rules apple and Moon.
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:g12:satellites-kepler:11}
+In Sun units (astronomical units, years) Kepler's third law reads
+$T^2 = a^3$: the straight line of the course's log--log plot. Place
+on it the asteroid Ceres, $a = \qty{2.77}{au}$, and Halley's comet,
+$a = \qty{17.8}{au}$: compute both periods. Halley last passed
+perihelion in 1986 --- when is it due back?
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:g12:satellites-kepler:12}
+Thin air brushes the station, yet its speed \emph{increases} as it
+loses altitude. Compute $v$ at altitudes \qty{400}{km} and
+\qty{350}{km}, then resolve the paradox: friction slows things down
+--- where does the extra speed come from?
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:g12:satellites-kepler:13}
+A telescope finds an exoplanet circling its star at
+$r = \qty{7.48e9}{m}$ every \qty{3.50}{d}. Weigh the star, in
+kilograms and in Suns. Which mass --- star's or planet's ---
+\emph{cannot} be obtained this way, and why?
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:g12:satellites-kepler:14}
+Mars settlers want an ``areostationary'' relay over their base.
+Mars turns relative to the stars in \qty{24}{h} \qty{37}{min}:
+compute the orbit radius and the altitude above the Martian
+surface (data card).
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:g12:satellites-kepler:15}
+Halley's comet passes perihelion at $r_p = \qty{8.77e10}{m}$ moving
+at \qty{54.5}{km/s}; aphelion is at $r_a = \qty{5.25e12}{m}$. At
+both extremes the velocity is perpendicular to the Sun--comet
+segment, and Kepler's second law then forces $r_p v_p = r_a v_a$
+(equal sweep triangles of area $\tfrac12 r v\,\Delta t$). Deduce the
+aphelion speed and comment on the ratio.
+\end{exercise}
+
+\section{Problem: A Seat Over the Equator}
+
+\begin{problem}[{Weekend problem --- putting a satellite over the
+equator: why the only parking spot in the sky is a circle
+\qty{35800}{km} up, how it compares with the station racing below,
+and how the same law weighs Jupiter on the way}]
+\label{pb:g12:satellites-kepler:1}
+A telecom company wants a relay that its ground dishes, bolted down
+once, never have to chase: a geostationary satellite. You are the
+mission analyst; use the data card. For Part~IV: Jupiter's moon Io
+orbits at $r = \qty{4.22e8}{m}$ in $T = \qty{1.77}{d}$, and Jupiter
+turns relative to the stars in \qty{9}{h} \qty{56}{min}.
+
+\medskip
+\noindent\textbf{Part I --- The rules of hanging still.}
+\begin{enumerate}
+  \item The satellite must stay over one fixed ground point. What
+        must its period be --- and why the sidereal day
+        \qty{86164}{s} rather than \qty{24}{h}?
+  \item In circular motion the net force points at the circle's
+        center; here the only force is gravity. Deduce that the
+        center of any circular orbit is the Earth's center.
+  \item A circle hovering above Paris's latitude would be centered
+        on the Earth's axis, north of the center. Conclude: in which
+        plane must a geostationary orbit lie?
+  \item Write Newton's second law in the Frenet frame for a circular
+        orbit of radius $r$ and derive $v = \sqrt{GM/r}$.
+  \item Deduce $T = 2\pi\sqrt{r^3/(GM)}$ and rewrite it as Kepler's
+        third law $T^2/r^3 = 4\pi^2/(GM)$.
+\end{enumerate}
+
+\medskip
+\noindent\textbf{Part II --- The one circle that works.}
+\begin{enumerate}[resume]
+  \item Solve the third law for $r$ and compute the geostationary
+        radius.
+  \item Deduce the altitude above the ground.
+  \item Compute the orbital speed from $v = 2\pi r/T$.
+  \item Check it against $v = \sqrt{GM/r}$.
+  \item The company's satellite has mass \qty{4.0e3}{kg}; a rival's
+        weighs twice that. Compare their geostationary radii, and
+        say what the extra mass changes at launch.
+\end{enumerate}
+
+\medskip
+\noindent\textbf{Part III --- The station below.}
+\begin{enumerate}[resume]
+  \item The space station flies at $r = \qty{6.77e6}{m}$: compute
+        its speed.
+  \item Compute its period, in seconds and minutes.
+  \item How many orbits does it complete in \qty{24}{h} --- about
+        how many sunrises do the astronauts watch per day?
+  \item Compute the ratio of radii $r_{\text{geo}}/r_{\text{ISS}}$,
+        and verify that the ratio of periods is that number to the
+        power $3/2$, as Kepler's third law demands.
+  \item Which satellite moves faster, and which took more energy per
+        kilogram to emplace? Reconcile the two in one sentence.
+\end{enumerate}
+
+\medskip
+\noindent\textbf{Part IV --- Weighing Jupiter on the side.}
+\begin{enumerate}[resume]
+  \item From Kepler's third law applied to Io, express Jupiter's
+        mass $M_J$ in terms of $G$, $r$ and $T$.
+  \item Compute $M_J$.
+  \item How many Earth masses is that? Roughly what fraction of the
+        Sun's mass?
+  \item A ``jovistationary'' relay should hang over one point of
+        Jupiter's clouds: compute its orbit radius; compare with
+        Io's.
+  \item Report to the board, two sentences: the altitude where the
+        company must park its relay, and the mass of Jupiter that
+        the very same law delivered for free.
+\end{enumerate}
+\end{problem}
