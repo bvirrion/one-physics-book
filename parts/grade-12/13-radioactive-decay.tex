@@ -1,6 +1,440 @@
 \chapter{Radioactive Decay}\label{ch:g12:radioactive-decay}
 
-% TODO: course, examples, figures, and 8--12 graded exercises
-% (see CONTRIBUTING.md). Placeholder until written.
+In a museum basement, a Geiger counter clicks over a sliver of wood from a
+pharaoh's coffin. Each click is lawless: nothing announced it, nothing
+predicts the next. Yet by Friday the lab will print a date good to a
+century. This chapter resolves the paradox --- how events perfectly random
+one by one add up, by the trillion, to the steadiest clocks we own.
 
-\emph{This chapter has not been written yet.}
+\section{Lawless one by one, clockwork by the mole}
+
+Last year (\cref{ch:g11:nucleus-radioactivity}) we met the unstable
+nuclei, balanced their $\alpha$ and $\beta$ equations, and saw half of any
+large sample vanish per half-life $T_{1/2}$. What we could not say was
+\emph{when between the stairs} --- nor why a random process keeps a
+schedule at all. Both questions have one answer.
+
+\begin{definition}[Decay constant]\label{def:g12:radioactive-decay:lambda}
+For each unstable nuclide there is a constant $\lambda$, its \emph{decay
+constant}\index{decay constant} (unit \unit{s^{-1}}), such that during any
+short interval $\dd t$ each nucleus has probability $p = \lambda\,\dd t$ of
+decaying --- the same for every nucleus of the species, whatever its age,
+and untouched by temperature, pressure or chemistry.
+\end{definition}
+
+\begin{remark}[Lawless singly, exact in crowds]\label{rem:g12:radioactive-decay:crowds}
+A nucleus that has waited ten thousand years is exactly as likely to decay
+this second as one made this morning: no wearing out, no warning --- which
+one goes next is genuinely unpredictable. Crowds are another matter. Toss
+$100$ coins: expect $50$ heads, but be unsurprised by $43$ ---
+fluctuations of order $\sqrt n$, here $10\%$. Toss $10^{20}$: the
+relative fluctuation $1/\sqrt n$ is $10^{-10}$, the outcome certain to
+ten decimals. A gram of matter holds some $10^{22}$ nuclei: lawlessness
+averages into clockwork, an exact law for $N(t)$, the number of nuclei
+still intact at time $t$.
+\end{remark}
+
+\begin{omfigure}
+\begin{tikzpicture}
+\begin{axis}[omaxis, width=8.8cm, height=5.0cm,
+    xlabel={$t$ (in $T_{1/2}$)}, ylabel={survivors},
+    xmin=0, xmax=4.3, ymin=0, ymax=21, xtick={0,1,2,3,4},
+    legend pos=north east, legend style={font=\small}]
+  \addplot[omDef, thick, domain=0:4.2, samples=60] {20*exp(-0.6931*x)};
+  \addplot[omProp, only marks, mark=x] coordinates
+    {(0,20) (0.5,17) (1,11) (1.5,8) (2,6) (2.5,4) (3,3) (3.5,2) (4,1)};
+  \addplot[omExo, only marks, mark=o] coordinates
+    {(0,20) (0.5,14) (1,9) (1.5,7) (2,4) (2.5,4) (3,2) (3.5,1) (4,1)};
+  \legend{expected, sample 1, sample 2}
+\end{axis}
+\end{tikzpicture}
+
+{\small Two real samples of $20$ nuclei stagger down unpredictably around
+the expected curve; a mole of nuclei would hug it to ten decimal places.}
+\end{omfigure}
+
+\section{The decay law}
+
+\begin{proposition}[The evolution equation]\label{prop:g12:radioactive-decay:ode}
+In a large sample of $N$ nuclei, during $\dd t$ the number changes by
+\[
+\dd N = -\lambda N\,\dd t, \qquad\text{i.e.}\qquad \frac{\dd N}{\dd t} = -\lambda N :
+\]
+the population shrinks at a rate proportional to itself.
+\end{proposition}
+
+\begin{proof}
+Each of the $N$ nuclei decays during $\dd t$ with probability
+$\lambda\,\dd t$: expected decays $N\lambda\,\dd t$, and for large $N$ the
+actual count sticks to the expected one
+(\cref{rem:g12:radioactive-decay:crowds}); each decay removes one nucleus.
+\end{proof}
+
+\begin{theorem}[Law of radioactive decay]\label{thm:g12:radioactive-decay:law}
+A sample holding $N_0$ nuclei at $t = 0$ holds, at time $t$,
+\[
+N(t) = N_0 \, e^{-\lambda t}.
+\]
+\end{theorem}
+
+\begin{proof}
+Check by substitution:
+$\dd N/\dd t = N_0(-\lambda)\,e^{-\lambda t} = -\lambda N(t)$, and
+$N(0) = N_0 e^0 = N_0$: equation and start both right. (That no
+\emph{other} function fits is proved, with integrals, in the university
+volume.)
+\end{proof}
+
+\begin{definition}[Exponential decay]\label{def:g12:radioactive-decay:exponential}
+A quantity following $N_0\,e^{-\lambda t}$ undergoes \emph{exponential
+decay}\index{exponential decay}: in equal times, equal \emph{fractions}
+are lost. It is exactly the discharging capacitor of
+\cref{ch:g12:rc-rl-circuits}, with $\lambda$ playing $1/(RC)$: one
+differential equation, learned once, runs circuits and nuclei alike.
+\end{definition}
+
+\begin{proposition}[Half-life]\label{prop:g12:radioactive-decay:halflife}
+The half-life (\cref{def:g11:nucleus-radioactivity:halflife}) of a nuclide
+is set by its decay constant: $T_{1/2} = \ln 2/\lambda$, and after $n$
+half-lives $N = N_0/2^{\,n}$, whole $n$ or not.
+\end{proposition}
+
+\begin{proof}
+$N(T_{1/2}) = N_0/2$ requires $e^{-\lambda T_{1/2}} = \tfrac12$, i.e.\
+$\lambda T_{1/2} = \ln 2$; and $N(n\,T_{1/2}) = N_0\,e^{-n\ln 2} =
+N_0/2^{\,n}$ for any $n$: the exponential threads the staircase and fills
+in between the stairs.
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}
+\begin{axis}[omaxis, width=8.8cm, height=5.2cm,
+    xlabel={$t$ (in $T_{1/2}$)}, ylabel={$N/N_0$},
+    xmin=0, xmax=5, ymin=0, ymax=1.08, xtick={0,1,2,3,4,5},
+    ytick={0.125,0.25,0.5,1}, yticklabels={$\tfrac18$,$\tfrac14$,$\tfrac12$,$1$}]
+  \addplot[omDef, thick, domain=0:5, samples=80] {exp(-0.6931*x)};
+  \addplot[omExo, dashed] coordinates {(0,0.5) (1,0.5) (1,0)};
+  \addplot[omExo, dashed] coordinates {(0,0.25) (2,0.25) (2,0)};
+  \addplot[omExo, dashed] coordinates {(0,0.125) (3,0.125) (3,0)};
+\end{axis}
+\end{tikzpicture}
+
+{\small $N(t) = N_0\,e^{-\lambda t}$ passes through every stair of the
+staircase --- and now says what happens in between.}
+\end{omfigure}
+
+\begin{example}[Twenty powers of ten]\label{ex:g12:radioactive-decay:range}
+With $1$ year $= \qty{3.156e7}{s}$:
+\begin{center}\small
+\begin{tabular}{llll}
+nuclide & $T_{1/2}$ & $\lambda$ (\unit{s^{-1}}) & \\
+polonium-214 & \qty{1.6e-4}{s} & \num{4.2e3} & uranium chain link\\
+technetium-99m & $6.0$ hours & \num{3.2e-5} & medical imaging\\
+iodine-131 & $8.0$ days & \num{1.0e-6} & thyroid medicine\\
+caesium-137 & $30$ years & \num{7.3e-10} & reactor fallout\\
+carbon-14 & \num{5730} years & \num{3.8e-12} & archaeology\\
+potassium-40 & \num{1.25e9} years & \num{1.8e-17} & rock dating\\
+uranium-238 & \num{4.5e9} years & \num{4.9e-18} & Earth's inner heat\\
+\end{tabular}
+\end{center}
+One law, twenty powers of ten of $\lambda$.
+\end{example}
+
+\section{Activity: counting the clicks}
+
+\begin{proposition}[Activity]\label{prop:g12:radioactive-decay:activity}
+The activity of a sample --- its decays per second, in becquerels
+(\cref{def:g11:nucleus-radioactivity:activity}) --- is
+\[
+\mathcal A = \lambda N, \qquad\text{so}\qquad \mathcal A(t) = \mathcal A_0 \, e^{-\lambda t}:
+\]
+proportional to the surviving population, and equally exponential.
+\end{proposition}
+
+\begin{proof}
+$N$ nuclei, each with probability $\lambda$ per second: $\lambda N$
+decays per second; multiplying \cref{thm:g12:radioactive-decay:law} by
+$\lambda$ gives $\mathcal A(t) = \mathcal A_0 e^{-\lambda t}$.
+\end{proof}
+
+\begin{example}[Huge $N$, tiny $\lambda$]\label{ex:g12:radioactive-decay:body}
+A banana ticks at about \qty{15}{Bq}, a human body at about
+\qty{8000}{Bq}, a cubic metre of granite at some \qty{e6}{Bq}
+(\cref{ch:g11:nucleus-radioactivity}). Behind the modest clicks sit
+astronomical populations: the body's potassium-40 contributes
+$\mathcal A \approx \qty{4.4e3}{Bq}$ with $\lambda =
+\qty{1.8e-17}{s^{-1}}$: $N = \mathcal A/\lambda \approx \num{2.5e20}$
+nuclei, of which barely a few thousand fire each second.
+\end{example}
+
+\begin{method}[Measuring a half-life]\label{met:g12:radioactive-decay:semilog}
+\begin{enumerate}
+  \item Count decays with a Geiger counter over successive equal
+        intervals: this samples $\mathcal A$ at successive times.
+  \item Plot $\ln \mathcal A$ against $t$: since
+        $\ln \mathcal A = \ln \mathcal A_0 - \lambda t$, exponential
+        decay shows as a \emph{straight line} --- crooked data means
+        another law, or a mixture of nuclides.
+  \item Read $\lambda$ off as minus the slope; $T_{1/2} = \ln 2/\lambda$.
+\end{enumerate}
+\end{method}
+
+\begin{omfigure}
+\begin{tikzpicture}
+\begin{axis}[omaxis, width=8.8cm, height=5.0cm,
+    xlabel={$t$ (\unit{s})}, ylabel={$\ln \mathcal A$},
+    xmin=0, xmax=260, ymin=0, ymax=6.8, xtick={0,60,120,180,240}, ytick={2,4,6}]
+  \addplot[omDef, thick, domain=0:250, samples=2] {5.99-0.00958*x};
+  \addplot[omProp, only marks, mark=*, mark size=1.6pt] coordinates
+    {(0,5.99) (60,5.42) (120,4.84) (180,4.26) (240,3.69)};
+  \draw[omExo, dashed] (axis cs:60,5.42) -| (axis cs:180,4.26);
+  \node[font=\small, above right] at (axis cs:110,4.28) {slope $= -\lambda$};
+\end{axis}
+\end{tikzpicture}
+
+{\small Geiger counts of a short-lived nuclide: on semi-log axes the
+exponential becomes a straight line; here the slope gives
+$\lambda \approx \qty{9.6e-3}{s^{-1}}$, so $T_{1/2} \approx \qty{72}{s}$.}
+\end{omfigure}
+
+\begin{remark}[Becquerels are not harm]\label{rem:g12:radioactive-decay:dose}
+The becquerel counts decays, not damage. Harm is tracked by the dose in
+sieverts (\cref{ch:g11:nucleus-radioactivity}), weighing the energy
+deposited per kilogram of tissue by each radiation's destructiveness: a
+\qty{5e8}{Bq} technetium scan is routine, far fewer becquerels of inhaled
+$\alpha$ emitter are not; converting \unit{Bq} to \unit{Sv} is
+university material.
+\end{remark}
+
+\section{Dating: reading time off a ratio}
+
+The decay law run backwards is a clock: measure the surviving fraction,
+and the exponential names the elapsed time.
+
+\begin{method}[Radiocarbon dating]\label{met:g12:radioactive-decay:carbon}
+\begin{enumerate}
+  \item \emph{Alive:} living tissue exchanges carbon with the atmosphere
+        and carries its carbon-14 proportion --- one atom in $10^{12}$,
+        giving $\mathcal A_0 = 13.6$ decays per minute per gram of carbon.
+  \item \emph{Death starts the clock:} intake stops, and the proportion
+        decays with $T_{1/2} = \num{5730}$ years.
+  \item Measure the sample's activity $\mathcal A$ per gram of carbon;
+        $\mathcal A = \mathcal A_0 e^{-\lambda t}$ inverts to
+        $t = \frac{1}{\lambda}\ln(\mathcal A_0/\mathcal A)
+        = T_{1/2}\,\ln(\mathcal A_0/\mathcal A)/\ln 2$.
+\end{enumerate}
+\end{method}
+
+\begin{example}[A hearth in a cave]\label{ex:g12:radioactive-decay:hearth}
+Charcoal from a buried hearth gives $5.0$ decays per minute per gram:
+$\mathcal A_0/\mathcal A = 13.6/5.0 = 2.72$, so
+$t = \num{5730} \times \ln(2.72)/\ln 2 \approx \num{8.3e3}$ years. The
+fire went out eight thousand years ago --- the wood itself is the archive.
+\end{example}
+
+\begin{omfigure}
+\begin{tikzpicture}
+\begin{axis}[omaxis, width=8.8cm, height=5.0cm,
+    xlabel={age (thousands of years)}, ylabel={$\mathcal A/\mathcal A_0$},
+    xmin=0, xmax=32, ymin=0, ymax=1.08, xtick={0,10,20,30},
+    ytick={0.25,0.37,0.5,1}, yticklabels={$\tfrac14$,$0.37$,$\tfrac12$,$1$}]
+  \addplot[omDef, thick, domain=0:31, samples=80] {exp(-0.6931*x/5.73)};
+  \addplot[omExo, dashed] coordinates {(0,0.37) (8.3,0.37) (8.3,0)};
+  \fill[omThm] (axis cs:8.3,0.37) circle (1.6pt);
+\end{axis}
+\end{tikzpicture}
+
+{\small The dating curve: enter at the measured ratio, read down to the
+age. The dot is the hearth of \cref{ex:g12:radioactive-decay:hearth}:
+ratio $0.37$, age \num{8.3e3} years.}
+\end{omfigure}
+
+\begin{example}[Clocks for rocks]\label{ex:g12:radioactive-decay:rocks}
+Carbon-14 goes silent beyond some \num{50000} years; geology keeps slower
+clocks. \emph{Potassium--argon}: potassium-40 ($T_{1/2} = \num{1.25e9}$
+years) decays to argon, a gas that escapes molten lava but is trapped once
+rock crystallises --- solidification zeroes the clock. \emph{Uranium--lead}:
+uranium-238 heads a chain of decays ending at stable lead-206
+(\cref{ch:g11:nucleus-radioactivity}), and the lead-to-uranium ratio in a
+crystal dates it. Both clocks agree on the oldest minerals
+($\approx \num{4.4e9}$ years) and, via meteorites, on the Solar System's
+age.
+\end{example}
+
+\begin{remark}[Chains, and the gas in the cellar]\label{rem:g12:radioactive-decay:radon}
+Between uranium and lead the chain passes through radium, then radon-222,
+a radioactive \emph{gas} ($T_{1/2} = 3.8$ days). Born in granite and
+soil, it seeps into basements and accumulates; its $\alpha$-emitting
+daughters decay in the lungs --- most people's largest natural dose, and
+the cheapest to reduce: open the cellar window.
+\end{remark}
+
+\section{Exercises}
+
+\begin{exercise}[$\star$]\label{exo:g12:radioactive-decay:1}
+Iodine-131 has $\lambda = \qty{1.0e-6}{s^{-1}}$. Compute its half-life in
+seconds, then in days.
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:g12:radioactive-decay:2}
+Radon-222 has $T_{1/2} = 3.8$ days. Compute $\lambda$ in \unit{s^{-1}},
+then the activity of a sample of \num{1.0e10} nuclei.
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:g12:radioactive-decay:3}
+Verify by substitution that $N(t) = N_0\,e^{-\lambda t}$ satisfies
+$\dd N/\dd t = -\lambda N$ and $N(0) = N_0$; then compute $N(T_{1/2})/N_0$.
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:g12:radioactive-decay:4}
+A caesium-137 source ($T_{1/2} = 30$ years) has activity \qty{4.0e5}{Bq}
+today. Compute its activity in $90$ years, then in $300$ years.
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:g12:radioactive-decay:5}
+A semi-log plot of $\ln \mathcal A$ against $t$ for a technetium sample is
+a straight line through $(0, 20.00)$ and $(\qty{10}{hours}, 18.85)$. Find
+$\lambda$ (in \unit{h^{-1}} and \unit{s^{-1}}) and $T_{1/2}$.
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:g12:radioactive-decay:6}
+One gram of radium-226 ($T_{1/2} = 1600$ years; molar mass
+\qty{226}{g/mol}; $N_A = \qty{6.02e23}{mol^{-1}}$): compute the number of
+nuclei, then $\lambda$, then the activity --- history's first activity
+unit, the curie.
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:g12:radioactive-decay:7}
+Two students seal samples of $20$ and \num{2.0e20} nuclei of one same
+nuclide. What does each expect after one half-life? Whose prediction is
+reliable? (Estimate the relative fluctuation $1/\sqrt n$ for each.)
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:g12:radioactive-decay:8}
+A body holds about \qty{140}{g} of potassium, of which $0.012\%$ is
+potassium-40 ($T_{1/2} = \num{1.25e9}$ years, molar mass \qty{40}{g/mol}).
+Compute the number of potassium-40 nuclei, then their activity; compare
+with the body's total \qty{8000}{Bq}.
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:g12:radioactive-decay:9}
+A patient receives \qty{500}{MBq} of technetium-99m ($T_{1/2} = 6.0$
+hours). Compute the activity $15$ hours later, then the time for it to
+fall below \qty{1}{MBq}.
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:g12:radioactive-decay:10}
+Charcoal from one pit shows $3.4$ decays per minute per gram of carbon;
+bone from another shows $30\%$ of the living rate ($\mathcal A_0 = 13.6$
+per minute per gram, $T_{1/2} = \num{5730}$ years). Date both samples.
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:g12:radioactive-decay:11}
+A cellar is sealed with a batch of radon-222 inside ($T_{1/2} = 3.8$
+days). After how long has the batch's activity fallen to $1\%$? Real
+cellars stay radioactive for decades: where does fresh radon come from,
+and why must ventilation be permanent rather than one-off?
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:g12:radioactive-decay:12}
+Show from $N = N_0 e^{-\lambda t}$ that $t = T_{1/2}\ln(N_0/N)/\ln 2$. A
+bone retains $5.0\%$ of its living carbon-14: date it.
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:g12:radioactive-decay:13}
+In a crystal that trapped no argon at solidification, each decayed
+potassium-40 nucleus leaves one argon atom in place. Show that
+$N_{\mathrm{Ar}}/N_{\mathrm K} = e^{\lambda t} - 1$; a rock shows a ratio
+of $3.0$: find its age ($T_{1/2} = \num{1.25e9}$ years).
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:g12:radioactive-decay:14}
+A Geiger counter gives, at $t = 0$, $60$, $120$, $180$, $240$ seconds,
+rates of $400$, $225$, $127$, $71$, $40$ counts per second. Compute
+$\ln \mathcal A$ at each time, check alignment, and deduce $\lambda$ and
+$T_{1/2}$.
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:g12:radioactive-decay:15}
+For a single nucleus, the probability of surviving $n$ half-lives is
+$1/2^{\,n}$. Compute the probability that (a) one given nucleus survives
+$10$ half-lives; (b) all of $8$ watched nuclei survive one half-life.
+(c) Of \num{1000} nuclei, how many are expected after $3$ half-lives ---
+and can the law say \emph{which}? Conclude on what the law predicts.
+\end{exercise}
+
+\section{Problem: The age of things}
+
+\begin{problem}[{Weekend problem --- the age of things: a museum lab
+calibrates the carbon clock, dates a statue and a papyrus, learns why no
+clock reads past its dial, and pushes a volcanic rock back a billion years}]
+\label{pb:g12:radioactive-decay:1}
+A week in a museum's dating laboratory. Data: living tissue shows
+$\mathcal A_0 = 13.6$ carbon-14 decays per minute per gram of carbon;
+$T_{1/2} = \num{5730}$ years (carbon-14), \num{1.25e9} years
+(potassium-40); $1$ year $= \qty{3.156e7}{s}$;
+$N_A = \qty{6.02e23}{mol^{-1}}$; molar mass of carbon \qty{12}{g/mol};
+the counters resolve about $0.2$ decays per minute per gram.
+
+\medskip
+\noindent\textbf{Part I --- Monday: calibrating the clock.}
+\begin{enumerate}
+  \item Why is the carbon-14 proportion constant in living tissue, and
+        what changes at death?
+  \item Compute $\lambda$ for carbon-14 in \unit{s^{-1}}.
+  \item Verify by substitution that $N_0 e^{-\lambda t}$ solves
+        $\dd N/\dd t = -\lambda N$.
+  \item From $\mathcal A_0$, compute the number of carbon-14 atoms per
+        gram of carbon in living tissue.
+  \item How many carbon atoms does one gram hold? Deduce the carbon-14
+        proportion --- compare with ``one in $10^{12}$''.
+  \item Show that a measured activity $\mathcal A$ dates a sample as
+        $t = T_{1/2}\,\ln(\mathcal A_0/\mathcal A)/\ln 2$.
+\end{enumerate}
+
+\medskip
+\noindent\textbf{Part II --- Tuesday: the statue and the papyrus.}
+\begin{enumerate}[resume]
+  \item A wooden statue gives $9.1$ decays per minute per gram. Date the
+        wood.
+  \item What event, exactly, does that date mark --- the carving or
+        something else? What caution follows?
+  \item An Egyptian papyrus gives $10.4$ decays per minute per gram. Date
+        it. Is a scribe of twenty-two centuries ago plausible?
+  \item The activity is measured to $\pm 0.2$ decays per minute. Estimate
+        the papyrus's age uncertainty, using
+        $\Delta t \approx \Delta\mathcal A/(\lambda \mathcal A)$.
+  \item A dealer's ``ancient'' parchment gives $13.4$ decays per minute
+        per gram. Verdict?
+\end{enumerate}
+
+\medskip
+\noindent\textbf{Part III --- Thursday: the limits of the clock.}
+\begin{enumerate}[resume]
+  \item After how many half-lives does a sample's activity fall below the
+        counters' $0.2$ decays per minute per gram? What age is that?
+  \item The best laboratories reach about ten half-lives. What is the
+        practical horizon of radiocarbon dating, in years?
+  \item A dinosaur bone is about \num{6.6e7} years old: how many
+        carbon-14 half-lives? Using question 4, after how many half-lives
+        is not even \emph{one} atom of the gram's carbon-14 left?
+        Conclude about ``carbon-dating dinosaurs''.
+  \item What kind of nuclide could date the dinosaur's rock instead?
+\end{enumerate}
+
+\medskip
+\noindent\textbf{Part IV --- Friday: the volcanic rock.}
+\begin{enumerate}[resume]
+  \item Argon is a gas, potassium a solid's faithful resident: explain
+        why the solidification of lava zeroes the potassium--argon clock.
+  \item Assuming each decayed potassium-40 nucleus leaves one trapped
+        argon atom, show that
+        $N_{\mathrm{Ar}}/N_{\mathrm K} = e^{\lambda t} - 1$.
+  \item The rock under the museum's fossil shows
+        $N_{\mathrm{Ar}}/N_{\mathrm K} = 0.60$. Date the rock.
+  \item Could carbon-14 have dated this rock, or potassium--argon the
+        statue? Give each clock's useful window in half-lives.
+  \item Friday report, one sentence: the three ages found this week, and
+        the single law that read them all.
+\end{enumerate}
+\end{problem}

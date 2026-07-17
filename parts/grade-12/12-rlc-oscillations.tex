@@ -1,6 +1,440 @@
 \chapter{Free Electrical Oscillations: RLC}\label{ch:g12:rlc-oscillations}
 
-% TODO: course, examples, figures, and 8--12 graded exercises
-% (see CONTRIBUTING.md). Placeholder until written.
+Turn the heavy dial of an attic radio and the stations file past the
+needle: a voice, violins, static, a voice again. Behind the panel there
+is no motor and no computer --- a coil, a capacitor whose interleaved
+plates the dial rotates, and a length of aerial wire. This chapter
+connects last chapter's two energy tanks (\cref{ch:g12:rc-rl-circuits})
+head to head and finds the fastest pendulum ever built: charge swinging
+back and forth, up to millions of times per second, at a tempo the dial
+chooses.
 
-\emph{This chapter has not been written yet.}
+\section{An electrical pendulum: the LC circuit}
+
+Charge a capacitor $C$ to a voltage $U_0$ --- its plates then hold
+$\pm Q_0$ with $Q_0 = C U_0$ --- and at $t = 0$ switch it onto an
+\emph{ideal} coil $L$, of zero resistance. No source anywhere in the
+loop: whatever happens next, the circuit does on its own.
+
+\begin{omfigure}
+\begin{circuitikz}[font=\small]
+  \draw (0,0) to[C=$C$, v=$u$] (0,2.4) to[nos, l=$K$] (2.6,2.4)
+    -- (3.8,2.4) to[L=$L$, i=$i$] (3.8,0) -- (0,0);
+  \node[right, font=\footnotesize] at (0.18,1.5) {$+q$};
+  \node[right, font=\footnotesize] at (0.18,0.9) {$-q$};
+\end{circuitikz}
+
+{\small The LC circuit: a capacitor charged to $Q_0$, a switch, an
+ideal coil. Closing $K$ lets the charge spill through the coil --- and
+the coil, hating change, will not let it stop.}
+\end{omfigure}
+
+\begin{proposition}[The LC equation]\label{prop:g12:rlc-oscillations:equation}
+\index{LC circuit}
+In the ideal LC loop the charge $q(t)$ of the upper plate obeys
+\[
+L\,\frac{d^2q}{dt^2} + \frac{q}{C} = 0,
+\qquad\text{i.e.}\qquad
+\frac{d^2q}{dt^2} = -\frac{1}{LC}\,q .
+\]
+\end{proposition}
+
+\begin{proof}
+Around the loop the voltages sum to zero
+(\cref{prop:g11:circuits-and-power:laws}): $u_L + u_C = 0$. The
+capacitor gives $u_C = q/C$ and the coil $u_L = L\,di/dt$
+(\cref{def:g12:rc-rl-circuits:inductor}), with $i = dq/dt$ counting
+the charge arriving on the upper plate
+(\cref{prop:g12:rc-rl-circuits:cdudt}); substitute.
+\end{proof}
+
+\begin{theorem}[Free oscillations of the LC circuit]\label{thm:g12:rlc-oscillations:oscillation}
+\index{electrical oscillations}
+Released at $t = 0$ with $q(0) = Q_0$ and $i(0) = 0$, the circuit
+oscillates:
+\[
+q(t) = Q_0 \cos\!\left(\frac{2\pi t}{T_0}\right),
+\qquad
+i(t) = -I_0 \sin\!\left(\frac{2\pi t}{T_0}\right),
+\qquad
+T_0 = 2\pi\sqrt{LC},
+\]
+with peak current $I_0 = 2\pi Q_0/T_0 = Q_0/\sqrt{LC}$.
+\end{theorem}
+
+\begin{proof}
+Verify by substitution. Differentiating,
+$i = dq/dt = -\frac{2\pi}{T_0} Q_0 \sin(2\pi t/T_0)$ --- the stated
+$i(t)$ --- and again $\frac{d^2q}{dt^2} = -(\frac{2\pi}{T_0})^2 q$,
+which equals $-q/(LC)$ exactly when $(2\pi/T_0)^2 = 1/(LC)$, i.e.\
+$T_0 = 2\pi\sqrt{LC}$. And $q(0) = Q_0$, $i(0) = 0$. That no
+\emph{other} function fits the equation and the start is admitted,
+exactly as for the spring
+(\cref{rem:g12:oscillators-and-time:uniqueness}).
+\end{proof}
+
+\begin{definition}[Natural period and frequency]\label{def:g12:rlc-oscillations:period}
+The \emph{natural period}\index{natural period!of an LC circuit} of an
+LC circuit is $T_0 = 2\pi\sqrt{LC}$; its
+\emph{natural frequency}\index{natural frequency!of an LC circuit} is
+\[
+f_0 = \frac{1}{T_0} = \frac{1}{2\pi\sqrt{LC}} .
+\]
+Dimensional check: $\qty{1}{H} = \qty{1}{V.s/A}$ and
+$\qty{1}{F} = \qty{1}{C/V}$, so $LC$ carries
+$\unit{s} \times \unit{C/A} = \unit{s^2}$ --- $\sqrt{LC}$ is a time,
+as it must be.
+\end{definition}
+
+\begin{example}[First numbers]\label{ex:g12:rlc-oscillations:firstnumbers}
+$L = \qty{10}{mH}$ with $C = \qty{1.0}{\micro F}$:
+$\sqrt{LC} = \qty{1.0e-4}{s}$, so $T_0 = \qty{0.63}{ms}$ and
+$f_0 \approx \qty{1.6}{kHz}$ --- an audible tone. $L = \qty{1.0}{mH}$
+with $C = \qty{100}{pF}$: $T_0 = \qty{2.0}{\micro s}$,
+$f_0 \approx \qty{0.50}{MHz}$ --- a radio frequency. Only the
+\emph{product} $LC$ sets the tempo.
+\end{example}
+
+\begin{remark}[A quarter period out of step]\label{rem:g12:rlc-oscillations:quarter}
+The current is a quarter period out of phase with the charge: $i = 0$
+when $q = \pm Q_0$ (plates full, flow reversing) and $i = \pm I_0$
+when $q = 0$ (plates empty, flow at full tilt) --- exactly the
+pendulum, motionless at the extremes and fastest at the bottom.
+\end{remark}
+
+\begin{omfigure}
+\begin{tikzpicture}
+\begin{axis}[omaxis, width=9.2cm, height=5.0cm, xlabel={$t$},
+    xmin=0, xmax=2, ymin=-1.4, ymax=1.75, xtick={0,0.5,1,1.5,2},
+    xticklabels={$0$,$T_0/2$,$T_0$,$3T_0/2$,$2T_0$},
+    ytick={-1,0,1}, legend pos=north east]
+  \addplot[omDef, thick, domain=0:2, samples=200] {cos(360*x)};
+  \addplot[omThm, thick, domain=0:2, samples=200] {-sin(360*x)};
+  \legend{$q/Q_0$, $i/I_0$}
+\end{axis}
+\end{tikzpicture}
+
+{\small Charge and current of the free LC circuit: the current peaks
+each time the charge crosses zero, a quarter period out of step.}
+\end{omfigure}
+
+\section{The energy waltz}
+
+\begin{proposition}[Conservation of the stored energy]\label{prop:g12:rlc-oscillations:energy}
+\index{energy!of an LC circuit}
+In the ideal LC circuit the total stored energy
+(\cref{prop:g12:rc-rl-circuits:energy})
+\[
+E \;=\; E_C + E_L \;=\; \frac{q^2}{2C} + \tfrac12\,L i^2
+\;=\; \frac{Q_0^2}{2C} \;=\; \tfrac12\,L I_0^2
+\]
+is constant: entirely in the capacitor when $q = \pm Q_0$, entirely in
+the coil when $i = \pm I_0$.
+\end{proposition}
+
+\begin{proof}
+Differentiate: $\frac{dE}{dt} = \frac{q}{C}\frac{dq}{dt} +
+Li\frac{di}{dt} = i\left(\frac{q}{C} + L\frac{d^2q}{dt^2}\right) = 0$
+by \cref{prop:g12:rlc-oscillations:equation}. Its value is read at
+$t = 0$ (all capacitor), and again at the all-current instant
+$q = 0$ --- whence $\tfrac12 L I_0^2 = Q_0^2/2C$, recovering
+$I_0 = Q_0/\sqrt{LC}$ by energy alone.
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}
+\begin{axis}[omaxis, width=8.6cm, height=4.6cm, xlabel={$t/T_0$},
+    ylabel={energy $/\,E$}, xmin=0, xmax=1, ymin=0, ymax=1.3,
+    legend pos=south east]
+  \addplot[omDef, thick, domain=0:1, samples=120] {cos(360*x)^2};
+  \addplot[omProp, thick, domain=0:1, samples=120] {sin(360*x)^2};
+  \addplot[omThm, dashed, thick, domain=0:1, samples=2] {1};
+  \legend{$E_C$, $E_L$, $E$}
+\end{axis}
+\end{tikzpicture}
+
+{\small One period of the waltz: energy sloshes from plates to coil
+and back twice per period, the sum pinned at $Q_0^2/2C$ --- the very
+figure of the spring--mass oscillator, relabeled.}
+\end{omfigure}
+
+\begin{example}[The waltz, measured]\label{ex:g12:rlc-oscillations:waltz}
+$C = \qty{1.0}{\micro F}$ charged to $U_0 = \qty{10}{V}$, switched onto
+$L = \qty{10}{mH}$: energy $E = \tfrac12 C U_0^2 = \qty{5.0e-5}{J}$,
+period $T_0 = \qty{0.63}{ms}$, and a peak current
+$I_0 = U_0\sqrt{C/L} = \qty{0.10}{A}$ reached a quarter period
+(\qty{0.16}{ms}) after the switch closes.
+\end{example}
+
+\section{Real circuits: damped oscillations}
+
+Every real coil is wound from resistive wire: the honest loop is a
+series \emph{RLC} circuit, and the resistance taxes the waltz.
+
+\begin{definition}[Pseudo-periodic and aperiodic regimes]\label{def:g12:rlc-oscillations:regimes}
+\index{RLC circuit}\index{pseudo-periodic regime}\index{aperiodic regime}
+In a series RLC circuit the resistor dissipates energy by Joule
+heating (\cref{ch:g11:circuits-and-power}): the free oscillations are
+\emph{damped}. Two regimes, read off an oscilloscope:
+\begin{itemize}
+  \item \emph{pseudo-periodic} (small $R$): the circuit still
+        oscillates inside a shrinking envelope, with a repeat time ---
+        the \emph{pseudo-period}\index{pseudo-period!electrical} ---
+        close to $T_0 = 2\pi\sqrt{LC}$ when the damping is light;
+  \item \emph{aperiodic} (large $R$): the charge creeps back to zero
+        without ever overshooting --- no oscillation at all.
+\end{itemize}
+The exact mirror of the damped mechanical oscillator
+(\cref{def:g12:oscillators-and-time:damping}).
+\end{definition}
+
+\begin{omfigure}
+\begin{tikzpicture}
+\begin{axis}[omaxis, width=9.2cm, height=5.2cm,
+    xlabel={$t$ (\unit{\micro s})}, ylabel={$u$ (\unit{V})},
+    xmin=0, xmax=10, ymin=-6.6, ymax=8.2, legend pos=north east]
+  \addplot[omDef, thick, domain=0:10, samples=300]
+    {6*exp(-x/3)*cos(deg(2*pi*x/1.6))};
+  \addplot[omProp, thick, domain=0:10, samples=100] {6*exp(-x/1.2)};
+  \legend{pseudo-periodic (small $R$), aperiodic (large $R$)}
+  \addplot[omThm, dashed, domain=0:10, samples=80, forget plot]
+    {6*exp(-x/3)};
+  \addplot[omThm, dashed, domain=0:10, samples=80, forget plot]
+    {-6*exp(-x/3)};
+\end{axis}
+\end{tikzpicture}
+
+{\small The two fates of a real RLC circuit: oscillations dying inside
+an exponential envelope (dashed), or a creep to zero with no
+oscillation. Lightly damped, the pseudo-period stays $\approx T_0$.}
+\end{omfigure}
+
+\begin{remark}[Maintaining oscillations]\label{rem:g12:rlc-oscillations:maintain}
+\index{maintained oscillations}
+To keep the amplitude alive, feed the circuit exactly the energy the
+resistance burns, once per cycle and \emph{in step} with the swing: an
+amplifier does for the RLC loop what the escapement's push does for
+the pendulum (\cref{ch:g12:oscillators-and-time}). Every quartz watch
+and every radio transmitter is such a maintained oscillator, running
+at its natural frequency $f_0$.
+\end{remark}
+
+\section{The mechanical twin}
+
+\begin{proposition}[The electrical--mechanical dictionary]\label{prop:g12:rlc-oscillations:analogy}
+\index{electrical--mechanical analogy}
+The LC equation is the spring--mass equation
+(\cref{prop:g12:oscillators-and-time:spring-period}) word for word:
+\begin{center}\small
+\begin{tabular}{lcl}
+LC circuit & & spring--mass glider\\[2pt]
+charge $q$ & $\longleftrightarrow$ & position $x$\\
+current $i = dq/dt$ & $\longleftrightarrow$ & velocity $v = dx/dt$\\
+inductance $L$ & $\longleftrightarrow$ & mass $m$\\
+inverse capacitance $1/C$ & $\longleftrightarrow$ & stiffness $k$\\
+resistance $R$ & $\longleftrightarrow$ & friction\\
+$L\,\frac{d^2q}{dt^2} + \frac{q}{C} = 0$ & $\longleftrightarrow$ &
+  $m\,\frac{d^2x}{dt^2} + kx = 0$\\[2pt]
+$T_0 = 2\pi\sqrt{LC}$ & $\longleftrightarrow$ &
+  $T_0 = 2\pi\sqrt{m/k}$\\[2pt]
+$E_C = q^2/2C$ & $\longleftrightarrow$ & $E_p = \tfrac12 kx^2$\\
+$E_L = \tfrac12 Li^2$ & $\longleftrightarrow$ & $E_k = \tfrac12 mv^2$
+\end{tabular}
+\end{center}
+Same equation, same solutions: every result about either oscillator
+translates instantly into the other language.
+\end{proposition}
+
+\begin{proof}
+Compare \cref{prop:g12:rlc-oscillations:equation} with
+$m\,d^2x/dt^2 = -kx$: substituting $q \to x$, $L \to m$, $1/C \to k$
+turns one into the other, and $LC \to m/k$ turns
+$2\pi\sqrt{LC}$ into $2\pi\sqrt{m/k}$.
+\end{proof}
+
+\begin{example}[Tuning a radio]\label{ex:g12:rlc-oscillations:tuning}
+An aerial feeds a whisper of \emph{every} station into an LC loop, but
+only the one broadcasting near $f_0$ pushes in step and builds up ---
+resonance (\cref{def:g12:oscillators-and-time:resonance}). The dial
+rotates the plates of a variable capacitor: changing $C$ moves
+$f_0 = 1/(2\pi\sqrt{LC})$, and the needle hands the earphone one
+station at a time. On the transmitting side, a maintained oscillator
+(\cref{rem:g12:rlc-oscillations:maintain}) sets the broadcast
+frequency; in a watch, a quartz crystal --- a mechanical twin of
+breathtaking stiffness --- plays the same role.
+\end{example}
+
+\section{Exercises}
+
+\begin{exercise}[$\star$]\label{exo:g12:rlc-oscillations:1}
+Compute $T_0$ and $f_0$ for (a) $L = \qty{10}{mH}$,
+$C = \qty{1.0}{\micro F}$; (b) $L = \qty{1.0}{mH}$,
+$C = \qty{100}{pF}$. By what factor do the frequencies differ?
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:g12:rlc-oscillations:2}
+Using $\qty{1}{H} = \qty{1}{V.s/A}$ and $\qty{1}{F} = \qty{1}{C/V}$,
+show unit by unit that $\sqrt{LC}$ is a time. Why does the $2\pi$
+change nothing?
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:g12:rlc-oscillations:3}
+A \qty{470}{nF} capacitor is charged to \qty{6.0}{V}. Compute $Q_0$
+and the stored energy; describe, without computation, what follows
+when it is switched onto an ideal coil.
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:g12:rlc-oscillations:4}
+An LC circuit follows $q(t) = 2.0\cos(2\pi t/T_0)$ in microcoulombs,
+with $T_0 = \qty{4.0}{ms}$. Read off $Q_0$; compute $f_0$, $q(T_0/2)$,
+$i(0)$, and the peak current $I_0 = 2\pi Q_0/T_0$.
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:g12:rlc-oscillations:5}
+At which instants of the cycle is the energy entirely in the
+capacitor? Entirely in the coil? What is the mechanical counterpart of
+each moment for a pendulum?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:g12:rlc-oscillations:6}
+Verify by substitution that $q(t) = Q_0\cos(2\pi t/T_0)$ satisfies
+$L\,d^2q/dt^2 + q/C = 0$ exactly when $T_0 = 2\pi\sqrt{LC}$.
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:g12:rlc-oscillations:7}
+A long-wave station broadcasts at \qty{198}{kHz}. With
+$C = \qty{220}{pF}$, what inductance tunes to it?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:g12:rlc-oscillations:8}
+$C = \qty{1.0}{\micro F}$ charged to \qty{10}{V} discharges into
+$L = \qty{10}{mH}$. Compute the stored energy, the peak current (by
+energy conservation), and the instant it is first reached.
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:g12:rlc-oscillations:9}
+Explain why $E_C$ and $E_L$ oscillate at frequency $2f_0$, not $f_0$.
+Show that at $t = T_0/8$ (started from $q = Q_0$) the energy is split
+exactly in half.
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:g12:rlc-oscillations:10}
+On an oscillogram of a lightly damped RLC circuit, successive maxima
+read \qty{4.0}{V} then \qty{3.0}{V}. Assuming the ratio stays
+constant, predict the sixth maximum after the \qty{4.0}{V} one. What
+fraction of the \emph{energy} survives each pseudo-period? What can
+you say of the pseudo-period itself?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:g12:rlc-oscillations:11}
+An LC circuit has $L = \qty{0.50}{H}$ and $C = \qty{20}{\micro F}$.
+Compute $T_0$; then, using the dictionary
+(\cref{prop:g12:rlc-oscillations:analogy}), find the stiffness $k$
+giving a \qty{0.50}{kg} glider the same period, and check it.
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:g12:rlc-oscillations:12}
+A tuner uses $L = \qty{0.20}{mH}$ and a variable capacitor sweeping
+\qtyrange{50}{500}{pF}. Compute the two extreme frequencies. Show that
+$f_0 \propto 1/\sqrt{C}$, so tenfold in $C$ gives only
+$\sqrt{10} \approx 3.2$ in frequency.
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:g12:rlc-oscillations:13}
+A real coil makes the circuit lose $5.0\%$ of its energy each
+pseudo-period. After how many periods has the energy halved? What is
+the amplitude then, as a fraction of the start? At
+$f_0 = \qty{1.0}{MHz}$, how long is that in microseconds?
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:g12:rlc-oscillations:14}
+A watch oscillator stores $E = \qty{1.0e-9}{J}$ and loses $2.0\%$ of
+it per cycle at $f_0 = \qty{32768}{Hz}$. What average power must the
+maintaining circuit supply? Why does the push have to arrive in step
+with the oscillation?
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:g12:rlc-oscillations:15}
+After each edge of a square signal, an experimenter's wiring ``rings''
+at \qty{25}{MHz}; the stray inductance is about \qty{1.0}{\micro H}.
+Estimate the stray capacitance responsible. Which regime should a
+small added series resistor push the circuit into, and why does that
+cure the ringing?
+\end{exercise}
+
+\section{Problem: Building a crystal radio}
+
+\begin{problem}[{Weekend problem --- building a crystal radio: one
+coil, one variable capacitor, a diode and an earphone --- no battery,
+no amplifier, and the evening news arrives on the energy of the wave
+itself}]
+\label{pb:g12:rlc-oscillations:1}
+A kit from a grandparent's attic: a coil $L = \qty{0.20}{mH}$ wound on
+a cardboard tube, a variable capacitor whose plates rotate from
+\qty{20}{pF} to \qty{480}{pF}, a crystal diode, an earphone, and
+\qty{20}{m} of aerial wire. The stations to catch broadcast between
+\qty{530}{kHz} and \qty{1700}{kHz}.
+
+\medskip
+\noindent\textbf{Part I --- The tuning loop.}
+\begin{enumerate}
+  \item The capacitor, charged, is left to discharge into the coil:
+        write the loop law and turn it into the differential equation
+        for $q(t)$.
+  \item Verify by substitution that $q(t) = Q_0\cos(2\pi t/T_0)$
+        solves it, provided $T_0 = 2\pi\sqrt{LC}$.
+  \item Check by dimensional analysis that $\sqrt{LC}$ is a time.
+  \item Dial set to $C = \qty{330}{pF}$: compute $T_0$ and $f_0$. Is
+        the loop tuned inside the band?
+  \item Find the capacitance that tunes to exactly \qty{1.00}{MHz}.
+\end{enumerate}
+
+\medskip
+\noindent\textbf{Part II --- The variable capacitor.}
+\begin{enumerate}[resume]
+  \item Compute the capacitance needed for \qty{530}{kHz}.
+  \item Compute the capacitance needed for \qty{1700}{kHz}.
+  \item Compute the two frequencies the kit's \qtyrange{20}{480}{pF}
+        capacitor actually reaches. Does it cover the whole band?
+  \item Show that $f_0 \propto 1/\sqrt{C}$ at fixed $L$; by what
+        factor must $C$ change to double $f_0$?
+  \item The plates open linearly, so $C$ falls steadily as the dial
+        turns. Explain why the stations then crowd together at one end
+        of the dial --- and which end.
+\end{enumerate}
+
+\medskip
+\noindent\textbf{Part III --- Energy and damping.}
+Tuned to \qty{1.00}{MHz} ($C = \qty{127}{pF}$), the aerial momentarily
+charges the capacitor to $U_0 = \qty{20}{mV}$.
+\begin{enumerate}[resume]
+  \item Compute the charge $Q_0$ and the stored energy $E$.
+  \item Compute the peak current $I_0$, using energy conservation.
+  \item The coil's resistance dissipates $4.0\%$ of the stored energy
+        per cycle: after how many cycles has the energy halved?
+  \item How long is that in microseconds? Why can this ``ringing''
+        alone not play the evening news?
+  \item Explain why the arriving wave keeps the loop swinging only
+        when tuned to that station --- and what maintains the
+        oscillation at the \emph{transmitter}
+        (\cref{rem:g12:rlc-oscillations:maintain}).
+\end{enumerate}
+
+\medskip
+\noindent\textbf{Part IV --- The mechanical twin.}
+\begin{enumerate}[resume]
+  \item Using the dictionary (\cref{prop:g12:rlc-oscillations:analogy})
+        with a glider of mass $m = \qty{0.20}{kg}$, compute the
+        stiffness $k$ of the spring matching the tuned circuit.
+  \item A stiff car spring has $k \approx \qty{5e4}{N/m}$. Comment:
+        can a bench-top spring--mass system oscillate at megahertz?
+  \item Keep a reasonable $k = \qty{100}{N/m}$ instead: what mass
+        oscillates at \qty{1.00}{MHz}?
+  \item What real object is such a featherweight, ultra-stiff
+        mechanical oscillator, and where did you meet it earlier this
+        year (\cref{ch:g12:oscillators-and-time})?
+  \item Spec sheet, one sentence: the band your radio sweeps, the
+        capacitance that picks \qty{1.00}{MHz}, how long a lone ring
+        lasts, and what plays the news anyway.
+\end{enumerate}
+\end{problem}
