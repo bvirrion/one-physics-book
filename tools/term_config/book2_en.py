@@ -35,6 +35,11 @@ STOP = {
     # harvested from the reference-frame definition; its derived form catches
     # the ordinary verb ("everything rests on the law").
     "rest",
+    # retina rods (g11 lenses); pendulum rods and control rods elsewhere.
+    "rod",
+    # oscilloscope gain (g10 signals); the verb "gains" is everywhere in
+    # clock-drift prose.
+    "gain",
 }
 
 NO_CAPITAL = {
