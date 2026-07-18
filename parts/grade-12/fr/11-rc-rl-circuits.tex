@@ -1,0 +1,507 @@
+\chapter{Circuits RC et RL}\label{ch:g12:rc-rl-circuits}
+
+Appuyez à mi-course sur le déclencheur d'un appareil photo~: un
+sifflement \omterm{def:g11:lenses-and-eye:lens}{fin} monte pendant deux secondes, une lumière passe au
+vert --- seulement alors le flash se déclenchera, déversant en une
+milliseconde ce qu'il a passé deux secondes à rassembler. Ce chapitre
+rencontre les deux composants qui donnent aux circuits une mémoire et
+une horloge --- \omterm{def:g12:rc-rl-circuits:capacitor}{condensateur} et \omterm{def:g11:magnetic-fields:solenoid}{bobine} --- et les
+premières équations différentielles de la physique, vérifiables avec
+les dérivées de cette année.
+
+\section{Le condensateur}
+
+\begin{definition}[Condensateur et capacité]\label{def:g12:rc-rl-circuits:capacitor}
+Un \emph{condensateur}\index{condensateur} est une paire de plaques
+métalliques en regard séparées par un isolant \omterm{def:g11:lenses-and-eye:lens}{mince}. Branchées
+à une source, les plaques prennent des charges opposées $+q$ et $-q$
+--- un \omterm{def:g11:electric-gravitational-fields:efield}{champ électrique} remplit l'intervalle
+(\cref{ch:g11:electric-gravitational-fields}) --- et la
+\omterm{def:g11:circuits-and-power:voltage}{tension} $u$ entre les plaques est proportionnelle à
+la charge stockée~:
+\[ q = C\,u . \]
+La constante $C$ est la \emph{capacité}\index{capacité}, en
+\emph{farads}\index{farad} (\unit{F})~: $\qty{1}{F} = \qty{1}{C/V}$.
+\end{definition}
+
+\begin{example}[Ordres de grandeur]\label{ex:g12:rc-rl-circuits:orders}
+Un \omterm{def:g12:rc-rl-circuits:capacitor}{farad} est énorme --- un
+\omterm{def:g11:fundamental-interactions:charge}{coulomb} garé par \omterm{def:g11:circuits-and-power:voltage}{volt}. Céramiques des
+circuits radio~: \unit{pF} à \unit{nF}~; électrolytiques des
+alimentations de \omterm{def:g11:work-of-force:power}{puissance} et des flashs~:
+\unit{\micro F} à \unit{mF}~; supercondensateurs~: des milliers de
+\omterm{def:g12:rc-rl-circuits:capacitor}{farads}.
+\end{example}
+
+\begin{proposition}[Courant entrant dans un condensateur]\label{prop:g12:rc-rl-circuits:cdudt}
+Le courant qui arrive sur une plaque d'un
+\omterm{def:g12:rc-rl-circuits:capacitor}{condensateur} est le taux auquel sa charge croît~:
+\[
+i = \frac{dq}{dt} = C\,\frac{du}{dt} ,
+\]
+les minuscules marquant les grandeurs variables dans le temps
+($U$, $I$ restent stationnaires, \cref{ch:g11:circuits-and-power}).
+\end{proposition}
+
+\begin{proof}
+Le courant est la charge livrée par seconde
+(\cref{def:g11:circuits-and-power:current})~: sur un intervalle qui se
+rétrécit, $i$ est la dérivée de $q$~; et $q = Cu$ avec $C$ constant
+donne $C\,du/dt$.
+\end{proof}
+
+\begin{remark}[Deux conséquences]\label{rem:g12:rc-rl-circuits:continuity}
+Si $u$ est constant, $i = 0$~: un \omterm{def:g12:rc-rl-circuits:capacitor}{condensateur} chargé ne
+laisse passer aucun courant permanent. Et $u$ ne peut jamais sauter
+--- un échelon exigerait un courant infini~: la
+\omterm{def:g11:circuits-and-power:voltage}{tension} du \omterm{def:g12:rc-rl-circuits:capacitor}{condensateur} est la mémoire
+du circuit.
+\end{remark}
+
+\section{Charger un condensateur~: le circuit RC}
+
+Une seule boucle --- source $\mathcal{E}$
+(\cref{def:g11:circuits-and-power:emf}), interrupteur, résistor,
+\omterm{def:g12:rc-rl-circuits:capacitor}{condensateur} vide~: fermer $K$ à $t = 0$.
+
+\begin{omfigure}
+\begin{circuitikz}[font=\small]
+  \draw (0,0) to[battery1, l=$\mathcal{E}$] (0,2.4) to[nos, l=$K$] (2.1,2.4)
+    to[R=$R$, i=$i$] (4.2,2.4) -- (5.4,2.4) to[C=$C$, v=$u$] (5.4,0) -- (0,0);
+\end{circuitikz}
+
+{\small Le circuit de charge RC~: fermer $K$ laisse la source pousser
+de la charge à travers $R$ sur les plaques de $C$.}
+\end{omfigure}
+
+\begin{theorem}[Loi de charge du circuit RC]\label{thm:g12:rc-rl-circuits:charging}
+\index{circuit RC}
+Après la fermeture de l'interrupteur, la \omterm{def:g11:circuits-and-power:voltage}{tension} du
+\omterm{def:g12:rc-rl-circuits:capacitor}{condensateur} obéit, puis suit de $u(0) = 0$~:
+\[
+RC\,\frac{du}{dt} + u = \mathcal{E},
+\qquad
+u(t) = \mathcal{E}\left(1 - e^{-t/\tau}\right),
+\qquad \tau = RC .
+\]
+\end{theorem}
+
+\begin{proof}
+Les \omterm{def:g11:circuits-and-power:voltage}{tensions} le long de la boucle s'ajoutent
+(\cref{prop:g11:circuits-and-power:laws})~: $\mathcal{E} = u_R + u = Ri + u$
+à chaque instant~; substituer $i = C\,du/dt$
+(\cref{prop:g12:rc-rl-circuits:cdudt}). Maintenant \emph{vérifier} la
+candidate~: $du/dt = (\mathcal{E}/\tau)e^{-t/\tau}$, donc
+$RC\,(\mathcal{E}/RC)\,e^{-t/\tau} + \mathcal{E}(1 - e^{-t/\tau}) =
+\mathcal{E}$, vrai pour tout $t$~; et $u(0) = \mathcal{E}(1-1) = 0$.
+Qu'aucune \emph{autre} courbe ne s'accorde à l'équation et au départ
+est prouvé dans le cours de mathématiques de cette année sur les
+équations différentielles.
+\end{proof}
+
+\begin{definition}[Constante de temps]\label{def:g12:rc-rl-circuits:tau}
+La \emph{constante de temps}\index{constante de temps} d'un
+\omterm{thm:g12:rc-rl-circuits:charging}{circuit RC} est $\tau = RC$.
+\omterm{def:g10:orders-of-magnitude:unit}{Unités}~: $\unit{\ohm} \times \unit{F} =
+(\unit{V/A})(\unit{C/V}) = \unit{C/A} = \unit{s}$ --- le propre
+tempo du circuit.
+\end{definition}
+
+\begin{method}[Lire $\tau$ sur la courbe]\label{met:g12:rc-rl-circuits:reading}
+Trois lectures équivalentes, directement sur un graphe~:
+\begin{enumerate}
+  \item \emph{tangente à l'origine~:} $u'(0) = \mathcal{E}/\tau$, donc
+        la tangente initiale atteint l'asymptote en $t = \tau$~;
+  \item \emph{63\%~:} $u(\tau) = \mathcal{E}(1 - e^{-1}) \approx
+        0.63\,\mathcal{E}$~;
+  \item \emph{95\%~:} $u(3\tau) \approx 0.95\,\mathcal{E}$ --- chargé,
+        pour les besoins pratiques ($5\tau$~: $99\%$).
+\end{enumerate}
+\end{method}
+
+\begin{proposition}[Décharge]\label{prop:g12:rc-rl-circuits:discharge}
+Un \omterm{def:g12:rc-rl-circuits:capacitor}{condensateur} chargé à $U_0$ et fermé sur un résistor
+$R$ seul obéit à $RC\,du/dt + u = 0$ et suit
+\[
+u(t) = U_0\,e^{-t/\tau}, \qquad \tau = RC
+\]
+--- $37\%$ restants à $\tau$, $5\%$ à $3\tau$.
+\end{proposition}
+
+\begin{proof}
+Même loi de maille, sans source~; substitution encore~:
+$RC(-U_0/\tau)e^{-t/\tau} + U_0 e^{-t/\tau} = 0$, avec $u(0) = U_0$.
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}
+\begin{axis}[omaxis, width=9.2cm, height=5.4cm, xlabel={$t$}, ylabel={$u$},
+    xmin=0, xmax=5, ymin=0, ymax=7.4, xtick={0,1,2,3,4,5},
+    xticklabels={$0$,$\tau$,$2\tau$,$3\tau$,$4\tau$,$5\tau$},
+    ytick={0,2.21,3.79,6.0},
+    yticklabels={$0$,$0.37\,\mathcal{E}$,$0.63\,\mathcal{E}$,$\mathcal{E}$}]
+  \addplot[omExo, dashed, domain=0:5, samples=2] {6};
+  \addplot[omExo, dashed, domain=0:1.18, samples=2] {6*x};
+  \addplot[omExo, dashed, domain=0:1.1, samples=2] {6-6*x};
+  \addplot[omDef, thick, domain=0:5, samples=80] {6*(1-exp(-x))};
+  \addplot[omThm, thick, domain=0:5, samples=80] {6*exp(-x)};
+  \draw[dashed, omExo] (1,0) -- (1,3.79) -- (0,3.79);
+  \draw[dashed, omExo] (3,0) -- (3,5.70);
+\end{axis}
+\end{tikzpicture}
+
+{\small Charge (bleu, de $u = 0$ vers $\mathcal{E}$) et décharge
+(rouge, depuis $U_0 = \mathcal{E}$). Les deux tangentes initiales
+rencontrent leur asymptote en $t = \tau$~; $63\%$ faits à $\tau$,
+$95\%$ à $3\tau$.}
+\end{omfigure}
+
+\begin{example}[Les nombres d'un flash photo]\label{ex:g12:rc-rl-circuits:flashrc}
+Un flash photo charge $C = \qty{800}{\micro F}$ à travers
+$R = \qty{1.0}{k\ohm}$~: $\tau = 10^3 \times 8.0\times10^{-4} =
+\qty{0.80}{s}$, donc le voyant «~prêt~» --- câblé pour se déclencher
+à $95\%$ --- attend $3\tau \approx \qty{2.4}{s}$~: le sifflement de
+l'accroche. Déclenché à travers les maigres \qty{0.50}{\ohm} du tube
+éclair, le \emph{même} \omterm{def:g12:rc-rl-circuits:capacitor}{condensateur} se vide avec
+$\tau' = \qty{0.40}{ms}$~: deux mille fois plus vite en sortie qu'en
+entrée.
+\end{example}
+
+\section{La bobine~: inductance et circuit RL}
+
+\begin{definition}[Bobine et inductance]\label{def:g12:rc-rl-circuits:inductor}
+Une \emph{bobine}\index{bobine}\index{inductance (composant)} est un
+\omterm{def:g11:magnetic-fields:solenoid}{solénoïde} de fil~: son courant enfile ses propres spires
+d'un \omterm{def:g11:magnetic-fields:bfield}{champ magnétique}
+(\cref{ch:g11:magnetic-fields})~; dès qu'il \emph{change}, une
+\omterm{def:g11:circuits-and-power:voltage}{tension} apparaît aux bornes de la
+\omterm{def:g11:magnetic-fields:solenoid}{bobine}~:
+\[
+u = L\,\frac{di}{dt} .
+\]
+La constante $L$ est l'\emph{inductance}\index{inductance}, en
+\emph{henrys}\index{henry} (\unit{H})~: $\qty{1}{H} = \qty{1}{V.s/A}$.
+\end{definition}
+\admitted
+
+\begin{remark}[La bobine résiste au changement]\label{rem:g12:rc-rl-circuits:oppose}
+Pourquoi un courant variable produit une \omterm{def:g11:circuits-and-power:voltage}{tension} ---
+l'induction --- se dérive dans les volumes universitaires~; ici on
+prend la loi et son caractère~: la \omterm{def:g11:magnetic-fields:solenoid}{bobine}
+\emph{s'oppose aux changements} de son courant. Jumeaux miroir~: la
+$u$ d'un \omterm{def:g12:rc-rl-circuits:capacitor}{condensateur} ne peut pas sauter, le $i$ d'une
+\omterm{def:g11:magnetic-fields:solenoid}{bobine} non plus.
+\end{remark}
+
+\begin{omfigure}
+\begin{circuitikz}[font=\small]
+  \draw (0,0) to[battery1, l=$\mathcal{E}$] (0,2.4) to[nos, l=$K$] (2.1,2.4)
+    to[R=$R$] (4.2,2.4) -- (5.4,2.4) to[L=$L$, i=$i$, v=$u$] (5.4,0) -- (0,0);
+\end{circuitikz}
+
+{\small Le \omterm{prop:g12:rc-rl-circuits:rl}{circuit RL}~: après la fermeture de $K$, la
+\omterm{def:g11:magnetic-fields:solenoid}{bobine} ne laisse le courant grimper qu'à son propre rythme
+$\tau = L/R$.}
+\end{omfigure}
+
+\begin{proposition}[Montée du courant dans un circuit RL]\label{prop:g12:rc-rl-circuits:rl}
+\index{circuit RL}
+Fermer l'interrupteur sur une source $\mathcal{E}$, un résistor $R$
+et une \omterm{def:g11:magnetic-fields:solenoid}{bobine} $L$ en série donne $\mathcal{E} = Ri +
+L\,di/dt$, c'est-à-dire
+\[
+\frac{L}{R}\,\frac{di}{dt} + i = \frac{\mathcal{E}}{R},
+\qquad\text{résolu par}\quad
+i(t) = \frac{\mathcal{E}}{R}\left(1 - e^{-t/\tau}\right),
+\quad \tau = \frac{L}{R} .
+\]
+\end{proposition}
+
+\begin{proof}
+La loi de maille encore~; et c'est la \emph{même équation} qu'au
+\cref{thm:g12:rc-rl-circuits:charging} avec $u \to i$,
+$\mathcal{E} \to \mathcal{E}/R$, $RC \to L/R$ --- la même
+substitution vérifie la solution, et chaque lecture de la
+\cref{met:g12:rc-rl-circuits:reading} se transfère.
+\end{proof}
+
+\begin{example}[Un électroaimant se réveille]\label{ex:g12:rc-rl-circuits:rl}
+Une \omterm{def:g11:magnetic-fields:solenoid}{bobine} de relais, $L = \qty{0.30}{H}$ et
+$R = \qty{6.0}{\ohm}$, sur une alimentation de \qty{12}{V}~: courant
+final $\mathcal{E}/R = \qty{2.0}{A}$, au rythme
+$\tau = 0.30/6.0 = \qty{50}{ms}$ --- éveillé en $3\tau \approx
+\qty{0.15}{s}$.
+\end{example}
+
+\begin{remark}[L'étincelle à l'ouverture]\label{rem:g12:rc-rl-circuits:spark}
+Ouvrir un interrupteur sur une \omterm{def:g11:magnetic-fields:solenoid}{bobine} sous tension et $i$
+doit s'écraser à zéro en une fraction de milliseconde~: $di/dt$ est
+énorme et $u = L\,di/dt$ atteint des centaines ou des milliers de
+\omterm{def:g11:circuits-and-power:voltage}{volts} --- une étincelle saute le contact. La
+\omterm{def:g11:magnetic-fields:solenoid}{bobine} d'allumage d'une voiture le fait exprès, des
+milliers de fois par minute.
+\end{remark}
+
+\section{Énergie stockée}
+
+\begin{proposition}[Énergie dans un condensateur, énergie dans une bobine]\label{prop:g12:rc-rl-circuits:energy}
+\index{énergie!d'un condensateur}\index{énergie!d'une bobine}
+Un \omterm{def:g12:rc-rl-circuits:capacitor}{condensateur} $C$ chargé à la
+\omterm{def:g11:circuits-and-power:voltage}{tension} $u$ et une \omterm{def:g11:magnetic-fields:solenoid}{bobine} $L$
+parcourue par un courant $i$ stockent
+\[
+E_C = \tfrac12\,C u^2 = \frac{q^2}{2C},
+\qquad
+E_L = \tfrac12\,L i^2 .
+\]
+\end{proposition}
+
+\begin{proof}
+Déposer une petite charge $dq$ sur des plaques déjà à la
+\omterm{def:g11:circuits-and-power:voltage}{tension} $u$ coûte $u\,dq$
+(\cref{def:g11:circuits-and-power:voltage})~; en empilant les coûts, le
+total est l'aire sous la droite $u = q/C$ --- le triangle ci-dessous
+--- donc $E_C = \tfrac12 qu = \tfrac12 Cu^2$. Le même triangle pour
+la \omterm{def:g11:magnetic-fields:solenoid}{bobine} (élever $i$ de $di$ coûte $Li\,di$) donne
+$E_L = \tfrac12 Li^2$.
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}[font=\small, x=1.35cm, y=1.05cm]
+  \fill[omDef!25] (0,0) -- (4,0) -- (4,2.6) -- cycle;
+  \fill[omDef!60] (2.4,0) rectangle (2.7,1.658);
+  \draw[omDef, thick] (0,0) -- (4,2.6);
+  \draw[-Stealth] (0,0) -- (4.8,0) node[right] {$q$};
+  \draw[-Stealth] (0,0) -- (0,3.1) node[above] {$u = q/C$};
+  \draw[dashed] (4,0) -- (4,2.6) -- (0,2.6);
+  \node[below] at (4,0) {$q_0$}; \node[left] at (0,2.6) {$u_0$};
+  \node[below, font=\footnotesize] at (2.55,0) {$dq$};
+  \node[omDef!50!black, font=\footnotesize] at (2.9,0.85)
+    {$E_C$};
+\end{tikzpicture}
+
+{\small Chaque tranche $dq$ coûte $u\,dq$~; la charge entière coûte
+l'aire du triangle $E_C = \tfrac12 q_0 u_0$ --- les premiers
+\omterm{def:g11:fundamental-interactions:charge}{coulombs} montent à basse
+\omterm{def:g11:circuits-and-power:voltage}{tension}.}
+\end{omfigure}
+
+\begin{example}[Ordres de grandeur d'énergie]\label{ex:g12:rc-rl-circuits:energies}
+Le \omterm{def:g12:rc-rl-circuits:capacitor}{condensateur} de flash de
+l'\cref{ex:g12:rc-rl-circuits:flashrc}~:
+$\tfrac12 \times 8.0\times10^{-4} \times 300^2 = \qty{36}{J}$. Un
+supercondensateur de \qty{3000}{F} à \qty{2.7}{V}~: \qty{1.1e4}{J} ---
+l'équivalent d'une pile AA. Une \omterm{def:g11:magnetic-fields:solenoid}{bobine} de \qty{10}{mH} à
+\qty{10}{A}~: \qty{0.50}{J}. Moins que ce que tiennent les piles ---
+mais libérable en une milliseconde.
+\end{example}
+
+\begin{remark}[À quoi servent les deux garde-temps]\label{rem:g12:rc-rl-circuits:applications}
+\index{lissage}\index{circuit de temporisation}
+L'entrée lente, la sortie rapide \omterm{def:g11:work-of-force:power}{alimente} le flash photo et le
+défibrillateur. Le \omterm{def:g12:mechanical-waves:delay}{délai} $\tau = RC$ fait tourner les
+\omterm{rem:g12:rc-rl-circuits:applications}{circuits de temporisation}~: essuie-glaces
+intermittents, balises clignotantes, lumières de cage d'escalier. Un
+\omterm{def:g12:rc-rl-circuits:capacitor}{condensateur} aux bornes d'une alimentation
+\emph{lisse} la \omterm{def:g11:circuits-and-power:voltage}{tension} ($u$ ne peut pas sauter)~; une
+\omterm{def:g11:magnetic-fields:solenoid}{bobine} en série lisse le courant ($i$ ne peut pas sauter).
+Et \omterm{def:g11:magnetic-fields:solenoid}{bobine} plus \omterm{def:g12:rc-rl-circuits:capacitor}{condensateur} ensemble font un
+\omterm{def:g12:oscillators-and-time:oscillator}{oscillateur} (\cref{ch:g12:rlc-oscillations}).
+\end{remark}
+
+\section{Exercices}
+
+\begin{exercise}[$\star$]\label{exo:g12:rc-rl-circuits:1}
+Un \omterm{def:g12:rc-rl-circuits:capacitor}{condensateur} de \qty{470}{\micro F} est chargé à
+\qty{12}{V}~: quelle charge tient-il~? Quelle
+\omterm{def:g11:circuits-and-power:voltage}{tension} mettrait \qty{2.0}{mC} sur
+\qty{100}{\micro F}~?
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:g12:rc-rl-circuits:2}
+Attribuer \qty{47}{pF}, \qty{2200}{\micro F} et \qty{10}{F} entre un
+lisseur d'alimentation, un accord radio et un supercondensateur~;
+calculer l'\omterm{def:g10:energy-conservation:energy}{énergie} du dernier à \qty{2.7}{V}.
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:g12:rc-rl-circuits:3}
+La \omterm{def:g11:circuits-and-power:voltage}{tension} aux bornes d'un
+\omterm{def:g12:rc-rl-circuits:capacitor}{condensateur} de \qty{220}{\micro F} monte régulièrement
+de $0$ à \qty{5.0}{V} en \qty{10}{ms}~: quel courant entre~? Quel
+courant une fois la \omterm{def:g11:circuits-and-power:voltage}{tension} stabilisée, et
+pourquoi~?
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:g12:rc-rl-circuits:4}
+Calculer $\tau$ pour $R = \qty{10}{k\ohm}$, $C = \qty{100}{\micro F}$,
+puis pour $L = \qty{0.10}{H}$, $R = \qty{50}{\ohm}$. Vérifier,
+\omterm{def:g10:orders-of-magnitude:unit}{unité} par \omterm{def:g10:orders-of-magnitude:unit}{unité}, que les deux
+combinaisons sont des secondes.
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:g12:rc-rl-circuits:5}
+Un \omterm{def:g12:rc-rl-circuits:capacitor}{condensateur} se charge vers \qty{6.0}{V}, passant par
+\qty{3.8}{V} à $t = \qty{2.0}{s}$. Lire la
+\omterm{def:g12:rc-rl-circuits:tau}{constante de temps}~; quand la charge est-elle faite
+à $95\%$~?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:g12:rc-rl-circuits:6}
+Un \omterm{thm:g12:rc-rl-circuits:charging}{circuit RC}~: $\mathcal{E} = \qty{9.0}{V}$,
+$R = \qty{4.7}{k\ohm}$, $C = \qty{220}{\micro F}$. Calculer $\tau$,
+$u(\tau)$, $u(3\tau)$, et le courant à l'instant où l'interrupteur se
+ferme.
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:g12:rc-rl-circuits:7}
+Vérifier par substitution que $u(t) = \mathcal{E}(1 - e^{-t/RC})$
+satisfait $RC\,du/dt + u = \mathcal{E}$~; que codent physiquement sa
+valeur en $t = 0$ et sa limite aux grands $t$~?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:g12:rc-rl-circuits:8}
+Un \omterm{def:g12:rc-rl-circuits:capacitor}{condensateur} de \qty{100}{\micro F} chargé à
+\qty{12}{V} se décharge à travers \qty{47}{k\ohm}~: calculer $\tau$,
+$u(\tau)$, et le temps pour que $u$ descende sous \qty{0.60}{V}.
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:g12:rc-rl-circuits:9}
+Le courant dans une \omterm{def:g11:magnetic-fields:solenoid}{bobine} de \qty{0.50}{H} monte
+régulièrement de $0$ à \qty{2.0}{A} en \qty{40}{ms}~: quelle
+\omterm{def:g11:circuits-and-power:voltage}{tension} apparaît à ses bornes~? Avec
+$u = L\,di/dt$, pourquoi l'\emph{ouverture} d'un interrupteur sur une
+\omterm{def:g11:magnetic-fields:solenoid}{bobine} produit-elle une étincelle, pas la fermeture~?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:g12:rc-rl-circuits:10}
+Le relais de l'\cref{ex:g12:rc-rl-circuits:rl}~: vérifier par
+substitution que $i(t) = (\mathcal{E}/R)(1 - e^{-Rt/L})$ satisfait
+$L\,di/dt + Ri = \mathcal{E}$, puis calculer $i(\tau)$ et $i(3\tau)$.
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:g12:rc-rl-circuits:11}
+Montrer que $u'(0) = \mathcal{E}/\tau$, et en déduire que la tangente
+à l'origine rencontre l'asymptote en $t = \tau$. Sur une courbe
+enregistrée qui donne $\tau = \qty{0.50}{s}$, avec
+$R = \qty{2.0}{k\ohm}$~: trouver $C$.
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:g12:rc-rl-circuits:12}
+Classer par \omterm{def:g10:energy-conservation:energy}{énergie} stockée, en calculant chacune~: un
+supercondensateur de \qty{3000}{F} à \qty{2.7}{V}~; un
+\omterm{def:g12:rc-rl-circuits:capacitor}{condensateur} de flash, \qty{800}{\micro F} à
+\qty{300}{V}~; une \omterm{def:g11:magnetic-fields:solenoid}{bobine} de \qty{10}{mH} à
+\qty{10}{A}~; une pile AA ($E \approx \qty{1.3e4}{J}$). Que offrent
+les trois premiers que la pile ne peut pas~?
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:g12:rc-rl-circuits:13}
+Un minuteur de cage d'escalier allume tant que $u < 0.63\,\mathcal{E}$
+aux bornes de son \omterm{def:g12:rc-rl-circuits:capacitor}{condensateur} en charge, s'éteignant à
+$t = \tau$. Concevoir la lumière pour durer \qty{5.0}{s} avec
+$C = \qty{100}{\micro F}$~: quel $R$~? Pour un seuil
+$0.50\,\mathcal{E}$, montrer que le \omterm{def:g12:mechanical-waves:delay}{délai} est
+$\tau \ln 2$ et le calculer.
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:g12:rc-rl-circuits:14}
+Un \omterm{def:g12:rc-rl-circuits:capacitor}{condensateur} de \qty{2200}{\micro F} lisse une
+alimentation~: entre deux recharges, il alimente seul une charge
+puisant \qty{0.50}{A} pendant \qty{10}{ms}. À partir de
+$i = C\,du/dt$, calculer la chute de \omterm{def:g11:circuits-and-power:voltage}{tension}, puis la
+\omterm{def:g12:rc-rl-circuits:capacitor}{capacité} qui la maintient sous \qty{0.50}{V}.
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:g12:rc-rl-circuits:15}
+Une \omterm{def:g11:magnetic-fields:solenoid}{bobine} d'allumage, $L = \qty{0.80}{H}$, porte
+\qty{2.0}{A} lorsque le rupteur la coupe en environ \qty{1.0}{ms}.
+Estimer la \omterm{def:g11:circuits-and-power:voltage}{tension} de la \omterm{def:g11:magnetic-fields:solenoid}{bobine}
+pendant la coupure et l'\omterm{def:g10:energy-conservation:energy}{énergie} de l'étincelle~; pourquoi
+une interruption lente ne donne-t-elle pas d'étincelle~?
+\end{exercise}
+
+\section{Problème~: Le flash photo}
+
+\begin{problem}[{Problème du week-end --- le flash photo~: un
+sifflement de deux secondes, une milliseconde de gloire, et le cousin
+mural qui redémarre les cœurs --- une seule exponentielle les fait
+tous tourner}]
+\label{pb:g12:rc-rl-circuits:1}
+Un flash compact (une \omterm{def:g10:orders-of-magnitude:unit}{unité}) stocke de
+l'\omterm{def:g10:energy-conservation:energy}{énergie} dans un
+\omterm{def:g12:rc-rl-circuits:capacitor}{condensateur} $C = \qty{800}{\micro F}$, chargé à travers
+$R = \qty{1.0}{k\ohm}$ depuis un \omterm{def:g10:energy-conservation:transfer}{convertisseur} modélisé
+comme une source idéale $\mathcal{E} = \qty{300}{V}$~; le voyant
+«~prêt~» se déclenche à $95\%$ de la \omterm{def:g11:circuits-and-power:voltage}{tension} pleine.
+Déclenché, le \omterm{def:g12:rc-rl-circuits:capacitor}{condensateur} ne voit que le tube éclair,
+$R_f = \qty{0.50}{\ohm}$. Données~: une pile AA livre \qty{1.5}{V} et
+\qty{2.4}{A.h}~; $e = \qty{1.60e-19}{C}$.
+
+\medskip
+\noindent\textbf{Partie I --- Le réservoir.}
+\begin{enumerate}
+  \item Calculer la charge sur le \omterm{def:g12:rc-rl-circuits:capacitor}{condensateur} à
+        \qty{300}{V}.
+  \item Combien de \omterm{def:g11:fundamental-interactions:elementary}{charges élémentaires}
+        est-ce~?
+  \item Calculer l'\omterm{def:g10:energy-conservation:energy}{énergie} stockée $E_C$.
+  \item La pile AA tient $q = It \approx \qty{8.6e3}{C}$, donc environ
+        \qty{1.3e4}{J}. Combien de fois l'\omterm{def:g10:energy-conservation:energy}{énergie} du
+        \omterm{def:g12:rc-rl-circuits:capacitor}{condensateur} est-ce~?
+  \item Alors pourquoi s'embêter avec le
+        \omterm{def:g12:rc-rl-circuits:capacitor}{condensateur}~? Une phrase, en utilisant
+        «~\omterm{def:g11:work-of-force:power}{puissance}~».
+\end{enumerate}
+
+\medskip
+\noindent\textbf{Partie II --- L'attente du vert.}
+\begin{enumerate}[resume]
+  \item Écrire la loi de maille et la transformer en équation
+        différentielle pour $u(t)$.
+  \item Vérifier par substitution que
+        $u(t) = \mathcal{E}(1 - e^{-t/RC})$ la résout, partant de
+        $u(0) = 0$.
+  \item Calculer la \omterm{def:g12:rc-rl-circuits:tau}{constante de temps} $\tau$.
+  \item Au bout de quel temps le voyant prêt passe-t-il au vert, et à
+        quelle \omterm{def:g11:circuits-and-power:voltage}{tension}~? Reconnaître le sifflement de
+        deux secondes.
+  \item Calculer le courant de charge initial~; pourquoi meurt-il
+        ensuite~?
+\end{enumerate}
+
+\medskip
+\noindent\textbf{Partie III --- La milliseconde de gloire.}
+\begin{enumerate}[resume]
+  \item Écrire la loi de décharge $u(t)$ à travers le tube et calculer
+        la nouvelle \omterm{def:g12:rc-rl-circuits:tau}{constante de temps} $\tau'$.
+  \item Calculer le courant de crête à travers le tube.
+  \item Calculer la \omterm{def:g11:work-of-force:power}{puissance} de crête~; la comparer à une
+        bouilloire de \qty{2.2}{kW}.
+  \item Prenant le flash pour terminé à $3\tau'$, donner sa durée et
+        sa \omterm{def:g11:work-of-force:power}{puissance} moyenne.
+  \item Former le rapport du temps de charge au temps de flash~: même
+        \omterm{def:g12:rc-rl-circuits:capacitor}{condensateur}, même charge --- qu'est-ce qui a
+        changé, et qu'est-ce que cela fait d'un
+        \omterm{def:g12:rc-rl-circuits:capacitor}{condensateur}~: un réservoir
+        d'\omterm{def:g10:energy-conservation:energy}{énergie}, ou un levier de
+        \omterm{def:g11:work-of-force:power}{puissance}~?
+\end{enumerate}
+
+\medskip
+\noindent\textbf{Partie IV --- Le cousin sur le mur.}
+Un défibrillateur doit livrer $E_C = \qty{200}{J}$ à
+$U_0 = \qty{1500}{V}$~; poitrine et palettes présentent environ
+\qty{50}{\ohm}.
+\begin{enumerate}[resume]
+  \item Calculer la \omterm{def:g12:rc-rl-circuits:capacitor}{capacité} requise.
+  \item Calculer la charge stockée.
+  \item Calculer la \omterm{def:g12:rc-rl-circuits:tau}{constante de temps} du choc et sa
+        durée ($3\tau$)~; comparer au flash.
+  \item Calculer le courant de crête et la
+        \omterm{def:g11:work-of-force:power}{puissance} de crête dans le patient.
+  \item Le circuit de recharge doit rendre l'appareil prêt ($95\%$) en
+        \qty{6.0}{s}~: trouver la \omterm{def:g11:circuits-and-power:resistance}{résistance} de charge
+        requise et le courant de charge initial --- les nombres qu'un
+        concepteur commanderait.
+\end{enumerate}
+\end{problem}
