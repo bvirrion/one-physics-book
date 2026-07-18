@@ -40,9 +40,11 @@ collected at the end of each book.
 
 ## Current status
 
-🚧 **Structure established, content in progress.** All five books build,
-with every chapter present as a titled placeholder; course text, figures,
-exercises and solutions are being written.
+🚧 **Book 2 (High School, grades 10–12) is fully written**: 35 chapters
+of course text with 130+ TikZ figures, 525 graded exercises, 35 weekend
+problems (~20 questions each), full solutions to everything, and 4 500+
+defined-term links — about 350 pages. Books 1 and 3–5 build with every
+chapter present as a titled placeholder; their content is being written.
 
 ## Building the books
 

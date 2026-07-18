@@ -35,8 +35,9 @@ STOP = {
     # harvested from the reference-frame definition; its derived form catches
     # the ordinary verb ("everything rests on the law").
     "rest",
-    # retina rods (g11 lenses); pendulum rods and control rods elsewhere.
-    "rod",
+    # retina rods (g11 color chapter); pendulum rods and control rods
+    # elsewhere. Both forms: the plural is harvested as its own term.
+    "rod", "rods",
     # oscilloscope gain (g10 signals); the verb "gains" is everywhere in
     # clock-drift prose.
     "gain",
