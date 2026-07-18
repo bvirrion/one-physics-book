@@ -16,15 +16,27 @@ for the school years, PCSI and PC* for university years 1–2, an L3 de
 physique for year 3 — **pure physics, no chemistry**. Grades 1–6, where
 the French primaire taught no physics, use age-adapted chapters.
 
-**Current state: structure only.** All chapter files exist with real
-titles and `ch:` labels but placeholder bodies (a TODO comment and an
-"unwritten" line). Solutions files exist per chapter with the header
-`\section*` line and no solutions yet (there are no exercises yet).
-English only; `\ominput` already supports FR/NL trees later.
+**Current state: Book 2 written, the rest structure only.** Book 2
+(High School, grades 10–12) is complete: 35 chapters of course text
+(~349 pp), 137 TikZ/pgfplots/circuitikz figures, exactly 15 exercises
+per chapter (star ramp 5×★ / 6×★★ / 4×★★★, in that order), one
+~20-question "weekend problem" per chapter, a full solution for every
+exercise and problem keyed by label, and ~4,500 generated `\omterm`
+links (`tools/term_config/book2_en.py` is a curated config, no longer a
+stub — regenerate links after editing Book 2 definitions or prose). The
+invariant checks below are live for Book 2 and must stay green. Books 1
+and 3–5 still have placeholder chapter bodies (a TODO comment and an
+"unwritten" line) with header-only solutions files. English only;
+`\ominput` already supports FR/NL trees later.
 
 `CONTRIBUTING.md` holds the authoritative style/structure conventions;
 `THEME.md` documents the One Course cover brand. Read both before writing
 chapters.
+
+## Git
+
+**Never create git commits yourself.** Make the changes and leave the
+working tree for the user to review and commit.
 
 ## Build
 
