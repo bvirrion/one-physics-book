@@ -17,7 +17,7 @@ ENTRY = {
     5: "one_physics_book_5_university_year_3.tex",
 }
 
-LANGS = {1: ("en",), 2: ("en",), 3: ("en",), 4: ("en",), 5: ("en",)}
+LANGS = {1: ("en",), 2: ("en", "fr", "nl", "es"), 3: ("en",), 4: ("en",), 5: ("en",)}
 
 
 def years(book):
