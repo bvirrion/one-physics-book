@@ -57,10 +57,11 @@ grep -ci 'undefined' $L         # undefined references — must be 0
 grep -c 'Overfull' $L           # overfull boxes — keep at 0
 ```
 
-CI (`.github/workflows/build.yml`) builds all books on every push;
-`release.yml` additionally generates `version.tex` (overriding
-`\bookversion`/`\bookdate` in the entry files) and attaches versioned
-PDFs to the release.
+CI builds only on tagged releases (`v*`):
+`.github/workflows/release.yml` compiles all books, generates
+`version.tex` (overriding `\bookversion`/`\bookdate` in the entry
+files) and attaches versioned PDFs to the release. Pushes to `main`
+are not built — the quality gate before pushing is the local log.
 
 ## Architecture
 
