@@ -9,6 +9,7 @@ $out_dir = 'build';
     'one_physics_book_2_high_school_fr.tex',
     'one_physics_book_2_high_school_nl.tex',
     'one_physics_book_2_high_school_es.tex',
+    'one_physics_book_2_high_school_pt.tex',
     'one_physics_book_3_university_year_1.tex',
     'one_physics_book_4_university_year_2.tex',
     'one_physics_book_5_university_year_3.tex',
