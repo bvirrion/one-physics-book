@@ -20,21 +20,65 @@
 % ----------------------------------------------------------------------------
 % Core packages
 % ----------------------------------------------------------------------------
-\RequirePackage[T1]{fontenc}
-\RequirePackage[utf8]{inputenc}
-\RequirePackage{lmodern}
+% Engine / script detection. Hindi editions use Devanagari and must be built
+% with XeLaTeX (or LuaLaTeX); pdfTeX cannot load OpenType Devanagari fonts.
+% Other languages stay on the historical pdfTeX path (T1 + lmodern).
+\RequirePackage{iftex}
+\edef\om@booklang@exp{\booklang}%
+\def\om@lang@fr{fr}%
+\def\om@lang@nl{nl}%
+\def\om@lang@es{es}%
+\def\om@lang@pt{pt}%
+\def\om@lang@hi{hi}%
+\newif\ifom@hindi
+\ifx\om@booklang@exp\om@lang@hi
+  \om@hinditrue
+\fi
+
+\ifom@hindi
+  \ifPDFTeX
+    \PackageError{onephysics}{%
+      Hindi editions require XeLaTeX (or LuaLaTeX).\MessageBreak
+      Use: xelatex \jobname.tex\MessageBreak
+      (or latexmk, which picks XeLaTeX for *_hi.tex)}{Build with XeLaTeX.}%
+  \fi
+  \RequirePackage{fontspec}%
+  % Bundled under assets/fonts/ so CI and local builds do not depend on
+  % system font packages. Noto Sans Devanagari covers Devanagari + basic Latin.
+  % (Same path as onemath.sty; SI micro µ uses math \mu — see siunitx setup.)
+  \IfFileExists{assets/fonts/NotoSansDevanagari-Regular.ttf}{%
+    \setmainfont{NotoSansDevanagari}[%
+      Path=assets/fonts/,%
+      Extension=.ttf,%
+      UprightFont=*-Regular,%
+      BoldFont=*-Bold,%
+      Script=Devanagari,%
+    ]%
+  }{%
+    \setmainfont{Noto Sans Devanagari}[Script=Devanagari]%
+  }%
+\else
+  \ifPDFTeX
+    \RequirePackage[T1]{fontenc}%
+    \RequirePackage[utf8]{inputenc}%
+    \RequirePackage{lmodern}%
+  \fi
+\fi
 \RequirePackage{microtype}
+% microtype letterspacing (\textls) is not implemented for XeTeX; Hindi
+% editions use XeLaTeX for Devanagari. Provide a no-op so the cover wordmark
+% and branded header still compile (tracking is cosmetic).
+\ifXeTeX
+  \DeclareRobustCommand{\textls}[2][]{#2}%
+\fi
 \RequirePackage[a4paper,inner=2.2cm,outer=2.2cm,top=2.4cm,bottom=2.6cm,headheight=14pt]{geometry}
 
 % babel: only for non-English editions (keeps English builds unchanged).
 % Compare expanded token lists so \newcommand{\booklang}{fr} matches.
 % Load language babel only when the .ldf is installed; UI strings still
 % come from styles/lang/<lang>.tex either way.
-\edef\om@booklang@exp{\booklang}%
-\def\om@lang@fr{fr}%
-\def\om@lang@nl{nl}%
-\def\om@lang@es{es}%
-\def\om@lang@pt{pt}%
+% Hindi: no babel (no babel-hindi in our stack); UI strings from
+% styles/lang/hi.tex and colon-safe labels without active characters.
 % shorthands=off: French (and Dutch/Spanish/Portuguese) babel makes characters
 % such as ":" active for punctuation spacing. Our labels use colons throughout
 % (type:year:slug:name) and cleveref cannot parse active characters in
@@ -111,6 +155,15 @@
 % text mode so they inherit the surrounding font.
 \RequirePackage{siunitx}
 \sisetup{per-mode=symbol, output-decimal-marker={.}, range-units=single}
+% Hindi (XeTeX + Noto Sans Devanagari): siunitx v3 injects Unicode µ (U+00B5)
+% and Ω (U+2126) under XeTeX; those glyphs are absent from the Devanagari face.
+% Redeclare prefixes/units with math symbols (math-micro options were removed in v3).
+\ifom@hindi
+  \AtBeginDocument{%
+    \DeclareSIPrefix{\micro}{\ensuremath{\mu}}{-6}%
+    \DeclareSIUnit{\ohm}{\ensuremath{\Omega}}%
+  }%
+\fi
 % Unbreakable in-text figure block: keeps a picture and its caption line
 % on the same page. Use in place of "center" around tikzpicture figures.
 \newenvironment{omfigure}
