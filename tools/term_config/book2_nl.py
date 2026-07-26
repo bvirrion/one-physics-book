@@ -33,7 +33,21 @@ NO_CAPITAL = {
     "coulomb", "volt", "ampère", "ohm", "becquerel", "henry", "farad",
 }
 
-EXTRA = {}
+# Dutch writes as one solid word what English writes as two ("RC circuit" ->
+# "RC-kring", "time dilation" -> "tijddilatatie"). An \index entry attached to
+# a statement is only harvested when it contains a space (harvest.py), so every
+# such compound is lost here while its English twin is linked. Restored by
+# hand, one entry per English link target.
+EXTRA = {
+    "RC-kring": "thm:g12:rc-rl-circuits:charging",
+    "RL-kring": "prop:g12:rc-rl-circuits:rl",
+    "LC-kring": "prop:g12:rlc-oscillations:equation",
+    "tijddilatatie": "thm:g12:special-relativity:dilation",
+    "lengtecontractie": "prop:g12:special-relativity:contraction",
+    "ijzerpiek": "prop:g12:nuclear-energy:ironpeak",
+    "veeroscillator": "prop:g12:oscillators-and-time:spring-period",
+    "tijdschakelingen": "rem:g12:rc-rl-circuits:applications",
+}
 DROP = {
     "absoluut",
     "verticaal",
