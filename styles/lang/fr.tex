@@ -76,6 +76,31 @@
 \newcommand{\omnameChapter}{Chapitre}
 \newcommand{\omnameChapters}{Chapitres}
 
+% siunitx and cleveref keep their English conjunctions unless told otherwise:
+% \qtyrange printed "5 to 4186 Hz" and \cref{a,b} printed "Chapitres 25 and 29"
+% in the middle of French prose.
+% cleveref installs its conjunctions at \begin{document}, so redefine them there.
+\sisetup{range-phrase={ à }, list-pair-separator={ et }, list-final-separator={ et }}
+\AtBeginDocument{%
+  \renewcommand{\crefpairconjunction}{ et }%
+  \renewcommand{\creflastconjunction}{ et }%
+  \renewcommand{\crefrangeconjunction}{ à }%
+  % a \cref spanning two label types builds a group list, which has its
+  % own pair of conjunctions: "Théorèmes 2.14 et 2.18 and Lemme 2.17".
+  \renewcommand{\crefpairgroupconjunction}{ et }%
+  \renewcommand{\creflastgroupconjunction}{ et }%
+}
+
+% \today is English without babel (which is optional here), so the cover date
+% read "July 27, 2026" on a French book. French writes it as
+% "27 juillet 2026", month lowercase.
+% (the first of the month is "1\textsuperscript{er}", every other day a bare
+% numeral).
+\renewcommand{\today}{\ifnum\day=1 1\textsuperscript{er}\else\number\day\fi
+  \space\ifcase\month\or janvier\or février\or
+  mars\or avril\or mai\or juin\or juillet\or août\or septembre\or octobre\or
+  novembre\or décembre\fi\space\number\year}
+
 % LaTeX's own structural names. babel would normally localise these, but it is
 % optional here (see onephysics.sty) — so without these a French book prints
 % "Chapter 1" above every chapter title and "Appendix A" over the solutions.
