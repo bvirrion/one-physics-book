@@ -46,17 +46,42 @@
   % Bundled under assets/fonts/ so CI and local builds do not depend on
   % system font packages. Noto Sans Devanagari covers Devanagari + basic Latin.
   % (Same path as onemath.sty; SI micro µ uses math \mu — see siunitx setup.)
+  %
+  % Noto Sans Devanagari ships Regular and Bold only: no italic, no small
+  % caps. Left undeclared, every \emph and \textsc raised "Font shape
+  % TU/NotoSansDevanagari(0)/m/it undefined" and silently fell back to
+  % upright — so every defined term, marked \emph{term}\index{term} inside a
+  % definition, was typographically invisible in the Hindi PDF. Alias the
+  % missing shapes onto the faces we have, then carry emphasis with WEIGHT,
+  % which is what Devanagari typography does: the script has no italic.
   \IfFileExists{assets/fonts/NotoSansDevanagari-Regular.ttf}{%
     \setmainfont{NotoSansDevanagari}[%
       Path=assets/fonts/,%
       Extension=.ttf,%
       UprightFont=*-Regular,%
       BoldFont=*-Bold,%
+      ItalicFont=*-Regular,%
+      BoldItalicFont=*-Bold,%
+      SmallCapsFont=*-Regular,%
       Script=Devanagari,%
     ]%
   }{%
     \setmainfont{Noto Sans Devanagari}[Script=Devanagari]%
   }%
+  % \emph -> bold at the first level, upright at the second (nested emphasis
+  % toggles back, as \em does in Latin scripts). \DeclareEmphSequence is the
+  % supported hook for this; do not \renewcommand\emph, which breaks nesting.
+  \DeclareEmphSequence{\bfseries,\normalfont}%
+  % Table of contents: book.cls sizes the page-number box at \@pnumwidth =
+  % 1.55em, which fits three Latin Modern digits. Noto Sans Devanagari's
+  % digits are wider, so every three-digit entry overflowed by exactly
+  % 1.12782pt -- that single cause accounted for ALL 141 overfull boxes in
+  % the Hindi edition, while every other language sat at zero. Not a prose
+  % problem: the log shows no "Overfull \hbox ... in paragraph" at all, so
+  % Hindi needs no hyphenation patterns here. Widen the box and push the
+  % entry's right margin out by the same amount.
+  \renewcommand{\@pnumwidth}{2.2em}%
+  \renewcommand{\@tocrmarg}{3.2em}%
 \else
   \ifPDFTeX
     \RequirePackage[T1]{fontenc}%
