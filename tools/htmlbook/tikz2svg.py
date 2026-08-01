@@ -28,6 +28,10 @@ PREAMBLE = r"""
 \usetikzlibrary{arrows.meta,calc,angles,quotes,patterns}
 \usetikzlibrary{decorations.pathmorphing,decorations.markings,positioning,intersections}
 \usepackage[european]{circuitikz}
+% standalone only auto-crops tikzpicture; register circuitikz too (after
+% the package, which defines the env), else its figures come out as full
+% letter-size pages
+\standaloneenv{circuitikz}
 \usepackage{siunitx}
 \sisetup{per-mode=symbol, output-decimal-marker={.}, range-units=single}
 \pgfplotsset{
