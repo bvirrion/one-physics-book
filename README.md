@@ -25,7 +25,7 @@ A series of five **free physics textbooks** with the ambition of forming a
 single coherent course **from Grade 1 to the end of the bachelor's
 degree** — one notation, one voice, every year building on the previous
 one. The **High School book is complete today**, in six editions:
-**English, French, Dutch, Spanish, Portuguese and Hindi** — free to
+**English, French, Dutch, Spanish, Portuguese, Hindi and Arabic** — free to
 download for students, parents, teachers and homeschooling families:
 
 1. **Primary & Middle School Physics** — Grades 1–9;
@@ -61,7 +61,7 @@ solution.
 
 | Book | Download PDF |
 |------|--------------|
-| **2. High School** (Grades 10–12) — complete | [EN](https://github.com/bvirrion/one-physics-book/releases/latest/download/one_physics_book_2_high_school.pdf) · [ES](https://github.com/bvirrion/one-physics-book/releases/latest/download/one_physics_book_2_high_school_es.pdf) · [FR](https://github.com/bvirrion/one-physics-book/releases/latest/download/one_physics_book_2_high_school_fr.pdf) · [HI](https://github.com/bvirrion/one-physics-book/releases/latest/download/one_physics_book_2_high_school_hi.pdf) · [NL](https://github.com/bvirrion/one-physics-book/releases/latest/download/one_physics_book_2_high_school_nl.pdf) · [PT](https://github.com/bvirrion/one-physics-book/releases/latest/download/one_physics_book_2_high_school_pt.pdf) |
+| **2. High School** (Grades 10–12) — complete | [EN](https://github.com/bvirrion/one-physics-book/releases/latest/download/one_physics_book_2_high_school.pdf) · [ES](https://github.com/bvirrion/one-physics-book/releases/latest/download/one_physics_book_2_high_school_es.pdf) · [FR](https://github.com/bvirrion/one-physics-book/releases/latest/download/one_physics_book_2_high_school_fr.pdf) · [HI](https://github.com/bvirrion/one-physics-book/releases/latest/download/one_physics_book_2_high_school_hi.pdf) · [AR](https://github.com/bvirrion/one-physics-book/releases/latest/download/one_physics_book_2_high_school_ar.pdf) · [NL](https://github.com/bvirrion/one-physics-book/releases/latest/download/one_physics_book_2_high_school_nl.pdf) · [PT](https://github.com/bvirrion/one-physics-book/releases/latest/download/one_physics_book_2_high_school_pt.pdf) |
 | **1. Primary & Middle School** (Grades 1–9) — structural preview | [EN](https://github.com/bvirrion/one-physics-book/releases/latest/download/one_physics_book_1_primary_middle_school.pdf) |
 | **3. University — Year 1** — structural preview | [EN](https://github.com/bvirrion/one-physics-book/releases/latest/download/one_physics_book_3_university_year_1.pdf) |
 | **4. University — Year 2** — structural preview | [EN](https://github.com/bvirrion/one-physics-book/releases/latest/download/one_physics_book_4_university_year_2.pdf) |
@@ -79,7 +79,7 @@ fixes usually ship within days.
 of course text with 130+ TikZ figures, 525 graded exercises, 35 weekend
 problems (~20 questions each), full solutions to everything, and 4 500+
 defined-term links — about 350 pages, in all six languages (English,
-French, Dutch, Spanish, Portuguese, Hindi).
+French, Dutch, Spanish, Portuguese, Hindi, Arabic).
 
 🚧 Books 1 and 3–5 build with every chapter present as a titled
 placeholder; their content is being written.
@@ -100,9 +100,10 @@ build/one_physics_book_<N>_<slug>[_<lang>].pdf
 ```
 
 with `N` = 1–5 and, for the High School book, `lang` ∈ {`fr`, `nl`,
-`es`, `pt`, `hi`} (no suffix for English) — 10 PDFs in total. The Hindi
-edition compiles with XeLaTeX (Devanagari, fonts bundled under
-`assets/fonts/`); everything else is pdflatex.
+`es`, `pt`, `hi`, `ar`} (no suffix for English) — 11 PDFs in total. The Hindi
+edition compiles with XeLaTeX (Devanagari) and the Arabic edition with
+LuaLaTeX (right-to-left, via babel `bidi=basic`); both have their fonts
+bundled under `assets/fonts/`, and everything else is pdflatex.
 
 `make clean` removes auxiliary files, `make distclean` removes the whole
 `build/` directory. To build a single book, e.g.\

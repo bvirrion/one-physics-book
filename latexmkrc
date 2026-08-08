@@ -11,11 +11,13 @@ $out_dir = 'build';
     'one_physics_book_2_high_school_es.tex',
     'one_physics_book_2_high_school_pt.tex',
     'one_physics_book_2_high_school_hi.tex',
+    'one_physics_book_2_high_school_ar.tex',
     'one_physics_book_3_university_year_1.tex',
     'one_physics_book_4_university_year_2.tex',
     'one_physics_book_5_university_year_3.tex',
 );
-# Hindi editions (*_hi.tex) need XeLaTeX for OpenType Devanagari; every other
+# Hindi editions (*_hi.tex) need XeLaTeX for OpenType Devanagari, and Arabic
+# editions (*_ar.tex) need LuaLaTeX for babel's Lua bidi engine (bidi=basic); every other
 # edition builds with pdfTeX. The choice is made per *source file*, inside the
 # command latexmk runs, and deliberately not by setting $pdf_mode:
 #
@@ -34,12 +36,15 @@ $out_dir = 'build';
 # memory (5M words), hence the raised runtime limits.
 $pdflatex = 'internal op_compile %O %S';
 $xelatex  = 'internal op_compile %O %S';
+$lualatex = 'internal op_compile %O %S';
 
 sub op_compile {
     my @args = @_;
     my $source = pop @args;
     my @engine = $source =~ /_hi\.tex$/
         ? ('xelatex', '-interaction=nonstopmode', '-halt-on-error')
+        : $source =~ /_ar\.tex$/
+        ? ('lualatex', '-interaction=nonstopmode', '-halt-on-error')
         : ('pdflatex',
            '-cnf-line=main_memory=12000000',
            '-cnf-line=extra_mem_top=6000000',
