@@ -5,6 +5,12 @@ $out_dir = 'build';
 # (build/one_physics_book_<N>_<slug>.pdf).
 @default_files = (
     'one_physics_book_1_primary_middle_school.tex',
+    'one_physics_book_1_primary_middle_school_fr.tex',
+    'one_physics_book_1_primary_middle_school_nl.tex',
+    'one_physics_book_1_primary_middle_school_es.tex',
+    'one_physics_book_1_primary_middle_school_pt.tex',
+    'one_physics_book_1_primary_middle_school_hi.tex',
+    'one_physics_book_1_primary_middle_school_ar.tex',
     'one_physics_book_2_high_school.tex',
     'one_physics_book_2_high_school_fr.tex',
     'one_physics_book_2_high_school_nl.tex',

@@ -75,6 +75,27 @@
 \newcommand{\omnameChapter}{अध्याय}
 \newcommand{\omnameChapters}{अध्याय}
 
+% siunitx and cleveref keep their English conjunctions unless told otherwise,
+% and Hindi has no babel here to localise them (see the note below). So
+% \qtyrange printed "20 to 480 Hz" and \cref{a,b} printed "अध्याय 25 and 29"
+% in the middle of Devanagari prose -- 19 such sites in the shipped Book 2
+% Hindi edition, invisible to every structural gate because they are produced
+% by the macros, not written in the sources.
+\sisetup{range-phrase={ से }, list-pair-separator={ और },
+         list-final-separator={ और }}
+% Deferred to the END of begindocument: cleveref creates these macros inside
+% its own \AtBeginDocument, so a \renewcommand at package-load time fails with
+% "Command \crefpairconjunction undefined", and a plain \AtBeginDocument only
+% wins if ours was registered after cleveref's. Same technique as the Arabic
+% block in onephysics.sty, for the same reason.
+\AddToHook{begindocument/end}{%
+  \renewcommand{\crefpairconjunction}{ और }%
+  \renewcommand{\creflastconjunction}{ और }%
+  \renewcommand{\crefpairgroupconjunction}{ और }%
+  \renewcommand{\creflastgroupconjunction}{ और }%
+  \renewcommand{\crefrangeconjunction}{ से }%
+}
+
 % LaTeX's own structural names (babel is not used for Hindi).
 \renewcommand{\chaptername}{अध्याय}
 \renewcommand{\partname}{भाग}

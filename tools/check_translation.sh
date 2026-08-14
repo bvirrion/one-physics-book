@@ -117,7 +117,9 @@ check_year_lang() {
 if [ $# -eq 2 ]; then
   check_year_lang "$1" "$2"
 else
-  for year in grade-10 grade-11 grade-12 bachelor-1 bachelor-2 bachelor-3; do
+  for year in grade-1 grade-2 grade-3 grade-4 grade-5 grade-6 grade-7 \
+              grade-8 grade-9 grade-10 grade-11 grade-12 \
+              bachelor-1 bachelor-2 bachelor-3; do
     for lang in fr nl es pt hi ar; do
       # Skip years that have no translation directory yet.
       [ -d "parts/$year/$lang" ] || continue

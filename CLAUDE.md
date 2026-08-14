@@ -16,18 +16,33 @@ for the school years, PCSI and PC* for university years 1–2, an L3 de
 physique for year 3 — **pure physics, no chemistry**. Grades 1–6, where
 the French primaire taught no physics, use age-adapted chapters.
 
-**Current state: Book 2 written, the rest structure only.** Book 2
-(High School, grades 10–12) is complete: 35 chapters of course text
-(~349 pp), 137 TikZ/pgfplots/circuitikz figures, exactly 15 exercises
-per chapter (star ramp 5×★ / 6×★★ / 4×★★★, in that order), one
-~20-question "weekend problem" per chapter, a full solution for every
-exercise and problem keyed by label, and ~4,500 generated `\omterm`
-links (`tools/term_config/book2_en.py` is a curated config, no longer a
-stub — regenerate links after editing Book 2 definitions or prose). The
-invariant checks below are live for Book 2 and must stay green. Books 1
-and 3–5 still have placeholder chapter bodies (a TODO comment and an
-"unwritten" line) with header-only solutions files. English only;
-`\ominput` already supports FR/NL trees later.
+**Current state: Books 1 and 2 written, each in seven languages; Books
+3–5 structure only.**
+
+- **Book 1** (Primary & Middle School, grades 1–9): 71 chapters + 71
+  solutions files (~435 pp), 142 figures, photographs and AI-generated
+  illustrations credited in `frontmatter/image-credits*.tex`, ~6,480
+  generated `\omterm` links. Grades 1–5 carry 9–11 exercises and no
+  weekend problem; grades 6–9 carry 12 exercises plus one ~13–15-question
+  problem.
+- **Book 2** (High School, grades 10–12): 35 chapters of course text
+  (~349 pp), 137 TikZ/pgfplots/circuitikz figures, exactly 15 exercises
+  per chapter (star ramp 5×★ / 6×★★ / 4×★★★, in that order), one
+  ~20-question "weekend problem" per chapter, a full solution for every
+  exercise and problem keyed by label, ~4,500 generated `\omterm` links.
+- **Language editions**: both books ship in `fr`, `nl`, `es`, `pt`, `hi`
+  and `ar` alongside English — bodies under `parts/<year>/<lang>/` and
+  `parts/<year>/solutions/<lang>/`, one entry file each, all registered
+  in `latexmkrc` and `.github/workflows/release.yml`. Every edition is
+  gated by `tools/check_translation.sh` and self-scored under
+  `translation_scores/book_<N>/<lang>/`. See the workspace-root
+  `translation_instruction.md` before touching any of them.
+- `tools/term_config/book{1,2}_*.py` are curated configs, not stubs —
+  regenerate links after editing those books' definitions or prose.
+
+The invariant checks below are live for Books 1 and 2 and must stay
+green. Books 3–5 still have placeholder chapter bodies (a TODO comment
+and an "unwritten" line) with header-only solutions files, English only.
 
 `CONTRIBUTING.md` holds the authoritative style/structure conventions;
 `THEME.md` documents the One Course cover brand. Read both before writing
