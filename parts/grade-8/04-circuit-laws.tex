@@ -1,6 +1,301 @@
 \chapter{Current and Voltage Laws in Circuits}\label{ch:g8:circuit-laws}
 
-% TODO: course, examples, figures, and 8--12 graded exercises
-% (see CONTRIBUTING.md). Placeholder until written.
+Two meters, two quantities --- and now, at last, the
+constitution. Every circuit you will ever build, from a torch to
+a city grid, obeys four short laws: two about the current's
+bookkeeping, two about the \omterm{def:g8:voltage-voltmeter:voltage}{voltage}'s. Armed with them and a
+little algebra, you can compute readings you have not yet
+measured --- and catch any measurement that lies.
 
-\emph{This chapter has not been written yet.}
+\section{The current laws}
+
+\begin{proposition}[Current law for a series loop]\label{prop:g8:circuit-laws:seriesI}
+Along a single loop, the \omterm{def:g8:intensity-ammeter:intensity}{intensity} is the same everywhere:
+\[
+I_{\text{battery}} = I_{\text{lamp 1}} = I_{\text{lamp 2}} =
+\dots
+\]
+One road, one march --- last chapter's tollbooths, now a law of
+the constitution.
+\end{proposition}
+
+\begin{proposition}[The junction law]\label{prop:g8:circuit-laws:junction}
+At any \omterm{def:g5:series-parallel-circuits:parallel}{junction}, the intensities flowing in together equal the
+intensities flowing out together: for a main road splitting
+into two \omterm{def:g5:series-parallel-circuits:parallel}{branches},
+\[
+I = I_1 + I_2 .
+\]
+Charge is neither created, destroyed nor stored at a fork:
+whatever arrives, leaves. (True for any number of \omterm{def:g5:series-parallel-circuits:parallel}{branches} ---
+sum the arrivals, sum the departures, and the books balance.)
+\end{proposition}
+
+\begin{omfigure}
+\begin{tikzpicture}[scale=0.85]
+  \draw (0,0) to[battery1] (0,3.2)
+    to[ammeter, l={$I = \qty{0.50}{A}$}] (3.0,3.2);
+  \draw (3.0,3.2) to[short] (3.0,2.3)
+    to[lamp, l={$I_1 = \qty{0.30}{A}$}] (6.2,2.3)
+    to[short] (6.2,3.2);
+  \draw (3.0,3.2) to[short] (3.0,4.1)
+    to[lamp, l={$I_2 = \qty{0.20}{A}$}] (6.2,4.1)
+    to[short] (6.2,3.2);
+  \draw (6.2,3.2) to[short] (7.8,3.2) to[short] (7.8,0)
+    to[short] (0,0);
+  \fill (3.0,3.2) circle (2pt);
+  \fill (6.2,3.2) circle (2pt);
+\end{tikzpicture}
+
+{\small The \omterm{def:g5:series-parallel-circuits:parallel}{junction} law with numbers: \qty{0.50}{A} arrives at
+the fork, $0.30 + 0.20$ leave along the \omterm{def:g5:series-parallel-circuits:parallel}{branches} --- and
+\qty{0.50}{A} reassembles at the far \omterm{def:g5:series-parallel-circuits:parallel}{junction}.}
+\end{omfigure}
+
+\section{The voltage laws}
+
+\begin{proposition}[Voltage law for a series loop]\label{prop:g8:circuit-laws:seriesU}
+Around a series loop, the \omterm{def:g7:short-circuits-safety:battery}{battery's} \omterm{def:g8:voltage-voltmeter:voltage}{voltage} is shared among the
+devices, and the shares add up exactly:
+\[
+U_{\text{battery}} = U_1 + U_2 + \dots
+\]
+The waterfall \omterm{prop:g5:mirrors-reflection:image}{image} keeps the books: the \omterm{def:g3:first-electric-circuit:battery}{battery} lifts the
+march through its full height, and the devices spend that
+height between them, drop by drop --- with good wires spending
+none.
+\end{proposition}
+
+\begin{proposition}[Voltage law for parallel branches]\label{prop:g8:circuit-laws:parallelU}
+Devices \omterm{def:g5:series-parallel-circuits:parallel}{in parallel} all span the same two \omterm{def:g5:series-parallel-circuits:parallel}{junctions} --- so one
+\omterm{def:g8:voltage-voltmeter:voltage}{voltage} serves them all:
+\[
+U_1 = U_2 = U_{\text{across the pair of junctions}} .
+\]
+Each \omterm{def:g5:series-parallel-circuits:parallel}{branch} enjoys the full push between the \omterm{def:g5:series-parallel-circuits:parallel}{junctions} ---
+which is why parallel lamps shine at full nominal brightness,
+and why your house's every socket offers the same
+\qty{230}{V}.
+\end{proposition}
+
+\begin{omfigure}
+\begin{tikzpicture}[scale=0.85]
+  \draw (0,0) to[battery1, l=\qty{4.5}{V}] (0,3.0)
+    to[short] (1.8,3.0)
+    to[lamp, l={$U_1 = \qty{2.1}{V}$}] (4.6,3.0)
+    to[lamp, l={$U_2 = \qty{2.4}{V}$}] (7.4,3.0)
+    to[short] (8.8,3.0)
+    to[short] (8.8,0)
+    to[short] (0,0);
+\end{tikzpicture}
+
+{\small The series \omterm{def:g8:voltage-voltmeter:voltage}{voltage} law with numbers: the \omterm{def:g7:short-circuits-safety:battery}{battery's}
+\qty{4.5}{V} is spent in two unequal shares --- $2.1 + 2.4 =
+4.5$, to the decimal.}
+\end{omfigure}
+
+\begin{example}[Why unequal shares?]\label{ex:g8:circuit-laws:unequal}
+Two different lamps \omterm{def:g4:series-circuits:series}{in series} carry the same current (law one)
+yet split the \omterm{def:g8:voltage-voltmeter:voltage}{voltage} unequally --- \qty{2.1}{V} against
+\qty{2.4}{V}. The bigger share goes to the lamp that opposes
+the march more: the harder worker takes the larger drop. What
+exactly ``opposes more'' means, and how to \omterm{def:g6:measurement-in-science:measuring}{measure} it, is the
+next chapter's whole subject --- the laws of this chapter are
+its stage.
+\end{example}
+
+\section{Computing before measuring}
+
+\begin{method}[Solving a circuit with the four laws]\label{met:g8:circuit-laws:solve}
+Given a circuit with some readings known:
+\begin{enumerate}
+  \item draw the diagram and mark every known $I$ and $U$;
+  \item write the applicable laws as equations --- \omterm{def:g5:series-parallel-circuits:parallel}{junction}
+        sums for currents, loop sums for \omterm{def:g8:voltage-voltmeter:voltage}{voltages}, sameness
+        for series $I$ and parallel $U$;
+  \item solve for the unknowns (your algebra course's
+        equations, earning their keep);
+  \item sanity-check: no lamp receiving more than the \omterm{def:g3:first-electric-circuit:battery}{battery}
+        offers, no \omterm{def:g5:series-parallel-circuits:parallel}{branch} current exceeding the main road's.
+\end{enumerate}
+\end{method}
+
+\begin{example}[Worked: the mixed circuit]\label{ex:g8:circuit-laws:worked}
+A \qty{6}{V} \omterm{def:g3:first-electric-circuit:battery}{battery} feeds lamp A \omterm{def:g4:series-circuits:series}{in series} with a parallel
+pair (B and C). Measured: $I_{\text{battery}} = \qty{0.5}{A}$,
+$I_B = \qty{0.3}{A}$, $U_A = \qty{2.5}{V}$. Compute the rest.
+\omterm{def:g5:series-parallel-circuits:parallel}{Junction} law: $I_C = 0.5 - 0.3 = \qty{0.2}{A}$. Series current
+law: lamp A carries the full \qty{0.5}{A}. Loop \omterm{def:g8:voltage-voltmeter:voltage}{voltage} law:
+the pair receives $U_{\text{pair}} = 6 - 2.5 = \qty{3.5}{V}$;
+parallel \omterm{def:g8:voltage-voltmeter:voltage}{voltage} law: $U_B = U_C = \qty{3.5}{V}$. Every meter
+reading in the circuit, now known --- four laws, one line of
+algebra each.
+\end{example}
+
+\begin{example}[The laws as lie detectors]\label{ex:g8:circuit-laws:liedetector}
+A lab report claims: \omterm{def:g3:first-electric-circuit:battery}{battery} \qty{4.5}{V}; two series lamps at
+\qty{2.1}{V} and \qty{2.9}{V}. The loop law adds the shares:
+\qty{5.0}{V} spent from a \qty{4.5}{V} purse --- impossible;
+someone misread a dial. Another report: \omterm{def:g5:series-parallel-circuits:parallel}{junction} in
+\qty{0.40}{A}, \omterm{def:g5:series-parallel-circuits:parallel}{branches} out \qty{0.25}{A} and \qty{0.20}{A}
+--- the fork ``creates'' \qty{0.05}{A}: rejected. Before the
+laws, wrong readings looked as good as right ones; now the
+constitution audits every page.
+\end{example}
+
+\begin{remark}[Batteries under the same laws]\label{rem:g8:circuit-laws:batteries}
+The nose-to-tail rule is the series \omterm{def:g8:voltage-voltmeter:voltage}{voltage} law wearing its
+oldest clothes: batteries \omterm{def:g4:series-circuits:series}{in series} add their \omterm{def:g8:voltage-voltmeter:voltage}{voltages} ($1.5 +
+1.5 + 1.5 = \qty{4.5}{V}$ --- the flat \omterm{def:g7:short-circuits-safety:battery}{battery's} secret), and
+one reversed cell \emph{subtracts}, its push spent fighting
+the others. The laws govern givers and spenders alike; only
+the sign of their contribution differs.
+\end{remark}
+
+\section{Exercises}
+
+\begin{exercise}[$\star$]\label{exo:g8:circuit-laws:1}
+State the four laws --- two for current, two for \omterm{def:g8:voltage-voltmeter:voltage}{voltage} ---
+each in one line.
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:g8:circuit-laws:2}
+A \omterm{def:g5:series-parallel-circuits:parallel}{junction} receives \qty{0.8}{A} and sends \qty{0.55}{A} down
+one \omterm{def:g5:series-parallel-circuits:parallel}{branch}. The other \omterm{def:g5:series-parallel-circuits:parallel}{branch} carries?
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:g8:circuit-laws:3}
+A \qty{9}{V} \omterm{def:g3:first-electric-circuit:battery}{battery} feeds three series lamps; two of them
+take \qty{2.5}{V} and \qty{3.8}{V}. The third's share?
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:g8:circuit-laws:4}
+Two lamps \omterm{def:g5:series-parallel-circuits:parallel}{in parallel} across a \qty{12}{V} \omterm{def:g3:first-electric-circuit:battery}{battery}: each
+lamp's \omterm{def:g8:voltage-voltmeter:voltage}{voltage}? What everyday fact about house sockets is the
+same law?
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:g8:circuit-laws:5}
+In the worked mixed circuit, which single further measurement
+would have been redundant, and why? (Pick any, justify by a
+law.)
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:g8:circuit-laws:6}
+Two different series lamps carry the same current but split
+the \omterm{def:g8:voltage-voltmeter:voltage}{voltage} $1.8$ against \qty{2.7}{V}. Which lamp opposes the
+march more? What chapter-to-come \omterm{def:g6:measurement-in-science:measuring}{measures} that opposition?
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:g8:circuit-laws:7}
+Audit: \omterm{def:g3:first-electric-circuit:battery}{battery} \qty{6}{V}; series lamps measured \qty{2.2}{V},
+\qty{1.9}{V}, \qty{1.4}{V}. Do the books balance within a
+meter's honesty?
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:g8:circuit-laws:8}
+Audit: main road \qty{0.9}{A}; three \omterm{def:g5:series-parallel-circuits:parallel}{branches} \qty{0.4}{A},
+\qty{0.3}{A}, \qty{0.3}{A}. Verdict?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:g8:circuit-laws:9}
+A \qty{4.5}{V} \omterm{def:g3:first-electric-circuit:battery}{battery}, lamp D \omterm{def:g4:series-circuits:series}{in series} with a \omterm{ex:g3:first-electric-circuit:switch}{switch} ---
+then, \omterm{def:g5:series-parallel-circuits:parallel}{in parallel} with lamp D, a \omterm{def:g8:voltage-voltmeter:voltmeter}{voltmeter} shows \qty{4.5}{V}
+across the \emph{open} \omterm{ex:g3:first-electric-circuit:switch}{switch} and \qty{0}{V} across D. Show
+both readings obey the loop \omterm{def:g8:voltage-voltmeter:voltage}{voltage} law.
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:g8:circuit-laws:10}
+Three identical cells nose-to-tail \omterm{def:g1:light-and-shadows:source}{light} a lamp; a fourth,
+reversed, joins the queue. Total \omterm{def:g8:voltage-voltmeter:voltage}{voltage} before and after, by
+the series law with signs? What does the lamp do?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:g8:circuit-laws:11}
+A \omterm{def:g5:series-parallel-circuits:parallel}{two-branch} circuit: \omterm{def:g5:series-parallel-circuits:parallel}{branch} one carries lamps E and F \omterm{def:g4:series-circuits:series}{in
+series}; \omterm{def:g5:series-parallel-circuits:parallel}{branch} two carries lamp G alone. \omterm{def:g3:first-electric-circuit:battery}{Battery} \qty{6}{V};
+$U_E = \qty{2.2}{V}$. Compute $U_F$ and $U_G$, citing a law
+for each step.
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:g8:circuit-laws:12}
+The complete audit: a \qty{6}{V} \omterm{def:g3:first-electric-circuit:battery}{battery}; lamp P \omterm{def:g4:series-circuits:series}{in series}
+with a \omterm{def:g5:series-parallel-circuits:parallel}{junction}; \omterm{def:g5:series-parallel-circuits:parallel}{branches} Q and R rejoin and return.
+Measured: $I_P = \qty{0.6}{A}$, $I_Q = \qty{0.45}{A}$,
+$U_Q = \qty{2.3}{V}$. Compute every remaining current and
+\omterm{def:g8:voltage-voltmeter:voltage}{voltage} in the circuit ($I_R$, $U_P$, $U_R$), stating the law
+behind each line --- then invent one extra ``measurement'' a
+careless student might report that your finished solution
+would instantly convict.
+\end{exercise}
+
+\section{Problem: The Sealed Mystery Boxes}
+
+\begin{problem}[{Weekend problem --- the electronics club's
+sealed-box challenge; four laws against four mysteries; the
+grand audit}]\label{pb:g8:circuit-laws:1}
+The club seals simple circuits into boxes, leaving only meter
+sockets. Teams must deduce the insides --- constitution in
+hand. The bench \omterm{def:g3:first-electric-circuit:battery}{battery} is \qty{6}{V} throughout.
+
+\medskip\noindent\textbf{Part I --- Box A: two \omterm{def:g3:first-electric-circuit:battery}{terminals}, two
+lamps.}
+The label admits: two identical lamps and nothing else,
+either \omterm{def:g4:series-circuits:series}{in series} or \omterm{def:g5:series-parallel-circuits:parallel}{in parallel}.
+\begin{enumerate}
+  \item Wired to the \omterm{def:g3:first-electric-circuit:battery}{battery}, box A draws \qty{0.2}{A}; a
+        single such lamp alone on \qty{6}{V} is known to draw
+        about \qty{0.4}{A}. Series or parallel? Argue with a
+        current law.
+  \item Predict what the box would draw in the \emph{other}
+        arrangement.
+  \item What \omterm{def:g8:voltage-voltmeter:voltage}{voltage} does each inner lamp receive in the
+        actual arrangement, by which \omterm{def:g8:voltage-voltmeter:voltage}{voltage} law?
+  \item In which arrangement would the hidden lamps shine at
+        full nominal brightness --- and why do they visibly
+        not, through the box's peephole?
+\end{enumerate}
+
+\medskip\noindent\textbf{Part II --- Box B: the three-lamp
+puzzle.}
+Box B admits: one lamp (X) \omterm{def:g4:series-circuits:series}{in series} with a parallel pair
+(Y, Z --- not necessarily identical).
+\begin{enumerate}[resume]
+  \item The team \omterm{def:g6:measurement-in-science:measuring}{measures} $I_{\text{battery}} = \qty{0.5}{A}$
+        and, at Y's own test socket, $I_Y = \qty{0.35}{A}$.
+        Find $I_Z$ and $I_X$, citing laws.
+  \item A \omterm{def:g8:voltage-voltmeter:voltmeter}{voltmeter} across X: \qty{2.8}{V}. Find the parallel
+        pair's \omterm{def:g8:voltage-voltmeter:voltage}{voltage} --- and each of $U_Y$, $U_Z$.
+  \item Y and Z carry different currents at the same \omterm{def:g8:voltage-voltmeter:voltage}{voltage}.
+        What does this reveal about the two lamps, in the
+        language of \cref{ex:g8:circuit-laws:unequal}?
+  \item The team unscrews Y through a hatch. Predict the new
+        $I_{\text{battery}}$ direction of change (rise, fall,
+        or hold), reasoning from roads and their opposition.
+\end{enumerate}
+
+\medskip\noindent\textbf{Part III --- Box C: the cheat.}
+\begin{enumerate}[resume]
+  \item Box C's builder reports: ``\omterm{def:g3:first-electric-circuit:battery}{battery} \qty{6}{V}; two
+        series lamps inside at \qty{2.5}{V} and \qty{4.1}{V};
+        \omterm{def:g5:series-parallel-circuits:parallel}{junction} inside receiving \qty{0.3}{A} and sending
+        \qty{0.2}{A} plus \qty{0.15}{A}.'' Convict the report
+        twice, one law per conviction.
+  \item One of the two reported \omterm{def:g8:voltage-voltmeter:voltage}{voltage} readings is later
+        found honest. If it is the \qty{2.5}{V}, what must its
+        partner truly be?
+  \item The builder confesses the \omterm{def:g5:series-parallel-circuits:parallel}{junction} numbers were
+        ``rounded generously''. If the two \omterm{def:g5:series-parallel-circuits:parallel}{branch} readings
+        \qty{0.2}{A} and \qty{0.15}{A} are honest, what must
+        the main road truly carry?
+  \item Why do the four laws make sealed-box cheating a losing
+        game? One sentence.
+\end{enumerate}
+
+\medskip\noindent\textbf{Part IV --- The constitution.}
+\begin{enumerate}[resume]
+  \item Write the club's charter: the four laws in four lines,
+        each with the everyday \omterm{prop:g5:mirrors-reflection:image}{image} that carries it (roads,
+        tollbooths, waterfalls, forks).
+\end{enumerate}
+\end{problem}
