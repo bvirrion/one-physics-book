@@ -150,6 +150,8 @@ def collect_figures(blocks, out):
     for b in blocks:
         if b["t"] == "figure":
             out.extend(b["tikzs"])
+            for row in b.get("grid") or []:
+                out.extend(cell["src"] for cell in row)
         elif b["t"] == "env":
             collect_figures(b["body"], out)
         elif b["t"] == "list":
@@ -319,8 +321,8 @@ def main():
         collect_figures(editions[lang]["blocks"], tikzs)
         for tikz in tikzs:
             figures[tikz] = builder.figure_info(tikz)
-    print(f"figures: {len(set(f['file'] for f in figures.values()))} SVG(s) "
-          f"for {len(figures)} tikzpicture(s)")
+    print(f"figures: {len(set(f['file'] for f in figures.values()))} file(s) "
+          f"for {len(figures)} picture(s)")
 
     # ---- emit + render per language ------------------------------------
     manifest_langs = {}
