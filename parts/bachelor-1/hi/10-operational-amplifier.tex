@@ -1,0 +1,564 @@
+\chapter{संक्रियात्मक प्रवर्धक}\label{ch:b1:operational-amplifier}
+
+किसी पुल की धरन पर चिपका विकृति-मापी ट्रक गुज़रने पर अपना प्रतिरोध हज़ारवें
+हिस्से भर बदलता है; और उसके चारों ओर बना \omterm{prop:b1:dc-circuits:wheatstone}{व्हीटस्टोन सेतु}
+(\cref{ch:b1:dc-circuits}) उसे दो मिलीवोल्ट में बदल देता है। दो
+मिलीवोल्ट कुछ भी नहीं चला सकते। मापी और उस चेतावनी-यंत्र के बीच, जो पुल को
+यातायात के लिए बंद कर देगा, नाख़ून जितनी एक चिप बैठी है, जो कुछ ही पैसों में
+बिकती है और संकेत को हज़ार गुना कर देती है, उसे \omterm{def:b1:filters-transfer-functions:H}{फ़िल्टर} करती है, किसी देहली से
+उसकी तुलना करती है और एक दीपक जला देती है --- चार काम, एक अवयव, चार भिन्न
+जोड़-तोड़। यह अध्याय \omterm{def:b1:operational-amplifier:opamp}{संक्रियात्मक प्रवर्धक} को उसके आदर्श प्रतिरूप के द्वारा
+प्रस्तुत करता है, उन मुट्ठी भर परिपथों को व्युत्पन्न करता है जिनसे हर उपकरण
+बनता है, और दिखाता है कि पुनर्भरण हटा देने पर क्या होता है।
+
+\section{अवयव और उसका आदर्श प्रतिरूप}
+
+\begin{definition}[संक्रियात्मक प्रवर्धक]\label{def:b1:operational-amplifier:opamp}
+\index{संक्रियात्मक प्रवर्धक}\index{संतृप्ति विभवांतर}\index{खुले-पाश की लब्धि}
+\emph{संक्रियात्मक प्रवर्धक} एक एकीकृत परिपथ है, जिसके दो
+निवेश हैं --- विभव $V_+$ वाला \emph{अ-प्रतिलोमी} निवेश और
+विभव $V_-$ वाला \emph{प्रतिलोमी} निवेश --- तथा विभव $V_s$ वाला एक निर्गम,
+और जो दो आपूर्तियों $\pm V_{\mathrm{cc}}$ (प्रायः
+$\pm\qty{15}{V}$) से चलता है, जिन्हें आरेखों में आमतौर पर छोड़ दिया जाता है। वह
+अंतर $\epsilon = V_+ - V_-$ को प्रवर्धित करता है:
+\[
+V_s = \mu\,\epsilon \quad\text{जब तक } \abs{V_s} < V_{\mathrm{sat}},
+\]
+जहाँ \emph{खुले-पाश की \omterm{def:b1:filters-transfer-functions:H}{लब्धि}} $\mu$ लगभग $10^5$ कोटि की है और
+\emph{संतृप्ति \omterm{def:b1:dc-circuits:voltage}{विभवांतर}} $V_{\mathrm{sat}}$
+$V_{\mathrm{cc}}$ से ज़रा नीचे। जब $\mu\abs\epsilon$ $V_{\mathrm{sat}}$ से आगे
+निकलने लगे, तब निर्गम $+V_{\mathrm{sat}}$ या $-V_{\mathrm{sat}}$ पर अटक जाता
+है: यही \emph{संतृप्त} व्यवस्था है।
+\end{definition}
+
+\begin{definition}[आदर्श संक्रियात्मक प्रवर्धक]\label{def:b1:operational-amplifier:ideal}
+\index{आदर्श संक्रियात्मक प्रवर्धक}\index{आभासी लघुपथ}\index{रैखिक व्यवस्था}
+\emph{आदर्श} प्रतिरूप यह मान लेता है: (क) किसी भी निवेश में कोई धारा नहीं
+घुसती, $i_+ = i_- = 0$ (अनंत निवेश \omterm{def:b1:sinusoidal-impedance:impedance}{प्रतिबाधा}); (ख) निर्गम अपना
+\omterm{def:b1:dc-circuits:voltage}{विभवांतर} लाद देता है, चाहे उससे कितनी भी धारा खींची जाए (शून्य निर्गम
+\omterm{def:b1:sinusoidal-impedance:impedance}{प्रतिबाधा}); (ग) अनंत \omterm{def:b1:filters-transfer-functions:H}{लब्धि}, $\mu \to \infty$। \emph{रैखिक व्यवस्था}
+($\abs{V_s}
+< V_{\mathrm{sat}}$) में तीसरी मान्यता यह लाद देती है कि
+\[
+\epsilon = V_+ - V_- = 0 :
+\]
+यानी दोनों निवेश एक ही विभव पर बैठते हैं (एक ``आभासी लघुपथ''),
+हालाँकि उनके बीच कोई धारा नहीं बहती।
+\end{definition}
+
+\begin{omfigure}
+\begin{tikzpicture}[font=\small]
+  \node[op amp] (oa) at (0,0) {};
+  \draw (oa.-) -- ++(-0.8,0) node[left] {$V_-$};
+  \draw (oa.+) -- ++(-0.8,0) node[left] {$V_+$};
+  \draw (oa.out) -- ++(0.6,0) node[right] {$V_s$};
+  \draw (oa.up) -- ++(0,0.3) node[above, font=\footnotesize] {$+V_{\mathrm{cc}}$};
+  \draw (oa.down) -- ++(0,-0.3) node[below, font=\footnotesize] {$-V_{\mathrm{cc}}$};
+  \begin{scope}[xshift=6.2cm]
+  \begin{axis}[omaxis, axis y line=left, width=6.4cm, height=4.6cm, xlabel={$\epsilon$}, ylabel={$V_s$},
+      xmin=-2.2, xmax=2.2, ymin=-1.5, ymax=1.5, xtick={-0.15,0.15}, xticklabels={,},
+      ytick={-1,1}, yticklabels={$-V_{\mathrm{sat}}$,$+V_{\mathrm{sat}}$}, anchor=origin, at={(0,0)}]
+    \addplot[omThm, thick, domain=-2.2:-0.15, samples=2] {-1};
+    \addplot[omThm, thick, domain=-0.15:0.15, samples=2] {x/0.15};
+    \addplot[omThm, thick, domain=0.15:2.2, samples=2] {1};
+    \node[omThm, font=\footnotesize] at (axis cs:1.3,0.6) {संतृप्त};
+    \node[omThm, font=\footnotesize] at (axis cs:-1.2,-0.6) {संतृप्त};
+    \node[omThm, font=\footnotesize, right] at (axis cs:0.2,-0.55) {रैखिक, ढाल $\mu$};
+  \end{axis}
+  \end{scope}
+\end{tikzpicture}
+
+{\small \omterm{def:b1:operational-amplifier:opamp}{संक्रियात्मक प्रवर्धक}: अपने दो निवेशों के साथ उसका संकेत, और उसका
+स्थानांतरण अभिलक्षणिक वक्र $V_s(\epsilon)$ --- ढाल
+$\mu \sim 10^5$ का एक तीखा रैखिक खंड (जो यहाँ कहीं अधिक चपटा खींचा गया है),
+और फिर $\pm V_{\mathrm{sat}}$ पर संतृप्ति। आदर्श प्रतिरूप में रैखिक खंड
+ऊर्ध्वाधर होता है: $\epsilon = 0$।}
+\end{omfigure}
+
+\begin{proposition}[ऋणात्मक पुनर्भरण और रैखिक व्यवस्था]\label{prop:b1:operational-amplifier:feedback}
+\index{ऋणात्मक पुनर्भरण}\index{धनात्मक पुनर्भरण}
+यदि निर्गम किसी जाल के द्वारा वापस \emph{प्रतिलोमी} निवेश से जोड़ दिया जाए
+(\omterm{prop:b1:operational-amplifier:feedback}{ऋणात्मक पुनर्भरण}), तो परिपथ का $\epsilon = 0$ पर एक स्थायी रैखिक \omterm{met:b1:dc-circuits:loadline}{क्रिया
+बिंदु} होता है और आदर्श प्रवर्धक के नियम लागू होते हैं। और यदि
+निर्गम अ-प्रतिलोमी निवेश को लौटाया जाए (\omterm{prop:b1:operational-amplifier:feedback}{धनात्मक पुनर्भरण}), या बिलकुल
+न लौटाया जाए, तो प्रवर्धक संतृप्त हो जाता है: $V_s = \pm V_{\mathrm{sat}}$,
+$\epsilon$ के चिह्न के अनुसार।
+\end{proposition}
+
+\begin{proof}[आंशिक उपपत्ति]
+\omterm{prop:b1:operational-amplifier:feedback}{ऋणात्मक पुनर्भरण} के साथ मान लीजिए $V_s$ अपने साम्य मान से थोड़ा ऊपर
+चढ़ता है; तब पुनर्भरण जाल के द्वारा $V_-$ चढ़ता है, $\epsilon$
+गिरता है, और प्रवर्धक $V_s$ को वापस नीचे खींच लेता है: यानी विक्षोभ सुधर जाता
+है। \omterm{prop:b1:operational-amplifier:feedback}{धनात्मक पुनर्भरण} के साथ वही विक्षोभ $V_+$ को चढ़ाता है,
+$\epsilon$ बढ़ाता है और $V_s$ को और दूर धकेलता है, जब तक वह संतृप्त न हो जाए।
+पूरा तर्क (प्रवर्धक का प्रथम कोटि प्रतिरूप, $\mu(j\omega)
+= \mu_0/(1 + j\omega/\omega_0)$, और उससे बनते अवकल समीकरण की स्थिरता) वर्ष 2
+के खंड का विषय है; और ऊपर दिया नियम ही वह है जिसे काम में लिया जाता है।
+\end{proof}
+
+\begin{remark}[असली प्रवर्धक]\label{rem:b1:operational-amplifier:real}
+\index{लब्धि--बैंड-चौड़ाई गुणनफल}\index{आरोहण दर}\index{निवेश विस्थापन विभवांतर}
+व्यवहार में आदर्श से तीन विचलन मायने रखते हैं। \omterm{def:b1:operational-amplifier:opamp}{खुले-पाश की लब्धि}
+आवृत्ति के साथ $\mu_0/(1 + jf/f_0)$ की तरह गिरती है, जहाँ $f_0 \sim \qty{10}{Hz}$:
+और गुणनफल $\mu_0 f_0 = f_T \sim \qty{1}{MHz}$ (यानी \emph{\omterm{rem:b1:operational-amplifier:real}{लब्धि--बैंड-चौड़ाई
+गुणनफल}}) किसी अनुगामी को उपलब्ध बैंड-चौड़ाई है, जबकि बंद-पाश \omterm{def:b1:filters-transfer-functions:H}{लब्धि}
+$G$ वाले किसी परिपथ की बैंड-चौड़ाई $f_T/G$ होती है। निर्गम
+\emph{\omterm{rem:b1:operational-amplifier:real}{आरोहण दर}} से तेज़ नहीं बदल सकता, जो $\sim\qty{1}{V/\micro s}$ होती है।
+और कोई छोटा-सा \emph{\omterm{rem:b1:operational-amplifier:real}{निवेश विस्थापन विभवांतर}} ($\sim\qty{1}{mV}$) भी संकेत की
+तरह ही प्रवर्धित होता है --- मिलीवोल्ट के निवेशों के लिए घातक, जब तक उसे
+साधा न जाए।
+\end{remark}
+
+\section{बुनियादी रैखिक परिपथ}
+
+\begin{method}[रैखिक व्यवस्था में किसी आदर्श ऑप-ऐंप परिपथ का विश्लेषण]\label{met:b1:operational-amplifier:method}
+\begin{enumerate}
+  \item जाँचिए कि पुनर्भरण प्रतिलोमी निवेश को जाता है।
+  \item $i_+ = i_- = 0$ लिखिए: निवेश-संधियाँ किरचॉफ़ के \omterm{thm:b1:dc-circuits:kirchhoff}{संधि नियम} का पालन
+        करती हैं, और प्रवर्धक में कोई धारा नहीं जाती (विभाजक तथा \omterm{prop:b1:dc-circuits:millman}{मिलमैन की
+        प्रमेय} लागू होते हैं)।
+  \item $V_+ = V_-$ लिखिए और $V_s$ के लिए हल कीजिए।
+  \item बाद में जाँचिए कि $\abs{V_s} < V_{\mathrm{sat}}$ है; यदि नहीं, तो
+        प्रवर्धक संतृप्त है और परिणाम $\pm V_{\mathrm{sat}}$ है।
+\end{enumerate}
+\end{method}
+
+\begin{proposition}[अनुगामी, अ-प्रतिलोमी और प्रतिलोमी प्रवर्धक]\label{prop:b1:operational-amplifier:basic}
+\index{विभव अनुगामी}\index{अ-प्रतिलोमी प्रवर्धक}\index{प्रतिलोमी प्रवर्धक}\index{आभासी भू}
+\begin{itemize}
+  \item \emph{अनुगामी}: निर्गम $V_-$ से जुड़ा, निवेश $V_+$ पर:
+        $V_s = V_e$; अनंत निवेश \omterm{def:b1:sinusoidal-impedance:impedance}{प्रतिबाधा}, शून्य निर्गम \omterm{def:b1:sinusoidal-impedance:impedance}{प्रतिबाधा}।
+  \item \emph{\omterm{prop:b1:operational-amplifier:basic}{अ-प्रतिलोमी प्रवर्धक}}: निर्गम से $V_-$ तक एक
+        विभाजक $R_2$ (पुनर्भरण) और $R_1$ (भू तक), निवेश $V_+$ पर:
+        \[
+        V_s = \left(1 + \frac{R_2}{R_1}\right)V_e .
+        \]
+  \item \emph{\omterm{prop:b1:operational-amplifier:basic}{प्रतिलोमी प्रवर्धक}}: $V_+$ भूसंपर्कित, निवेश
+        $R_1$ के द्वारा $V_-$ तक, पुनर्भरण $R_2$ निर्गम से $V_-$ तक:
+        \[
+        V_s = -\frac{R_2}{R_1}\,V_e ,
+        \]
+        जहाँ $V_-$ भू के विभव पर बना रहता है (एक \emph{\omterm{prop:b1:operational-amplifier:basic}{आभासी भू}})
+        और निवेश \omterm{def:b1:sinusoidal-impedance:impedance}{प्रतिबाधा} $R_1$ होती है।
+\end{itemize}
+\end{proposition}
+
+\begin{proof}
+अनुगामी: $V_- = V_s$ और $V_+ = V_e$; $\epsilon = 0$ से $V_s = V_e$ मिलता है।
+अ-प्रतिलोमी: $V_-$ में कोई धारा नहीं जाती, अतः विभाजक देता है $V_- =
+V_sR_1/(R_1 + R_2)$; अब इसे $V_+ = V_e$ के बराबर रखिए। प्रतिलोमी: $V_- = V_+ = 0$;
+और $V_-$ पर \omterm{thm:b1:dc-circuits:kirchhoff}{संधि नियम}, $i_- = 0$ के साथ: $(V_e - 0)/R_1 + (V_s - 0)/R_2 = 0$।
+स्रोत $V_e/R_1$ देता है: अतः निवेश \omterm{def:b1:sinusoidal-impedance:impedance}{प्रतिबाधा} $R_1$।
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}[font=\small]
+  % follower (+ input up)
+  \node[op amp, noinv input up] (a) at (0,0) {};
+  \draw (a.+) -- ++(-0.6,0) node[left] {$V_e$};
+  \draw (a.out) -- ++(0.5,0) node[right] {$V_s$};
+  \draw (a.out) ++(0.25,0) -- ++(0,-1.3) -| ($(a.-)+(-0.4,0)$) -- (a.-);
+  \node[below, font=\footnotesize] at (0,-1.7) {अनुगामी: $V_s = V_e$};
+  % non-inverting (+ input up)
+  \begin{scope}[xshift=5.6cm]
+  \node[op amp, noinv input up] (b) at (0,0) {};
+  \draw (b.+) -- ++(-0.8,0) node[left] {$V_e$};
+  \draw (b.out) -- ++(0.6,0) node[right] {$V_s$};
+  \coordinate (j) at ($(b.-)+(-0.5,0)$);
+  \draw (b.-) -- (j);
+  \coordinate (f) at ($(j)+(0,-1.0)$);
+  \coordinate (o) at ($(b.out)+(0.3,0)$);
+  \draw (o) -- (o |- f) to[R=$R_2$] (f) -- (j);
+  \draw (f) to[R=$R_1$] ++(0,-1.6) node[ground]{};
+  \node[below, font=\footnotesize] at (0,-3.7) {अ-प्रतिलोमी: $V_s = (1 + R_2/R_1)V_e$};
+  \end{scope}
+  % inverting (- input up)
+  \begin{scope}[xshift=11.3cm]
+  \node[op amp] (c) at (0,0) {};
+  \draw (c.+) -- ++(-0.4,0) node[ground]{};
+  \coordinate (m) at ($(c.-)+(-0.5,0)$);
+  \draw (c.-) -- (m) to[R=$R_1$] ++(-1.5,0) node[left] {$V_e$};
+  \draw (c.out) -- ++(0.6,0) node[right] {$V_s$};
+  \coordinate (f2) at ($(m)+(0,1.3)$);
+  \coordinate (o2) at ($(c.out)+(0.3,0)$);
+  \draw (o2) -- (o2 |- f2) to[R=$R_2$] (f2) -- (m);
+  \node[below, font=\footnotesize] at (0,-1.7) {प्रतिलोमी: $V_s = -(R_2/R_1)V_e$};
+  \end{scope}
+\end{tikzpicture}
+
+{\small तीनों बुनियादी प्रवर्धक। हर एक में निर्गम
+प्रतिलोमी निवेश को खिलाता है, प्रवर्धक अपनी \omterm{def:b1:operational-amplifier:ideal}{रैखिक व्यवस्था} में काम करता है, और
+\omterm{def:b1:filters-transfer-functions:H}{लब्धि} केवल प्रतिरोधों के अनुपातों से तय होती है --- न कि प्रवर्धक के अपने
+विशाल और अस्पष्ट $\mu$ से।}
+\end{omfigure}
+
+\begin{example}[अनुगामी क्यों]\label{ex:b1:operational-amplifier:follower}
+तेवेनिन प्रतिरोध \qty{10}{k\ohm} का कोई संवेदक, जो \qty{1}{k\ohm} के
+भार को खिलाए, अपने खुले परिपथ के \omterm{def:b1:dc-circuits:voltage}{विभवांतर} का केवल $1/11$ पहुँचाता है
+(\cref{rem:b1:dc-circuits:loading})। उनके बीच लगा कोई अनुगामी संवेदक से कोई
+धारा नहीं खींचता और भार को शून्य-प्रतिबाधा वाले निर्गम से चलाता है:
+अतः पूरा \omterm{def:b1:dc-circuits:voltage}{विभवांतर} पहुँच जाता है। अनुगामी एक \emph{\omterm{def:b1:sinusoidal-impedance:impedance}{प्रतिबाधा}
+अनुकूलक} है --- और वही \cref{prop:b1:filters-transfer-functions:cascade} के
+शृंखलन-नियम को यथार्थ बना देता है।
+\end{example}
+
+\begin{proposition}[योग और अंतर प्रवर्धक]\label{prop:b1:operational-amplifier:sumdiff}
+\index{योग प्रवर्धक}\index{अंतर प्रवर्धक}
+निवेश $V_1, V_2$ $R_1, R_2$ के द्वारा प्रतिलोमी संधि तक, पुनर्भरण
+$R_f$, और $V_+$ भूसंपर्कित:
+\[
+V_s = -R_f\left(\frac{V_1}{R_1} + \frac{V_2}{R_2}\right)
+\quad (\text{योग प्रवर्धक}).
+\]
+$V_1$ $R_1$ के द्वारा $V_-$ तक (पुनर्भरण $R_2$) और $V_2$
+$R_1$ के द्वारा $V_+$ तक ($R_2$ $V_+$ से भू तक) हो, तो:
+\[
+V_s = \frac{R_2}{R_1}\,(V_2 - V_1)
+\quad (\text{अंतर प्रवर्धक}).
+\]
+\end{proposition}
+
+\begin{proof}
+योग: \omterm{prop:b1:operational-amplifier:basic}{आभासी भू} पर \omterm{thm:b1:dc-circuits:kirchhoff}{संधि नियम}, $V_1/R_1 + V_2/R_2 + V_s/R_f =
+0$। अंतर: $V_+ = V_2R_2/(R_1 + R_2)$ (विभाजक); $V_-$ पर \omterm{thm:b1:dc-circuits:kirchhoff}{संधि नियम}:
+$(V_1 - V_-)/R_1 + (V_s - V_-)/R_2 = 0$, अतः $V_s = V_-(1 + R_2/R_1) -
+V_1R_2/R_1$; अब $V_- = V_+$ रखिए और सरल कीजिए।
+\end{proof}
+
+\section{समाकलक और अवकलक}
+
+\begin{proposition}[समाकलक]\label{prop:b1:operational-amplifier:integrator}
+\index{समाकलक (ऑप-ऐंप)}
+निवेश $R$ के द्वारा $V_-$ तक, पुनर्भरण के रूप में संधारित्र $C$, और $V_+$
+भूसंपर्कित:
+\[
+V_s(t) = -\frac{1}{RC}\int_0^t V_e(t')\,\dd t' + V_s(0),
+\qquad
+\underline H = -\frac{1}{jRC\omega} .
+\]
+\omterm{def:b1:filters-transfer-functions:H}{लब्धि} हर आवृत्ति पर प्रति दशक \qty{20}{dB} गिरती है और \omterm{def:b1:wave-propagation:signal}{कला}
+$+90^\circ$ रहती है: यानी एक यथार्थ समाकलक --- जब तक कि कोई नन्हा-सा विस्थापन
+या अभिनति, हमेशा के लिए समाकलित होकर, निर्गम को संतृप्ति में न धकेल दे।
+\end{proposition}
+
+\begin{proof}
+\omterm{prop:b1:operational-amplifier:basic}{आभासी भू}: धारा $V_e/R$ संधारित्र में बहती है, जिसका
+\omterm{def:b1:dc-circuits:voltage}{विभवांतर} ($V_-$ से निर्गम) $-V_s$ है;
+अतः $C\,\dd(-V_s)/\dd t = V_e/R$,
+और सम्मिश्र संकेतन में $\underline H = -1/(jRC\omega)$।
+\end{proof}
+
+\begin{remark}[समाकलक को साधना]\label{rem:b1:operational-amplifier:pseudo}
+\index{छद्म-समाकलक}
+कोई \omterm{def:b1:dc-circuits:resistor}{प्रतिरोधक} $R'$, जो $C$ के समांतर में जुड़ा हो, देता है
+\[
+\underline H = -\frac{R'/R}{1 + jR'C\omega},
+\]
+यानी दिष्ट \omterm{def:b1:filters-transfer-functions:H}{लब्धि} $-R'/R$ और कटऑफ़ $1/R'C$ वाला प्रथम कोटि का निम्न-पारक, जो
+$\omega \gg 1/R'C$ के लिए समाकलन करता है पर संतृप्ति की ओर बह नहीं सकता। इसी तरह अवकलक (निवेश पर संधारित्र,
+पुनर्भरण के रूप में \omterm{def:b1:dc-circuits:resistor}{प्रतिरोधक}: $V_s = -RC\,\dd V_e/\dd t$, $\underline H =
+-jRC\omega$) ऊँची आवृत्ति के रव को बिना सीमा के प्रवर्धित करता है, जब तक
+कोई छोटा श्रेणी \omterm{def:b1:dc-circuits:resistor}{प्रतिरोधक} उसकी \omterm{def:b1:filters-transfer-functions:H}{लब्धि} पर टोपी न लगा दे।
+\end{remark}
+
+\begin{omfigure}
+\begin{tikzpicture}[font=\small]
+  \node[op amp] (c) at (0,0) {};
+  \draw (c.+) -- ++(-0.4,0) node[ground]{};
+  \draw (c.-) -- ++(-0.3,0) coordinate (m1) to[R=$R$] ++(-1.8,0) node[left] {$V_e$};
+  \draw (c.out) -- ++(0.5,0) node[right] {$V_s$};
+  \draw (c.out) ++(0.25,0) |- ++(0,1.2) to[C=$C$] ++(-2.1,0) -| (m1);
+  \begin{scope}[xshift=7.3cm, yshift=-1.2cm]
+  \begin{axis}[omaxis, axis x line=bottom, axis y line=left, xlabel style={at={(axis description cs:0.5,-0.16)}, anchor=north},
+      width=6.4cm, height=4.2cm, xmode=log, xlabel={$\omega$ ($\log$)}, ylabel={$G_{\mathrm{dB}}$},
+      xmin=0.01, xmax=100, ymin=-45, ymax=48, ytick={40,20,0,-20,-40}, xtick={0.01,0.1,1,10,100},
+      xticklabels={$0.01$,$0.1$,$1$,$10$,$100$}, anchor=origin, at={(0,0)}]
+    \addplot[omDef, thick, domain=0.01:100, samples=2] {-20*log10(x)};
+    \addplot[omThm, thick, domain=0.01:100, samples=200] {20 - 10*log10(1 + (x/0.1)^2)};
+    \node[omDef, font=\footnotesize, rotate=-32] at (axis cs:8,-10) {समाकलक};
+    \node[omThm, font=\footnotesize, anchor=west] at (axis cs:0.012,29) {छद्म-समाकलक};
+  \end{axis}
+  \end{scope}
+\end{tikzpicture}
+
+{\small समाकलक और उसका \omterm{def:b1:filters-transfer-functions:bode}{बोदे आरेख} (नीला, हर जगह \qty{-20}{dB} प्रति दशक,
+और दिष्ट पर अनंत \omterm{def:b1:filters-transfer-functions:H}{लब्धि}); और $C$ के आरपार \omterm{def:b1:dc-circuits:resistor}{प्रतिरोधक} लगाने पर कम आवृत्ति पर
+\omterm{def:b1:filters-transfer-functions:H}{लब्धि} पर टोपी लग जाती है (लाल): यानी ऐसा निम्न-पारक जो अपने कटऑफ़ के ऊपर
+समाकलन करता है।}
+\end{omfigure}
+
+\begin{example}[वर्ग से त्रिभुज]\label{ex:b1:operational-amplifier:triangle}
+$R = \qty{10}{k\ohm}$, $C = \qty{100}{nF}$, $1/RC = \qty{1000}{s^{-1}}$।
+$\pm\qty{1}{V}$ की \qty{1}{kHz} वर्ग तरंग ढाल
+$\mp\qty{1000}{V/s}$ और \omterm{def:b1:wave-propagation:signal}{आयाम} $ET/4RC = \qty{0.25}{V}$ की त्रिभुज देती है ---
+बिना किसी निष्क्रिय RC वाले $1/\omega$ क्षीणन के, और अगले चरण को खिलाने के
+लिए शून्य-प्रतिबाधा निर्गम के साथ।
+\end{example}
+
+\section{सक्रिय फ़िल्टर}
+
+\begin{proposition}[प्रथम कोटि का सक्रिय निम्न-पारक]\label{prop:b1:operational-amplifier:activelp}
+\index{सक्रिय फ़िल्टर}
+\omterm{prop:b1:operational-amplifier:basic}{प्रतिलोमी प्रवर्धक}, जिसमें संधारित्र $C$ अपने पुनर्भरण \omterm{def:b1:dc-circuits:resistor}{प्रतिरोधक} $R_2$ के
+आरपार लगा हो, उसके लिए
+\[
+\underline H = -\frac{R_2/R_1}{1 + jR_2C\omega}:
+\]
+यानी दिष्ट \omterm{def:b1:filters-transfer-functions:H}{लब्धि} $-R_2/R_1$ (जो $1$ से बड़ी हो सकती है) और कटऑफ़
+$\omega_c = 1/R_2C$ वाला निम्न-पारक, साथ में शून्य निर्गम \omterm{def:b1:sinusoidal-impedance:impedance}{प्रतिबाधा} --- अतः
+चरण साधारण गुणा से शृंखलित हो जाते हैं।
+\end{proposition}
+
+\begin{proof}
+\omterm{prop:b1:operational-amplifier:basic}{प्रतिलोमी प्रवर्धक}, जिसमें पुनर्भरण \omterm{def:b1:sinusoidal-impedance:impedance}{प्रतिबाधा} $R_2 \parallel 1/jC\omega
+= R_2/(1 + jR_2C\omega)$ है, $R_2$ की जगह।
+\end{proof}
+
+\section{ऋणात्मक पुनर्भरण के बिना: तुलनित्र}
+
+\begin{proposition}[तुलनित्र]\label{prop:b1:operational-amplifier:comparator}
+\index{तुलनित्र}
+बिना किसी पुनर्भरण के आदर्श प्रवर्धक संतृप्त रहता है:
+$V_s = +V_{\mathrm{sat}}$ जब $V_+ > V_-$ हो, और
+$-V_{\mathrm{sat}}$ जब $V_+ < V_-$ हो। किसी एक निवेश पर संदर्भ $V_{\mathrm{ref}}$
+और दूसरे पर संकेत रखने से निर्गम बता देता है कि संकेत संदर्भ से आगे निकला या
+नहीं --- यानी एक-बिट का परिवर्तक।
+\end{proposition}
+
+\begin{proof}
+$\mu\epsilon$ $V_{\mathrm{sat}}$ से आगे निकल जाता है, किसी भी $\abs\epsilon >
+V_{\mathrm{sat}}/\mu \sim \qty{0.1}{mV}$ के लिए।
+\end{proof}
+
+\begin{proposition}[श्मिट ट्रिगर]\label{prop:b1:operational-amplifier:schmitt}
+\index{श्मिट ट्रिगर}\index{शैथिल्य}
+निर्गम का अंश $\beta = R_1/(R_1 + R_2)$ वापस $V_+$ को दीजिए
+(विभाजक: $R_1$ भू तक, $R_2$ निर्गम से) और संकेत
+$V_e$ $V_-$ पर लगाइए। निर्गम $+V_{\mathrm{sat}}$ से
+$-V_{\mathrm{sat}}$ पर तब पलटता है जब $V_e$ चढ़कर $+\beta V_{\mathrm{sat}}$ पार
+करे, और वापस तब जब $V_e$ गिरकर $-\beta V_{\mathrm{sat}}$ से नीचे जाए: यानी दो
+देहलियाँ, चौड़ाई $2\beta V_{\mathrm{sat}}$ का एक \emph{शैथिल्य}, और उस चौड़ाई
+से छोटे रव के प्रति निरापद।
+\end{proposition}
+
+\begin{proof}
+\omterm{prop:b1:operational-amplifier:feedback}{धनात्मक पुनर्भरण}: अतः संतृप्त। यदि $V_s = +V_{\mathrm{sat}}$ हो तो $V_+ =
+\beta V_{\mathrm{sat}}$, और $\epsilon = \beta V_{\mathrm{sat}} - V_e$
+तब तक धनात्मक रहता है जब तक $V_e$ $\beta V_{\mathrm{sat}}$ से आगे न निकले; तब
+निर्गम पलट जाता है, $V_+$ गिरकर $-\beta V_{\mathrm{sat}}$ हो जाता है, और नई
+अवस्था तब तक टिकी रहती है जब तक $V_e$ उससे नीचे न गिरे।
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}[font=\small]
+  \node[op amp] (s) at (0,0) {};
+  \draw (s.-) -- ++(-0.8,0) node[left] {$V_e$};
+  \draw (s.out) -- ++(0.6,0) node[right] {$V_s$};
+  \coordinate (j) at ($(s.+)+(-0.6,0)$);
+  \coordinate (f) at ($(j)+(0,-1.0)$);
+  \coordinate (o) at ($(s.out)+(0.3,0)$);
+  \draw (s.+) -- (j);
+  \draw (o) -- (o |- f) to[R=$R_2$] (f) -- (j);
+  \draw (f) to[R=$R_1$] ++(0,-1.6) node[ground]{};
+  \begin{scope}[xshift=7.8cm, yshift=-0.9cm]
+  \begin{axis}[omaxis, axis x line=bottom, axis y line=left, width=6.4cm, height=4.6cm, xlabel={$V_e$}, ylabel={$V_s$},
+      xlabel style={at={(axis description cs:0.5,-0.12)}, anchor=north},
+      xmin=-2.2, xmax=2.2, ymin=-1.5, ymax=1.5, xtick={-1,1}, xticklabels={$-\beta V_{\mathrm{sat}}$,$\beta V_{\mathrm{sat}}$},
+      ytick={-1,1}, yticklabels={$-V_{\mathrm{sat}}$,$+V_{\mathrm{sat}}$}, anchor=origin, at={(0,0)}]
+    \draw[omThm, thick, -Stealth] (axis cs:-2.2,1) -- (axis cs:0.2,1);
+    \draw[omThm, thick] (axis cs:0.2,1) -- (axis cs:1,1) -- (axis cs:1,-1);
+    \draw[omThm, thick, -Stealth] (axis cs:2.2,-1) -- (axis cs:-0.2,-1);
+    \draw[omThm, thick] (axis cs:-0.2,-1) -- (axis cs:-1,-1) -- (axis cs:-1,1);
+  \end{axis}
+  \end{scope}
+\end{tikzpicture}
+
+{\small \omterm{prop:b1:operational-amplifier:schmitt}{श्मिट ट्रिगर}: $R_1$, $R_2$ के द्वारा \omterm{prop:b1:operational-amplifier:feedback}{धनात्मक पुनर्भरण}
+दो देहलियाँ $\pm\beta V_{\mathrm{sat}}$ दे देता है। निर्गम ऊँचे से नीचे तब
+पलटता है जब $V_e$ चढ़कर ऊपरी देहली पार करे, और नीचे से ऊँचे तब जब वह निचली से
+नीचे गिरे (तीर): यानी एक शैथिल्य-चक्र।}
+\end{omfigure}
+
+\begin{example}[शिथिलन दोलित्र]\label{ex:b1:operational-amplifier:astable}
+\index{शिथिलन दोलित्र}
+\omterm{prop:b1:operational-amplifier:schmitt}{श्मिट ट्रिगर} के निर्गम को $R$ के द्वारा उसी के प्रतिलोमी निवेश से जोड़
+दीजिए, और $C$ को $V_-$ से भू तक लगा दीजिए। संधारित्र
+$\pm V_{\mathrm{sat}}$ की ओर आवेशित होता है और हर बार
+$\pm\beta V_{\mathrm{sat}}$ पर पहुँचकर ट्रिगर को पलट देता है: अतः निर्गम एक
+वर्ग तरंग है, संधारित्र का \omterm{def:b1:dc-circuits:voltage}{विभवांतर} चरघातांकी चापों की शृंखला, और आवर्तकाल है
+\[
+T = 2RC\ln\frac{1 + \beta}{1 - \beta}
+\]
+(\cref{exo:b1:operational-amplifier:12}): $2.2\,RC$, जब $\beta = \tfrac12$ हो।
+कोई निवेश नहीं, एक संधारित्र, और एक घड़ी --- यानी ऐसा निकाय जो इसलिए दोलन करता
+है कि वह थम ही नहीं सकता, और यह विषय वर्ष 2 के खंड के पुनर्भरण-दोलित्रों के
+साथ लौटता है।
+\end{example}
+
+\section{अभ्यास}
+
+\begin{exercise}[$\star$]\label{exo:b1:operational-amplifier:1}
+किसी \omterm{prop:b1:operational-amplifier:basic}{अ-प्रतिलोमी प्रवर्धक} में $R_1 = \qty{1.0}{k\ohm}$, $R_2 =
+\qty{9.0}{k\ohm}$, $V_{\mathrm{sat}} = \qty{15}{V}$ है। \omterm{def:b1:filters-transfer-functions:H}{लब्धि}?
+$V_e = \qty{0.50}{V}$ के लिए निर्गम? संतृप्ति से पहले सबसे बड़ा निवेश?
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b1:operational-amplifier:2}
+किसी \omterm{prop:b1:operational-amplifier:basic}{प्रतिलोमी प्रवर्धक} में $R_1 = \qty{10}{k\ohm}$, $R_2 = \qty{100}{k\ohm}$ है।
+\omterm{def:b1:filters-transfer-functions:H}{लब्धि}, निवेश \omterm{def:b1:sinusoidal-impedance:impedance}{प्रतिबाधा}, \qty{1.0}{V} के स्रोत से खींची धारा, और निर्गम।
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b1:operational-amplifier:3}
+\omterm{def:b1:dc-circuits:sources}{आंतरिक प्रतिरोध} \qty{10}{k\ohm} और खुले परिपथ के \omterm{def:b1:dc-circuits:voltage}{विभवांतर}
+\qty{1.0}{V} वाले किसी संवेदक को \qty{1.0}{k\ohm} का भार चलाना है। उनके बीच
+अनुगामी के बिना और उसके साथ भार के आरपार \omterm{def:b1:dc-circuits:voltage}{विभवांतर}?
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b1:operational-amplifier:4}
+किसी \omterm{prop:b1:operational-amplifier:sumdiff}{योग प्रवर्धक} में $R_f = \qty{10}{k\ohm}$ है और निवेश
+\qty{10}{k\ohm} तथा \qty{20}{k\ohm} के द्वारा आते हैं। $V_s$ लिखिए; और उसे
+$V_1 = \qty{1.0}{V}$, $V_2 = \qty{2.0}{V}$ के लिए निकालिए।
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b1:operational-amplifier:5}
+\omterm{prop:b1:operational-amplifier:sumdiff}{अंतर प्रवर्धक} का $V_s = (R_2/R_1)(V_2 - V_1)$ व्युत्पन्न कीजिए।
+$R_1 = \qty{10}{k\ohm}$, $R_2 = \qty{100}{k\ohm}$, $V_1 = \qty{1.00}{V}$,
+$V_2 = \qty{1.05}{V}$ के साथ: निर्गम? दोनों निवेशों में साझी \qty{1}{V}
+का क्या हुआ?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b1:operational-amplifier:6}
+$R = \qty{10}{k\ohm}$, $C = \qty{100}{nF}$ वाला समाकलक, जिसका निर्गम
+आरंभ में शून्य है। उस पर \qty{1.0}{V} का सोपान लगाया जाता है: निर्गम की ढाल
+और संतृप्ति (\qty{15}{V}) तक का समय। और $\pm\qty{1.0}{V}$ की \qty{1.0}{kHz}
+वर्ग तरंग: निर्गम की आकृति और \omterm{def:b1:wave-propagation:signal}{आयाम}।
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b1:operational-amplifier:7}
+पिछले समाकलक के संधारित्र के आरपार \qty{1.0}{M\ohm} का \omterm{def:b1:dc-circuits:resistor}{प्रतिरोधक} जोड़ दिया
+जाता है। \omterm{def:b1:filters-transfer-functions:H}{स्थानांतरण फलन}, दिष्ट \omterm{def:b1:filters-transfer-functions:H}{लब्धि}, \omterm{def:b1:filters-transfer-functions:bode}{कटऑफ़
+आवृत्ति}, और \qty{1.0}{kHz} पर \omterm{def:b1:filters-transfer-functions:H}{लब्धि} दीजिए; किस परास में परिपथ अब भी
+समाकलन करता है?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b1:operational-amplifier:8}
+$R_1 = \qty{1.0}{k\ohm}$ का उपयोग करके ऐसा प्रतिलोमी सक्रिय निम्न-पारक
+गढ़िए जिसकी \omterm{def:b1:filters-transfer-functions:bode}{पारक बैंड} में \omterm{def:b1:filters-transfer-functions:H}{लब्धि} \qty{20}{dB} और कटऑफ़ \qty{500}{Hz} हो।
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b1:operational-amplifier:9}
+किसी असली प्रवर्धक के लिए $\mu_0 = 10^5$ और $f_T = \qty{1.0}{MHz}$ है।
+$100$ की \omterm{def:b1:filters-transfer-functions:H}{लब्धि} के लिए गढ़े गए किसी \omterm{prop:b1:operational-amplifier:basic}{अ-प्रतिलोमी प्रवर्धक} के लिए: वास्तविक दिष्ट
+\omterm{def:b1:filters-transfer-functions:H}{लब्धि} (विश्लेषण में $\mu_0$ को परिमित रखिए), और बैंड-चौड़ाई। और किसी
+अनुगामी की बैंड-चौड़ाई?
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b1:operational-amplifier:10}
+$V_{\mathrm{ref}} = \qty{2.0}{V}$ वाला कोई तुलनित्र, जो $V_-$ पर लगा है, ऐसे
+धीरे-धीरे चढ़ते संकेत को देखता है जिसमें \qty{50}{mV} का रव है। जब संकेत \qty{2.0}{V}
+पार करे तब निर्गम का वर्णन कीजिए। उपाय?
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b1:operational-amplifier:11}
+$R_1 = \qty{1.0}{k\ohm}$, $R_2 = \qty{9.0}{k\ohm}$,
+$V_{\mathrm{sat}} = \qty{15}{V}$ वाला \omterm{prop:b1:operational-amplifier:schmitt}{श्मिट ट्रिगर}: दोनों देहलियाँ व्युत्पन्न कीजिए और निकालिए।
+$V_s$ खींचिए, \omterm{def:b1:wave-propagation:signal}{आयाम} \qty{3}{V} की त्रिभुजाकार $V_e$ के लिए।
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b1:operational-amplifier:12}
+$R_1 = R_2$ ($\beta = \tfrac12$) वाला \omterm{ex:b1:operational-amplifier:astable}{शिथिलन दोलित्र}। आवर्तकाल
+$T = 2RC\ln\frac{1 + \beta}{1 - \beta}$ को $C$ के आवेशन से, दोनों देहलियों
+के बीच $R$ के द्वारा, व्युत्पन्न कीजिए; \qty{1.0}{kHz} के लिए $R$ चुनिए,
+$C = \qty{100}{nF}$ के साथ; और $V_s(t)$ तथा $V_C(t)$ खींचिए।
+\end{exercise}
+
+\section{समस्या: विकृति-मापी के लिए एक उपकरण-शृंखला}
+
+\begin{problem}[{सप्ताहांत समस्या --- पुल की धरन पर दो मिलीवोल्ट से लेकर एक
+लाल दीपक तक: अनुगामी, एक अंतर प्रवर्धक, एक सक्रिय
+फ़िल्टर और एक श्मिट ट्रिगर, तथा वे दो अपूर्णताएँ जो तय करती हैं कि
+शृंखला काम करेगी या नहीं}]
+\label{pb:b1:operational-amplifier:1}
+प्रतिरोध $R(1 + \epsilon)$ का कोई विकृति-मापी, $R = \qty{1.00}{k\ohm}$,
+$0 \leq \epsilon \leq \num{2.0e-3}$, तीन जड़े \qty{1.00}{k\ohm} प्रतिरोधकों
+के साथ \omterm{prop:b1:dc-circuits:wheatstone}{व्हीटस्टोन सेतु} बनाता है, जिसे $E = \qty{5.00}{V}$ खिलाता है।
+सेतु का निर्गम $u = V_B - V_A$ (दोनों मध्यबिंदुओं के बीच)
+$u \approx E\epsilon/4$ है (चिह्न तारों से चुना जाता है)। प्रवर्धक:
+जब तक कुछ और न कहा जाए, आदर्श; $V_{\mathrm{sat}} = \qty{15}{V}$; और जहाँ ज़रूरी हो,
+$f_T = \qty{1.0}{MHz}$, \omterm{rem:b1:operational-amplifier:real}{आरोहण दर} \qty{0.5}{V/\micro s}, निवेश विस्थापन
+\qty{1}{mV}।
+
+\medskip
+\noindent\textbf{भाग I --- सेतु और उस पर भार।}
+\begin{enumerate}
+  \item याद कीजिए कि $u \approx E\epsilon/4$ क्यों है, छोटे $\epsilon$ के लिए।
+  \item $u$ निकालिए, पूर्ण पैमाने पर ($\epsilon = \num{2.0e-3}$)।
+  \item शून्य विकृति पर और पूर्ण पैमाने पर हर मध्यबिंदु का विभव दीजिए
+        (सेतु के ऋण सिरे के सापेक्ष)। उनके साझे मान को क्या कहते हैं?
+  \item हर मध्यबिंदु दो \qty{1}{k\ohm} प्रतिरोधकों वाले किसी विभाजक का
+        निर्गम है: दोनों मध्यबिंदुओं के बीच तेवेनिन प्रतिरोध क्या दिखता है?
+  \item सेतु के निर्गम के आरपार ऐसा प्रवर्धक जोड़ा जाता है जिसका निवेश
+        प्रतिरोध \qty{10}{k\ohm} है: उसे $u$ का कितना अंश मिलता है?
+  \item हर मध्यबिंदु पर लगा अनुगामी इसे क्यों ठीक कर देता है? काम में आए
+        दोनों गुण बताइए।
+  \item अनुगामियों के निर्गम \omterm{def:b1:dc-circuits:voltage}{विभवांतर} क्या हैं ($V_A$, $V_B$ के पदों में),
+        और वे सेतु से कितनी धारा खींचते हैं?
+\end{enumerate}
+
+\medskip
+\noindent\textbf{भाग II --- अंतर को प्रवर्धित करना।}
+\begin{enumerate}[resume]
+  \item अनुगामी किसी \omterm{prop:b1:operational-amplifier:sumdiff}{अंतर प्रवर्धक} को खिलाते हैं (दोनों निवेशों पर $R_1$,
+        और $R_2$ पुनर्भरण तथा भू तक)। $V_s =
+        (R_2/R_1)(V_B - V_A)$ व्युत्पन्न कीजिए।
+  \item $R_1 = \qty{10}{k\ohm}$ लीजिए और $R_2$ चुनिए, $100$ की \omterm{def:b1:filters-transfer-functions:H}{लब्धि} के लिए।
+  \item दूसरा, अ-प्रतिलोमी चरण $10$ से गुणा करता है: उसके \omterm{def:b1:dc-circuits:resistor}{प्रतिरोधक}, कुल
+        \omterm{def:b1:filters-transfer-functions:H}{लब्धि}, और पूर्ण पैमाने पर निर्गम दीजिए।
+  \item दोनों मध्यबिंदु $E/2 = \qty{2.5}{V}$ के पास बैठते हैं (यानी
+        उभयनिष्ठ-विधा \omterm{def:b1:dc-circuits:voltage}{विभवांतर})। ठीक-ठीक मिलाया गया \omterm{prop:b1:operational-amplifier:sumdiff}{अंतर प्रवर्धक} उसके
+        साथ क्या करता है? यदि कोई एक प्रतिरोध-अनुपात $1\%$ चूक जाए, तो
+        निवेश पर लौटाए गए मिथ्या \omterm{def:b1:dc-circuits:voltage}{विभवांतर} का आकलन कीजिए और संकेत से तुलना कीजिए।
+  \item पहले प्रवर्धक का निवेश विस्थापन \qty{1}{mV} है। कुल \omterm{def:b1:filters-transfer-functions:H}{लब्धि} के बाद
+        वह निर्गम में कितनी त्रुटि लाता है? निष्कर्ष निकालिए।
+  \item $f_T = \qty{1}{MHz}$ के साथ हर चरण की बैंड-चौड़ाई क्या है?
+        क्या वह \qty{5}{Hz} से नीचे के संकेत के लिए पर्याप्त है?
+  \item निर्गम को लगभग \qty{10}{ms} में \qty{2.5}{V} झूलना है, जब कोई ट्रक
+        आए: क्या \omterm{rem:b1:operational-amplifier:real}{आरोहण दर} सीमित करती है?
+\end{enumerate}
+
+\medskip
+\noindent\textbf{भाग III --- फ़िल्टरन।}
+प्रवर्धित संकेत बिजली की लाइन से पकड़ी गई \qty{50}{Hz} की गुनगुनाहट ढो रहा
+है।
+\begin{enumerate}[resume]
+  \item \omterm{def:b1:filters-transfer-functions:H}{लब्धि} $-1$ और कटऑफ़ \qty{10}{Hz} वाला प्रतिलोमी सक्रिय निम्न-पारक
+        गढ़िए, $R_1 = R_2 = \qty{16}{k\ohm}$ का उपयोग करके: $C$ निकालिए।
+  \item \qty{50}{Hz} पर उसका क्षीणन \omterm{def:b1:filters-transfer-functions:bode}{डेसिबल} में निकालिए।
+  \item \qty{5}{Hz} पर कला-खिसकाव और उससे मिलता विलंब निकालिए। क्या यह
+        किसी चेतावनी-यंत्र के लिए स्वीकार्य है?
+  \item यहाँ किसी निष्क्रिय RC की तुलना में \omterm{prop:b1:operational-amplifier:activelp}{सक्रिय फ़िल्टर} क्यों बेहतर है
+        (दो कारण)?
+  \item दूसरा एक जैसा चरण शृंखलित किया जाता है: \qty{50}{Hz} पर क्षीणन?
+        यहाँ गुणनफल का नियम यथार्थ क्यों है?
+\end{enumerate}
+
+\medskip
+\noindent\textbf{भाग IV --- देहली और चेतावनी।}
+चेतावनी तब बजनी चाहिए जब विकृति \num{1.6e-3} से आगे निकले।
+\begin{enumerate}[resume]
+  \item यह शृंखला के किस निर्गम \omterm{def:b1:dc-circuits:voltage}{विभवांतर} से मेल खाता है? इसी संदर्भ वाला
+        कोई तुलनित्र: निर्गम की अवस्थाएँ।
+  \item \omterm{def:b1:filters-transfer-functions:H}{फ़िल्टर} किया संकेत देहली के पास अब भी \qty{50}{mV} का रव ढोता है।
+        सादा तुलनित्र क्या करता है?
+  \item किसी एक निवेश पर संदर्भ और पुनर्भरण $\beta$ वाला \omterm{prop:b1:operational-amplifier:schmitt}{श्मिट ट्रिगर}:
+        दिखाइए कि देहलियाँ $V_{\mathrm{ref}} \pm
+        \beta V_{\mathrm{sat}}$ हैं; $\beta$ चुनिए, $\pm\qty{0.10}{V}$ के लिए,
+        और $R_1$, $R_2$ दीजिए।
+  \item दोनों देहलियाँ वोल्ट में और विकृति में बताइए।
+  \item निर्गम किसी \omterm{def:b1:dc-circuits:resistor}{प्रतिरोधक} के द्वारा एक LED (\qty{2.0}{V}, \qty{13}{mA})
+        चलाता है: उसे निकालिए। जब निर्गम $-V_{\mathrm{sat}}$ पर हो तब
+        LED की रक्षा कौन करता है?
+  \item शृंखला का चरण-दर-चरण सार लिखिए, और उन दो अ-आदर्शताओं के नाम लीजिए
+        जो उसकी असली सीमाएँ तय करती हैं।
+\end{enumerate}
+\end{problem}

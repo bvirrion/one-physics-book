@@ -1,0 +1,669 @@
+\chapter{Magnetostática: campo, forças e dipolos}\label{ch:b1:magnetostatics}
+
+Uma agulha de bússola gira quando um fio próximo conduz corrente: essa
+observação de Ørsted, em 1820, uniu duas ciências que haviam crescido
+separadas, a eletricidade e o magnetismo, e em poucos meses Ampère tinha a lei
+da força entre correntes, e Biot e Savart, o campo de um fio.
+Este capítulo é a estática do \omterm{def:b1:magnetostatics:field}{campo magnético}: o que as correntes criam
+(mapas de campo, a \omterm{thm:b1:magnetostatics:biotsavart}{lei de Biot--Savart} e o teorema de Ampère, o gêmeo
+magnético da \omterm{thm:b1:electrostatics-gauss:gauss}{lei de Gauss}), o que o campo faz às correntes (a \omterm{thm:b1:magnetostatics:laplace}{força de
+Laplace}, que move todo motor e todo instrumento de medida) e o
+\omterm{def:b1:magnetostatics:moment}{dipolo magnético}, a espira de corrente que explica a bússola, o ímã e o
+campo da própria Terra.
+
+\begin{omfigure}
+\includegraphics[width=0.34\linewidth]{images/book3/compass.jpg}
+
+{\small O mais antigo instrumento do magnetismo: uma agulha de bússola é um pequeno \omterm{def:b1:magnetostatics:moment}{dipolo magnético} que se alinha com o campo da Terra.}
+\end{omfigure}
+
+\begin{omfigure}
+\includegraphics[width=0.58\linewidth]{images/book3/ai/b3-28-oersted-compass-wire.png}
+
+{\small A experiência de Ørsted: feche o circuito e a agulha gira --- uma corrente cria um \omterm{def:b1:magnetostatics:field}{campo magnético} que circula o fio.}
+\end{omfigure}
+
+\section{Fontes e mapas de campo}
+
+\begin{definition}[Campo magnetostático]\label{def:b1:magnetostatics:field}
+\index{campo magnético}\index{linha de campo!magnética}\index{tesla}
+Correntes permanentes (cargas em movimento permanente) criam em todo ponto um
+\emph{campo magnético} $\vect B$ (tesla, \unit{T}), definido pela força
+$q\vect v\wedge\vect B$ que ele exerce sobre uma carga de prova em movimento
+(\cref{def:b1:charged-particles:lorentz}). As suas \emph{\omterm{def:b1:electrostatics-gauss:field}{linhas de campo}} são
+tangentes a $\vect B$ e orientadas segundo ele. Os ímãs permanentes criam
+campos da mesma natureza, a partir das correntes microscópicas dos seus
+átomos. \omterm{def:b1:units-dimensions:oom}{Ordens de grandeza}: a Terra, \qty{5e-5}{T}; um ímã de geladeira,
+\qty{0.01}{T}; um aparelho de ressonância magnética, de \qty{1.5}{T} a \qty{3}{T}; os maiores
+campos permanentes de laboratório, \qty{45}{T}.
+\end{definition}
+
+\begin{proposition}[Mapas de campo]\label{prop:b1:magnetostatics:maps}
+\index{regra da mão direita}\index{conservação do fluxo (magnético)}
+\begin{enumerate}
+  \item Um fio retilíneo: círculos centrados no fio, em planos
+        perpendiculares a ele, orientados pela \emph{regra da mão direita}
+        (polegar no sentido da corrente, dedos no sentido de $\vect B$).
+  \item Uma espira circular: linhas que a atravessam ao longo do seu eixo e
+        se fecham por fora; de longe, o mapa de um pequeno ímã.
+  \item Um solenoide longo: linhas paralelas, densas e uniformes dentro; quase
+        nenhum campo fora; é o mapa de um ímã em barra, cuja face ``norte''
+        é aquela de onde as linhas saem.
+  \item As \omterm{def:b1:electrostatics-gauss:field}{linhas de campo} magnético não têm começo nem fim: elas se fecham
+        sobre si mesmas ou vão para o infinito. Equivalentemente, \emph{o fluxo
+        de $\vect B$ através de qualquer superfície fechada é nulo} --- não existem
+        cargas magnéticas.
+\end{enumerate}
+\end{proposition}
+\admitted
+
+\begin{omfigure}
+\begin{tikzpicture}[font=\small, x=1cm, y=1cm, >=Stealth]
+  % wire seen end-on
+  \begin{scope}
+    \foreach \r in {0.5,1.0,1.5,2.0} \draw[omDef, thick, postaction={decorate, decoration={markings, mark=at position 0.125 with {\arrow{>}}, mark=at position 0.625 with {\arrow{>}}}}] (0,0) circle (\r);
+    \fill[omThm] (0,0) circle (3pt); \draw[omThm] (0,0) circle (5pt);
+    \node[font=\footnotesize] at (0,-2.55) {fio retilíneo ($I$ vindo para o leitor)};
+  \end{scope}
+  % loop seen from the side
+  \begin{scope}[xshift=5.6cm, fl/.style={omDef, thick, postaction={decorate, decoration={markings, mark=at position 0.06 with {\arrow{>}}}}}]
+    \draw[omDef, thick, -Stealth] (-2.3,0) -- (2.3,0);
+    \foreach \s in {1,-1} {
+      \draw[fl] plot[smooth cycle] coordinates {(0,{0.5*\s}) (0.8,{0.55*\s}) (1.5,{0.9*\s}) (1.7,{1.5*\s}) (1.2,{2.0*\s}) (0,{2.1*\s}) (-1.2,{2.0*\s}) (-1.7,{1.5*\s}) (-1.5,{0.9*\s}) (-0.8,{0.55*\s})};
+      \draw[fl] plot[smooth cycle] coordinates {(0,{0.8*\s}) (0.5,{0.85*\s}) (0.75,{1.0*\s}) (0.75,{1.3*\s}) (0.5,{1.5*\s}) (0,{1.55*\s}) (-0.5,{1.5*\s}) (-0.75,{1.3*\s}) (-0.75,{1.0*\s}) (-0.5,{0.85*\s})};
+    }
+    \draw[omThm, very thick] (0,1) circle (4pt); \draw[omThm, very thick] (0,-1) circle (4pt);
+    \fill[white] (0,1) circle (3.5pt); \fill[white] (0,-1) circle (3.5pt);
+    \fill[omThm] (0,1) circle (1.2pt); \node[omThm, font=\scriptsize] at (0,-1) {$\times$};
+    \node[font=\footnotesize] at (0,-2.55) {espira (em corte): as linhas a atravessam};
+  \end{scope}
+  % solenoid
+  \begin{scope}[xshift=10.9cm]
+    \foreach \x in {-1.6,-1.2,...,1.6} {\fill[omThm] (\x,0.9) circle (2pt); \node[omThm, font=\scriptsize] at (\x,-0.9) {$\times$};}
+    \foreach \y in {-0.6,-0.2,0.2,0.6} \draw[omDef, thick, -Stealth] (-2.3,\y) -- (2.3,\y);
+    \draw[omDef, thick, postaction={decorate, decoration={markings, mark=at position 0.5 with {\arrow{>}}}}] (2.3,0.6) .. controls (3.0,0.9) and (3.0,2.0) .. (0,2.1) .. controls (-3.0,2.0) and (-3.0,0.9) .. (-2.3,0.6);
+    \draw[omDef, thick, postaction={decorate, decoration={markings, mark=at position 0.5 with {\arrow{>}}}}] (2.3,-0.6) .. controls (3.0,-0.9) and (3.0,-2.0) .. (0,-2.1) .. controls (-3.0,-2.0) and (-3.0,-0.9) .. (-2.3,-0.6);
+    \node[font=\footnotesize] at (0,-2.55) {solenoide (em corte): uniforme dentro};
+  \end{scope}
+\end{tikzpicture}
+
+{\small Três mapas de campo. Um ponto é uma corrente que vem para o leitor, e uma cruz,
+uma corrente que se afasta. As linhas de um fio são círculos; as de uma espira a
+atravessam e se fecham por fora; as de um solenoide longo são retas e uniformes
+dentro e se fecham bem longe, onde o campo é fraco --- em todos os casos
+elas não têm nem fonte nem sumidouro.}
+\end{omfigure}
+
+\begin{proposition}[Simetrias de $\vect B$]\label{prop:b1:magnetostatics:symmetry}
+\index{simetria (de um campo)!magnética}
+$\vect B$ se comporta na reflexão especular de modo \emph{oposto} a $\vect E$
+(ele é um \emph{pseudovetor}, construído a partir de um produto vetorial): num ponto
+de um plano de \emph{simetria} das correntes, $\vect B$ é
+\emph{perpendicular} ao plano; num ponto de um plano de
+\emph{antissimetria} (a imagem especular inverte as correntes), $\vect B$
+está \emph{contido} no plano. As invariâncias se transferem como para $\vect E$.
+\end{proposition}
+
+\begin{proof}
+O campo de um elemento de corrente é $\propto I\,\dd\vect l\wedge\vect e_r$
+(veja abaixo); um espelho inverte um dos fatores de um produto vetorial em relação à
+imagem de um vetor verdadeiro, de modo que a imagem de $\vect B$ é o oposto da
+imagem especular da flecha. Num \omterm{prop:b1:electrostatics-gauss:symmetry}{plano de simetria} $\vect B$ tem de ser igual ao
+oposto da sua própria imagem especular, e portanto normal ao plano; num \omterm{prop:b1:electrostatics-gauss:symmetry}{plano de
+antissimetria}, o oposto do oposto: contido no plano.
+\end{proof}
+
+\begin{example}[Usando as simetrias]\label{ex:b1:magnetostatics:symmetryuse}
+Para um fio retilíneo, todo plano que contém o fio é um \omterm{prop:b1:electrostatics-gauss:symmetry}{plano de simetria},
+de modo que em cada ponto $\vect B$ é perpendicular ao plano que passa pelo
+fio e pelo ponto: ortorradial, $\vect B = B(r)\,\vect e_\theta$ por
+invariância ao longo e em torno do fio. Para uma espira, o plano da espira
+é um \omterm{prop:b1:electrostatics-gauss:symmetry}{plano de simetria}: nele $\vect B$ é normal à espira; o eixo
+está contido em todos os \omterm{prop:b1:electrostatics-gauss:symmetry}{planos de antissimetria} que o contêm: no eixo $\vect B$ é
+axial.
+\end{example}
+
+\section{A lei de Biot--Savart}
+
+\begin{theorem}[Biot--Savart]\label{thm:b1:magnetostatics:biotsavart}
+\index{lei de Biot--Savart}\index{permeabilidade do vácuo}
+Um circuito que conduz a corrente $I$ cria em $M$ o campo
+\[
+\vect B(M) = \frac{\mu_0}{4\pi}\sum_{\text{circuito}} \frac{I\,\dd\vect l\wedge\vect e_{PM}}{PM^2} ,
+\]
+soma sobre os elementos $\dd\vect l$ do circuito nos pontos $P$,
+orientados no sentido da corrente, sendo $\vect e_{PM}$ o vetor unitário de
+$P$ para $M$ e $\mu_0 = 4\pi \times 10^{-7}\,\unit{T.m/A}$ a
+\emph{\omterm{thm:b1:magnetostatics:biotsavart}{permeabilidade do vácuo}}. Cada elemento contribui com um campo
+perpendicular a si mesmo e à reta $PM$, que cai como $1/PM^2$.
+\end{theorem}
+\admitted
+
+\begin{proposition}[Fio, espira, solenoide]\label{prop:b1:magnetostatics:three}
+\index{campo de um fio retilíneo}\index{campo de uma espira}\index{campo de um solenoide}
+\begin{enumerate}
+  \item Fio retilíneo infinito, à distância $r$: $B = \dfrac{\mu_0I}{2\pi r}$.
+  \item Espira circular de raio $R$, no seu eixo à distância $z$ do
+        centro: $B_z = \dfrac{\mu_0IR^2}{2(R^2 + z^2)^{3/2}} = \dfrac{\mu_0I}{2R}
+        \sin^3\alpha$, sendo $\alpha$ o semiângulo sob o qual a espira é
+        vista de $M$; no centro, $B = \mu_0I/2R$.
+  \item Solenoide de $n$ espiras por metro, no seu eixo: $B = \tfrac12\mu_0nI
+        (\cos\alpha_1 - \cos\alpha_2)$, sendo $\alpha_1, \alpha_2$ os ângulos sob
+        os quais se veem as duas extremidades; para um solenoide longo, $B = \mu_0nI$
+        dentro, e metade disso numa extremidade.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+(1) $M$ à distância $r$ do fio, $P$ na abscissa $z$ ao longo dele:
+$\dd\vect l\wedge\vect e_{PM}$ tem módulo $\dd z\,\sin\beta = \dd z\cdot r/PM$
+com $PM = \sqrt{r^2 + z^2}$, e todas as contribuições são ortorradiais:
+$B = \dfrac{\mu_0I}{4\pi}\displaystyle\int_{-\infty}^{\infty}\dfrac{r\,\dd z}{(r^2 + z^2)^{3/2}}
+= \dfrac{\mu_0I}{4\pi}\,\dfrac{2}{r}$. (2) Cada elemento da espira está à
+mesma distância $\sqrt{R^2 + z^2}$ de $M$, perpendicular a
+$\vect e_{PM}$; o seu campo tem módulo $\mu_0I\,\dd l/4\pi(R^2 + z^2)$, e
+só a componente axial, a fração $R/\sqrt{R^2 + z^2}$ dele,
+sobrevive à soma ao longo da espira: $B_z = \mu_0I\cdot2\pi R\cdot R/4\pi(R^2 +
+z^2)^{3/2}$. (3) Uma fatia $\dd z'$ de solenoide é uma espira de corrente
+$nI\,\dd z'$; com $z' - z = R/\tan\alpha$, $\dd z' = -R\,\dd\alpha/\sin^2\alpha$,
+e $B = \dfrac{\mu_0nI}{2}\displaystyle\int\sin^3\alpha\,\dfrac{\dd\alpha}{\sin^2\alpha}$ sobre
+o solenoide $= \tfrac12\mu_0nI(\cos\alpha_1 - \cos\alpha_2)$; infinitamente
+longo, $\alpha_1 \to 0$, $\alpha_2 \to \pi$.
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}[font=\small, x=1cm, y=1cm, >=Stealth]
+  \begin{scope}
+    \draw[omThm, very thick, -Stealth] (0,-2.2) -- (0,2.4) node[right] {$I$};
+    \fill[omThm] (0,0.4) circle (1.5pt) node[left, font=\footnotesize] {$P$};
+    \draw[omThm, very thick] (0,0.4) -- (0,0.75);
+    \node[omThm, font=\footnotesize, anchor=east] at (-0.1,0.85) {$\dd\vect l$};
+    \fill (2.2,-0.6) circle (1.5pt) node[below right, font=\footnotesize] {$M$};
+    \draw[dashed] (0,0.4) -- (2.2,-0.6) node[midway, above, font=\footnotesize] {$\vect e_{PM}$};
+    \draw[dashed] (0,-0.6) -- (2.2,-0.6) node[midway, below, font=\footnotesize] {$r$};
+    \node[omDef, font=\footnotesize] at (2.2,-0.6) [xshift=14pt, yshift=10pt] {$\odot\ \dd\vect B$};
+    \node[font=\footnotesize] at (1.0,-2.55) {Biot--Savart para um fio};
+  \end{scope}
+  \begin{scope}[xshift=6.6cm]
+    \draw[omThm, very thick] (0,0) ellipse (0.45 and 1.3);
+    \draw[dashed] (-0.3,0) -- (3.6,0);
+    \fill (2.6,0) circle (1.5pt) node[below, font=\footnotesize] {$M$};
+    \draw[dashed] (0,1.3) -- (2.6,0); \draw[dashed] (0,-1.3) -- (2.6,0);
+    \draw (2.0,0) arc[start angle=180, end angle=153.4, radius=0.6];
+    \node[font=\footnotesize] at (1.75,0.22) {$\alpha$};
+    \draw[<->] (0,0) -- (0,1.3) node[midway, left, font=\footnotesize] {$R$};
+    \draw[<->] (0,-1.5) -- (2.6,-1.5) node[midway, below, font=\footnotesize] {$z$};
+    \draw[omDef, thick, -Stealth] (2.6,0) -- (3.4,0) node[above, font=\footnotesize] {$\vect B$};
+    \node[font=\footnotesize] at (1.6,-2.55) {espira: $B = \frac{\mu_0 I}{2R}\sin^3\alpha$};
+  \end{scope}
+  \begin{scope}[xshift=12.4cm]
+    \draw[omThm, thick] (-1.6,0.8) rectangle (1.6,0.9); \draw[omThm, thick] (-1.6,-0.9) rectangle (1.6,-0.8);
+    \draw[dashed] (-2.2,0) -- (2.2,0);
+    \fill (0.3,0) circle (1.5pt) node[below, font=\footnotesize] {$M$};
+    \draw[dashed] (0.3,0) -- (-1.6,0.85); \draw[dashed] (0.3,0) -- (1.6,0.85);
+    \draw (-0.3,0) arc[start angle=180, end angle=156, radius=0.6];
+    \node[font=\footnotesize] at (-0.5,0.32) {$\alpha_1$};
+    \draw (0.9,0) arc[start angle=0, end angle=33, radius=0.6];
+    \node[font=\footnotesize] at (1.15,0.32) {$\alpha_2$};
+    \node[font=\footnotesize] at (0,-2.55) {solenoide: $\frac12\mu_0 nI(\cos\alpha_1 - \cos\alpha_2)$};
+  \end{scope}
+\end{tikzpicture}
+
+{\small Os três cálculos de Biot--Savart do capítulo: o elemento
+$\dd\vect l$ de um fio e a sua contribuição em $M$, perpendicular ao
+plano da figura; a espira vista de $M$ sob o semiângulo
+$\alpha$; e o solenoide, cujas extremidades são vistas sob $\alpha_1$ e
+$\alpha_2$.}
+\end{omfigure}
+
+\begin{example}[Ordens de grandeza]\label{ex:b1:magnetostatics:orders}
+Um fio de \qty{10}{A} a \qty{1}{cm}: $B = 2 \times 10^{-7} \times 10/0.01 =
+\qty{2e-4}{T}$, quatro vezes o campo da Terra --- a bússola gira mesmo.
+Uma bobina de $100$ espiras, raio \qty{5}{cm}, com \qty{2}{A}: $\mu_0NI/2R =
+\qty{2.5}{mT}$ no seu centro. Um solenoide de $1000$ espiras por metro a
+\qty{5}{A}: \qty{6.3}{mT}; com um núcleo de ferro de permeabilidade relativa
+$1000$, seguiriam vários \omterm{def:b1:magnetostatics:field}{tesla}, se o ferro não saturasse perto de
+\qty{2}{T} --- o teto de todo eletroímã, e é por isso que os
+campos mais fortes vêm de bobinas supercondutoras sem ferro.
+\end{example}
+
+\section{A lei de Ampère}
+
+\begin{theorem}[Ampère]\label{thm:b1:magnetostatics:ampere}
+\index{lei de Ampère}\index{circulação!do campo magnético}
+A circulação de $\vect B$ ao longo de qualquer curva fechada orientada $\Gamma$
+é igual a $\mu_0$ vezes a corrente total que atravessa qualquer superfície apoiada em
+$\Gamma$, contada positivamente quando ela atravessa no sentido dado pela
+regra da mão direita a partir da orientação de $\Gamma$:
+\[
+\oint_\Gamma \vect B\cdot\dd\vect l = \mu_0 I_{\text{enlaçada}} .
+\]
+\end{theorem}
+
+\begin{proof}
+Para um círculo de raio $r$ centrado num fio retilíneo, $\vect B$ é
+tangente e de módulo $\mu_0I/2\pi r$ em toda parte, de modo que a circulação vale
+$2\pi r \times \mu_0I/2\pi r = \mu_0I$, independente de $r$; para uma curva que não
+envolve o fio, as contribuições se cancelam. O caso geral fica
+admitido (volume do segundo ano).
+\end{proof}
+
+\begin{method}[Usar a lei de Ampère]\label{meth:b1:magnetostatics:ampere}
+Como no caso de Gauss: (1) as simetrias dão a direção de $\vect B$ e a
+variável de que ele depende; (2) escolha uma \emph{curva amperiana} que passe por $M$
+e sobre a qual $\vect B$ seja tangente com módulo constante ou então
+perpendicular; (3) conte a corrente que a atravessa; (4) isole. Funciona
+para fios e cilindros infinitos, solenoides e toroides infinitos, e
+lâminas de corrente infinitas.
+\end{method}
+
+\begin{proposition}[Cilindro, solenoide, toroide]\label{prop:b1:magnetostatics:ampereapps}
+\begin{enumerate}
+  \item Um fio cilíndrico de raio $a$ que conduz $I$ uniformemente:
+        $B = \dfrac{\mu_0Ir}{2\pi a^2}$ dentro e $\dfrac{\mu_0I}{2\pi r}$ fora
+        --- o máximo fica na superfície.
+  \item Um solenoide infinito de $n$ espiras por metro: $\vect B = \mu_0nI\,
+        \vect e_z$ uniforme dentro e $\vect 0$ fora, qualquer que seja a forma da
+        sua seção.
+  \item Um toroide de $N$ espiras: $B = \dfrac{\mu_0NI}{2\pi r}$ dentro dos
+        enrolamentos e nulo fora --- é um solenoide fechado sobre si mesmo, sem
+        campo disperso.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+(1) Círculo de raio $r$: $2\pi rB = \mu_0I(r/a)^2$ ou $\mu_0I$. (2) $\vect B$
+é axial por simetria e, por Ampère num retângulo com os dois lados longos
+fora, uniforme fora, e portanto nulo (ele se anula no infinito); um
+retângulo com um lado longo dentro, de comprimento $\ell$, dá $B\ell =
+\mu_0n\ell I$. (3) Círculo de raio $r$ dentro do toro: $2\pi rB =
+\mu_0NI$; fora, a corrente encerrada é nula.
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}
+\begin{axis}[omaxis, axis x line=bottom, axis y line=left, width=7.4cm, height=5.2cm,
+    xlabel={$r/a$}, ylabel={$B$ (em unidades de $\mu_0I/2\pi a$)},
+    xlabel style={at={(axis description cs:0.5,-0.1)}, anchor=north},
+    xmin=0, xmax=4, ymin=0, ymax=1.25, xtick={1,2,3}, ytick={0.5,1}, samples=60]
+  \addplot[omDef, very thick, domain=0:1] {x};
+  \addplot[omDef, very thick, domain=1:4] {1/x} node[pos=0.3, above right, font=\footnotesize] {$\propto 1/r$};
+  \node[omDef, font=\footnotesize, anchor=north west] at (axis cs:0.1,0.9) {$\propto r$};
+\end{axis}
+\end{tikzpicture}\hfill
+\begin{tikzpicture}[font=\small, x=1cm, y=1cm, >=Stealth]
+  \foreach \x in {-2.0,-1.6,...,2.0} {\fill[omThm] (\x,0.9) circle (2pt); \node[omThm, font=\scriptsize] at (\x,-0.9) {$\times$};}
+  \foreach \y in {-0.55,-0.15,0.25,0.65} \draw[omDef, thick, -Stealth] (-2.6,\y) -- (2.6,\y);
+  \draw[omProp, very thick, dashed, -Stealth] (-1.2,0.2) -- (1.2,0.2) node[midway, below, font=\footnotesize] {$\ell$};
+  \draw[omProp, very thick, dashed] (1.2,0.2) -- (1.2,1.5) -- (-1.2,1.5) -- (-1.2,0.2);
+  \node[omProp, font=\footnotesize] at (0,1.85) {retângulo amperiano: $B\ell = \mu_0 n\ell I$};
+  \node[font=\footnotesize] at (0,-1.5) {$\vect B = \vect 0$ fora, $\mu_0 nI$ dentro};
+\end{tikzpicture}
+
+{\small À esquerda: o campo de um fio espesso, linear dentro e em $1/r$
+fora, máximo na superfície. À direita: o retângulo amperiano que
+dá o \omterm{prop:b1:magnetostatics:three}{campo de um solenoide} infinito --- só o lado que fica dentro
+contribui para a circulação.}
+\end{omfigure}
+
+\section{A força de Laplace}
+
+\begin{theorem}[Força de Laplace]\label{thm:b1:magnetostatics:laplace}
+\index{força de Laplace}
+Um elemento de condutor $\dd\vect l$ que conduz $I$ num campo $\vect B$
+recebe a força $\dd\vect F = I\,\dd\vect l\wedge\vect B$; um segmento
+retilíneo $\vect L$ num campo uniforme recebe $\vect F = I\vect L\wedge\vect B$,
+de módulo $ILB\sin\theta$, perpendicular ao fio e ao
+campo.
+\end{theorem}
+
+\begin{proof}
+Os portadores de carga em $\dd\vect l$ (em número $n\,S\,\dd l$, de carga $q$ e
+velocidade de deriva $\vect v$) sentem cada um $q\vect v\wedge\vect B$; a sua soma vale
+$nSq\,\dd l\,\vect v\wedge\vect B = I\,\dd\vect l\wedge\vect B$, pois $I = nqvS$
+e $\vect v$ é paralelo a $\dd\vect l$. Os portadores transmitem a força à
+rede cristalina do fio pelas suas colisões.
+\end{proof}
+
+\begin{proposition}[Força entre fios paralelos]\label{prop:b1:magnetostatics:parallel}
+\index{ampère (definição)}
+Dois fios longos e paralelos separados de $d$, conduzindo $I_1$ e $I_2$,
+se atraem se as correntes forem paralelas e se repelem se forem antiparalelas,
+com a força por unidade de comprimento
+\[
+\frac{F}{\ell} = \frac{\mu_0I_1I_2}{2\pi d} .
+\]
+Dois fios a \qty{1}{m} um do outro conduzindo \qty{1}{A} sentem $2 \times 10^{-7}$~N por
+metro --- a definição do \omterm{def:b1:dc-circuits:current}{ampère} de 1948 a 2019, e a
+origem do valor $\mu_0 = 4\pi \times 10^{-7}$.
+\end{proposition}
+
+\begin{proof}
+O fio~1 cria $\mu_0I_1/2\pi d$ no fio~2, perpendicular a ele; a
+\omterm{thm:b1:magnetostatics:laplace}{força de Laplace} sobre um comprimento $\ell$ do fio~2 vale $I_2\ell \times \mu_0I_1/2\pi d$,
+dirigida ao fio~1 quando as correntes são paralelas (verifique com a
+regra da mão direita).
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}[font=\small, x=1cm, y=1cm, >=Stealth]
+  \begin{scope}
+    \draw[omThm, very thick, -Stealth] (-0.8,-1.6) -- (-0.8,1.6) node[above] {$I_1$};
+    \draw[omThm, very thick, -Stealth] (0.8,-1.6) -- (0.8,1.6) node[above] {$I_2$};
+    \draw[omDef, thick, ->] (-0.8,0) -- (-0.1,0) node[midway, above, font=\footnotesize] {$\vect F$};
+    \draw[omDef, thick, ->] (0.8,0) -- (0.1,0);
+    \node[omProp, font=\scriptsize] at (0.8,-0.5) [xshift=10pt] {$\odot\ \vect B_1$};
+    \node[font=\footnotesize] at (0,-2.1) {correntes paralelas se atraem};
+  \end{scope}
+  \begin{scope}[xshift=4.6cm]
+    \draw[omThm, very thick, -Stealth] (-0.8,-1.6) -- (-0.8,1.6) node[above] {$I_1$};
+    \draw[omThm, very thick, -Stealth] (0.8,1.6) node[above] {$I_2$} -- (0.8,-1.6);
+    \draw[omDef, thick, ->] (-0.8,0) -- (-1.5,0) node[midway, above, font=\footnotesize] {$\vect F$};
+    \draw[omDef, thick, ->] (0.8,0) -- (1.5,0);
+    \node[font=\footnotesize] at (0,-2.1) {antiparalelas: se repelem};
+  \end{scope}
+  \begin{scope}[xshift=10.2cm]
+    \draw[omThm, very thick] (-2.2,0.9) -- (2.2,0.9); \draw[omThm, very thick] (-2.2,-0.9) -- (2.2,-0.9);
+    \draw[omThm, very thick, -Stealth] (0.3,0.9) -- (0.3,-0.9) node[midway, right, font=\footnotesize] {$I$};
+    \draw[omThm, very thick] (0.15,0.9) rectangle (0.45,-0.9);
+    \foreach \x in {-1.8,-1.2,-0.6,1.0,1.6} \foreach \y in {-0.45,0.45} \node[omProp, font=\scriptsize] at (\x,\y) {$\times$};
+    \node[omProp, font=\footnotesize] at (-1.2,1.25) {$\vect B$ entrando na página};
+    \draw[omDef, very thick, ->] (0.3,0) -- (1.6,0);
+    \node[omDef, font=\footnotesize, anchor=north west] at (0.85,-0.2) {$\vect F = I\vect L\wedge\vect B$};
+    \node[font=\footnotesize] at (0,-2.1) {trilhos: o motor mais simples};
+  \end{scope}
+\end{tikzpicture}
+
+{\small A \omterm{thm:b1:magnetostatics:laplace}{força de Laplace}: entre fios paralelos (à esquerda e no meio) e sobre
+uma barra deslizante que conduz corrente através de um campo (à direita) --- os trilhos
+de Laplace, cujo balanço de energia é assunto do \cref{ch:b1:induction}.}
+\end{omfigure}
+
+\section{O dipolo magnético}
+
+\begin{definition}[Momento magnético]\label{def:b1:magnetostatics:moment}
+\index{momento magnético}\index{dipolo magnético}
+Uma espira plana de área $S$ que conduz $I$, orientada pela regra da mão direita
+(a normal $\vect n$ segundo o polegar quando os dedos seguem $I$), tem
+\emph{momento magnético} $\vect m = IS\,\vect n$ (\unit{A.m^2}); para $N$
+espiras, $NIS\,\vect n$. Vista de distâncias $r \gg \sqrt S$, a espira é um
+\emph{dipolo magnético}: o seu campo tem exatamente a forma do campo do \omterm{def:b1:potential-capacitors:dipole}{dipolo
+elétrico} com $\vect p/\varepsilon_0 \to \mu_0\vect m$:
+\[
+B_r = \frac{\mu_0}{4\pi}\,\frac{2m\cos\theta}{r^3}, \qquad
+B_\theta = \frac{\mu_0}{4\pi}\,\frac{m\sin\theta}{r^3} .
+\]
+Um ímã em barra, um átomo, a Terra são dipolos magnéticos: o momento da
+Terra vale \qty{8e22}{A.m^2}, e o de um elétron, \qty{9.3e-24}{A.m^2} (o
+magnéton de Bohr).
+\end{definition}
+
+\begin{proof}
+No eixo, o campo da espira $\mu_0IR^2/2z^3$ para $z \gg R$ é igual a
+$\mu_0 \cdot 2m/4\pi z^3$ com $m = I\pi R^2$, coincidindo com $B_r$ em $\theta = 0$;
+a forma angular completa fica admitida.
+\end{proof}
+
+\begin{theorem}[Dipolo num campo]\label{thm:b1:magnetostatics:dipoleinfield}
+\index{dipolo magnético!torque}\index{dipolo magnético!energia}
+Um \omterm{def:b1:magnetostatics:moment}{momento magnético} $\vect m$ num campo uniforme $\vect B$ não sente força
+resultante, mas sim um \omterm{def:b1:angular-momentum:moment}{torque} $\vect\Gamma = \vect m\wedge\vect B$ que o alinha com
+o campo, e tem a \omterm{def:b1:work-and-energy:conservative}{energia potencial} $E_p = -\vect m\cdot\vect B$. Num
+campo não uniforme ele é puxado para a região de campo intenso quando está
+alinhado (e empurrado para longe quando antialinhado).
+\end{theorem}
+
+\begin{proof}
+Para uma espira retangular $a \times b$ com $\vect n$ fazendo o ângulo $\theta$ com
+$\vect B$: as \omterm{thm:b1:magnetostatics:laplace}{forças de Laplace} sobre os dois lados de comprimento $b$ paralelos ao
+eixo de rotação valem $\pm IbB$, opostas e separadas de $a\sin\theta$:
+um binário de momento $IabB\sin\theta = mB\sin\theta$, que tende a
+reduzir $\theta$; as forças sobre os outros dois lados são opostas e
+colineares. Energia: $\Gamma = -\dd E_p/\dd\theta$ com $\Gamma = -mB\sin\theta$
+dá $E_p = -mB\cos\theta$. Toda espira plana é uma soma de pequenos retângulos;
+o caso não uniforme fica admitido.
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}[font=\small, x=1cm, y=1cm, >=Stealth]
+  \begin{scope}
+    % rectangular loop seen from above, B horizontal
+    \foreach \y in {-1.4,-0.7,0,0.7,1.4} \draw[omProp, ->] (-2.8,\y) -- (2.8,\y);
+    \node[omProp, font=\footnotesize] at (2.5,1.7) {$\vect B$};
+    \draw[omThm, very thick] (-0.9,-0.55) -- (0.9,0.55);
+    \fill[omThm] (-0.9,-0.55) circle (3pt); \node[omThm, font=\footnotesize] at (0.9,0.55) {$\otimes$};
+    \draw[omDef, very thick, ->] (-0.9,-0.55) -- (-0.9,-1.6) node[left, font=\footnotesize] {$\vect F$};
+    \draw[omDef, very thick, ->] (0.9,0.55) -- (0.9,1.6) node[right, font=\footnotesize] {$-\vect F$};
+    \draw[very thick, ->] (0,0) -- (-0.66,1.08) node[above left, font=\footnotesize] {$\vect m$};
+    \draw (0,0.6) arc[start angle=90, end angle=121.4, radius=0.6] node[midway, above, font=\footnotesize] {$\theta$};
+    \node[font=\footnotesize] at (0,-2.95) {binário $mB\sin\theta$: a espira gira e alinha $\vect m$ com $\vect B$};
+  \end{scope}
+  \begin{scope}[xshift=8.6cm]
+    % compass / dipole field lines of a magnet
+    \draw[fill=omThm!20, draw=omThm, thick] (-1.0,-0.3) rectangle (0,0.3); \node[omThm, font=\footnotesize] at (-0.5,0) {S};
+    \draw[fill=omDef!20, draw=omDef, thick] (0,-0.3) rectangle (1.0,0.3); \node[omDef, font=\footnotesize] at (0.5,0) {N};
+    \foreach \K in {1.4,2.0,2.6} {
+      \draw[omDef, thick, domain=8:172, samples=90, postaction={decorate, decoration={markings, mark=at position 0.5 with {\arrow{>}}}}] plot ({\K*sin(\x)*sin(\x)*cos(\x)}, {\K*sin(\x)*sin(\x)*sin(\x)});
+      \draw[omDef, thick, domain=188:352, samples=90, postaction={decorate, decoration={markings, mark=at position 0.5 with {\arrow{<}}}}] plot ({\K*sin(\x)*sin(\x)*cos(\x)}, {\K*sin(\x)*sin(\x)*sin(\x)});
+    }
+    \draw[->, very thick] (-0.6,0) -- (0.6,0); \node[font=\footnotesize] at (0,-0.5) {$\vect m$};
+    \node[font=\footnotesize] at (0,-2.95) {um ímã: o campo de um dipolo, linhas de N a S};
+  \end{scope}
+\end{tikzpicture}
+
+{\small À esquerda: uma espira de corrente num campo uniforme, vista ao longo do seu eixo
+de rotação --- as \omterm{thm:b1:magnetostatics:laplace}{forças de Laplace} sobre os dois lados formam um binário que
+alinha o momento com o campo. À direita: as \omterm{def:b1:electrostatics-gauss:field}{linhas de campo} de um ímã em
+barra são as de um \omterm{def:b1:magnetostatics:moment}{dipolo magnético}, de forma idêntica às do \omterm{def:b1:potential-capacitors:dipole}{dipolo
+elétrico}, saindo da face norte e voltando à sul.}
+\end{omfigure}
+
+\begin{example}[A bússola e a Terra]\label{ex:b1:magnetostatics:compass}
+Uma agulha de bússola é um pequeno ímã, de momento $m \sim \qty{0.1}{A.m^2}$; na
+componente horizontal do campo da Terra, $B_h \approx \qty{2e-5}{T}$, o
+\omterm{def:b1:angular-momentum:moment}{torque} $mB_h\sin\theta$ a vira para o norte, e ela oscila em torno do norte com
+período $2\pi\sqrt{J/mB_h} \sim \qty{1}{s}$ (\cref{exo:b1:magnetostatics:9}).
+O dipolo da própria Terra, \qty{8e22}{A.m^2}, equivale a uma corrente de
+alguns bilhões de \omterm{def:b1:dc-circuits:current}{ampères} circulando no núcleo de ferro líquido; o campo que ele
+faz na superfície é o mais fraco do capítulo e foi o primeiro que
+alguém usou.
+\end{example}
+
+\section{Exercícios}
+
+\begin{exercise}[$\star$]\label{exo:b1:magnetostatics:1}
+Campo a \qty{1.0}{cm} de um fio retilíneo que conduz \qty{10}{A}; corrente
+necessária para chegar a \qty{1}{T} nessa distância; distância em que o campo de um
+fio de \qty{100}{A} iguala os \qty{5e-5}{T} da Terra.
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b1:magnetostatics:2}
+Campo no centro de uma bobina de $100$ espiras, raio \qty{5.0}{cm},
+conduzindo \qty{2.0}{A}; e no seu eixo a \qty{5.0}{cm} e a \qty{50}{cm}
+do centro.
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b1:magnetostatics:3}
+Um solenoide de $1000$ espiras por metro conduz \qty{5.0}{A}: campo dentro,
+longe das extremidades, e bem na extremidade. Número de espiras de fio de
+\qty{0.5}{mm} que se pode enrolar por metro numa única camada, e o campo então
+a \qty{5}{A}.
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b1:magnetostatics:4}
+Força sobre um fio de \qty{1.0}{m} conduzindo \qty{10}{A} perpendicular a um
+campo de \qty{0.10}{T}; e sobre o mesmo fio a \qty{30}{\degree} do campo.
+Um motor tem $100$ fios desses num rotor de raio \qty{5}{cm}: \omterm{def:b1:angular-momentum:moment}{torque}
+(\omterm{def:b1:units-dimensions:oom}{ordem de grandeza}).
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b1:magnetostatics:5}
+Campo de um segmento retilíneo finito à distância $d$ da sua reta, com as suas
+extremidades vistas sob os ângulos $\alpha_1$ e $\alpha_2$ (medidos a partir da
+perpendicular): $B = \dfrac{\mu_0I}{4\pi d}(\sin\alpha_2 - \sin\alpha_1)$. Verifique
+o limite do fio infinito. Campo no centro de uma espira quadrada de lado
+$a$.
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b1:magnetostatics:6}
+\emph{Bobinas de Helmholtz.} Duas bobinas idênticas ($N$ espiras, raio $R$) num
+eixo comum, separadas de $R$, conduzem a mesma corrente no mesmo
+sentido. Campo no ponto médio; mostre que a primeira \emph{e a segunda}
+derivadas de $B$ ao longo do eixo se anulam ali. Números: $N = 100$,
+$R = \qty{15}{cm}$, $I = \qty{1.0}{A}$.
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b1:magnetostatics:7}
+Um fio de cobre de raio \qty{2.0}{mm} conduz \qty{100}{A}. Campo na
+superfície, a \qty{1.0}{mm} do eixo e a \qty{1.0}{cm}. Esboce $B(r)$.
+O fio passa a ser o condutor interno de um cabo coaxial cuja blindagem
+conduz a corrente de retorno: campo fora da blindagem.
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b1:magnetostatics:8}
+Força por metro entre dois fios a \qty{1}{m} um do outro com \qty{1}{A}; entre
+dois barramentos a \qty{10}{cm} conduzindo \qty{10}{kA}; e sob um curto-circuito
+de \qty{100}{kA}. O que tem de segurar os barramentos?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b1:magnetostatics:9}
+Uma agulha de bússola, de momento $m = \qty{0.10}{A.m^2}$ e \omterm{prop:b1:angular-momentum:inertia}{momento de inércia}
+$J = \qty{1.0e-7}{kg.m^2}$, num campo horizontal $B_h = \qty{2.0e-5}{T}$.
+\omterm{def:b1:angular-momentum:moment}{Torque} a \qty{90}{\degree}; trabalho para virá-la do norte ao sul; período
+das \omterm{prop:b1:work-and-energy:stability}{pequenas oscilações}. Como se mede $B_h$ com ela?
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b1:magnetostatics:10}
+\emph{A Terra como dipolo.} (a) Mostre que, no seu eixo e bem longe, o
+\omterm{prop:b1:magnetostatics:three}{campo de uma espira} vale $B = \mu_0m/2\pi z^3$ com $m = I\pi R^2$; compare com o
+\omterm{def:b1:potential-capacitors:dipole}{dipolo elétrico}. (b) O campo no polo magnético vale cerca de
+\qty{6e-5}{T}: deduza o \omterm{def:b1:potential-capacitors:dipole}{momento dipolar} da Terra. (c) Corrente numa espira
+de raio \qty{3000}{km} (o núcleo) que o produziria. (d) Campo no
+equador no modelo dipolar; e a inclinação magnética do campo na
+latitude \qty{45}{\degree} (use $B_r$ e $B_\theta$).
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b1:magnetostatics:11}
+\emph{Solenoide finito.} Comprimento $L = \qty{20}{cm}$, raio $R = \qty{2.0}{cm}$,
+$n = \qty{2000}{m^{-1}}$, $I = \qty{3.0}{A}$. Campo no centro e numa
+extremidade pela fórmula do curso; fração do valor do solenoide infinito;
+a que distância fora, ao longo do eixo, o campo caiu a
+$1\%$ do valor central? Esboce $B(z)$ ao longo do eixo.
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b1:magnetostatics:12}
+\emph{Pressão magnética.} Num solenoide longo o campo vale $B$ dentro
+e $0$ fora; os enrolamentos conduzem a corrente superficial $K = nI$ por
+metro de comprimento. (a) Mostre que o campo \emph{sobre} os enrolamentos, a
+média entre o de dentro e o de fora, vale $B/2$, e que a \omterm{thm:b1:magnetostatics:laplace}{força de Laplace} sobre
+eles é uma pressão dirigida para fora, $p = B^2/2\mu_0$. (b) Números para
+\qty{1}{T}, \qty{10}{T} e \qty{45}{T}; compare com a pressão atmosférica e
+com a resistência à tração do aço (\qty{1}{GPa}). (c) O que limita os
+ímãs permanentes mais fortes?
+\end{exercise}
+
+\begin{omfigure}
+\includegraphics[width=0.50\linewidth]{images/book3/transmission-line.jpg}
+
+{\small Uma linha de transmissão de alta \omterm{def:b1:dc-circuits:voltage}{tensão}: três condutores por circuito, cujas correntes somam zero, de modo que os seus campos se cancelam a distância. Fotografia: Stefan Andrej Shambora, CC~BY~2.0.}
+\end{omfigure}
+
+\section{Problema: o cabo, a linha e o instrumento}
+
+\begin{problem}[{Problema de fim de semana --- a lei de Ampère num cabo coaxial,
+forças de Laplace numa linha de transmissão e o projeto de um galvanômetro
+de bobina móvel}]
+\label{pb:b1:magnetostatics:1}
+$\mu_0 = 4\pi \times 10^{-7}$~SI; resistividade do cobre $\rho = \qty{1.7e-8}{\ohm.m}$.
+
+\medskip
+\noindent\textbf{Parte I --- O cabo coaxial.}
+Um cabo conduz $I = \qty{1.0}{A}$ por uma alma maciça de cobre de raio
+$a = \qty{0.50}{mm}$ e de volta por uma blindagem de raio interno $b =
+\qty{2.5}{mm}$ e raio externo $c = \qty{3.0}{mm}$; as correntes são uniformes
+na seção de cada condutor.
+\begin{enumerate}
+  \item Simetrias e invariâncias: direção de $\vect B$ e a
+        variável de que ele depende.
+  \item $B(r)$ na alma, entre os condutores e fora do
+        cabo, pela \omterm{thm:b1:magnetostatics:ampere}{lei de Ampère}.
+  \item Valores em $r = a$ e $r = b$.
+  \item A alma é substituída por um tubo fino de cobre do mesmo raio
+        $a$ conduzindo a mesma corrente: o que muda em cada região?
+  \item $B(r)$ dentro da blindagem ($b < r < c$); verifique os valores em $b$
+        e em $c$; esboce $B(r)$ de $0$ a \qty{4}{mm}.
+  \item \omterm{thm:b1:magnetostatics:laplace}{Força de Laplace} sobre a blindagem: sentido (atração ou
+        repulsão em relação à alma?) e módulo por unidade de área, tomando o
+        campo na blindagem como a média entre os seus valores em $b$ e em $c$.
+        O mesmo para uma corrente pulsada de \qty{10}{kA}.
+  \item Por que a geometria coaxial é usada para sinais? Compare com um
+        par de fios paralelos separados de $d = \qty{2}{mm}$: campo à distância
+        $D = \qty{10}{cm}$ do par (superponha os dois fios).
+\end{enumerate}
+
+\medskip
+\noindent\textbf{Parte II --- A linha de transmissão.}
+Dois condutores horizontais separados de $d = \qty{1.0}{m}$, a $h = \qty{10}{m}$ acima
+do solo, conduzem $I = \qty{500}{A}$ em sentidos opostos.
+\begin{enumerate}[resume]
+  \item Campo de um dos condutores no ponto do solo situado abaixo do
+        ponto médio; mostre que os dois campos se combinam num campo vertical
+        e dê o seu valor; compare com o da Terra e com o
+        limite de exposição de \qty{100}{\micro T}.
+  \item Mostre que, a distâncias $D \gg d$, o campo do par cai como
+        $\mu_0Id/2\pi D^2$: por que mais depressa do que o de um único fio?
+  \item Campo a \qty{1.0}{m} abaixo de um dos condutores, onde um técnico
+        poderia trabalhar.
+  \item Força por metro entre os condutores; atração ou
+        repulsão? O mesmo sob uma corrente de curto-circuito de \qty{20}{kA}.
+  \item Força sobre um vão de \qty{300}{m}, em regime normal e em curto-circuito;
+        compare com o peso do vão (\qty{1.0}{kg/m}); o que fazem as linhas
+        durante um curto-circuito?
+  \item Uma linha trifásica conduz três correntes de mesma \omterm{def:b1:wave-propagation:signal}{amplitude}
+        defasadas de \qty{120}{\degree}: mostre que a sua soma se anula em
+        todo instante, e o que isso implica para o campo distante.
+  \item Uma bússola no ponto da questão~8, onde o campo horizontal da Terra
+        vale \qty{2.0e-5}{T}: o campo da linha a
+        desvia? (Considere a direção dele.)
+\end{enumerate}
+
+\medskip
+\noindent\textbf{Parte III --- O galvanômetro de bobina móvel.}
+Uma bobina retangular, $N = 200$ espiras, de lados $a = \qty{2.0}{cm}$ (paralelo ao
+eixo de rotação) e $b = \qty{3.0}{cm}$, gira em torno do seu eixo no
+entreferro entre peças polares cilíndricas onde o campo, $B = \qty{0.20}{T}$,
+é \emph{radial}: sempre no plano da bobina e perpendicular aos seus
+lados $a$. Uma mola espiral exerce o \omterm{def:b1:angular-momentum:moment}{torque} restaurador $-C\theta$ com
+$C = \qty{1.0e-5}{N.m/rad}$. \omterm{prop:b1:angular-momentum:inertia}{Momento de inércia} da bobina e do ponteiro:
+$J = \qty{6.7e-8}{kg.m^2}$.
+\begin{enumerate}[resume]
+  \item \omterm{thm:b1:magnetostatics:laplace}{Forças de Laplace} sobre os quatro lados; quais delas produzem \omterm{def:b1:angular-momentum:moment}{torque}
+        em torno do eixo?
+  \item \omterm{def:b1:angular-momentum:moment}{Torque} para uma corrente $I$; por que o campo radial o torna
+        independente de $\theta$?
+  \item Deflexão $\theta$ no equilíbrio; sensibilidade em radianos por
+        miliampère; corrente para uma deflexão de fundo de escala de \qty{1.2}{rad}.
+  \item A bobina é enrolada com fio de cobre de diâmetro \qty{0.10}{mm}:
+        resistência da bobina; \omterm{def:b1:dc-circuits:voltage}{tensão} nos seus terminais e potência dissipada em
+        fundo de escala.
+  \item Equação do movimento da bobina; período próprio das
+        oscilações em torno do equilíbrio.
+  \item O movimento da bobina no campo induz um \omterm{def:b1:angular-momentum:moment}{torque} de frenagem
+        $-\alpha\dot\theta$ (\cref{ch:b1:induction}); valor de $\alpha$ para
+        o amortecimento crítico, e por que ele é desejável.
+  \item \omterm{def:b1:dc-circuits:resistor}{Resistor} em série para fazer um voltímetro de fundo de escala \qty{10}{V}; \omterm{def:b1:dc-circuits:resistor}{resistor}
+        em derivação para fazer um amperímetro de fundo de escala \qty{1.0}{A}.
+  \item \omterm{def:b1:magnetostatics:moment}{Momento magnético} da bobina em fundo de escala; energia $-\vect m\cdot
+        \vect B$ que ela teria, alinhada, num campo uniforme de \qty{0.20}{T};
+        compare com a energia armazenada na mola em fundo de escala.
+  \item Se o campo fosse \emph{uniforme} em vez de radial, mostre que a
+        escala deixaria de ser linear: escreva a condição de equilíbrio
+        com $\theta$ medido a partir da posição em que o plano da bobina
+        contém $\vect B$.
+  \item Uma corrente de \qty{50}{Hz} e \omterm{def:b1:wave-propagation:signal}{amplitude} \qty{0.5}{mA} é aplicada ao
+        instrumento: o que o ponteiro mostra, e por quê? (Compare \qty{50}{Hz}
+        com a \omterm{def:b1:oscillators-resonance:harmonic}{frequência própria}.)
+  \item Resuma as três cenas em três números, e diga que lei única
+        produziu cada um.
+\end{enumerate}
+\end{problem}

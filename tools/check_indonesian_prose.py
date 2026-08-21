@@ -104,6 +104,18 @@ ENGLISH_FUNCTION = {
     "consider", "observe", "indeed", "conversely", "moreover", "however",
     "again", "always", "never", "often", "sometimes", "now", "once",
     "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten",
+    # Appended for Book 3 (University Year 1). A university book argues, so it
+    # leans on a wider set of connectives and relational words than the school
+    # books did; each of these was checked against KBBI. "as" is deliberately
+    # ABSENT -- see NOT_GATED.
+    "than", "along", "inside", "outside", "against", "across", "toward",
+    "towards", "apart", "away", "out", "off", "alone", "own", "itself",
+    "behind", "around", "beyond", "instead", "just", "too", "almost",
+    "together", "whatever", "nothing", "well", "way", "like", "part",
+    # "new" is NOT here: the set is matched case-insensitively and it fired on
+    # "New York" in the shipped grade-10 id chapter on optical fibre.
+    "whether", "unless", "whereas", "throughout", "everywhere", "anywhere",
+    "twice", "once", "enough", "rather", "quite", "very", "already",
 }
 # "no" is kept out of the short-token pass below, because "No." for "nomor"
 # is ordinary Indonesian in a table head; it is listed here and screened by
@@ -197,6 +209,53 @@ ENGLISH_CONTENT = {
     # The -s/-es stem rule cannot reach them: their stems are in NOT_GATED.
     "magnets", "gases", "atoms", "ions", "protons", "neutrons", "orbits",
     "planets", "lasers", "motors", "radios", "resistors", "meteors",
+    # ---- university physics (Book 3) ---------------------------------------
+    # Harvested from the English bodies of parts/bachelor-1 and filtered
+    # against KBBI: the Indonesian of each of these is a DIFFERENT string
+    # (medan, hukum, tetapan, fase, entropi, momen, torsi, ...), so the
+    # English form in visible text is always a defect. Words already caught
+    # by ENGLISH_SUFFIX (-tion, -ance, -ence, -ous, -ly, -ght, -th: friction,
+    # resistance, impedance, difference, continuous, length, ...) are not
+    # repeated here, and neither are the ones Indonesian spells identically
+    # (see NOT_GATED -- radius, uniform, loop, model, input, output, ...).
+    "field", "fields", "law", "laws", "constant", "constants", "phase",
+    "entropy", "enthalpy", "potential", "flux", "torque", "dipole",
+    "moment", "moments", "cycle", "cycles", "frame", "frames", "value",
+    "values", "ratio", "signal", "signals", "body", "bodies", "ground",
+    "rest", "mean", "liquid", "vapour", "vapor", "fluid", "fluids",
+    "particle", "particles", "displacement", "equilibrium", "magnitude",
+    "oscillator", "oscillators", "pendulum-bob", "damping", "harmonic",
+    "harmonics", "adiabatic", "reversible", "irreversible", "engine",
+    "engines", "pump", "sphere", "spheres", "cylinder", "cylinders",
+    "plate", "plates", "coil", "coils", "wall", "walls", "tube", "cable",
+    "wheel", "wheels", "rod", "rods", "bar-magnet", "hull", "vessel",
+    "bottle", "floor", "road", "car", "cars", "machine", "machines",
+    "refrigerator", "thermostat", "telescope", "microscope", "eyepiece",
+    "objective", "antenna", "receiver", "transmitter",
+    "amplitude-gain", "cyclotron", "buoyancy", "curvature", "latitude",
+    "tangent", "element", "elements", "index", "rule", "rules", "beat",
+    "beats", "mole", "hydrogen", "atmosphere", "steel", "fuel", "sea",
+    "bridge", "branch", "threshold", "peak", "gap", "drop", "drops",
+    "load", "rate", "sign", "curve", "core", "thin", "turn", "turns",
+    "zero", "size", "single", "free", "full", "change", "changes",
+    "equal", "equals", "red", "blue", "green", "black", "white",
+    "electricity", "uncertainty", "weekend", "week", "day", "year",
+    "room", "house",
+    # adjectives and adverbs: Indonesian writes kinetik, listrik, mekanis,
+    # optis, relatif, sentral, vertikal, sirkular, aksial -- never these.
+    "kinetic", "electrical", "mechanical", "optical", "inertial",
+    "relative", "central", "vertical", "circular", "cylindrical",
+    "spherical", "axial", "external", "independent", "infinite", "finite",
+    "visible", "negligible", "dimensionless", "conservative", "critical",
+    "steady", "maximal", "minimal", "partial", "extra", "little",
+    "quadratic", "symmetric", "local", "initial", "stable", "unstable",
+    "simple", "perfect", "common", "open", "closed", "opposite",
+    "downward", "upward", "outward", "inward", "clockwise",
+    # -ing and -ed forms. ENGLISH_SUFFIX deliberately gates neither ending
+    # (penting, masing-masing; and -ed would fire on surnames), so the ones
+    # a physics figure label actually uses are listed by hand.
+    "boiling", "melting", "freezing", "cooling", "heating", "converging",
+    "diverging", "falling", "sliding", "rolling", "charged", "closed-loop",
 }
 
 ENGLISH_WORDS = ENGLISH_FUNCTION | ENGLISH_CONTENT
@@ -252,6 +311,38 @@ NOT_GATED = {
     "newton", "joule", "watt", "volt", "ampere", "ohm", "kelvin", "hertz",
     "pascal", "tesla", "weber", "farad", "henry", "becquerel", "sievert",
     "candela", "lumen", "coulomb",
+    # ---- university physics (Book 3) ---------------------------------------
+    # "as" is Indonesian for an AXLE (as roda, as putar) -- and Book 3 is half
+    # mechanics. Gating English "as" would fire on correct prose exactly the
+    # way "air" (water) and "not" (a musical note) would; the same argument
+    # applies: a forgotten English sentence containing "as" always carries
+    # "the"/"is"/"of" as well, and the `untranslated` class sees it.
+    "as",
+    # "per" is Indonesian too (meter per detik) -- and it is on every page of
+    # a mechanics book.
+    "per",
+    # Loanwords KBBI spells exactly as English does. Every one of these was in
+    # the block above until it fired on correct Indonesian physics prose;
+    # re-adding any of them to ENGLISH_CONTENT will break a green gate.
+    "radius", "uniform", "loop", "model", "input", "output", "pendulum",
+    "amplifier", "horizontal", "radial", "pupil", "virtual", "sinusoidal",
+    "solenoid", "solenoida", "filter", "level", "medium", "polar", "formula",
+    "diagram", "spin", "sensor", "terminal", "fiber", "natural", "helium",
+    "internal", "alternator", "starter", "diesel", "rigid", "rim", "net",
+    "disk", "feedback", "emf", "ggl", "torsi", "kalor", "usaha",
+    # "camera obscura" is a Latin phrase Indonesian keeps verbatim (it is in
+    # the shipped grade-6 id chapter three times); the device itself is
+    # "kamera", so gating the English spelling would cost a false alarm on
+    # correct prose for no coverage.
+    "camera",
+    "kilogram", "sentimeter", "milimeter", "kilometer", "detik", "sekon",
+    # Indonesian technical vocabulary that happens to be Latin-looking and
+    # would otherwise trip the -s plural rule or a suffix.
+    "impuls", "fluks", "entropi", "entalpi", "adiabatik", "isotermal",
+    "isobarik", "isokorik", "kapasitas", "resistansi", "impedansi",
+    "induktansi", "kapasitansi", "reaktansi", "amplitudo", "fase",
+    "harmonik", "osilator", "osilasi", "resonansi", "difraksi", "refleksi",
+    "dioptri", "lensa", "cermin", "medan", "gaya", "massa", "berat",
 }
 
 # Brand, markup names and unit symbols that legitimately stay Latin.
@@ -291,6 +382,14 @@ ENGLISH_SUFFIX = re.compile(
 # Cauchy, Riemann, Lebesgue, Frobenius, Legendre, Sylvester, ...) matches this.
 ENGLISH_SUFFIX_CAP = re.compile(
     r"(?:tion|sion|ness|ance|ence|ship|hood|wise|ity)$")
+
+# An English possessive is unambiguous: Indonesian has no 's, it writes the
+# possessor after the noun (hukum Newton, medan Bumi). Book 3's English bodies
+# are full of them ("Newton's third law", "the Earth's field", "Gauss's law"),
+# and a forgotten two-word figure label is far too short for the
+# sentence-density class to see. LATIN_WORD keeps the apostrophe inside the
+# token, so the whole possessive is one match.
+ENGLISH_POSSESSIVE = re.compile(r"^[a-z]{2,}'s$")
 
 DOTTED_ABBREV = re.compile(r"\b(?:i\.e\.|e\.g\.|etc\.|cf\.|viz\.)")
 # "No. 3" / "no. 3" is Indonesian for "nomor"; "no" elsewhere is English.
@@ -349,6 +448,22 @@ ID_MARKERS = {
     "satu", "dua", "tiga", "empat", "lima", "enam", "tujuh", "delapan",
     "sembilan", "sepuluh", "puluh", "ratus", "ribu", "juta", "miliar",
     "semesta", "bintang", "planet-planet", "sebagai", "supaya", "hingga",
+    # ---- appended for Physics Book 3 (university), 2026-08-21 -------------
+    # A university physics clause is noun-phrase-heavy and can run past eight
+    # words on circuit and thermodynamics vocabulary alone ("tingkat pertamanya
+    # hambatan Thevenin-nya tegangan keluarannya tak ..."). Same rule as every
+    # block above: English spells each of these differently, so the class can
+    # still not excuse an English sentence.
+    "tegangan", "hambatan", "tingkat", "keluaran", "masukan", "penguat",
+    "kumparan", "induktor", "kapasitor-nya", "rangkaiannya", "sumbu",
+    "poros", "putaran", "simpangan", "amplitudonya", "getaran", "redaman",
+    "tumbukan", "momentumnya", "kekekalan", "kelembaman", "acuan",
+    "fluida", "zat-cair", "uap", "wujud", "peleburan", "penguapan",
+    "entropinya", "siklus", "mesin", "pendingin", "kerja", "usahanya",
+    "muatannya", "kapasitor", "dielektrik", "induksi", "fluksnya",
+    "lintasan", "kelengkungan", "jari-jari", "sudut", "torsi-nya",
+    "keseimbangan", "kesetimbangan", "tetapan", "besarnya", "arahnya",
+    "terhitung", "berbanding", "sebanding", "berbalik", "terhadapnya",
     # ---- appended by the Physics Book 1 (id) agent, 2026-08-20 ----------
     # Same rule as above: every word here is unambiguously Indonesian (English
     # spells each of them differently), so the class can still not excuse an
@@ -481,6 +596,7 @@ def check_file(path: pathlib.Path, findings: list) -> None:
             continue
         stem = low[:-2] if low.endswith("es") else low[:-1] if low.endswith("s") else None
         if (low in ENGLISH_WORDS
+                or ENGLISH_POSSESSIVE.match(low)
                 or (stem and stem in ENGLISH_WORDS and stem not in NOT_GATED)
                 or (word.islower() and len(word) > 3
                     and ENGLISH_SUFFIX.search(low))

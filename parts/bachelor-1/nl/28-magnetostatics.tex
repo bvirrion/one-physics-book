@@ -1,0 +1,669 @@
+\chapter{Magnetostatica: veld, krachten en dipolen}\label{ch:b1:magnetostatics}
+
+Een kompasnaald slaat uit wanneer een draad ernaast stroom voert: die
+waarneming van Ørsted, in 1820, bracht twee wetenschappen samen die
+apart waren opgegroeid, elektriciteit en magnetisme, en binnen enkele maanden had Ampère de wet
+van de kracht tussen stromen en hadden Biot en Savart het veld van een draad.
+Dit hoofdstuk is de statica van het magnetische veld: wat stromen opwekken
+(veldkaarten, de \omterm{thm:b1:magnetostatics:biotsavart}{wet van Biot--Savart}, en de \omterm{thm:b1:magnetostatics:ampere}{stelling van Ampère}, de magnetische
+tweelingzus van de \omterm{thm:b1:electrostatics-gauss:gauss}{wet van Gauss}), wat het veld met stromen doet (de
+\omterm{thm:b1:magnetostatics:laplace}{laplacekracht}, die elke motor en elke meter aandrijft), en de \omterm{def:b1:magnetostatics:moment}{magnetische
+dipool}, de stroomkring die het kompas, de magneet en het
+aardveld verklaart.
+
+\begin{omfigure}
+\includegraphics[width=0.34\linewidth]{images/book3/compass.jpg}
+
+{\small Het oudste instrument van het magnetisme: een kompasnaald is een kleine \omterm{def:b1:magnetostatics:moment}{magnetische dipool} die zich met het aardveld uitlijnt.}
+\end{omfigure}
+
+\begin{omfigure}
+\includegraphics[width=0.58\linewidth]{images/book3/ai/b3-28-oersted-compass-wire.png}
+
+{\small Het experiment van Ørsted: sluit de kring en de naald slaat uit --- een stroom wekt een \omterm{def:b1:magnetostatics:field}{magnetisch veld} op, dat om de draad heen cirkelt.}
+\end{omfigure}
+
+\section{Bronnen en veldkaarten}
+
+\begin{definition}[Magnetostatisch veld]\label{def:b1:magnetostatics:field}
+\index{magnetisch veld}\index{veldlijn!magnetische}\index{tesla}
+Stationaire stromen (ladingen in stationaire beweging) wekken in elk punt een
+\emph{magnetisch veld} $\vect B$ op (tesla, \unit{T}), gedefinieerd door de kracht
+$q\vect v\wedge\vect B$ die het uitoefent op een bewegende proeflading
+(\cref{def:b1:charged-particles:lorentz}). Zijn \emph{\omterm{def:b1:electrostatics-gauss:field}{veldlijnen}} raken
+aan $\vect B$ en zijn er langs georiënteerd. Permanente magneten wekken
+velden van dezelfde aard op, vanuit de microscopische stromen van hun
+atomen. Ordes van grootte: aarde \qty{5e-5}{T}; een koelkastmagneet
+\qty{0.01}{T}; een MRI-scanner \qty{1.5}{T} tot \qty{3}{T}; de sterkste
+stationaire laboratoriumvelden \qty{45}{T}.
+\end{definition}
+
+\begin{proposition}[Veldkaarten]\label{prop:b1:magnetostatics:maps}
+\index{rechterhandregel}\index{fluxbehoud (magnetisch)}
+\begin{enumerate}
+  \item Een rechte draad: cirkels met de draad als middelpunt, in vlakken
+        loodrecht erop, georiënteerd volgens de \emph{rechterhandregel}
+        (duim langs de stroom, vingers langs $\vect B$).
+  \item Een ronde winding: lijnen die de winding langs haar as doorsteken en
+        er buitenom sluiten; van ver de kaart van een kleine magneet.
+  \item Een lange spoel: evenwijdige, dichte, homogene lijnen binnenin; vrijwel
+        geen veld erbuiten; de kaart van een staafmagneet, waarvan het ``noordvlak''
+        het vlak is dat de lijnen verlaten.
+  \item Magnetische \omterm{def:b1:electrostatics-gauss:field}{veldlijnen} hebben begin noch eind: zij sluiten zichzelf
+        of lopen naar het oneindige. Gelijkwaardig: de \emph{flux van
+        $\vect B$ door elk gesloten oppervlak is nul} --- er bestaan geen
+        magnetische ladingen.
+\end{enumerate}
+\end{proposition}
+\admitted
+
+\begin{omfigure}
+\begin{tikzpicture}[font=\small, x=1cm, y=1cm, >=Stealth]
+  % wire seen end-on
+  \begin{scope}
+    \foreach \r in {0.5,1.0,1.5,2.0} \draw[omDef, thick, postaction={decorate, decoration={markings, mark=at position 0.125 with {\arrow{>}}, mark=at position 0.625 with {\arrow{>}}}}] (0,0) circle (\r);
+    \fill[omThm] (0,0) circle (3pt); \draw[omThm] (0,0) circle (5pt);
+    \node[font=\footnotesize] at (0,-2.55) {rechte draad ($I$ naar de lezer toe)};
+  \end{scope}
+  % loop seen from the side
+  \begin{scope}[xshift=5.6cm, fl/.style={omDef, thick, postaction={decorate, decoration={markings, mark=at position 0.06 with {\arrow{>}}}}}]
+    \draw[omDef, thick, -Stealth] (-2.3,0) -- (2.3,0);
+    \foreach \s in {1,-1} {
+      \draw[fl] plot[smooth cycle] coordinates {(0,{0.5*\s}) (0.8,{0.55*\s}) (1.5,{0.9*\s}) (1.7,{1.5*\s}) (1.2,{2.0*\s}) (0,{2.1*\s}) (-1.2,{2.0*\s}) (-1.7,{1.5*\s}) (-1.5,{0.9*\s}) (-0.8,{0.55*\s})};
+      \draw[fl] plot[smooth cycle] coordinates {(0,{0.8*\s}) (0.5,{0.85*\s}) (0.75,{1.0*\s}) (0.75,{1.3*\s}) (0.5,{1.5*\s}) (0,{1.55*\s}) (-0.5,{1.5*\s}) (-0.75,{1.3*\s}) (-0.75,{1.0*\s}) (-0.5,{0.85*\s})};
+    }
+    \draw[omThm, very thick] (0,1) circle (4pt); \draw[omThm, very thick] (0,-1) circle (4pt);
+    \fill[white] (0,1) circle (3.5pt); \fill[white] (0,-1) circle (3.5pt);
+    \fill[omThm] (0,1) circle (1.2pt); \node[omThm, font=\scriptsize] at (0,-1) {$\times$};
+    \node[font=\footnotesize] at (0,-2.55) {winding (doorsnede): lijnen steken erdoorheen};
+  \end{scope}
+  % solenoid
+  \begin{scope}[xshift=10.9cm]
+    \foreach \x in {-1.6,-1.2,...,1.6} {\fill[omThm] (\x,0.9) circle (2pt); \node[omThm, font=\scriptsize] at (\x,-0.9) {$\times$};}
+    \foreach \y in {-0.6,-0.2,0.2,0.6} \draw[omDef, thick, -Stealth] (-2.3,\y) -- (2.3,\y);
+    \draw[omDef, thick, postaction={decorate, decoration={markings, mark=at position 0.5 with {\arrow{>}}}}] (2.3,0.6) .. controls (3.0,0.9) and (3.0,2.0) .. (0,2.1) .. controls (-3.0,2.0) and (-3.0,0.9) .. (-2.3,0.6);
+    \draw[omDef, thick, postaction={decorate, decoration={markings, mark=at position 0.5 with {\arrow{>}}}}] (2.3,-0.6) .. controls (3.0,-0.9) and (3.0,-2.0) .. (0,-2.1) .. controls (-3.0,-2.0) and (-3.0,-0.9) .. (-2.3,-0.6);
+    \node[font=\footnotesize] at (0,-2.55) {spoel (doorsnede): binnenin homogeen};
+  \end{scope}
+\end{tikzpicture}
+
+{\small Drie veldkaarten. Een stip is een stroom naar de lezer toe, een kruis
+een stroom van hem af. De lijnen van een draad zijn cirkels; die van een winding steken
+erdoorheen en sluiten erbuiten; die van een lange spoel zijn recht en homogeen
+binnenin en sluiten ver weg, waar het veld zwak is --- in elk geval
+hebben zij bron noch put.}
+\end{omfigure}
+
+\begin{proposition}[Symmetrieën van $\vect B$]\label{prop:b1:magnetostatics:symmetry}
+\index{symmetrie (van een veld)!magnetische}
+$\vect B$ gedraagt zich bij spiegeling \emph{tegengesteld} aan $\vect E$
+(het is een \emph{pseudovector}, opgebouwd uit een uitwendig product): in een punt
+van een \emph{\omterm{prop:b1:electrostatics-gauss:symmetry}{symmetrievlak}} van de stromen staat $\vect B$
+\emph{loodrecht} op het vlak; in een punt van een
+\emph{\omterm{prop:b1:electrostatics-gauss:symmetry}{antisymmetrievlak}} (het spiegelbeeld keert de stromen om) ligt $\vect B$
+\emph{in} het vlak. Invarianties dragen over als bij $\vect E$.
+\end{proposition}
+
+\begin{proof}
+Het veld van een stroomelement is $\propto I\,\dd\vect l\wedge\vect e_r$
+(zie hieronder); een spiegel keert één factor van een uitwendig product om ten opzichte van het
+beeld van een echte vector, zodat het beeld van $\vect B$ het tegengestelde is van het
+spiegelbeeld van de pijl. Op een \omterm{prop:b1:electrostatics-gauss:symmetry}{symmetrievlak} moet $\vect B$ gelijk zijn aan het
+tegengestelde van zijn eigen spiegelbeeld, en er dus loodrecht op staan; op een
+\omterm{prop:b1:electrostatics-gauss:symmetry}{antisymmetrievlak} het tegengestelde van het tegengestelde: in het vlak.
+\end{proof}
+
+\begin{example}[De symmetrieën gebruiken]\label{ex:b1:magnetostatics:symmetryuse}
+Bij een rechte draad is elk vlak dat de draad bevat een \omterm{prop:b1:electrostatics-gauss:symmetry}{symmetrievlak},
+dus staat $\vect B$ in elk punt loodrecht op het vlak door de
+draad en dat punt: orthoradiaal, $\vect B = B(r)\,\vect e_\theta$ door
+invariantie langs en om de draad. Bij een winding is het vlak van de winding
+een \omterm{prop:b1:electrostatics-gauss:symmetry}{symmetrievlak}: daarin staat $\vect B$ loodrecht op de winding; de as
+ligt in elk \omterm{prop:b1:electrostatics-gauss:symmetry}{antisymmetrievlak} dat haar bevat: op de as ligt $\vect B$
+langs de as.
+\end{example}
+
+\section{De wet van Biot--Savart}
+
+\begin{theorem}[Biot--Savart]\label{thm:b1:magnetostatics:biotsavart}
+\index{wet van Biot--Savart}\index{permeabiliteit van het vacuüm}
+Een kring die de stroom $I$ voert wekt in $M$ het veld
+\[
+\vect B(M) = \frac{\mu_0}{4\pi}\sum_{\text{kring}} \frac{I\,\dd\vect l\wedge\vect e_{PM}}{PM^2} ,
+\]
+op, gesommeerd over de elementen $\dd\vect l$ van de kring in de punten $P$,
+langs de stroom georiënteerd, met $\vect e_{PM}$ de eenheidsvector van
+$P$ naar $M$, en $\mu_0 = 4\pi \times 10^{-7}\,\unit{T.m/A}$ de
+\emph{\omterm{thm:b1:magnetostatics:biotsavart}{permeabiliteit van het vacuüm}}. Elk element levert een veld
+loodrecht op zichzelf en op de lijn $PM$, dat afneemt als $1/PM^2$.
+\end{theorem}
+\admitted
+
+\begin{proposition}[Draad, winding, spoel]\label{prop:b1:magnetostatics:three}
+\index{veld van een rechte draad}\index{veld van een winding}\index{veld van een spoel}
+\begin{enumerate}
+  \item Oneindige rechte draad, op afstand $r$: $B = \dfrac{\mu_0I}{2\pi r}$.
+  \item Ronde winding met straal $R$, op haar as op afstand $z$ van
+        het middelpunt: $B_z = \dfrac{\mu_0IR^2}{2(R^2 + z^2)^{3/2}} = \dfrac{\mu_0I}{2R}
+        \sin^3\alpha$, met $\alpha$ de halve hoek waaronder de winding
+        vanuit $M$ wordt gezien; in het middelpunt is $B = \mu_0I/2R$.
+  \item Spoel met $n$ windingen per meter, op haar as: $B = \tfrac12\mu_0nI
+        (\cos\alpha_1 - \cos\alpha_2)$, met $\alpha_1, \alpha_2$ de hoeken waaronder
+        de twee uiteinden worden gezien; voor een lange spoel is $B = \mu_0nI$
+        binnenin, en de helft daarvan aan een uiteinde.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+(1) $M$ op afstand $r$ van de draad, $P$ op abscis $z$ erlangs:
+$\dd\vect l\wedge\vect e_{PM}$ heeft grootte $\dd z\,\sin\beta = \dd z\cdot r/PM$
+met $PM = \sqrt{r^2 + z^2}$, en alle bijdragen zijn orthoradiaal:
+$B = \dfrac{\mu_0I}{4\pi}\displaystyle\int_{-\infty}^{\infty}\dfrac{r\,\dd z}{(r^2 + z^2)^{3/2}}
+= \dfrac{\mu_0I}{4\pi}\,\dfrac{2}{r}$. (2) Elk element van de winding ligt op
+dezelfde afstand $\sqrt{R^2 + z^2}$ van $M$, loodrecht op
+$\vect e_{PM}$; zijn veld heeft grootte $\mu_0I\,\dd l/4\pi(R^2 + z^2)$, en
+alleen de axiale component, de fractie $R/\sqrt{R^2 + z^2}$ ervan,
+overleeft de som rond de winding: $B_z = \mu_0I\cdot2\pi R\cdot R/4\pi(R^2 +
+z^2)^{3/2}$. (3) Een schijfje $\dd z'$ spoel is een winding met stroom
+$nI\,\dd z'$; met $z' - z = R/\tan\alpha$, $\dd z' = -R\,\dd\alpha/\sin^2\alpha$,
+en $B = \dfrac{\mu_0nI}{2}\displaystyle\int\sin^3\alpha\,\dfrac{\dd\alpha}{\sin^2\alpha}$ over
+de spoel $= \tfrac12\mu_0nI(\cos\alpha_1 - \cos\alpha_2)$; oneindig
+lang gaat $\alpha_1 \to 0$, $\alpha_2 \to \pi$.
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}[font=\small, x=1cm, y=1cm, >=Stealth]
+  \begin{scope}
+    \draw[omThm, very thick, -Stealth] (0,-2.2) -- (0,2.4) node[right] {$I$};
+    \fill[omThm] (0,0.4) circle (1.5pt) node[left, font=\footnotesize] {$P$};
+    \draw[omThm, very thick] (0,0.4) -- (0,0.75);
+    \node[omThm, font=\footnotesize, anchor=east] at (-0.1,0.85) {$\dd\vect l$};
+    \fill (2.2,-0.6) circle (1.5pt) node[below right, font=\footnotesize] {$M$};
+    \draw[dashed] (0,0.4) -- (2.2,-0.6) node[midway, above, font=\footnotesize] {$\vect e_{PM}$};
+    \draw[dashed] (0,-0.6) -- (2.2,-0.6) node[midway, below, font=\footnotesize] {$r$};
+    \node[omDef, font=\footnotesize] at (2.2,-0.6) [xshift=14pt, yshift=10pt] {$\odot\ \dd\vect B$};
+    \node[font=\footnotesize] at (1.0,-2.55) {Biot--Savart voor een draad};
+  \end{scope}
+  \begin{scope}[xshift=6.6cm]
+    \draw[omThm, very thick] (0,0) ellipse (0.45 and 1.3);
+    \draw[dashed] (-0.3,0) -- (3.6,0);
+    \fill (2.6,0) circle (1.5pt) node[below, font=\footnotesize] {$M$};
+    \draw[dashed] (0,1.3) -- (2.6,0); \draw[dashed] (0,-1.3) -- (2.6,0);
+    \draw (2.0,0) arc[start angle=180, end angle=153.4, radius=0.6];
+    \node[font=\footnotesize] at (1.75,0.22) {$\alpha$};
+    \draw[<->] (0,0) -- (0,1.3) node[midway, left, font=\footnotesize] {$R$};
+    \draw[<->] (0,-1.5) -- (2.6,-1.5) node[midway, below, font=\footnotesize] {$z$};
+    \draw[omDef, thick, -Stealth] (2.6,0) -- (3.4,0) node[above, font=\footnotesize] {$\vect B$};
+    \node[font=\footnotesize] at (1.6,-2.55) {winding: $B = \frac{\mu_0 I}{2R}\sin^3\alpha$};
+  \end{scope}
+  \begin{scope}[xshift=12.4cm]
+    \draw[omThm, thick] (-1.6,0.8) rectangle (1.6,0.9); \draw[omThm, thick] (-1.6,-0.9) rectangle (1.6,-0.8);
+    \draw[dashed] (-2.2,0) -- (2.2,0);
+    \fill (0.3,0) circle (1.5pt) node[below, font=\footnotesize] {$M$};
+    \draw[dashed] (0.3,0) -- (-1.6,0.85); \draw[dashed] (0.3,0) -- (1.6,0.85);
+    \draw (-0.3,0) arc[start angle=180, end angle=156, radius=0.6];
+    \node[font=\footnotesize] at (-0.5,0.32) {$\alpha_1$};
+    \draw (0.9,0) arc[start angle=0, end angle=33, radius=0.6];
+    \node[font=\footnotesize] at (1.15,0.32) {$\alpha_2$};
+    \node[font=\footnotesize] at (0,-2.55) {spoel: $\frac12\mu_0 nI(\cos\alpha_1 - \cos\alpha_2)$};
+  \end{scope}
+\end{tikzpicture}
+
+{\small De drie berekeningen met Biot--Savart uit dit hoofdstuk: het element
+$\dd\vect l$ van een draad en zijn bijdrage in $M$, loodrecht op het
+vlak van de figuur; de winding gezien vanuit $M$ onder de halve hoek
+$\alpha$; de spoel, waarvan de uiteinden onder $\alpha_1$ en
+$\alpha_2$ worden gezien.}
+\end{omfigure}
+
+\begin{example}[Ordes van grootte]\label{ex:b1:magnetostatics:orders}
+Een draad met \qty{10}{A} op \qty{1}{cm}: $B = 2 \times 10^{-7} \times 10/0.01 =
+\qty{2e-4}{T}$, vier keer het aardveld --- het kompas slaat inderdaad uit.
+Een spoel van $100$ windingen, straal \qty{5}{cm}, \qty{2}{A}: $\mu_0NI/2R =
+\qty{2.5}{mT}$ in haar middelpunt. Een spoel van $1000$ windingen per meter bij
+\qty{5}{A}: \qty{6.3}{mT}; met een ijzeren kern met relatieve permeabiliteit
+$1000$ zouden er enkele \omterm{def:b1:magnetostatics:field}{tesla} volgen als ijzer niet rond
+\qty{2}{T} verzadigde --- het plafond van elke elektromagneet, en daarom komen
+de sterkste velden van supergeleidende spoelen zonder ijzer.
+\end{example}
+
+\section{De stelling van Ampère}
+
+\begin{theorem}[Ampère]\label{thm:b1:magnetostatics:ampere}
+\index{stelling van Ampère}\index{circulatie!van het magnetische veld}
+De circulatie van $\vect B$ langs een willekeurige gesloten georiënteerde kromme $\Gamma$
+is gelijk aan $\mu_0$ maal de totale stroom die door een willekeurig oppervlak met rand
+$\Gamma$ gaat, positief geteld wanneer hij passeert in de richting die de
+rechterhandregel uit de oriëntatie van $\Gamma$ geeft:
+\[
+\oint_\Gamma \vect B\cdot\dd\vect l = \mu_0 I_{\text{oms}} .
+\]
+\end{theorem}
+
+\begin{proof}
+Voor een cirkel met straal $r$ om een rechte draad is $\vect B$
+rakend met overal grootte $\mu_0I/2\pi r$, zodat de circulatie
+$2\pi r \times \mu_0I/2\pi r = \mu_0I$ is, onafhankelijk van $r$; voor een kromme die de
+draad niet omsluit heffen de bijdragen elkaar op. Het algemene geval wordt
+aangenomen (volume van jaar 2).
+\end{proof}
+
+\begin{method}[De stelling van Ampère gebruiken]\label{meth:b1:magnetostatics:ampere}
+Als bij Gauss: (1) de symmetrieën geven de richting van $\vect B$ en de
+variabele waarvan het afhangt; (2) kies een \emph{ampèrelus} door $M$
+waarop $\vect B$ óf raakt met constante grootte, óf er
+loodrecht op staat; (3) tel de stroom erdoorheen; (4) los op. Het werkt
+voor oneindige draden en cilinders, oneindige spoelen en toroïden, en
+oneindige stroomvlakken.
+\end{method}
+
+\begin{proposition}[Cilinder, spoel, toroïde]\label{prop:b1:magnetostatics:ampereapps}
+\begin{enumerate}
+  \item Een cilindrische draad met straal $a$ die $I$ gelijkmatig voert:
+        $B = \dfrac{\mu_0Ir}{2\pi a^2}$ binnenin, $\dfrac{\mu_0I}{2\pi r}$ erbuiten
+        --- het maximum ligt aan het oppervlak.
+  \item Een oneindige spoel met $n$ windingen per meter: $\vect B = \mu_0nI\,
+        \vect e_z$ homogeen binnenin, $\vect 0$ erbuiten, wat de vorm van
+        haar doorsnede ook is.
+  \item Een toroïde met $N$ windingen: $B = \dfrac{\mu_0NI}{2\pi r}$ binnen de
+        wikkelingen, nul erbuiten --- een spoel die op zichzelf is gesloten, zonder
+        strooiveld.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+(1) Cirkel met straal $r$: $2\pi rB = \mu_0I(r/a)^2$ of $\mu_0I$. (2) $\vect B$
+is axiaal uit symmetrie en, met Ampère op een rechthoek met beide lange zijden
+erbuiten, homogeen erbuiten en dus nul (het verdwijnt in het oneindige); een
+rechthoek met één lange zijde binnenin, met lengte $\ell$, geeft $B\ell =
+\mu_0n\ell I$. (3) Cirkel met straal $r$ binnen de torus: $2\pi rB =
+\mu_0NI$; erbuiten is de omsloten stroom nul.
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}
+\begin{axis}[omaxis, axis x line=bottom, axis y line=left, width=7.4cm, height=5.2cm,
+    xlabel={$r/a$}, ylabel={$B$ (in eenheden van $\mu_0I/2\pi a$)},
+    xlabel style={at={(axis description cs:0.5,-0.1)}, anchor=north},
+    xmin=0, xmax=4, ymin=0, ymax=1.25, xtick={1,2,3}, ytick={0.5,1}, samples=60]
+  \addplot[omDef, very thick, domain=0:1] {x};
+  \addplot[omDef, very thick, domain=1:4] {1/x} node[pos=0.3, above right, font=\footnotesize] {$\propto 1/r$};
+  \node[omDef, font=\footnotesize, anchor=north west] at (axis cs:0.1,0.9) {$\propto r$};
+\end{axis}
+\end{tikzpicture}\hfill
+\begin{tikzpicture}[font=\small, x=1cm, y=1cm, >=Stealth]
+  \foreach \x in {-2.0,-1.6,...,2.0} {\fill[omThm] (\x,0.9) circle (2pt); \node[omThm, font=\scriptsize] at (\x,-0.9) {$\times$};}
+  \foreach \y in {-0.55,-0.15,0.25,0.65} \draw[omDef, thick, -Stealth] (-2.6,\y) -- (2.6,\y);
+  \draw[omProp, very thick, dashed, -Stealth] (-1.2,0.2) -- (1.2,0.2) node[midway, below, font=\footnotesize] {$\ell$};
+  \draw[omProp, very thick, dashed] (1.2,0.2) -- (1.2,1.5) -- (-1.2,1.5) -- (-1.2,0.2);
+  \node[omProp, font=\footnotesize] at (0,1.85) {ampèrerechthoek: $B\ell = \mu_0 n\ell I$};
+  \node[font=\footnotesize] at (0,-1.5) {$\vect B = \vect 0$ erbuiten, $\mu_0 nI$ binnenin};
+\end{tikzpicture}
+
+{\small Links: het veld van een dikke draad, lineair binnenin en als $1/r$
+erbuiten, het grootst aan het oppervlak. Rechts: de ampèrerechthoek die
+het veld van een oneindige spoel geeft --- alleen de zijde binnenin
+draagt aan de circulatie bij.}
+\end{omfigure}
+
+\section{De laplacekracht}
+
+\begin{theorem}[Laplacekracht]\label{thm:b1:magnetostatics:laplace}
+\index{laplacekracht}
+Een geleiderelement $\dd\vect l$ dat $I$ voert in een veld $\vect B$
+ondervindt de kracht $\dd\vect F = I\,\dd\vect l\wedge\vect B$; een recht
+stuk $\vect L$ in een homogeen veld ondervindt $\vect F = I\vect L\wedge\vect B$,
+met grootte $ILB\sin\theta$, loodrecht op zowel de draad als het
+veld.
+\end{theorem}
+
+\begin{proof}
+De ladingsdragers in $\dd\vect l$ (aantal $n\,S\,\dd l$, lading $q$,
+driftsnelheid $\vect v$) voelen elk $q\vect v\wedge\vect B$; hun som is
+$nSq\,\dd l\,\vect v\wedge\vect B = I\,\dd\vect l\wedge\vect B$ omdat $I = nqvS$
+en $\vect v$ langs $\dd\vect l$ ligt. De dragers geven de kracht door aan het
+rooster van de draad via hun botsingen.
+\end{proof}
+
+\begin{proposition}[Kracht tussen evenwijdige draden]\label{prop:b1:magnetostatics:parallel}
+\index{ampère (definitie)}
+Twee lange evenwijdige draden op afstand $d$ die $I_1$ en $I_2$ voeren
+trekken elkaar aan als de stromen gelijkgericht zijn en stoten elkaar af als zij tegengesteld zijn,
+met de kracht per lengte-eenheid
+\[
+\frac{F}{\ell} = \frac{\mu_0I_1I_2}{2\pi d} .
+\]
+Twee draden op \qty{1}{m} afstand die \qty{1}{A} voeren ondervinden $2 \times 10^{-7}$~N per
+meter --- de definitie van de \omterm{def:b1:dc-circuits:current}{ampère} van 1948 tot 2019, en de
+herkomst van de waarde $\mu_0 = 4\pi \times 10^{-7}$.
+\end{proposition}
+
+\begin{proof}
+Draad~1 wekt bij draad~2 het veld $\mu_0I_1/2\pi d$ op, loodrecht erop; de
+\omterm{thm:b1:magnetostatics:laplace}{laplacekracht} op een lengte $\ell$ van draad~2 is $I_2\ell \times \mu_0I_1/2\pi d$,
+naar draad~1 gericht wanneer de stromen gelijkgericht zijn (controleer met
+de rechterhandregel).
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}[font=\small, x=1cm, y=1cm, >=Stealth]
+  \begin{scope}
+    \draw[omThm, very thick, -Stealth] (-0.8,-1.6) -- (-0.8,1.6) node[above] {$I_1$};
+    \draw[omThm, very thick, -Stealth] (0.8,-1.6) -- (0.8,1.6) node[above] {$I_2$};
+    \draw[omDef, thick, ->] (-0.8,0) -- (-0.1,0) node[midway, above, font=\footnotesize] {$\vect F$};
+    \draw[omDef, thick, ->] (0.8,0) -- (0.1,0);
+    \node[omProp, font=\scriptsize] at (0.8,-0.5) [xshift=10pt] {$\odot\ \vect B_1$};
+    \node[font=\footnotesize] at (0,-2.1) {gelijkgerichte stromen trekken aan};
+  \end{scope}
+  \begin{scope}[xshift=4.6cm]
+    \draw[omThm, very thick, -Stealth] (-0.8,-1.6) -- (-0.8,1.6) node[above] {$I_1$};
+    \draw[omThm, very thick, -Stealth] (0.8,1.6) node[above] {$I_2$} -- (0.8,-1.6);
+    \draw[omDef, thick, ->] (-0.8,0) -- (-1.5,0) node[midway, above, font=\footnotesize] {$\vect F$};
+    \draw[omDef, thick, ->] (0.8,0) -- (1.5,0);
+    \node[font=\footnotesize] at (0,-2.1) {tegengesteld: stoten af};
+  \end{scope}
+  \begin{scope}[xshift=10.2cm]
+    \draw[omThm, very thick] (-2.2,0.9) -- (2.2,0.9); \draw[omThm, very thick] (-2.2,-0.9) -- (2.2,-0.9);
+    \draw[omThm, very thick, -Stealth] (0.3,0.9) -- (0.3,-0.9) node[midway, right, font=\footnotesize] {$I$};
+    \draw[omThm, very thick] (0.15,0.9) rectangle (0.45,-0.9);
+    \foreach \x in {-1.8,-1.2,-0.6,1.0,1.6} \foreach \y in {-0.45,0.45} \node[omProp, font=\scriptsize] at (\x,\y) {$\times$};
+    \node[omProp, font=\footnotesize] at (-1.2,1.25) {$\vect B$ het vlak in};
+    \draw[omDef, very thick, ->] (0.3,0) -- (1.6,0);
+    \node[omDef, font=\footnotesize, anchor=north west] at (0.85,-0.2) {$\vect F = I\vect L\wedge\vect B$};
+    \node[font=\footnotesize] at (0,-2.1) {rails: de eenvoudigste motor};
+  \end{scope}
+\end{tikzpicture}
+
+{\small De \omterm{thm:b1:magnetostatics:laplace}{laplacekracht}: tussen evenwijdige draden (links, midden) en op
+een schuivende staaf die een stroom dwars door een veld voert (rechts) --- de
+laplacerails, waarvan de energiebalans het onderwerp is van \cref{ch:b1:induction}.}
+\end{omfigure}
+
+\section{De magnetische dipool}
+
+\begin{definition}[Magnetisch moment]\label{def:b1:magnetostatics:moment}
+\index{magnetisch moment}\index{magnetische dipool}
+Een vlakke winding met oppervlakte $S$ die $I$ voert, georiënteerd volgens de rechterhandregel
+(normaal $\vect n$ langs de duim wanneer de vingers $I$ volgen), heeft het
+\emph{magnetisch moment} $\vect m = IS\,\vect n$ (\unit{A.m^2}); bij $N$
+windingen $NIS\,\vect n$. Van afstanden $r \gg \sqrt S$ gezien is de winding een
+\emph{magnetische dipool}: haar veld heeft precies de vorm van dat van de \omterm{def:b1:potential-capacitors:dipole}{elektrische
+dipool} met $\vect p/\varepsilon_0 \to \mu_0\vect m$:
+\[
+B_r = \frac{\mu_0}{4\pi}\,\frac{2m\cos\theta}{r^3}, \qquad
+B_\theta = \frac{\mu_0}{4\pi}\,\frac{m\sin\theta}{r^3} .
+\]
+Een staafmagneet, een atoom en de aarde zijn magnetische dipolen: het moment
+van de aarde is \qty{8e22}{A.m^2}, dat van een elektron \qty{9.3e-24}{A.m^2} (het
+bohrmagneton).
+\end{definition}
+
+\begin{proof}
+Op de as is het veld van de winding $\mu_0IR^2/2z^3$ voor $z \gg R$ gelijk aan
+$\mu_0 \cdot 2m/4\pi z^3$ met $m = I\pi R^2$, wat overeenkomt met $B_r$ bij $\theta = 0$;
+de volledige hoekafhankelijkheid wordt aangenomen.
+\end{proof}
+
+\begin{theorem}[Dipool in een veld]\label{thm:b1:magnetostatics:dipoleinfield}
+\index{magnetische dipool!koppel}\index{magnetische dipool!energie}
+Een \omterm{def:b1:magnetostatics:moment}{magnetisch moment} $\vect m$ in een homogeen veld $\vect B$ ondervindt geen netto
+kracht, wel een \omterm{def:b1:angular-momentum:moment}{koppel} $\vect\Gamma = \vect m\wedge\vect B$ dat het met
+het veld uitlijnt, en heeft de \omterm{def:b1:work-and-energy:conservative}{potentiële energie} $E_p = -\vect m\cdot\vect B$. In een
+inhomogeen veld wordt het naar het gebied met sterk veld getrokken wanneer het
+is uitgelijnd (en weggeduwd wanneer het tegengesteld staat).
+\end{theorem}
+
+\begin{proof}
+Voor een rechthoekige winding $a \times b$ met $\vect n$ onder hoek $\theta$ met
+$\vect B$: de \omterm{thm:b1:magnetostatics:laplace}{laplacekrachten} op de twee zijden met lengte $b$ evenwijdig aan
+de draaias zijn $\pm IbB$, tegengesteld, op afstand $a\sin\theta$
+van elkaar: een \omterm{def:b1:angular-momentum:moment}{koppel} met moment $IabB\sin\theta = mB\sin\theta$, dat
+$\theta$ probeert te verkleinen; de krachten op de andere twee zijden zijn tegengesteld en
+liggen op één lijn. Energie: $\Gamma = -\dd E_p/\dd\theta$ met $\Gamma = -mB\sin\theta$
+geeft $E_p = -mB\cos\theta$. Elke vlakke winding is een som van kleine rechthoeken;
+het inhomogene geval wordt aangenomen.
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}[font=\small, x=1cm, y=1cm, >=Stealth]
+  \begin{scope}
+    % rectangular loop seen from above, B horizontal
+    \foreach \y in {-1.4,-0.7,0,0.7,1.4} \draw[omProp, ->] (-2.8,\y) -- (2.8,\y);
+    \node[omProp, font=\footnotesize] at (2.5,1.7) {$\vect B$};
+    \draw[omThm, very thick] (-0.9,-0.55) -- (0.9,0.55);
+    \fill[omThm] (-0.9,-0.55) circle (3pt); \node[omThm, font=\footnotesize] at (0.9,0.55) {$\otimes$};
+    \draw[omDef, very thick, ->] (-0.9,-0.55) -- (-0.9,-1.6) node[left, font=\footnotesize] {$\vect F$};
+    \draw[omDef, very thick, ->] (0.9,0.55) -- (0.9,1.6) node[right, font=\footnotesize] {$-\vect F$};
+    \draw[very thick, ->] (0,0) -- (-0.66,1.08) node[above left, font=\footnotesize] {$\vect m$};
+    \draw (0,0.6) arc[start angle=90, end angle=121.4, radius=0.6] node[midway, above, font=\footnotesize] {$\theta$};
+    \node[font=\footnotesize] at (0,-2.95) {koppel $mB\sin\theta$: de winding lijnt $\vect m$ uit met $\vect B$};
+  \end{scope}
+  \begin{scope}[xshift=8.6cm]
+    % compass / dipole field lines of a magnet
+    \draw[fill=omThm!20, draw=omThm, thick] (-1.0,-0.3) rectangle (0,0.3); \node[omThm, font=\footnotesize] at (-0.5,0) {Z};
+    \draw[fill=omDef!20, draw=omDef, thick] (0,-0.3) rectangle (1.0,0.3); \node[omDef, font=\footnotesize] at (0.5,0) {N};
+    \foreach \K in {1.4,2.0,2.6} {
+      \draw[omDef, thick, domain=8:172, samples=90, postaction={decorate, decoration={markings, mark=at position 0.5 with {\arrow{>}}}}] plot ({\K*sin(\x)*sin(\x)*cos(\x)}, {\K*sin(\x)*sin(\x)*sin(\x)});
+      \draw[omDef, thick, domain=188:352, samples=90, postaction={decorate, decoration={markings, mark=at position 0.5 with {\arrow{<}}}}] plot ({\K*sin(\x)*sin(\x)*cos(\x)}, {\K*sin(\x)*sin(\x)*sin(\x)});
+    }
+    \draw[->, very thick] (-0.6,0) -- (0.6,0); \node[font=\footnotesize] at (0,-0.5) {$\vect m$};
+    \node[font=\footnotesize] at (0,-2.95) {een magneet: het dipoolveld, lijnen van N naar Z};
+  \end{scope}
+\end{tikzpicture}
+
+{\small Links: een stroomwinding in een homogeen veld, gezien langs haar
+draaias --- de \omterm{thm:b1:magnetostatics:laplace}{laplacekrachten} op de twee zijden vormen een \omterm{def:b1:angular-momentum:moment}{koppel} dat
+het moment met het veld uitlijnt. Rechts: de \omterm{def:b1:electrostatics-gauss:field}{veldlijnen} van een staafmagneet
+zijn die van een \omterm{def:b1:magnetostatics:moment}{magnetische dipool}, in vorm gelijk aan die van de
+\omterm{def:b1:potential-capacitors:dipole}{elektrische dipool}, die het noordvlak verlaten en naar het zuidvlak terugkeren.}
+\end{omfigure}
+
+\begin{example}[Het kompas en de aarde]\label{ex:b1:magnetostatics:compass}
+Een kompasnaald is een kleine magneet met moment $m \sim \qty{0.1}{A.m^2}$; in de
+horizontale component van het aardveld, $B_h \approx \qty{2e-5}{T}$, draait het
+\omterm{def:b1:angular-momentum:moment}{koppel} $mB_h\sin\theta$ haar naar het noorden, en zij trilt om het noorden met
+periode $2\pi\sqrt{J/mB_h} \sim \qty{1}{s}$ (\cref{exo:b1:magnetostatics:9}).
+De eigen dipool van de aarde, \qty{8e22}{A.m^2}, komt overeen met een stroom van
+enkele miljarden \omterm{def:b1:dc-circuits:current}{ampère} die in de vloeibare ijzeren kern rondgaat; het veld dat hij
+aan het oppervlak maakt is het zwakste van dit hoofdstuk en het eerste dat
+iemand ooit heeft gebruikt.
+\end{example}
+
+\section{Oefeningen}
+
+\begin{exercise}[$\star$]\label{exo:b1:magnetostatics:1}
+Veld op \qty{1.0}{cm} van een rechte draad die \qty{10}{A} voert; stroom die
+nodig is om op die afstand \qty{1}{T} te bereiken; afstand waarop het veld van een
+draad met \qty{100}{A} gelijk is aan het aardveld van \qty{5e-5}{T}.
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b1:magnetostatics:2}
+Veld in het middelpunt van een spoel van $100$ windingen met straal \qty{5.0}{cm}
+die \qty{2.0}{A} voert; op haar as op \qty{5.0}{cm} en op \qty{50}{cm}
+van het middelpunt.
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b1:magnetostatics:3}
+Een spoel met $1000$ windingen per meter voert \qty{5.0}{A}: veld binnenin,
+ver van de uiteinden; en helemaal aan het uiteinde. Aantal windingen draad van
+\qty{0.5}{mm} dat men in één laag per meter kan wikkelen, en het veld dan bij
+\qty{5}{A}.
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b1:magnetostatics:4}
+Kracht op een draad van \qty{1.0}{m} die \qty{10}{A} voert loodrecht op een veld van
+\qty{0.10}{T}; op dezelfde draad onder \qty{30}{\degree} met het veld.
+Een motor heeft $100$ zulke draden op een rotor met straal \qty{5}{cm}: \omterm{def:b1:angular-momentum:moment}{koppel}
+(\omterm{def:b1:units-dimensions:oom}{orde van grootte}).
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b1:magnetostatics:5}
+Veld van een eindig recht stuk op afstand $d$ van zijn lijn, waarvan de
+uiteinden onder de hoeken $\alpha_1$ en $\alpha_2$ worden gezien (gemeten vanaf de
+loodlijn): $B = \dfrac{\mu_0I}{4\pi d}(\sin\alpha_2 - \sin\alpha_1)$. Controleer
+de limiet van de oneindige draad. Veld in het middelpunt van een vierkante winding met zijde
+$a$.
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b1:magnetostatics:6}
+\emph{Helmholtzspoelen.} Twee gelijke spoelen ($N$ windingen, straal $R$) op een
+gemeenschappelijke as, op afstand $R$, voeren dezelfde stroom in dezelfde
+zin. Veld in het midden; toon aan dat de eerste \emph{en de tweede}
+afgeleide van $B$ langs de as daar verdwijnen. Getallen: $N = 100$,
+$R = \qty{15}{cm}$, $I = \qty{1.0}{A}$.
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b1:magnetostatics:7}
+Een koperdraad met straal \qty{2.0}{mm} voert \qty{100}{A}. Veld aan het
+oppervlak, op \qty{1.0}{mm} van de as, op \qty{1.0}{cm}. Schets $B(r)$.
+De draad is nu de binnengeleider van een coaxkabel waarvan de mantel
+de retourstroom voert: veld buiten de mantel.
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b1:magnetostatics:8}
+Kracht per meter tussen twee draden op \qty{1}{m} afstand bij \qty{1}{A}; tussen
+twee stroomrails op \qty{10}{cm} die \qty{10}{kA} voeren; en bij een
+kortsluiting van \qty{100}{kA}. Wat moet de rails vasthouden?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b1:magnetostatics:9}
+Een kompasnaald met moment $m = \qty{0.10}{A.m^2}$ en \omterm{prop:b1:angular-momentum:inertia}{traagheidsmoment}
+$J = \qty{1.0e-7}{kg.m^2}$, in een horizontaal veld $B_h = \qty{2.0e-5}{T}$.
+\omterm{def:b1:angular-momentum:moment}{Koppel} bij \qty{90}{\degree}; arbeid om haar van noord naar zuid te draaien; periode
+van \omterm{prop:b1:work-and-energy:stability}{kleine trillingen}. Hoe meet men $B_h$ ermee?
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b1:magnetostatics:10}
+\emph{De aarde als dipool.} (a) Toon aan dat het \omterm{prop:b1:magnetostatics:three}{veld van een winding} op haar as,
+ver weg, $B = \mu_0m/2\pi z^3$ is met $m = I\pi R^2$; vergelijk met de
+\omterm{def:b1:potential-capacitors:dipole}{elektrische dipool}. (b) Het veld op de magnetische pool is ongeveer
+\qty{6e-5}{T}: leid daaruit het \omterm{def:b1:potential-capacitors:dipole}{dipoolmoment} van de aarde af. (c) Stroom in een winding
+met straal \qty{3000}{km} (de kern) die het zou opwekken. (d) Veld op
+de evenaar in het dipoolmodel; de inclinatiehoek van het veld op
+breedte \qty{45}{\degree} (gebruik $B_r$ en $B_\theta$).
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b1:magnetostatics:11}
+\emph{Eindige spoel.} Lengte $L = \qty{20}{cm}$, straal $R = \qty{2.0}{cm}$,
+$n = \qty{2000}{m^{-1}}$, $I = \qty{3.0}{A}$. Veld in het midden en aan een
+uiteinde met de formule uit de cursus; welk deel van de waarde voor de oneindige spoel;
+op welke afstand erbuiten langs de as is het veld gezakt tot
+$1\%$ van de waarde in het midden? Schets $B(z)$ langs de as.
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b1:magnetostatics:12}
+\emph{Magnetische druk.} In een lange spoel is het veld $B$ binnenin
+en $0$ erbuiten; de wikkelingen voeren de oppervlaktestroom $K = nI$ per
+meter lengte. (a) Toon aan dat het veld \emph{ter plaatse van} de wikkelingen, het
+gemiddelde van binnen en buiten, gelijk is aan $B/2$, en dat de \omterm{thm:b1:magnetostatics:laplace}{laplacekracht} erop
+een naar buiten gerichte druk $p = B^2/2\mu_0$ is. (b) Getallen voor
+\qty{1}{T}, \qty{10}{T}, \qty{45}{T}; vergelijk met de atmosferische druk en
+met de treksterkte van staal (\qty{1}{GPa}). (c) Wat begrenst de
+sterkste stationaire magneten?
+\end{exercise}
+
+\begin{omfigure}
+\includegraphics[width=0.50\linewidth]{images/book3/transmission-line.jpg}
+
+{\small Een hoogspanningslijn: drie geleiders per circuit waarvan de stromen tot nul optellen, zodat hun velden op afstand tegen elkaar wegvallen. Foto: Stefan Andrej Shambora, CC~BY~2.0.}
+\end{omfigure}
+
+\section{Probleem: De kabel, de lijn en de meter}
+
+\begin{problem}[{Weekendopgave --- de stelling van Ampère op een coaxkabel,
+laplacekrachten op een hoogspanningslijn, en het ontwerp van een
+draaispoelgalvanometer}]
+\label{pb:b1:magnetostatics:1}
+$\mu_0 = 4\pi \times 10^{-7}$~SI; soortelijke weerstand van koper $\rho = \qty{1.7e-8}{\ohm.m}$.
+
+\medskip
+\noindent\textbf{Deel I --- De coaxkabel.}
+Een kabel voert $I = \qty{1.0}{A}$ langs een massieve koperen kern met straal
+$a = \qty{0.50}{mm}$ en terug langs een mantel met binnenstraal $b =
+\qty{2.5}{mm}$ en buitenstraal $c = \qty{3.0}{mm}$; de stromen zijn gelijkmatig
+over de doorsnede van elke geleider verdeeld.
+\begin{enumerate}
+  \item Symmetrieën en invarianties: richting van $\vect B$ en de
+        variabele waarvan het afhangt.
+  \item $B(r)$ in de kern, tussen de geleiders en buiten de
+        kabel, met de \omterm{thm:b1:magnetostatics:ampere}{stelling van Ampère}.
+  \item Waarden in $r = a$ en $r = b$.
+  \item De kern wordt vervangen door een dunne koperen buis met dezelfde straal
+        $a$ die dezelfde stroom voert: wat verandert er in elk gebied?
+  \item $B(r)$ in de mantel ($b < r < c$); controleer de waarden in $b$
+        en $c$; schets $B(r)$ van $0$ tot \qty{4}{mm}.
+  \item \omterm{thm:b1:magnetostatics:laplace}{Laplacekracht} op de mantel: richting (aantrekking of
+        afstoting ten opzichte van de kern?) en grootte per oppervlakte-eenheid, met
+        het veld op de mantel gelijk aan het gemiddelde van zijn waarden in $b$ en $c$.
+        Idem voor een gepulste stroom van \qty{10}{kA}.
+  \item Waarom gebruikt men de coaxiale meetkunde voor signalen? Vergelijk met een
+        paar evenwijdige draden op $d = \qty{2}{mm}$: veld op afstand
+        $D = \qty{10}{cm}$ van het paar (superponeer twee draden).
+\end{enumerate}
+
+\medskip
+\noindent\textbf{Deel II --- De hoogspanningslijn.}
+Twee horizontale geleiders op $d = \qty{1.0}{m}$ afstand, $h = \qty{10}{m}$ boven
+de grond, voeren $I = \qty{500}{A}$ in tegengestelde richtingen.
+\begin{enumerate}[resume]
+  \item Veld van één geleider in het punt op de grond onder het
+        midden; toon aan dat de twee velden samen een verticaal veld geven
+        en geef de waarde; vergelijk met het aardveld en met de
+        blootstellingsrichtlijn van \qty{100}{\micro T}.
+  \item Toon aan dat het veld van het paar op afstanden $D \gg d$ afneemt als
+        $\mu_0Id/2\pi D^2$: waarom sneller dan bij één draad?
+  \item Veld op \qty{1.0}{m} onder één geleider, waar een monteur
+        zou kunnen werken.
+  \item Kracht per meter tussen de geleiders; aantrekking of
+        afstoting? Idem bij een kortsluitstroom van \qty{20}{kA}.
+  \item Kracht op een overspanning van \qty{300}{m}, normaal en bij kortsluiting;
+        vergelijk met het gewicht van de overspanning (\qty{1.0}{kg/m}); wat doen de lijnen
+        tijdens een kortsluiting?
+  \item Een driefasenlijn voert drie stromen met dezelfde \omterm{def:b1:wave-propagation:signal}{amplitude}
+        die \qty{120}{\degree} verschoven zijn: toon aan dat hun som op
+        elk ogenblik nul is, en wat dat voor het verre veld betekent.
+  \item Een kompas in het punt uit vraag~8, waar het horizontale
+        aardveld \qty{2.0e-5}{T} is: buigt het veld van de lijn het
+        af? (Let op de richting ervan.)
+\end{enumerate}
+
+\medskip
+\noindent\textbf{Deel III --- De draaispoelgalvanometer.}
+Een rechthoekige spoel, $N = 200$ windingen, met zijden $a = \qty{2.0}{cm}$ (evenwijdig aan
+de draaias) en $b = \qty{3.0}{cm}$, draait om haar as in de
+spleet tussen cilindrische poolschoenen waar het veld, $B = \qty{0.20}{T}$,
+\emph{radiaal} is: altijd in het vlak van de spoel, loodrecht op haar
+zijden $a$. Een spiraalveer levert het terugdrijvende \omterm{def:b1:angular-momentum:moment}{koppel} $-C\theta$ met
+$C = \qty{1.0e-5}{N.m/rad}$. \omterm{prop:b1:angular-momentum:inertia}{Traagheidsmoment} van spoel en naald:
+$J = \qty{6.7e-8}{kg.m^2}$.
+\begin{enumerate}[resume]
+  \item \omterm{thm:b1:magnetostatics:laplace}{Laplacekrachten} op de vier zijden; welke leveren een \omterm{def:b1:angular-momentum:moment}{koppel}
+        om de as?
+  \item \omterm{def:b1:angular-momentum:moment}{Koppel} bij een stroom $I$; waarom maakt het radiale veld het
+        onafhankelijk van $\theta$?
+  \item Uitwijking $\theta$ in evenwicht; gevoeligheid in radialen per
+        milliampère; stroom voor een volle uitslag van \qty{1.2}{rad}.
+  \item De spoel is gewikkeld met koperdraad van \qty{0.10}{mm} doorsnede:
+        weerstand van de spoel; \omterm{def:b1:dc-circuits:voltage}{spanning} erover en gedissipeerd vermogen bij
+        volle uitslag.
+  \item Bewegingsvergelijking van de spoel; eigenperiode van de
+        trillingen om het evenwicht.
+  \item De beweging van de spoel in het veld wekt een remmend \omterm{def:b1:angular-momentum:moment}{koppel}
+        $-\alpha\dot\theta$ op (\cref{ch:b1:induction}); waarde van $\alpha$ voor
+        kritische demping, en waarom men die wil.
+  \item Serieweerstand om er een voltmeter met volle uitslag \qty{10}{V} van te maken; parallelweerstand
+        om er een ampèremeter met volle uitslag \qty{1.0}{A} van te maken.
+  \item \omterm{def:b1:magnetostatics:moment}{Magnetisch moment} van de spoel bij volle uitslag; energie $-\vect m\cdot
+        \vect B$ die zij, uitgelijnd, in een homogeen veld van \qty{0.20}{T} zou hebben;
+        vergelijk met de energie die bij volle uitslag in de veer zit.
+  \item Was het veld \emph{homogeen} in plaats van radiaal, toon dan aan dat de
+        schaal niet langer lineair zou zijn: schrijf de evenwichtsvoorwaarde op
+        met $\theta$ gemeten vanaf de stand waarin het vlak van de spoel
+        $\vect B$ bevat.
+  \item Er wordt een stroom van \qty{50}{Hz} met \omterm{def:b1:wave-propagation:signal}{amplitude} \qty{0.5}{mA} op de
+        meter gezet: wat wijst de naald aan, en waarom? (Vergelijk \qty{50}{Hz}
+        met de \omterm{def:b1:oscillators-resonance:harmonic}{eigenfrequentie}.)
+  \item Vat de drie taferelen samen in drie getallen, en zeg welke ene
+        wet elk ervan opleverde.
+\end{enumerate}
+\end{problem}

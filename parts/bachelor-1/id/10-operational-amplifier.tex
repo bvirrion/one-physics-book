@@ -1,0 +1,586 @@
+\chapter{Penguat Operasional}\label{ch:b1:operational-amplifier}
+
+Sebuah pengukur regangan yang dilekatkan pada gelagar jembatan berubah
+hambatannya seperseribu ketika sebuah truk lewat; \omterm{prop:b1:dc-circuits:wheatstone}{jembatan Wheatstone} di
+sekitarnya (\cref{ch:b1:dc-circuits}) mengubahnya menjadi dua milivolt.
+Dua milivolt tak menggerakkan apa pun. Di antara pengukurnya dan alarm
+yang akan menutup jembatan itu bagi lalu lintas duduk sebuah keping
+sebesar kuku, yang dijual beberapa sen, yang mengalikan \omterm{def:b1:wave-propagation:signal}{sinyalnya}
+seribu kali, menapisnya, membandingkannya dengan sebuah ambang lalu
+menyalakan sebuah lampu --- empat pekerjaan, satu komponen, empat
+pengawatan yang berbeda. Bab ini memperkenalkan \omterm{def:b1:operational-amplifier:opamp}{penguat operasional}
+lewat model idealnya, menurunkan segelintir rangkaian yang menjadi bahan
+setiap instrumen, lalu memperlihatkan apa yang terjadi ketika umpan
+baliknya dicabut.
+
+\section{Komponennya dan model idealnya}
+
+\begin{definition}[Penguat operasional]\label{def:b1:operational-amplifier:opamp}
+\index{penguat operasional}\index{tegangan jenuh}\index{penguatan lingkar terbuka}
+\emph{Penguat operasional} adalah rangkaian terpadu dengan dua masukan
+--- masukan \emph{tak membalik} berpotensial $V_+$ dan masukan
+\emph{membalik} berpotensial $V_-$ --- serta satu keluaran
+berpotensial $V_s$, yang diberi daya oleh dua catu $\pm V_{\mathrm{cc}}$
+(lazimnya $\pm\qty{15}{V}$) yang biasanya tidak digambarkan. Ia
+menguatkan selisih $\epsilon = V_+ - V_-$:
+\[
+V_s = \mu\,\epsilon \quad\text{selama } \abs{V_s} < V_{\mathrm{sat}},
+\]
+dengan \emph{penguatan lingkar terbuka} $\mu$ berorde $10^5$ dan
+\emph{\omterm{def:b1:dc-circuits:voltage}{tegangan} jenuh} $V_{\mathrm{sat}}$ yang sedikit di bawah
+$V_{\mathrm{cc}}$. Ketika $\mu\abs\epsilon$ akan melampaui
+$V_{\mathrm{sat}}$, keluarannya melekat pada $+V_{\mathrm{sat}}$ atau
+$-V_{\mathrm{sat}}$: itulah rezim \emph{jenuh}.
+\end{definition}
+
+\begin{definition}[Penguat operasional ideal]\label{def:b1:operational-amplifier:ideal}
+\index{penguat operasional ideal}\index{hubung singkat maya}
+\index{rezim linear}
+Model \emph{ideal} mengandaikan: (i) tak ada arus yang masuk ke salah
+satu masukannya, $i_+ = i_- = 0$ (\omterm{def:b1:sinusoidal-impedance:impedance}{impedansi} masukan tak hingga); (ii)
+keluarannya memaksakan \omterm{def:b1:dc-circuits:voltage}{tegangannya} berapa pun arus yang ditarik
+(\omterm{def:b1:sinusoidal-impedance:impedance}{impedansi} keluaran nol); (iii) penguatan tak hingga, $\mu \to \infty$.
+Dalam \emph{rezim linear} ($\abs{V_s}
+< V_{\mathrm{sat}}$) andaian ketiga memaksa
+\[
+\epsilon = V_+ - V_- = 0 :
+\]
+kedua masukannya duduk pada potensial yang sama (``hubung singkat maya'')
+walaupun tak ada arus yang mengalir di antara keduanya.
+\end{definition}
+
+\begin{omfigure}
+\begin{tikzpicture}[font=\small]
+  \node[op amp] (oa) at (0,0) {};
+  \draw (oa.-) -- ++(-0.8,0) node[left] {$V_-$};
+  \draw (oa.+) -- ++(-0.8,0) node[left] {$V_+$};
+  \draw (oa.out) -- ++(0.6,0) node[right] {$V_s$};
+  \draw (oa.up) -- ++(0,0.3) node[above, font=\footnotesize] {$+V_{\mathrm{cc}}$};
+  \draw (oa.down) -- ++(0,-0.3) node[below, font=\footnotesize] {$-V_{\mathrm{cc}}$};
+  \begin{scope}[xshift=6.2cm]
+  \begin{axis}[omaxis, axis y line=left, width=6.4cm, height=4.6cm, xlabel={$\epsilon$}, ylabel={$V_s$},
+      xmin=-2.2, xmax=2.2, ymin=-1.5, ymax=1.5, xtick={-0.15,0.15}, xticklabels={,},
+      ytick={-1,1}, yticklabels={$-V_{\mathrm{sat}}$,$+V_{\mathrm{sat}}$}, anchor=origin, at={(0,0)}]
+    \addplot[omThm, thick, domain=-2.2:-0.15, samples=2] {-1};
+    \addplot[omThm, thick, domain=-0.15:0.15, samples=2] {x/0.15};
+    \addplot[omThm, thick, domain=0.15:2.2, samples=2] {1};
+    \node[omThm, font=\footnotesize] at (axis cs:1.3,0.6) {jenuh};
+    \node[omThm, font=\footnotesize] at (axis cs:-1.2,-0.6) {jenuh};
+    \node[omThm, font=\footnotesize, right] at (axis cs:0.2,-0.55) {linear, kemiringan $\mu$};
+  \end{axis}
+  \end{scope}
+\end{tikzpicture}
+
+{\small \omterm{def:b1:operational-amplifier:opamp}{Penguat operasional}: lambangnya beserta kedua masukannya, dan
+karakteristik alihnya $V_s(\epsilon)$ --- ruas linear yang curam
+berkemiringan $\mu \sim 10^5$ (digambar terlalu landai), lalu kejenuhan
+pada $\pm V_{\mathrm{sat}}$. Dalam model idealnya ruas linear itu tegak:
+$\epsilon = 0$.}
+\end{omfigure}
+
+\begin{proposition}[Umpan balik negatif dan rezim linear]\label{prop:b1:operational-amplifier:feedback}
+\index{umpan balik negatif}\index{umpan balik positif}
+Jika keluarannya disambungkan kembali ke masukan \emph{membalik} lewat
+sebuah jaringan (\omterm{prop:b1:operational-amplifier:feedback}{umpan balik negatif}), rangkaiannya mempunyai \omterm{met:b1:dc-circuits:loadline}{titik
+kerja} linear yang mantap pada $\epsilon = 0$ dan kaidah penguat idealnya
+berlaku. Jika keluarannya diumpanbalikkan ke masukan tak membalik
+(\omterm{prop:b1:operational-amplifier:feedback}{umpan balik positif}), atau tidak diumpanbalikkan sama sekali,
+penguatnya menjadi jenuh: $V_s = \pm V_{\mathrm{sat}}$ menurut tanda
+$\epsilon$.
+\end{proposition}
+
+\begin{proof}[Bukti sebagian]
+Dengan \omterm{prop:b1:operational-amplifier:feedback}{umpan balik negatif}, andaikan $V_s$ naik sedikit di atas nilai
+kesetimbangannya; lewat jaringan umpan baliknya $V_-$ naik, $\epsilon$
+turun, dan penguatnya menarik $V_s$ kembali ke bawah: usikannya
+terkoreksi. Dengan \omterm{prop:b1:operational-amplifier:feedback}{umpan balik positif}, usikan yang sama menaikkan
+$V_+$, memperbesar $\epsilon$ dan mendorong $V_s$ makin jauh sampai ia
+jenuh. Alasan lengkapnya (model penguat orde pertama, $\mu(j\omega)
+= \mu_0/(1 + j\omega/\omega_0)$, dan kemantapan persamaan diferensial
+yang dihasilkannya) adalah pokok bahasan volume Tahun ke-2; kaidah di
+atas itulah yang dipakai orang.
+\end{proof}
+
+\begin{remark}[Penguat yang sesungguhnya]\label{rem:b1:operational-amplifier:real}
+\index{hasil kali penguatan--lebar pita}\index{laju ayun}\index{tegangan simpangan masukan}
+Tiga penyimpangan dari yang ideal berarti dalam praktik. \omterm{def:b1:operational-amplifier:opamp}{Penguatan
+lingkar terbukanya} jatuh terhadap frekuensi sebagai $\mu_0/(1 + jf/f_0)$
+dengan $f_0 \sim \qty{10}{Hz}$: hasil kali $\mu_0 f_0 = f_T \sim \qty{1}{MHz}$
+(\emph{\omterm{rem:b1:operational-amplifier:real}{hasil kali penguatan--lebar pita}}) adalah \omterm{thm:b1:sinusoidal-impedance:resonance}{lebar pita} yang
+tersedia bagi sebuah pengikut, dan rangkaian dengan penguatan lingkar
+tertutup $G$ berlebar pita $f_T/G$. Keluarannya tak dapat berubah lebih
+cepat daripada \emph{\omterm{rem:b1:operational-amplifier:real}{laju ayun}}nya, $\sim\qty{1}{V/\micro s}$. Dan
+\emph{\omterm{rem:b1:operational-amplifier:real}{tegangan simpangan masukan}} yang kecil ($\sim\qty{1}{mV}$)
+dikuatkan seperti sebuah \omterm{def:b1:wave-propagation:signal}{sinyal} --- fatal bagi masukan bertaraf
+milivolt kecuali ditera.
+\end{remark}
+
+\section{Rangkaian linear dasarnya}
+
+\begin{method}[Menganalisis rangkaian penguat operasional ideal dalam rezim linear]\label{met:b1:operational-amplifier:method}
+\begin{enumerate}
+  \item Periksalah bahwa umpan baliknya menuju masukan membalik.
+  \item Tuliskan $i_+ = i_- = 0$: simpul masukannya menuruti \omterm{thm:b1:dc-circuits:kirchhoff}{hukum
+        simpul} Kirchhoff tanpa arus yang masuk ke penguatnya (pembagi
+        dan teorema Millman berlaku).
+  \item Tuliskan $V_+ = V_-$ lalu selesaikan untuk $V_s$.
+  \item Periksalah sesudahnya bahwa $\abs{V_s} < V_{\mathrm{sat}}$; jika
+        tidak, penguatnya jenuh dan hasilnya $\pm V_{\mathrm{sat}}$.
+\end{enumerate}
+\end{method}
+
+\begin{proposition}[Pengikut, penguat tak membalik dan penguat membalik]\label{prop:b1:operational-amplifier:basic}
+\index{pengikut tegangan}\index{penguat tak membalik}
+\index{penguat membalik}\index{tanah maya}
+\begin{itemize}
+  \item \emph{Pengikut}: keluarannya diawatkan ke $V_-$, masukannya pada
+        $V_+$: $V_s = V_e$; \omterm{def:b1:sinusoidal-impedance:impedance}{impedansi} masukannya tak hingga, \omterm{def:b1:sinusoidal-impedance:impedance}{impedansi}
+        keluarannya nol.
+  \item \emph{\omterm{prop:b1:operational-amplifier:basic}{Penguat tak membalik}}: keluarannya ke $V_-$ lewat pembagi
+        $R_2$ (umpan balik) dan $R_1$ (ke tanah), masukannya pada $V_+$:
+        \[
+        V_s = \left(1 + \frac{R_2}{R_1}\right)V_e .
+        \]
+  \item \emph{\omterm{prop:b1:operational-amplifier:basic}{Penguat membalik}}: $V_+$ ditanahkan, masukannya lewat
+        $R_1$ ke $V_-$, umpan baliknya $R_2$ dari keluaran ke $V_-$:
+        \[
+        V_s = -\frac{R_2}{R_1}\,V_e ,
+        \]
+        dengan $V_-$ tertahan pada potensial tanah (sebuah \emph{\omterm{prop:b1:operational-amplifier:basic}{tanah
+        maya}}) dan \omterm{def:b1:sinusoidal-impedance:impedance}{impedansi} masukan $R_1$.
+\end{itemize}
+\end{proposition}
+
+\begin{proof}
+Pengikut: $V_- = V_s$ dan $V_+ = V_e$; $\epsilon = 0$ memberi $V_s = V_e$.
+Tak membalik: tak ada arus yang masuk ke $V_-$, sehingga pembaginya memberi $V_- =
+V_sR_1/(R_1 + R_2)$; samakan dengan $V_+ = V_e$. Membalik: $V_- = V_+ = 0$;
+\omterm{thm:b1:dc-circuits:kirchhoff}{hukum simpul} di $V_-$ dengan $i_- = 0$: $(V_e - 0)/R_1 + (V_s - 0)/R_2 = 0$.
+Sumbernya menyampaikan $V_e/R_1$: \omterm{def:b1:sinusoidal-impedance:impedance}{impedansi} masukannya $R_1$.
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}[font=\small]
+  % follower (+ input up)
+  \node[op amp, noinv input up] (a) at (0,0) {};
+  \draw (a.+) -- ++(-0.6,0) node[left] {$V_e$};
+  \draw (a.out) -- ++(0.5,0) node[right] {$V_s$};
+  \draw (a.out) ++(0.25,0) -- ++(0,-1.3) -| ($(a.-)+(-0.4,0)$) -- (a.-);
+  \node[below, font=\footnotesize] at (0,-1.7) {pengikut: $V_s = V_e$};
+  % non-inverting (+ input up)
+  \begin{scope}[xshift=5.6cm]
+  \node[op amp, noinv input up] (b) at (0,0) {};
+  \draw (b.+) -- ++(-0.8,0) node[left] {$V_e$};
+  \draw (b.out) -- ++(0.6,0) node[right] {$V_s$};
+  \coordinate (j) at ($(b.-)+(-0.5,0)$);
+  \draw (b.-) -- (j);
+  \coordinate (f) at ($(j)+(0,-1.0)$);
+  \coordinate (o) at ($(b.out)+(0.3,0)$);
+  \draw (o) -- (o |- f) to[R=$R_2$] (f) -- (j);
+  \draw (f) to[R=$R_1$] ++(0,-1.6) node[ground]{};
+  \node[below, font=\footnotesize] at (0,-3.7) {tak membalik: $V_s = (1 + R_2/R_1)V_e$};
+  \end{scope}
+  % inverting (- input up)
+  \begin{scope}[xshift=11.3cm]
+  \node[op amp] (c) at (0,0) {};
+  \draw (c.+) -- ++(-0.4,0) node[ground]{};
+  \coordinate (m) at ($(c.-)+(-0.5,0)$);
+  \draw (c.-) -- (m) to[R=$R_1$] ++(-1.5,0) node[left] {$V_e$};
+  \draw (c.out) -- ++(0.6,0) node[right] {$V_s$};
+  \coordinate (f2) at ($(m)+(0,1.3)$);
+  \coordinate (o2) at ($(c.out)+(0.3,0)$);
+  \draw (o2) -- (o2 |- f2) to[R=$R_2$] (f2) -- (m);
+  \node[below, font=\footnotesize] at (0,-1.7) {membalik: $V_s = -(R_2/R_1)V_e$};
+  \end{scope}
+\end{tikzpicture}
+
+{\small Ketiga penguat dasarnya. Pada masing-masing, keluarannya
+memberi masukan membaliknya, penguatnya bekerja dalam \omterm{def:b1:operational-amplifier:ideal}{rezim linear}, dan
+penguatannya ditetapkan oleh nisbah \omterm{def:b1:dc-circuits:resistor}{resistor} semata --- bukan oleh $\mu$
+penguatnya sendiri yang raksasa dan tak terdefinisi dengan baik.}
+\end{omfigure}
+
+\begin{example}[Mengapa sebuah pengikut]\label{ex:b1:operational-amplifier:follower}
+Sensor berhambatan Thévenin \qty{10}{k\ohm} yang memberi daya kepada
+beban \qty{1}{k\ohm} hanya menyampaikan $1/11$ \omterm{def:b1:dc-circuits:voltage}{tegangan} rangkaian
+terbukanya (\cref{rem:b1:dc-circuits:loading}). Sebuah pengikut di
+antara keduanya tak menarik arus dari sensornya dan menggerakkan
+bebannya dari keluaran berimpedansi nol: \omterm{def:b1:dc-circuits:voltage}{tegangan} penuhnya tiba.
+Pengikut itu adalah \emph{penyesuai \omterm{def:b1:sinusoidal-impedance:impedance}{impedansi}} --- dan ia membuat kaidah
+deretan \cref{prop:b1:filters-transfer-functions:cascade} menjadi eksak.
+\end{example}
+
+\begin{proposition}[Penguat penjumlah dan penguat selisih]\label{prop:b1:operational-amplifier:sumdiff}
+\index{penguat penjumlah}\index{penguat selisih}
+Masukan $V_1, V_2$ lewat $R_1, R_2$ ke simpul membaliknya, umpan balik
+$R_f$, $V_+$ ditanahkan:
+\[
+V_s = -R_f\left(\frac{V_1}{R_1} + \frac{V_2}{R_2}\right)
+\quad (\text{penguat penjumlah}).
+\]
+Dengan $V_1$ lewat $R_1$ ke $V_-$ (umpan balik $R_2$) dan $V_2$ lewat
+$R_1$ ke $V_+$ (dengan $R_2$ dari $V_+$ ke tanah):
+\[
+V_s = \frac{R_2}{R_1}\,(V_2 - V_1)
+\quad (\text{penguat selisih}).
+\]
+\end{proposition}
+
+\begin{proof}
+Penjumlah: \omterm{thm:b1:dc-circuits:kirchhoff}{hukum simpul} di \omterm{prop:b1:operational-amplifier:basic}{tanah mayanya}, $V_1/R_1 + V_2/R_2 + V_s/R_f =
+0$. Selisih: $V_+ = V_2R_2/(R_1 + R_2)$ (pembagi); \omterm{thm:b1:dc-circuits:kirchhoff}{hukum simpul} di $V_-$:
+$(V_1 - V_-)/R_1 + (V_s - V_-)/R_2 = 0$, sehingga $V_s = V_-(1 + R_2/R_1) -
+V_1R_2/R_1$; tetapkan $V_- = V_+$ lalu sederhanakan.
+\end{proof}
+
+\section{Pengintegral dan diferensiator}
+
+\begin{proposition}[Pengintegral]\label{prop:b1:operational-amplifier:integrator}
+\index{pengintegral (penguat operasional)}
+Masukan lewat $R$ ke $V_-$, sebuah kapasitor $C$ sebagai umpan balik,
+$V_+$ ditanahkan:
+\[
+V_s(t) = -\frac{1}{RC}\int_0^t V_e(t')\,\dd t' + V_s(0),
+\qquad
+\underline H = -\frac{1}{jRC\omega} .
+\]
+Penguatannya jatuh \qty{20}{dB} tiap dekade pada setiap frekuensi dan
+fasenya $+90^\circ$: sebuah pengintegral yang eksak --- sampai
+simpangan atau prategangan sekecil apa pun, yang diintegralkan
+selamanya, mendorong keluarannya ke kejenuhan.
+\end{proposition}
+
+\begin{proof}
+\omterm{prop:b1:operational-amplifier:basic}{Tanah maya}: arus $V_e/R$ mengalir ke kapasitornya, yang \omterm{def:b1:dc-circuits:voltage}{tegangannya}
+(dari $V_-$ ke keluarannya) adalah $-V_s$; jadi $C\,\dd(-V_s)/\dd t
+= V_e/R$, dan dalam notasi kompleks $\underline H = -1/(jRC\omega)$.
+\end{proof}
+
+\begin{remark}[Menjinakkan pengintegral]\label{rem:b1:operational-amplifier:pseudo}
+\index{pseudointegrator}
+Sebuah \omterm{def:b1:dc-circuits:resistor}{resistor} $R'$ yang terangkai paralel dengan $C$ memberi
+\[
+\underline H = -\frac{R'/R}{1 + jR'C\omega},
+\]
+yaitu lolos rendah orde pertama berpenguatan searah $-R'/R$ dan
+berfrekuensi potong $1/R'C$, yang mengintegralkan untuk
+$\omega \gg 1/R'C$ tetapi tak dapat menghanyut ke kejenuhan. Begitu pula diferensiatornya (kapasitor di masukannya,
+\omterm{def:b1:dc-circuits:resistor}{resistor} sebagai umpan balik: $V_s = -RC\,\dd V_e/\dd t$, $\underline H =
+-jRC\omega$) menguatkan derau frekuensi tinggi tanpa batas kecuali
+sebuah \omterm{def:b1:dc-circuits:resistor}{resistor} seri yang kecil membatasi penguatannya.
+\end{remark}
+
+\begin{omfigure}
+\begin{tikzpicture}[font=\small]
+  \node[op amp] (c) at (0,0) {};
+  \draw (c.+) -- ++(-0.4,0) node[ground]{};
+  \draw (c.-) -- ++(-0.3,0) coordinate (m1) to[R=$R$] ++(-1.8,0) node[left] {$V_e$};
+  \draw (c.out) -- ++(0.5,0) node[right] {$V_s$};
+  \draw (c.out) ++(0.25,0) |- ++(0,1.2) to[C=$C$] ++(-2.1,0) -| (m1);
+  \begin{scope}[xshift=7.3cm, yshift=-1.2cm]
+  \begin{axis}[omaxis, axis x line=bottom, axis y line=left, xlabel style={at={(axis description cs:0.5,-0.16)}, anchor=north},
+      width=6.4cm, height=4.2cm, xmode=log, xlabel={$\omega$ ($\log$)}, ylabel={$G_{\mathrm{dB}}$},
+      xmin=0.01, xmax=100, ymin=-45, ymax=48, ytick={40,20,0,-20,-40}, xtick={0.01,0.1,1,10,100},
+      xticklabels={$0.01$,$0.1$,$1$,$10$,$100$}, anchor=origin, at={(0,0)}]
+    \addplot[omDef, thick, domain=0.01:100, samples=2] {-20*log10(x)};
+    \addplot[omThm, thick, domain=0.01:100, samples=200] {20 - 10*log10(1 + (x/0.1)^2)};
+    \node[omDef, font=\footnotesize, rotate=-32] at (axis cs:8,-10) {pengintegral};
+    \node[omThm, font=\footnotesize, anchor=west] at (axis cs:0.012,29) {pseudointegrator};
+  \end{axis}
+  \end{scope}
+\end{tikzpicture}
+
+{\small Pengintegral dan \omterm{def:b1:filters-transfer-functions:bode}{diagram Bode-nya} (biru, \qty{-20}{dB/dekade}
+di sepanjangnya, penguatan tak hingga pada arus searah); dengan sebuah
+\omterm{def:b1:dc-circuits:resistor}{resistor} melintasi $C$, penguatannya dibatasi pada frekuensi rendah
+(merah): lolos rendah yang mengintegralkan di atas \omterm{def:b1:filters-transfer-functions:bode}{frekuensi potongnya}.}
+\end{omfigure}
+
+\begin{example}[Segitiga dari persegi]\label{ex:b1:operational-amplifier:triangle}
+$R = \qty{10}{k\ohm}$, $C = \qty{100}{nF}$, $1/RC = \qty{1000}{s^{-1}}$.
+Gelombang persegi \qty{1}{kHz} sebesar $\pm\qty{1}{V}$ memberi segitiga
+berkemiringan $\mp\qty{1000}{V/s}$ dan beramplitudo
+$ET/4RC = \qty{0.25}{V}$ --- tanpa pelemahan $1/\omega$ milik RC pasif,
+dan dengan keluaran berimpedansi nol untuk memberi tingkat berikutnya.
+\end{example}
+
+\section{Tapis aktif}
+
+\begin{proposition}[Lolos rendah aktif orde pertama]\label{prop:b1:operational-amplifier:activelp}
+\index{tapis aktif}
+\omterm{prop:b1:operational-amplifier:basic}{Penguat membalik} dengan sebuah kapasitor $C$ melintasi \omterm{def:b1:dc-circuits:resistor}{resistor} umpan
+baliknya $R_2$ mempunyai
+\[
+\underline H = -\frac{R_2/R_1}{1 + jR_2C\omega}:
+\]
+yaitu lolos rendah berpenguatan searah $-R_2/R_1$ (yang dapat melampaui
+$1$) dan berfrekuensi potong $\omega_c = 1/R_2C$, dengan \omterm{def:b1:sinusoidal-impedance:impedance}{impedansi}
+keluaran nol --- tingkatnya berderet lewat perkalian sederhana.
+\end{proposition}
+
+\begin{proof}
+\omterm{prop:b1:operational-amplifier:basic}{Penguat membalik} dengan \omterm{def:b1:sinusoidal-impedance:impedance}{impedansi} umpan balik $R_2 \parallel 1/jC\omega
+= R_2/(1 + jR_2C\omega)$ menggantikan $R_2$.
+\end{proof}
+
+\section{Tanpa umpan balik negatif: pembanding}
+
+\begin{proposition}[Pembanding]\label{prop:b1:operational-amplifier:comparator}
+\index{pembanding}
+Tanpa umpan balik, penguat idealnya menjadi jenuh:
+$V_s = +V_{\mathrm{sat}}$ jika $V_+ > V_-$, dan $-V_{\mathrm{sat}}$ jika
+$V_+ < V_-$. Dengan acuan $V_{\mathrm{ref}}$ pada salah satu masukannya
+dan \omterm{def:b1:wave-propagation:signal}{sinyal} pada yang lain, keluarannya memberitahukan apakah \omterm{def:b1:wave-propagation:signal}{sinyalnya}
+melampaui acuannya --- sebuah pengubah satu bit.
+\end{proposition}
+
+\begin{proof}
+$\mu\epsilon$ melampaui $V_{\mathrm{sat}}$ untuk sebarang $\abs\epsilon >
+V_{\mathrm{sat}}/\mu \sim \qty{0.1}{mV}$.
+\end{proof}
+
+\begin{proposition}[Pemicu Schmitt]\label{prop:b1:operational-amplifier:schmitt}
+\index{pemicu Schmitt}\index{histeresis}
+Umpanbalikkan sebagian $\beta = R_1/(R_1 + R_2)$ keluarannya ke $V_+$
+(pembagi $R_1$ ke tanah, $R_2$ dari keluarannya) lalu terapkan \omterm{def:b1:wave-propagation:signal}{sinyal}
+$V_e$ pada $V_-$. Keluarannya berpindah dari $+V_{\mathrm{sat}}$ ke
+$-V_{\mathrm{sat}}$ ketika $V_e$ naik melewati $+\beta V_{\mathrm{sat}}$,
+dan kembali ketika $V_e$ jatuh di bawah $-\beta V_{\mathrm{sat}}$: dua
+ambang, sebuah \emph{histeresis} selebar $2\beta V_{\mathrm{sat}}$, yang
+kebal terhadap derau yang lebih kecil daripada lebar itu.
+\end{proposition}
+
+\begin{proof}
+\omterm{prop:b1:operational-amplifier:feedback}{Umpan balik positif}: jenuh. Jika $V_s = +V_{\mathrm{sat}}$ maka $V_+ =
+\beta V_{\mathrm{sat}}$, dan $\epsilon = \beta V_{\mathrm{sat}} - V_e$
+tetap positif sampai $V_e$ melampaui $\beta V_{\mathrm{sat}}$; lalu
+keluarannya berbalik, $V_+$ jatuh ke $-\beta V_{\mathrm{sat}}$, dan
+keadaan barunya bertahan sampai $V_e$ jatuh di bawah nilai itu.
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}[font=\small]
+  \node[op amp] (s) at (0,0) {};
+  \draw (s.-) -- ++(-0.8,0) node[left] {$V_e$};
+  \draw (s.out) -- ++(0.6,0) node[right] {$V_s$};
+  \coordinate (j) at ($(s.+)+(-0.6,0)$);
+  \coordinate (f) at ($(j)+(0,-1.0)$);
+  \coordinate (o) at ($(s.out)+(0.3,0)$);
+  \draw (s.+) -- (j);
+  \draw (o) -- (o |- f) to[R=$R_2$] (f) -- (j);
+  \draw (f) to[R=$R_1$] ++(0,-1.6) node[ground]{};
+  \begin{scope}[xshift=7.8cm, yshift=-0.9cm]
+  \begin{axis}[omaxis, axis x line=bottom, axis y line=left, width=6.4cm, height=4.6cm, xlabel={$V_e$}, ylabel={$V_s$},
+      xlabel style={at={(axis description cs:0.5,-0.12)}, anchor=north},
+      xmin=-2.2, xmax=2.2, ymin=-1.5, ymax=1.5, xtick={-1,1}, xticklabels={$-\beta V_{\mathrm{sat}}$,$\beta V_{\mathrm{sat}}$},
+      ytick={-1,1}, yticklabels={$-V_{\mathrm{sat}}$,$+V_{\mathrm{sat}}$}, anchor=origin, at={(0,0)}]
+    \draw[omThm, thick, -Stealth] (axis cs:-2.2,1) -- (axis cs:0.2,1);
+    \draw[omThm, thick] (axis cs:0.2,1) -- (axis cs:1,1) -- (axis cs:1,-1);
+    \draw[omThm, thick, -Stealth] (axis cs:2.2,-1) -- (axis cs:-0.2,-1);
+    \draw[omThm, thick] (axis cs:-0.2,-1) -- (axis cs:-1,-1) -- (axis cs:-1,1);
+  \end{axis}
+  \end{scope}
+\end{tikzpicture}
+
+{\small \omterm{prop:b1:operational-amplifier:schmitt}{Pemicu Schmitt}: \omterm{prop:b1:operational-amplifier:feedback}{umpan balik positif} lewat $R_1$, $R_2$ memberi
+dua ambang $\pm\beta V_{\mathrm{sat}}$. Keluarannya berbalik dari tinggi
+ke rendah ketika $V_e$ naik melewati ambang atasnya dan dari rendah ke
+tinggi ketika ia jatuh di bawah ambang bawahnya (anak panah): sebuah
+daur histeresis.}
+\end{omfigure}
+
+\begin{example}[Osilator relaksasi]\label{ex:b1:operational-amplifier:astable}
+\index{osilator relaksasi}
+Sambungkan keluaran \omterm{prop:b1:operational-amplifier:schmitt}{pemicu Schmitt} itu kembali ke masukan membaliknya
+sendiri lewat $R$, dengan $C$ dari $V_-$ ke tanah. Kapasitornya mengisi
+menuju $\pm V_{\mathrm{sat}}$ lalu membalikkan pemicunya setiap kali ia
+mencapai $\pm\beta V_{\mathrm{sat}}$: keluarannya adalah gelombang
+persegi, \omterm{def:b1:dc-circuits:voltage}{tegangan} kapasitornya sederet busur eksponensial, dan
+periodenya
+\[
+T = 2RC\ln\frac{1 + \beta}{1 - \beta}
+\]
+(\cref{exo:b1:operational-amplifier:12}): $2.2\,RC$ untuk $\beta = \tfrac12$.
+Tanpa masukan, satu kapasitor, dan sebuah jam --- sistem yang berosilasi
+karena ia tak dapat tenang, sebuah tema yang kembali bersama osilator
+umpan balik volume Tahun ke-2.
+\end{example}
+
+\section{Latihan}
+
+\begin{exercise}[$\star$]\label{exo:b1:operational-amplifier:1}
+Sebuah \omterm{prop:b1:operational-amplifier:basic}{penguat tak membalik} mempunyai $R_1 = \qty{1.0}{k\ohm}$, $R_2 =
+\qty{9.0}{k\ohm}$, $V_{\mathrm{sat}} = \qty{15}{V}$. Berapa penguatannya?
+Berapa keluarannya untuk $V_e = \qty{0.50}{V}$? Berapa masukan terbesar
+sebelum jenuh?
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b1:operational-amplifier:2}
+Sebuah \omterm{prop:b1:operational-amplifier:basic}{penguat membalik} mempunyai $R_1 = \qty{10}{k\ohm}$, $R_2 = \qty{100}{k\ohm}$.
+Berapa penguatannya, \omterm{def:b1:sinusoidal-impedance:impedance}{impedansi} masukannya, arus yang ditarik dari sumber
+\qty{1.0}{V}, dan keluarannya?
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b1:operational-amplifier:3}
+Sebuah sensor berhambatan dalam \qty{10}{k\ohm} dan bertegangan
+rangkaian terbuka \qty{1.0}{V} harus menggerakkan beban \qty{1.0}{k\ohm}.
+Berapa \omterm{def:b1:dc-circuits:voltage}{tegangan} pada bebannya tanpa dan dengan sebuah pengikut di antara keduanya?
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b1:operational-amplifier:4}
+Sebuah \omterm{prop:b1:operational-amplifier:sumdiff}{penguat penjumlah} mempunyai $R_f = \qty{10}{k\ohm}$ dan masukan
+lewat \qty{10}{k\ohm} dan \qty{20}{k\ohm}. Tuliskan $V_s$; hitunglah
+untuk $V_1 = \qty{1.0}{V}$, $V_2 = \qty{2.0}{V}$.
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b1:operational-amplifier:5}
+Turunkan $V_s = (R_2/R_1)(V_2 - V_1)$ milik \omterm{prop:b1:operational-amplifier:sumdiff}{penguat selisih}. Dengan
+$R_1 = \qty{10}{k\ohm}$, $R_2 = \qty{100}{k\ohm}$, $V_1 = \qty{1.00}{V}$,
+$V_2 = \qty{1.05}{V}$: berapa keluarannya? Apa yang terjadi pada
+\qty{1}{V} yang bersama pada kedua masukannya?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b1:operational-amplifier:6}
+Pengintegral dengan $R = \qty{10}{k\ohm}$, $C = \qty{100}{nF}$, yang
+keluarannya mula-mula nol. Sebuah tangga \qty{1.0}{V} diterapkan: berapa
+kemiringan keluarannya dan waktu sampai jenuh (\qty{15}{V})? Sebuah
+gelombang persegi \qty{1.0}{kHz} sebesar $\pm\qty{1.0}{V}$: bagaimana
+bentuk dan \omterm{def:b1:wave-propagation:signal}{amplitudo} keluarannya?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b1:operational-amplifier:7}
+Sebuah \omterm{def:b1:dc-circuits:resistor}{resistor} \qty{1.0}{M\ohm} ditambahkan melintasi kapasitor
+pengintegral sebelumnya. Berikan \omterm{def:b1:filters-transfer-functions:H}{fungsi alihnya}, penguatan searahnya,
+\omterm{def:b1:filters-transfer-functions:bode}{frekuensi potongnya}, dan penguatannya pada \qty{1.0}{kHz}; pada rentang
+mana rangkaiannya masih mengintegralkan?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b1:operational-amplifier:8}
+Rancanglah lolos rendah aktif membalik dengan penguatan \qty{20}{dB}
+pada pita lolosnya dan \omterm{def:b1:filters-transfer-functions:bode}{frekuensi potong} \qty{500}{Hz}, memakai $R_1 = \qty{1.0}{k\ohm}$.
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b1:operational-amplifier:9}
+Sebuah penguat sungguhan mempunyai $\mu_0 = 10^5$ dan $f_T = \qty{1.0}{MHz}$.
+Untuk \omterm{prop:b1:operational-amplifier:basic}{penguat tak membalik} yang dirancang bagi penguatan $100$: berapa
+penguatan searah sejatinya (pertahankan $\mu_0$ berhingga dalam
+analisisnya), dan berapa \omterm{thm:b1:sinusoidal-impedance:resonance}{lebar pitanya}? Berapa \omterm{thm:b1:sinusoidal-impedance:resonance}{lebar pita} sebuah pengikut?
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b1:operational-amplifier:10}
+Sebuah pembanding dengan $V_{\mathrm{ref}} = \qty{2.0}{V}$ pada $V_-$
+mengawasi \omterm{def:b1:wave-propagation:signal}{sinyal} yang naik perlahan dan membawa derau \qty{50}{mV}.
+Gambarkan keluarannya ketika \omterm{def:b1:wave-propagation:signal}{sinyalnya} melintasi \qty{2.0}{V}. Apa obatnya?
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b1:operational-amplifier:11}
+\omterm{prop:b1:operational-amplifier:schmitt}{Pemicu Schmitt} dengan $R_1 = \qty{1.0}{k\ohm}$, $R_2 = \qty{9.0}{k\ohm}$,
+$V_{\mathrm{sat}} = \qty{15}{V}$: turunkan lalu hitunglah kedua ambangnya.
+Sketsalah $V_s$ untuk $V_e$ berbentuk segitiga beramplitudo \qty{3}{V}.
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b1:operational-amplifier:12}
+\omterm{ex:b1:operational-amplifier:astable}{Osilator relaksasi} dengan $R_1 = R_2$ ($\beta = \tfrac12$). Turunkan
+periodenya $T = 2RC\ln\frac{1 + \beta}{1 - \beta}$ dari pengisian $C$
+lewat $R$ antara kedua ambangnya; pilihlah $R$ untuk \qty{1.0}{kHz}
+dengan $C = \qty{100}{nF}$; sketsalah $V_s(t)$ dan $V_C(t)$.
+\end{exercise}
+
+\section{Soal: Rantai instrumentasi untuk sebuah pengukur regangan}
+
+\begin{problem}[{Soal akhir pekan --- dari dua milivolt pada sebuah
+gelagar jembatan sampai sebuah lampu merah: pengikut, penguat selisih,
+tapis aktif dan pemicu Schmitt, serta dua ketakidealan yang memutuskan
+apakah rantainya bekerja}]
+\label{pb:b1:operational-amplifier:1}
+Sebuah pengukur regangan berhambatan $R(1 + \epsilon)$, $R = \qty{1.00}{k\ohm}$,
+$0 \leq \epsilon \leq \num{2.0e-3}$, membentuk \omterm{prop:b1:dc-circuits:wheatstone}{jembatan Wheatstone}
+bersama tiga \omterm{def:b1:dc-circuits:resistor}{resistor} tetap \qty{1.00}{k\ohm}, yang diberi $E = \qty{5.00}{V}$.
+Keluaran jembatannya $u = V_B - V_A$ (antara kedua titik tengahnya)
+adalah $u \approx E\epsilon/4$ (tandanya dipilih lewat pengawatannya).
+Penguatnya: ideal kecuali dinyatakan lain; $V_{\mathrm{sat}} = \qty{15}{V}$;
+bila diperlukan, $f_T = \qty{1.0}{MHz}$, \omterm{rem:b1:operational-amplifier:real}{laju ayun} \qty{0.5}{V/\micro s},
+simpangan masukan \qty{1}{mV}.
+
+\medskip
+\noindent\textbf{Bagian I --- Jembatannya dan pembebanannya.}
+\begin{enumerate}
+  \item Ingat kembali mengapa $u \approx E\epsilon/4$ untuk $\epsilon$ kecil.
+  \item Hitunglah $u$ pada skala penuh ($\epsilon = \num{2.0e-3}$).
+  \item Berikan potensial tiap titik tengahnya (relatif terhadap kutub
+        negatif jembatannya) pada regangan nol dan pada skala penuh.
+        Apa nama nilai bersamanya?
+  \item Tiap titik tengahnya adalah keluaran sebuah pembagi dua \omterm{def:b1:dc-circuits:resistor}{resistor}
+        \qty{1}{k\ohm}: berapa hambatan Thévenin yang terlihat antara
+        kedua titik tengahnya?
+  \item Sebuah penguat yang hambatan masukannya \qty{10}{k\ohm}
+        dipasang melintasi keluaran jembatannya: berapa bagian $u$ yang
+        diterimanya?
+  \item Mengapa sebuah pengikut pada tiap titik tengahnya menyembuhkan
+        hal ini? Sebutkan kedua sifat yang dipakainya.
+  \item Berapa \omterm{def:b1:dc-circuits:voltage}{tegangan} keluaran pengikutnya (dalam $V_A$, $V_B$), dan
+        berapa arus yang ditariknya dari jembatannya?
+\end{enumerate}
+
+\medskip
+\noindent\textbf{Bagian II --- Menguatkan selisihnya.}
+\begin{enumerate}[resume]
+  \item Pengikutnya memberi sebuah \omterm{prop:b1:operational-amplifier:sumdiff}{penguat selisih} ($R_1$ pada kedua
+        masukannya, $R_2$ sebagai umpan balik dan ke tanah). Turunkan
+        $V_s =
+        (R_2/R_1)(V_B - V_A)$.
+  \item Pilihlah $R_1 = \qty{10}{k\ohm}$ dan $R_2$ untuk penguatan $100$.
+  \item Tingkat kedua yang tak membalik mengalikan dengan $10$: berikan
+        \omterm{def:b1:dc-circuits:resistor}{resistornya}, penguatan totalnya, dan keluarannya pada skala penuh.
+  \item Kedua titik tengahnya duduk di dekat $E/2 = \qty{2.5}{V}$
+        (\omterm{def:b1:dc-circuits:voltage}{tegangan} modus bersamanya). Apa yang dilakukan \omterm{prop:b1:operational-amplifier:sumdiff}{penguat selisih}
+        yang tersesuaikan dengan tepat terhadapnya? Jika satu nisbah
+        \omterm{def:b1:dc-circuits:resistor}{resistornya} meleset $1\%$, taksirlah \omterm{def:b1:dc-circuits:voltage}{tegangan} palsu yang
+        teracukan ke masukannya lalu bandingkan dengan \omterm{def:b1:wave-propagation:signal}{sinyalnya}.
+  \item Penguat pertamanya mempunyai simpangan masukan \qty{1}{mV}.
+        Berapa galat keluaran yang dihasilkannya setelah penguatan
+        totalnya? Simpulkan.
+  \item Dengan $f_T = \qty{1}{MHz}$, berapa \omterm{thm:b1:sinusoidal-impedance:resonance}{lebar pita} tiap tingkatnya?
+        Apakah itu cukup bagi \omterm{def:b1:wave-propagation:signal}{sinyal} di bawah \qty{5}{Hz}?
+  \item Keluarannya harus berayun sebesar \qty{2.5}{V} ketika sebuah
+        truk tiba dalam sekitar \qty{10}{ms}: apakah \omterm{rem:b1:operational-amplifier:real}{laju ayunnya} membatasi?
+\end{enumerate}
+
+\medskip
+\noindent\textbf{Bagian III --- Menapis.}
+\omterm{def:b1:wave-propagation:signal}{Sinyal} yang telah dikuatkan itu membawa dengung \qty{50}{Hz} yang
+terpungut dari jaringan listrik.
+\begin{enumerate}[resume]
+  \item Rancanglah lolos rendah aktif membalik berpenguatan $-1$ dan
+        berfrekuensi potong \qty{10}{Hz}, memakai
+        $R_1 = R_2 = \qty{16}{k\ohm}$: carilah $C$.
+  \item Hitunglah pelemahannya pada \qty{50}{Hz} dalam \omterm{def:b1:filters-transfer-functions:bode}{desibel}.
+  \item Hitunglah pergeseran fasenya pada \qty{5}{Hz} dan tundaan yang
+        bersesuaian. Dapat diterima bagi sebuah alarm?
+  \item Mengapa \omterm{prop:b1:operational-amplifier:activelp}{tapis aktif} lebih disukai di sini daripada RC pasif
+        (dua alasan)?
+  \item Tingkat kedua yang serupa dideretkan: berapa pelemahannya pada
+        \qty{50}{Hz}? Mengapa kaidah perkaliannya eksak di sini?
+\end{enumerate}
+
+\medskip
+\noindent\textbf{Bagian IV --- Ambang dan alarm.}
+Alarmnya harus terpicu ketika regangannya melampaui \num{1.6e-3}.
+\begin{enumerate}[resume]
+  \item \omterm{def:b1:dc-circuits:voltage}{Tegangan} keluaran rantai berapa yang bersesuaian dengan hal ini?
+        Sebuah pembanding dengan acuan itu: berapa keadaan keluarannya?
+  \item \omterm{def:b1:wave-propagation:signal}{Sinyal} yang telah ditapis itu masih membawa derau \qty{50}{mV}
+        di dekat ambangnya. Apa yang dilakukan pembanding biasanya?
+  \item Sebuah \omterm{prop:b1:operational-amplifier:schmitt}{pemicu Schmitt} dengan acuannya pada satu masukan dan
+        umpan balik $\beta$: tunjukkan bahwa ambangnya adalah
+        $V_{\mathrm{ref}} \pm
+        \beta V_{\mathrm{sat}}$; pilihlah $\beta$ untuk $\pm\qty{0.10}{V}$
+        lalu berikan $R_1$, $R_2$.
+  \item Nyatakan kedua ambangnya dalam volt dan dalam regangan.
+  \item Keluarannya menggerakkan sebuah LED (\qty{2.0}{V}, \qty{13}{mA})
+        lewat sebuah \omterm{def:b1:dc-circuits:resistor}{resistor}: hitunglah \omterm{def:b1:dc-circuits:resistor}{resistornya}. Apa yang
+        melindungi LED-nya ketika keluarannya berada pada $-V_{\mathrm{sat}}$?
+  \item Ringkaslah rantainya, tingkat demi tingkat, lalu sebutkan kedua
+        ketakidealan yang menetapkan batas sejatinya.
+\end{enumerate}
+\end{problem}

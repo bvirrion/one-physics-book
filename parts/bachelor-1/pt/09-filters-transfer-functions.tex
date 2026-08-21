@@ -1,0 +1,540 @@
+\chapter{Filtros e funções de transferência}\label{ch:b1:filters-transfer-functions}
+
+Dentro de uma caixa acústica, uma bobina e um capacitor decidem, sem um
+único transistor, que os graves vão para o cone grande e os agudos para
+a cúpula pequena. O botão ``AC'' de um osciloscópio remove um nível contínuo que
+deriva devagar e conserva a ondulação sobre ele. Uma fonte de alimentação transforma
+uma rede retificada pulsante numa \omterm{def:b1:dc-circuits:voltage}{tensão} estável com um único capacitor.
+Os três são \emph{\omterm{def:b1:filters-transfer-functions:H}{filtros}}: \omterm{def:b1:dc-circuits:linear}{circuitos lineares} que tratam cada frequência
+de modo diferente. Como todo sinal periódico é uma soma de senoides, saber
+o que um circuito faz com cada senoide --- a sua \omterm{def:b1:filters-transfer-functions:H}{função de transferência} --- é
+saber o que ele faz com tudo. Este capítulo define as \omterm{def:b1:filters-transfer-functions:H}{funções de
+transferência}, traça os seus \omterm{def:b1:filters-transfer-functions:bode}{diagramas de Bode} para os circuitos de primeira e
+segunda ordem dos capítulos anteriores e os usa para prever como uma
+onda quadrada sai de um \omterm{def:b1:filters-transfer-functions:H}{filtro}.
+
+\section{Função de transferência e diagrama de Bode}
+
+\begin{definition}[Função de transferência]\label{def:b1:filters-transfer-functions:H}
+\index{função de transferência}\index{ganho}\index{filtro}
+Um \omterm{def:b1:dc-circuits:linear}{circuito linear} com uma \omterm{def:b1:dc-circuits:voltage}{tensão} de entrada $\underline U_e$ e uma \omterm{def:b1:dc-circuits:voltage}{tensão}
+de saída $\underline U_s$ (tomada com nada ligado à saída) tem
+a \emph{função de transferência}
+\[
+\underline H(j\omega) = \frac{\underline U_s}{\underline U_e},
+\qquad G(\omega) = \abs{\underline H}, \qquad \varphi(\omega) = \arg\underline H,
+\]
+com o \emph{ganho} $G$ (razão de \omterm{def:b1:wave-propagation:signal}{amplitudes}) e a defasagem $\varphi$
+da saída em relação à entrada. Um \emph{filtro} é um circuito desses
+usado pela sua dependência com a frequência: uma senoide de \omterm{def:b1:wave-propagation:signal}{amplitude} $E$ em
+$\omega$ sai como $G(\omega)E\cos(\omega t + \varphi(\omega))$.
+\end{definition}
+
+\begin{definition}[Decibéis; diagrama de Bode]\label{def:b1:filters-transfer-functions:bode}
+\index{decibel}\index{diagrama de Bode}\index{frequência de corte}\index{banda passante}
+O \omterm{def:b1:filters-transfer-functions:H}{ganho} em \emph{decibéis} vale $G_{\mathrm{dB}} = 20\log_{10}G$: um fator
+$10$ são \qty{20}{dB}, um fator $2$ são \qty{6}{dB}, e $1/\sqrt2$ são
+\qty{-3}{dB}. O \emph{diagrama de Bode} traça $G_{\mathrm{dB}}$ e
+$\varphi$ contra $\log_{10}\omega$ (ou $f$). A \emph{frequência de
+corte} é aquela em que $G$ cai a $G_{\max}/\sqrt2$ (\qty{-3}{dB} em relação
+ao máximo); a \emph{banda passante} é a faixa de frequências dentro de
+\qty{3}{dB} do máximo. Uma década é um fator $10$ em frequência, e uma
+oitava um fator $2$.
+\end{definition}
+
+\begin{method}[A natureza de um filtro num relance]\label{met:b1:filters-transfer-functions:nature}
+Antes de calcular, olhe os limites: em frequência muito baixa um capacitor
+é um circuito aberto e uma bobina é um fio; em frequência muito alta é o
+contrário. Substitua cada um e veja se a saída é a entrada
+(passa) ou zero (bloqueada). Passa o baixo e bloqueia o alto: passa-baixa; o
+contrário: passa-alta; bloqueia os dois: passa-faixa; passa os dois: rejeita-faixa.
+Depois calcule $\underline H$ por um \omterm{prop:b1:dc-circuits:dividers}{divisor de tensão}.
+\end{method}
+
+\section{Filtros de primeira ordem}
+
+\begin{proposition}[Passa-baixa de primeira ordem]\label{prop:b1:filters-transfer-functions:lowpass1}
+\index{filtro passa-baixa}\index{integrador}
+O divisor RC com saída em $C$ (ou o divisor RL com saída
+em $R$) tem
+\[
+\underline H = \frac{1}{1 + j\omega/\omega_c}, \qquad
+\omega_c = \frac{1}{RC} \ \Big(\text{ou } \frac{R}{L}\Big),
+\qquad G = \frac{1}{\sqrt{1 + (\omega/\omega_c)^2}}, \qquad
+\varphi = -\arctan\frac{\omega}{\omega_c} .
+\]
+Assíntotas de Bode: $G_{\mathrm{dB}} = 0$ para $\omega \ll \omega_c$, e uma
+reta que cai \qty{20}{dB} por década para $\omega \gg \omega_c$,
+encontrando-se em $\omega_c$, onde a curva verdadeira vale \qty{-3}{dB} e
+$\varphi = -45^\circ$. Para $\omega \gg \omega_c$, $\underline H \approx
+\omega_c/(j\omega)$: a saída é proporcional à \emph{integral}
+da entrada --- ali o \omterm{def:b1:filters-transfer-functions:H}{filtro} é um integrador.
+\end{proposition}
+
+\begin{proof}
+\omterm{prop:b1:dc-circuits:dividers}{Divisor de tensão}:
+\[
+\underline H = \frac{1/jC\omega}{R + 1/jC\omega} = \frac{1}{1 + jRC\omega} .
+\]
+Bem acima do corte, $1 + j\omega/\omega_c \approx j\omega/\omega_c$, e
+dividir uma \omterm{def:b1:sinusoidal-impedance:complex}{amplitude complexa} por $j\omega$ é integrar
+(\cref{prop:b1:sinusoidal-impedance:rules}): $u_s \approx \omega_c\int u_e\,\dd t$.
+E $20\log(\omega_c/\omega)$ perde \qty{20}{dB} a cada $\omega$ dez vezes maior.
+\end{proof}
+
+\begin{proposition}[Passa-alta de primeira ordem]\label{prop:b1:filters-transfer-functions:highpass1}
+\index{filtro passa-alta}\index{derivador}
+O divisor CR com saída em $R$ (ou LR com saída em $L$)
+tem
+\[
+\underline H = \frac{j\omega/\omega_c}{1 + j\omega/\omega_c},
+\qquad G = \frac{\omega/\omega_c}{\sqrt{1 + (\omega/\omega_c)^2}},
+\qquad \varphi = \frac{\pi}{2} - \arctan\frac{\omega}{\omega_c},
+\]
+subindo \qty{20}{dB} por década abaixo de $\omega_c$, plano acima, com \qty{-3}{dB}
+e $+45^\circ$ em $\omega_c$. Para $\omega \ll \omega_c$, $\underline H
+\approx j\omega/\omega_c$: a saída é proporcional à
+\emph{derivada} da entrada.
+\end{proposition}
+
+\begin{proof}
+$\underline H = R/(R + 1/jC\omega) = jRC\omega/(1 + jRC\omega)$;
+multiplicar por $j\omega$ é derivar.
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}
+\begin{axis}[omaxis, axis x line=bottom, axis y line=left, xlabel style={at={(axis description cs:0.5,-0.14)}, anchor=north}, width=7.4cm, height=5.2cm, xmode=log, xlabel={$\omega/\omega_c$},
+    ylabel={$G_{\mathrm{dB}}$}, xmin=0.01, xmax=100, ymin=-42, ymax=6,
+    ytick={0,-20,-40}, yticklabels={$0$,$-20$,$-40$},
+    xtick={0.01,0.1,1,10,100}, xticklabels={$10^{-2}$,$10^{-1}$,$1$,$10$,$10^{2}$}]
+  \addplot[omExo, dashed, domain=0.01:1, samples=2] {0};
+  \addplot[omExo, dotted, domain=0.01:100, samples=2] {-3};
+  \addplot[omExo, dashed, domain=1:100, samples=2] {-20*log10(x)};
+  \addplot[omDef, thick, domain=0.01:100, samples=200] {-10*log10(1 + x^2)};
+  \addplot[omThm, thick, domain=0.01:100, samples=200] {-10*log10(1 + 1/x^2)};
+  \node[omDef, font=\footnotesize] at (axis cs:0.05,-7) {passa-baixa};
+  \node[omThm, font=\footnotesize] at (axis cs:30,-9) {passa-alta};
+\end{axis}
+\end{tikzpicture}\qquad
+\begin{tikzpicture}
+\begin{axis}[omaxis, axis x line=bottom, axis y line=left, xlabel style={at={(axis description cs:0.5,-0.14)}, anchor=north}, width=7.0cm, height=5.2cm, xmode=log, xlabel={$\omega/\omega_c$},
+    ylabel={$\varphi$}, xmin=0.01, xmax=100, ymin=-1.8, ymax=1.8,
+    ytick={-1.5708,-0.7854,0,0.7854,1.5708}, yticklabels={$-\frac{\pi}{2}$,$-\frac{\pi}{4}$,$0$,$\frac{\pi}{4}$,$\frac{\pi}{2}$},
+    xtick={0.01,0.1,1,10,100}, xticklabels={$10^{-2}$,$10^{-1}$,$1$,$10$,$10^{2}$}]
+  \addplot[omDef, thick, domain=0.01:100, samples=200] {-rad(atan(x))};
+  \addplot[omThm, thick, domain=0.01:100, samples=200] {rad(90 - atan(x))};
+\end{axis}
+\end{tikzpicture}
+
+{\small \omterm{def:b1:filters-transfer-functions:bode}{Diagramas de Bode} do passa-baixa (azul) e do passa-alta (vermelho)
+de primeira ordem: \omterm{def:b1:filters-transfer-functions:H}{ganho} em decibéis com as assíntotas (tracejadas) encontrando-se na
+\omterm{def:b1:filters-transfer-functions:bode}{frequência de corte}, onde o \omterm{def:b1:filters-transfer-functions:H}{ganho} verdadeiro vale \qty{-3}{dB}, e fase, que cruza
+$\mp45^\circ$ na \omterm{def:b1:filters-transfer-functions:bode}{frequência de corte}.}
+\end{omfigure}
+
+\begin{example}[Acoplamento AC]\label{ex:b1:filters-transfer-functions:accoupling}
+A entrada AC de um osciloscópio é um passa-alta com $f_c \approx \qty{10}{Hz}$:
+um sinal de \qty{1}{kHz} montado sobre um nível contínuo de \qty{5}{V} passa com
+\qty{-0.0002}{dB} e sem esse nível. Mas uma onda quadrada de \qty{50}{Hz}
+sai visivelmente distorcida --- os seus patamares planos afundam --- porque em
+\qty{50}{Hz} o \omterm{def:b1:filters-transfer-functions:H}{filtro} está apenas uma década acima do seu corte e os
+harmônicos baixos do sinal ficam defasados
+(\cref{exo:b1:filters-transfer-functions:12}).
+\end{example}
+
+\section{Filtros de segunda ordem}
+
+\begin{proposition}[O RLC série como três filtros]\label{prop:b1:filters-transfer-functions:rlc}
+\index{filtro passa-faixa}\index{filtro de segunda ordem}
+Com $x = \omega/\omega_0$, $\omega_0 = 1/\sqrt{LC}$ e $Q =
+\sqrt{L/C}/R$, o RLC série alimentado por $\underline U_e$ dá, conforme
+o lugar de onde se toma a saída:
+\begin{align*}
+\text{em } C:&\quad \underline H = \frac{1}{1 - x^2 + jx/Q}, \\
+\text{em } R:&\quad \underline H = \frac{jx/Q}{1 - x^2 + jx/Q} = \frac{1}{1 + jQ(x - 1/x)}, \\
+\text{em } L:&\quad \underline H = \frac{-x^2}{1 - x^2 + jx/Q}:
+\end{align*}
+um passa-baixa, um passa-faixa e um passa-alta de segunda ordem. Longe de
+$\omega_0$ o passa-baixa e o passa-alta caem \qty{40}{dB} por década, e
+o passa-faixa \qty{20}{dB} por década de cada lado; o passa-faixa
+tem máximo $1$ em $\omega_0$ e a \omterm{thm:b1:sinusoidal-impedance:resonance}{largura de banda} $\Delta\omega =
+\omega_0/Q$ do \cref{thm:b1:sinusoidal-impedance:resonance}.
+\end{proposition}
+
+\begin{proof}
+\omterm{prop:b1:dc-circuits:dividers}{Divisores de tensão} com a \omterm{def:b1:sinusoidal-impedance:impedance}{impedância} total $R + j(L\omega - 1/C\omega)$;
+multiplique numerador e denominador por $jC\omega$ e use
+$LC\omega_0^2 = 1$, $RC\omega_0 = 1/Q$. O passa-faixa é a ressonância
+em corrente do capítulo anterior, lida como uma \omterm{def:b1:dc-circuits:voltage}{tensão} em $R$.
+\end{proof}
+
+\begin{proposition}[Passa-baixa de segunda ordem: o papel de $Q$]\label{prop:b1:filters-transfer-functions:lowpass2}
+\index{ressonância!de um filtro}
+Para o passa-baixa, $G = 1/\sqrt{(1 - x^2)^2 + x^2/Q^2}$: para
+$Q > 1/\sqrt2$ o \omterm{def:b1:filters-transfer-functions:H}{ganho} sobe acima de $1$ perto de $\omega_0$ (ressonância, com pico
+$\approx Q$ para $Q$ grande); para $Q = 1/\sqrt2$ ele é ``maximamente plano'',
+$G = 1/\sqrt{1 + x^4}$, exatamente \qty{-3}{dB} em $\omega_0$; para
+$Q$ menor ele cai antes da hora. A fase vai de $0$ a $-\pi$, passando por $-\pi/2$
+em $\omega_0$.
+\end{proposition}
+
+\begin{proof}
+$(1 - x^2)^2 + x^2/Q^2 = 1 + x^4 + x^2(1/Q^2 - 2)$: o termo do meio
+se anula para $Q^2 = \tfrac12$, é negativo (pico) acima e positivo
+(queda) abaixo; o comportamento perto de $x = 1$ foi analisado em
+\cref{prop:b1:sinusoidal-impedance:overvoltage}.
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}
+\begin{axis}[omaxis, axis x line=bottom, axis y line=left, xlabel style={at={(axis description cs:0.5,-0.14)}, anchor=north}, width=7.4cm, height=5.4cm, xmode=log, xlabel={$\omega/\omega_0$},
+    ylabel={$G_{\mathrm{dB}}$}, xmin=0.1, xmax=10, ymin=-45, ymax=15,
+    ytick={10,0,-20,-40}, xtick={0.1,1,10}, xticklabels={$0.1$,$1$,$10$},
+    legend style={at={(0.03,0.03)}, anchor=south west, font=\footnotesize, draw=none, fill=none}]
+  \addplot[omDef, thick, domain=0.1:10, samples=300] {-10*log10((1 - x^2)^2 + x^2/9)};
+  \addlegendentry{$Q = 3$}
+  \addplot[omThm, thick, domain=0.1:10, samples=300] {-10*log10(1 + x^4)};
+  \addlegendentry{$Q = 1/\sqrt2$}
+  \addplot[omProp, thick, domain=0.1:10, samples=300] {-10*log10((1 - x^2)^2 + x^2/0.04)};
+  \addlegendentry{$Q = 0.2$}
+  \addplot[omExo, dashed, domain=1:10, samples=2] {-40*log10(x)};
+\end{axis}
+\end{tikzpicture}\qquad
+\begin{tikzpicture}
+\begin{axis}[omaxis, axis x line=bottom, axis y line=left, xlabel style={at={(axis description cs:0.5,-0.14)}, anchor=north}, width=7.0cm, height=5.4cm, xmode=log, xlabel={$\omega/\omega_0$},
+    ylabel={$G_{\mathrm{dB}}$}, xmin=0.1, xmax=10, ymin=-45, ymax=5,
+    ytick={0,-20,-40}, xtick={0.1,1,10}, xticklabels={$0.1$,$1$,$10$},
+    legend style={at={(0.03,0.97)}, anchor=north west, font=\footnotesize, draw=none, fill=none}]
+  \addplot[omExo, dotted, domain=0.1:10, samples=2, forget plot] {-3};
+  \addplot[omDef, thick, domain=0.1:10, samples=400] {-10*log10(1 + 100*(x - 1/x)^2)};
+  \addlegendentry{$Q = 10$}
+  \addplot[omThm, thick, domain=0.1:10, samples=300] {-10*log10(1 + (x - 1/x)^2)};
+  \addlegendentry{$Q = 1$}
+\end{axis}
+\end{tikzpicture}
+
+{\small \omterm{prop:b1:filters-transfer-functions:rlc}{Filtros de segunda ordem} a partir do RLC série. À esquerda, o passa-baixa
+(saída em $C$) para três valores de $Q$: um pico de ressonância, a resposta
+maximamente plana ou uma queda antecipada, todos se juntando à assíntota
+de \qty{-40}{dB} por década (tracejada). À direita, o passa-faixa (saída em $R$): um pico
+de largura $\omega_0/Q$ caindo \qty{20}{dB} por década de cada lado.}
+\end{omfigure}
+
+\begin{example}[Um divisor de frequências]\label{ex:b1:filters-transfer-functions:crossover}
+O woofer e o tweeter de uma caixa acústica, cada um de \qty{8}{\ohm}, compartilham o
+amplificador através de um passa-baixa (uma bobina em série) e de um passa-alta (um capacitor
+em série) cortados em \qty{2}{kHz}: $L = R/\omega_c = \qty{0.64}{mH}$,
+$C = 1/R\omega_c = \qty{10}{\micro F}$. Em \qty{2}{kHz} cada alto-falante recebe
+\qty{-3}{dB}, isto é, metade da potência, e $G_L^2 + G_H^2 = 1$ em toda
+frequência: a potência é repartida, não perdida. O problema de fim de semana projeta
+uma versão mais íngreme.
+\end{example}
+
+\section{Filtrando um sinal periódico}
+
+\begin{theorem}[Decomposição de Fourier]\label{thm:b1:filters-transfer-functions:fourier}
+\index{série de Fourier}\index{harmônico}\index{espectro!de um sinal periódico}
+Um sinal periódico de período $T = 2\pi/\omega$ (razoavelmente regular) é
+a soma de uma constante e de senoides nos múltiplos de $\omega$:
+\[
+s(t) = c_0 + \sum_{n = 1}^{\infty} c_n\cos(n\omega t + \varphi_n),
+\]
+em que $c_0 = \langle s\rangle$ é o seu valor médio; o termo $n = 1$ é a
+\emph{fundamental}, os demais os \emph{harmônicos}, e as
+\omterm{def:b1:wave-propagation:signal}{amplitudes} $c_n$ formam o \emph{espectro}. Uma onda quadrada de \omterm{def:b1:wave-propagation:signal}{amplitude}
+$\pm E$ tem $c_n = 4E/(n\pi)$ para $n$ ímpar e $0$ para $n$ par; uma
+onda triangular de \omterm{def:b1:wave-propagation:signal}{amplitude} $\pm E$ tem $c_n = 8E/(n\pi)^2$ para $n$ ímpar.
+\end{theorem}
+\admitted
+
+\begin{remark}[O que reter dela]\label{rem:b1:filters-transfer-functions:fourier}
+O teorema e o cálculo dos $c_n$ pertencem ao curso de matemática
+do segundo ano. Aqui ele é uma ferramenta: cantos vivos exigem muitos
+harmônicos (os da onda quadrada caem apenas como $1/n$), e sinais suaves
+exigem poucos (os do triângulo caem como $1/n^2$). O conteúdo harmônico de um sinal é
+aquilo de que o timbre de um instrumento é feito, e aquilo sobre o que um \omterm{def:b1:filters-transfer-functions:H}{filtro} age.
+\end{remark}
+
+\begin{proposition}[Filtragem linear de um sinal periódico]\label{prop:b1:filters-transfer-functions:filtering}
+Através de um \omterm{def:b1:filters-transfer-functions:H}{filtro} de \omterm{def:b1:filters-transfer-functions:H}{função de transferência} $\underline H$, o sinal do
+teorema se torna
+\[
+s_{\text{saída}}(t) = G(0)\,c_0 + \sum_{n \geq 1} G(n\omega)\,c_n\cos\!\big(n\omega t + \varphi_n + \varphi(n\omega)\big):
+\]
+cada harmônico é escalado pelo \omterm{def:b1:filters-transfer-functions:H}{ganho} e defasado pela fase na
+\emph{sua própria} frequência, e depois as partes são somadas. Daí:
+\begin{itemize}
+  \item um passa-baixa com $\omega_c \ll \omega$ guarda essencialmente $c_0$:
+        ele \emph{faz a média} (alisamento, remoção de ondulação) e transforma uma
+        onda quadrada num pequeno triângulo (integração);
+  \item um passa-alta com $\omega_c \ll \omega$ remove $c_0$ e deixa passar
+        o resto (acoplamento AC); com $\omega_c \gg \omega$ ele
+        deriva (picos nas bordas de uma onda quadrada);
+  \item um passa-faixa sintonizado em $n\omega$ com $Q \gg 1$ extrai o
+        $n$-ésimo harmônico sozinho: uma senoide a partir de uma onda quadrada.
+\end{itemize}
+\end{proposition}
+
+\begin{proof}
+Superposição num \omterm{def:b1:dc-circuits:linear}{circuito linear} (\cref{thm:b1:dc-circuits:superposition})
+aplicada à soma de entradas senoidais, cada uma tratada por
+\cref{def:b1:filters-transfer-functions:H}.
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}
+\begin{axis}[omaxis, axis x line=bottom, width=6.6cm, height=4.8cm, xlabel={harmônico $n$}, ylabel={$c_n/c_1$},
+    xmin=0, xmax=10, ymin=0, ymax=1.15, xtick={1,3,5,7,9}, ytick={0.5,1}]
+  \addplot[ybar, bar width=7pt, fill=omDef!35, draw=omDef] coordinates {(1,1) (3,0.333) (5,0.2) (7,0.143) (9,0.111)};
+  \addplot[ybar, bar width=3.5pt, fill=omThm, draw=omThm] coordinates
+    {(1,0.7071) (3,0.1054) (5,0.0392) (7,0.0202) (9,0.0123)};
+  \node[omDef, font=\footnotesize] at (axis cs:6.0,0.9) {onda quadrada (azul)};
+  \node[omThm, font=\footnotesize] at (axis cs:6.0,0.7) {após o passa-baixa (vermelho)};
+\end{axis}
+\end{tikzpicture}\hfill
+\begin{tikzpicture}
+\begin{axis}[omaxis, axis x line=bottom, width=6.6cm, height=4.8cm, xlabel={$t/T$}, ylabel={$u$},
+    xmin=0, xmax=2, ymin=-1.3, ymax=1.3, xtick={0.5,1,1.5,2}, ytick={-1,1}, yticklabels={$-E$,$E$}]
+  % square wave
+  \addplot[omDef!60, thick, const plot, domain=0:2, samples=5] coordinates {(0,1) (0.5,-1) (1,1) (1.5,-1) (2,-1)};
+  % RC response with tau = T/(2pi) (wc = w): on each half period u = s + (u0 - s) e^{-t/tau}; steady amplitude A = tanh(T/(4 tau)) = tanh(pi/2)=0.917
+  \addplot[omThm, thick, domain=0:0.5, samples=60] {1 - (1 + 0.917)*exp(-2*pi*x)};
+  \addplot[omThm, thick, domain=0.5:1, samples=60] {-1 + (1 + 0.917)*exp(-2*pi*(x-0.5))};
+  \addplot[omThm, thick, domain=1:1.5, samples=60] {1 - (1 + 0.917)*exp(-2*pi*(x-1))};
+  \addplot[omThm, thick, domain=1.5:2, samples=60] {-1 + (1 + 0.917)*exp(-2*pi*(x-1.5))};
+  % tau = T/(20 pi): wc = 10 w: amplitude tanh(5 pi)=1
+  \addplot[omProp, thick, domain=0:0.5, samples=80] {1 - 2*exp(-20*pi*x)};
+  \addplot[omProp, thick, domain=0.5:1, samples=80] {-1 + 2*exp(-20*pi*(x-0.5))};
+  \addplot[omProp, thick, domain=1:1.5, samples=80] {1 - 2*exp(-20*pi*(x-1))};
+  \addplot[omProp, thick, domain=1.5:2, samples=80] {-1 + 2*exp(-20*pi*(x-1.5))};
+\end{axis}
+\end{tikzpicture}
+
+{\small Uma onda quadrada através de um passa-baixa de primeira ordem. À esquerda: o seu
+espectro (harmônicos ímpares em $1/n$) e o espectro após um \omterm{def:b1:filters-transfer-functions:H}{filtro} cortado
+na fundamental. À direita: o sinal no tempo para $\omega_c = \omega$ (vermelho,
+arcos exponenciais) e $\omega_c = 10\omega$ (laranja, apenas cantos
+arredondados); com $\omega_c \ll \omega$ a saída seria um pequeno triângulo
+em torno do valor médio.}
+\end{omfigure}
+
+\begin{example}[Números]\label{ex:b1:filters-transfer-functions:numbers}
+Uma onda quadrada de \qty{1}{kHz} e \omterm{def:b1:wave-propagation:signal}{amplitude} \qty{5}{V}: harmônicos de
+\qty{6.37}{V} em \qty{1}{kHz}, \qty{2.12}{V} em \qty{3}{kHz} e
+\qty{1.27}{V} em \qty{5}{kHz}. Através de um passa-baixa RC cortado em
+\qty{10}{Hz} ($\tau = \qty{16}{ms}$) a saída é um triângulo de
+\omterm{def:b1:wave-propagation:signal}{amplitude} $ET/4\tau \approx \qty{80}{mV}$ em torno de zero; através de um
+passa-faixa sintonizado em \qty{3}{kHz} com $Q = 20$, uma senoide de \qty{2.1}{V}
+em \qty{3}{kHz} com apenas alguns por cento dos vizinhos
+(\cref{exo:b1:filters-transfer-functions:8}).
+\end{example}
+
+\section{Filtros em cascata}
+
+\begin{proposition}[Cascata e efeito de carga]\label{prop:b1:filters-transfer-functions:cascade}
+\index{cascata (de filtros)}\index{efeito de carga (de um filtro)}
+Dois \omterm{def:b1:filters-transfer-functions:H}{filtros} em cascata têm $\underline H = \underline H_1\underline H_2$
+--- os \omterm{def:b1:filters-transfer-functions:H}{ganhos} se multiplicam, os decibéis e as fases se somam --- \emph{desde que o segundo
+não carregue o primeiro}, isto é, não drene corrente apreciável da sua
+saída. Caso contrário, as relações de divisor devem ser reescritas para a
+rede combinada. Um seguidor de \omterm{def:b1:dc-circuits:voltage}{tensão} com amplificador operacional
+(\cref{ch:b1:operational-amplifier}) entre os estágios torna a regra do produto
+exata.
+\end{proposition}
+
+\begin{proof}
+$\underline H_1$ foi definida com a saída em aberto; se a \omterm{def:b1:sinusoidal-impedance:impedance}{impedância} de
+entrada do estágio seguinte for muito maior que a \omterm{def:b1:sinusoidal-impedance:impedance}{impedância} de saída do primeiro
+(a sua resistência de Thévenin), a \omterm{def:b1:dc-circuits:voltage}{tensão} de saída não muda e o
+segundo estágio recebe exatamente $\underline U_{s1}$ como entrada.
+\end{proof}
+
+\begin{example}[Dois estágios RC]\label{ex:b1:filters-transfer-functions:tworc}
+Dois passa-baixas RC idênticos em série \emph{não} dão
+$1/(1 + j\omega/\omega_c)^2$: o $R$ do segundo estágio carrega o primeiro.
+O resultado exato é $\underline H = 1/[1 - (\omega/\omega_c)^2 +
+3j\omega/\omega_c]$, \qty{-9.5}{dB} em $\omega_c$ em vez dos
+\qty{-6}{dB} que a regra do produto promete, embora ambos acabem alcançando a mesma
+inclinação de \qty{-40}{dB} por década.
+\end{example}
+
+\section{Exercícios}
+
+\begin{exercise}[$\star$]\label{exo:b1:filters-transfer-functions:1}
+Converta em decibéis: os \omterm{def:b1:filters-transfer-functions:H}{ganhos} $0.5$, $10$, $1/\sqrt2$, $100$. Converta em
+razões: \qty{-40}{dB}, \qty{+6}{dB}. Dois \omterm{def:b1:filters-transfer-functions:H}{filtros} em cascata (sem efeito de carga)
+dão \qty{-6}{dB} e \qty{-20}{dB} em certa frequência: qual o \omterm{def:b1:filters-transfer-functions:H}{ganho} total?
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b1:filters-transfer-functions:2}
+Passa-baixa RC, $R = \qty{10}{k\ohm}$, $C = \qty{16}{nF}$: \omterm{def:b1:filters-transfer-functions:bode}{frequência de corte}
+e \omterm{def:b1:filters-transfer-functions:H}{ganho} em decibéis a \qty{100}{Hz}, \qty{1}{kHz}, \qty{10}{kHz} e
+\qty{100}{kHz}.
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b1:filters-transfer-functions:3}
+Sem calcular, dê a natureza (passa-baixa, passa-alta, passa-faixa) de: (a)
+$R$ em série e $C$ na saída; (b) $C$ em série e $R$ na
+saída; (c) $L$ em série e $C$ na saída; (d) $L$ e $C$ em
+série e $R$ na saída.
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b1:filters-transfer-functions:4}
+Uma onda quadrada de \qty{1.0}{kHz} e \omterm{def:b1:wave-propagation:signal}{amplitude} \qty{5.0}{V}: dê as
+frequências e \omterm{def:b1:wave-propagation:signal}{amplitudes} dos seus três primeiros harmônicos não nulos. Por que
+ela não tem harmônicos pares?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b1:filters-transfer-functions:5}
+Um passa-alta CR cortado em \qty{10}{kHz} recebe uma onda triangular de
+\omterm{def:b1:wave-propagation:signal}{amplitude} \qty{1.0}{V} a \qty{100}{Hz}. Explique por que ele se comporta como um
+derivador e dê a forma e a \omterm{def:b1:wave-propagation:signal}{amplitude} da saída.
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b1:filters-transfer-functions:6}
+Um passa-baixa RC cortado em \qty{10}{Hz} recebe uma onda quadrada de \qty{1.0}{kHz}
+e \omterm{def:b1:wave-propagation:signal}{amplitude} $\pm\qty{1.0}{V}$. Mostre que a saída é um triângulo
+e calcule a sua \omterm{def:b1:wave-propagation:signal}{amplitude}.
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b1:filters-transfer-functions:7}
+Um passa-baixa RLC série com $L = \qty{10}{mH}$, $C = \qty{100}{nF}$: dê
+$f_0$; encontre $R$ para a resposta maximamente plana; dê o \omterm{def:b1:filters-transfer-functions:H}{ganho} em
+decibéis em $f_0$ e em $10f_0$.
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b1:filters-transfer-functions:8}
+Um passa-faixa ($Q = 20$) sintonizado em \qty{3.0}{kHz} recebe a onda quadrada de
+\qty{1}{kHz} do \cref{exo:b1:filters-transfer-functions:4}. Calcule o
+\omterm{def:b1:filters-transfer-functions:H}{ganho} em $1$, $3$ e \qty{5}{kHz} e as \omterm{def:b1:wave-propagation:signal}{amplitudes} de saída desses
+harmônicos; descreva a saída.
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b1:filters-transfer-functions:9}
+Dois passa-baixas RC idênticos ($R = \qty{1.0}{k\ohm}$, $C = \qty{159}{nF}$)
+em cascata. Calcule a \omterm{def:b1:filters-transfer-functions:H}{função de transferência} exata (o segundo carrega o
+primeiro) e o \omterm{def:b1:filters-transfer-functions:H}{ganho} em $\omega_c = 1/RC$; compare com o produto dos
+dois \omterm{def:b1:filters-transfer-functions:H}{ganhos} separados.
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b1:filters-transfer-functions:10}
+Esboce as assíntotas de Bode de $\underline H = (1 + j\omega/\omega_1)/
+(1 + j\omega/\omega_2)$ com $\omega_1 = \qty{100}{rad/s}$, $\omega_2 =
+\qty{1e4}{rad/s}$: inclinações, quebras, o patamar de alta frequência em
+decibéis e a fase em $\sqrt{\omega_1\omega_2}$.
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b1:filters-transfer-functions:11}
+Um seno retificado em onda completa (rede de \qty{50}{Hz}) tem média $2E/\pi$ e
+um primeiro harmônico em \qty{100}{Hz} de \omterm{def:b1:wave-propagation:signal}{amplitude} $4E/3\pi$. Um passa-baixa
+RC deve reduzir a ondulação de \qty{100}{Hz} abaixo de $1\%$ da
+média: encontre a \omterm{def:b1:filters-transfer-functions:bode}{frequência de corte} e a \omterm{def:b1:transient-regimes:firstorder}{constante de tempo} necessárias. Por que
+um capacitor sozinho (com a resistência de carga) é a escolha usual?
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b1:filters-transfer-functions:12}
+O acoplamento AC de um osciloscópio é um passa-alta com $C = \qty{0.10}{\micro F}$
+e $R = \qty{160}{k\ohm}$. Calcule $f_c$. Aplica-se uma onda quadrada: mostre
+que cada patamar plano vira uma exponencial decrescente e calcule o afundamento
+(fração perdida ao longo de meio período) a \qty{50}{Hz} e a \qty{1}{kHz}.
+\end{exercise}
+
+\begin{omfigure}
+\includegraphics[width=0.50\linewidth]{images/book3/ai/b3-09-loudspeaker-crossover.png}
+
+{\small Dentro de uma caixa acústica de duas vias: as bobinas e os capacitores do divisor de frequências são os \omterm{prop:b1:filters-transfer-functions:lowpass1}{filtros passa-baixa} e passa-alta que mandam os graves para o woofer e os agudos para o tweeter.}
+\end{omfigure}
+
+\section{Problema: o divisor de frequências da caixa acústica}
+
+\begin{problem}[{Problema de fim de semana --- um woofer, um tweeter, uma bobina e um
+capacitor: como um divisor passivo reparte a música, por que o mais simples
+deles deixa vazar graves para o tweeter e o que uma bobina móvel real faz com o
+projeto}]
+\label{pb:b1:filters-transfer-functions:1}
+O woofer e o tweeter são primeiro modelados como resistências puras
+$R = \qty{8.0}{\ohm}$. O amplificador é uma \omterm{def:b1:dc-circuits:sources}{fonte de tensão} ideal
+$\underline U_e$. A frequência de cruzamento vale $f_c = \qty{2.0}{kHz}$.
+
+\medskip
+\noindent\textbf{Parte I --- Divisor de primeira ordem.}
+O woofer é alimentado através de uma bobina em série $L$, e o tweeter através de um
+capacitor em série $C$.
+\begin{enumerate}
+  \item Defina a \omterm{def:b1:filters-transfer-functions:H}{função de transferência} de cada ramo (\omterm{def:b1:dc-circuits:voltage}{tensão} no
+        alto-falante dividida por $\underline U_e$) e o \omterm{def:b1:filters-transfer-functions:H}{ganho} em decibéis.
+  \item Mostre que o ramo do woofer é um passa-baixa de primeira ordem e dê
+        a sua \omterm{def:b1:filters-transfer-functions:bode}{frequência de corte} $\omega_c$ em termos de $R$ e $L$.
+  \item Calcule $L$ para $f_c = \qty{2.0}{kHz}$.
+  \item Mostre que o ramo do tweeter é um passa-alta de primeira ordem; dê
+        $\omega_c$ e calcule $C$.
+  \item Dê o \omterm{def:b1:filters-transfer-functions:H}{ganho} de cada alto-falante em decibéis em $f_c$, a \qty{200}{Hz}
+        e a \qty{20}{kHz}.
+  \item Mostre que $G_L^2 + G_H^2 = 1$ em toda frequência. O que isso
+        significa para a potência exigida do amplificador?
+  \item Dê a fase de cada ramo em $f_c$; de quanto diferem em fase as
+        tensões dos dois alto-falantes ali?
+  \item Quais são as inclinações das duas respostas, em dB por oitava, longe
+        de $f_c$?
+\end{enumerate}
+
+\medskip
+\noindent\textbf{Parte II --- Divisor de segunda ordem.}
+O woofer passa agora a ser alimentado por uma bobina em série $L$ com um capacitor $C$
+em paralelo com o alto-falante.
+\begin{enumerate}[resume]
+  \item Mostre que $\underline H = 1/(1 - LC\omega^2 + jL\omega/R)$.
+  \item Identifique $\omega_0$ e $Q$ em termos de $L$, $C$, $R$.
+  \item Para $Q = 1/\sqrt2$ mostre que $G = 1/\sqrt{1 + (\omega/\omega_0)^4}$
+        e que o \omterm{def:b1:filters-transfer-functions:H}{ganho} vale \qty{-3}{dB} em $\omega_0$.
+  \item Calcule $L$ e $C$ para $f_0 = \qty{2.0}{kHz}$ e $Q = 1/\sqrt2$.
+  \item Calcule o \omterm{def:b1:filters-transfer-functions:H}{ganho} em decibéis a \qty{4}{kHz} e a \qty{8}{kHz};
+        deduza a inclinação em dB por oitava.
+  \item O ramo do tweeter troca os papéis de $L$ e $C$ ($C$ em série,
+        $L$ em paralelo): escreva a sua \omterm{def:b1:filters-transfer-functions:H}{função de transferência} sem novo
+        cálculo.
+  \item Calcule a fase de cada ramo em $f_0$. O que se deve fazer com a
+        ligação do tweeter, e por quê?
+\end{enumerate}
+
+\medskip
+\noindent\textbf{Parte III --- Música através do divisor.}
+\begin{enumerate}[resume]
+  \item Uma nota de violoncelo a \qty{220}{Hz} carrega harmônicos até o 20º.
+        Quais harmônicos vão em sua maioria para o tweeter, com o divisor
+        de primeira ordem?
+  \item O que acontece com o 9º harmônico?
+  \item Usa-se uma onda quadrada de \qty{1.0}{kHz} como sinal de teste. Com o
+        divisor de primeira ordem, dê o \omterm{def:b1:filters-transfer-functions:H}{ganho} de cada ramo para a
+        fundamental e para o terceiro e o quinto harmônicos.
+  \item O amplificador desenvolve por acidente um nível contínuo de \qty{1}{V}. Que
+        alto-falante fica protegido, e por quê?
+  \item Com o divisor de primeira ordem, que fração da \omterm{def:b1:dc-circuits:voltage}{tensão}
+        e da potência de um tom de \qty{500}{Hz} chega ao tweeter?
+        E com o de segunda ordem? Por que isso importa para a
+        sobrevivência do tweeter?
+\end{enumerate}
+
+\medskip
+\noindent\textbf{Parte IV --- Uma bobina móvel real.}
+O woofer é, na verdade, $R = \qty{8.0}{\ohm}$ em série com uma indutância
+de bobina móvel $L_{vc} = \qty{0.50}{mH}$.
+\begin{enumerate}[resume]
+  \item Calcule a \omterm{def:b1:sinusoidal-impedance:impedance}{impedância} (módulo) do woofer a \qty{2}{kHz} e a
+        \qty{8}{kHz}.
+  \item Recalcule o \omterm{def:b1:filters-transfer-functions:H}{ganho} do woofer de primeira ordem a \qty{2}{kHz} e a
+        \qty{8}{kHz} com essa \omterm{def:b1:sinusoidal-impedance:impedance}{impedância} e compare com os ideais
+        \qty{-3}{dB} e \qty{-12.3}{dB}. O que aconteceu com a atenuação?
+  \item Uma ``rede de Zobel'' --- $R_z = R$ em série com $C_z =
+        L_{vc}/R^2$ --- é ligada em paralelo com o woofer. Mostre
+        que o conjunto se comporta como uma resistência pura $R$ em todas as
+        frequências, e calcule $C_z$.
+  \item O amplificador entrega \qty{50}{W} em \qty{8}{\ohm}: que \omterm{def:b1:dc-circuits:voltage}{tensão}
+        eficaz é essa, e que potência cada alto-falante recebe em
+        $f_c$ (divisor de primeira ordem)? A \qty{500}{Hz}, quanto chega
+        ao tweeter?
+  \item Resuma os compromissos: inclinação, fase, número de componentes,
+        proteção do tweeter e a necessidade de uma rede de Zobel.
+\end{enumerate}
+\end{problem}

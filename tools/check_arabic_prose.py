@@ -296,11 +296,35 @@ def nested_text(fragment: str, depth: int) -> str:
     return visible_text(fragment, [], "<nested>", depth + 1)
 
 
+def _unwrap_braces(s: str) -> str:
+    """Strip ONE outer brace pair, and only when it is genuinely balanced.
+
+    `s.strip("{}")` is wrong and cost two editions a workaround in their
+    SOURCES: a node whose whole body is one macro, `node {\\qty{1}{atm}}`, is
+    captured as `\\qty{1}{atm}` and strip() eats the macro's own closing brace,
+    leaving `\\qty{1}{atm` -- so the unit leaked out of the macro and was
+    reported as residual English. Both the Hindi and the Arabic Book 3 agents
+    hit it on the same figure and patched the .tex rather than the tool.
+    """
+    s = s.strip()
+    while len(s) >= 2 and s[0] == "{" and s[-1] == "}":
+        depth = 0
+        for i, ch in enumerate(s):
+            if ch == "{":
+                depth += 1
+            elif ch == "}":
+                depth -= 1
+                if depth == 0 and i != len(s) - 1:
+                    return s          # the leading brace closes early: keep all
+        s = s[1:-1].strip()
+    return s
+
+
 def extract_drawing_text(body: str, depth: int = 0) -> str:
     """Pull the visible strings out of tikz/pgfplots/circuitikz drawing code."""
     pieces = [m.group(1) for m in TIKZ_NODE.finditer(body)]
     pieces += [m.group(1) for m in TIKZ_TEXT_KEYS.finditer(body)]
-    return " \n ".join(nested_text(p.strip("{}"), depth) for p in pieces)
+    return " \n ".join(nested_text(_unwrap_braces(p), depth) for p in pieces)
 
 
 def visible_text(text: str, findings: list, path: str, depth: int = 0) -> str:

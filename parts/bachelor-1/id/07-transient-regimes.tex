@@ -1,0 +1,547 @@
+\chapter{Rezim Peralihan: Orde Pertama dan Orde Kedua}\label{ch:b1:transient-regimes}
+
+Tekanlah sudut sebuah mobil yang terparkir lalu lepaskan. Mobil yang
+sehat naik satu kali lalu berhenti; mobil dengan peredam kejut yang aus
+mengayun dua atau tiga kali sebelum tenang. Di laboratorium elektronika,
+dua perilaku yang sama muncul pada osiloskop ketika sebuah kapasitor
+mengosong lewat sebuah kumparan: kembali dengan mulus, atau berdering
+lalu padam. Keduanya adalah \emph{peralihan} antara satu \omterm{def:b1:transient-regimes:firstorder}{keadaan tunak}
+dan \omterm{def:b1:transient-regimes:firstorder}{keadaan tunak} lainnya, dan keduanya menuruti keluarga kecil
+persamaan diferensial linear yang sama --- orde pertama untuk satu
+penyimpan energi, orde kedua untuk dua penyimpan yang saling bertukar.
+Bab ini menyelesaikannya sekali untuk selamanya, menamai parameternya
+(\omterm{def:b1:transient-regimes:firstorder}{tetapan waktu}, frekuensi alami, \omterm{def:b1:transient-regimes:secondorder}{faktor kualitas}), lalu memperlihatkan
+bagaimana angka yang sama menggambarkan sebuah rangkaian dan sebuah
+suspensi.
+
+\begin{omfigure}
+\includegraphics[width=0.60\linewidth]{images/book3/ai/b3-07-rlc-breadboard-oscilloscope.png}
+
+{\small Sebuah kumparan, sebuah kapasitor dan sebuah \omterm{def:b1:dc-circuits:resistor}{resistor} di atas papan rangkai, dan pada osiloskopnya osilasi meluruh yang menyusul sebuah tangga: \omterm{thm:b1:transient-regimes:regimes}{rezim pseudoperiodik} bab ini.}
+\end{omfigure}
+
+\section{Sistem orde pertama}
+
+\begin{definition}[Sistem linear orde pertama]\label{def:b1:transient-regimes:firstorder}
+\index{sistem orde pertama}\index{tetapan waktu}\index{rezim peralihan}\index{keadaan tunak}
+Besaran $x(t)$ menuruti \emph{persamaan linear orde pertama berkoefisien
+tetap} bila
+\[
+\tau\,\frac{\dd x}{\dd t} + x = x_\infty ,
+\]
+dengan $\tau > 0$ sebagai \emph{tetapan waktu} dan $x_\infty$ sebuah
+tetapan (nilai yang dipaksakan sumbernya). \emph{Keadaan tunak}nya
+adalah $x = x_\infty$; \emph{rezim peralihan}nya adalah pendekatan
+menuju keadaan itu dari nilai awal $x(0) = x_0$.
+\end{definition}
+
+\begin{theorem}[Penyelesaian]\label{thm:b1:transient-regimes:firstorder}
+Penyelesaian tunggal dengan $x(0) = x_0$ adalah
+\[
+x(t) = x_\infty + (x_0 - x_\infty)\,\eu^{-t/\tau} .
+\]
+Selisih terhadap \omterm{def:b1:transient-regimes:firstorder}{keadaan tunaknya} menyusut dengan faktor $\eu^{-1} \approx
+0.37$ tiap $\tau$: $63\%$ perjalanannya pada $\tau$, $95\%$ pada
+$3\tau$, $99\%$ pada $4.6\tau$. Garis singgung di titik asalnya
+mencapai $x_\infty$ pada $t = \tau$.
+\end{theorem}
+
+\begin{proof}
+$y = x - x_\infty$ menuruti $\tau y' + y = 0$, yang penyelesaiannya
+$y = K\eu^{-t/\tau}$ (kuliah matematika tentang persamaan diferensial
+linear membuktikan tak ada yang lain); $K = x_0 - x_\infty$.
+Kemiringannya di $0$ adalah $-(x_0 - x_\infty)/\tau$, yang akan menutup
+selisihnya dalam waktu $\tau$.
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}
+\begin{axis}[omaxis, width=9.4cm, height=5.4cm, xlabel={$t$}, ylabel={$x$},
+    xmin=0, xmax=5, ymin=0, ymax=1.35, xtick={1,2,3,4,5},
+    xticklabels={$\tau$,$2\tau$,$3\tau$,$4\tau$,$5\tau$},
+    ytick={0.632,1}, yticklabels={$0.63$,$x_\infty$}]
+  \addplot[omExo, dashed, domain=0:5, samples=2] {1};
+  \addplot[omExo, dashed, domain=0:1, samples=2] {x};
+  \addplot[omDef, thick, domain=0:5, samples=100] {1 - exp(-x)};
+  \draw[dashed, omExo] (axis cs:1,0) -- (axis cs:1,0.632) -- (axis cs:0,0.632);
+  \draw[dashed, omExo] (axis cs:3,0) -- (axis cs:3,0.95);
+  \node[omExo, below right, font=\footnotesize] at (axis cs:3,0.95) {$0.95\,x_\infty$};
+  \node[omDef, font=\footnotesize, below right] at (axis cs:2.2,0.75) {$x_\infty(1 - \eu^{-t/\tau})$};
+\end{axis}
+\end{tikzpicture}
+
+{\small Tanggapan tangga orde pertama dari $x_0 = 0$: garis singgung
+awalnya menemui asimtotnya pada $t = \tau$; $63\%$ perjalanannya pada
+$\tau$, $95\%$ pada $3\tau$. Setiap peralihan orde pertama adalah kurva
+ini, teregang oleh $\tau$ dan tergeser oleh $x_0$ dan $x_\infty$.}
+\end{omfigure}
+
+\begin{proposition}[Rangkaian RC dan RL]\label{prop:b1:transient-regimes:rcrl}
+\index{rangkaian RC}\index{rangkaian RL}
+Kapasitor $C$ yang diisi lewat \omterm{def:b1:dc-circuits:resistor}{resistor} $R$ dari sumber ideal $E$
+menuruti $RC\,\dd u_C/\dd t + u_C = E$: $\tau = RC$, $u_{C,\infty} = E$.
+Kumparan $L$ yang terangkai seri dengan $R$ melintasi $E$ menuruti
+$(L/R)\,\dd i/\dd t + i =
+E/R$: $\tau = L/R$, $i_\infty = E/R$. Dengan sumbernya dilepas
+($E \to 0$), persamaan yang sama menggambarkan pengosongan menuju nol.
+\end{proposition}
+
+\begin{proof}
+\omterm{thm:b1:dc-circuits:kirchhoff}{Hukum loop} $E = Ri + u_C$ dengan $i = C\,\dd u_C/\dd t$; \omterm{thm:b1:dc-circuits:kirchhoff}{hukum loop}
+$E = Ri + L\,\dd i/\dd t$.
+\end{proof}
+
+\begin{proposition}[Syarat kekontinuan]\label{prop:b1:transient-regimes:continuity}
+\index{kekontinuan ($u_C$, $i_L$)}
+\omterm{def:b1:dc-circuits:voltage}{Tegangan} pada kapasitor dan arus lewat induktor merupakan fungsi waktu
+yang kontinu: pada saat penyaklaran $t_0$,
+$u_C(t_0^+) = u_C(t_0^-)$ dan $i_L(t_0^+) = i_L(t_0^-)$. Arus pada
+\omterm{def:b1:dc-circuits:resistor}{resistor} dan \omterm{def:b1:dc-circuits:voltage}{tegangan} pada kumparan boleh melompat.
+\end{proposition}
+
+\begin{proof}
+Lompatan $u_C$ akan menuntut $i = C\,\dd u_C/\dd t$ tak hingga,
+lompatan $i_L$ akan menuntut $u = L\,\dd i/\dd t$ tak hingga; keduanya
+mustahil dalam rangkaian yang \omterm{def:b1:dc-circuits:voltage}{tegangan} dan arusnya berhingga (setara
+dengan itu, energi tersimpan $\tfrac12 Cu_C^2$ dan $\tfrac12 Li^2$ tak
+dapat berubah seketika tanpa daya tak hingga).
+\end{proof}
+
+\begin{method}[Menyelesaikan peralihan orde pertama]\label{met:b1:transient-regimes:first}
+\begin{enumerate}
+  \item Tuliskan \omterm{thm:b1:dc-circuits:kirchhoff}{hukum loop} dan \omterm{thm:b1:dc-circuits:kirchhoff}{hukum simpulnya} setelah saklarnya,
+        beserta hukum komponennya; sederhanakan menjadi satu persamaan
+        dalam $u_C$ atau $i_L$ lalu bawalah ke bentuk
+        $\tau x' + x = x_\infty$; bacalah $\tau$ dan $x_\infty$ (yang
+        terakhir juga merupakan \omterm{def:b1:transient-regimes:firstorder}{keadaan tunak} yang ditemukan dengan
+        mengganti $C$ dengan rangkaian terbuka dan $L$ dengan kawat).
+  \item Carilah $x_0$ dari kekontinuan $u_C$ atau $i_L$ pada saat
+        penyaklarannya, dengan memakai rangkaian \emph{sebelum} saat itu.
+  \item Tuliskan $x = x_\infty + (x_0 - x_\infty)\eu^{-t/\tau}$;
+        simpulkan besaran lainnya lewat penurunan dan \omterm{thm:b1:dc-circuits:kirchhoff}{hukum loop}.
+\end{enumerate}
+Ketika kapasitornya menghadapi jaringan \omterm{def:b1:dc-circuits:resistor}{resistor} dan sumber, gantilah
+jaringan itu lebih dulu dengan setara Thévenin-nya
+$(E_{\mathrm{Th}}, R_{\mathrm{Th}})$ (\cref{ch:b1:dc-circuits}):
+$\tau = R_{\mathrm{Th}}C$, $u_\infty = E_{\mathrm{Th}}$.
+\end{method}
+
+\begin{proposition}[Neraca energi pengisian RC]\label{prop:b1:transient-regimes:rcenergy}
+Ketika kapasitor diisi dari $0$ sampai $E$ lewat \omterm{def:b1:dc-circuits:resistor}{resistor} $R$ apa pun,
+sumbernya memasok $CE^2$, kapasitornya menyimpan $\tfrac12 CE^2$, dan
+\omterm{def:b1:dc-circuits:resistor}{resistornya} melesapkan $\tfrac12 CE^2$ sisanya --- berapa pun $R$-nya.
+\end{proposition}
+
+\begin{proof}
+$i = (E/R)\eu^{-t/\tau}$; sumbernya memasok $\int_0^\infty Ei\,\dd t
+= E \cdot (E/R)\tau = CE^2$; \omterm{def:b1:dc-circuits:resistor}{resistornya} mengambil $\int_0^\infty Ri^2\,\dd t
+= (E^2/R)\int_0^\infty \eu^{-2t/\tau}\dd t = (E^2/R)(\tau/2) = \tfrac12 CE^2$;
+selisihnya adalah $\tfrac12 CE^2$ yang tersimpan. $R$ yang lebih kecil
+melesapkan energi yang sama lebih cepat.
+\end{proof}
+
+\begin{example}[Kumparan sebuah relai]\label{ex:b1:transient-regimes:relay}
+$L = \qty{20}{mH}$, $R = \qty{5.0}{\ohm}$, $E = \qty{10}{V}$: $\tau =
+\qty{4.0}{ms}$, $i_\infty = \qty{2.0}{A}$; kontaknya menarik ketika
+$i$ mencapai \qty{1.5}{A}, yaitu pada $t = -\tau\ln(1 - 0.75) =
+\qty{5.5}{ms}$. Ketika rangkaiannya dibuka, $i$ harus jatuh dari
+\qty{2}{A}; dioda ``roda bebas'' yang dipasang melintasi kumparannya
+memberinya jalan lewat $R$ saja, $\tau = \qty{4}{ms}$, alih-alih sebuah percikan.
+\end{example}
+
+\section{Sistem orde kedua}
+
+\begin{definition}[Bentuk baku orde kedua]\label{def:b1:transient-regimes:secondorder}
+\index{sistem orde kedua}\index{frekuensi sudut alami}\index{faktor kualitas}\index{nisbah peredaman}
+Besaran $x(t)$ merupakan \emph{sistem linear orde kedua} bila
+\[
+\frac{\dd^2 x}{\dd t^2} + \frac{\omega_0}{Q}\,\frac{\dd x}{\dd t} + \omega_0^2\,x
+= \omega_0^2\,x_\infty ,
+\]
+dengan $\omega_0 > 0$ sebagai \emph{\omterm{def:b1:wave-propagation:signal}{frekuensi sudut} alami}, $Q > 0$
+sebagai \emph{faktor kualitas} (\omterm{def:b1:units-dimensions:dimension}{tak berdimensi}), dan $x_\infty$ sebagai
+\omterm{def:b1:transient-regimes:firstorder}{keadaan tunaknya}. Orang juga menulis $\omega_0/Q = 2\xi\omega_0$ dengan
+$\xi = 1/2Q$ sebagai \emph{nisbah peredaman}.
+\end{definition}
+
+\begin{proposition}[Rangkaian RLC seri]\label{prop:b1:transient-regimes:rlc}
+\index{rangkaian RLC}
+Kapasitor $C$, kumparan $L$ dan \omterm{def:b1:dc-circuits:resistor}{resistor} $R$ yang terangkai seri
+melintasi sumber $E$: \omterm{def:b1:dc-circuits:voltage}{tegangan} kapasitornya menuruti bentuk bakunya dengan
+\[
+\omega_0 = \frac{1}{\sqrt{LC}}, \qquad Q = \frac{1}{R}\sqrt{\frac{L}{C}},
+\qquad u_{C,\infty} = E .
+\]
+\end{proposition}
+
+\begin{proof}
+\omterm{thm:b1:dc-circuits:kirchhoff}{Hukum loop}: $E = L\,\dd i/\dd t + Ri + u_C$ dengan $i = C\,\dd u_C/\dd t$:
+$LC\,u_C'' + RC\,u_C' + u_C = E$; bagi dengan $LC$ lalu kenali
+$\omega_0^2 = 1/LC$, $\omega_0/Q = R/L$.
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}[font=\small]
+  \draw (0,0) to[battery1, l=$E$, invert] (0,2.6) to[R=$R$] (2.4,2.6) to[L=$L$, i=$i$] (4.8,2.6) -- (4.8,2.6) to[C=$C$, v=$u_C$] (4.8,0) -- (0,0);
+  \begin{scope}[xshift=7.6cm]
+    \draw[thick] (0,0) -- (0,3.4);
+    \fill[pattern=north east lines] (-0.25,0) rectangle (0,3.4);
+    % spring
+    \draw[thick] (0,2.6) -- (0.4,2.6) \foreach \i in {0,...,5} {-- ++(0.2,0.25) -- ++(0.2,-0.5) -- ++(0.2,0.25)} -- (3.3,2.6);
+    % damper
+    \draw[thick] (0,0.8) -- (1.2,0.8);
+    \draw[thick] (1.2,0.5) -- (1.2,1.1) -- (2.2,1.1); \draw[thick] (1.2,0.5) -- (2.2,0.5);
+    \draw[thick] (1.9,0.6) -- (1.9,1.0); \draw[thick] (1.9,0.8) -- (3.3,0.8);
+    \draw[thick, fill=omDef!15] (3.3,0.2) rectangle (4.5,3.2); \node at (3.9,1.7) {$m$};
+    \draw[-Stealth] (3.9,3.5) -- (5.2,3.5) node[right] {$x$};
+    \node at (1.7,3.15) {$k$}; \node at (1.7,0.1) {$\alpha$};
+  \end{scope}
+\end{tikzpicture}
+
+{\small Dua wajah \omterm{def:b1:transient-regimes:secondorder}{sistem orde kedua}: \omterm{prop:b1:transient-regimes:rlc}{rangkaian RLC} seri
+($\omega_0 = 1/\sqrt{LC}$, $Q = \sqrt{L/C}/R$) dan sistem
+massa--pegas--peredam ($\omega_0 = \sqrt{k/m}$, $Q = \sqrt{km}/\alpha$).
+Persamaan yang sama, ketiga rezim yang sama.}
+\end{omfigure}
+
+\begin{proposition}[Osilator mekanik]\label{prop:b1:transient-regimes:mechanical}
+\index{massa--pegas--peredam}\index{analogi elektromekanik}
+Massa $m$ pada pegas berkekakuan $k$ dengan peredam kental berkoefisien
+$\alpha$ (gaya $-\alpha\dot x$), yang tersimpang sejauh $x$ dari
+kesetimbangannya, menuruti $m\ddot x + \alpha\dot x + kx = 0$: bentuk
+bakunya dengan
+\[
+\omega_0 = \sqrt{\frac{k}{m}}, \qquad Q = \frac{\sqrt{km}}{\alpha} .
+\]
+Padanan $x \leftrightarrow q$, $\dot x \leftrightarrow i$,
+$m \leftrightarrow L$, $\alpha \leftrightarrow R$, $k \leftrightarrow 1/C$
+memetakan setiap hasil sistem yang satu ke sistem yang lain.
+\end{proposition}
+
+\begin{proof}
+Hukum kedua Newton (\cref{ch:b1:newton-dynamics}) dengan gaya pegas
+$-kx$ dan gaya peredamnya; bagi dengan $m$.
+\end{proof}
+
+\begin{theorem}[Ketiga rezimnya]\label{thm:b1:transient-regimes:regimes}
+\index{rezim aperiodik}\index{rezim kritis}\index{rezim pseudoperiodik}\index{pseudoperiode}
+Penyelesaian persamaan homogen $x'' + (\omega_0/Q)x' +
+\omega_0^2 x = 0$ diatur oleh akar $r^2 + (\omega_0/Q)r +
+\omega_0^2 = 0$, yang berdiskriminan $\Delta = \omega_0^2(1/Q^2 - 4)$:
+\begin{itemize}
+  \item $Q < \tfrac12$, \emph{aperiodik}: dua akar real negatif
+        $r_\pm = -\frac{\omega_0}{2Q}\big(1 \mp \sqrt{1 - 4Q^2}\big)$,
+        $x = A\eu^{r_+t} + B\eu^{r_-t}$, kembali tanpa berosilasi;
+  \item $Q = \tfrac12$, \emph{kritis}: akar kembar $r = -\omega_0$,
+        $x = (A + Bt)\eu^{-\omega_0 t}$, kembali paling cepat tanpa
+        lonjakan lebih;
+  \item $Q > \tfrac12$, \emph{pseudoperiodik}: akar kompleks
+        $r = -1/\tau \pm \iu\omega$ dengan
+        \[
+        \tau = \frac{2Q}{\omega_0}, \qquad
+        \omega = \omega_0\sqrt{1 - \frac{1}{4Q^2}},
+        \qquad
+        x = \eu^{-t/\tau}\big(A\cos\omega t + B\sin\omega t\big),
+        \]
+        yaitu osilasi teredam ber\emph{pseudoperiode} $T = 2\pi/\omega$
+        di dalam selubung $\pm\sqrt{A^2 + B^2}\,\eu^{-t/\tau}$.
+\end{itemize}
+Penyelesaian lengkap dengan ruas kanan tetap adalah $x_\infty$ ditambah
+penyelesaian homogennya; $A$ dan $B$ menyusul dari $x(0)$ dan $x'(0)$.
+\end{theorem}
+
+\begin{proof}
+Persamaan karakteristik sebuah persamaan linear berkoefisien tetap
+(kuliah matematika, persamaan linear orde kedua): akarnya adalah
+$r = -\omega_0/2Q \pm \tfrac12\sqrt\Delta$. Untuk $Q > \tfrac12$,
+$\sqrt\Delta = \iu\omega_0\sqrt{4 - 1/Q^2}$, yang memberi bagian real
+$-\omega_0/2Q = -1/\tau$ dan bagian imajiner $\pm\omega_0\sqrt{1 - 1/4Q^2}$;
+penyelesaian realnya adalah kombinasi $\eu^{-t/\tau}\cos\omega t$
+dan $\eu^{-t/\tau}\sin\omega t$.
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}
+\begin{axis}[omaxis, width=11.5cm, height=6cm, xlabel={$\omega_0 t$}, ylabel={$x/x_\infty$},
+    xmin=0, xmax=16, ymin=0, ymax=1.75, xtick={0,5,10,15}, ytick={0.5,1,1.5},
+    legend style={at={(0.97,0.97)}, anchor=north east, font=\footnotesize, draw=none, fill=none}]
+  % Q=0.2: roots r = -(1/(2Q))(1 -/+ sqrt(1-4Q^2)) = -2.5(1 -/+ 0.6) = -1, -4 ; x = 1 - (4 e^{-t} - e^{-4t})/3
+  \addplot[omProp, thick, domain=0:16, samples=200] {1 - (4*exp(-x) - exp(-4*x))/3};
+  \addlegendentry{$Q = 0.2$ (aperiodik)}
+  \addplot[omThm, thick, domain=0:16, samples=200] {1 - (1 + x)*exp(-x)};
+  \addlegendentry{$Q = 0.5$ (kritis)}
+  % Q=3: tau=6, w = sqrt(1-1/36)=0.986 ; x = 1 - e^{-t/6}(cos wt + sin wt /(6 w))
+  \addplot[omDef, thick, domain=0:16, samples=400] {1 - exp(-x/6)*(cos(deg(0.986*x)) + sin(deg(0.986*x))/(6*0.986))};
+  \addlegendentry{$Q = 3$ (pseudoperiodik)}
+  \addplot[omExo, dashed, domain=0:16, samples=2] {1};
+\end{axis}
+\end{tikzpicture}
+
+{\small Tanggapan tangga sebuah \omterm{def:b1:transient-regimes:secondorder}{sistem orde kedua} dari keadaan diam,
+untuk tiga \omterm{def:b1:transient-regimes:secondorder}{faktor kualitas}. $Q$ kecil: merayap lambat; $Q = \tfrac12$:
+kembali paling cepat tanpa lonjakan lebih; $Q$ besar: dering yang
+bertahan sekitar $Q$ osilasi.}
+\end{omfigure}
+
+\begin{proposition}[Membaca $Q$ pada jejak pseudoperiodik]\label{prop:b1:transient-regimes:decrement}
+\index{dekremen logaritmik}
+Dalam \omterm{thm:b1:transient-regimes:regimes}{rezim pseudoperiodik}, dua maksimum berurutan bernisbah
+$x_{n+1}/x_n = \eu^{-T/\tau}$; \emph{\omterm{prop:b1:transient-regimes:decrement}{dekremen logaritmik}}
+\[
+\delta = \ln\frac{x_n}{x_{n+1}} = \frac{T}{\tau} = \frac{\pi}{Q\sqrt{1 - 1/4Q^2}}
+\approx \frac{\pi}{Q} \quad (Q \gg 1)
+\]
+memberi $Q$; banyaknya osilasi yang terlihat sebelum \omterm{def:b1:wave-propagation:signal}{amplitudonya}
+jatuh di bawah $5\%$ kira-kira $Q$. Untuk $Q \gg 1$, $\omega \approx \omega_0$
+dan $T \approx 2\pi/\omega_0$.
+\end{proposition}
+
+\begin{proof}
+Selubung $\eu^{-t/\tau}$ menyusut dengan faktor $\eu^{-T/\tau}$
+tiap periodenya; $T/\tau = (2\pi/\omega)(\omega_0/2Q)$. Selubungnya mencapai $\eu^{-3}
+\approx 5\%$ pada $3\tau = 6Q/\omega_0 \approx Q\,T$, yaitu setelah
+kira-kira $Q$ periode.
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}
+\begin{axis}[omaxis, width=11.5cm, height=5.6cm, xlabel={$t$}, ylabel={$x$},
+    xmin=0, xmax=12.5, ymin=-1.2, ymax=1.3, xtick={2,4,6,8,10,12},
+    xticklabels={$T$,$2T$,$3T$,$4T$,$5T$,$6T$}, ytick={-1,1}, yticklabels={$-x_0$,$x_0$}]
+  \addplot[omExo, dashed, domain=0:12.5, samples=60] {exp(-x/5)};
+  \addplot[omExo, dashed, domain=0:12.5, samples=60] {-exp(-x/5)};
+  \addplot[omDef, thick, domain=0:12.5, samples=500] {exp(-x/5)*cos(deg(pi*x))};
+  \fill[omThm] (axis cs:0,1) circle (1.4pt) node[above right, font=\footnotesize] {$x_0$};
+  \fill[omThm] (axis cs:2,0.670) circle (1.4pt) node[above right, xshift=2pt, yshift=3pt, font=\footnotesize] {$x_1 = x_0\eu^{-T/\tau}$};
+  \fill[omThm] (axis cs:4,0.449) circle (1.4pt) node[above right, xshift=2pt, yshift=3pt, font=\footnotesize] {$x_2$};
+\end{axis}
+\end{tikzpicture}
+
+{\small Peluruhan pseudoperiodik bebas, $x = x_0\eu^{-t/\tau}\cos\omega t$:
+maksimum berurutannya menyusut dengan faktor tetap $\eu^{-T/\tau}$, dan
+$\ln(x_n/x_{n+1}) = T/\tau \approx \pi/Q$ mengukur faktor kualitasnya
+dari jejak itu.}
+\end{omfigure}
+
+\begin{example}[Dering sebuah RLC]\label{ex:b1:transient-regimes:rlcnum}
+$L = \qty{10}{mH}$, $C = \qty{100}{nF}$, $R = \qty{100}{\ohm}$:
+$\omega_0 = 1/\sqrt{10^{-9}} = \qty{3.16e4}{rad/s}$ ($f_0 =
+\qty{5.03}{kHz}$), $Q = \sqrt{L/C}/R = 316/100 = 3.16$: pseudoperiodik,
+$\tau = 2Q/\omega_0 = \qty{0.20}{ms}$, $\omega = 0.987\,\omega_0$,
+$T = \qty{0.20}{ms}$, tiga osilasi yang terlihat. Hambatan kritisnya
+adalah $R_c = 2\sqrt{L/C} = \qty{632}{\ohm}$; di atasnya pengosongannya
+aperiodik.
+\end{example}
+
+\begin{method}[Menyelesaikan peralihan orde kedua]\label{met:b1:transient-regimes:second}
+\begin{enumerate}
+  \item Tuliskan persamaannya; bawalah ke bentuk baku; bacalah
+        $\omega_0$, $Q$ dan $x_\infty$.
+  \item Putuskan rezimnya dari $Q$ lalu tuliskan penyelesaian umumnya
+        sebagai $x_\infty$ ditambah penyelesaian homogennya.
+  \item Carilah $x(0)$ dan $x'(0)$ dari kekontinuan $u_C$ dan $i_L$
+        (untuk RLC: $u_C(0^+) = u_C(0^-)$ dan $u_C'(0^+) = i(0^-)/C$);
+        selesaikan untuk kedua tetapannya.
+\end{enumerate}
+\end{method}
+
+\begin{example}[Syarat awal]\label{ex:b1:transient-regimes:ic}
+Kapasitor pada contoh sebelumnya diisi sampai $U_0$ lalu, pada
+$t = 0$, ditutup pada $L$ dan $R$ (tanpa sumber): $x_\infty = 0$,
+$u_C(0) = U_0$, $u_C'(0) = i(0)/C = 0$ karena arus kumparannya nol.
+Jadi $A = U_0$ dan $-A/\tau + B\omega = 0$, $B = U_0/(\omega\tau) =
+U_0/\sqrt{4Q^2 - 1}$: $u_C = U_0\eu^{-t/\tau}[\cos\omega t + \sin(\omega
+t)/\sqrt{4Q^2 - 1}]$ --- untuk $Q \gg 1$ cukup $U_0\eu^{-t/\tau}\cos\omega_0 t$,
+dan arusnya $i = -C\,\dd u_C/\dd t$ memuncak di dekat $U_0\sqrt{C/L} =
+U_0/(\omega_0 L)$.
+\end{example}
+
+\begin{remark}[Energi]\label{rem:b1:transient-regimes:energy}
+Energi tersimpan $\tfrac12 Cu_C^2 + \tfrac12 Li^2$ (atau $\tfrac12 kx^2
++ \tfrac12 m\dot x^2$) berkurang dengan laju $Ri^2$ ($\alpha\dot x^2$):
+turunkan lalu pakai persamaannya. Tiap pseudoperiode energinya menyusut
+dengan faktor $\eu^{-2T/\tau}$; dengan $Q = 3$ sekitar $88\%$ di
+antaranya hilang tiap osilasi. $Q$ yang tinggi berarti kebocoran yang
+lambat relatif terhadap osilasinya --- jam yang baik, resonansi yang
+tajam (\cref{ch:b1:sinusoidal-impedance}) --- dan $Q$ yang rendah
+berarti kembali dengan cepat: pilihan yang tepat bagi sebuah suspensi
+atau jarum sebuah alat ukur.
+\end{remark}
+
+\section{Latihan}
+
+\begin{exercise}[$\star$]\label{exo:b1:transient-regimes:1}
+Sebuah \omterm{prop:b1:transient-regimes:rcrl}{rangkaian RC}: $R = \qty{10}{k\ohm}$, $C = \qty{47}{nF}$, diisi
+dari $E$. Hitunglah $\tau$, $u_C(\tau)/E$, dan waktu untuk mencapai $99\%$ dari $E$.
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b1:transient-regimes:2}
+Sebuah \omterm{prop:b1:transient-regimes:rcrl}{rangkaian RL}: $L = \qty{20}{mH}$, $R = \qty{5.0}{\ohm}$, $E = \qty{10}{V}$.
+Hitunglah $\tau$, arus akhirnya, arus pada $t = \tau$, dan \omterm{def:b1:dc-circuits:voltage}{tegangan} pada
+kumparannya tepat setelah saklarnya ditutup.
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b1:transient-regimes:3}
+Sebuah RLC seri: $L = \qty{10}{mH}$, $C = \qty{100}{nF}$, $R = \qty{100}{\ohm}$.
+Hitunglah $\omega_0$, $f_0$, $Q$; sebutkan rezimnya; berikan $\tau$ dan
+pseudoperiodenya.
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b1:transient-regimes:4}
+Untuk $L$ dan $C$ yang sama, hambatan berapa yang memberi \omterm{thm:b1:transient-regimes:regimes}{rezim kritis}?
+Berapa $Q$-nya ketika itu? Apa yang terjadi untuk $R = \qty{2}{k\ohm}$?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b1:transient-regimes:5}
+Sebuah kapasitor bermuatan $C = \qty{1.0}{\micro F}$ mengosong lewat $R$
+yang belum diketahui; \omterm{def:b1:dc-circuits:voltage}{tegangannya} berkurang separuh tiap \qty{3.5}{ms}.
+Tunjukkan bahwa waktu paruhnya adalah $\tau\ln 2$ lalu carilah $R$.
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b1:transient-regimes:6}
+Tunjukkan lewat pengintegralan langsung bahwa mengisi kapasitor dari $0$
+sampai $E$ lewat $R$ melesapkan tepat $\tfrac12 CE^2$ di $R$, bebas dari
+$R$. Menjadi berapa efisiensi pemindahannya, dan bagaimana orang dapat
+melakukannya lebih baik?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b1:transient-regimes:7}
+Pada sebuah osiloskop, peluruhan bebas sebuah RLC memperlihatkan
+maksimum berurutan \qty{2.0}{V}, \qty{1.5}{V}, \qty{1.12}{V} dengan
+selang \qty{0.40}{ms}. Simpulkan $Q$, $\omega_0$, dan, dengan
+$C = \qty{1.0}{\micro F}$, nilai $L$ dan $R$.
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b1:transient-regimes:8}
+Sebuah kapasitor yang diisi sampai $U_0 = \qty{100}{V}$ ($C = \qty{10}{\micro F}$)
+disaklarkan ke kumparan $L = \qty{1.0}{mH}$ yang hambatannya kecil ($Q \gg 1$).
+Tuliskan $u_C(t)$ dan $i(t)$, lalu taksirlah arus puncaknya. Di mana
+energinya berada pada puncak itu?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b1:transient-regimes:9}
+Seperempat sebuah mobil: $m = \qty{400}{kg}$ pada pegas $k = \qty{2.0e4}{N/m}$.
+Hitunglah $\omega_0$, $f_0$ dan koefisien peredaman kritisnya. Dengan
+peredam $\alpha = \qty{2000}{N.s/m}$, berikan $Q$, rezimnya,
+pseudoperiodenya dan waktu peluruhannya $\tau$.
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b1:transient-regimes:10}
+Sebuah kumparan $L = \qty{0.50}{H}$ membawa $I_0 = \qty{2.0}{A}$;
+sumbernya dilepas dan kumparannya dibiarkan pada \omterm{def:b1:dc-circuits:resistor}{resistor} pembuang
+$R = \qty{100}{\ohm}$. Berikan $i(t)$, $\tau$, \omterm{def:b1:dc-circuits:voltage}{tegangan} puncak pada
+kumparannya dan energi yang dilesapkan. Apa yang akan terjadi tanpa
+\omterm{def:b1:dc-circuits:resistor}{resistor} itu?
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b1:transient-regimes:11}
+Sebuah kapasitor $C = \qty{1.0}{\micro F}$ diisi dari $E = \qty{12}{V}$
+lewat $R_1 = \qty{10}{k\ohm}$ sementara $R_2 = \qty{20}{k\ohm}$ terpasang
+melintasinya. Dengan memakai setara Thévenin, carilah \omterm{def:b1:transient-regimes:firstorder}{tetapan waktu}
+dan \omterm{def:b1:dc-circuits:voltage}{tegangan} akhirnya; tuliskan $u_C(t)$ dari $u_C(0) = 0$.
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b1:transient-regimes:12}
+\omterm{thm:b1:transient-regimes:regimes}{Rezim kritis}, tangga dari keadaan diam ($x(0) = x'(0) = 0$): tunjukkan
+bahwa $x = x_\infty[1 - (1 + \omega_0 t)\eu^{-\omega_0 t}]$, lalu carilah
+secara numerik waktu untuk mencapai $95\%$ dari $x_\infty$ (dalam satuan
+$1/\omega_0$). Bandingkan dengan waktu mapan selubungnya untuk $Q = 5$
+dan untuk akar lambatnya ketika $Q = 0.1$; simpulkan mengapa ``kritis''
+menjadi sasaran para insinyur.
+\end{exercise}
+
+\section{Soal: Merancang sebuah suspensi}
+
+\begin{problem}[{Soal akhir pekan --- persamaan diferensial yang sama di
+atas meja kerja dan di bawah sebuah mobil: berapa ayunan yang diizinkan
+peredam kejut yang aus, apa yang dipilih perancangnya sebagai gantinya,
+dan bagaimana satu angka membedakan keduanya}]
+\label{pb:b1:transient-regimes:1}
+Bagian I mempelajari \omterm{prop:b1:transient-regimes:rlc}{rangkaian RLC} seri, $L = \qty{10}{mH}$, $C = \qty{100}{nF}$;
+Bagian II--IV mempelajari model seperempat mobil: massa $m = \qty{350}{kg}$
+yang bertumpu pada pegas $k = \qty{22}{kN/m}$ dan peredam kejut yang
+mengerahkan $-\alpha\dot x$. Lonjakan lebih tanggapan tangga dalam \omterm{thm:b1:transient-regimes:regimes}{rezim
+pseudoperiodik} (diberikan):
+$x_{\max}/x_\infty - 1 = \exp(-\pi\xi/\sqrt{1 - \xi^2})$, $\xi = 1/2Q$.
+
+\medskip
+\noindent\textbf{Bagian I --- Rangkaiannya.}
+\begin{enumerate}
+  \item Tuliskan \omterm{thm:b1:dc-circuits:kirchhoff}{hukum loop} untuk RLC seri melintasi sumber $E$, dan
+        persamaan diferensial untuk $u_C$.
+  \item Bawalah ke bentuk baku; nyatakan $\omega_0$ dan $Q$.
+  \item Hitunglah $\omega_0$, $f_0$ dan hambatan kritisnya $R_c$.
+  \item Tuliskan persamaan karakteristiknya dan diskriminannya; nyatakan
+        ketiga rezimnya dalam $Q$.
+  \item Dalam kasus pseudoperiodik, berikan $\tau$ dan $\omega$ serta
+        bentuk $u_C(t)$.
+  \item Untuk $R = \qty{100}{\ohm}$ hitunglah $Q$, $\tau$,
+        pseudoperiodenya, dan banyaknya osilasi yang terlihat.
+  \item Kapasitornya, yang diisi sampai $U_0$, disaklarkan ke $L$ dan $R$
+        pada $t = 0$. Berikan $u_C(0^+)$ dan $\dd u_C/\dd t(0^+)$,
+        beserta alasan fisisnya masing-masing.
+\end{enumerate}
+
+\medskip
+\noindent\textbf{Bagian II --- Seperempat mobilnya.}
+\begin{enumerate}[resume]
+  \item Dengan mengukur $x$ dari kedudukan kesetimbangannya, tuliskan
+        hukum kedua Newton untuk bodinya lalu tunjukkan bahwa beratnya lenyap.
+  \item Bawalah persamaannya ke bentuk baku; berikan $\omega_0$ dan $Q$
+        dalam $m$, $k$, $\alpha$, lalu daftarkan padanan
+        elektromekaniknya.
+  \item Hitunglah $\omega_0$, $f_0$ dan koefisien kritisnya
+        $\alpha_c$.
+  \item Perancangnya memasang $\alpha = \qty{4000}{N.s/m}$: hitunglah
+        $Q$, $\xi$, lalu sebutkan rezimnya.
+  \item Hitunglah $\tau$ dan pseudoperiodenya.
+  \item Hitunglah lonjakan lebihnya setelah sebuah tangga (tepi
+        trotoar): apakah mobilnya nyaman?
+  \item Hambatan $R$ berapa yang akan memberi rangkaian Bagian I nilai
+        $Q$ yang sama dengan suspensi ini?
+\end{enumerate}
+
+\medskip
+\noindent\textbf{Bagian III --- Peredam yang aus.}
+Olinya bocor: $\alpha = \qty{1200}{N.s/m}$.
+\begin{enumerate}[resume]
+  \item Hitunglah $Q$, pseudoperiodenya dan $\tau$.
+  \item Dengan faktor berapa maksimum berurutannya menyusut? Berapa
+        ayunan yang terlihat sebelum \omterm{def:b1:wave-propagation:signal}{amplitudonya} di bawah $5\%$?
+  \item Uji ayun: orang menekan sudutnya ke bawah sejauh $x_0 =
+        \qty{5.0}{cm}$ lalu melepaskannya. Berikan syarat awalnya,
+        energi yang tersimpan di pegasnya, lalu katakan ke mana energi
+        itu pergi.
+  \item Taksirlah kecepatan puncak bodinya selama kembalinya yang
+        pertama ($\approx x_0\omega_0$ untuk $Q \gg 1$) dan gaya puncak
+        peredamnya.
+  \item Mengapa peredaman yang tepat kritis ($Q = \tfrac12$) bukan
+        pilihan perancangnya, walaupun ia tak memberi lonjakan lebih?
+        (Pikirkan beberapa milimeter terakhir kembalinya.)
+  \item Hitunglah lonjakan lebih untuk peredam yang aus lalu bandingkan
+        dengan Bagian II.
+\end{enumerate}
+
+\medskip
+\noindent\textbf{Bagian IV --- Mendiagnosis $Q$ dari sebuah jejak.}
+Sebuah akselerometer pada bodinya merekam peluruhan bebasnya.
+\begin{enumerate}[resume]
+  \item Untuk mobil yang aus, maksimum berurutannya terbaca $1.00$, $0.25$, $0.062$
+        (satuan sebarang). Hitunglah \omterm{prop:b1:transient-regimes:decrement}{dekremen logaritmiknya}, simpulkan
+        $\xi$ secara eksak dari $\delta = 2\pi\xi/\sqrt{1 - \xi^2}$, lalu $Q$;
+        bandingkan dengan Bagian III.
+  \item Untuk mobil yang sehat tak ada maksimum kedua yang terlihat;
+        hanya lonjakan lebihnya, $3.8\%$, yang dapat dibaca. Balikkan
+        rumus lonjakan lebihnya untuk mencari $\xi$ dan $Q$.
+  \item Berapa bagian energi mekanik yang dilesapkan peredam yang aus
+        itu tiap pseudoperiode?
+  \item Seorang teknisi yang tak punya mobil membangun RLC Bagian I
+        dengan $R$ yang dipilih agar $Q = 2.3$: berapa $R$-nya, dan
+        mengapa jejak osiloskopnya, yang digambarkan terhadap
+        $\omega_0 t$, sama bentuknya dengan jejak mobilnya?
+  \item Ringkaslah: bilangan \omterm{def:b1:units-dimensions:dimension}{tak berdimensi} mana yang memutuskan bentuk
+        sebarang peralihan orde kedua, nilai berapa yang dituju perancang
+        suspensi, dan apa yang harus disimpulkan seorang pengemudi dari
+        ``lebih dari satu ayunan''.
+\end{enumerate}
+\end{problem}

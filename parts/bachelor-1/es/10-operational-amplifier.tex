@@ -1,0 +1,576 @@
+\chapter{El amplificador operacional}\label{ch:b1:operational-amplifier}
+
+Una galga extensométrica pegada a la viga de un puente cambia su
+resistencia en una milésima cuando pasa un camión; el \omterm{prop:b1:dc-circuits:wheatstone}{puente de Wheatstone}
+que la rodea (\cref{ch:b1:dc-circuits}) convierte eso en dos milivoltios.
+Dos milivoltios no accionan nada. Entre la galga y la alarma que cerrará el
+puente al tráfico hay un chip del tamaño de una uña, que cuesta unos
+céntimos y que multiplica la \omterm{def:b1:wave-propagation:signal}{señal} por mil, la filtra, la compara con un
+umbral y enciende una lámpara --- cuatro tareas, un componente, cuatro
+cableados distintos. Este capítulo presenta el \omterm{def:b1:operational-amplifier:opamp}{amplificador operacional} a
+través de su modelo ideal, deduce el puñado de circuitos con los que está
+construido cualquier instrumento y muestra qué ocurre cuando se suprime la
+realimentación.
+
+\section{El componente y su modelo ideal}
+
+\begin{definition}[Amplificador operacional]\label{def:b1:operational-amplifier:opamp}
+\index{amplificador operacional}\index{tensión de saturación}\index{ganancia en lazo abierto}
+Un \emph{amplificador operacional} es un circuito integrado con dos
+entradas --- la entrada \emph{no inversora} a potencial $V_+$ y la entrada
+\emph{inversora} a $V_-$ --- y una salida a potencial $V_s$, alimentado
+por dos fuentes $\pm V_{\mathrm{cc}}$ (típicamente $\pm\qty{15}{V}$) que
+suelen omitirse en los esquemas. Amplifica la diferencia
+$\epsilon = V_+ - V_-$:
+\[
+V_s = \mu\,\epsilon \quad\text{mientras } \abs{V_s} < V_{\mathrm{sat}},
+\]
+con una \emph{ganancia en lazo abierto} $\mu$ del orden de $10^5$ y una
+\emph{tensión de saturación} $V_{\mathrm{sat}}$ algo inferior a
+$V_{\mathrm{cc}}$. Cuando $\mu\abs\epsilon$ superaría $V_{\mathrm{sat}}$,
+la salida se queda pegada a $+V_{\mathrm{sat}}$ o a $-V_{\mathrm{sat}}$:
+es el régimen \emph{saturado}.
+\end{definition}
+
+\begin{definition}[Amplificador operacional ideal]\label{def:b1:operational-amplifier:ideal}
+\index{amplificador operacional ideal}\index{cortocircuito virtual}\index{régimen lineal}
+El modelo \emph{ideal} supone: (i) que no entra corriente por ninguna
+entrada, $i_+ = i_- = 0$ (\omterm{def:b1:sinusoidal-impedance:impedance}{impedancia} de entrada infinita); (ii) que la
+salida impone su tensión sea cual sea la corriente que se le pida
+(\omterm{def:b1:sinusoidal-impedance:impedance}{impedancia} de salida nula); (iii) ganancia infinita, $\mu \to \infty$. En
+el \emph{régimen lineal} ($\abs{V_s}
+< V_{\mathrm{sat}}$) la tercera hipótesis obliga a
+\[
+\epsilon = V_+ - V_- = 0 :
+\]
+las dos entradas están al mismo potencial (un ``cortocircuito virtual'')
+aunque entre ellas no circule corriente alguna.
+\end{definition}
+
+\begin{omfigure}
+\begin{tikzpicture}[font=\small]
+  \node[op amp] (oa) at (0,0) {};
+  \draw (oa.-) -- ++(-0.8,0) node[left] {$V_-$};
+  \draw (oa.+) -- ++(-0.8,0) node[left] {$V_+$};
+  \draw (oa.out) -- ++(0.6,0) node[right] {$V_s$};
+  \draw (oa.up) -- ++(0,0.3) node[above, font=\footnotesize] {$+V_{\mathrm{cc}}$};
+  \draw (oa.down) -- ++(0,-0.3) node[below, font=\footnotesize] {$-V_{\mathrm{cc}}$};
+  \begin{scope}[xshift=6.2cm]
+  \begin{axis}[omaxis, axis y line=left, width=6.4cm, height=4.6cm, xlabel={$\epsilon$}, ylabel={$V_s$},
+      xmin=-2.2, xmax=2.2, ymin=-1.5, ymax=1.5, xtick={-0.15,0.15}, xticklabels={,},
+      ytick={-1,1}, yticklabels={$-V_{\mathrm{sat}}$,$+V_{\mathrm{sat}}$}, anchor=origin, at={(0,0)}]
+    \addplot[omThm, thick, domain=-2.2:-0.15, samples=2] {-1};
+    \addplot[omThm, thick, domain=-0.15:0.15, samples=2] {x/0.15};
+    \addplot[omThm, thick, domain=0.15:2.2, samples=2] {1};
+    \node[omThm, font=\footnotesize] at (axis cs:1.3,0.6) {saturado};
+    \node[omThm, font=\footnotesize] at (axis cs:-1.2,-0.6) {saturado};
+    \node[omThm, font=\footnotesize, right] at (axis cs:0.2,-0.55) {lineal, pendiente $\mu$};
+  \end{axis}
+  \end{scope}
+\end{tikzpicture}
+
+{\small El \omterm{def:b1:operational-amplifier:opamp}{amplificador operacional}: el símbolo con sus dos entradas y su
+característica de transferencia $V_s(\epsilon)$ --- un tramo lineal muy
+inclinado, de pendiente $\mu \sim 10^5$ (dibujado con muy poca
+pendiente), y después la saturación en $\pm V_{\mathrm{sat}}$. En el
+modelo ideal el tramo lineal es vertical: $\epsilon = 0$.}
+\end{omfigure}
+
+\begin{proposition}[Realimentación negativa y régimen lineal]\label{prop:b1:operational-amplifier:feedback}
+\index{realimentación negativa}\index{realimentación positiva}
+Si la salida se reconduce a la entrada \emph{inversora} a través de una
+red (\omterm{prop:b1:operational-amplifier:feedback}{realimentación negativa}), el circuito tiene un \omterm{met:b1:dc-circuits:loadline}{punto de
+funcionamiento} lineal estable en $\epsilon = 0$ y valen las reglas del
+amplificador ideal. Si la salida se reconduce a la entrada no inversora
+(\omterm{prop:b1:operational-amplifier:feedback}{realimentación positiva}), o no se reconduce en absoluto, el amplificador
+satura: $V_s = \pm V_{\mathrm{sat}}$ según el signo de $\epsilon$.
+\end{proposition}
+
+\begin{proof}[Demostración parcial]
+Con \omterm{prop:b1:operational-amplifier:feedback}{realimentación negativa}, supóngase que $V_s$ sube un poco por encima
+de su valor de equilibrio; a través de la red de realimentación sube
+$V_-$, baja $\epsilon$ y el amplificador vuelve a bajar $V_s$: la
+perturbación queda corregida. Con \omterm{prop:b1:operational-amplifier:feedback}{realimentación positiva}, esa misma
+perturbación sube $V_+$, aumenta $\epsilon$ y aleja aún más a $V_s$ hasta
+que satura. El argumento completo (un modelo de primer orden del
+amplificador, $\mu(j\omega)
+= \mu_0/(1 + j\omega/\omega_0)$, y la estabilidad de la ecuación
+diferencial resultante) es materia del volumen del Año 2; lo que se usa es
+la regla anterior.
+\end{proof}
+
+\begin{remark}[Amplificadores reales]\label{rem:b1:operational-amplifier:real}
+\index{producto ganancia--ancho de banda}\index{velocidad de subida}\index{tensión de desviación de entrada}
+Tres desviaciones del ideal importan en la práctica. La \omterm{def:b1:operational-amplifier:opamp}{ganancia en lazo
+abierto} cae con la frecuencia como $\mu_0/(1 + jf/f_0)$ con
+$f_0 \sim \qty{10}{Hz}$: el producto $\mu_0 f_0 = f_T \sim \qty{1}{MHz}$
+(el \emph{\omterm{rem:b1:operational-amplifier:real}{producto ganancia--ancho de banda}}) es el \omterm{thm:b1:sinusoidal-impedance:resonance}{ancho de banda}
+disponible para un seguidor, y un circuito de ganancia en lazo cerrado
+$G$ tiene un \omterm{thm:b1:sinusoidal-impedance:resonance}{ancho de banda} $f_T/G$. La salida no puede cambiar más
+deprisa que la \emph{\omterm{rem:b1:operational-amplifier:real}{velocidad de subida}}, $\sim\qty{1}{V/\micro s}$.
+Y una pequeña \emph{\omterm{rem:b1:operational-amplifier:real}{tensión de desviación de
+entrada}} ($\sim\qty{1}{mV}$) se amplifica igual que una \omterm{def:b1:wave-propagation:signal}{señal} --- fatal
+para entradas de milivoltios si no se ajusta.
+\end{remark}
+
+\section{Los circuitos lineales básicos}
+
+\begin{method}[Analizar un circuito con operacional ideal en régimen lineal]\label{met:b1:operational-amplifier:method}
+\begin{enumerate}
+  \item Compruébese que la realimentación va a la entrada inversora.
+  \item Escríbase $i_+ = i_- = 0$: los nudos de entrada cumplen la \omterm{thm:b1:dc-circuits:kirchhoff}{ley de
+        los nudos} de Kirchhoff sin corriente hacia el amplificador (valen
+        los divisores y el \omterm{prop:b1:dc-circuits:millman}{teorema de Millman}).
+  \item Escríbase $V_+ = V_-$ y despéjese $V_s$.
+  \item Compruébese después que $\abs{V_s} < V_{\mathrm{sat}}$; si no, el
+        amplificador está saturado y el resultado es $\pm V_{\mathrm{sat}}$.
+\end{enumerate}
+\end{method}
+
+\begin{proposition}[Seguidor, amplificador no inversor e inversor]\label{prop:b1:operational-amplifier:basic}
+\index{seguidor de tensión}\index{amplificador no inversor}\index{amplificador inversor}\index{masa virtual}
+\begin{itemize}
+  \item \emph{Seguidor}: la salida cableada a $V_-$ y la entrada en $V_+$:
+        $V_s = V_e$; \omterm{def:b1:sinusoidal-impedance:impedance}{impedancia} de entrada infinita e \omterm{def:b1:sinusoidal-impedance:impedance}{impedancia} de salida
+        nula.
+  \item \emph{\omterm{prop:b1:operational-amplifier:basic}{Amplificador no inversor}}: la salida a $V_-$ a través de un
+        divisor $R_2$ (realimentación) y $R_1$ (a masa), entrada en $V_+$:
+        \[
+        V_s = \left(1 + \frac{R_2}{R_1}\right)V_e .
+        \]
+  \item \emph{\omterm{prop:b1:operational-amplifier:basic}{Amplificador inversor}}: $V_+$ a masa, entrada a través de
+        $R_1$ hacia $V_-$, realimentación $R_2$ de la salida a $V_-$:
+        \[
+        V_s = -\frac{R_2}{R_1}\,V_e ,
+        \]
+        con $V_-$ mantenido al potencial de masa (una \emph{\omterm{prop:b1:operational-amplifier:basic}{masa virtual}})
+        y una \omterm{def:b1:sinusoidal-impedance:impedance}{impedancia} de entrada $R_1$.
+\end{itemize}
+\end{proposition}
+
+\begin{proof}
+Seguidor: $V_- = V_s$ y $V_+ = V_e$; $\epsilon = 0$ da $V_s = V_e$. No
+inversor: no entra corriente por $V_-$, así que el divisor da $V_- =
+V_sR_1/(R_1 + R_2)$; iguálese a $V_+ = V_e$. Inversor: $V_- = V_+ = 0$;
+\omterm{thm:b1:dc-circuits:kirchhoff}{ley de los nudos} en $V_-$ con $i_- = 0$: $(V_e - 0)/R_1 + (V_s - 0)/R_2 = 0$.
+La fuente entrega $V_e/R_1$: \omterm{def:b1:sinusoidal-impedance:impedance}{impedancia} de entrada $R_1$.
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}[font=\small]
+  % follower (+ input up)
+  \node[op amp, noinv input up] (a) at (0,0) {};
+  \draw (a.+) -- ++(-0.6,0) node[left] {$V_e$};
+  \draw (a.out) -- ++(0.5,0) node[right] {$V_s$};
+  \draw (a.out) ++(0.25,0) -- ++(0,-1.3) -| ($(a.-)+(-0.4,0)$) -- (a.-);
+  \node[below, font=\footnotesize] at (0,-1.7) {seguidor: $V_s = V_e$};
+  % non-inverting (+ input up)
+  \begin{scope}[xshift=5.6cm]
+  \node[op amp, noinv input up] (b) at (0,0) {};
+  \draw (b.+) -- ++(-0.8,0) node[left] {$V_e$};
+  \draw (b.out) -- ++(0.6,0) node[right] {$V_s$};
+  \coordinate (j) at ($(b.-)+(-0.5,0)$);
+  \draw (b.-) -- (j);
+  \coordinate (f) at ($(j)+(0,-1.0)$);
+  \coordinate (o) at ($(b.out)+(0.3,0)$);
+  \draw (o) -- (o |- f) to[R=$R_2$] (f) -- (j);
+  \draw (f) to[R=$R_1$] ++(0,-1.6) node[ground]{};
+  \node[below, font=\footnotesize] at (0,-3.7) {no inversor: $V_s = (1 + R_2/R_1)V_e$};
+  \end{scope}
+  % inverting (- input up)
+  \begin{scope}[xshift=11.3cm]
+  \node[op amp] (c) at (0,0) {};
+  \draw (c.+) -- ++(-0.4,0) node[ground]{};
+  \coordinate (m) at ($(c.-)+(-0.5,0)$);
+  \draw (c.-) -- (m) to[R=$R_1$] ++(-1.5,0) node[left] {$V_e$};
+  \draw (c.out) -- ++(0.6,0) node[right] {$V_s$};
+  \coordinate (f2) at ($(m)+(0,1.3)$);
+  \coordinate (o2) at ($(c.out)+(0.3,0)$);
+  \draw (o2) -- (o2 |- f2) to[R=$R_2$] (f2) -- (m);
+  \node[below, font=\footnotesize] at (0,-1.7) {inversor: $V_s = -(R_2/R_1)V_e$};
+  \end{scope}
+\end{tikzpicture}
+
+{\small Los tres amplificadores básicos. En cada uno la salida alimenta la
+entrada inversora, el amplificador trabaja en su \omterm{def:b1:operational-amplifier:ideal}{régimen lineal} y la
+ganancia la fijan solo cocientes de resistencias --- no la $\mu$ enorme y
+mal definida del propio amplificador.}
+\end{omfigure}
+
+\begin{example}[Para qué un seguidor]\label{ex:b1:operational-amplifier:follower}
+Un sensor de resistencia de Thévenin \qty{10}{k\ohm} que alimenta una
+carga de \qty{1}{k\ohm} entrega solo $1/11$ de su tensión en circuito
+abierto (\cref{rem:b1:dc-circuits:loading}). Un seguidor entre ambos no
+toma corriente del sensor y ataca la carga desde una salida de \omterm{def:b1:sinusoidal-impedance:impedance}{impedancia}
+nula: llega la tensión entera. El seguidor es un \emph{adaptador de
+\omterm{def:b1:sinusoidal-impedance:impedance}{impedancias}} --- y hace exacta la regla de la cascada de
+\cref{prop:b1:filters-transfer-functions:cascade}.
+\end{example}
+
+\begin{proposition}[Amplificadores sumador y diferencia]\label{prop:b1:operational-amplifier:sumdiff}
+\index{amplificador sumador}\index{amplificador diferencia}
+Entradas $V_1, V_2$ a través de $R_1, R_2$ hacia el nudo inversor,
+realimentación $R_f$ y $V_+$ a masa:
+\[
+V_s = -R_f\left(\frac{V_1}{R_1} + \frac{V_2}{R_2}\right)
+\quad (\text{amplificador sumador}).
+\]
+Con $V_1$ a través de $R_1$ hacia $V_-$ (realimentación $R_2$) y $V_2$ a
+través de $R_1$ hacia $V_+$ (con $R_2$ de $V_+$ a masa):
+\[
+V_s = \frac{R_2}{R_1}\,(V_2 - V_1)
+\quad (\text{amplificador diferencia}).
+\]
+\end{proposition}
+
+\begin{proof}
+Sumador: \omterm{thm:b1:dc-circuits:kirchhoff}{ley de los nudos} en la \omterm{prop:b1:operational-amplifier:basic}{masa virtual}, $V_1/R_1 + V_2/R_2 + V_s/R_f =
+0$. Diferencia: $V_+ = V_2R_2/(R_1 + R_2)$ (divisor); \omterm{thm:b1:dc-circuits:kirchhoff}{ley de los nudos} en
+$V_-$: $(V_1 - V_-)/R_1 + (V_s - V_-)/R_2 = 0$, luego $V_s = V_-(1 + R_2/R_1) -
+V_1R_2/R_1$; hágase $V_- = V_+$ y simplifíquese.
+\end{proof}
+
+\section{Integrador y derivador}
+
+\begin{proposition}[Integrador]\label{prop:b1:operational-amplifier:integrator}
+\index{integrador (operacional)}
+Entrada a través de $R$ hacia $V_-$, un condensador $C$ como
+realimentación y $V_+$ a masa:
+\[
+V_s(t) = -\frac{1}{RC}\int_0^t V_e(t')\,\dd t' + V_s(0),
+\qquad
+\underline H = -\frac{1}{jRC\omega} .
+\]
+La ganancia cae \qty{20}{dB} por década a toda frecuencia y la fase vale
+$+90^\circ$: un integrador exacto --- hasta que la menor desviación o
+corriente de polarización, integrada indefinidamente, lleva la salida a la
+saturación.
+\end{proposition}
+
+\begin{proof}
+\omterm{prop:b1:operational-amplifier:basic}{Masa virtual}: la corriente $V_e/R$ va al condensador, cuya tensión (de
+$V_-$ a la salida) vale $-V_s$; por tanto $C\,\dd(-V_s)/\dd t
+= V_e/R$, y en notación compleja $\underline H = -1/(jRC\omega)$.
+\end{proof}
+
+\begin{remark}[Domar el integrador]\label{rem:b1:operational-amplifier:pseudo}
+\index{seudointegrador}
+Un \omterm{def:b1:dc-circuits:resistor}{resistor} $R'$ en paralelo con $C$ da
+\[
+\underline H = -\frac{R'/R}{1 + jR'C\omega},
+\]
+un paso bajo de primer orden de ganancia en continua $-R'/R$ y corte
+$1/R'C$, que integra para $\omega \gg 1/R'C$ pero no puede derivar hasta la saturación. De igual modo, el derivador (condensador a la entrada,
+\omterm{def:b1:dc-circuits:resistor}{resistor} como realimentación: $V_s = -RC\,\dd V_e/\dd t$, $\underline H =
+-jRC\omega$) amplifica sin límite el ruido de alta frecuencia salvo que un
+pequeño \omterm{def:b1:dc-circuits:resistor}{resistor} en serie limite su ganancia.
+\end{remark}
+
+\begin{omfigure}
+\begin{tikzpicture}[font=\small]
+  \node[op amp] (c) at (0,0) {};
+  \draw (c.+) -- ++(-0.4,0) node[ground]{};
+  \draw (c.-) -- ++(-0.3,0) coordinate (m1) to[R=$R$] ++(-1.8,0) node[left] {$V_e$};
+  \draw (c.out) -- ++(0.5,0) node[right] {$V_s$};
+  \draw (c.out) ++(0.25,0) |- ++(0,1.2) to[C=$C$] ++(-2.1,0) -| (m1);
+  \begin{scope}[xshift=7.3cm, yshift=-1.2cm]
+  \begin{axis}[omaxis, axis x line=bottom, axis y line=left, xlabel style={at={(axis description cs:0.5,-0.16)}, anchor=north},
+      width=6.4cm, height=4.2cm, xmode=log, xlabel={$\omega$ ($\log$)}, ylabel={$G_{\mathrm{dB}}$},
+      xmin=0.01, xmax=100, ymin=-45, ymax=48, ytick={40,20,0,-20,-40}, xtick={0.01,0.1,1,10,100},
+      xticklabels={$0.01$,$0.1$,$1$,$10$,$100$}, anchor=origin, at={(0,0)}]
+    \addplot[omDef, thick, domain=0.01:100, samples=2] {-20*log10(x)};
+    \addplot[omThm, thick, domain=0.01:100, samples=200] {20 - 10*log10(1 + (x/0.1)^2)};
+    \node[omDef, font=\footnotesize, rotate=-32] at (axis cs:8,-10) {integrador};
+    \node[omThm, font=\footnotesize, anchor=west] at (axis cs:0.012,29) {seudointegrador};
+  \end{axis}
+  \end{scope}
+\end{tikzpicture}
+
+{\small El integrador y su \omterm{def:b1:filters-transfer-functions:bode}{diagrama de Bode} (azul, \qty{-20}{dB} por década en
+todo el margen y ganancia infinita en continua); con un \omterm{def:b1:dc-circuits:resistor}{resistor} en
+paralelo con $C$ la ganancia queda limitada a baja frecuencia (rojo): un
+paso bajo que integra por encima de su corte.}
+\end{omfigure}
+
+\begin{example}[Triángulo a partir de cuadrada]\label{ex:b1:operational-amplifier:triangle}
+$R = \qty{10}{k\ohm}$, $C = \qty{100}{nF}$, $1/RC = \qty{1000}{s^{-1}}$.
+Una \omterm{def:b1:wave-propagation:signal}{señal} cuadrada de \qty{1}{kHz} y $\pm\qty{1}{V}$ da un triángulo de
+pendiente $\mp\qty{1000}{V/s}$ y \omterm{def:b1:wave-propagation:signal}{amplitud} $ET/4RC = \qty{0.25}{V}$ --- sin
+la atenuación en $1/\omega$ de un RC pasivo y con una salida de \omterm{def:b1:sinusoidal-impedance:impedance}{impedancia}
+nula para atacar la etapa siguiente.
+\end{example}
+
+\section{Filtros activos}
+
+\begin{proposition}[Paso bajo activo de primer orden]\label{prop:b1:operational-amplifier:activelp}
+\index{filtro activo}
+El \omterm{prop:b1:operational-amplifier:basic}{amplificador inversor} con un condensador $C$ en paralelo con su
+\omterm{def:b1:dc-circuits:resistor}{resistor} de realimentación $R_2$ tiene
+\[
+\underline H = -\frac{R_2/R_1}{1 + jR_2C\omega}:
+\]
+un paso bajo de ganancia en continua $-R_2/R_1$ (que puede superar $1$) y
+corte $\omega_c = 1/R_2C$, con \omterm{def:b1:sinusoidal-impedance:impedance}{impedancia} de salida nula --- las etapas se
+ponen en cascada multiplicando sin más.
+\end{proposition}
+
+\begin{proof}
+\omterm{prop:b1:operational-amplifier:basic}{Amplificador inversor} con la \omterm{def:b1:sinusoidal-impedance:impedance}{impedancia} de realimentación $R_2 \parallel 1/jC\omega
+= R_2/(1 + jR_2C\omega)$ en lugar de $R_2$.
+\end{proof}
+
+\section{Sin realimentación negativa: comparadores}
+
+\begin{proposition}[Comparador]\label{prop:b1:operational-amplifier:comparator}
+\index{comparador}
+Sin realimentación, el amplificador ideal está saturado:
+$V_s = +V_{\mathrm{sat}}$ si $V_+ > V_-$, y $-V_{\mathrm{sat}}$ si
+$V_+ < V_-$. Con una referencia $V_{\mathrm{ref}}$ en una entrada y una
+\omterm{def:b1:wave-propagation:signal}{señal} en la otra, la salida dice si la \omterm{def:b1:wave-propagation:signal}{señal} supera a la referencia ---
+un convertidor de un bit.
+\end{proposition}
+
+\begin{proof}
+$\mu\epsilon$ supera $V_{\mathrm{sat}}$ para cualquier $\abs\epsilon >
+V_{\mathrm{sat}}/\mu \sim \qty{0.1}{mV}$.
+\end{proof}
+
+\begin{proposition}[Disparador de Schmitt]\label{prop:b1:operational-amplifier:schmitt}
+\index{disparador de Schmitt}\index{histéresis}
+Devuélvase una fracción $\beta = R_1/(R_1 + R_2)$ de la salida hacia $V_+$
+(divisor $R_1$ a masa, $R_2$ desde la salida) y aplíquese la \omterm{def:b1:wave-propagation:signal}{señal} $V_e$ a
+$V_-$. La salida conmuta de $+V_{\mathrm{sat}}$ a $-V_{\mathrm{sat}}$
+cuando $V_e$ sube por encima de $+\beta V_{\mathrm{sat}}$, y vuelve cuando
+$V_e$ baja de $-\beta V_{\mathrm{sat}}$: dos umbrales, una
+\emph{histéresis} de anchura $2\beta V_{\mathrm{sat}}$, inmune al ruido
+menor que esa anchura.
+\end{proposition}
+
+\begin{proof}
+\omterm{prop:b1:operational-amplifier:feedback}{Realimentación positiva}: saturado. Si $V_s = +V_{\mathrm{sat}}$ entonces $V_+ =
+\beta V_{\mathrm{sat}}$, y $\epsilon = \beta V_{\mathrm{sat}} - V_e$ se
+mantiene positivo hasta que $V_e$ supera $\beta V_{\mathrm{sat}}$;
+entonces la salida bascula, $V_+$ baja a $-\beta V_{\mathrm{sat}}$ y el
+nuevo estado se mantiene hasta que $V_e$ baja por debajo de ese valor.
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}[font=\small]
+  \node[op amp] (s) at (0,0) {};
+  \draw (s.-) -- ++(-0.8,0) node[left] {$V_e$};
+  \draw (s.out) -- ++(0.6,0) node[right] {$V_s$};
+  \coordinate (j) at ($(s.+)+(-0.6,0)$);
+  \coordinate (f) at ($(j)+(0,-1.0)$);
+  \coordinate (o) at ($(s.out)+(0.3,0)$);
+  \draw (s.+) -- (j);
+  \draw (o) -- (o |- f) to[R=$R_2$] (f) -- (j);
+  \draw (f) to[R=$R_1$] ++(0,-1.6) node[ground]{};
+  \begin{scope}[xshift=7.8cm, yshift=-0.9cm]
+  \begin{axis}[omaxis, axis x line=bottom, axis y line=left, width=6.4cm, height=4.6cm, xlabel={$V_e$}, ylabel={$V_s$},
+      xlabel style={at={(axis description cs:0.5,-0.12)}, anchor=north},
+      xmin=-2.2, xmax=2.2, ymin=-1.5, ymax=1.5, xtick={-1,1}, xticklabels={$-\beta V_{\mathrm{sat}}$,$\beta V_{\mathrm{sat}}$},
+      ytick={-1,1}, yticklabels={$-V_{\mathrm{sat}}$,$+V_{\mathrm{sat}}$}, anchor=origin, at={(0,0)}]
+    \draw[omThm, thick, -Stealth] (axis cs:-2.2,1) -- (axis cs:0.2,1);
+    \draw[omThm, thick] (axis cs:0.2,1) -- (axis cs:1,1) -- (axis cs:1,-1);
+    \draw[omThm, thick, -Stealth] (axis cs:2.2,-1) -- (axis cs:-0.2,-1);
+    \draw[omThm, thick] (axis cs:-0.2,-1) -- (axis cs:-1,-1) -- (axis cs:-1,1);
+  \end{axis}
+  \end{scope}
+\end{tikzpicture}
+
+{\small El \omterm{prop:b1:operational-amplifier:schmitt}{disparador de Schmitt}: la \omterm{prop:b1:operational-amplifier:feedback}{realimentación positiva} por $R_1$ y
+$R_2$ da dos umbrales $\pm\beta V_{\mathrm{sat}}$. La salida bascula de
+alto a bajo cuando $V_e$ sube por encima del umbral superior, y de bajo a
+alto cuando baja del inferior (flechas): un ciclo de histéresis.}
+\end{omfigure}
+
+\begin{example}[El oscilador de relajación]\label{ex:b1:operational-amplifier:astable}
+\index{oscilador de relajación}
+Conéctese la salida del \omterm{prop:b1:operational-amplifier:schmitt}{disparador de Schmitt} a su propia entrada
+inversora a través de $R$, con $C$ de $V_-$ a masa. El condensador se
+carga hacia $\pm V_{\mathrm{sat}}$ y hace bascular el disparador cada vez
+que alcanza $\pm\beta V_{\mathrm{sat}}$: la salida es una \omterm{def:b1:wave-propagation:signal}{señal} cuadrada,
+la tensión del condensador una cadena de arcos exponenciales, y el
+periodo vale
+\[
+T = 2RC\ln\frac{1 + \beta}{1 - \beta}
+\]
+(\cref{exo:b1:operational-amplifier:12}): $2.2\,RC$ para $\beta = \tfrac12$.
+Sin entrada, con un condensador, un reloj --- un sistema que oscila porque
+no puede estabilizarse, tema que vuelve con los osciladores realimentados
+del volumen del Año 2.
+\end{example}
+
+\section{Ejercicios}
+
+\begin{exercise}[$\star$]\label{exo:b1:operational-amplifier:1}
+Un \omterm{prop:b1:operational-amplifier:basic}{amplificador no inversor} tiene $R_1 = \qty{1.0}{k\ohm}$, $R_2 =
+\qty{9.0}{k\ohm}$ y $V_{\mathrm{sat}} = \qty{15}{V}$. ¿Ganancia? ¿Salida
+para $V_e = \qty{0.50}{V}$? ¿Mayor entrada antes de saturar?
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b1:operational-amplifier:2}
+Un \omterm{prop:b1:operational-amplifier:basic}{amplificador inversor} tiene $R_1 = \qty{10}{k\ohm}$, $R_2 = \qty{100}{k\ohm}$.
+Ganancia, \omterm{def:b1:sinusoidal-impedance:impedance}{impedancia} de entrada, corriente que toma de una fuente de \qty{1.0}{V} y salida.
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b1:operational-amplifier:3}
+Un sensor de \omterm{def:b1:dc-circuits:sources}{resistencia interna} \qty{10}{k\ohm} y tensión en circuito
+abierto \qty{1.0}{V} debe atacar una carga de \qty{1.0}{k\ohm}. ¿Tensión
+en la carga sin seguidor y con un seguidor intercalado?
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b1:operational-amplifier:4}
+Un \omterm{prop:b1:operational-amplifier:sumdiff}{amplificador sumador} tiene $R_f = \qty{10}{k\ohm}$ y entradas a través
+de \qty{10}{k\ohm} y \qty{20}{k\ohm}. Escríbase $V_s$ y calcúlese para
+$V_1 = \qty{1.0}{V}$ y $V_2 = \qty{2.0}{V}$.
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b1:operational-amplifier:5}
+Dedúzcase el $V_s = (R_2/R_1)(V_2 - V_1)$ del \omterm{prop:b1:operational-amplifier:sumdiff}{amplificador diferencia}. Con
+$R_1 = \qty{10}{k\ohm}$, $R_2 = \qty{100}{k\ohm}$, $V_1 = \qty{1.00}{V}$ y
+$V_2 = \qty{1.05}{V}$: ¿salida? ¿Qué ha pasado con el \qty{1}{V} común a
+las dos entradas?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b1:operational-amplifier:6}
+Integrador con $R = \qty{10}{k\ohm}$, $C = \qty{100}{nF}$ y salida
+inicialmente nula. Se aplica un escalón de \qty{1.0}{V}: pendiente de la
+salida y tiempo hasta saturar (\qty{15}{V}). Con una \omterm{def:b1:wave-propagation:signal}{señal} cuadrada de
+\qty{1.0}{kHz} y $\pm\qty{1.0}{V}$: forma y \omterm{def:b1:wave-propagation:signal}{amplitud} de la salida.
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b1:operational-amplifier:7}
+Se añade un \omterm{def:b1:dc-circuits:resistor}{resistor} de \qty{1.0}{M\ohm} en paralelo con el condensador
+del integrador anterior. Dense la \omterm{def:b1:filters-transfer-functions:H}{función de transferencia}, la ganancia en
+continua, la \omterm{def:b1:filters-transfer-functions:bode}{frecuencia de corte} y la ganancia a \qty{1.0}{kHz}; ¿en qué
+margen sigue integrando el circuito?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b1:operational-amplifier:8}
+Diséñese un paso bajo activo inversor con una ganancia de \qty{20}{dB} en
+la \omterm{def:b1:filters-transfer-functions:bode}{banda pasante} y corte en \qty{500}{Hz}, usando $R_1 = \qty{1.0}{k\ohm}$.
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b1:operational-amplifier:9}
+Un amplificador real tiene $\mu_0 = 10^5$ y $f_T = \qty{1.0}{MHz}$. Para
+un \omterm{prop:b1:operational-amplifier:basic}{amplificador no inversor} diseñado con ganancia $100$: ganancia real en
+continua (manténgase $\mu_0$ finita en el análisis) y \omterm{thm:b1:sinusoidal-impedance:resonance}{ancho de banda}.
+¿\omterm{thm:b1:sinusoidal-impedance:resonance}{Ancho de banda} de un seguidor?
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b1:operational-amplifier:10}
+Un comparador con $V_{\mathrm{ref}} = \qty{2.0}{V}$ en $V_-$ vigila una
+\omterm{def:b1:wave-propagation:signal}{señal} que sube despacio y lleva \qty{50}{mV} de ruido. Descríbase la
+salida cuando la \omterm{def:b1:wave-propagation:signal}{señal} cruza \qty{2.0}{V}. ¿Remedio?
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b1:operational-amplifier:11}
+\omterm{prop:b1:operational-amplifier:schmitt}{Disparador de Schmitt} con $R_1 = \qty{1.0}{k\ohm}$, $R_2 = \qty{9.0}{k\ohm}$
+y $V_{\mathrm{sat}} = \qty{15}{V}$: dedúzcanse y calcúlense los dos
+umbrales. Esbócese $V_s$ para un $V_e$ triangular de \omterm{def:b1:wave-propagation:signal}{amplitud} \qty{3}{V}.
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b1:operational-amplifier:12}
+\omterm{ex:b1:operational-amplifier:astable}{Oscilador de relajación} con $R_1 = R_2$ ($\beta = \tfrac12$). Dedúzcase el
+periodo $T = 2RC\ln\frac{1 + \beta}{1 - \beta}$ a partir de la carga de
+$C$ a través de $R$ entre los dos umbrales; elíjase $R$ para
+\qty{1.0}{kHz} con $C = \qty{100}{nF}$; esbócense $V_s(t)$ y $V_C(t)$.
+\end{exercise}
+
+\section{Problema: una cadena de instrumentación para una galga extensométrica}
+
+\begin{problem}[{Problema de fin de semana --- de dos milivoltios en la
+viga de un puente a una lámpara roja: seguidores, un amplificador
+diferencia, un filtro activo y un disparador de Schmitt, y las dos
+imperfecciones que deciden si la cadena funciona}]
+\label{pb:b1:operational-amplifier:1}
+Una galga extensométrica de resistencia $R(1 + \epsilon)$, con
+$R = \qty{1.00}{k\ohm}$ y $0 \leq \epsilon \leq \num{2.0e-3}$, forma un
+\omterm{prop:b1:dc-circuits:wheatstone}{puente de Wheatstone} con otros tres \omterm{def:b1:dc-circuits:resistor}{resistores} fijos de \qty{1.00}{k\ohm},
+alimentado por $E = \qty{5.00}{V}$. La salida del puente $u = V_B - V_A$
+(entre los dos puntos intermedios) vale $u \approx E\epsilon/4$ (el signo
+se elige con el cableado). Amplificadores: ideales salvo indicación en
+contra; $V_{\mathrm{sat}} = \qty{15}{V}$; donde haga falta,
+$f_T = \qty{1.0}{MHz}$, \omterm{rem:b1:operational-amplifier:real}{velocidad de subida} \qty{0.5}{V/\micro s} y
+desviación de entrada \qty{1}{mV}.
+
+\medskip
+\noindent\textbf{Parte I --- El puente y su carga.}
+\begin{enumerate}
+  \item Recuérdese por qué $u \approx E\epsilon/4$ para $\epsilon$ pequeño.
+  \item Calcúlese $u$ a fondo de escala ($\epsilon = \num{2.0e-3}$).
+  \item Dese el potencial de cada punto intermedio (respecto del borne
+        negativo del puente) sin deformación y a fondo de escala. ¿Cómo se
+        llama su valor común?
+  \item Cada punto intermedio es la salida de un divisor de dos
+        \omterm{def:b1:dc-circuits:resistor}{resistores} de \qty{1}{k\ohm}: ¿cuál es la resistencia de Thévenin
+        vista entre los dos puntos intermedios?
+  \item Se conecta a la salida del puente un amplificador cuya resistencia
+        de entrada vale \qty{10}{k\ohm}: ¿qué fracción de $u$ recibe?
+  \item ¿Por qué lo cura un seguidor en cada punto intermedio? Dígase qué
+        dos propiedades se usan.
+  \item ¿Cuáles son las tensiones de salida de los seguidores (en función
+        de $V_A$ y $V_B$) y qué corriente toman del puente?
+\end{enumerate}
+
+\medskip
+\noindent\textbf{Parte II --- Amplificar la diferencia.}
+\begin{enumerate}[resume]
+  \item Los seguidores alimentan un \omterm{prop:b1:operational-amplifier:sumdiff}{amplificador diferencia} ($R_1$ en las
+        dos entradas, $R_2$ como realimentación y a masa). Dedúzcase $V_s =
+        (R_2/R_1)(V_B - V_A)$.
+  \item Elíjanse $R_1 = \qty{10}{k\ohm}$ y $R_2$ para una ganancia de $100$.
+  \item Una segunda etapa, no inversora, multiplica por $10$: dense sus
+        \omterm{def:b1:dc-circuits:resistor}{resistores}, la ganancia total y la salida a fondo de escala.
+  \item Los dos puntos intermedios están cerca de $E/2 = \qty{2.5}{V}$ (la
+        tensión de modo común). ¿Qué hace con ella un \omterm{prop:b1:operational-amplifier:sumdiff}{amplificador
+        diferencia} exactamente equilibrado? Si un cociente de resistencias
+        se desvía un $1\%$, estímese la tensión espuria referida a la
+        entrada y compárese con la \omterm{def:b1:wave-propagation:signal}{señal}.
+  \item El primer amplificador tiene una desviación de entrada de
+        \qty{1}{mV}. ¿Qué error de salida produce tras la ganancia total?
+        Conclúyase.
+  \item Con $f_T = \qty{1}{MHz}$, ¿cuál es el \omterm{thm:b1:sinusoidal-impedance:resonance}{ancho de banda} de cada
+        etapa? ¿Basta para una \omterm{def:b1:wave-propagation:signal}{señal} por debajo de \qty{5}{Hz}?
+  \item La salida debe recorrer \qty{2.5}{V} cuando llega un camión en
+        unos \qty{10}{ms}: ¿limita la \omterm{rem:b1:operational-amplifier:real}{velocidad de subida}?
+\end{enumerate}
+
+\medskip
+\noindent\textbf{Parte III --- El filtrado.}
+La \omterm{def:b1:wave-propagation:signal}{señal} amplificada arrastra un zumbido de \qty{50}{Hz} captado de la red
+eléctrica.
+\begin{enumerate}[resume]
+  \item Diséñese un paso bajo activo inversor de ganancia $-1$ y corte
+        \qty{10}{Hz}, con $R_1 = R_2 = \qty{16}{k\ohm}$: hállese $C$.
+  \item Calcúlese su atenuación a \qty{50}{Hz} en \omterm{def:b1:filters-transfer-functions:bode}{decibelios}.
+  \item Calcúlense el desfase a \qty{5}{Hz} y el retraso correspondiente.
+        ¿Es aceptable para una alarma?
+  \item ¿Por qué es aquí preferible un \omterm{prop:b1:operational-amplifier:activelp}{filtro activo} a un RC pasivo (dos
+        razones)?
+  \item Se pone en cascada una segunda etapa idéntica: ¿atenuación a
+        \qty{50}{Hz}? ¿Por qué es exacta aquí la regla del producto?
+\end{enumerate}
+
+\medskip
+\noindent\textbf{Parte IV --- Umbral y alarma.}
+La alarma debe dispararse cuando la deformación supera \num{1.6e-3}.
+\begin{enumerate}[resume]
+  \item ¿A qué tensión de salida de la cadena corresponde eso? Con un
+        comparador con esa referencia: estados de salida.
+  \item La \omterm{def:b1:wave-propagation:signal}{señal} filtrada aún lleva \qty{50}{mV} de ruido cerca del
+        umbral. ¿Qué hace el comparador simple?
+  \item Un \omterm{prop:b1:operational-amplifier:schmitt}{disparador de Schmitt} con la referencia en una entrada y
+        realimentación $\beta$: muéstrese que los umbrales son
+        $V_{\mathrm{ref}} \pm
+        \beta V_{\mathrm{sat}}$; elíjase $\beta$ para $\pm\qty{0.10}{V}$
+        y dense $R_1$ y $R_2$.
+  \item Dense los dos umbrales en voltios y en deformación.
+  \item La salida ataca un LED (\qty{2.0}{V}, \qty{13}{mA}) a través de un
+        \omterm{def:b1:dc-circuits:resistor}{resistor}: calcúlese. ¿Qué protege al LED cuando la salida está en
+        $-V_{\mathrm{sat}}$?
+  \item Resúmase la cadena, etapa por etapa, y nómbrense las dos
+        imperfecciones que fijan sus límites reales.
+\end{enumerate}
+\end{problem}

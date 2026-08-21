@@ -1,0 +1,517 @@
+\chapter{Régimen sinusoidal permanente e impedancia}\label{ch:b1:sinusoidal-impedance}
+
+Se gira el dial de una radio antigua y, de las cien emisoras que llegan a
+la vez a la antena, se oye una: una bobina y un condensador variable se
+han ajustado para que resuenen exactamente a una frecuencia. La red
+eléctrica que zumba en cada pared es una sinusoide de \qty{50}{Hz}; la
+fábrica que mueve con ella motores grandes paga un recargo si su corriente
+se retrasa demasiado respecto de la tensión. Las sinusoides son el idioma
+natural de los \omterm{def:b1:dc-circuits:linear}{circuitos lineales} --- salen tal como entran, solo
+escaladas y desplazadas --- y este capítulo les da su álgebra: \omterm{def:b1:sinusoidal-impedance:complex}{amplitudes
+complejas}, \omterm{def:b1:sinusoidal-impedance:impedance}{impedancias}, la resonancia del \omterm{prop:b1:transient-regimes:rlc}{circuito RLC} y la potencia que
+entregan realmente las corrientes sinusoidales.
+
+\begin{omfigure}
+\includegraphics[width=0.60\linewidth]{images/book3/oscilloscope-sine-square.jpg}
+
+{\small Un osciloscopio que muestra una sinusoide y una \omterm{def:b1:wave-propagation:signal}{señal} cuadrada: la sinusoide es la \omterm{def:b1:wave-propagation:signal}{señal} de la que vive este capítulo, y la cuadrada la que el capítulo siguiente descompone en sinusoides.}
+\end{omfigure}
+
+\section{El régimen sinusoidal permanente}
+
+\begin{proposition}[Régimen sinusoidal forzado]\label{prop:b1:sinusoidal-impedance:forced}
+\index{régimen sinusoidal permanente}\index{régimen forzado}
+En un \omterm{def:b1:dc-circuits:linear}{circuito lineal} excitado por una fuente sinusoidal de \omterm{def:b1:wave-propagation:signal}{frecuencia
+angular} $\omega$, toda corriente y toda tensión son, una vez extinguidos
+los transitorios, sinusoides de la misma \omterm{def:b1:wave-propagation:signal}{frecuencia angular} $\omega$, cada
+una con su propia \omterm{def:b1:wave-propagation:signal}{amplitud} y su propia fase:
+$x(t) = X\cos(\omega t + \varphi)$.
+\end{proposition}
+
+\begin{proof}
+Las ecuaciones del circuito son ecuaciones diferenciales lineales con
+coeficientes constantes; su solución general es una solución particular
+más las soluciones de la ecuación homogénea, que son los transitorios de
+\cref{ch:b1:transient-regimes} y decaen (todo circuito real tiene algo de
+resistencia). Existe una solución particular sinusoidal porque derivar
+una sinusoide de frecuencia $\omega$ da una sinusoide de la misma
+frecuencia: las ecuaciones pueden satisfacerse término a término --- el
+método complejo de más abajo la construye explícitamente.
+\end{proof}
+
+\begin{definition}[Amplitud compleja]\label{def:b1:sinusoidal-impedance:complex}
+\index{amplitud compleja}\index{fasor}
+A la sinusoide $x(t) = X\cos(\omega t + \varphi)$ se le asocia la \omterm{def:b1:wave-propagation:signal}{señal}
+compleja $\underline{x}(t) = X\eu^{j(\omega t + \varphi)}$, de modo que
+$x = \Rea(\underline{x})$, y la \emph{\omterm{def:b1:wave-propagation:signal}{amplitud} compleja}
+\[
+\underline{X} = X\eu^{j\varphi}, \qquad \underline{x}(t) = \underline{X}\,\eu^{j\omega t},
+\]
+que lleva la \omterm{def:b1:wave-propagation:signal}{amplitud} $X = \abs{\underline{X}}$ y la fase
+$\varphi = \arg\underline{X}$. Aquí $j$ designa la unidad imaginaria,
+$j^2 = -1$, ya que la letra $i$ queda reservada para las corrientes.
+Dibujada como un vector de longitud $X$ y ángulo $\varphi$,
+$\underline{X}$ es un \emph{fasor} (vector de Fresnel).
+\end{definition}
+
+\begin{proposition}[Reglas del método complejo]\label{prop:b1:sinusoidal-impedance:rules}
+\begin{enumerate}
+  \item Las operaciones lineales conmutan con la toma de parte real: la
+        \omterm{def:b1:sinusoidal-impedance:complex}{amplitud compleja} de una suma es la suma de las \omterm{def:b1:sinusoidal-impedance:complex}{amplitudes
+        complejas}.
+  \item Derivar respecto del tiempo multiplica la \omterm{def:b1:sinusoidal-impedance:complex}{amplitud compleja} por
+        $j\omega$; integrar la divide por $j\omega$.
+  \item Las \omterm{thm:b1:dc-circuits:kirchhoff}{leyes de Kirchhoff}, por ser lineales, valen para las
+        \omterm{def:b1:sinusoidal-impedance:complex}{amplitudes complejas}.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+$\Rea(\underline a + \underline b) = \Rea\underline a + \Rea\underline b$;
+$\dd(\underline X\eu^{j\omega t})/\dd t = j\omega\underline X\eu^{j\omega t}$,
+y $\dd x/\dd t = \Rea(\dd\underline x/\dd t)$ porque la derivación es
+lineal sobre los reales. Las sumas de corrientes en un nudo y de
+tensiones en una malla son lineales.
+\end{proof}
+
+\begin{example}[Sumar dos sinusoides]\label{ex:b1:sinusoidal-impedance:add}
+$3\cos\omega t + 4\sin\omega t$: las \omterm{def:b1:sinusoidal-impedance:complex}{amplitudes complejas} son $3$ y
+$4\eu^{-j\pi/2} = -4j$ (pues $\sin\omega t = \cos(\omega t - \pi/2)$); su
+suma $3 - 4j$ tiene módulo $5$ y argumento $-0.927\ \unit{rad}$:
+$5\cos(\omega t - 0.927)$. Sin ninguna identidad trigonométrica.
+\end{example}
+
+\section{Impedancia}
+
+\begin{definition}[Impedancia, admitancia]\label{def:b1:sinusoidal-impedance:impedance}
+\index{impedancia}\index{admitancia}\index{reactancia}
+Para un \omterm{def:b1:dc-circuits:linear}{dipolo lineal} en \omterm{prop:b1:sinusoidal-impedance:forced}{régimen sinusoidal permanente} (\omterm{thm:b1:dc-circuits:kirchhoff}{convenio
+receptor}), la \emph{impedancia} es el cociente de \omterm{def:b1:sinusoidal-impedance:complex}{amplitudes complejas}
+\[
+\underline Z = \frac{\underline U}{\underline I} = Z\eu^{j\varphi}
+\quad (\text{ohmios}),
+\]
+cuyo módulo $Z = U/I$ relaciona las \omterm{def:b1:wave-propagation:signal}{amplitudes} y cuyo argumento
+$\varphi = \varphi_u - \varphi_i$ es el adelanto de fase de la tensión
+sobre la corriente. Su inversa $\underline Y = 1/\underline Z$ es la
+\emph{admitancia} (siemens). La parte real de $\underline Z$ es su
+resistencia, y la parte imaginaria su \emph{reactancia}.
+\end{definition}
+
+\begin{proposition}[Impedancias de R, L y C]\label{prop:b1:sinusoidal-impedance:rlc}
+\[
+\underline Z_R = R, \qquad \underline Z_L = jL\omega, \qquad
+\underline Z_C = \frac{1}{jC\omega} = -\frac{j}{C\omega} .
+\]
+Un \omterm{def:b1:dc-circuits:resistor}{resistor} mantiene en fase la tensión y la corriente; en una bobina la
+tensión se adelanta $\pi/2$ a la corriente, y en un condensador se
+retrasa $\pi/2$. A baja frecuencia una bobina tiende a un hilo y un
+condensador a un circuito abierto; a alta frecuencia, al revés.
+\end{proposition}
+
+\begin{proof}
+$u = Ri$; $u = L\,\dd i/\dd t \to \underline U = jL\omega\,\underline I$;
+$i = C\,\dd u/\dd t \to \underline I = jC\omega\,\underline U$. Los
+argumentos de $1$, $j$ y $-j$ son $0$, $\pi/2$ y $-\pi/2$.
+\end{proof}
+
+\begin{proposition}[Asociación; divisores; teoremas]\label{prop:b1:sinusoidal-impedance:assoc}
+Las \omterm{def:b1:sinusoidal-impedance:impedance}{impedancias} en serie se suman; las \omterm{def:b1:sinusoidal-impedance:impedance}{admitancias} en paralelo se suman;
+los \omterm{prop:b1:dc-circuits:dividers}{divisores de tensión} y de corriente, los teoremas de Thévenin y de
+Norton, la superposición y el \omterm{prop:b1:dc-circuits:millman}{teorema de Millman} de
+\cref{ch:b1:dc-circuits} valen todos con \omterm{def:b1:sinusoidal-impedance:complex}{amplitudes complejas} e
+\omterm{def:b1:sinusoidal-impedance:impedance}{impedancias} en lugar de tensiones, corrientes y resistencias reales.
+\end{proposition}
+
+\begin{proof}
+Todas las demostraciones de \cref{ch:b1:dc-circuits} usaron solo las \omterm{thm:b1:dc-circuits:kirchhoff}{leyes
+de Kirchhoff} y la linealidad de $u = Ri$, válidas ambas en forma compleja.
+\end{proof}
+
+\begin{example}[El divisor RC]\label{ex:b1:sinusoidal-impedance:rcdivider}
+Un \omterm{def:b1:dc-circuits:resistor}{resistor} $R$ y un condensador $C$ en serie sometidos a $\underline E$,
+con la salida tomada en bornes de $C$: $\underline U_C = \underline E\,\dfrac{1/jC\omega}
+{R + 1/jC\omega} = \dfrac{\underline E}{1 + jRC\omega}$. \omterm{def:b1:wave-propagation:signal}{Amplitud}
+$E/\sqrt{1 + (RC\omega)^2}$, fase $-\arctan(RC\omega)$: transmisión
+completa a baja frecuencia, $1/\sqrt2$ y $-45^\circ$ en
+$\omega = 1/RC$, y una caída como $1/\omega$ más allá --- un filtro de
+paso bajo, objeto de \cref{ch:b1:filters-transfer-functions}.
+\end{example}
+
+\section{El circuito RLC serie: resonancia}
+
+\begin{theorem}[Resonancia de corriente]\label{thm:b1:sinusoidal-impedance:resonance}
+\index{resonancia}\index{resonancia!de corriente}\index{ancho de banda}
+Un \omterm{def:b1:dc-circuits:resistor}{resistor} $R$, una bobina $L$ y un condensador $C$ en serie sometidos a
+$e(t) = E\cos\omega t$ llevan la corriente de \omterm{def:b1:sinusoidal-impedance:complex}{amplitud compleja}
+\[
+\underline I = \frac{E}{R + j\left(L\omega - \dfrac{1}{C\omega}\right)},
+\qquad
+I = \frac{E}{\sqrt{R^2 + \left(L\omega - \dfrac{1}{C\omega}\right)^2}},
+\qquad
+\varphi_i = -\arctan\frac{L\omega - 1/C\omega}{R} .
+\]
+La \omterm{def:b1:wave-propagation:signal}{amplitud} es máxima, $I_{\max} = E/R$, con la corriente y la tensión en
+fase, en la \emph{resonancia} $\omega_0 = 1/\sqrt{LC}$. Con
+$Q = L\omega_0/R = 1/(RC\omega_0)$ y $x = \omega/\omega_0$,
+\[
+\frac{I}{I_{\max}} = \frac{1}{\sqrt{1 + Q^2\left(x - \dfrac1x\right)^2}} ,
+\]
+y el \emph{\omterm{thm:b1:sinusoidal-impedance:resonance}{ancho de banda}} --- el intervalo de $\omega$ en el que
+$I \geq I_{\max}/\sqrt2$ --- vale
+\[
+\Delta\omega = \omega_2 - \omega_1 = \frac{\omega_0}{Q} = \frac{R}{L} .
+\]
+\end{theorem}
+
+\begin{proof}
+Las \omterm{def:b1:sinusoidal-impedance:impedance}{impedancias} en serie se suman: $\underline Z = R + jL\omega + 1/jC\omega$, y
+$\underline I = \underline E/\underline Z$. El módulo es máximo cuando se
+anula la \omterm{def:b1:sinusoidal-impedance:impedance}{reactancia} $L\omega - 1/C\omega$, es decir en $\omega_0$.
+Factorícese $L\omega - 1/C\omega = L\omega_0(x - 1/x)$ y divídase por $R$:
+$L\omega_0/R = Q$. En los bordes de la banda, $Q(x - 1/x) = \pm 1$, es decir
+$x^2 \mp x/Q - 1 = 0$, cuyas raíces positivas son $x_{1,2} = \mp\frac{1}{2Q}
++ \sqrt{1 + \frac{1}{4Q^2}}$; su diferencia vale $1/Q$.
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}
+\begin{axis}[omaxis, width=7.6cm, height=5.4cm, xlabel={$\omega/\omega_0$}, ylabel={$I/I_{\max}$},
+    xmin=0, xmax=2.1, ymin=0, ymax=1.45, xtick={0.5,1,1.5,2}, ytick={0.5,0.707,1},
+    yticklabels={$0.5$,$\frac{1}{\sqrt2}$,$1$},
+    legend style={at={(0.97,0.97)}, anchor=north east, font=\footnotesize, draw=none, fill=none}]
+  \addplot[omProp, thick, domain=0.05:2.1, samples=300] {1/sqrt(1 + (1*(x - 1/x))^2)};
+  \addlegendentry{$Q = 1$}
+  \addplot[omDef, thick, domain=0.05:2.1, samples=300] {1/sqrt(1 + (3*(x - 1/x))^2)};
+  \addlegendentry{$Q = 3$}
+  \addplot[omThm, thick, domain=0.05:2.1, samples=500] {1/sqrt(1 + (10*(x - 1/x))^2)};
+  \addlegendentry{$Q = 10$}
+  \draw[dashed, omExo] (axis cs:0,0.707) -- (axis cs:2.1,0.707);
+\end{axis}
+\end{tikzpicture}\qquad
+\begin{tikzpicture}
+\begin{axis}[omaxis, width=7.0cm, height=5.4cm, xlabel={$\omega/\omega_0$}, ylabel={$\varphi_i$},
+    xmin=0, xmax=2.1, ymin=-1.8, ymax=1.8, xtick={0.5,1,1.5,2}, ytick={-1.5708,0,1.5708},
+    yticklabels={$-\frac{\pi}{2}$,$0$,$\frac{\pi}{2}$}]
+  \addplot[omProp, thick, domain=0.05:2.1, samples=300] {-rad(atan(1*(x - 1/x)))};
+  \addplot[omDef, thick, domain=0.05:2.1, samples=300] {-rad(atan(3*(x - 1/x)))};
+  \addplot[omThm, thick, domain=0.05:2.1, samples=500] {-rad(atan(10*(x - 1/x)))};
+\end{axis}
+\end{tikzpicture}
+
+{\small RLC serie: \omterm{def:b1:wave-propagation:signal}{amplitud} de la corriente (izquierda) y su fase respecto
+de la fuente (derecha) frente a $\omega/\omega_0$, para
+$Q = 1, 3, 10$. El pico se estrecha al crecer $Q$ ($\Delta\omega =
+\omega_0/Q$); por debajo de la resonancia el circuito es capacitivo (la
+corriente se adelanta) y por encima, inductivo (se retrasa).}
+\end{omfigure}
+
+\begin{omfigure}
+\begin{tikzpicture}[font=\small, x=1cm, y=1cm, >=Stealth]
+  % phasors for RLC at omega above resonance: UR along I, UL +90, UC -90
+  \draw[->, thick, omExo] (0,0) -- (2.6,0) node[right] {$\underline I$};
+  \draw[->, very thick, omProp] (0,0) -- (1.6,0) node[midway, below] {$\underline U_R = R\underline I$};
+  \draw[->, very thick, omDef] (1.6,0) -- (1.6,2.4) node[left, pos=0.8] {$\underline U_L = jL\omega\underline I$};
+  \draw[->, very thick, omDef!60] (1.78,2.4) -- (1.78,1.1) node[right, midway] {$\underline U_C = \underline I/jC\omega$};
+  \draw[->, very thick, omThm] (0,0) -- (1.6,1.1) node[midway, above left, xshift=-1pt] {$\underline E$};
+  \draw (0.6,0) arc (0:34.5:0.6); \node at (0.85,0.2) {$\varphi$};
+\end{tikzpicture}
+
+{\small Diagrama de \omterm{def:b1:sinusoidal-impedance:complex}{fasores} del RLC serie por encima de la resonancia:
+$\underline U_R$ a lo largo de $\underline I$, $\underline U_L$ un cuarto
+de vuelta por delante y $\underline U_C$ un cuarto de vuelta por detrás;
+su suma $\underline E$ se adelanta a la corriente en $\varphi$. En la
+resonancia $\underline U_L$ y $\underline U_C$ se cancelan y
+$\underline E = \underline U_R$.}
+\end{omfigure}
+
+\begin{proposition}[Sobretensión]\label{prop:b1:sinusoidal-impedance:overvoltage}
+\index{resonancia!de tensión}\index{sobretensión}
+En la resonancia, las tensiones en bornes de la bobina y del condensador
+tienen la misma \omterm{def:b1:wave-propagation:signal}{amplitud} $QE$ y fases opuestas: para $Q \gg 1$ el
+condensador soporta una tensión $Q$ veces mayor que la de la fuente. La
+propia \omterm{def:b1:wave-propagation:signal}{amplitud} $U_C(\omega)$ presenta un máximo, si $Q > 1/\sqrt2$, en $\omega_r =
+\omega_0\sqrt{1 - 1/2Q^2}$, algo por debajo de $\omega_0$, con
+$U_{C,\max} = QE/\sqrt{1 - 1/4Q^2}$.
+\end{proposition}
+
+\begin{proof}
+En $\omega_0$, $\underline U_C = \underline I/jC\omega_0 = -jQE$ y
+$\underline U_L = jL\omega_0\underline I = jQE$, puesto que $I = E/R$. En
+general $U_C = I/C\omega = E/\sqrt{(1 - x^2)^2 + x^2/Q^2}$ (multiplíquense
+numerador y denominador por $1/C\omega_0$); el cuadrado del denominador
+vale $(1 - x^2)^2 + x^2/Q^2$, un polinomio de segundo grado en $x^2$ que
+se minimiza en $x^2 =
+1 - 1/2Q^2$ cuando esto es positivo, con mínimo $1/Q^2 - 1/4Q^4$.
+\end{proof}
+
+\begin{example}[Sintonizar una radio]\label{ex:b1:sinusoidal-impedance:radio}
+Una bobina $L = \qty{200}{\micro H}$ y un condensador variable: $C =
+\qty{127}{pF}$ sintoniza $f_0 = \qty{1.00}{MHz}$. Con la resistencia del
+hilo de la bobina $R = \qty{12.6}{\ohm}$, $L\omega_0 = \qty{1257}{\ohm}$ y
+$Q = 100$: \omterm{thm:b1:sinusoidal-impedance:resonance}{ancho de banda} $\Delta f = f_0/Q = \qty{10}{kHz}$ --- la
+anchura de un canal de AM --- y los \qty{10}{\micro V} inducidos por un
+emisor lejano se convierten en $QE = \qty{1}{mV}$ en bornes del
+condensador, de balde. El problema de fin de semana construye este receptor.
+\end{example}
+
+\begin{remark}[Por qué de nuevo $Q$]\label{rem:b1:sinusoidal-impedance:Q}
+El $Q$ de este capítulo es el $Q$ de \cref{ch:b1:transient-regimes}: el
+circuito que oscila durante unos $Q$ periodos cuando se le golpea es el
+que resuena en una banda de anchura $\omega_0/Q$ cuando se le excita.
+Ambos expresan un mismo cociente: $2\pi$ veces la energía almacenada
+dividida por la energía disipada en un periodo
+(\cref{exo:b1:sinusoidal-impedance:12}). Una resonancia aguda y una
+oscilación larga son la misma propiedad, y también lo es la respuesta
+lenta: un filtro de \omterm{thm:b1:sinusoidal-impedance:resonance}{ancho de banda} $\Delta\omega$ tarda un tiempo del
+orden de $1/\Delta\omega$ en estabilizarse.
+\end{remark}
+
+\section{Potencia en régimen sinusoidal}
+
+\begin{definition}[Valor eficaz]\label{def:b1:sinusoidal-impedance:rms}
+\index{valor eficaz}\index{valor cuadrático medio}
+El \emph{valor eficaz} (rms, o valor cuadrático medio) de una
+\omterm{def:b1:wave-propagation:signal}{señal} periódica $x(t)$ es $X_{\mathrm{rms}} = \sqrt{\langle x^2\rangle}$,
+la raíz cuadrada del promedio temporal de $x^2$ sobre un periodo. Para
+una sinusoide de \omterm{def:b1:wave-propagation:signal}{amplitud} $X$, $X_{\mathrm{rms}} = X/\sqrt2$. Los
+\qty{230}{V} de la red son un valor eficaz; su \omterm{def:b1:wave-propagation:signal}{amplitud} es \qty{325}{V}.
+\end{definition}
+
+\begin{theorem}[Potencia media]\label{thm:b1:sinusoidal-impedance:power}
+\index{potencia media}\index{factor de potencia}\index{potencia reactiva}
+Un dipolo con $u = U\cos\omega t$ e $i = I\cos(\omega t - \varphi)$
+(\omterm{thm:b1:dc-circuits:kirchhoff}{convenio receptor}) recibe la potencia instantánea $p = ui$, de valor
+medio
+\[
+P = \tfrac12\,UI\cos\varphi = U_{\mathrm{rms}}I_{\mathrm{rms}}\cos\varphi
+= \tfrac12\Rea\!\big(\underline U\,\underline I^{\,*}\big) = \tfrac12\Rea(\underline Z)\,I^2,
+\]
+donde $\cos\varphi$ es el \emph{\omterm{thm:b1:sinusoidal-impedance:power}{factor de potencia}}. Un \omterm{def:b1:dc-circuits:resistor}{resistor} recibe
+$\tfrac12 RI^2 = RI_{\mathrm{rms}}^2$; una bobina o un condensador ideales
+($\varphi = \pm\pi/2$) no reciben \omterm{thm:b1:sinusoidal-impedance:power}{potencia media} --- almacenan energía
+durante medio periodo y la devuelven durante el otro medio.
+\end{theorem}
+
+\begin{proof}
+$p = UI\cos\omega t\cos(\omega t - \varphi) = \tfrac12 UI[\cos\varphi +
+\cos(2\omega t - \varphi)]$; el segundo término promedia cero. Con
+$\underline U = U$ e $\underline I = I\eu^{-j\varphi}$,
+$\underline U\,\underline I^* = UI\eu^{j\varphi}$, cuya parte real vale
+$UI\cos\varphi$; y $\underline U = \underline Z\,\underline I$ da
+$\underline U\,\underline I^* = \underline Z I^2$.
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}
+\begin{axis}[omaxis, axis x line=bottom, width=11.5cm, height=5cm, xlabel={$t/T$}, ylabel={$p$},
+    xmin=0, xmax=2, ymin=-0.5, ymax=1.15, xtick={0.5,1,1.5,2}, ytick={0,0.5,1},
+    yticklabels={$0$,$P$,$UI$}]
+  \addplot[omDef, thick, domain=0:2, samples=300] {cos(deg(2*pi*x))*cos(deg(2*pi*x) - 60)};
+  \addplot[omThm, thick, dashed, domain=0:2, samples=2] {0.25};
+  \addplot[omExo, dashed, domain=0:2, samples=2] {0};
+  \node[omDef, font=\footnotesize] at (axis cs:1.62,0.95) {$p(t) = ui$, $\varphi = 60^\circ$};
+  \node[omThm, font=\footnotesize] at (axis cs:0.5,0.95) {media $P = \tfrac12 UI\cos\varphi$ (a trazos)};
+\end{axis}
+\end{tikzpicture}
+
+{\small Potencia instantánea recibida por un dipolo con un desfase de
+$60^\circ$ entre corriente y tensión: late a $2\omega$, baja por debajo de
+cero (energía devuelta a la fuente) y promedia $\tfrac12 UI\cos\varphi$
+--- aquí la mitad de lo que valdría en fase.}
+\end{omfigure}
+
+\begin{example}[Corrección del factor de potencia]\label{ex:b1:sinusoidal-impedance:pf}
+El motor de un taller a \qty{230}{V} eficaces consume \qty{2.0}{kW} con
+$\cos\varphi = 0.70$ (inductivo): $I_{\mathrm{rms}} = 2000/(230 \times
+0.70) = \qty{12.4}{A}$, frente a \qty{8.7}{A} si el \omterm{thm:b1:sinusoidal-impedance:power}{factor de potencia}
+fuese $1$ --- la corriente sobrante calienta en balde los cables de la
+compañía, de ahí el recargo. Un condensador en paralelo aporta localmente
+los vaivenes de energía de un cuarto de periodo de la bobina: la
+\emph{\omterm{thm:b1:sinusoidal-impedance:power}{potencia reactiva}} $P\tan\varphi =
+\qty{2.0}{kvar}$ exige $C = P\tan\varphi/(\omega U_{\mathrm{rms}}^2)
+\approx \qty{120}{\micro F}$ a \qty{50}{Hz}, y la corriente de línea baja
+a \qty{8.7}{A}.
+\end{example}
+
+\section{Ejercicios}
+
+\begin{exercise}[$\star$]\label{exo:b1:sinusoidal-impedance:1}
+Dese la \omterm{def:b1:sinusoidal-impedance:complex}{amplitud compleja} de $u = 5\cos(\omega t + \pi/3)$ (V), en forma
+polar y cartesiana. Usando \omterm{def:b1:sinusoidal-impedance:complex}{amplitudes complejas}, escríbase $3\cos\omega t
++ 4\sin\omega t$ como un único coseno.
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b1:sinusoidal-impedance:2}
+Calcúlese la \omterm{def:b1:sinusoidal-impedance:impedance}{impedancia} de $R = \qty{100}{\ohm}$, $L = \qty{0.10}{H}$ y
+$C = \qty{10}{\micro F}$ a \qty{50}{Hz} y a \qty{1.0}{kHz}. Dense el
+módulo y la fase de la \omterm{def:b1:sinusoidal-impedance:impedance}{impedancia} de $R$ y $L$ en serie a
+\qty{50}{Hz}.
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b1:sinusoidal-impedance:3}
+La red da \qty{230}{V} eficaces: ¿cuál es su \omterm{def:b1:wave-propagation:signal}{amplitud}? Un calefactor de
+\qty{2.0}{kW}: corriente eficaz y de pico. Muéstrese que la \omterm{thm:b1:sinusoidal-impedance:power}{potencia media}
+en un \omterm{def:b1:dc-circuits:resistor}{resistor} vale $RI_{\mathrm{rms}}^2$.
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b1:sinusoidal-impedance:4}
+RLC serie: $L = \qty{10}{mH}$, $C = \qty{100}{nF}$, $R = \qty{100}{\ohm}$,
+$E = \qty{1.0}{V}$. Dense $f_0$, $Q$, el \omterm{thm:b1:sinusoidal-impedance:resonance}{ancho de banda} en hercios y la
+\omterm{def:b1:wave-propagation:signal}{amplitud} de la corriente en la resonancia.
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b1:sinusoidal-impedance:5}
+Divisor RC con la salida en bornes de $C$: $R = \qty{1.0}{k\ohm}$, $C = \qty{159}{nF}$.
+¿A qué frecuencia la salida vale $1/\sqrt2$ de la entrada? Dense la razón
+de \omterm{def:b1:wave-propagation:signal}{amplitudes} y la fase a \qty{1.0}{kHz} y a \qty{10}{kHz}.
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b1:sinusoidal-impedance:6}
+A cierta frecuencia, un RLC serie tiene $R = \qty{100}{\ohm}$, $L\omega =
+\qty{250}{\ohm}$, $1/C\omega = \qty{100}{\ohm}$, y $E = \qty{1.0}{V}$.
+Calcúlense $\underline Z$, la \omterm{def:b1:wave-propagation:signal}{amplitud} y la fase de la corriente y las
+tres \omterm{def:b1:wave-propagation:signal}{amplitudes} de tensión; dibújese el diagrama de \omterm{def:b1:sinusoidal-impedance:complex}{fasores}. ¿Está el
+circuito por encima o por debajo de la resonancia?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b1:sinusoidal-impedance:7}
+Radio: $L = \qty{200}{\micro H}$, $C$ ajustable de \qty{50}{} a
+\qty{500}{pF}. Hállense el intervalo de frecuencias, la capacidad para
+\qty{1.00}{MHz} y, con $Q = 100$, el \omterm{thm:b1:sinusoidal-impedance:resonance}{ancho de banda} y la atenuación (razón
+de \omterm{def:b1:wave-propagation:signal}{amplitudes}) de una emisora situada a \qty{9}{kHz}. Con una fem de
+antena de \qty{10}{\micro V}: ¿tensión en bornes de $C$ en la resonancia?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b1:sinusoidal-impedance:8}
+Dedúzcanse las dos frecuencias de potencia mitad del RLC serie y
+muéstrese que su diferencia vale $\omega_0/Q$ y su producto $\omega_0^2$.
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b1:sinusoidal-impedance:9}
+Un motor a \qty{230}{V} eficaces y \qty{50}{Hz} absorbe \qty{2.0}{kW} con
+$\cos\varphi = 0.70$. Calcúlense la corriente eficaz, la \omterm{thm:b1:sinusoidal-impedance:power}{potencia
+reactiva}, la capacidad en paralelo que lleva el \omterm{thm:b1:sinusoidal-impedance:power}{factor de potencia} a $1$ y
+la nueva corriente. La línea de alimentación tiene \qty{0.50}{\ohm}:
+pérdidas por \omterm{def:b1:dc-circuits:resistor}{efecto Joule} antes y después.
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b1:sinusoidal-impedance:10}
+RLC en paralelo alimentado por una \omterm{def:b1:dc-circuits:sources}{fuente de corriente}: escríbase la
+\omterm{def:b1:sinusoidal-impedance:impedance}{admitancia}, muéstrese que la tensión es máxima en $\omega_0 = 1/\sqrt{LC}$
+y vale allí $RI$, y que el \omterm{thm:b1:sinusoidal-impedance:resonance}{ancho de banda} es $\Delta\omega = 1/RC$, es decir $Q =
+R\sqrt{C/L}$. Datos: $R = \qty{10}{k\ohm}$, $L = \qty{1.0}{mH}$,
+$C = \qty{1.0}{nF}$.
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b1:sinusoidal-impedance:11}
+Muéstrese que la tensión del condensador de un RLC serie vale $U_C = E/\sqrt{(1 -
+x^2)^2 + x^2/Q^2}$, que presenta un máximo en $x_r = \sqrt{1 - 1/2Q^2}$ si
+$Q > 1/\sqrt2$, y calcúlense $x_r$ y $U_{C,\max}/E$ para $Q = 3.16$.
+¿Qué ocurre si $Q < 1/\sqrt2$?
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b1:sinusoidal-impedance:12}
+En la resonancia de un RLC serie, muéstrese que la energía almacenada
+total $\tfrac12 Li^2 + \tfrac12 Cu_C^2$ es constante e igual a $\tfrac12 LI^2$,
+calcúlese la energía disipada en $R$ por periodo y pruébese que
+$2\pi\,(\text{almacenada})/(\text{disipada por periodo}) = Q$.
+\end{exercise}
+
+\begin{omfigure}
+\includegraphics[width=0.55\linewidth]{images/book3/ai/b3-08-vintage-radio-tuning.png}
+
+{\small Sintonizar una radio de válvulas: girar el mando cambia un condensador, el condensador fija la frecuencia de resonancia de un circuito $LC$, y se oye la emisora cuya frecuencia coincide --- el problema de fin de semana.}
+\end{omfigure}
+
+\section{Problema: el receptor de radio resonante}
+
+\begin{problem}[{Problema de fin de semana --- una bobina, un condensador
+variable y una antena: cómo una resonancia serie escoge una emisora entre
+cien, multiplica por cien su señal débil y por qué no puede hacerse
+arbitrariamente selectiva}]
+\label{pb:b1:sinusoidal-impedance:1}
+La antena se modela por una fem sinusoidal ideal $e(t) = E\cos\omega t$ en
+serie con una bobina $L = \qty{200}{\micro H}$, cuyo hilo tiene una
+resistencia $R = \qty{12.6}{\ohm}$, y un condensador variable $C$. El
+receptor lee la tensión en bornes de $C$. Más adelante (Parte IV) se tiene
+en cuenta la propia resistencia de la antena $R_a = \qty{50}{\ohm}$.
+
+\medskip
+\noindent\textbf{Parte I --- La corriente resonante.}
+\begin{enumerate}
+  \item Escríbase la \omterm{def:b1:sinusoidal-impedance:impedance}{impedancia} compleja del circuito serie.
+  \item Dese la \omterm{def:b1:sinusoidal-impedance:complex}{amplitud compleja} de la corriente y, después, su \omterm{def:b1:wave-propagation:signal}{amplitud}
+        $I(\omega)$ y su fase $\varphi_i(\omega)$ respecto de $e$.
+  \item Muéstrese que $I$ es máxima en $\omega_0 = 1/\sqrt{LC}$; dense
+        $I_{\max}$ y la fase en ese caso.
+  \item ¿Qué capacidad sintoniza $f_0 = \qty{1.000}{MHz}$? Calcúlese
+        $L\omega_0$.
+  \item Defínase $Q = L\omega_0/R$ y calcúlese.
+  \item Muéstrese que $I/I_{\max} = 1/\sqrt{1 + Q^2(x - 1/x)^2}$ con
+        $x = \omega/\omega_0$.
+  \item Dígase el signo de $\varphi_i$ por debajo y por encima de la
+        resonancia e interprétese (comportamiento capacitivo o inductivo).
+\end{enumerate}
+
+\medskip
+\noindent\textbf{Parte II --- Selectividad.}
+\begin{enumerate}[resume]
+  \item Escríbase la condición que define las dos frecuencias a las que
+        $I = I_{\max}/\sqrt2$.
+  \item Resuélvase y muéstrese que $\Delta\omega = \omega_2 - \omega_1 =
+        \omega_0/Q$.
+  \item Calcúlese el \omterm{thm:b1:sinusoidal-impedance:resonance}{ancho de banda} $\Delta f$ de este receptor.
+  \item Una segunda emisora emite a \qty{1.010}{MHz} y una tercera a
+        \qty{1.020}{MHz}: calcúlese la razón de \omterm{def:b1:wave-propagation:signal}{amplitudes} $I/I_{\max}$ de
+        cada una y la razón de potencias correspondiente en decibelios.
+  \item Las emisoras de AM se separan de \qty{9}{} a \qty{10}{kHz}. ¿Es
+        bastante selectivo el receptor? ¿Qué lo mejoraría?
+  \item El condensador puede ajustarse entre \qty{50}{} y \qty{500}{pF}:
+        ¿qué banda de frecuencias cubre el receptor?
+\end{enumerate}
+
+\medskip
+\noindent\textbf{Parte III --- La sobretensión.}
+\begin{enumerate}[resume]
+  \item Exprésese la \omterm{def:b1:sinusoidal-impedance:complex}{amplitud compleja} de la tensión del condensador y
+        muéstrese que en la resonancia su \omterm{def:b1:wave-propagation:signal}{amplitud} vale $QE$.
+  \item La fem de antena vale $E = \qty{10}{\micro V}$: calcúlense
+        $I_{\max}$ y la tensión del condensador en la resonancia.
+        Coméntese.
+  \item Muéstrese que la tensión de la bobina tiene la misma \omterm{def:b1:wave-propagation:signal}{amplitud} y
+        está en oposición de fase con la del condensador en la resonancia:
+        ¿qué ``ve'' la fuente?
+  \item Calcúlense la energía almacenada en el circuito en la resonancia y
+        la energía disipada por periodo; compruébese que su cociente por
+        $2\pi$ vale $Q$.
+  \item A partir de \cref{ch:b1:transient-regimes}, ¿cuál es la \omterm{def:b1:transient-regimes:firstorder}{constante
+        de tiempo} $\tau = 2Q/\omega_0$ de este circuito? ¿Por qué un $Q$
+        muy alto acaba distorsionando la voz y la música (\omterm{thm:b1:sinusoidal-impedance:resonance}{ancho de banda}
+        del audio: unos \qty{5}{kHz} en AM)?
+  \item Si la resistencia del hilo de la bobina se duplicase (hilo más
+        fino), ¿cómo cambiarían $Q$, el \omterm{thm:b1:sinusoidal-impedance:resonance}{ancho de banda} y la tensión del
+        condensador?
+\end{enumerate}
+
+\medskip
+\noindent\textbf{Parte IV --- La resistencia de la antena, y la potencia.}
+\begin{enumerate}[resume]
+  \item Con $R_a = \qty{50}{\ohm}$ en serie, recalcúlense $Q$, el \omterm{thm:b1:sinusoidal-impedance:resonance}{ancho de
+        banda} y la tensión del condensador para $E = \qty{10}{\micro V}$.
+        Conclúyase.
+  \item Calcúlense la \omterm{thm:b1:sinusoidal-impedance:power}{potencia media} entregada por la fem de antena en la
+        resonancia y la fracción disipada en $R_a$.
+  \item El teorema de máxima potencia pediría una resistencia de carga
+        igual a $R_a$: ¿por qué choca ese objetivo con la selectividad?
+  \item Los receptores reales conectan la antena a una toma intermedia de
+        la bobina, o a través de un pequeño condensador de acoplamiento.
+        Explíquese cualitativamente qué se consigue con ello.
+  \item Usando $P = \tfrac12 UI\cos\varphi$, calcúlese el \omterm{thm:b1:sinusoidal-impedance:power}{factor de
+        potencia} en las dos frecuencias de potencia mitad y explíquese el
+        nombre ``potencia mitad''.
+  \item Resúmase el diseño: qué aporta $Q$, qué cuesta y qué valor se
+        elige para un receptor de \qty{1}{MHz} con canales de
+        \qty{10}{kHz}.
+\end{enumerate}
+\end{problem}

@@ -16,8 +16,8 @@ for the school years, PCSI and PC* for university years 1–2, an L3 de
 physique for year 3 — **pure physics, no chemistry**. Grades 1–6, where
 the French primaire taught no physics, use age-adapted chapters.
 
-**Current state: Books 1 and 2 written, each in eight languages; Book 3
-written in English; Books 4–5 structure only.**
+**Current state: Books 1, 2 and 3 written, each in eight languages;
+Books 4–5 structure only.**
 
 - **Book 1** (Primary & Middle School, grades 1–9): 71 chapters + 71
   solutions files (~435 pp), 142 figures, photographs and AI-generated
@@ -38,13 +38,17 @@ written in English; Books 4–5 structure only.**
   and AI illustrations (`images/book3/ai/`, prompts in `PROMPTS.md`),
   exactly 12 exercises per chapter (4×★ / 5×★★ / 3×★★★), one
   25-question weekend problem per chapter, a full solution for every
-  exercise and problem, ~2,300 generated `\omterm` links
-  (`tools/term_config/book3_en.py` is curated). English only so far.
+  exercise and problem, ~2,340 generated `\omterm` links
+  (`tools/term_config/book3_en.py` is curated). Ships in all eight
+  languages (2026-08-21), each self-scored 96/100; link density runs
+  `ar` 1,983 < `nl` 2,173 < `hi` 2,244 < EN 2,342 < `es` 2,400 <
+  `fr` 2,430 < `pt` 2,509 < `id` 2,515, and 319–352 pp against
+  English's 332.
   The level guard is math Book 3 (Year 1): no surface integrals, div or
   curl — Gauss's and Ampère's laws are stated in integral form and used
   through symmetry; no wave equation in ch.~05.
-- **Language editions**: both books ship in `fr`, `nl`, `es`, `pt`, `hi`,
-  `ar` and `id` alongside English — bodies under `parts/<year>/<lang>/` and
+- **Language editions**: all three written books ship in `fr`, `nl`, `es`,
+  `pt`, `hi`, `ar` and `id` alongside English — bodies under `parts/<year>/<lang>/` and
   `parts/<year>/solutions/<lang>/`, one entry file each, all registered
   in `latexmkrc` and `.github/workflows/release.yml`. Every edition is
   gated by `tools/check_translation.sh` and self-scored under
@@ -75,10 +79,28 @@ written in English; Books 4–5 structure only.**
   plurals `magnets`, `gases`, `atoms`, … are gated because Indonesian
   pluralises by reduplication. The edition identity, glossary and traps
   live in `../indonesian_style_card.md`.
+- **A Latin-script edition needs a TWIN-COMPARISON gate too, and gate 8 is
+  not it.** Gate 8 asks "is this word English?", which needs a curated word
+  list and therefore exists only for Indonesian. `tools/check_latin_prose.py`
+  (gate 9) asks the question that needs no per-language knowledge at all:
+  *is this fragment byte-identical to its English twin, and does it contain a
+  lowercase word?* It compares environment optional titles, `\text{…}`, TikZ
+  node text and whole duplicated lines, positionally, against the English
+  twin, and reports in two tiers — a multi-word match is a defect, a one-word
+  match is usually a true cognate (*visible*, *signal*, *amplitude* are French
+  words too). It found real defects in three editions that a green
+  `check_translation.sh` and a clean PDF had passed: an untranslated
+  `\begin{proof}[Partial proof]` in `es`, `\text{energy stored}` inside a
+  displayed formula in `fr`, eight English op-amp figure nodes in `nl`, and in
+  `pt` three untranslated titles plus fourteen English `\text{}` subscripts.
+  It is deliberately NOT wired into `check_translation.sh`: the shipped Book 2
+  editions still carry hits (French `\text{body/ground}`, node
+  `amplitude (arb.)`), so wiring it in would turn the repo-wide gate red
+  before those are fixed.
 - `tools/term_config/book{1,2}_*.py` are curated configs, not stubs —
   regenerate links after editing those books' definitions or prose.
 
-The invariant checks below are live for Books 1 and 2 and must stay
+The invariant checks below are live for Books 1, 2 and 3 and must stay
 green. Books 4–5 still have placeholder chapter bodies (a TODO comment
 and an "unwritten" line) with header-only solutions files, English only.
 

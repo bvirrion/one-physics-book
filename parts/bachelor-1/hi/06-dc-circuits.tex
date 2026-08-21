@@ -1,0 +1,619 @@
+\chapter{दिष्ट धारा परिपथ: किरचॉफ़ के नियम और प्रमेय}\label{ch:b1:dc-circuits}
+
+ठंडी सुबह चाबी घुमाइए: स्टार्टर कराहता है, डैशबोर्ड की बत्तियाँ एक पल के लिए
+मंद पड़ती हैं, और कार खाँसती हुई जाग उठती है। जो बैटरी अभी-अभी स्थिर
+\qty{12.6}{V} दे रही थी वह ग्यारह पर उतर आई है, क्योंकि स्टार्टर अपने डेढ़ सौ
+\omterm{def:b1:dc-circuits:current}{ऐंपियर} खींच रहा है --- और समांतर में जुड़े शीर्षदीप इसकी क़ीमत चुकाते हैं। उस
+एक सेकंड की हर बात दो संरक्षण नियमों और रैखिक परिपथों की मुट्ठी भर प्रमेयों से
+सधती है, जिन्हें यह अध्याय कहता है, सिद्ध करता है और काम में लेता है: \omterm{thm:b1:dc-circuits:kirchhoff}{किरचॉफ़
+के नियम}, स्रोतों तथा प्रतिरोधकों के प्रतिरूप, विभाजक, तेवेनिन और नॉर्टन, और
+\omterm{met:b1:dc-circuits:loadline}{क्रिया बिंदु} खोजने की आलेखीय \omterm{def:b1:wave-propagation:signal}{कला}।
+
+\section{धारा, विभवांतर और अर्ध-स्थायी व्यवस्था}
+
+\begin{definition}[विद्युत धारा]\label{def:b1:dc-circuits:current}
+\index{विद्युत धारा}\index{ऐंपियर}
+किसी पृष्ठ (जैसे तार की अनुप्रस्थ काट) से होकर बहती \emph{विद्युत धारा} प्रति
+एकांक समय उसे पार करता आवेश है, जिसे किसी चुनी हुई दिशा में धनात्मक गिना जाता
+है:
+\[
+i = \frac{\dd q}{\dd t} \qquad (\text{ऐंपियर: } \qty{1}{A} = \qty{1}{C/s}).
+\]
+दिशा उलटने पर $i$ का चिह्न बदल जाता है। किसी धातु में वाहक इलेक्ट्रॉन होते
+हैं, जो पारंपरिक धारा-दिशा के \emph{विरुद्ध} बहते हैं, वह भी प्रति सेकंड
+मिलीमीटर के अंश भर।
+\end{definition}
+
+\begin{definition}[विभव और विभवांतर]\label{def:b1:dc-circuits:voltage}
+\index{विद्युत विभव}\index{विभवांतर}\index{भूसंपर्क}
+परिपथ के हर बिंदु का एक \emph{विद्युत विभव} $V$ (वोल्ट) होता है, जो किसी
+\emph{भूसंपर्क} ($V = 0$) के चुनाव से तय होते नियतांक तक परिभाषित है।
+$A$ और $B$ के बीच \emph{विभवांतर} विभवों का अंतर
+$u_{AB} = V_A - V_B$ है, जिसे $B$ से $A$ की ओर तीर से दिखाया जाता है। आवेश
+$q$ जो ऊर्जा $A$ से $B$ तक जाने में खोता है वह $q\,u_{AB}$ है (यह
+\cref{ch:b1:potential-capacitors} के स्थिरवैद्युत विभव से जुड़ता है)।
+\end{definition}
+
+\begin{definition}[अर्ध-स्थायी व्यवस्था (ARQS)]\label{def:b1:dc-circuits:arqs}
+\index{अर्ध-स्थायी व्यवस्था}\index{ARQS}
+आकार $\ell$ का कोई परिपथ, जो आवृत्ति $f$ पर चलाया जा रहा हो,
+\emph{अर्ध-स्थायी व्यवस्था} में तब है जब उसके अनुदिश विद्युत संकेतों का
+संचरण-काल $\ell/c$ आवर्तकाल $1/f$ के सामने नगण्य हो:
+$\ell \ll c/f$। तब हर क्षण किसी बिना शाखा वाले तार के हर बिंदु पर धारा एक ही
+होती है, और नीचे दिए नियम हर क्षण समय के साथ बदलती धाराओं और विभवांतरों पर
+(छोटे अक्षरों वाले $i$, $u$) ठीक वैसे ही लागू होते हैं जैसे स्थायी वालों पर
+($I$, $U$)।
+\end{definition}
+
+\begin{example}[अर्ध कितना अर्ध है]\label{ex:b1:dc-circuits:arqs}
+\qty{50}{Hz} पर $c/f = \qty{6000}{km}$: अतः कोई घर \omterm{def:b1:dc-circuits:arqs}{अर्ध-स्थायी
+व्यवस्था} में है। \qty{1}{MHz} पर \qty{300}{m}: रेडियो भी अब भी है।
+\qty{2}{GHz} पर \qty{15}{cm}: फ़ोन का परिपथ-पट्ट नहीं है, और उसकी पटरियों को
+संचरण-रेखाओं की तरह बरतना पड़ता है --- यह वर्ष 2 के खंड का विषय है।
+\end{example}
+
+\begin{theorem}[किरचॉफ़ के नियम]\label{thm:b1:dc-circuits:kirchhoff}
+\index{किरचॉफ़ के नियम}\index{संधि नियम}\index{पाश नियम}
+\omterm{def:b1:dc-circuits:arqs}{अर्ध-स्थायी व्यवस्था} में:
+\begin{enumerate}
+  \item \emph{\omterm{thm:b1:dc-circuits:kirchhoff}{संधि नियम}}: जिस संधि पर कई तार मिलते हैं, वहाँ आती धाराओं का
+        योग जाती धाराओं के योग के बराबर होता है,
+        $\sum_{\text{आती}} i_k = \sum_{\text{जाती}} i_k$।
+  \item \emph{\omterm{thm:b1:dc-circuits:kirchhoff}{पाश नियम}}: किसी भी बंद पाश के चारों ओर \omterm{def:b1:dc-circuits:voltage}{विभवांतर}, जब उन्हें
+        भ्रमण की चुनी हुई दिशा से मिले चिह्न के साथ गिना जाए, जुड़कर शून्य हो
+        जाते हैं: $\sum_{\text{पाश}} \pm u_k = 0$।
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+आवेश संरक्षित है और \omterm{def:b1:dc-circuits:arqs}{अर्ध-स्थायी व्यवस्था} में किसी संधि पर जमा नहीं होता: जो
+प्रति सेकंड आता है वही प्रति सेकंड चला जाता है। और \omterm{thm:b1:dc-circuits:kirchhoff}{पाश नियम} यही कहता है कि
+विभव स्थिति का फलन है: पाश के चारों ओर घूमकर आरंभ बिंदु पर लौटने पर विभव-पातों
+का योग $V_A - V_A = 0$ होता है।
+\end{proof}
+
+\begin{notation}[रूढ़ियाँ और शक्ति]\label{not:b1:dc-circuits:conventions}
+\index{अभिग्राही रूढ़ि}\index{जनित्र रूढ़ि}\index{विद्युत शक्ति}
+दो सिरों वाले किसी अवयव (यानी \emph{द्विसिरा}) के लिए \emph{\omterm{thm:b1:dc-circuits:kirchhoff}{अभिग्राही रूढ़ि}}
+\omterm{def:b1:dc-circuits:voltage}{विभवांतर} के तीर और धारा के तीर को विपरीत दिशाओं में खींचती है; जबकि
+\emph{\omterm{thm:b1:dc-circuits:kirchhoff}{जनित्र रूढ़ि}} उन्हें एक ही दिशा में खींचती है। \omterm{thm:b1:dc-circuits:kirchhoff}{अभिग्राही रूढ़ि} में
+द्विसिरा को \emph{मिलती} शक्ति है
+\[
+p = u\,i \qquad (\text{वाट}),
+\]
+जो गरम होते \omterm{def:b1:dc-circuits:resistor}{प्रतिरोधक} के लिए धनात्मक है और शक्ति देती बैटरी के लिए ऋणात्मक।
+\omterm{thm:b1:dc-circuits:kirchhoff}{जनित्र रूढ़ि} में $p = ui$ \emph{दी गई} शक्ति
+होती है।
+\end{notation}
+
+\begin{omfigure}
+\begin{tikzpicture}[font=\small]
+  \draw (0,0) to[generic, l=द्विसिरा, v=$u$, i=$i$] (3,0);
+  \node[below] at (1.5,-1.0) {अभिग्राही रूढ़ि: $p_{\text{मिली}} = ui$};
+  \begin{scope}[xshift=6cm]
+  \draw (0,0) to[generic, l=द्विसिरा, v<=$u$, i=$i$] (3,0);
+  \node[below] at (1.5,-1.0) {जनित्र रूढ़ि: $p_{\text{दी गई}} = ui$};
+  \end{scope}
+\end{tikzpicture}
+
+{\small किसी द्विसिरा के लिए चिह्न की दो रूढ़ियाँ: तीर विपरीत (अभिग्राही) या
+एक-दिशा में (जनित्र)। भौतिकी दोनों में एक ही है; बस $ui$ का चिह्न अलग तरह
+पढ़ा जाता है।}
+\end{omfigure}
+
+\section{द्विसिरा और उनके प्रतिरूप}
+
+\begin{definition}[अभिलक्षणिक वक्र; प्रतिरोधक; ओम का नियम]\label{def:b1:dc-circuits:resistor}
+\index{अभिलक्षणिक वक्र (द्विसिरा का)}\index{प्रतिरोधक}\index{ओम का नियम}\index{जूल प्रभाव}
+किसी द्विसिरा का \emph{अभिलक्षणिक वक्र} वह वक्र $i(u)$ (या $u(i)$) है जो वह
+लादता है। \emph{प्रतिरोधक} का अभिलक्षणिक वक्र मूल बिंदु से गुज़रती सरल रेखा
+होता है, यानी \emph{ओम का नियम}
+\[
+u = R\,i \qquad (\text{अभिग्राही रूढ़ि}),
+\]
+जहाँ $R$ उसका \emph{प्रतिरोध} है (ओम में, $\qty{1}{\ohm} = \qty{1}{V/A}$) और
+$G = 1/R$ उसकी \emph{चालकता} (सीमेंस में)। वह $p = Ri^2 =
+u^2/R \geq 0$ पाता है, जो ऊष्मा के रूप में क्षय होती है (\emph{जूल प्रभाव})।
+लंबाई $\ell$, अनुप्रस्थ काट $S$ और प्रतिरोधकता $\rho$ के तार का
+$R = \rho\ell/S$ होता है।
+\end{definition}
+
+\begin{definition}[आदर्श और वास्तविक स्रोत]\label{def:b1:dc-circuits:sources}
+\index{विभव स्रोत}\index{धारा स्रोत}\index{विद्युत वाहक बल}\index{आंतरिक प्रतिरोध}\index{तेवेनिन प्रतिरूप}\index{नॉर्टन प्रतिरूप}
+\emph{आदर्श विभव स्रोत} धारा चाहे कुछ भी हो, $u = E$ लाद देता है; और
+$E$ उसका \emph{विद्युत वाहक बल} है। \emph{आदर्श धारा स्रोत}
+\omterm{def:b1:dc-circuits:voltage}{विभवांतर} चाहे कुछ भी हो, $i = I_N$ लाद देता है। किसी \emph{वास्तविक स्रोत}
+(बैटरी, जनित्र, विद्युत आपूर्ति) का प्रतिरूप, \omterm{thm:b1:dc-circuits:kirchhoff}{जनित्र रूढ़ि} में, यह है:
+\[
+u = E - r\,i \quad (\text{तेवेनिन प्रतिरूप: आदर्श विद्युत वाहक बल } E \text{ के साथ श्रेणी में } r)
+\]
+अथवा, उसी के तुल्य, $i = I_N - u/r$ (नॉर्टन प्रतिरूप: आदर्श धारा
+स्रोत $I_N = E/r$, $r$ के समांतर में); और $r$ \emph{आंतरिक
+प्रतिरोध} है। $E$ खुले परिपथ का \omterm{def:b1:dc-circuits:voltage}{विभवांतर} है और $I_N = E/r$
+लघुपथ धारा।
+\end{definition}
+
+\begin{proposition}[किसी वास्तविक स्रोत का शक्ति-लेखा]\label{prop:b1:dc-circuits:sourcepower}
+\index{अधिकतम शक्ति अंतरण}
+वास्तविक स्रोत $(E, r)$, जो किसी \omterm{def:b1:dc-circuits:resistor}{प्रतिरोधक} $R$ को खिलाता है, धारा
+$i = E/(R + r)$ देता है और शक्ति
+\[
+P_R = \frac{E^2 R}{(R + r)^2},
+\]
+जो अधिकतम है और $E^2/4r$ के बराबर, तब जब $R = r$ हो
+(\emph{प्रतिबाधा-मिलान}), और तब दक्षता $P_R/(Ei) = R/(R + r)$ उस अधिकतम पर केवल $50\%$ रह जाती है।
+\end{proposition}
+
+\begin{proof}
+\omterm{thm:b1:dc-circuits:kirchhoff}{पाश नियम}: $E = ri + Ri$। $P_R = Ri^2$; अब $R/(R + r)^2$ का अवकलन कीजिए:
+$\big[(R + r)^2 - 2R(R + r)\big]/(R + r)^4 = (r - R)/(R + r)^3$, जो
+$R = r$ पर शून्य है, उससे पहले धनात्मक और बाद में ऋणात्मक। स्रोत
+$Ei = (R + r)i^2$ देता है, जिसमें से $ri^2$ स्वयं स्रोत को गरम करता है।
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}
+\begin{axis}[omaxis, width=7.6cm, height=5.2cm, xlabel={$i$}, ylabel={$u$},
+    xmin=0, xmax=1.3, ymin=0, ymax=1.3, xtick={1}, xticklabels={$I_N = E/r$},
+    ytick={1}, yticklabels={$E$}]
+  \addplot[omThm, thick, domain=0:1, samples=2] {1 - x};
+  \addplot[omDef, thick, domain=0:0.9, samples=2] {0.6*x};
+  \fill[omExo] (axis cs:0.625,0.375) circle (1.6pt);
+  \node[omExo, font=\footnotesize] (op) at (axis cs:0.98,0.92) {क्रिया बिंदु};
+  \draw[-Stealth, omExo] (op.south west) -- (axis cs:0.645,0.395);
+  \node[omThm, font=\footnotesize, anchor=south west] at (axis cs:0.03,1.02) {स्रोत $u = E - ri$};
+  \node[omDef, font=\footnotesize, right] at (axis cs:0.9,0.54) {भार $u = Ri$};
+\end{axis}
+\end{tikzpicture}\qquad
+\begin{tikzpicture}
+\begin{axis}[omaxis, width=7.0cm, height=5cm, xlabel={$R/r$}, ylabel={$P_R$},
+    xmin=0, xmax=6, ymin=0, ymax=0.3, xtick={1,3,5}, ytick={0.25}, yticklabels={$\frac{E^2}{4r}$}]
+  \addplot[omProp, thick, domain=0:6, samples=120] {x/((x+1)^2)};
+  \draw[dashed, omExo] (axis cs:1,0) -- (axis cs:1,0.25) -- (axis cs:0,0.25);
+\end{axis}
+\end{tikzpicture}
+
+{\small बाएँ: किसी वास्तविक स्रोत ($u = E - ri$) और किसी प्रतिरोधी भार
+($u = Ri$) के अभिलक्षणिक वक्र \omterm{met:b1:dc-circuits:loadline}{क्रिया बिंदु} पर मिलते हैं। दाएँ: भार को दी गई
+शक्ति $R = r$ पर शिखर पर पहुँचती है, जहाँ स्रोत की आधी शक्ति उसके अपने ही
+प्रतिरोध में बरबाद हो जाती है।}
+\end{omfigure}
+
+\begin{example}[भार के नीचे कार की बैटरी]\label{ex:b1:dc-circuits:battery}
+खुला परिपथ \qty{12.6}{V}; और स्टार्टर के \qty{120}{A} खींचते समय
+\qty{11.4}{V}: अतः $r = 1.2/120 = \qty{10}{m\ohm}$, $I_N = \qty{1260}{A}$
+(इसीलिए गिरा हुआ पाना वेल्डिंग-जैसा ख़तरा बन जाता है)। मिलान वाला भार
+$R = \qty{10}{m\ohm}$ कुछ सेकंडों के लिए $E^2/4r = \qty{4}{kW}$ ले लेता
+--- लगभग उतना ही जितना किसी स्टार्टर मोटर को चाहिए।
+\end{example}
+
+\begin{remark}[अन्य द्विसिरा]\label{rem:b1:dc-circuits:others}
+\index{डायोड}
+\emph{डायोड} केवल एक ही दिशा में चालन करता है: उसका एक आदर्शीकृत प्रतिरूप
+$u < U_0$ के लिए खुला परिपथ है, और चालन करते समय नियत \omterm{def:b1:dc-circuits:voltage}{विभवांतर} $u = U_0$
+(सिलिकॉन के लिए लगभग \qty{0.7}{V}, किसी LED के लिए \qty{2}{} से
+\qty{3}{V})। फ़िलामेंट लैंप ऐसा \omterm{def:b1:dc-circuits:resistor}{प्रतिरोधक} है जिसका $R$ उसके ताप के साथ बढ़ता
+है, और अतः $i$ के साथ भी --- यानी वक्र अभिलक्षणिक। स्थायी अवस्था में
+संधारित्र खुला परिपथ है ($i = C\,\dd u/\dd t = 0$) और
+प्रेरक लघुपथ ($u = L\,\dd i/\dd t = 0$); क्षणिक व्यवस्थाओं में उनकी भूमिका
+\cref{ch:b1:transient-regimes} है।
+\end{remark}
+
+\section{संयोजन और विभाजक}
+
+\begin{proposition}[श्रेणी और समांतर में प्रतिरोधक]\label{prop:b1:dc-circuits:seriesparallel}
+\index{श्रेणी (प्रतिरोधक)}\index{समांतर (प्रतिरोधक)}
+श्रेणी में जुड़े \omterm{def:b1:dc-circuits:resistor}{प्रतिरोधक} (समान धारा) जुड़ जाते हैं: $R = R_1 + R_2 + \cdots$।
+समांतर में जुड़े \omterm{def:b1:dc-circuits:resistor}{प्रतिरोधक} (समान \omterm{def:b1:dc-circuits:voltage}{विभवांतर}) अपनी चालकताएँ जोड़ते हैं:
+$1/R = 1/R_1 + 1/R_2 + \cdots$; और दो के लिए $R = R_1R_2/(R_1 + R_2)$,
+जिसे $R_1 \parallel R_2$ लिखा जाता है।
+\end{proposition}
+
+\begin{proof}
+श्रेणी: $u = u_1 + u_2 = (R_1 + R_2)i$ (\omterm{thm:b1:dc-circuits:kirchhoff}{पाश नियम})। समांतर: $i = i_1 +
+i_2 = u/R_1 + u/R_2$ (\omterm{thm:b1:dc-circuits:kirchhoff}{संधि नियम})।
+\end{proof}
+
+\begin{proposition}[विभव और धारा विभाजक]\label{prop:b1:dc-circuits:dividers}
+\index{विभव विभाजक}\index{धारा विभाजक}
+किसी \omterm{def:b1:dc-circuits:voltage}{विभवांतर} $u$ के आरपार श्रेणी में जुड़े दो \omterm{def:b1:dc-circuits:resistor}{प्रतिरोधक} उसे अपने प्रतिरोधों
+के अनुपात में बाँट लेते हैं:
+\[
+u_2 = \frac{R_2}{R_1 + R_2}\,u .
+\]
+धारा $i$ से खिलाए गए, समांतर में जुड़े दो \omterm{def:b1:dc-circuits:resistor}{प्रतिरोधक} उसे व्युत्क्रम अनुपात में
+बाँटते हैं:
+\[
+i_2 = \frac{R_1}{R_1 + R_2}\,i = \frac{G_2}{G_1 + G_2}\,i .
+\]
+\end{proposition}
+
+\begin{proof}
+श्रेणी: $i = u/(R_1 + R_2)$ और $u_2 = R_2 i$। समांतर: $u = (R_1
+\parallel R_2)\,i$ और $i_2 = u/R_2$।
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}[font=\small]
+  \draw (0,3.2) to[R=$R_1$] (0,1.6) to[R=$R_2$, v=$u_2$] (0,0);
+  \draw[-Stealth, thick] (-1.3,0.1) -- (-1.3,3.1) node[midway, left] {$u$};
+  \fill (0,3.2) circle (1.2pt); \fill (0,0) circle (1.2pt);
+  \begin{scope}[xshift=5.5cm]
+  \draw (0,3.2) to[short, i=$i$] (1.4,3.2) to[R=$R_1$] (1.4,0) -- (0,0);
+  \draw (1.4,3.2) -- (3.0,3.2) to[short, i=$i_2$] (3.0,2.4) to[R=$R_2$] (3.0,0) -- (1.4,0);
+  \fill (0,3.2) circle (1.2pt); \fill (0,0) circle (1.2pt);
+  \end{scope}
+\end{tikzpicture}
+
+{\small \omterm{prop:b1:dc-circuits:dividers}{विभव विभाजक} (बाएँ): $u_2 = R_2 u/(R_1 + R_2)$। \omterm{prop:b1:dc-circuits:dividers}{धारा
+विभाजक} (दाएँ): $i_2 = R_1 i/(R_1 + R_2)$ --- धारा छोटे प्रतिरोध को अधिक
+पसंद करती है।}
+\end{omfigure}
+
+\begin{remark}[विभाजक पर भार]\label{rem:b1:dc-circuits:loading}
+विभाजक का सूत्र तभी टिकता है जब मध्यबिंदु से कोई धारा न खींची जाए।
+कोई भार $R_L$, जो $R_2$ के आरपार जोड़ा जाए, $R_2$ की जगह $R_2
+\parallel R_L$ ले आता है और $u_2$ को गिरा देता है --- यही ``भार-प्रभाव'' है,
+और यही कारण कि वोल्टमापी का प्रतिरोध ऊँचा और विभवमापी का नीचा होना चाहिए, उस
+चीज़ की तुलना में जिसे वह खिलाता है (\cref{exo:b1:dc-circuits:4})।
+\end{remark}
+
+\begin{method}[किसी जाल को समेटना]\label{met:b1:dc-circuits:reduce}
+प्रतिरोधकों और एक स्रोत वाले किसी जाल में कोई एक धारा या \omterm{def:b1:dc-circuits:voltage}{विभवांतर} खोजने के
+लिए:
+\begin{enumerate}
+  \item स्रोत से दूर से शुरू करके श्रेणी और समांतर के समूहों को उनके
+        तुल्यों से बदलते जाइए, जब तक स्रोत के सामने एक ही \omterm{def:b1:dc-circuits:resistor}{प्रतिरोधक} न रह
+        जाए;
+  \item स्रोत की धारा निकालिए;
+  \item अब उलटा चलिए, धाराओं को धारा विभाजकों से और विभवांतरों को विभव
+        विभाजकों से बाँटते हुए, अभीष्ट शाखा तक।
+\end{enumerate}
+कई स्रोत हों, या ऐसी शाखा हो जिसके पड़ोसी बदलते रहते हों, तो अगले अनुभाग की
+प्रमेयें काम में लीजिए।
+\end{method}
+
+\section{रैखिक परिपथों की प्रमेयें}
+
+\begin{definition}[रैखिक द्विसिरा, रैखिक परिपथ]\label{def:b1:dc-circuits:linear}
+\index{रैखिक द्विसिरा}
+कोई द्विसिरा \emph{रैखिक} है यदि उसका अभिलक्षणिक वक्र सरल रेखा हो
+(\omterm{def:b1:dc-circuits:resistor}{प्रतिरोधक}, आदर्श और वास्तविक स्रोत); और केवल रैखिक द्विसिराओं से बना परिपथ
+\emph{रैखिक परिपथ} है। उसके अज्ञात रैखिक समीकरणों के एक निकाय का पालन करते
+हैं (\omterm{thm:b1:dc-circuits:kirchhoff}{किरचॉफ़ के नियम} और अभिलक्षणिक वक्र), जिसका हल अद्वितीय है।
+\end{definition}
+
+\begin{theorem}[तेवेनिन और नॉर्टन]\label{thm:b1:dc-circuits:thevenin}
+\index{तेवेनिन की प्रमेय}\index{नॉर्टन की प्रमेय}
+अपने किन्हीं दो सिरों $A$ और $B$ से देखने पर हर \omterm{def:b1:dc-circuits:linear}{रैखिक परिपथ} किसी वास्तविक
+स्रोत के तुल्य है: कोई \omterm{def:b1:dc-circuits:sources}{विद्युत वाहक बल} $E_{\mathrm{Th}}$, प्रतिरोध
+$R_{\mathrm{Th}}$ के साथ श्रेणी में (तेवेनिन), अथवा कोई \omterm{def:b1:dc-circuits:sources}{धारा स्रोत}
+$I_N =
+E_{\mathrm{Th}}/R_{\mathrm{Th}}$, $R_{\mathrm{Th}}$ के समांतर में (नॉर्टन), जहाँ
+\begin{itemize}
+  \item $E_{\mathrm{Th}}$ खुले परिपथ का \omterm{def:b1:dc-circuits:voltage}{विभवांतर} $u_{AB}$ है;
+  \item $I_N$ $A$ से $B$ तक की लघुपथ धारा है;
+  \item $R_{\mathrm{Th}}$ वह प्रतिरोध है जो $A$ और $B$ के बीच तब दिखता है
+        जब हर स्वतंत्र स्रोत बुझा दिया जाए (आदर्श विभव स्रोतों की जगह तार,
+        और आदर्श धारा स्रोतों की जगह खुला परिपथ)।
+\end{itemize}
+\end{theorem}
+
+\begin{proof}[आंशिक उपपत्ति]
+रैखिकता के कारण सिरों पर \omterm{def:b1:dc-circuits:voltage}{विभवांतर} $u_{AB}$ और वहाँ से खींची जाती धारा
+$i$ के बीच का संबंध अफ़ाइन है: $u_{AB} = a - b\,i$।
+$i = 0$ रखने पर $a = E_{\mathrm{Th}}$ पहचाना जाता है; और $u_{AB} = 0$ रखने पर
+$b = E_{\mathrm{Th}}/I_N$। यह कि $b$ स्रोत बुझाकर दिखते प्रतिरोध के बराबर है,
+अध्यारोपण (नीचे) से निकलता है: $u_{AB}$ का जो भाग अकेली बाहरी धारा से आता है
+वही है जो प्रतिरोध $R_{\mathrm{Th}}$ का कोई निष्क्रिय जाल उत्पन्न करता। और यह
+कि हर रैखिक निकाय का निवेश--निर्गम संबंध अफ़ाइन होता है, रैखिक समीकरणों का
+बीजगणित है।
+\end{proof}
+
+\begin{theorem}[अध्यारोपण]\label{thm:b1:dc-circuits:superposition}
+\index{अध्यारोपण प्रमेय}
+कई स्वतंत्र स्रोतों वाले किसी \omterm{def:b1:dc-circuits:linear}{रैखिक परिपथ} में कोई भी धारा या \omterm{def:b1:dc-circuits:voltage}{विभवांतर} उन
+मानों का योग है जो वह तब लेता है जब हर स्रोत अकेला काम करे और बाक़ी बुझा दिए
+जाएँ।
+\end{theorem}
+
+\begin{proof}
+समीकरण अज्ञातों में रैखिक हैं, और स्रोत उनका दायाँ पक्ष हैं; हल उसी दाएँ पक्ष
+का रैखिक फलन है, अतः वह हर स्रोत के लिए अलग-अलग निकले हलों का योग है।
+\end{proof}
+
+\begin{proposition}[मिलमैन की प्रमेय]\label{prop:b1:dc-circuits:millman}
+\index{मिलमैन की प्रमेय}
+जो संधि $N$ विभवों $V_1, \dots, V_n$ वाले बिंदुओं से प्रतिरोधों
+$R_1, \dots, R_n$ के द्वारा जुड़ी हो (और किसी और चीज़ से नहीं), उसका
+विभव है
+\[
+V_N = \frac{\sum_k V_k/R_k}{\sum_k 1/R_k} = \frac{\sum_k G_k V_k}{\sum_k G_k},
+\]
+यानी अपने पड़ोसियों के विभवों का चालकता-भारित माध्य।
+\end{proposition}
+
+\begin{proof}
+$N$ पर \omterm{thm:b1:dc-circuits:kirchhoff}{संधि नियम}: $\sum_k (V_k - V_N)/R_k = 0$; अब $V_N$ के लिए हल कीजिए।
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}[font=\small]
+  % network: E1=10V, R1=1k ; E2=5V, R2=2k ; common load R3=2k
+  \draw (0,0) to[battery1, l=$E_1$, invert] (0,2) to[R=$R_1$] (2.5,2) -- (2.5,2) to[R=$R_3$, v=$u$] (2.5,0) -- (0,0);
+  \draw (2.5,2) to[R=$R_2$] (5,2) to[battery1, l_=$E_2$] (5,0) -- (2.5,0);
+  \node at (2.5,2.45) {$N$};
+  \node at (6.4,1) {$\Longleftrightarrow$};
+  \begin{scope}[xshift=8.8cm]
+  \draw (0,0) to[battery1, l=$E_{\mathrm{Th}}$, invert] (0,2) to[R=$R_{\mathrm{Th}}$] (2.2,2) to[R=$R_3$, v=$u$] (2.2,0) -- (0,0);
+  \end{scope}
+\end{tikzpicture}
+
+{\small एक साझे भार $R_3$ को खिलाते दो स्रोत। $R_3$ के सिरों से देखने पर
+बाक़ी परिपथ एक तेवेनिन स्रोत है
+($E_{\mathrm{Th}}$, $R_{\mathrm{Th}}$); और \omterm{prop:b1:dc-circuits:millman}{मिलमैन की प्रमेय} संधि $N$ का विभव
+एक ही पंक्ति में दे देती है।}
+\end{omfigure}
+
+\begin{example}[एक ही उत्तर तक तीन रास्ते]\label{ex:b1:dc-circuits:threeways}
+आकृति में $E_1 = \qty{10}{V}$, $R_1 = \qty{1.0}{k\ohm}$, $E_2 =
+\qty{5.0}{V}$, $R_2 = \qty{2.0}{k\ohm}$, $R_3 = \qty{2.0}{k\ohm}$।
+\emph{मिलमैन}: $V_N = (10/1 + 5/2 + 0/2)/(1 + 0.5 + 0.5) = 12.5/2 =
+\qty{6.25}{V}$। \emph{अध्यारोपण}: अकेला $E_1$ $R_2 \parallel
+R_3 = \qty{1}{k\ohm}$ देखता है, अतः $u = 10 \times 1/2 = \qty{5}{V}$; अकेला $E_2$
+$R_1 \parallel R_3 = \qty{0.667}{k\ohm}$ देखता है, $u = 5 \times 0.667/2.667
+= \qty{1.25}{V}$; कुल \qty{6.25}{V}। \emph{तेवेनिन},
+$R_3$ से देखने पर: $E_{\mathrm{Th}}$ विभाजक
+$(E_1, R_1, R_2, E_2)$ के खुले परिपथ का \omterm{def:b1:dc-circuits:voltage}{विभवांतर} है: $E_2 + (E_1 - E_2)R_2/(R_1 + R_2) = 5 + 5 \times
+2/3 = \qty{8.33}{V}$; $R_{\mathrm{Th}} = R_1 \parallel R_2 =
+\qty{0.667}{k\ohm}$; अतः $u = 8.33 \times 2/2.667 = \qty{6.25}{V}$।
+\end{example}
+
+\section{क्रिया बिंदु; व्हीटस्टोन सेतु}
+
+\begin{method}[आलेखीय क्रिया बिंदु]\label{met:b1:dc-circuits:loadline}
+\index{क्रिया बिंदु}\index{भार रेखा}
+अरैखिक द्विसिरा (जिसका अभिलक्षणिक वक्र $i = g(u)$ है), जिसे किसी तेवेनिन
+स्रोत $(E, R)$ से खिलाया जाए, वहीं ठहरता है जहाँ दोनों संबंध एक साथ टिकें: द्विसिरा का
+अभिलक्षणिक वक्र और स्रोत की \emph{\omterm{met:b1:dc-circuits:loadline}{भार रेखा}} $u = E - Ri$ एक ही अक्षों पर
+खींचिए; उनका प्रतिच्छेद ही \emph{\omterm{met:b1:dc-circuits:loadline}{क्रिया बिंदु}} है। किसी LED का श्रेणी
+\omterm{def:b1:dc-circuits:resistor}{प्रतिरोधक}, कोई ज़ेनर नियंत्रक या किसी ट्रांजिस्टर की अभिनति चुनना ठीक यही रचना
+है।
+\end{method}
+
+\begin{omfigure}
+\begin{tikzpicture}
+\begin{axis}[omaxis, width=8cm, height=5.4cm, xlabel={$u$ (\unit{V})}, ylabel={$i$ (\unit{mA})},
+    xmin=0, xmax=5.6, ymin=0, ymax=30, xtick={1,2,3,4,5}, ytick={10,20,25}]
+  \addplot[omDef, thick, domain=0:1.9, samples=2] {0};
+  \addplot[omDef, thick, domain=1.9:2.9, samples=60] {28*(exp(2.8*(x-1.9))-1)/(exp(2.8)-1)};
+  \addplot[omThm, thick, domain=0:5, samples=2] {25 - 5*x};
+  \fill[omExo] (axis cs:2.0,15) circle (1.6pt);
+  \node[omExo, font=\footnotesize] (op) at (axis cs:1.05,11.5) {क्रिया बिंदु};
+  \draw[-Stealth, omExo] (op.east) -- (axis cs:1.93,14.8);
+  \node[omDef, font=\footnotesize, left] at (axis cs:2.55,25) {LED};
+  \node[omThm, font=\footnotesize] at (axis cs:3.1,1.4) {भार रेखा};
+\end{axis}
+\end{tikzpicture}
+
+{\small कोई LED (देहली \qty{2}{V} के पास), जिसे $E = \qty{5}{V}$
+से $R = \qty{200}{\ohm}$ के द्वारा खिलाया गया है: \omterm{met:b1:dc-circuits:loadline}{भार रेखा} $u = E - Ri$
+डायोड के अभिलक्षणिक वक्र को $\qty{2.0}{V}$, \qty{15}{mA} पर काटती है। $R$
+बढ़ाने पर रेखा नीचे झुक जाती है और LED मंद पड़ जाता है।}
+\end{omfigure}
+
+\begin{proposition}[व्हीटस्टोन सेतु]\label{prop:b1:dc-circuits:wheatstone}
+\index{व्हीटस्टोन सेतु}
+चार \omterm{def:b1:dc-circuits:resistor}{प्रतिरोधक} $R_1, R_2$ (एक शाखा) और $R_3, R_4$ (दूसरी शाखा), किसी स्रोत
+$E$ के आरपार; सेतु का निर्गम दोनों मध्यबिंदुओं के बीच का \omterm{def:b1:dc-circuits:voltage}{विभवांतर} है:
+\[
+u = E\left(\frac{R_2}{R_1 + R_2} - \frac{R_4}{R_3 + R_4}\right),
+\]
+जो शून्य है (यानी सेतु \emph{संतुलित} है) तभी जब $R_1R_4 = R_2R_3$ हो।
+$R_4$ को $R_4(1 + \epsilon)$ तक विक्षुब्ध करके, $\epsilon
+\ll 1$ और $R_3 = R_4$ के साथ, संतुलित सेतु के लिए: $u \approx -E\epsilon/4$।
+\end{proposition}
+
+\begin{proof}
+दो \omterm{prop:b1:dc-circuits:dividers}{विभव विभाजक}; अब घटा दीजिए। संतुलन: $R_2(R_3 + R_4) = R_4(R_1 +
+R_2)$, यानी $R_2R_3 = R_1R_4$। $R_3 = R_4 = R$ और $R_1 = R_2$ के साथ:
+$u = E[\tfrac12 - (1 + \epsilon)/(2 + \epsilon)] = E[(2 + \epsilon - 2 -
+2\epsilon)/(2(2 + \epsilon))] \approx -E\epsilon/4$।
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}[font=\small]
+  \draw (0,1.5) to[R=$R_1$] (2,3) to[R=$R_2$] (4,1.5) to[R=$R_4$] (2,0) to[R=$R_3$] (0,1.5);
+  \draw (2,3) to[short, *-] (2,3); \draw (2,0) to[short, *-] (2,0);
+  \draw (0,1.5) -- (-1,1.5) to[battery1, l=$E$] (-1,-1) -- (4,-1) -- (4,1.5);
+  \draw[-Stealth, omThm] (2,0.35) -- (2,2.65) ;
+  \node[omThm, right] at (2.05,1.5) {$u$};
+\end{tikzpicture}
+
+{\small \omterm{prop:b1:dc-circuits:wheatstone}{व्हीटस्टोन सेतु}: अगल-बगल रखे दो विभाजक। $R_1R_4 = R_2R_3$ होने पर
+संतुलित, यह किसी एक प्रतिरोध के नन्हे बदलाव (विकृति-मापी, तापप्रतिरोधी) को
+शून्य के आसपास के \omterm{def:b1:dc-circuits:voltage}{विभवांतर} में बदल देता है, जिसे किसी बड़े \omterm{def:b1:dc-circuits:voltage}{विभवांतर} के छोटे
+बदलाव की तुलना में कहीं आसानी से प्रवर्धित किया जा सकता है।}
+\end{omfigure}
+
+\section{अभ्यास}
+
+\begin{exercise}[$\star$]\label{exo:b1:dc-circuits:1}
+कोई फ़ोन एक घंटे तक \qty{1.5}{A} पर आवेशित होता है: कितना आवेश बहता है, कितने
+इलेक्ट्रॉन? आकलन कीजिए कि \omterm{def:b1:dc-circuits:arqs}{अर्ध-स्थायी व्यवस्था} \qty{50}{Hz} पर घर की तारों के
+लिए टिकती है या नहीं, \qty{1}{MHz} पर \qty{10}{cm} के परिपथ के लिए, और उसी
+परिपथ के लिए \qty{1}{GHz} पर।
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b1:dc-circuits:2}
+\qty{230}{V} पर कोई \qty{2000}{W} का ऊष्मक: धारा, प्रतिरोध, और \qty{3.0}{h}
+में खर्च ऊर्जा (kWh में और जूल में)। उसकी \qty{5.0}{m} लंबी ताँबे की डोरी की
+अनुप्रस्थ काट \qty{1.5}{mm^2} है ($\rho = \qty{1.7e-8}{\ohm.m}$):
+डोरी में खोई शक्ति निकालिए।
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b1:dc-circuits:3}
+$\qty{10}{\ohm}$, $\qty{20}{\ohm}$ और $\qty{30}{\ohm}$ के साथ: तीनों के
+श्रेणी में, समांतर में, और
+$(10 \parallel 20) + 30$ का प्रतिरोध निकालिए।
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b1:dc-circuits:4}
+कोई \qty{12}{V} स्रोत श्रेणी में जुड़े \qty{4.7}{k\ohm} और \qty{2.2}{k\ohm}
+को खिलाता है। \qty{2.2}{k\ohm} के आरपार \omterm{def:b1:dc-circuits:voltage}{विभवांतर} निकालिए। फिर उसके आरपार
+प्रतिरोध \qty{2.2}{k\ohm} की कोई युक्ति जोड़ दी जाती है: नया \omterm{def:b1:dc-circuits:voltage}{विभवांतर}?
+भार-प्रभाव पर निष्कर्ष निकालिए।
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b1:dc-circuits:5}
+कोई बैटरी खुली अवस्था में \qty{12.6}{V} दिखाती है और \qty{120}{A} देते समय
+\qty{11.4}{V}। उसका \omterm{def:b1:dc-circuits:sources}{आंतरिक प्रतिरोध} और लघुपथ धारा, स्टार्टर को दी गई शक्ति
+और भीतर खोई शक्ति, तथा दक्षता निकालिए।
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b1:dc-circuits:6}
+\cref{exo:b1:dc-circuits:4} के विभाजक
+($E = \qty{12}{V}$, $R_1 = \qty{4.7}{k\ohm}$, $R_2 = \qty{2.2}{k\ohm}$) का
+तेवेनिन तुल्य निकालिए, जैसा वह \qty{2.2}{k\ohm} \omterm{def:b1:dc-circuits:resistor}{प्रतिरोधक} के सिरों से दिखता
+है। उससे उस अभ्यास का भारित \omterm{def:b1:dc-circuits:voltage}{विभवांतर} फिर से पाइए।
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b1:dc-circuits:7}
+दो बैटरियाँ, $E_1 = \qty{10}{V}$ ($r_1 = \qty{1.0}{\ohm}$) और
+$E_2 = \qty{5.0}{V}$ ($r_2 = \qty{2.0}{\ohm}$), समांतर में (समान ध्रुवता के
+साथ) \qty{2.0}{\ohm} के भार के आरपार जुड़ी हैं। भार का \omterm{def:b1:dc-circuits:voltage}{विभवांतर} पहले
+अध्यारोपण से, फिर मिलमैन से निकालिए, और हर बैटरी में धारा भी। क्या दुर्बल
+बैटरी आवेशित हो रही है या विसर्जित?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b1:dc-circuits:8}
+कोई स्रोत $E = \qty{9.0}{V}$, $r = \qty{3.0}{\ohm}$। $\qty{1.0}{\ohm}$,
+$\qty{3.0}{\ohm}$, $\qty{12}{\ohm}$ के भारों को दी गई शक्ति निकालिए,
+और हर स्थिति में दक्षता। बैटरी से चलती किसी युक्ति के लिए अभियंता कौन-सा भार
+चुनेगा, और मिलान वाला क्यों नहीं?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b1:dc-circuits:9}
+कोई LED \qty{2.0}{V} पर चालन करता है और उसे \qty{5.0}{V} की आपूर्ति से
+\qty{15}{mA} लेनी है। श्रेणी \omterm{def:b1:dc-circuits:resistor}{प्रतिरोधक} चुनिए, \omterm{def:b1:dc-circuits:resistor}{प्रतिरोधक} में और LED में
+शक्तियाँ निकालिए, तथा \omterm{met:b1:dc-circuits:loadline}{भार रेखा} की रचना खींचिए। यदि आपूर्ति \qty{3.3}{V} हो तो
+क्या होगा?
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b1:dc-circuits:10}
+कोई विकृति-मापी $R_4 = R(1 + \epsilon)$, $R = \qty{1.0}{k\ohm}$,
+\qty{5.0}{V} के आरपार तीन जड़े \qty{1.0}{k\ohm} प्रतिरोधकों वाले \omterm{prop:b1:dc-circuits:wheatstone}{व्हीटस्टोन
+सेतु} में बैठा है। $\epsilon$ में प्रथम कोटि तक निर्गम \omterm{def:b1:dc-circuits:voltage}{विभवांतर} व्युत्पन्न कीजिए और
+$\epsilon = \num{1.0e-3}$ के लिए उसे निकालिए। किसी साधारण विभाजक में मापी के
+\omterm{def:b1:dc-circuits:voltage}{विभवांतर} को नापने से सेतु बेहतर क्यों है?
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b1:dc-circuits:11}
+बारह एक जैसे \omterm{def:b1:dc-circuits:resistor}{प्रतिरोधक} $R$ किसी घन की कोरें बनाते हैं। सममिति का उपयोग करके
+(जब धारा $I$ एक कोने से घुसकर सम्मुख कोने से निकले, तब कौन-सी संधियाँ समान
+विभव पर होती हैं) दिखाइए कि सम्मुख कोनों के बीच प्रतिरोध $5R/6$ होता है।
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b1:dc-circuits:12}
+\qty{4.0}{\ohm} के समांतर में जुड़ा कोई \omterm{def:b1:dc-circuits:sources}{धारा स्रोत} $I_N = \qty{2.0}{A}$
+किसी \qty{2.0}{\ohm} \omterm{def:b1:dc-circuits:resistor}{प्रतिरोधक} के द्वारा \qty{6.0}{V} की बैटरी (जिसका
+प्रतिरोध नगण्य है) से जुड़ा है, और बैटरी का \omterm{def:b1:dc-circuits:sources}{विद्युत वाहक बल} उसका विरोध करता है। नॉर्टन
+स्रोत को तेवेनिन में बदलिए और \qty{2.0}{\ohm} \omterm{def:b1:dc-circuits:resistor}{प्रतिरोधक} की धारा तथा हर स्रोत
+से विनिमय की गई शक्ति निकालिए।
+\end{exercise}
+
+\begin{omfigure}
+\includegraphics[width=0.58\linewidth]{images/book3/ai/b3-06-car-battery-engine-bay.png}
+
+{\small बोनट के नीचे: \qty{12}{V} की बैटरी, उसके मोटे तार और प्रत्यावर्तित्र --- यही सप्ताहांत समस्या का दिष्ट-धारा जाल है, जिसमें चालू करते समय सैकड़ों \omterm{def:b1:dc-circuits:current}{ऐंपियर} बहते हैं।}
+\end{omfigure}
+
+\section{समस्या: कार का विद्युत निकाय}
+
+\begin{problem}[{सप्ताहांत समस्या --- एक बैटरी, एक स्टार्टर, दो शीर्षदीप, एक
+प्रत्यावर्तित्र और कुछ मीटर ताँबा: धारा किसे मिलती है, क़ीमत कौन चुकाता है, और
+इंजन घुमाते समय बत्तियाँ मंद क्यों पड़ जाती हैं}]
+\label{pb:b1:dc-circuits:1}
+बैटरी एक वास्तविक स्रोत है, \omterm{def:b1:dc-circuits:sources}{विद्युत वाहक बल} $E = \qty{12.6}{V}$, \omterm{def:b1:dc-circuits:sources}{आंतरिक
+प्रतिरोध} $r = \qty{10}{m\ohm}$। ताँबा: $\rho = \qty{1.7e-8}{\ohm.m}$।
+
+\medskip
+\noindent\textbf{भाग I --- अकेली बैटरी।}
+\begin{enumerate}
+  \item \omterm{def:b1:dc-circuits:sources}{तेवेनिन प्रतिरूप} खींचिए और \omterm{thm:b1:dc-circuits:kirchhoff}{जनित्र रूढ़ि} में $u(i)$ लिखिए।
+  \item खुले परिपथ का \omterm{def:b1:dc-circuits:voltage}{विभवांतर} और लघुपथ धारा दीजिए। गिरा हुआ पाना सिरों को
+        कभी जोड़ क्यों नहीं देना चाहिए?
+  \item उसी बैटरी का \omterm{def:b1:dc-circuits:sources}{नॉर्टन प्रतिरूप} लिखिए।
+  \item बैटरी किसी \omterm{def:b1:dc-circuits:resistor}{प्रतिरोधक} $R$ को खिलाती है: धारा, सिरों का \omterm{def:b1:dc-circuits:voltage}{विभवांतर}, दी
+        गई शक्ति $P_R$ और $r$ में खोई शक्ति व्यक्त कीजिए।
+  \item दिखाइए कि $P_R$ $R = r$ पर अधिकतम है और वह अधिकतम निकालिए। तब
+        दक्षता क्या है?
+  \item कोई तकनीशियन \qty{12}{A} पर $u = \qty{12.48}{V}$ और \qty{120}{A}
+        पर $u = \qty{11.40}{V}$ नापता है। जाँचिए कि दोनों बिंदु प्रतिरूप पर
+        बैठते हैं और समझाइए कि ऐसे बिंदुओं की शृंखला सरल-रेखा फ़िटिंग से $E$
+        और $r$ कैसे दे देती है।
+  \item बैटरी \qty{60}{A.h} संचित रखती है। वह अकेले दोनों \qty{55}{W} के
+        शीर्षदीप कितनी देर चला सकती है (\qty{12}{V} लीजिए)? जूल में यह
+        कितनी ऊर्जा है?
+\end{enumerate}
+
+\medskip
+\noindent\textbf{भाग II --- बत्तियाँ जलाकर इंजन घुमाना।}
+स्टार्टर एक \omterm{def:b1:dc-circuits:resistor}{प्रतिरोधक} $R_s = \qty{80}{m\ohm}$ है; और हर शीर्षदीप
+\qty{12.0}{V} पर \qty{55}{W} का है तथा उसे \omterm{def:b1:dc-circuits:resistor}{प्रतिरोधक} माना जाता है।
+\begin{enumerate}[resume]
+  \item एक शीर्षदीप का और समांतर में दोनों का प्रतिरोध निकालिए।
+  \item अकेला स्टार्टर: धारा, सिरों का \omterm{def:b1:dc-circuits:voltage}{विभवांतर}, स्टार्टर में शक्ति, और
+        बैटरी में खोई शक्ति।
+  \item स्टार्टर और दोनों शीर्षदीप साथ-साथ: तुल्य भार-प्रतिरोध, कुल धारा,
+        और सिरों का \omterm{def:b1:dc-circuits:voltage}{विभवांतर}।
+  \item \omterm{prop:b1:dc-circuits:dividers}{धारा विभाजक} से स्टार्टर की धारा और शीर्षदीपों की धारा निकालिए।
+  \item हर शीर्षदीप को अब कितनी शक्ति मिलती है, यह निकालिए और उसकी तुलना
+        उसके नाममात्र मान से कीजिए: बत्तियाँ किस अंश से मंद पड़ती हैं?
+  \item \omterm{thm:b1:dc-circuits:kirchhoff}{पाश नियम} का उपयोग करके दो वाक्यों में समझाइए कि बत्तियाँ ठीक इसीलिए
+        मंद पड़ती हैं कि स्टार्टर बड़ी धारा खींचता है।
+  \item क्या मोटे बैटरी-तार बत्तियों की मदद करेंगे? अभी गुणात्मक रूप से
+        औचित्य दीजिए (भाग IV इसे संख्याओं में बाँधता है)।
+\end{enumerate}
+
+\medskip
+\noindent\textbf{भाग III --- इंजन चलता हुआ: प्रत्यावर्तित्र।}
+प्रत्यावर्तित्र दूसरा वास्तविक स्रोत है, $E_a = \qty{14.2}{V}$,
+$r_a = \qty{50}{m\ohm}$, जो बैटरी के समांतर में है; स्टार्टर
+बंद है और दोनों शीर्षदीप जल रहे हैं।
+\begin{enumerate}[resume]
+  \item परिपथ खींचिए: दो वास्तविक स्रोत और शीर्षदीपों का भार, तीनों उन्हीं
+        दो संधियों के बीच समांतर में।
+  \item साझे सिरा-विभवांतर के लिए \omterm{prop:b1:dc-circuits:millman}{मिलमैन की प्रमेय} लगाइए।
+  \item इससे प्रत्यावर्तित्र की धारा, बैटरी की धारा (चिह्न!) और
+        शीर्षदीपों की धारा निकालिए; \omterm{thm:b1:dc-circuits:kirchhoff}{संधि नियम} जाँचिए।
+  \item क्या बैटरी आवेशित हो रही है या विसर्जित? उसे कितनी शक्ति मिलती है,
+        और प्रत्यावर्तित्र कितनी शक्ति देता है?
+  \item सिरा-विभवांतर को अध्यारोपण से फिर से पाइए (हर स्रोत अकेला, दूसरे की
+        जगह उसका \omterm{def:b1:dc-circuits:sources}{आंतरिक प्रतिरोध}) और जाँच कीजिए।
+\end{enumerate}
+
+\medskip
+\noindent\textbf{भाग IV --- संवेदक और तार।}
+\begin{enumerate}[resume]
+  \item शीतलक संवेदक एक तापप्रतिरोधी है, जिसका प्रतिरोध
+        \qty{20}{\degreeCelsius} पर \qty{2.0}{k\ohm} से गिरकर
+        \qty{90}{\degreeCelsius} पर \qty{300}{\ohm} रह जाता है; वह
+        \qty{5.0}{V} से खिलाए गए किसी विभाजक का निचला \omterm{def:b1:dc-circuits:resistor}{प्रतिरोधक} है, और
+        ऊपरी \omterm{def:b1:dc-circuits:resistor}{प्रतिरोधक} $R_0$ है। निर्गम \omterm{def:b1:dc-circuits:voltage}{विभवांतर} व्यक्त कीजिए, और
+        $R_0 = \qty{775}{\ohm}$ के लिए दोनों तापों पर उसे निकालिए।
+  \item दिखाइए कि दोनों तापों के बीच निर्गम का झूला तब सबसे बड़ा होता है जब
+        $R_0$ संवेदक के दोनों मानों का गुणोत्तर माध्य हो, और ऊपर का मान
+        जाँचिए।
+  \item वही संवेदक तीन \qty{775}{\ohm} प्रतिरोधकों वाले \omterm{prop:b1:dc-circuits:wheatstone}{व्हीटस्टोन सेतु}
+        में रखा जाता है: सेतु का निर्गम लिखिए और बताइए कि वह किस ताप पर
+        संतुलित है।
+  \item स्टार्टर का तार एक ओर \qty{1.5}{m} लंबा है। \qty{16}{mm^2}
+        अनुप्रस्थ काट वाले एक चालक का प्रतिरोध, \qty{140}{A} पर कुल
+        विभव-पात, और तारों में क्षय होती शक्ति निकालिए।
+  \item वही \qty{4}{mm^2} के तार के साथ: स्टार्टर का तार इतना मोटा क्यों
+        होता है?
+  \item सार लिखिए: इंजन घुमाते समय सिरा-विभवांतर, स्टार्टर तक पहुँचती शक्ति
+        का अंश, और वह इकलौता नियम जो बत्तियों का मंद पड़ना समझा देता है।
+\end{enumerate}
+\end{problem}

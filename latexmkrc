@@ -21,6 +21,13 @@ $out_dir = 'build';
     'one_physics_book_2_high_school_ar.tex',
     'one_physics_book_2_high_school_id.tex',
     'one_physics_book_3_university_year_1.tex',
+    'one_physics_book_3_university_year_1_fr.tex',
+    'one_physics_book_3_university_year_1_nl.tex',
+    'one_physics_book_3_university_year_1_es.tex',
+    'one_physics_book_3_university_year_1_pt.tex',
+    'one_physics_book_3_university_year_1_hi.tex',
+    'one_physics_book_3_university_year_1_ar.tex',
+    'one_physics_book_3_university_year_1_id.tex',
     'one_physics_book_4_university_year_2.tex',
     'one_physics_book_5_university_year_3.tex',
 );

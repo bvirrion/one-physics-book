@@ -1,0 +1,672 @@
+\chapter{Magnétostatique~: champ, forces et dipôles}\label{ch:b1:magnetostatics}
+
+Une aiguille de boussole tourne lorsqu'un fil voisin est parcouru par un
+courant~: cette observation d'Ørsted, en 1820, a réuni deux sciences qui
+avaient grandi séparément, l'électricité et le magnétisme, et en quelques mois
+Ampère tenait la loi de la force entre courants, Biot et Savart le champ d'un
+fil. Ce chapitre est la statique du \omterm{def:b1:magnetostatics:field}{champ magnétique}~: ce que créent les
+courants (cartes de champ, \omterm{thm:b1:magnetostatics:biotsavart}{loi de Biot et Savart}, et \omterm{thm:b1:magnetostatics:ampere}{théorème d'Ampère}, le
+jumeau magnétique du \omterm{thm:b1:electrostatics-gauss:gauss}{théorème de Gauss}), ce que le champ fait aux courants
+(la \omterm{thm:b1:magnetostatics:laplace}{force de Laplace}, qui fait tourner tous les moteurs et dévier tous les
+appareils de mesure), et le \omterm{def:b1:magnetostatics:moment}{dipôle magnétique}, cette spire de courant qui
+explique la boussole, l'aimant et le champ de la Terre elle-même.
+
+\begin{omfigure}
+\includegraphics[width=0.34\linewidth]{images/book3/compass.jpg}
+
+{\small Le plus ancien instrument du magnétisme~: une aiguille de boussole est un petit \omterm{def:b1:magnetostatics:moment}{dipôle magnétique} qui s'aligne sur le champ terrestre.}
+\end{omfigure}
+
+\begin{omfigure}
+\includegraphics[width=0.58\linewidth]{images/book3/ai/b3-28-oersted-compass-wire.png}
+
+{\small L'expérience d'Ørsted~: on ferme le circuit et l'aiguille tourne --- un courant crée un \omterm{def:b1:magnetostatics:field}{champ magnétique}, qui s'enroule autour du fil.}
+\end{omfigure}
+
+\section{Sources et cartes de champ}
+
+\begin{definition}[Champ magnétostatique]\label{def:b1:magnetostatics:field}
+\index{champ magnétique}\index{ligne de champ!magnétique}\index{tesla}
+Des courants permanents (des charges en mouvement permanent) créent en tout
+point un \emph{champ magnétique} $\vect B$ (le tesla, \unit{T}), défini par la
+force $q\vect v\wedge\vect B$ qu'il exerce sur une charge d'épreuve en
+mouvement (\cref{def:b1:charged-particles:lorentz}). Ses \emph{\omterm{def:b1:electrostatics-gauss:field}{lignes de champ}}
+sont tangentes à $\vect B$ et orientées dans son sens. Les aimants permanents
+créent des champs de même nature, à partir des courants microscopiques de
+leurs atomes. \omterm{def:b1:units-dimensions:oom}{Ordres de grandeur}~: Terre \qty{5e-5}{T}~; aimant de
+\omterm{def:b1:heat-engines:machine}{réfrigérateur} \qty{0.01}{T}~; imageur à résonance magnétique \qty{1.5}{T} à
+\qty{3}{T}~; les plus grands champs permanents de laboratoire, \qty{45}{T}.
+\end{definition}
+
+\begin{proposition}[Cartes de champ]\label{prop:b1:magnetostatics:maps}
+\index{règle de la main droite}\index{conservation du flux magnétique}
+\begin{enumerate}
+  \item Un fil rectiligne~: des cercles centrés sur le fil, dans des plans
+        qui lui sont perpendiculaires, orientés par la \emph{règle de la main
+        droite} (pouce dans le sens du courant, doigts dans le sens de $\vect B$).
+  \item Une spire circulaire~: des lignes qui la traversent selon son axe et
+        se referment au-dehors~; de loin, la carte d'un petit aimant.
+  \item Un long solénoïde~: des lignes parallèles, denses et uniformes à
+        l'intérieur~; presque aucun champ au-dehors~; la carte d'un aimant
+        droit, dont la face «~nord~» est celle par où les lignes sortent.
+  \item Les lignes de \omterm{def:b1:magnetostatics:field}{champ magnétique} n'ont ni début ni fin~: elles se
+        referment sur elles-mêmes ou partent à l'infini. De façon équivalente,
+        le \emph{flux de $\vect B$ à travers toute surface fermée est nul}
+        --- il n'existe pas de charges magnétiques.
+\end{enumerate}
+\end{proposition}
+\admitted
+
+\begin{omfigure}
+\begin{tikzpicture}[font=\small, x=1cm, y=1cm, >=Stealth]
+  % wire seen end-on
+  \begin{scope}
+    \foreach \r in {0.5,1.0,1.5,2.0} \draw[omDef, thick, postaction={decorate, decoration={markings, mark=at position 0.125 with {\arrow{>}}, mark=at position 0.625 with {\arrow{>}}}}] (0,0) circle (\r);
+    \fill[omThm] (0,0) circle (3pt); \draw[omThm] (0,0) circle (5pt);
+    \node[font=\footnotesize] at (0,-2.55) {fil rectiligne ($I$ vers le lecteur)};
+  \end{scope}
+  % loop seen from the side
+  \begin{scope}[xshift=5.6cm, fl/.style={omDef, thick, postaction={decorate, decoration={markings, mark=at position 0.06 with {\arrow{>}}}}}]
+    \draw[omDef, thick, -Stealth] (-2.3,0) -- (2.3,0);
+    \foreach \s in {1,-1} {
+      \draw[fl] plot[smooth cycle] coordinates {(0,{0.5*\s}) (0.8,{0.55*\s}) (1.5,{0.9*\s}) (1.7,{1.5*\s}) (1.2,{2.0*\s}) (0,{2.1*\s}) (-1.2,{2.0*\s}) (-1.7,{1.5*\s}) (-1.5,{0.9*\s}) (-0.8,{0.55*\s})};
+      \draw[fl] plot[smooth cycle] coordinates {(0,{0.8*\s}) (0.5,{0.85*\s}) (0.75,{1.0*\s}) (0.75,{1.3*\s}) (0.5,{1.5*\s}) (0,{1.55*\s}) (-0.5,{1.5*\s}) (-0.75,{1.3*\s}) (-0.75,{1.0*\s}) (-0.5,{0.85*\s})};
+    }
+    \draw[omThm, very thick] (0,1) circle (4pt); \draw[omThm, very thick] (0,-1) circle (4pt);
+    \fill[white] (0,1) circle (3.5pt); \fill[white] (0,-1) circle (3.5pt);
+    \fill[omThm] (0,1) circle (1.2pt); \node[omThm, font=\scriptsize] at (0,-1) {$\times$};
+    \node[font=\footnotesize] at (0,-2.55) {spire (en coupe)~: les lignes la traversent};
+  \end{scope}
+  % solenoid
+  \begin{scope}[xshift=10.9cm]
+    \foreach \x in {-1.6,-1.2,...,1.6} {\fill[omThm] (\x,0.9) circle (2pt); \node[omThm, font=\scriptsize] at (\x,-0.9) {$\times$};}
+    \foreach \y in {-0.6,-0.2,0.2,0.6} \draw[omDef, thick, -Stealth] (-2.3,\y) -- (2.3,\y);
+    \draw[omDef, thick, postaction={decorate, decoration={markings, mark=at position 0.5 with {\arrow{>}}}}] (2.3,0.6) .. controls (3.0,0.9) and (3.0,2.0) .. (0,2.1) .. controls (-3.0,2.0) and (-3.0,0.9) .. (-2.3,0.6);
+    \draw[omDef, thick, postaction={decorate, decoration={markings, mark=at position 0.5 with {\arrow{>}}}}] (2.3,-0.6) .. controls (3.0,-0.9) and (3.0,-2.0) .. (0,-2.1) .. controls (-3.0,-2.0) and (-3.0,-0.9) .. (-2.3,-0.6);
+    \node[font=\footnotesize] at (0,-2.55) {solénoïde (en coupe)~: uniforme au-dedans};
+  \end{scope}
+\end{tikzpicture}
+
+{\small Trois cartes de champ. Un point est un courant qui vient vers le
+lecteur, une croix un courant qui s'en éloigne. Les lignes d'un fil sont des
+cercles~; celles d'une spire la traversent et se referment au-dehors~; celles
+d'un long solénoïde sont droites et uniformes à l'intérieur et se referment au
+loin, là où le champ est faible --- dans tous les cas, elles n'ont ni source ni puits.}
+\end{omfigure}
+
+\begin{proposition}[Symétries de $\vect B$]\label{prop:b1:magnetostatics:symmetry}
+\index{symétrie (d'un champ)!magnétique}
+$\vect B$ se comporte par réflexion dans un miroir \emph{à l'inverse} de
+$\vect E$ (c'est un \emph{pseudo-vecteur}, construit sur un produit
+vectoriel)~: en un point d'un plan de \emph{symétrie} des courants, $\vect B$
+est \emph{perpendiculaire} au plan~; en un point d'un plan
+d'\emph{antisymétrie} (l'image miroir renverse les courants), $\vect B$ est
+\emph{contenu} dans le plan. Les invariances se transmettent comme pour $\vect E$.
+\end{proposition}
+
+\begin{proof}
+Le champ d'un élément de courant est $\propto I\,\dd\vect l\wedge\vect e_r$
+(voir plus bas)~; un miroir renverse l'un des facteurs d'un produit vectoriel
+par rapport à l'image d'un vrai vecteur, de sorte que l'image de $\vect B$ est
+l'opposée de l'image miroir de la flèche. Sur un \omterm{prop:b1:electrostatics-gauss:symmetry}{plan de symétrie}, $\vect B$
+doit être égal à l'opposé de sa propre image miroir, donc normal au plan~; sur
+un \omterm{prop:b1:electrostatics-gauss:symmetry}{plan d'antisymétrie}, à l'opposé de l'opposé~: il est dans le plan.
+\end{proof}
+
+\begin{example}[Se servir des symétries]\label{ex:b1:magnetostatics:symmetryuse}
+Pour un fil rectiligne, tout plan contenant le fil est un \omterm{prop:b1:electrostatics-gauss:symmetry}{plan de symétrie}~;
+donc en tout point $\vect B$ est perpendiculaire au plan passant par le fil et
+le point~: il est orthoradial, $\vect B = B(r)\,\vect e_\theta$ par invariance
+le long du fil et autour de lui. Pour une spire, le plan de la spire est un
+\omterm{prop:b1:electrostatics-gauss:symmetry}{plan de symétrie}~: dessus, $\vect B$ est normal à la spire~; l'axe appartient
+à tout \omterm{prop:b1:electrostatics-gauss:symmetry}{plan d'antisymétrie} qui le contient~: sur l'axe, $\vect B$ est porté par
+l'axe.
+\end{example}
+
+\section{La loi de Biot et Savart}
+
+\begin{theorem}[Biot et Savart]\label{thm:b1:magnetostatics:biotsavart}
+\index{loi de Biot et Savart}\index{perméabilité du vide}
+Un circuit parcouru par le courant $I$ crée en $M$ le champ
+\[
+\vect B(M) = \frac{\mu_0}{4\pi}\sum_{\text{circuit}} \frac{I\,\dd\vect l\wedge\vect e_{PM}}{PM^2} ,
+\]
+somme sur les éléments $\dd\vect l$ du circuit, situés aux points $P$ et
+orientés dans le sens du courant, où $\vect e_{PM}$ est le vecteur unitaire de
+$P$ vers $M$ et $\mu_0 = 4\pi \times 10^{-7}\,\unit{T.m/A}$ la
+\emph{\omterm{thm:b1:magnetostatics:biotsavart}{perméabilité du vide}}. Chaque élément apporte un champ perpendiculaire à
+lui-même et à la droite $PM$, décroissant en $1/PM^2$.
+\end{theorem}
+\admitted
+
+\begin{proposition}[Fil, spire, solénoïde]\label{prop:b1:magnetostatics:three}
+\index{champ d'un fil rectiligne}\index{champ d'une spire}\index{champ d'un solénoïde}
+\begin{enumerate}
+  \item Fil rectiligne infini, à la distance $r$~: $B = \dfrac{\mu_0I}{2\pi r}$.
+  \item Spire circulaire de rayon $R$, sur son axe à la distance $z$ du
+        centre~: $B_z = \dfrac{\mu_0IR^2}{2(R^2 + z^2)^{3/2}} = \dfrac{\mu_0I}{2R}
+        \sin^3\alpha$, où $\alpha$ est le demi-angle sous lequel la spire est
+        vue de $M$~; au centre, $B = \mu_0I/2R$.
+  \item Solénoïde de $n$ spires par mètre, sur son axe~: $B = \tfrac12\mu_0nI
+        (\cos\alpha_1 - \cos\alpha_2)$, où $\alpha_1, \alpha_2$ sont les angles sous
+        lesquels on voit les deux extrémités~; pour un solénoïde long, $B = \mu_0nI$
+        à l'intérieur, la moitié à une extrémité.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+(1) $M$ à la distance $r$ du fil, $P$ d'abscisse $z$ sur celui-ci~:
+$\dd\vect l\wedge\vect e_{PM}$ a pour norme $\dd z\,\sin\beta = \dd z\cdot r/PM$
+avec $PM = \sqrt{r^2 + z^2}$, et toutes les contributions sont orthoradiales~:
+$B = \dfrac{\mu_0I}{4\pi}\displaystyle\int_{-\infty}^{\infty}\dfrac{r\,\dd z}{(r^2 + z^2)^{3/2}}
+= \dfrac{\mu_0I}{4\pi}\,\dfrac{2}{r}$. (2) Chaque élément de la spire est à
+la même distance $\sqrt{R^2 + z^2}$ de $M$, perpendiculairement à
+$\vect e_{PM}$~; son champ a pour norme $\mu_0I\,\dd l/4\pi(R^2 + z^2)$, et
+seule la composante axiale, la fraction $R/\sqrt{R^2 + z^2}$ de celle-ci,
+survit à la somme sur la spire~: $B_z = \mu_0I\cdot2\pi R\cdot R/4\pi(R^2 +
+z^2)^{3/2}$. (3) Une tranche $\dd z'$ de solénoïde est une spire de courant
+$nI\,\dd z'$~; avec $z' - z = R/\tan\alpha$, $\dd z' = -R\,\dd\alpha/\sin^2\alpha$,
+et $B = \dfrac{\mu_0nI}{2}\displaystyle\int\sin^3\alpha\,\dfrac{\dd\alpha}{\sin^2\alpha}$ sur
+tout le solénoïde $= \tfrac12\mu_0nI(\cos\alpha_1 - \cos\alpha_2)$~; infiniment
+long, $\alpha_1 \to 0$, $\alpha_2 \to \pi$.
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}[font=\small, x=1cm, y=1cm, >=Stealth]
+  \begin{scope}
+    \draw[omThm, very thick, -Stealth] (0,-2.2) -- (0,2.4) node[right] {$I$};
+    \fill[omThm] (0,0.4) circle (1.5pt) node[left, font=\footnotesize] {$P$};
+    \draw[omThm, very thick] (0,0.4) -- (0,0.75);
+    \node[omThm, font=\footnotesize, anchor=east] at (-0.1,0.85) {$\dd\vect l$};
+    \fill (2.2,-0.6) circle (1.5pt) node[below right, font=\footnotesize] {$M$};
+    \draw[dashed] (0,0.4) -- (2.2,-0.6) node[midway, above, font=\footnotesize] {$\vect e_{PM}$};
+    \draw[dashed] (0,-0.6) -- (2.2,-0.6) node[midway, below, font=\footnotesize] {$r$};
+    \node[omDef, font=\footnotesize] at (2.2,-0.6) [xshift=14pt, yshift=10pt] {$\odot\ \dd\vect B$};
+    \node[font=\footnotesize] at (1.0,-2.55) {Biot et Savart pour un fil};
+  \end{scope}
+  \begin{scope}[xshift=6.6cm]
+    \draw[omThm, very thick] (0,0) ellipse (0.45 and 1.3);
+    \draw[dashed] (-0.3,0) -- (3.6,0);
+    \fill (2.6,0) circle (1.5pt) node[below, font=\footnotesize] {$M$};
+    \draw[dashed] (0,1.3) -- (2.6,0); \draw[dashed] (0,-1.3) -- (2.6,0);
+    \draw (2.0,0) arc[start angle=180, end angle=153.4, radius=0.6];
+    \node[font=\footnotesize] at (1.75,0.22) {$\alpha$};
+    \draw[<->] (0,0) -- (0,1.3) node[midway, left, font=\footnotesize] {$R$};
+    \draw[<->] (0,-1.5) -- (2.6,-1.5) node[midway, below, font=\footnotesize] {$z$};
+    \draw[omDef, thick, -Stealth] (2.6,0) -- (3.4,0) node[above, font=\footnotesize] {$\vect B$};
+    \node[font=\footnotesize] at (1.6,-2.55) {spire~: $B = \frac{\mu_0 I}{2R}\sin^3\alpha$};
+  \end{scope}
+  \begin{scope}[xshift=12.4cm]
+    \draw[omThm, thick] (-1.6,0.8) rectangle (1.6,0.9); \draw[omThm, thick] (-1.6,-0.9) rectangle (1.6,-0.8);
+    \draw[dashed] (-2.2,0) -- (2.2,0);
+    \fill (0.3,0) circle (1.5pt) node[below, font=\footnotesize] {$M$};
+    \draw[dashed] (0.3,0) -- (-1.6,0.85); \draw[dashed] (0.3,0) -- (1.6,0.85);
+    \draw (-0.3,0) arc[start angle=180, end angle=156, radius=0.6];
+    \node[font=\footnotesize] at (-0.5,0.32) {$\alpha_1$};
+    \draw (0.9,0) arc[start angle=0, end angle=33, radius=0.6];
+    \node[font=\footnotesize] at (1.15,0.32) {$\alpha_2$};
+    \node[font=\footnotesize] at (0,-2.55) {solénoïde~: $\frac12\mu_0 nI(\cos\alpha_1 - \cos\alpha_2)$};
+  \end{scope}
+\end{tikzpicture}
+
+{\small Les trois calculs de Biot et Savart du chapitre~: l'élément
+$\dd\vect l$ d'un fil et sa contribution en $M$, perpendiculaire au plan de la
+figure~; la spire vue de $M$ sous le demi-angle $\alpha$~; le solénoïde, dont
+les extrémités sont vues sous $\alpha_1$ et
+$\alpha_2$.}
+\end{omfigure}
+
+\begin{example}[Ordres de grandeur]\label{ex:b1:magnetostatics:orders}
+Un fil de \qty{10}{A} à \qty{1}{cm}~: $B = 2 \times 10^{-7} \times 10/0.01 =
+\qty{2e-4}{T}$, quatre fois le champ terrestre --- la boussole tourne bel et
+bien. Une bobine de $100$ spires, de rayon \qty{5}{cm}, sous \qty{2}{A}~: $\mu_0NI/2R =
+\qty{2.5}{mT}$ en son centre. Un solénoïde de $1000$ spires par mètre sous
+\qty{5}{A}~: \qty{6.3}{mT}~; avec un noyau de fer de perméabilité relative
+$1000$, on obtiendrait plusieurs \omterm{def:b1:magnetostatics:field}{teslas} si le fer ne saturait pas vers
+\qty{2}{T} --- le plafond de tout électroaimant, et la raison pour laquelle
+les champs les plus intenses viennent de bobines supraconductrices sans fer.
+\end{example}
+
+\section{Le théorème d'Ampère}
+
+\begin{theorem}[Ampère]\label{thm:b1:magnetostatics:ampere}
+\index{théorème d'Ampère}\index{circulation!du champ magnétique}
+La circulation de $\vect B$ le long de toute courbe fermée orientée $\Gamma$
+vaut $\mu_0$ fois le courant total qui traverse une surface quelconque
+s'appuyant sur $\Gamma$, compté positivement lorsqu'il la traverse dans le
+sens donné par la règle de la main droite à partir de l'orientation de $\Gamma$~:
+\[
+\oint_\Gamma \vect B\cdot\dd\vect l = \mu_0 I_{\text{enlacé}} .
+\]
+\end{theorem}
+
+\begin{proof}
+Pour un cercle de rayon $r$ centré sur un fil rectiligne, $\vect B$ est
+tangent et de norme $\mu_0I/2\pi r$ partout, de sorte que la circulation vaut
+$2\pi r \times \mu_0I/2\pi r = \mu_0I$, indépendante de $r$~; pour une courbe
+qui n'entoure pas le fil, les contributions se compensent. Le cas général est
+admis (volume de deuxième année).
+\end{proof}
+
+\begin{method}[Utiliser le théorème d'Ampère]\label{meth:b1:magnetostatics:ampere}
+Comme pour Gauss~: (1) les symétries donnent la direction de $\vect B$ et la
+variable dont il dépend~; (2) choisir un \emph{contour d'Ampère} passant par
+$M$, sur lequel $\vect B$ est soit tangent et de norme constante, soit
+perpendiculaire~; (3) compter le courant qui le traverse~; (4) résoudre. Cela
+fonctionne pour les fils et cylindres infinis, les solénoïdes infinis et les
+tores, ainsi que pour les nappes de courant infinies.
+\end{method}
+
+\begin{proposition}[Cylindre, solénoïde, tore]\label{prop:b1:magnetostatics:ampereapps}
+\begin{enumerate}
+  \item Un fil cylindrique de rayon $a$ parcouru uniformément par $I$~:
+        $B = \dfrac{\mu_0Ir}{2\pi a^2}$ à l'intérieur, $\dfrac{\mu_0I}{2\pi r}$ à l'extérieur
+        --- le maximum est à la surface.
+  \item Un solénoïde infini de $n$ spires par mètre~: $\vect B = \mu_0nI\,
+        \vect e_z$ uniforme à l'intérieur, $\vect 0$ à l'extérieur, quelle que
+        soit la forme de sa section.
+  \item Un tore de $N$ spires~: $B = \dfrac{\mu_0NI}{2\pi r}$ à l'intérieur des
+        enroulements, nul au-dehors --- un solénoïde refermé sur lui-même,
+        sans champ de fuite.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+(1) Cercle de rayon $r$~: $2\pi rB = \mu_0I(r/a)^2$ ou $\mu_0I$. (2) $\vect B$
+est axial par symétrie et, en appliquant Ampère à un rectangle dont les deux
+grands côtés sont à l'extérieur, uniforme au-dehors, donc nul (il s'annule à
+l'infini)~; un rectangle dont un grand côté, de longueur $\ell$, est à
+l'intérieur donne $B\ell =
+\mu_0n\ell I$. (3) Cercle de rayon $r$ à l'intérieur du tore~: $2\pi rB =
+\mu_0NI$~; au-dehors, le courant enlacé est nul.
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}
+\begin{axis}[omaxis, axis x line=bottom, axis y line=left, width=7.4cm, height=5.2cm,
+    xlabel={$r/a$}, ylabel={$B$ (en unités de $\mu_0I/2\pi a$)},
+    xlabel style={at={(axis description cs:0.5,-0.1)}, anchor=north},
+    xmin=0, xmax=4, ymin=0, ymax=1.25, xtick={1,2,3}, ytick={0.5,1}, samples=60]
+  \addplot[omDef, very thick, domain=0:1] {x};
+  \addplot[omDef, very thick, domain=1:4] {1/x} node[pos=0.3, above right, font=\footnotesize] {$\propto 1/r$};
+  \node[omDef, font=\footnotesize, anchor=north west] at (axis cs:0.1,0.9) {$\propto r$};
+\end{axis}
+\end{tikzpicture}\hfill
+\begin{tikzpicture}[font=\small, x=1cm, y=1cm, >=Stealth]
+  \foreach \x in {-2.0,-1.6,...,2.0} {\fill[omThm] (\x,0.9) circle (2pt); \node[omThm, font=\scriptsize] at (\x,-0.9) {$\times$};}
+  \foreach \y in {-0.55,-0.15,0.25,0.65} \draw[omDef, thick, -Stealth] (-2.6,\y) -- (2.6,\y);
+  \draw[omProp, very thick, dashed, -Stealth] (-1.2,0.2) -- (1.2,0.2) node[midway, below, font=\footnotesize] {$\ell$};
+  \draw[omProp, very thick, dashed] (1.2,0.2) -- (1.2,1.5) -- (-1.2,1.5) -- (-1.2,0.2);
+  \node[omProp, font=\footnotesize] at (0,1.85) {contour d'Ampère~: $B\ell = \mu_0 n\ell I$};
+  \node[font=\footnotesize] at (0,-1.5) {$\vect B = \vect 0$ au-dehors, $\mu_0 nI$ au-dedans};
+\end{tikzpicture}
+
+{\small À gauche~: le champ d'un fil épais, linéaire à l'intérieur et en $1/r$
+à l'extérieur, maximal à la surface. À droite~: le rectangle d'Ampère qui
+donne le \omterm{prop:b1:magnetostatics:three}{champ d'un solénoïde} infini --- seul le côté intérieur contribue à la
+circulation.}
+\end{omfigure}
+
+\section{La force de Laplace}
+
+\begin{theorem}[Force de Laplace]\label{thm:b1:magnetostatics:laplace}
+\index{force de Laplace}
+Un élément de conducteur $\dd\vect l$ parcouru par $I$ dans un champ $\vect B$
+reçoit la force $\dd\vect F = I\,\dd\vect l\wedge\vect B$~; un segment
+rectiligne $\vect L$ dans un champ uniforme reçoit $\vect F = I\vect L\wedge\vect B$,
+de norme $ILB\sin\theta$, perpendiculaire à la fois au fil et au champ.
+\end{theorem}
+
+\begin{proof}
+Les porteurs de charge de $\dd\vect l$ (au nombre de $n\,S\,\dd l$, de charge
+$q$, de vitesse de dérive $\vect v$) subissent chacun $q\vect v\wedge\vect B$~;
+leur somme vaut
+$nSq\,\dd l\,\vect v\wedge\vect B = I\,\dd\vect l\wedge\vect B$ puisque $I = nqvS$
+et que $\vect v$ est porté par $\dd\vect l$. Les porteurs transmettent la force
+au réseau du fil par leurs chocs.
+\end{proof}
+
+\begin{proposition}[Force entre deux fils parallèles]\label{prop:b1:magnetostatics:parallel}
+\index{ampère (définition)}
+Deux longs fils parallèles distants de $d$, parcourus par $I_1$ et $I_2$,
+s'attirent si les courants sont de même sens, se repoussent s'ils sont
+opposés, avec la force par unité de longueur
+\[
+\frac{F}{\ell} = \frac{\mu_0I_1I_2}{2\pi d} .
+\]
+Deux fils distants de \qty{1}{m} parcourus par \qty{1}{A} subissent $2 \times 10^{-7}$~N par
+mètre --- la définition de l'\omterm{def:b1:dc-circuits:current}{ampère} de 1948 à 2019, et l'origine de la valeur
+$\mu_0 = 4\pi \times 10^{-7}$.
+\end{proposition}
+
+\begin{proof}
+Le fil~1 crée $\mu_0I_1/2\pi d$ au niveau du fil~2, perpendiculairement à
+celui-ci~; la \omterm{thm:b1:magnetostatics:laplace}{force de Laplace} sur une longueur $\ell$ du fil~2 vaut $I_2\ell \times \mu_0I_1/2\pi d$,
+dirigée vers le fil~1 lorsque les courants sont de même sens (à vérifier avec
+la règle de la main droite).
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}[font=\small, x=1cm, y=1cm, >=Stealth]
+  \begin{scope}
+    \draw[omThm, very thick, -Stealth] (-0.8,-1.6) -- (-0.8,1.6) node[above] {$I_1$};
+    \draw[omThm, very thick, -Stealth] (0.8,-1.6) -- (0.8,1.6) node[above] {$I_2$};
+    \draw[omDef, thick, ->] (-0.8,0) -- (-0.1,0) node[midway, above, font=\footnotesize] {$\vect F$};
+    \draw[omDef, thick, ->] (0.8,0) -- (0.1,0);
+    \node[omProp, font=\scriptsize] at (0.8,-0.5) [xshift=10pt] {$\odot\ \vect B_1$};
+    \node[font=\footnotesize] at (0,-2.1) {courants de même sens~: attraction};
+  \end{scope}
+  \begin{scope}[xshift=4.6cm]
+    \draw[omThm, very thick, -Stealth] (-0.8,-1.6) -- (-0.8,1.6) node[above] {$I_1$};
+    \draw[omThm, very thick, -Stealth] (0.8,1.6) node[above] {$I_2$} -- (0.8,-1.6);
+    \draw[omDef, thick, ->] (-0.8,0) -- (-1.5,0) node[midway, above, font=\footnotesize] {$\vect F$};
+    \draw[omDef, thick, ->] (0.8,0) -- (1.5,0);
+    \node[font=\footnotesize] at (0,-2.1) {sens opposés~: répulsion};
+  \end{scope}
+  \begin{scope}[xshift=10.2cm]
+    \draw[omThm, very thick] (-2.2,0.9) -- (2.2,0.9); \draw[omThm, very thick] (-2.2,-0.9) -- (2.2,-0.9);
+    \draw[omThm, very thick, -Stealth] (0.3,0.9) -- (0.3,-0.9) node[midway, right, font=\footnotesize] {$I$};
+    \draw[omThm, very thick] (0.15,0.9) rectangle (0.45,-0.9);
+    \foreach \x in {-1.8,-1.2,-0.6,1.0,1.6} \foreach \y in {-0.45,0.45} \node[omProp, font=\scriptsize] at (\x,\y) {$\times$};
+    \node[omProp, font=\footnotesize] at (-1.2,1.25) {$\vect B$ entrant dans la page};
+    \draw[omDef, very thick, ->] (0.3,0) -- (1.6,0);
+    \node[omDef, font=\footnotesize, anchor=north west] at (0.85,-0.2) {$\vect F = I\vect L\wedge\vect B$};
+    \node[font=\footnotesize] at (0,-2.1) {rails~: le moteur le plus simple};
+  \end{scope}
+\end{tikzpicture}
+
+{\small La \omterm{thm:b1:magnetostatics:laplace}{force de Laplace}~: entre fils parallèles (à gauche et au milieu) et
+sur une barre glissante parcourue par un courant dans un champ (à droite) ---
+les rails de Laplace, dont le bilan énergétique fait l'objet du \cref{ch:b1:induction}.}
+\end{omfigure}
+
+\section{Le dipôle magnétique}
+
+\begin{definition}[Moment magnétique]\label{def:b1:magnetostatics:moment}
+\index{moment magnétique}\index{dipôle magnétique}
+Une spire plane d'aire $S$ parcourue par $I$, orientée par la règle de la main
+droite (la normale $\vect n$ selon le pouce quand les doigts suivent $I$), a
+pour \emph{moment magnétique} $\vect m = IS\,\vect n$ (\unit{A.m^2})~; pour $N$
+spires, $NIS\,\vect n$. Vue des distances $r \gg \sqrt S$, la spire est un
+\emph{dipôle magnétique}~: son champ a exactement la forme de celui du \omterm{def:b1:potential-capacitors:dipole}{dipôle
+électrique}, avec $\vect p/\varepsilon_0 \to \mu_0\vect m$~:
+\[
+B_r = \frac{\mu_0}{4\pi}\,\frac{2m\cos\theta}{r^3}, \qquad
+B_\theta = \frac{\mu_0}{4\pi}\,\frac{m\sin\theta}{r^3} .
+\]
+Un aimant droit, un atome, la Terre sont des dipôles magnétiques~: le moment
+de la Terre vaut \qty{8e22}{A.m^2}, celui d'un électron \qty{9.3e-24}{A.m^2}
+(le magnéton de Bohr).
+\end{definition}
+
+\begin{proof}
+Sur l'axe, le champ de la spire $\mu_0IR^2/2z^3$ pour $z \gg R$ vaut
+$\mu_0 \cdot 2m/4\pi z^3$ avec $m = I\pi R^2$, ce qui coïncide avec $B_r$ en $\theta = 0$~;
+la forme angulaire complète est admise.
+\end{proof}
+
+\begin{theorem}[Dipôle dans un champ]\label{thm:b1:magnetostatics:dipoleinfield}
+\index{dipôle magnétique!moment des forces}\index{dipôle magnétique!énergie}
+Un \omterm{def:b1:magnetostatics:moment}{moment magnétique} $\vect m$ placé dans un champ uniforme $\vect B$ ne subit
+aucune force résultante, mais un couple $\vect\Gamma = \vect m\wedge\vect B$
+qui l'aligne sur le champ, et il a l'\omterm{def:b1:work-and-energy:conservative}{énergie potentielle} $E_p = -\vect m\cdot\vect B$.
+Dans un champ non uniforme, il est attiré vers la région de champ intense
+lorsqu'il est aligné (et repoussé lorsqu'il est anti-aligné).
+\end{theorem}
+
+\begin{proof}
+Pour une spire rectangulaire $a \times b$ dont la normale $\vect n$ fait
+l'angle $\theta$ avec $\vect B$~: les \omterm{thm:b1:magnetostatics:laplace}{forces de Laplace} sur les deux côtés de
+longueur $b$ parallèles à l'axe de rotation valent $\pm IbB$, opposées et
+distantes de $a\sin\theta$~: un couple de moment $IabB\sin\theta = mB\sin\theta$,
+qui tend à diminuer $\theta$~; les forces sur les deux autres côtés sont
+opposées et colinéaires. Énergie~: $\Gamma = -\dd E_p/\dd\theta$ avec $\Gamma = -mB\sin\theta$
+donne $E_p = -mB\cos\theta$. Toute spire plane est une somme de petits
+rectangles~; le cas non uniforme est admis.
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}[font=\small, x=1cm, y=1cm, >=Stealth]
+  \begin{scope}
+    % rectangular loop seen from above, B horizontal
+    \foreach \y in {-1.4,-0.7,0,0.7,1.4} \draw[omProp, ->] (-2.8,\y) -- (2.8,\y);
+    \node[omProp, font=\footnotesize] at (2.5,1.7) {$\vect B$};
+    \draw[omThm, very thick] (-0.9,-0.55) -- (0.9,0.55);
+    \fill[omThm] (-0.9,-0.55) circle (3pt); \node[omThm, font=\footnotesize] at (0.9,0.55) {$\otimes$};
+    \draw[omDef, very thick, ->] (-0.9,-0.55) -- (-0.9,-1.6) node[left, font=\footnotesize] {$\vect F$};
+    \draw[omDef, very thick, ->] (0.9,0.55) -- (0.9,1.6) node[right, font=\footnotesize] {$-\vect F$};
+    \draw[very thick, ->] (0,0) -- (-0.66,1.08) node[above left, font=\footnotesize] {$\vect m$};
+    \draw (0,0.6) arc[start angle=90, end angle=121.4, radius=0.6] node[midway, above, font=\footnotesize] {$\theta$};
+    \node[font=\footnotesize] at (0,-2.95) {couple $mB\sin\theta$~: la spire tourne et aligne $\vect m$ sur $\vect B$};
+  \end{scope}
+  \begin{scope}[xshift=8.6cm]
+    % compass / dipole field lines of a magnet
+    \draw[fill=omThm!20, draw=omThm, thick] (-1.0,-0.3) rectangle (0,0.3); \node[omThm, font=\footnotesize] at (-0.5,0) {S};
+    \draw[fill=omDef!20, draw=omDef, thick] (0,-0.3) rectangle (1.0,0.3); \node[omDef, font=\footnotesize] at (0.5,0) {N};
+    \foreach \K in {1.4,2.0,2.6} {
+      \draw[omDef, thick, domain=8:172, samples=90, postaction={decorate, decoration={markings, mark=at position 0.5 with {\arrow{>}}}}] plot ({\K*sin(\x)*sin(\x)*cos(\x)}, {\K*sin(\x)*sin(\x)*sin(\x)});
+      \draw[omDef, thick, domain=188:352, samples=90, postaction={decorate, decoration={markings, mark=at position 0.5 with {\arrow{<}}}}] plot ({\K*sin(\x)*sin(\x)*cos(\x)}, {\K*sin(\x)*sin(\x)*sin(\x)});
+    }
+    \draw[->, very thick] (-0.6,0) -- (0.6,0); \node[font=\footnotesize] at (0,-0.5) {$\vect m$};
+    \node[font=\footnotesize] at (0,-2.95) {un aimant~: le champ d'un dipôle, du N vers le S};
+  \end{scope}
+\end{tikzpicture}
+
+{\small À gauche~: une spire de courant dans un champ uniforme, vue selon son
+axe de rotation --- les \omterm{thm:b1:magnetostatics:laplace}{forces de Laplace} sur les deux côtés forment un couple
+qui aligne le moment sur le champ. À droite~: les \omterm{def:b1:electrostatics-gauss:field}{lignes de champ} d'un aimant
+droit sont celles d'un \omterm{def:b1:magnetostatics:moment}{dipôle magnétique}, de forme identique à celles du
+\omterm{def:b1:potential-capacitors:dipole}{dipôle électrique}, sortant par la face nord et revenant par la face sud.}
+\end{omfigure}
+
+\begin{example}[La boussole et la Terre]\label{ex:b1:magnetostatics:compass}
+Une aiguille de boussole est un petit aimant, de moment $m \sim \qty{0.1}{A.m^2}$~;
+dans la composante horizontale du champ terrestre, $B_h \approx \qty{2e-5}{T}$, le
+couple $mB_h\sin\theta$ la tourne vers le nord, et elle oscille autour du nord avec
+la période $2\pi\sqrt{J/mB_h} \sim \qty{1}{s}$ (\cref{exo:b1:magnetostatics:9}).
+Le dipôle propre de la Terre, \qty{8e22}{A.m^2}, équivaut à un courant de
+quelques milliards d'\omterm{def:b1:dc-circuits:current}{ampères} circulant dans le noyau de fer liquide~; le champ
+qu'il produit à la surface est le plus faible du chapitre et le premier dont
+on se soit servi.
+\end{example}
+
+\section{Exercices}
+
+\begin{exercise}[$\star$]\label{exo:b1:magnetostatics:1}
+Champ à \qty{1.0}{cm} d'un fil rectiligne parcouru par \qty{10}{A}~; courant
+nécessaire pour atteindre \qty{1}{T} à cette distance~; distance à laquelle le
+champ d'un fil de \qty{100}{A} égale les \qty{5e-5}{T} terrestres.
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b1:magnetostatics:2}
+Champ au centre d'une bobine de $100$ spires, de rayon \qty{5.0}{cm},
+parcourue par \qty{2.0}{A}~; sur son axe à \qty{5.0}{cm} puis à \qty{50}{cm}
+du centre.
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b1:magnetostatics:3}
+Un solénoïde de $1000$ spires par mètre est parcouru par \qty{5.0}{A}~: champ
+à l'intérieur, loin des extrémités~; puis tout au bout. Nombre de spires de
+fil de \qty{0.5}{mm} que l'on peut bobiner par mètre en une seule couche, et
+champ obtenu alors sous \qty{5}{A}.
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b1:magnetostatics:4}
+Force sur un fil de \qty{1.0}{m} parcouru par \qty{10}{A} perpendiculairement
+à un champ de \qty{0.10}{T}~; sur le même fil à \qty{30}{\degree} du champ. Un
+moteur porte $100$ fils de ce genre sur un rotor de rayon \qty{5}{cm}~: moment
+du couple (\omterm{def:b1:units-dimensions:oom}{ordre de grandeur}).
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b1:magnetostatics:5}
+Champ d'un segment rectiligne fini à la distance $d$ de sa droite support, ses
+extrémités étant vues sous les angles $\alpha_1$ et $\alpha_2$ (comptés depuis
+la perpendiculaire)~: $B = \dfrac{\mu_0I}{4\pi d}(\sin\alpha_2 - \sin\alpha_1)$. Vérifier
+la limite du fil infini. Champ au centre d'une spire carrée de côté
+$a$.
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b1:magnetostatics:6}
+\emph{Bobines de Helmholtz.} Deux bobines identiques ($N$ spires, rayon $R$)
+sur un même axe, distantes de $R$, parcourues par le même courant dans le même
+sens. Champ au milieu~; montrer que les dérivées première \emph{et seconde}
+de $B$ le long de l'axe y sont nulles. Application~: $N = 100$,
+$R = \qty{15}{cm}$, $I = \qty{1.0}{A}$.
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b1:magnetostatics:7}
+Un fil de cuivre de rayon \qty{2.0}{mm} est parcouru par \qty{100}{A}. Champ à
+la surface, à \qty{1.0}{mm} de l'axe, à \qty{1.0}{cm}. Esquisser $B(r)$.
+Ce fil devient l'âme d'un câble coaxial dont la \omterm{def:b1:rays-reflection-refraction:fiber}{gaine} porte le courant de
+retour~: champ à l'extérieur de la \omterm{def:b1:rays-reflection-refraction:fiber}{gaine}.
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b1:magnetostatics:8}
+Force par mètre entre deux fils distants de \qty{1}{m} sous \qty{1}{A}~; entre
+deux jeux de barres distants de \qty{10}{cm} parcourus par \qty{10}{kA}~; sous
+un court-circuit de \qty{100}{kA}. Que faut-il prévoir pour tenir les barres~?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b1:magnetostatics:9}
+Une aiguille de boussole, de moment $m = \qty{0.10}{A.m^2}$ et de \omterm{prop:b1:angular-momentum:inertia}{moment
+d'inertie} $J = \qty{1.0e-7}{kg.m^2}$, dans un champ horizontal $B_h = \qty{2.0e-5}{T}$.
+Moment du couple à \qty{90}{\degree}~; travail pour la tourner du nord au sud~;
+période des \omterm{prop:b1:work-and-energy:stability}{petites oscillations}. Comment mesure-t-on $B_h$ avec elle~?
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b1:magnetostatics:10}
+\emph{La Terre comme dipôle.} (a) Montrer que sur son axe, au loin, le \omterm{prop:b1:magnetostatics:three}{champ
+d'une spire} vaut $B = \mu_0m/2\pi z^3$ avec $m = I\pi R^2$~; comparer au \omterm{def:b1:potential-capacitors:dipole}{dipôle
+électrique}. (b) Le champ au pôle magnétique vaut environ
+\qty{6e-5}{T}~: en déduire le \omterm{def:b1:potential-capacitors:dipole}{moment dipolaire} de la Terre. (c) Courant dans
+une spire de rayon \qty{3000}{km} (le noyau) qui le produirait. (d) Champ à
+l'équateur dans le modèle dipolaire~; inclinaison du champ à la latitude
+\qty{45}{\degree} (utiliser $B_r$ et $B_\theta$).
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b1:magnetostatics:11}
+\emph{Solénoïde fini.} Longueur $L = \qty{20}{cm}$, rayon $R = \qty{2.0}{cm}$,
+$n = \qty{2000}{m^{-1}}$, $I = \qty{3.0}{A}$. Champ au centre et à une
+extrémité par la formule du cours~; fraction de la valeur du solénoïde
+infini~; à quelle distance au-dehors, sur l'axe, le champ est-il tombé à
+$1\%$ de la valeur centrale~? Esquisser $B(z)$ le long de l'axe.
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b1:magnetostatics:12}
+\emph{Pression magnétique.} Dans un long solénoïde, le champ vaut $B$ à
+l'intérieur et $0$ au-dehors~; les enroulements portent le courant surfacique
+$K = nI$ par mètre de longueur. (a) Montrer que le champ \emph{au niveau} des
+enroulements, moyenne de celui du dedans et de celui du dehors, vaut
+$B/2$, et que la \omterm{thm:b1:magnetostatics:laplace}{force de Laplace} qui s'exerce sur eux est une pression
+dirigée vers l'extérieur, $p = B^2/2\mu_0$. (b) Applications numériques pour
+\qty{1}{T}, \qty{10}{T}, \qty{45}{T}~; comparer à la pression atmosphérique et
+à la limite de rupture de l'acier (\qty{1}{GPa}). (c) Qu'est-ce qui limite les
+aimants les plus intenses fonctionnant en continu~?
+\end{exercise}
+
+\begin{omfigure}
+\includegraphics[width=0.50\linewidth]{images/book3/transmission-line.jpg}
+
+{\small Une ligne de transport à haute tension~: trois conducteurs par circuit dont les courants ont une somme nulle, de sorte que leurs champs se compensent à distance. Photographie~: Stefan Andrej Shambora, CC~BY~2.0.}
+\end{omfigure}
+
+\section{Problème~: le câble, la ligne et l'appareil de mesure}
+
+\begin{problem}[{Problème du week-end --- le théorème d'Ampère sur un câble
+coaxial, les forces de Laplace sur une ligne électrique, et la conception d'un
+galvanomètre à cadre mobile}]
+\label{pb:b1:magnetostatics:1}
+$\mu_0 = 4\pi \times 10^{-7}$~SI~; résistivité du cuivre $\rho = \qty{1.7e-8}{\ohm.m}$.
+
+\medskip
+\noindent\textbf{Partie I --- Le câble coaxial.}
+Un câble transporte $I = \qty{1.0}{A}$ dans une âme de cuivre pleine de rayon
+$a = \qty{0.50}{mm}$ et le ramène par une \omterm{def:b1:rays-reflection-refraction:fiber}{gaine} de rayon intérieur $b =
+\qty{2.5}{mm}$ et de rayon extérieur $c = \qty{3.0}{mm}$~; les courants sont
+uniformes sur la section de chaque conducteur.
+\begin{enumerate}
+  \item Symétries et invariances~: direction de $\vect B$ et variable dont il
+        dépend.
+  \item $B(r)$ dans l'âme, entre les conducteurs, puis à l'extérieur du
+        câble, par le \omterm{thm:b1:magnetostatics:ampere}{théorème d'Ampère}.
+  \item Valeurs en $r = a$ et $r = b$.
+  \item On remplace l'âme par un mince tube de cuivre de même rayon
+        $a$ portant le même courant~: qu'est-ce qui change dans chaque région~?
+  \item $B(r)$ à l'intérieur de la \omterm{def:b1:rays-reflection-refraction:fiber}{gaine} ($b < r < c$)~; vérifier les valeurs
+        en $b$ et en $c$~; esquisser $B(r)$ de $0$ à \qty{4}{mm}.
+  \item \omterm{thm:b1:magnetostatics:laplace}{Force de Laplace} sur la \omterm{def:b1:rays-reflection-refraction:fiber}{gaine}~: sens (attraction ou répulsion
+        vis-à-vis de l'âme~?) et valeur par unité d'aire, en prenant pour
+        champ à la \omterm{def:b1:rays-reflection-refraction:fiber}{gaine} la moyenne de ses valeurs en $b$ et en $c$.
+        Même question pour un courant impulsionnel de \qty{10}{kA}.
+  \item Pourquoi emploie-t-on la géométrie coaxiale pour les signaux~?
+        Comparer à une paire de fils parallèles distants de $d = \qty{2}{mm}$~:
+        champ à la distance $D = \qty{10}{cm}$ de la paire (superposer deux fils).
+\end{enumerate}
+
+\medskip
+\noindent\textbf{Partie II --- La ligne électrique.}
+Deux conducteurs horizontaux distants de $d = \qty{1.0}{m}$, à $h = \qty{10}{m}$
+au-dessus du sol, portent $I = \qty{500}{A}$ en sens opposés.
+\begin{enumerate}[resume]
+  \item Champ d'un conducteur au point du sol situé sous le milieu des deux~;
+        montrer que les deux champs se composent en un champ vertical et en
+        donner la valeur~; comparer au champ terrestre et à la valeur repère
+        d'exposition de \qty{100}{\micro T}.
+  \item Montrer qu'aux distances $D \gg d$ le champ de la paire décroît comme
+        $\mu_0Id/2\pi D^2$~: pourquoi plus vite que celui d'un fil seul~?
+  \item Champ à \qty{1.0}{m} sous l'un des conducteurs, là où un technicien
+        pourrait travailler.
+  \item Force par mètre entre les conducteurs~; attraction ou répulsion~?
+        Même question sous un courant de court-circuit de \qty{20}{kA}.
+  \item Force sur une portée de \qty{300}{m}, en régime normal puis en
+        court-circuit~; comparer au poids de la portée (\qty{1.0}{kg/m})~; que
+        font les lignes lors d'un court-circuit~?
+  \item Une ligne triphasée porte trois courants de même \omterm{def:b1:wave-propagation:signal}{amplitude} déphasés de
+        \qty{120}{\degree}~: montrer que leur somme s'annule à chaque instant,
+        et ce que cela implique pour le champ lointain.
+  \item Une boussole au point de la question~8, où le champ horizontal
+        terrestre vaut \qty{2.0e-5}{T}~: le champ de la ligne la
+        dévie-t-il~? (Penser à sa direction.)
+\end{enumerate}
+
+\medskip
+\noindent\textbf{Partie III --- Le galvanomètre à cadre mobile.}
+Un cadre rectangulaire de $N = 200$ spires, de côtés $a = \qty{2.0}{cm}$
+(parallèles à l'axe de rotation) et $b = \qty{3.0}{cm}$, tourne autour de son
+axe dans l'entrefer de pièces polaires cylindriques où le champ,
+$B = \qty{0.20}{T}$, est \emph{radial}~: toujours dans le plan du cadre et
+perpendiculaire à ses côtés $a$. Un ressort spiral exerce le couple de rappel
+$-C\theta$ avec $C = \qty{1.0e-5}{N.m/rad}$. \omterm{prop:b1:angular-momentum:inertia}{Moment d'inertie} du cadre et de
+l'aiguille~: $J = \qty{6.7e-8}{kg.m^2}$.
+\begin{enumerate}[resume]
+  \item \omterm{thm:b1:magnetostatics:laplace}{Forces de Laplace} sur les quatre côtés~; lesquelles produisent un
+        moment autour de l'axe~?
+  \item Moment du couple pour un courant $I$~; pourquoi le champ radial le
+        rend-il indépendant de $\theta$~?
+  \item Déviation $\theta$ à l'équilibre~; sensibilité en radians par
+        milliampère~; courant donnant la déviation pleine échelle de \qty{1.2}{rad}.
+  \item Le cadre est bobiné avec un fil de cuivre de \qty{0.10}{mm} de
+        diamètre~: résistance du cadre~; tension à ses bornes et puissance
+        dissipée en pleine échelle.
+  \item Équation du mouvement du cadre~; période propre des oscillations
+        autour de l'équilibre.
+  \item Le mouvement du cadre dans le champ induit un couple de freinage
+        $-\alpha\dot\theta$ (\cref{ch:b1:induction})~; valeur de $\alpha$ pour
+        un amortissement critique, et pourquoi on le recherche.
+  \item Résistance en série pour en faire un voltmètre de \qty{10}{V} pleine
+        échelle~; résistance en dérivation pour en faire un ampèremètre de
+        \qty{1.0}{A} pleine échelle.
+  \item \omterm{def:b1:magnetostatics:moment}{Moment magnétique} du cadre en pleine échelle~; énergie $-\vect m\cdot
+        \vect B$ qu'il aurait, aligné, dans un champ uniforme de \qty{0.20}{T}~;
+        comparer à l'énergie emmagasinée dans le ressort en pleine échelle.
+  \item Si le champ était \emph{uniforme} au lieu d'être radial, montrer que
+        la graduation ne serait plus linéaire~: écrire la condition d'équilibre
+        avec $\theta$ compté depuis la position où le plan du cadre
+        contient $\vect B$.
+  \item On envoie dans l'appareil un courant de \qty{50}{Hz} et de \qty{0.5}{mA}
+        d'\omterm{def:b1:wave-propagation:signal}{amplitude}~: qu'indique l'aiguille, et pourquoi~? (Comparer \qty{50}{Hz}
+        à la \omterm{def:b1:oscillators-resonance:harmonic}{fréquence propre}.)
+  \item Résumer les trois scènes en trois nombres, et dire quelle loi unique a
+        produit chacun.
+\end{enumerate}
+\end{problem}

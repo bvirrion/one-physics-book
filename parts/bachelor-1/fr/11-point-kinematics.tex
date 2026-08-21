@@ -1,0 +1,576 @@
+\chapter{Cinématique du point}\label{ch:b1:point-kinematics}
+
+La voiture d'un grand huit aborde la boucle à \qty{90}{km/h}, ralentit
+en montant, reste suspendue un instant au sommet, puis repart en
+rugissant~; ses passagers se sentent écrasés dans leur siège en bas et
+presque sans poids en haut. Décrire ce parcours --- où est la voiture, à
+quelle \omterm{def:b1:point-kinematics:velocity}{vitesse} elle va, comment sa \omterm{def:b1:point-kinematics:velocity}{vitesse} tourne et varie --- c'est la
+cinématique, et cela demande plus que les $x$, $y$, $z$ d'une route
+droite~: des \omterm{def:b1:point-kinematics:cylindrical}{coordonnées polaires} pour tout ce qui tourne, et un repère
+qui voyage avec la voiture elle-même. Ce chapitre met en place ces
+outils, démontre les formules de la \omterm{def:b1:point-kinematics:velocity}{vitesse} et de l'\omterm{def:b1:point-kinematics:velocity}{accélération} dans
+chacun d'eux, et les applique aux mouvements que tous les chapitres
+suivants invoqueront~: circulaire, hélicoïdal, harmonique, et le
+mouvement le long d'une courbe quelconque.
+
+\section{Position, vitesse, accélération}
+
+\begin{definition}[Référentiel~; position~; trajectoire]\label{def:b1:point-kinematics:frame}
+\index{référentiel}\index{vecteur position}\index{trajectoire}\index{point matériel}
+Un \emph{référentiel} est un solide pris pour fixe (le laboratoire, la
+Terre, un train), muni d'une horloge. Un \emph{point matériel} $M$ ---
+un corps dont la taille n'importe pas au mouvement étudié --- est repéré
+à chaque instant par son \emph{vecteur position} $\vect{OM}(t)$ depuis
+une origine $O$ liée au référentiel~; la courbe décrite par $M$ est sa
+\emph{trajectoire}. Un mouvement est toujours un mouvement
+\emph{par rapport à un référentiel}~: le même voyageur est au repos dans
+le train et en mouvement dans la gare.
+\end{definition}
+
+\begin{definition}[Vitesse et accélération]\label{def:b1:point-kinematics:velocity}
+\index{vitesse}\index{accélération}
+La \emph{vitesse} et l'\emph{accélération} de $M$ dans le \omterm{def:b1:point-kinematics:frame}{référentiel} sont
+\[
+\vect v = \frac{\dd\vect{OM}}{\dd t}, \qquad
+\vect a = \frac{\dd\vect v}{\dd t} = \frac{\dd^2\vect{OM}}{\dd t^2},
+\]
+dérivées de fonctions vectorielles~: la dérivée d'un vecteur s'obtient
+en dérivant ses composantes dans une base \emph{fixe dans le
+\omterm{def:b1:point-kinematics:frame}{référentiel}}. La vitesse est tangente à la \omterm{def:b1:point-kinematics:frame}{trajectoire} et orientée dans
+le sens du mouvement~; sa norme $v$ est la \emph{valeur de la vitesse}.
+Unités~: \unit{m/s}, \unit{m/s^2}.
+\end{definition}
+
+\begin{proposition}[Coordonnées cartésiennes]\label{prop:b1:point-kinematics:cartesian}
+\index{coordonnées cartésiennes}
+Avec une base orthonormée fixe $(\vect e_x, \vect e_y, \vect e_z)$ et
+$\vect{OM} = x\,\vect e_x + y\,\vect e_y + z\,\vect e_z$,
+\[
+\vect v = \dot x\,\vect e_x + \dot y\,\vect e_y + \dot z\,\vect e_z, \qquad
+\vect a = \ddot x\,\vect e_x + \ddot y\,\vect e_y + \ddot z\,\vect e_z,
+\]
+où le point désigne $\dd/\dd t$.
+\end{proposition}
+
+\begin{proof}
+Les vecteurs de base sont constants~; seules les composantes varient.
+\end{proof}
+
+\begin{example}[Projectile]\label{ex:b1:point-kinematics:projectile}
+Lancée de $O$ à la \omterm{def:b1:point-kinematics:velocity}{vitesse} $v_0$ sous un angle $\alpha$ au-dessus de
+l'horizontale, une balle a pour coordonnées (dynamique~: chapitre
+suivant) $x = v_0\cos\alpha\,t$, $z = v_0\sin\alpha\,t - \tfrac12 gt^2$. Alors
+$\vect v = v_0\cos\alpha\,\vect e_x + (v_0\sin\alpha - gt)\vect e_z$ et
+$\vect a = -g\vect e_z$~: l'\omterm{def:b1:point-kinematics:velocity}{accélération} est constante tandis que la
+\omterm{def:b1:point-kinematics:velocity}{vitesse} tourne~; au sommet ($\dot z = 0$, $t = v_0\sin\alpha/g$) la
+\omterm{def:b1:point-kinematics:velocity}{vitesse} est horizontale et l'\omterm{def:b1:point-kinematics:velocity}{accélération} lui est perpendiculaire. En
+éliminant $t$~: $z = x\tan\alpha - gx^2/(2v_0^2\cos^2\alpha)$, une
+parabole.
+\end{example}
+
+\begin{omfigure}
+\begin{tikzpicture}[font=\small, x=1cm, y=1cm]
+  \draw[-Stealth] (0,0) -- (6.8,0) node[right] {$x$};
+  \draw[-Stealth] (0,0) -- (0,3.6) node[above] {$z$};
+  \node[below left] at (0,0) {$O$};
+  \draw[omDef, thick, domain=0:6, samples=80] plot (\x, {2.2*\x - 0.3667*\x*\x});
+  % point at x=1.5: z=2.2*1.5-0.3667*2.25=3.3-0.825=2.475 ; slope = 2.2 - 0.7333*1.5 = 1.1
+  \fill[omThm] (1.5,2.475) circle (1.6pt); \node[above left] at (1.5,2.475) {$M$};
+  \draw[-Stealth, omThm, thick] (1.5,2.475) -- ++(1.0,1.1) node[above right] {$\vect v$};
+  \draw[-Stealth, omProp, thick] (1.5,2.475) -- ++(0,-1.2) node[right] {$\vect a = \vect g$};
+  \draw[-Stealth, omExo] (0,0) -- (1.5,2.475); \node[omExo, left] at (0.72,1.45) {$\vect{OM}$};
+  % apex at x=3: z=6.6-3.3=3.3
+  \fill[omThm] (3,3.3) circle (1.6pt);
+  \draw[-Stealth, omThm, thick] (3,3.3) -- ++(1.2,0);
+  \draw[-Stealth, omProp, thick] (3,3.3) -- ++(0,-1.2);
+\end{tikzpicture}
+
+{\small La parabole d'un projectile~: la \omterm{def:b1:point-kinematics:velocity}{vitesse} est tangente à la
+\omterm{def:b1:point-kinematics:frame}{trajectoire} et tourne, l'\omterm{def:b1:point-kinematics:velocity}{accélération} $\vect g$ est constante. Au
+sommet, \omterm{def:b1:point-kinematics:velocity}{vitesse} et \omterm{def:b1:point-kinematics:velocity}{accélération} sont perpendiculaires~: la valeur de la
+\omterm{def:b1:point-kinematics:velocity}{vitesse} est momentanément stationnaire alors que sa direction change encore.}
+\end{omfigure}
+
+\section{Coordonnées cylindriques}
+
+\begin{definition}[Coordonnées cylindriques et base locale]\label{def:b1:point-kinematics:cylindrical}
+\index{coordonnées cylindriques}\index{coordonnées polaires}\index{base locale}
+Le point $M$ est repéré par $r \geq 0$ (distance à l'axe $z$), l'angle
+$\theta$ que fait sa projection sur le plan $xy$ avec $\vect e_x$, et
+$z$~: $\vect{OM} = r\,\vect e_r + z\,\vect e_z$, où
+\[
+\vect e_r = \cos\theta\,\vect e_x + \sin\theta\,\vect e_y, \qquad
+\vect e_\theta = -\sin\theta\,\vect e_x + \cos\theta\,\vect e_y,
+\]
+et $\vect e_z$ forment la \emph{base locale} $(\vect e_r, \vect e_\theta,
+\vect e_z)$, orthonormée directe, qui \emph{se déplace avec $M$}. Dans
+le plan ($z$ fixé), ce sont les \emph{coordonnées polaires} $(r, \theta)$.
+\end{definition}
+
+\begin{lemma}[Dérivées de la base locale]\label{lem:b1:point-kinematics:basisderiv}
+\[
+\frac{\dd\vect e_r}{\dd t} = \dot\theta\,\vect e_\theta, \qquad
+\frac{\dd\vect e_\theta}{\dd t} = -\dot\theta\,\vect e_r, \qquad
+\frac{\dd\vect e_z}{\dd t} = \vect 0 .
+\]
+\end{lemma}
+
+\begin{proof}
+En dérivant les composantes~: $\dd\vect e_r/\dd t = \dot\theta(-\sin\theta\,
+\vect e_x + \cos\theta\,\vect e_y) = \dot\theta\vect e_\theta$, et de
+même pour $\vect e_\theta$. La dérivée d'un vecteur unitaire qui tourne
+lui est perpendiculaire, et a pour norme la \omterm{cor:b1:point-kinematics:circular}{vitesse angulaire}.
+\end{proof}
+
+\begin{theorem}[Vitesse et accélération en coordonnées cylindriques]\label{thm:b1:point-kinematics:cylindrical}
+\[
+\vect v = \dot r\,\vect e_r + r\dot\theta\,\vect e_\theta + \dot z\,\vect e_z,
+\qquad
+\vect a = \big(\ddot r - r\dot\theta^2\big)\vect e_r
++ \big(r\ddot\theta + 2\dot r\dot\theta\big)\vect e_\theta + \ddot z\,\vect e_z .
+\]
+\end{theorem}
+
+\begin{proof}
+Dérivons $\vect{OM} = r\vect e_r + z\vect e_z$ à l'aide du lemme~:
+$\vect v = \dot r\vect e_r + r\dot\theta\vect e_\theta + \dot z\vect e_z$.
+Dérivons une seconde fois~: $\ddot r\vect e_r + \dot r\dot\theta\vect e_\theta +
+\dot r\dot\theta\vect e_\theta + r\ddot\theta\vect e_\theta - r\dot\theta^2
+\vect e_r + \ddot z\vect e_z$~; puis on regroupe.
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}[font=\small, x=1cm, y=1cm]
+  \draw[-Stealth] (0,0) -- (5.2,0) node[right] {$x$};
+  \draw[-Stealth] (0,0) -- (0,3.6) node[above] {$y$};
+  \node[below left] at (0,0) {$O$};
+  \coordinate (M) at (35:3.4);
+  \draw[omExo] (0,0) -- (M); \fill[omThm] (M) circle (1.6pt); \node[below right, xshift=2pt] at (M) {$M$};
+  \node[omExo] at (20:1.9) {$r$};
+  \draw (0.9,0) arc (0:35:0.9); \node at (17:1.15) {$\theta$};
+  \draw[-Stealth, omDef, very thick] (M) -- ++(35:1.1) node[right] {$\vect e_r$};
+  \draw[-Stealth, omDef, very thick] (M) -- ++(125:1.0) node[left] {$\vect e_\theta$};
+  % trajectory sketch: spiral
+  \draw[omThm, thick, domain=5:75, samples=50, variable=\t] plot ({(2.2+0.0343*\t)*cos(\t)},{(2.2+0.0343*\t)*sin(\t)});
+  \draw[-Stealth, omThm, thick] (M) -- ++(100:1.6) node[above right] {$\vect v$};
+\end{tikzpicture}
+
+{\small \omterm{def:b1:point-kinematics:cylindrical}{Coordonnées polaires}~: la \omterm{def:b1:point-kinematics:cylindrical}{base locale} $(\vect e_r, \vect e_\theta)$
+tourne avec $M$~; la \omterm{def:b1:point-kinematics:velocity}{vitesse} a une composante radiale $\dot r$ et une
+composante orthoradiale $r\dot\theta$. Ici la \omterm{def:b1:point-kinematics:frame}{trajectoire} (en rouge)
+s'enroule vers l'extérieur, donc $\dot r > 0$ et $\vect v$ s'écarte de
+la tangente au cercle vers l'extérieur.}
+\end{omfigure}
+
+\begin{corollary}[Mouvement circulaire]\label{cor:b1:point-kinematics:circular}
+\index{mouvement circulaire}\index{accélération centripète}\index{vitesse angulaire}
+Sur un cercle de rayon $R$ ($r = R$, $z = 0$), avec la \emph{\omterm{cor:b1:point-kinematics:circular}{vitesse
+angulaire}} $\omega = \dot\theta$~:
+\[
+\vect v = R\omega\,\vect e_\theta, \qquad
+\vect a = -R\omega^2\,\vect e_r + R\dot\omega\,\vect e_\theta
+= -\frac{v^2}{R}\,\vect e_r + \frac{\dd v}{\dd t}\,\vect e_\theta .
+\]
+Pour un \omterm{cor:b1:point-kinematics:circular}{mouvement circulaire} \emph{uniforme} ($\omega$ constante),
+l'\omterm{def:b1:point-kinematics:velocity}{accélération} est purement \emph{centripète}, de norme
+$v^2/R = R\omega^2$, bien que la \omterm{def:b1:point-kinematics:velocity}{vitesse} soit constante en norme.
+\end{corollary}
+
+\begin{proof}
+On pose $\dot r = \ddot r = 0$ dans le théorème~; $v = R\omega$.
+\end{proof}
+
+\begin{example}[Deux cercles]\label{ex:b1:point-kinematics:circles}
+Une voiture prend un rond-point de rayon \qty{20}{m} à \qty{36}{km/h}
+(\qty{10}{m/s})~: $a = v^2/R = \qty{5.0}{m/s^2}$, un demi-$g$, dirigé
+vers le centre --- ce que les pneus doivent fournir. La Lune
+($R = \qty{3.84e8}{m}$, $T = \qty{27.3}{d}$)~: $\omega = 2\pi/T =
+\qty{2.66e-6}{rad/s}$, $a = R\omega^2 = \qty{2.7e-3}{m/s^2}$, le
+$3600$\textsuperscript{e} du $g$ terrestre, à soixante rayons terrestres
+--- la comparaison qu'a faite Newton (\cref{ch:b1:central-forces}).
+\end{example}
+
+\section{Coordonnées sphériques}
+
+\begin{definition}[Coordonnées sphériques]\label{def:b1:point-kinematics:spherical}
+\index{coordonnées sphériques}
+Le point $M$ est repéré par sa distance $r = OM$, la \emph{colatitude}
+$\theta \in [0, \pi]$ entre $\vect{OM}$ et $\vect e_z$, et l'\emph{azimut}
+$\varphi$ de sa projection sur le plan $xy$~:
+$\vect{OM} = r\,\vect e_r$ avec
+\[
+\vect e_r = \sin\theta\cos\varphi\,\vect e_x + \sin\theta\sin\varphi\,\vect e_y + \cos\theta\,\vect e_z ;
+\]
+où $\vect e_\theta$ (tangent au méridien, vers les $\theta$ croissants)
+et $\vect e_\varphi$ (tangent au parallèle) complètent la \omterm{def:b1:point-kinematics:cylindrical}{base locale}
+orthonormée. Sur la Terre, $\theta$ vaut $90^\circ$ moins la latitude et
+$\varphi$ est la longitude.
+\end{definition}
+
+\begin{proposition}[Vitesse en coordonnées sphériques]\label{prop:b1:point-kinematics:sphericalv}
+\[
+\vect v = \dot r\,\vect e_r + r\dot\theta\,\vect e_\theta + r\sin\theta\,\dot\varphi\,\vect e_\varphi .
+\]
+\end{proposition}
+
+\begin{proof}
+$\dd\vect e_r/\dd t = \dot\theta\,\vect e_\theta + \sin\theta\,\dot\varphi\,
+\vect e_\varphi$~: le premier terme est la rotation dans le plan
+méridien (comme dans le cas polaire), le second la rotation autour de
+$\vect e_z$ à la \omterm{def:b1:point-kinematics:velocity}{vitesse} $\dot\varphi$ d'un vecteur dont la distance à
+l'axe vaut $\sin\theta$. Puis $\vect v = \dd(r\vect e_r)/\dd t$.
+L'\omterm{def:b1:point-kinematics:velocity}{accélération} n'est pas utile cette année.
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}[font=\small, x=1cm, y=1cm, scale=0.95]
+  \draw[-Stealth] (0,0) -- (-2.4,-0.96) node[below left] {$x$};
+  \draw[-Stealth] (0,0) -- (4.2,0) node[right] {$y$};
+  \draw[-Stealth] (0,0) -- (0,3.6) node[above] {$z$};
+  \node[below right] at (0,0) {$O$};
+  \coordinate (M) at (1.4,2.4);
+  \coordinate (P) at (1.4,-0.3);
+  \draw[omExo] (0,0) -- (M); \fill[omThm] (M) circle (1.6pt); \node[above left] at (M) {$M$};
+  \draw[dashed] (M) -- (P); \draw[dashed] (0,0) -- (P);
+  \node[omExo] at (0.45,1.45) {$r$};
+  \draw (0,1.0) arc (90:60:1.0); \node at (0.3,1.25) {$\theta$};
+  \draw (-0.74,-0.3) arc (202:348:0.8); \node at (0.15,-1.05) {$\varphi$};
+  \draw[-Stealth, omDef, very thick] (M) -- ++(0.45,0.77) node[above] {$\vect e_r$};
+  \draw[-Stealth, omDef, very thick] (M) -- ++(0.77,-0.45) node[right] {$\vect e_\theta$};
+  \draw[-Stealth, omDef, very thick] (M) -- ++(0.84,0.33) node[right] {$\vect e_\varphi$};
+\end{tikzpicture}
+
+{\small Les \omterm{def:b1:point-kinematics:spherical}{coordonnées sphériques} $(r, \theta, \varphi)$ et leur \omterm{def:b1:point-kinematics:cylindrical}{base
+locale}~: $\vect e_r$ radial, $\vect e_\theta$ le long du méridien (vers
+le sud sur un globe), $\vect e_\varphi$ le long du parallèle (vers
+l'est).}
+\end{omfigure}
+
+\section{Le repère de Frenet}
+
+\begin{definition}[Abscisse curviligne~; base de Frenet]\label{def:b1:point-kinematics:frenet}
+\index{abscisse curviligne}\index{base de Frenet}\index{rayon de courbure}
+Le long d'une \omterm{def:b1:point-kinematics:frame}{trajectoire}, l'\emph{abscisse curviligne} $s(t)$ est la
+longueur d'arc depuis un point de référence, comptée
+algébriquement~; $v = \dot s$. En $M$, le vecteur unitaire tangent
+$\vect T = \dd\vect{OM}/\dd s$ pointe vers les $s$ croissants~; le
+\emph{rayon de courbure} $\rho > 0$ et le vecteur unitaire normal
+$\vect N$, dirigé vers la concavité (vers le centre de courbure), sont
+définis par
+\[
+\frac{\dd\vect T}{\dd s} = \frac{1}{\rho}\,\vect N .
+\]
+$(\vect T, \vect N)$ est la \emph{base de Frenet}~; $\rho = \infty$ sur
+une droite, $\rho = R$ sur un cercle de rayon $R$.
+\end{definition}
+
+\begin{theorem}[Accélération dans la base de Frenet]\label{thm:b1:point-kinematics:frenet}
+\index{accélération tangentielle}\index{accélération normale}
+\[
+\vect v = v\,\vect T, \qquad
+\vect a = \frac{\dd v}{\dd t}\,\vect T + \frac{v^2}{\rho}\,\vect N .
+\]
+La composante \emph{tangentielle} $\dd v/\dd t$ mesure la rapidité avec
+laquelle la \omterm{def:b1:point-kinematics:velocity}{vitesse} change en valeur~; la composante \emph{normale}
+$v^2/\rho$, toujours dirigée vers le centre de courbure, la rapidité
+avec laquelle la direction tourne. Le mouvement est uniforme si et
+seulement si $\vect a \perp \vect v$~; il est rectiligne si et seulement
+si $\vect a \parallel \vect v$.
+\end{theorem}
+
+\begin{proof}
+$\vect v = (\dd\vect{OM}/\dd s)(\dd s/\dd t) = v\vect T$. Puis $\vect a =
+\dot v\vect T + v\,\dd\vect T/\dd t = \dot v\vect T + v(\dd\vect T/\dd s)\dot s
+= \dot v\vect T + (v^2/\rho)\vect N$. Que $\dd\vect T/\dd s \perp \vect T$
+résulte de $\vect T\cdot\vect T = 1$ dérivé.
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}[font=\small, x=1cm, y=1cm]
+  \draw[omDef, thick, domain=-2.6:3.2, samples=80] plot (\x, {0.22*\x*\x - 0.05*\x*\x*\x});
+  % point at x=1: y=0.17 ; slope = 0.44-0.15=0.29 -> T direction angle 16.2 deg
+  \coordinate (M) at (1,0.17);
+  \fill[omThm] (M) circle (1.6pt); \node[below right] at (M) {$M$};
+  \draw[-Stealth, omThm, very thick] (M) -- ++(16.2:1.2) node[right] {$\vect T$};
+  \draw[-Stealth, omThm, very thick] (M) -- ++(106.2:1.2) node[above] {$\vect N$};
+  % center of curvature: curvature kappa = y''/(1+y'^2)^{3/2}: y''=0.44-0.3=0.14 ; (1+0.0841)^1.5=1.129 -> kappa=0.124 -> rho=8.06 (too big) ; draw just arrow to C off-figure shortened
+  \draw[dashed, omExo] (M) -- ++(106.2:3.0) node[above] {vers $C$, à la distance $\rho$};
+  \draw[-Stealth, omProp, thick] (M) -- ++(16.2:0.8) ++(0,0) -- ++(106.2:1.0);
+  \draw[-Stealth, omProp, very thick] (M) -- ($(M)+(16.2:0.8)+(106.2:1.0)$) node[above right] {$\vect a$};
+  \node[omProp, font=\footnotesize] at ($(M)+(16.2:0.95)+(0,-0.25)$) {$\dot v$};
+  \node[omProp, font=\footnotesize] at ($(M)+(16.2:0.8)+(106.2:0.5)+(0.25,0)$) {$v^2/\rho$};
+\end{tikzpicture}
+
+{\small La \omterm{def:b1:point-kinematics:frenet}{base de Frenet} en un point d'une courbe~: $\vect T$ dans le
+sens du mouvement, $\vect N$ vers le centre de courbure $C$.
+L'\omterm{def:b1:point-kinematics:velocity}{accélération} se décompose en une part tangentielle $\dot v\vect T$
+(accélérer ou freiner) et une part normale $(v^2/\rho)\vect N$ (tourner).}
+\end{omfigure}
+
+\begin{example}[Freiner dans un virage]\label{ex:b1:point-kinematics:bend}
+Une voiture à \qty{90}{km/h} (\qty{25}{m/s}) dans un virage de rayon
+\qty{100}{m} freine à \qty{2.0}{m/s^2}~: $a_T = \qty{-2.0}{m/s^2}$, $a_N = 625/100 =
+\qty{6.25}{m/s^2}$, $a = \sqrt{4 + 39} = \qty{6.6}{m/s^2}$. La part
+normale domine~: un virage est d'abord un changement de direction, et
+l'adhérence des pneus (chapitre suivant) limite $\sqrt{a_T^2 + a_N^2}$,
+ce qui explique qu'on freine \emph{avant} le virage.
+\end{example}
+
+\section{Mouvements de référence}
+
+\begin{proposition}[Mouvement rectiligne uniformément accéléré]\label{prop:b1:point-kinematics:uarm}
+\index{mouvement uniformément accéléré}
+Sur un axe, avec $\ddot x = a$ constante, à partir de $x_0$ et $v_0$~:
+$v = v_0 + at$, $x = x_0 + v_0t + \tfrac12 at^2$, et
+$v^2 - v_0^2 = 2a(x - x_0)$.
+\end{proposition}
+
+\begin{proof}
+On intègre deux fois~; on élimine $t$ entre les deux premières relations.
+\end{proof}
+
+\begin{proposition}[Mouvement hélicoïdal]\label{prop:b1:point-kinematics:helix}
+\index{mouvement hélicoïdal}
+$r = R$, $\theta = \omega t$, $z = v_zt$ ($R$, $\omega$, $v_z$
+constants)~: la \omterm{def:b1:point-kinematics:velocity}{vitesse} $v = \sqrt{R^2\omega^2 + v_z^2}$ est constante,
+l'\omterm{def:b1:point-kinematics:velocity}{accélération} $\vect a = -R\omega^2\vect e_r$ est centripète et de norme
+constante, et le \omterm{def:b1:point-kinematics:frenet}{rayon de courbure} vaut $\rho = v^2/a = R(1 + v_z^2/R^2\omega^2) > R$.
+\end{proposition}
+
+\begin{proof}
+La \cref{thm:b1:point-kinematics:cylindrical} avec $\dot r = 0$,
+$\ddot\theta = 0$, $\ddot z = 0$~; le mouvement est uniforme, donc
+$\vect a$ est purement normale et $v^2/\rho = R\omega^2$.
+\end{proof}
+
+\begin{proposition}[Mouvement harmonique]\label{prop:b1:point-kinematics:harmonic}
+\index{mouvement harmonique}
+$x = A\cos(\omega t + \varphi)$~: $\dot x = -A\omega\sin(\omega t + \varphi)$,
+$\ddot x = -\omega^2 x$. La \omterm{def:b1:point-kinematics:velocity}{vitesse} est en avance d'un quart de période
+sur la position et l'\omterm{def:b1:point-kinematics:velocity}{accélération} est opposée à la position~; $v_{\max} =
+A\omega$, $a_{\max} = A\omega^2$. C'est la projection sur un diamètre
+d'un \omterm{cor:b1:point-kinematics:circular}{mouvement circulaire} uniforme de rayon $A$ et de \omterm{cor:b1:point-kinematics:circular}{vitesse angulaire}
+$\omega$.
+\end{proposition}
+
+\begin{proof}
+On dérive~; pour la projection, on prend $x = A\cos\theta$ avec $\theta =
+\omega t + \varphi$.
+\end{proof}
+
+\begin{method}[Choisir ses coordonnées]\label{met:b1:point-kinematics:choose}
+\begin{itemize}
+  \item Mouvement rectiligne ou parabolique, \omterm{def:b1:point-kinematics:velocity}{accélération} constante~:
+        cartésiennes.
+  \item Mouvement autour d'un axe ou d'un point (cercles, spirales,
+        orbites, plateaux tournants)~: cylindriques ou polaires~; la
+        base bouge, donc on utilise la
+        \cref{thm:b1:point-kinematics:cylindrical}, jamais une dérivation
+        naïve des composantes.
+  \item Une courbe donnée (piste, virage, boucle) lorsque la loi des
+        \omterm{def:b1:point-kinematics:velocity}{vitesses} est connue~: Frenet, qui sépare le «~à quelle \omterm{def:b1:point-kinematics:velocity}{vitesse}~»
+        du «~dans quelle direction~».
+\end{itemize}
+Quel que soit le choix, $\vect v$ et $\vect a$ sont des vecteurs qui
+dépendent du \omterm{def:b1:point-kinematics:frame}{référentiel}, et un résultat n'est complet qu'avec le
+\omterm{def:b1:point-kinematics:frame}{référentiel} nommé.
+\end{method}
+
+\section{Exercices}
+
+\begin{exercise}[$\star$]\label{exo:b1:point-kinematics:1}
+Une voiture part du repos avec $x(t) = 2.0\,t^2$ (unités SI). \omterm{def:b1:point-kinematics:velocity}{Vitesse} et
+\omterm{def:b1:point-kinematics:velocity}{accélération} à $t = \qty{3.0}{s}$~; distance parcourue pendant les
+\qty{5}{s} initiales~; temps pour atteindre \qty{100}{km/h}.
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b1:point-kinematics:2}
+Un point se déplace dans un plan avec $r = \qty{2.0}{m}$ et $\theta = 3.0\,t$
+(en rad, unités SI). Donner $\vect v$ et $\vect a$ dans la base polaire,
+leurs normes, et la nature du mouvement.
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b1:point-kinematics:3}
+Un point de l'équateur ($R = \qty{6.37e6}{m}$, jour sidéral
+\qty{86164}{s})~: \omterm{def:b1:point-kinematics:velocity}{vitesse} et \omterm{def:b1:point-kinematics:velocity}{accélération} dans le \omterm{def:b1:point-kinematics:frame}{référentiel}
+géocentrique. Comparer l'\omterm{def:b1:point-kinematics:velocity}{accélération} à $g$.
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b1:point-kinematics:4}
+Une balle est lancée avec $v_0 = \qty{12}{m/s}$ sous $\alpha = 40^\circ$~;
+ses coordonnées sont celles de l'\cref{ex:b1:point-kinematics:projectile}.
+Trouver la durée de montée jusqu'au sommet, la hauteur maximale, la
+portée et la \omterm{def:b1:point-kinematics:velocity}{vitesse} à l'arrivée au sol.
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b1:point-kinematics:5}
+Un cycliste à \qty{10}{m/s} aborde un virage de rayon \qty{25}{m} et
+accélère de \qty{1.0}{m/s^2}. Donner $\vect a$ dans la \omterm{def:b1:point-kinematics:frenet}{base de Frenet} et
+sa norme~; et après \qty{5}{s} de la même \omterm{def:b1:point-kinematics:velocity}{accélération} sur le même virage~?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b1:point-kinematics:6}
+Un point suit la spirale $r = b\theta$, $\theta = \omega t$ ($b$ et
+$\omega$ constants). Calculer $\vect v$, la \omterm{def:b1:point-kinematics:velocity}{vitesse} et $\vect a$ dans la
+base polaire. D'où vient le terme $2\dot r\dot\theta$~?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b1:point-kinematics:7}
+Hélice~: $R = \qty{2.0}{m}$, $\omega = \qty{1.0}{rad/s}$, $v_z = \qty{0.50}{m/s}$.
+\omterm{def:b1:point-kinematics:velocity}{Vitesse}, \omterm{def:b1:point-kinematics:velocity}{accélération}, pas de l'hélice, \omterm{def:b1:point-kinematics:frenet}{rayon de courbure}.
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b1:point-kinematics:8}
+Un piston se déplace selon $x = 0.10\cos(10t)$ (unités SI). Donner
+$v_{\max}$, $a_{\max}$, les relations de phase entre $x$, $v$ et $a$, et
+les positions où $\abs v$ et $\abs a$ sont les plus grands.
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b1:point-kinematics:9}
+En partant de $\vect e_r = \cos\theta\,\vect e_x + \sin\theta\,\vect e_y$,
+établir $\dd\vect e_r/\dd t$ et $\dd\vect e_\theta/\dd t$, puis la \omterm{def:b1:point-kinematics:velocity}{vitesse}
+et l'\omterm{def:b1:point-kinematics:velocity}{accélération} polaires de la \cref{thm:b1:point-kinematics:cylindrical}.
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b1:point-kinematics:10}
+Pour le projectile de l'\cref{ex:b1:point-kinematics:projectile},
+trouver le \omterm{def:b1:point-kinematics:frenet}{rayon de courbure} de la \omterm{def:b1:point-kinematics:frame}{trajectoire} au sommet et au point de
+lancement (utiliser la composante normale de $\vect g$). Lequel est le
+plus petit, et pourquoi~?
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b1:point-kinematics:11}
+Une roue de rayon $R$ roule sans glisser à la \omterm{def:b1:point-kinematics:velocity}{vitesse} $v$~; un point de
+sa jante a pour coordonnées $x = vt - R\sin(vt/R)$, $y = R - R\cos(vt/R)$
+(une cycloïde). Calculer sa \omterm{def:b1:point-kinematics:velocity}{vitesse} et son \omterm{def:b1:point-kinematics:velocity}{accélération}~; montrer qu'au
+moment où il touche le sol sa \omterm{def:b1:point-kinematics:velocity}{vitesse} s'annule et son \omterm{def:b1:point-kinematics:velocity}{accélération} vaut
+$v^2/R$ vers le haut~; trouver sa \omterm{def:b1:point-kinematics:velocity}{vitesse} au sommet.
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b1:point-kinematics:12}
+Une personne s'éloigne le long d'un rayon d'un plateau tournant à
+$\omega$ constante, à la \omterm{def:b1:point-kinematics:velocity}{vitesse} constante $u$ par rapport au plateau~:
+$r = ut$, $\theta = \omega t$. Calculer $\vect a$ dans la base polaire,
+identifier les deux termes, et les évaluer pour $u = \qty{1.0}{m/s}$ et
+$\omega = \qty{1.0}{rad/s}$ à $t = \qty{2.0}{s}$. Lequel n'a aucun
+équivalent pour une personne qui marche sur le sol~?
+\end{exercise}
+
+\begin{omfigure}
+\includegraphics[width=0.38\linewidth]{images/book3/roller-coaster-loop.jpg}
+
+{\small Une boucle verticale (Yomiuriland, Tokyo)~: une goutte d'eau plutôt qu'un cercle, de sorte que la courbure soit la plus forte au sommet, là où la \omterm{def:b1:point-kinematics:velocity}{vitesse} est la plus faible --- la géométrie du problème du week-end. Photographie~: Jeremy Thompson, CC~BY~2.0.}
+\end{omfigure}
+
+\section{Problème~: la boucle du grand huit}
+
+\begin{problem}[{Problème du week-end --- une voiture aborde une boucle
+verticale à quatre-vingt-dix kilomètres à l'heure~: où elle ralentit, où
+pointe son accélération, combien de $g$ ressentent les passagers, et
+pourquoi les boucles modernes ne sont pas des cercles}]
+\label{pb:b1:point-kinematics:1}
+Une voiture, assimilée à un point $M$, parcourt une boucle circulaire
+verticale de rayon $R = \qty{10}{m}$ et de centre $C$. Sa position est
+donnée par l'angle $\theta$ entre $\vect{CM}$ et la verticale
+descendante ($\theta =
+0$ en bas, $\pi$ en haut). Les frottements sont négligés, et la loi des
+\omterm{def:b1:point-kinematics:velocity}{vitesses} (établie au \cref{ch:b1:work-and-energy}) s'écrit
+\[
+v^2 = v_0^2 - 2gR(1 - \cos\theta),
+\]
+avec $v_0 = \qty{25}{m/s}$ la \omterm{def:b1:point-kinematics:velocity}{vitesse} en bas~; $g = \qty{9.81}{m/s^2}$.
+
+\medskip
+\noindent\textbf{Partie I --- Cinématique sur le cercle.}
+\begin{enumerate}
+  \item En \omterm{def:b1:point-kinematics:cylindrical}{coordonnées polaires} centrées en $C$ (avec $\vect e_r$ de $C$
+        vers $M$), écrire $\vect v$ et $\vect a$ pour un mouvement sur le
+        cercle.
+  \item Identifier les vecteurs de Frenet $\vect T$ et $\vect N$ en
+        fonction de $\vect e_r$ et $\vect e_\theta$, ainsi que le \omterm{def:b1:point-kinematics:frenet}{rayon
+        de courbure}.
+  \item Calculer la \omterm{def:b1:point-kinematics:velocity}{vitesse} au sommet, puis aux points latéraux
+        $\theta = \pi/2$ et $3\pi/2$.
+  \item Dériver la loi des \omterm{def:b1:point-kinematics:velocity}{vitesses} par rapport au temps pour montrer
+        que l'\omterm{thm:b1:point-kinematics:frenet}{accélération tangentielle} vaut $a_T = -g\sin\theta$.
+        Interpréter son signe à la montée et à la descente.
+  \item Exprimer l'\omterm{thm:b1:point-kinematics:frenet}{accélération normale} $a_N(\theta)$ et la calculer en
+        bas, sur les côtés et au sommet.
+  \item Donner la norme de $\vect a$ aux quatre points et l'angle
+        qu'elle fait avec la verticale au sommet.
+  \item En quels points $\vect a$ est-elle perpendiculaire à $\vect v$~?
+        Parallèle~?
+\end{enumerate}
+
+\medskip
+\noindent\textbf{Partie II --- \omterm{cor:b1:point-kinematics:circular}{Vitesses angulaires} et durées.}
+\begin{enumerate}[resume]
+  \item Exprimer $\dot\theta$ en fonction de $\theta$ et la calculer en
+        bas et au sommet.
+  \item Montrer que $\ddot\theta = -(g/R)\sin\theta$ (l'équation du
+        pendule) et commenter.
+  \item Pour comparaison, calculer la période des petites oscillations
+        d'un pendule simple de longueur $R$
+        (l'\cref{ex:b1:units-dimensions:pendulum} en a donné la forme~;
+        $k = 2\pi$).
+  \item Estimer la durée d'un tour de boucle, en utilisant la moyenne
+        des \omterm{def:b1:point-kinematics:velocity}{vitesses} aux quatre points de référence.
+  \item La \omterm{def:b1:point-kinematics:velocity}{vitesse} minimale au sommet pour que la voiture reste sur le
+        rail (chapitre suivant) vaut $\sqrt{gR}$. Est-elle atteinte~?
+        Quelle $v_0$ minimale faudrait-il~?
+\end{enumerate}
+
+\medskip
+\noindent\textbf{Partie III --- Ce que ressentent les passagers.}
+Le poids apparent par unité de masse ressenti par un passager vaut
+$\vect a - \vect g$ (admis ici, établi au
+\cref{ch:b1:newton-dynamics})~; sa norme, en unités de $g$, est le
+«~nombre de $g$~».
+\begin{enumerate}[resume]
+  \item Calculer le nombre de $g$ en bas.
+  \item Le calculer au sommet, et dire dans quel sens le passager est
+        pressé (siège ou harnais).
+  \item Le calculer aux points latéraux.
+  \item Les passagers tolèrent brièvement environ $4g$. Cette boucle
+        passe-t-elle~? Où est le problème~?
+  \item Montrer que, pour une boucle circulaire abordée juste assez vite
+        pour passer le sommet (poids apparent nul en haut), le nombre de
+        $g$ en bas vaut nécessairement $6g$, quel que soit $R$.
+\end{enumerate}
+
+\medskip
+\noindent\textbf{Partie IV --- La boucle en clothoïde.}
+Les boucles modernes sont des «~gouttes d'eau~»~: le \omterm{def:b1:point-kinematics:frenet}{rayon de courbure}
+est grand en bas et petit en haut.
+\begin{enumerate}[resume]
+  \item À l'aide de la forme de Frenet de $\vect a$, expliquer pourquoi
+        faire varier $\rho$ le long du rail change $a_N$ sans changer la
+        loi des \omterm{def:b1:point-kinematics:velocity}{vitesses} (qui ne dépend que de la hauteur).
+  \item Choisir $\rho_{\text{bas}}$ pour que le nombre de $g$ en bas
+        vaille $3g$ avec $v_0 = \qty{25}{m/s}$.
+  \item Au sommet, la hauteur est toujours $2R = \qty{20}{m}$ au-dessus
+        du bas. Choisir $\rho_{\text{haut}}$ pour que le nombre de
+        $g$ y vaille $1.5g$.
+  \item Une clothoïde a une courbure proportionnelle à l'\omterm{def:b1:point-kinematics:frenet}{abscisse
+        curviligne}, $1/\rho = s/A^2$. Le long d'une telle entrée, la
+        \omterm{def:b1:point-kinematics:velocity}{vitesse} étant presque constante, comment $a_N$ croît-elle avec le
+        temps, et pourquoi est-ce plus doux pour la nuque qu'un cercle
+        (où $a_N$ saute à l'entrée)~?
+  \item Esquisser qualitativement la forme de boucle obtenue et
+        récapituler en deux phrases pourquoi elle a remplacé le cercle.
+\end{enumerate}
+
+\medskip
+\noindent\textbf{Partie V --- Vue depuis le sol.}
+Une caméra au niveau du sol, à \qty{50}{m} du centre de la boucle et
+dans son plan, suit la voiture.
+\begin{enumerate}[resume]
+  \item Lorsque la voiture est au sommet et se déplace horizontalement à
+        \qty{15}{m/s}, à quelle \omterm{cor:b1:point-kinematics:circular}{vitesse angulaire} (en rad/s) la caméra
+        doit-elle tourner~? (\omterm{def:b1:point-kinematics:cylindrical}{Coordonnées polaires} depuis la caméra.)
+  \item Pourquoi une caméra qui tourne à \omterm{def:b1:point-kinematics:velocity}{vitesse} constante suit-elle mal
+        un \omterm{cor:b1:point-kinematics:circular}{mouvement circulaire} uniforme~?
+  \item Récapituler la leçon du chapitre tirée de cette boucle~: quel
+        système de coordonnées a répondu à quelle question.
+\end{enumerate}
+\end{problem}

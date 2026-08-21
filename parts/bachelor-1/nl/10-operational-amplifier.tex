@@ -1,0 +1,565 @@
+\chapter{De operationele versterker}\label{ch:b1:operational-amplifier}
+
+Een rekstrookje op een brugligger verandert zijn weerstand met een
+duizendste wanneer er een vrachtwagen passeert; de \omterm{prop:b1:dc-circuits:wheatstone}{brug van Wheatstone} eromheen
+(\cref{ch:b1:dc-circuits}) maakt daar twee millivolt van. Twee
+millivolt drijven niets aan. Tussen het strookje en het alarm dat de brug voor
+verkeer zal sluiten zit een chip ter grootte van een vingernagel, verkocht
+voor een paar cent, die het \omterm{def:b1:wave-propagation:signal}{signaal} met duizend vermenigvuldigt, het filtert,
+het met een drempel vergelijkt en een lamp doet branden --- vier taken, één
+component, vier verschillende schakelingen. Dit hoofdstuk introduceert de
+\omterm{def:b1:operational-amplifier:opamp}{operationele versterker} via haar ideale model, leidt het handjevol
+schakelingen af waaruit elk instrument is opgebouwd, en laat zien wat er gebeurt
+wanneer de terugkoppeling wordt weggehaald.
+
+\section{De component en haar ideale model}
+
+\begin{definition}[Operationele versterker]\label{def:b1:operational-amplifier:opamp}
+\index{operationele versterker}\index{verzadigingsspanning}\index{openlusversterking}
+Een \emph{operationele versterker} is een geïntegreerde schakeling met twee
+ingangen --- de \emph{niet-inverterende} ingang op potentiaal $V_+$ en de
+\emph{inverterende} ingang op $V_-$ --- en één uitgang op potentiaal $V_s$,
+gevoed door twee voedingen $\pm V_{\mathrm{cc}}$ (meestal
+$\pm\qty{15}{V}$) die gewoonlijk niet in de schema's worden getekend. Zij versterkt
+het verschil $\epsilon = V_+ - V_-$:
+\[
+V_s = \mu\,\epsilon \quad\text{zolang } \abs{V_s} < V_{\mathrm{sat}},
+\]
+met een \emph{openlusversterking} $\mu$ van de orde $10^5$ en een
+\emph{verzadigingsspanning} $V_{\mathrm{sat}}$ net onder
+$V_{\mathrm{cc}}$. Zodra $\mu\abs\epsilon$ groter zou worden dan $V_{\mathrm{sat}}$,
+blijft de uitgang op $+V_{\mathrm{sat}}$ of $-V_{\mathrm{sat}}$ hangen: het
+\emph{verzadigde} regime.
+\end{definition}
+
+\begin{definition}[Ideale operationele versterker]\label{def:b1:operational-amplifier:ideal}
+\index{ideale operationele versterker}\index{virtuele kortsluiting}\index{lineair regime}
+Het \emph{ideale} model veronderstelt: (i) er loopt geen stroom een ingang binnen,
+$i_+ = i_- = 0$ (oneindige ingangsimpedantie); (ii) de uitgang legt haar
+\omterm{def:b1:dc-circuits:voltage}{spanning} op, hoeveel stroom er ook wordt getrokken (nul uitgangsimpedantie); (iii)
+oneindige versterking, $\mu \to \infty$. In het \emph{lineaire regime} ($\abs{V_s}
+< V_{\mathrm{sat}}$) dwingt de derde aanname
+\[
+\epsilon = V_+ - V_- = 0 :
+\]
+de twee ingangen staan op dezelfde potentiaal (een ``virtuele kortsluiting''),
+hoewel er tussen hen geen stroom loopt.
+\end{definition}
+
+\begin{omfigure}
+\begin{tikzpicture}[font=\small]
+  \node[op amp] (oa) at (0,0) {};
+  \draw (oa.-) -- ++(-0.8,0) node[left] {$V_-$};
+  \draw (oa.+) -- ++(-0.8,0) node[left] {$V_+$};
+  \draw (oa.out) -- ++(0.6,0) node[right] {$V_s$};
+  \draw (oa.up) -- ++(0,0.3) node[above, font=\footnotesize] {$+V_{\mathrm{cc}}$};
+  \draw (oa.down) -- ++(0,-0.3) node[below, font=\footnotesize] {$-V_{\mathrm{cc}}$};
+  \begin{scope}[xshift=6.2cm]
+  \begin{axis}[omaxis, axis y line=left, width=6.4cm, height=4.6cm, xlabel={$\epsilon$}, ylabel={$V_s$},
+      xmin=-2.2, xmax=2.2, ymin=-1.5, ymax=1.5, xtick={-0.15,0.15}, xticklabels={,},
+      ytick={-1,1}, yticklabels={$-V_{\mathrm{sat}}$,$+V_{\mathrm{sat}}$}, anchor=origin, at={(0,0)}]
+    \addplot[omThm, thick, domain=-2.2:-0.15, samples=2] {-1};
+    \addplot[omThm, thick, domain=-0.15:0.15, samples=2] {x/0.15};
+    \addplot[omThm, thick, domain=0.15:2.2, samples=2] {1};
+    \node[omThm, font=\footnotesize] at (axis cs:1.3,0.6) {verzadigd};
+    \node[omThm, font=\footnotesize] at (axis cs:-1.2,-0.6) {verzadigd};
+    \node[omThm, font=\footnotesize, right] at (axis cs:0.2,-0.55) {lineair, helling $\mu$};
+  \end{axis}
+  \end{scope}
+\end{tikzpicture}
+
+{\small De \omterm{def:b1:operational-amplifier:opamp}{operationele versterker}: het symbool met haar twee ingangen, en haar
+overdrachtskarakteristiek $V_s(\epsilon)$ --- een steil lineair stuk met
+helling $\mu \sim 10^5$ (veel te flauw getekend), en dan verzadiging bij
+$\pm V_{\mathrm{sat}}$. In het ideale model staat het lineaire stuk
+verticaal: $\epsilon = 0$.}
+\end{omfigure}
+
+\begin{proposition}[Negatieve terugkoppeling en het lineaire regime]\label{prop:b1:operational-amplifier:feedback}
+\index{negatieve terugkoppeling}\index{positieve terugkoppeling}
+Wordt de uitgang via een netwerk teruggekoppeld naar de \emph{inverterende}
+ingang (\omterm{prop:b1:operational-amplifier:feedback}{negatieve terugkoppeling}), dan heeft de schakeling een stabiel lineair
+\omterm{met:b1:dc-circuits:loadline}{werkpunt} bij $\epsilon = 0$ en gelden de regels van de ideale versterker. Wordt de
+uitgang naar de niet-inverterende ingang teruggekoppeld (\omterm{prop:b1:operational-amplifier:feedback}{positieve terugkoppeling}), of
+helemaal niet, dan raakt de versterker in verzadiging: $V_s = \pm V_{\mathrm{sat}}$
+naargelang het teken van $\epsilon$.
+\end{proposition}
+
+\begin{proof}[Gedeeltelijk bewijs]
+Neem bij \omterm{prop:b1:operational-amplifier:feedback}{negatieve terugkoppeling} aan dat $V_s$ iets boven zijn
+evenwichtswaarde stijgt; via het terugkoppelnetwerk stijgt $V_-$, daalt $\epsilon$
+en trekt de versterker $V_s$ weer omlaag: de verstoring wordt
+gecorrigeerd. Bij \omterm{prop:b1:operational-amplifier:feedback}{positieve terugkoppeling} verhoogt dezelfde verstoring $V_+$,
+vergroot zij $\epsilon$ en drijft zij $V_s$ verder weg tot verzadiging optreedt.
+Het volledige argument (een eerste-ordemodel van de versterker, $\mu(j\omega)
+= \mu_0/(1 + j\omega/\omega_0)$, en de stabiliteit van de resulterende
+differentiaalvergelijking) is het onderwerp van het volume van jaar 2; de regel
+hierboven is wat men gebruikt.
+\end{proof}
+
+\begin{remark}[Werkelijke versterkers]\label{rem:b1:operational-amplifier:real}
+\index{versterking-bandbreedteproduct}\index{slew rate}\index{ingangsoffsetspanning}
+Drie afwijkingen van het ideaal tellen in de praktijk. De \omterm{def:b1:operational-amplifier:opamp}{openlusversterking}
+daalt met de frequentie als $\mu_0/(1 + jf/f_0)$ met $f_0 \sim \qty{10}{Hz}$:
+het product $\mu_0 f_0 = f_T \sim \qty{1}{MHz}$ (het
+\emph{versterking-bandbreedteproduct}) is de bandbreedte die een volger heeft, en een
+schakeling met geslotenlusversterking $G$ heeft bandbreedte $f_T/G$. De uitgang kan niet
+sneller veranderen dan de \emph{\omterm{rem:b1:operational-amplifier:real}{slew rate}}, $\sim\qty{1}{V/\micro s}$. En een
+kleine \emph{ingangsoffsetspanning} ($\sim\qty{1}{mV}$) wordt net als
+een \omterm{def:b1:wave-propagation:signal}{signaal} versterkt --- fataal bij ingangen van enkele millivolt, tenzij zij wordt bijgeregeld.
+\end{remark}
+
+\section{De elementaire lineaire schakelingen}
+
+\begin{method}[Een ideale opampschakeling in het lineaire regime analyseren]\label{met:b1:operational-amplifier:method}
+\begin{enumerate}
+  \item Ga na dat de terugkoppeling naar de inverterende ingang gaat.
+  \item Schrijf $i_+ = i_- = 0$: de ingangsknooppunten voldoen aan de
+        knooppuntregel van Kirchhoff zonder stroom naar de versterker (delers en de
+        stelling van Millman zijn bruikbaar).
+  \item Schrijf $V_+ = V_-$ en los op naar $V_s$.
+  \item Controleer achteraf dat $\abs{V_s} < V_{\mathrm{sat}}$; zo niet, dan
+        is de versterker verzadigd en is het resultaat $\pm V_{\mathrm{sat}}$.
+\end{enumerate}
+\end{method}
+
+\begin{proposition}[Volger, niet-inverterende en inverterende versterker]\label{prop:b1:operational-amplifier:basic}
+\index{spanningsvolger}\index{niet-inverterende versterker}\index{inverterende versterker}\index{virtuele massa}
+\begin{itemize}
+  \item \emph{Volger}: de uitgang aan $V_-$, de ingang op $V_+$:
+        $V_s = V_e$; oneindige ingangsimpedantie, nul uitgangsimpedantie.
+  \item \emph{\omterm{prop:b1:operational-amplifier:basic}{Niet-inverterende versterker}}: de uitgang naar $V_-$ via een
+        deler $R_2$ (terugkoppeling) en $R_1$ (naar massa), de ingang op $V_+$:
+        \[
+        V_s = \left(1 + \frac{R_2}{R_1}\right)V_e .
+        \]
+  \item \emph{\omterm{prop:b1:operational-amplifier:basic}{Inverterende versterker}}: $V_+$ aan massa, de ingang via
+        $R_1$ naar $V_-$, terugkoppeling $R_2$ van de uitgang naar $V_-$:
+        \[
+        V_s = -\frac{R_2}{R_1}\,V_e ,
+        \]
+        waarbij $V_-$ op massapotentiaal blijft (een \emph{\omterm{prop:b1:operational-amplifier:basic}{virtuele massa}})
+        en de ingangsimpedantie $R_1$ is.
+\end{itemize}
+\end{proposition}
+
+\begin{proof}
+Volger: $V_- = V_s$ en $V_+ = V_e$; $\epsilon = 0$ geeft $V_s = V_e$.
+Niet-inverterend: geen stroom naar $V_-$, dus geeft de deler $V_- =
+V_sR_1/(R_1 + R_2)$; stel gelijk aan $V_+ = V_e$. Inverterend: $V_- = V_+ = 0$;
+knooppuntregel in $V_-$ met $i_- = 0$: $(V_e - 0)/R_1 + (V_s - 0)/R_2 = 0$.
+De bron levert $V_e/R_1$: ingangsimpedantie $R_1$.
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}[font=\small]
+  % follower (+ input up)
+  \node[op amp, noinv input up] (a) at (0,0) {};
+  \draw (a.+) -- ++(-0.6,0) node[left] {$V_e$};
+  \draw (a.out) -- ++(0.5,0) node[right] {$V_s$};
+  \draw (a.out) ++(0.25,0) -- ++(0,-1.3) -| ($(a.-)+(-0.4,0)$) -- (a.-);
+  \node[below, font=\footnotesize] at (0,-1.7) {volger: $V_s = V_e$};
+  % non-inverting (+ input up)
+  \begin{scope}[xshift=5.6cm]
+  \node[op amp, noinv input up] (b) at (0,0) {};
+  \draw (b.+) -- ++(-0.8,0) node[left] {$V_e$};
+  \draw (b.out) -- ++(0.6,0) node[right] {$V_s$};
+  \coordinate (j) at ($(b.-)+(-0.5,0)$);
+  \draw (b.-) -- (j);
+  \coordinate (f) at ($(j)+(0,-1.0)$);
+  \coordinate (o) at ($(b.out)+(0.3,0)$);
+  \draw (o) -- (o |- f) to[R=$R_2$] (f) -- (j);
+  \draw (f) to[R=$R_1$] ++(0,-1.6) node[ground]{};
+  \node[below, font=\footnotesize] at (0,-3.7) {niet-inverterend: $V_s = (1 + R_2/R_1)V_e$};
+  \end{scope}
+  % inverting (- input up)
+  \begin{scope}[xshift=11.3cm]
+  \node[op amp] (c) at (0,0) {};
+  \draw (c.+) -- ++(-0.4,0) node[ground]{};
+  \coordinate (m) at ($(c.-)+(-0.5,0)$);
+  \draw (c.-) -- (m) to[R=$R_1$] ++(-1.5,0) node[left] {$V_e$};
+  \draw (c.out) -- ++(0.6,0) node[right] {$V_s$};
+  \coordinate (f2) at ($(m)+(0,1.3)$);
+  \coordinate (o2) at ($(c.out)+(0.3,0)$);
+  \draw (o2) -- (o2 |- f2) to[R=$R_2$] (f2) -- (m);
+  \node[below, font=\footnotesize] at (0,-1.7) {inverterend: $V_s = -(R_2/R_1)V_e$};
+  \end{scope}
+\end{tikzpicture}
+
+{\small De drie elementaire versterkers. In elk voedt de uitgang de
+inverterende ingang, werkt de versterker in haar \omterm{def:b1:operational-amplifier:ideal}{lineaire regime} en wordt de
+versterking alleen door verhoudingen van weerstanden bepaald --- niet door de
+enorme en slecht bepaalde $\mu$ van de versterker zelf.}
+\end{omfigure}
+
+\begin{example}[Waarom een volger]\label{ex:b1:operational-amplifier:follower}
+Een sensor met Thévenin-weerstand \qty{10}{k\ohm} die een belasting van \qty{1}{k\ohm}
+voedt levert maar $1/11$ van haar nullastspanning
+(\cref{rem:b1:dc-circuits:loading}). Een volger ertussen trekt geen
+stroom uit de sensor en drijft de belasting aan vanuit een uitgang met \omterm{def:b1:sinusoidal-impedance:impedance}{impedantie}
+nul: de volle \omterm{def:b1:dc-circuits:voltage}{spanning} komt aan. De volger is een \emph{impedantieaanpasser}
+--- en hij maakt de cascaderegel van
+\cref{prop:b1:filters-transfer-functions:cascade} exact.
+\end{example}
+
+\begin{proposition}[Sommeer- en verschilversterker]\label{prop:b1:operational-amplifier:sumdiff}
+\index{sommeerversterker}\index{verschilversterker}
+Ingangen $V_1, V_2$ via $R_1, R_2$ naar het inverterende knooppunt, terugkoppeling
+$R_f$, $V_+$ aan massa:
+\[
+V_s = -R_f\left(\frac{V_1}{R_1} + \frac{V_2}{R_2}\right)
+\quad (\text{sommeerversterker}).
+\]
+Met $V_1$ via $R_1$ naar $V_-$ (terugkoppeling $R_2$) en $V_2$ via
+$R_1$ naar $V_+$ (met $R_2$ van $V_+$ naar massa):
+\[
+V_s = \frac{R_2}{R_1}\,(V_2 - V_1)
+\quad (\text{verschilversterker}).
+\]
+\end{proposition}
+
+\begin{proof}
+Sommeren: knooppuntregel in de \omterm{prop:b1:operational-amplifier:basic}{virtuele massa}, $V_1/R_1 + V_2/R_2 + V_s/R_f =
+0$. Verschil: $V_+ = V_2R_2/(R_1 + R_2)$ (deler); knooppuntregel in $V_-$:
+$(V_1 - V_-)/R_1 + (V_s - V_-)/R_2 = 0$, dus $V_s = V_-(1 + R_2/R_1) -
+V_1R_2/R_1$; stel $V_- = V_+$ en vereenvoudig.
+\end{proof}
+
+\section{Integrator en differentiator}
+
+\begin{proposition}[Integrator]\label{prop:b1:operational-amplifier:integrator}
+\index{integrator (opamp)}
+De ingang via $R$ naar $V_-$, een condensator $C$ als terugkoppeling, $V_+$
+aan massa:
+\[
+V_s(t) = -\frac{1}{RC}\int_0^t V_e(t')\,\dd t' + V_s(0),
+\qquad
+\underline H = -\frac{1}{jRC\omega} .
+\]
+De versterking daalt bij elke frequentie \qty{20}{dB} per decade en de fase
+is $+90^\circ$: een exacte integrator --- tot de kleinste offset of
+voorstroom, eeuwig geïntegreerd, de uitgang in verzadiging drijft.
+\end{proposition}
+
+\begin{proof}
+\omterm{prop:b1:operational-amplifier:basic}{Virtuele massa}: de stroom $V_e/R$ loopt in de condensator, waarvan de
+\omterm{def:b1:dc-circuits:voltage}{spanning} (van $V_-$ naar de uitgang) $-V_s$ is; dus $C\,\dd(-V_s)/\dd t
+= V_e/R$, en in complexe notatie $\underline H = -1/(jRC\omega)$.
+\end{proof}
+
+\begin{remark}[De integrator temmen]\label{rem:b1:operational-amplifier:pseudo}
+\index{pseudo-integrator}
+Een weerstand $R'$ parallel aan $C$ geeft
+\[
+\underline H = -\frac{R'/R}{1 + jR'C\omega},
+\]
+een laagdoorlaat van de eerste orde met gelijkspanningsversterking $-R'/R$ en \omterm{def:b1:filters-transfer-functions:bode}{afsnijfrequentie} $1/R'C$, die
+integreert voor $\omega \gg 1/R'C$ maar niet naar verzadiging kan weglopen. Net zo versterkt de differentiator (condensator aan de ingang,
+weerstand als terugkoppeling: $V_s = -RC\,\dd V_e/\dd t$, $\underline H =
+-jRC\omega$) hoogfrequente ruis zonder grens, tenzij een
+kleine weerstand in serie zijn versterking begrenst.
+\end{remark}
+
+\begin{omfigure}
+\begin{tikzpicture}[font=\small]
+  \node[op amp] (c) at (0,0) {};
+  \draw (c.+) -- ++(-0.4,0) node[ground]{};
+  \draw (c.-) -- ++(-0.3,0) coordinate (m1) to[R=$R$] ++(-1.8,0) node[left] {$V_e$};
+  \draw (c.out) -- ++(0.5,0) node[right] {$V_s$};
+  \draw (c.out) ++(0.25,0) |- ++(0,1.2) to[C=$C$] ++(-2.1,0) -| (m1);
+  \begin{scope}[xshift=7.3cm, yshift=-1.2cm]
+  \begin{axis}[omaxis, axis x line=bottom, axis y line=left, xlabel style={at={(axis description cs:0.5,-0.16)}, anchor=north},
+      width=6.4cm, height=4.2cm, xmode=log, xlabel={$\omega$ ($\log$)}, ylabel={$G_{\mathrm{dB}}$},
+      xmin=0.01, xmax=100, ymin=-45, ymax=48, ytick={40,20,0,-20,-40}, xtick={0.01,0.1,1,10,100},
+      xticklabels={$0.01$,$0.1$,$1$,$10$,$100$}, anchor=origin, at={(0,0)}]
+    \addplot[omDef, thick, domain=0.01:100, samples=2] {-20*log10(x)};
+    \addplot[omThm, thick, domain=0.01:100, samples=200] {20 - 10*log10(1 + (x/0.1)^2)};
+    \node[omDef, font=\footnotesize, rotate=-32] at (axis cs:8,-10) {integrator};
+    \node[omThm, font=\footnotesize, anchor=west] at (axis cs:0.012,29) {pseudo-integrator};
+  \end{axis}
+  \end{scope}
+\end{tikzpicture}
+
+{\small De integrator en zijn \omterm{def:b1:filters-transfer-functions:bode}{bodediagram} (blauw, overal
+\qty{-20}{dB/decade}, oneindige versterking bij gelijkspanning); met een weerstand over $C$ wordt de
+versterking bij lage frequentie begrensd (rood): een laagdoorlaat die boven zijn
+\omterm{def:b1:filters-transfer-functions:bode}{afsnijfrequentie} integreert.}
+\end{omfigure}
+
+\begin{example}[Driehoek uit blok]\label{ex:b1:operational-amplifier:triangle}
+$R = \qty{10}{k\ohm}$, $C = \qty{100}{nF}$, $1/RC = \qty{1000}{s^{-1}}$.
+Een blokgolf van \qty{1}{kHz} met $\pm\qty{1}{V}$ geeft een driehoek met helling
+$\mp\qty{1000}{V/s}$ en \omterm{def:b1:wave-propagation:signal}{amplitude} $ET/4RC = \qty{0.25}{V}$ --- zonder
+de verzwakking met $1/\omega$ van een passieve RC, en met een uitgangsimpedantie
+nul om de volgende trap te voeden.
+\end{example}
+
+\section{Actieve filters}
+
+\begin{proposition}[Actieve laagdoorlaat van de eerste orde]\label{prop:b1:operational-amplifier:activelp}
+\index{actief filter}
+De \omterm{prop:b1:operational-amplifier:basic}{inverterende versterker} met een condensator $C$ over haar
+terugkoppelweerstand $R_2$ heeft
+\[
+\underline H = -\frac{R_2/R_1}{1 + jR_2C\omega}:
+\]
+een laagdoorlaat met gelijkspanningsversterking $-R_2/R_1$ (die groter dan $1$ kan zijn) en \omterm{def:b1:filters-transfer-functions:bode}{afsnijfrequentie}
+$\omega_c = 1/R_2C$, met uitgangsimpedantie nul --- trappen in cascade
+vermenigvuldigen eenvoudig.
+\end{proposition}
+
+\begin{proof}
+\omterm{prop:b1:operational-amplifier:basic}{Inverterende versterker} met de terugkoppelimpedantie $R_2 \parallel 1/jC\omega
+= R_2/(1 + jR_2C\omega)$ in plaats van $R_2$.
+\end{proof}
+
+\section{Zonder negatieve terugkoppeling: comparatoren}
+
+\begin{proposition}[Comparator]\label{prop:b1:operational-amplifier:comparator}
+\index{comparator}
+Zonder terugkoppeling is de ideale versterker verzadigd:
+$V_s = +V_{\mathrm{sat}}$ als $V_+ > V_-$, en $-V_{\mathrm{sat}}$ als
+$V_+ < V_-$. Met een referentie $V_{\mathrm{ref}}$ op de ene ingang en een
+\omterm{def:b1:wave-propagation:signal}{signaal} op de andere zegt de uitgang of het \omterm{def:b1:wave-propagation:signal}{signaal} de referentie
+overschrijdt --- een omzetter van één bit.
+\end{proposition}
+
+\begin{proof}
+$\mu\epsilon$ overschrijdt $V_{\mathrm{sat}}$ voor elke $\abs\epsilon >
+V_{\mathrm{sat}}/\mu \sim \qty{0.1}{mV}$.
+\end{proof}
+
+\begin{proposition}[Schmitttrigger]\label{prop:b1:operational-amplifier:schmitt}
+\index{schmitttrigger}\index{hysterese}
+Koppel een fractie $\beta = R_1/(R_1 + R_2)$ van de uitgang terug naar $V_+$
+(deler $R_1$ naar massa, $R_2$ vanaf de uitgang) en leg het \omterm{def:b1:wave-propagation:signal}{signaal}
+$V_e$ aan $V_-$. De uitgang klapt van $+V_{\mathrm{sat}}$ naar
+$-V_{\mathrm{sat}}$ wanneer $V_e$ boven $+\beta V_{\mathrm{sat}}$ stijgt, en
+terug wanneer $V_e$ onder $-\beta V_{\mathrm{sat}}$ zakt: twee drempels,
+een \emph{hysterese} met breedte $2\beta V_{\mathrm{sat}}$, ongevoelig voor ruis
+die kleiner is dan die breedte.
+\end{proposition}
+
+\begin{proof}
+\omterm{prop:b1:operational-amplifier:feedback}{Positieve terugkoppeling}: verzadigd. Is $V_s = +V_{\mathrm{sat}}$, dan is $V_+ =
+\beta V_{\mathrm{sat}}$, en blijft $\epsilon = \beta V_{\mathrm{sat}} - V_e$
+positief totdat $V_e$ boven $\beta V_{\mathrm{sat}}$ komt; dan klapt de
+uitgang om, zakt $V_+$ naar $-\beta V_{\mathrm{sat}}$, en houdt de nieuwe toestand
+aan tot $V_e$ daaronder zakt.
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}[font=\small]
+  \node[op amp] (s) at (0,0) {};
+  \draw (s.-) -- ++(-0.8,0) node[left] {$V_e$};
+  \draw (s.out) -- ++(0.6,0) node[right] {$V_s$};
+  \coordinate (j) at ($(s.+)+(-0.6,0)$);
+  \coordinate (f) at ($(j)+(0,-1.0)$);
+  \coordinate (o) at ($(s.out)+(0.3,0)$);
+  \draw (s.+) -- (j);
+  \draw (o) -- (o |- f) to[R=$R_2$] (f) -- (j);
+  \draw (f) to[R=$R_1$] ++(0,-1.6) node[ground]{};
+  \begin{scope}[xshift=7.8cm, yshift=-0.9cm]
+  \begin{axis}[omaxis, axis x line=bottom, axis y line=left, width=6.4cm, height=4.6cm, xlabel={$V_e$}, ylabel={$V_s$},
+      xlabel style={at={(axis description cs:0.5,-0.12)}, anchor=north},
+      xmin=-2.2, xmax=2.2, ymin=-1.5, ymax=1.5, xtick={-1,1}, xticklabels={$-\beta V_{\mathrm{sat}}$,$\beta V_{\mathrm{sat}}$},
+      ytick={-1,1}, yticklabels={$-V_{\mathrm{sat}}$,$+V_{\mathrm{sat}}$}, anchor=origin, at={(0,0)}]
+    \draw[omThm, thick, -Stealth] (axis cs:-2.2,1) -- (axis cs:0.2,1);
+    \draw[omThm, thick] (axis cs:0.2,1) -- (axis cs:1,1) -- (axis cs:1,-1);
+    \draw[omThm, thick, -Stealth] (axis cs:2.2,-1) -- (axis cs:-0.2,-1);
+    \draw[omThm, thick] (axis cs:-0.2,-1) -- (axis cs:-1,-1) -- (axis cs:-1,1);
+  \end{axis}
+  \end{scope}
+\end{tikzpicture}
+
+{\small De \omterm{prop:b1:operational-amplifier:schmitt}{schmitttrigger}: \omterm{prop:b1:operational-amplifier:feedback}{positieve terugkoppeling} via $R_1$, $R_2$
+geeft twee drempels $\pm\beta V_{\mathrm{sat}}$. De uitgang klapt van hoog naar
+laag wanneer $V_e$ boven de bovenste drempel stijgt, en van laag naar hoog
+wanneer zij onder de onderste zakt (pijlen): een hysteresekring.}
+\end{omfigure}
+
+\begin{example}[De relaxatieoscillator]\label{ex:b1:operational-amplifier:astable}
+\index{relaxatieoscillator}
+Koppel de uitgang van de \omterm{prop:b1:operational-amplifier:schmitt}{schmitttrigger} terug naar zijn eigen inverterende ingang
+via $R$, met $C$ van $V_-$ naar massa. De condensator laadt zich
+naar $\pm V_{\mathrm{sat}}$ toe en klapt de trigger om telkens wanneer hij
+$\pm\beta V_{\mathrm{sat}}$ bereikt: de uitgang is een blokgolf, de \omterm{def:b1:dc-circuits:voltage}{spanning} over
+de condensator een keten van exponentiële bogen, en de periode is
+\[
+T = 2RC\ln\frac{1 + \beta}{1 - \beta}
+\]
+(\cref{exo:b1:operational-amplifier:12}): $2.2\,RC$ voor $\beta = \tfrac12$.
+Geen ingang, één condensator, en een klok --- een systeem dat trilt
+omdat het niet tot rust kan komen, een thema dat terugkeert bij de
+terugkoppeloscillatoren van het volume van jaar 2.
+\end{example}
+
+\section{Oefeningen}
+
+\begin{exercise}[$\star$]\label{exo:b1:operational-amplifier:1}
+Een \omterm{prop:b1:operational-amplifier:basic}{niet-inverterende versterker} heeft $R_1 = \qty{1.0}{k\ohm}$, $R_2 =
+\qty{9.0}{k\ohm}$, $V_{\mathrm{sat}} = \qty{15}{V}$. Versterking? Uitgang voor
+$V_e = \qty{0.50}{V}$? Grootste ingang vóór verzadiging?
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b1:operational-amplifier:2}
+Een \omterm{prop:b1:operational-amplifier:basic}{inverterende versterker} heeft $R_1 = \qty{10}{k\ohm}$, $R_2 = \qty{100}{k\ohm}$.
+Versterking, ingangsimpedantie, stroom uit een bron van \qty{1.0}{V}, uitgang.
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b1:operational-amplifier:3}
+Een sensor met \omterm{def:b1:dc-circuits:sources}{inwendige weerstand} \qty{10}{k\ohm} en nullastspanning
+\qty{1.0}{V} moet een belasting van \qty{1.0}{k\ohm} aandrijven. \omterm{def:b1:dc-circuits:voltage}{Spanning} over
+de belasting zonder en met een volger ertussen?
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b1:operational-amplifier:4}
+Een \omterm{prop:b1:operational-amplifier:sumdiff}{sommeerversterker} heeft $R_f = \qty{10}{k\ohm}$ en ingangen via
+\qty{10}{k\ohm} en \qty{20}{k\ohm}. Schrijf $V_s$ op; bereken hem voor
+$V_1 = \qty{1.0}{V}$, $V_2 = \qty{2.0}{V}$.
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b1:operational-amplifier:5}
+Leid $V_s = (R_2/R_1)(V_2 - V_1)$ van de \omterm{prop:b1:operational-amplifier:sumdiff}{verschilversterker} af. Bereken voor
+$R_1 = \qty{10}{k\ohm}$, $R_2 = \qty{100}{k\ohm}$, $V_1 = \qty{1.00}{V}$,
+$V_2 = \qty{1.05}{V}$ de uitgang. Wat is er gebeurd met de \qty{1}{V} die beide
+ingangen gemeen hebben?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b1:operational-amplifier:6}
+Integrator met $R = \qty{10}{k\ohm}$, $C = \qty{100}{nF}$, uitgang
+aanvankelijk nul. Er wordt een sprong van \qty{1.0}{V} aangelegd: helling van de uitgang en
+tijd tot verzadiging (\qty{15}{V}). Een blokgolf van \qty{1.0}{kHz} met
+$\pm\qty{1.0}{V}$: vorm en \omterm{def:b1:wave-propagation:signal}{amplitude} van de uitgang.
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b1:operational-amplifier:7}
+Over de condensator van de vorige integrator wordt een weerstand van \qty{1.0}{M\ohm}
+gezet. Geef de \omterm{def:b1:filters-transfer-functions:H}{overdrachtsfunctie}, de gelijkspanningsversterking, de
+\omterm{def:b1:filters-transfer-functions:bode}{afsnijfrequentie} en de versterking bij \qty{1.0}{kHz}; in welk gebied
+integreert de schakeling nog?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b1:operational-amplifier:8}
+Ontwerp een inverterende actieve laagdoorlaat met een versterking van \qty{20}{dB} in de
+\omterm{def:b1:filters-transfer-functions:bode}{doorlaatband} en een \omterm{def:b1:filters-transfer-functions:bode}{afsnijfrequentie} bij \qty{500}{Hz}, met $R_1 = \qty{1.0}{k\ohm}$.
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b1:operational-amplifier:9}
+Een werkelijke versterker heeft $\mu_0 = 10^5$ en $f_T = \qty{1.0}{MHz}$. Bepaal voor een
+\omterm{prop:b1:operational-amplifier:basic}{niet-inverterende versterker} die voor een versterking $100$ is ontworpen de
+werkelijke gelijkspanningsversterking (houd $\mu_0$ eindig in de analyse) en de bandbreedte. Bandbreedte van een
+volger?
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b1:operational-amplifier:10}
+Een comparator met $V_{\mathrm{ref}} = \qty{2.0}{V}$ op $V_-$ bewaakt een
+langzaam stijgend \omterm{def:b1:wave-propagation:signal}{signaal} met \qty{50}{mV} ruis. Beschrijf de uitgang
+terwijl het \omterm{def:b1:wave-propagation:signal}{signaal} \qty{2.0}{V} passeert. Oplossing?
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b1:operational-amplifier:11}
+\omterm{prop:b1:operational-amplifier:schmitt}{Schmitttrigger} met $R_1 = \qty{1.0}{k\ohm}$, $R_2 = \qty{9.0}{k\ohm}$,
+$V_{\mathrm{sat}} = \qty{15}{V}$: leid de twee drempels af en bereken ze.
+Schets $V_s$ voor een driehoekige $V_e$ met \omterm{def:b1:wave-propagation:signal}{amplitude} \qty{3}{V}.
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b1:operational-amplifier:12}
+\omterm{ex:b1:operational-amplifier:astable}{Relaxatieoscillator} met $R_1 = R_2$ ($\beta = \tfrac12$). Leid de
+periode $T = 2RC\ln\frac{1 + \beta}{1 - \beta}$ af uit het laden van $C$
+via $R$ tussen de twee drempels; kies $R$ voor \qty{1.0}{kHz}
+met $C = \qty{100}{nF}$; schets $V_s(t)$ en $V_C(t)$.
+\end{exercise}
+
+\section{Probleem: Een meetketen voor een rekstrookje}
+
+\begin{problem}[{Weekendopgave --- van twee millivolt op een brugligger
+naar een rode lamp: volgers, een verschilversterker, een actief
+filter en een schmitttrigger, en de twee onvolkomenheden die bepalen
+of de keten werkt}]
+\label{pb:b1:operational-amplifier:1}
+Een rekstrookje met weerstand $R(1 + \epsilon)$, $R = \qty{1.00}{k\ohm}$,
+$0 \leq \epsilon \leq \num{2.0e-3}$, vormt een \omterm{prop:b1:dc-circuits:wheatstone}{brug van Wheatstone} met
+drie vaste weerstanden van \qty{1.00}{k\ohm}, gevoed door $E = \qty{5.00}{V}$.
+De bruguitgang $u = V_B - V_A$ (tussen de twee middelpunten) is
+$u \approx E\epsilon/4$ (het teken wordt door de bedrading gekozen). Versterkers:
+ideaal tenzij anders vermeld; $V_{\mathrm{sat}} = \qty{15}{V}$; waar nodig
+$f_T = \qty{1.0}{MHz}$, \omterm{rem:b1:operational-amplifier:real}{slew rate} \qty{0.5}{V/\micro s}, ingangsoffset
+\qty{1}{mV}.
+
+\medskip
+\noindent\textbf{Deel I --- De brug en haar belasting.}
+\begin{enumerate}
+  \item Herhaal waarom $u \approx E\epsilon/4$ voor kleine $\epsilon$.
+  \item Bereken $u$ op volle schaal ($\epsilon = \num{2.0e-3}$).
+  \item Geef de potentiaal van elk middelpunt (ten opzichte van de negatieve
+        klem van de brug) bij nulrek en bij volle schaal. Hoe heet
+        hun gemeenschappelijke waarde?
+  \item Elk middelpunt is de uitgang van een deler met twee weerstanden van \qty{1}{k\ohm}:
+        wat is de Thévenin-weerstand tussen de
+        twee middelpunten?
+  \item Een versterker met ingangsweerstand \qty{10}{k\ohm} wordt
+        over de bruguitgang gezet: welke fractie van $u$ ontvangt hij?
+  \item Waarom verhelpt een volger op elk middelpunt dit? Noem de twee
+        gebruikte eigenschappen.
+  \item Wat zijn de uitgangsspanningen van de volgers (in termen van $V_A$,
+        $V_B$), en welke stroom trekken zij uit de brug?
+\end{enumerate}
+
+\medskip
+\noindent\textbf{Deel II --- Het verschil versterken.}
+\begin{enumerate}[resume]
+  \item De volgers voeden een \omterm{prop:b1:operational-amplifier:sumdiff}{verschilversterker} ($R_1$ aan beide
+        ingangen, $R_2$ als terugkoppeling en naar massa). Leid $V_s =
+        (R_2/R_1)(V_B - V_A)$ af.
+  \item Kies $R_1 = \qty{10}{k\ohm}$ en $R_2$ voor een versterking $100$.
+  \item Een tweede, niet-inverterende trap vermenigvuldigt met $10$: geef haar
+        weerstanden, de totale versterking en de uitgang op volle schaal.
+  \item Beide middelpunten liggen rond $E/2 = \qty{2.5}{V}$ (de
+        common-modespanning). Wat doet een exact aangepaste \omterm{prop:b1:operational-amplifier:sumdiff}{verschilversterker}
+        daarmee? Schat, als één weerstandsverhouding $1\%$ afwijkt, de
+        onechte ingangsspanning en vergelijk haar met het \omterm{def:b1:wave-propagation:signal}{signaal}.
+  \item De eerste versterker heeft \qty{1}{mV} ingangsoffset. Welke uitgangsfout
+        levert dat na de totale versterking? Trek een conclusie.
+  \item Wat is met $f_T = \qty{1}{MHz}$ de bandbreedte van elke trap?
+        Is die voldoende voor een \omterm{def:b1:wave-propagation:signal}{signaal} onder \qty{5}{Hz}?
+  \item De uitgang moet \qty{2.5}{V} uitslaan wanneer er in ongeveer
+        \qty{10}{ms} een vrachtwagen aankomt: begrenst de \omterm{rem:b1:operational-amplifier:real}{slew rate} dat?
+\end{enumerate}
+
+\medskip
+\noindent\textbf{Deel III --- \omterm{def:b1:filters-transfer-functions:H}{Filteren}.}
+Het versterkte \omterm{def:b1:wave-propagation:signal}{signaal} draagt een brom van \qty{50}{Hz} die van het net is
+opgepikt.
+\begin{enumerate}[resume]
+  \item Ontwerp een inverterende actieve laagdoorlaat met versterking $-1$ en \omterm{def:b1:filters-transfer-functions:bode}{afsnijfrequentie}
+        \qty{10}{Hz}, met $R_1 = R_2 = \qty{16}{k\ohm}$: bepaal $C$.
+  \item Bereken haar verzwakking bij \qty{50}{Hz} in \omterm{def:b1:filters-transfer-functions:bode}{decibel}.
+  \item Bereken de faseverschuiving bij \qty{5}{Hz} en de bijbehorende
+        vertraging. Aanvaardbaar voor een alarm?
+  \item Waarom verdient een \omterm{prop:b1:operational-amplifier:activelp}{actief filter} hier de voorkeur boven een passieve RC
+        (twee redenen)?
+  \item Er wordt een tweede identieke trap in cascade gezet: verzwakking bij \qty{50}{Hz}?
+        Waarom is de productregel hier exact?
+\end{enumerate}
+
+\medskip
+\noindent\textbf{Deel IV --- Drempel en alarm.}
+Het alarm moet afgaan wanneer de rek boven \num{1.6e-3} komt.
+\begin{enumerate}[resume]
+  \item Met welke uitgangsspanning van de keten komt dat overeen? Een
+        comparator met deze referentie: uitgangstoestanden.
+  \item Het gefilterde \omterm{def:b1:wave-propagation:signal}{signaal} draagt nabij de drempel nog \qty{50}{mV} ruis.
+        Wat doet de kale comparator?
+  \item Een \omterm{prop:b1:operational-amplifier:schmitt}{schmitttrigger} met de referentie op de ene ingang en terugkoppeling
+        $\beta$: toon aan dat de drempels $V_{\mathrm{ref}} \pm
+        \beta V_{\mathrm{sat}}$ zijn; kies $\beta$ voor $\pm\qty{0.10}{V}$
+        en geef $R_1$, $R_2$.
+  \item Geef de twee drempels in volt en in rek.
+  \item De uitgang stuurt een led (\qty{2.0}{V}, \qty{13}{mA}) via een
+        weerstand: bereken die. Wat beschermt de led wanneer de uitgang
+        op $-V_{\mathrm{sat}}$ staat?
+  \item Vat de keten trap voor trap samen en noem de twee
+        niet-idealiteiten die haar werkelijke grenzen bepalen.
+\end{enumerate}
+\end{problem}

@@ -1,0 +1,537 @@
+\chapter{क्षणिक व्यवस्थाएँ: प्रथम और द्वितीय कोटि}\label{ch:b1:transient-regimes}
+
+खड़ी कार के किसी कोने को दबाकर छोड़ दीजिए। अच्छी हालत वाली कार एक बार उठती है
+और रुक जाती है; जबकि घिसे अवमंदकों वाली कार थमने से पहले दो-तीन बार उछलती है।
+इलेक्ट्रॉनिकी की प्रयोगशाला में यही दो व्यवहार दोलनदर्शी पर तब दिखते हैं जब
+कोई संधारित्र किसी कुंडली से होकर विसर्जित होता है: या तो सहज वापसी, या फिर
+मरती हुई झनझनाहट। दोनों ही एक \omterm{def:b1:transient-regimes:firstorder}{स्थायी अवस्था} से दूसरी तक की \emph{क्षणिक}
+अवस्था हैं, और दोनों रैखिक अवकल समीकरणों के उसी छोटे कुल का पालन करते हैं ---
+एक अकेले ऊर्जा-भंडार के लिए प्रथम कोटि, और आपस में ऊर्जा बदलते दो भंडारों के
+लिए द्वितीय कोटि। यह अध्याय उन्हें एक ही बार हमेशा के लिए हल करता है, उनके
+प्राचल नाम से पुकारता है (\omterm{def:b1:transient-regimes:firstorder}{कालांक}, स्वाभाविक आवृत्ति, \omterm{def:b1:transient-regimes:secondorder}{गुणता गुणक}), और दिखाता है
+कि वही संख्याएँ किसी परिपथ का और किसी निलंबन का, दोनों का वर्णन करती हैं।
+
+\begin{omfigure}
+\includegraphics[width=0.60\linewidth]{images/book3/ai/b3-07-rlc-breadboard-oscilloscope.png}
+
+{\small ब्रेडबोर्ड पर एक कुंडली, एक संधारित्र और एक \omterm{def:b1:dc-circuits:resistor}{प्रतिरोधक}, और दोलनदर्शी पर किसी सोपान के बाद आता वह मरता हुआ दोलन: यही इस अध्याय की \omterm{thm:b1:transient-regimes:regimes}{छद्म-आवर्ती व्यवस्था} है।}
+\end{omfigure}
+
+\section{प्रथम कोटि के निकाय}
+
+\begin{definition}[प्रथम कोटि का रैखिक निकाय]\label{def:b1:transient-regimes:firstorder}
+\index{प्रथम कोटि का निकाय}\index{कालांक}\index{क्षणिक व्यवस्था}\index{स्थायी अवस्था}
+कोई राशि $x(t)$ \emph{नियत गुणांकों वाले प्रथम कोटि के रैखिक समीकरण} का पालन
+तब करती है जब
+\[
+\tau\,\frac{\dd x}{\dd t} + x = x_\infty ,
+\]
+जहाँ $\tau > 0$ \emph{कालांक} है और $x_\infty$ कोई नियतांक (यानी स्रोत का
+लादा हुआ मान)। उसकी \emph{स्थायी अवस्था} $x = x_\infty$ है; और
+\emph{क्षणिक व्यवस्था} आरंभिक मान $x(0) = x_0$ से उस तक पहुँचने की राह है।
+\end{definition}
+
+\begin{theorem}[हल]\label{thm:b1:transient-regimes:firstorder}
+$x(0) = x_0$ वाला अद्वितीय हल है
+\[
+x(t) = x_\infty + (x_0 - x_\infty)\,\eu^{-t/\tau} .
+\]
+\omterm{def:b1:transient-regimes:firstorder}{स्थायी अवस्था} से बचा अंतराल गुणक $\eu^{-1} \approx
+0.37$ से सिकुड़ता है, हर $\tau$ में: रास्ते का $63\%$ $\tau$ पर, $95\%$
+$3\tau$ पर, $99\%$ $4.6\tau$ पर। और मूल बिंदु पर स्पर्शरेखा $x_\infty$ तक
+$t = \tau$ पर पहुँच जाती है।
+\end{theorem}
+
+\begin{proof}
+$y = x - x_\infty$ $\tau y' + y = 0$ का पालन करता है, जिसके हल
+$y = K\eu^{-t/\tau}$ हैं (रैखिक अवकल समीकरणों पर गणित का पाठ्यक्रम सिद्ध करता
+है कि इनके अलावा और कोई नहीं); और $K = x_0 - x_\infty$। $0$ पर ढाल
+$-(x_0 - x_\infty)/\tau$ है, जो अंतराल को समय
+$\tau$ में पाट देती।
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}
+\begin{axis}[omaxis, width=9.4cm, height=5.4cm, xlabel={$t$}, ylabel={$x$},
+    xmin=0, xmax=5, ymin=0, ymax=1.35, xtick={1,2,3,4,5},
+    xticklabels={$\tau$,$2\tau$,$3\tau$,$4\tau$,$5\tau$},
+    ytick={0.632,1}, yticklabels={$0.63$,$x_\infty$}]
+  \addplot[omExo, dashed, domain=0:5, samples=2] {1};
+  \addplot[omExo, dashed, domain=0:1, samples=2] {x};
+  \addplot[omDef, thick, domain=0:5, samples=100] {1 - exp(-x)};
+  \draw[dashed, omExo] (axis cs:1,0) -- (axis cs:1,0.632) -- (axis cs:0,0.632);
+  \draw[dashed, omExo] (axis cs:3,0) -- (axis cs:3,0.95);
+  \node[omExo, below right, font=\footnotesize] at (axis cs:3,0.95) {$0.95\,x_\infty$};
+  \node[omDef, font=\footnotesize, below right] at (axis cs:2.2,0.75) {$x_\infty(1 - \eu^{-t/\tau})$};
+\end{axis}
+\end{tikzpicture}
+
+{\small $x_0 = 0$ से प्रथम कोटि की सोपान-अनुक्रिया: आरंभिक
+स्पर्शरेखा अनंतस्पर्शी से $t = \tau$ पर मिलती है; रास्ते का $63\%$ $\tau$ पर,
+$95\%$ $3\tau$ पर। प्रथम कोटि की हर क्षणिक अवस्था यही वक्र है, जो
+$\tau$ से तना और $x_0$ तथा $x_\infty$ से खिसका हुआ है।}
+\end{omfigure}
+
+\begin{proposition}[RC और RL परिपथ]\label{prop:b1:transient-regimes:rcrl}
+\index{RC परिपथ}\index{RL परिपथ}
+संधारित्र $C$, जो \omterm{def:b1:dc-circuits:resistor}{प्रतिरोधक} $R$ के द्वारा किसी आदर्श स्रोत $E$ से आवेशित होता
+है, $RC\,\dd u_C/\dd t + u_C = E$ का पालन करता है: यानी $\tau = RC$, $u_{C,\infty} = E$।
+और कुंडली $L$, जो $R$ के साथ श्रेणी में $E$ के आरपार जुड़ी हो,
+$(L/R)\,\dd i/\dd t + i =
+E/R$ का पालन करती है: $\tau = L/R$, $i_\infty = E/R$। स्रोत हटा देने पर
+($E \to 0$) वही समीकरण शून्य की ओर विसर्जन का वर्णन करते हैं।
+\end{proposition}
+
+\begin{proof}
+\omterm{thm:b1:dc-circuits:kirchhoff}{पाश नियम} $E = Ri + u_C$, जहाँ $i = C\,\dd u_C/\dd t$; और \omterm{thm:b1:dc-circuits:kirchhoff}{पाश नियम}
+$E = Ri + L\,\dd i/\dd t$।
+\end{proof}
+
+\begin{proposition}[सांतत्य की शर्तें]\label{prop:b1:transient-regimes:continuity}
+\index{सांतत्य ($u_C$ का, $i_L$ का)}
+किसी संधारित्र के आरपार \omterm{def:b1:dc-circuits:voltage}{विभवांतर} और किसी प्रेरक से होकर बहती धारा समय के संतत
+फलन हैं: किसी स्विच बदलने के क्षण $t_0$ पर
+$u_C(t_0^+) = u_C(t_0^-)$ और $i_L(t_0^+) = i_L(t_0^-)$। प्रतिरोधकों में
+धाराएँ और कुंडलियों के आरपार \omterm{def:b1:dc-circuits:voltage}{विभवांतर} उछल सकते हैं।
+\end{proposition}
+
+\begin{proof}
+$u_C$ का उछाल $i = C\,\dd u_C/\dd t$ को अनंत माँगता, और $i_L$ का उछाल
+$u = L\,\dd i/\dd t$ को अनंत; परिमित विभवांतरों और धाराओं वाले किसी परिपथ में
+दोनों असंभव हैं (उसी बात को यों भी कह सकते हैं कि संचित ऊर्जाएँ
+$\tfrac12 Cu_C^2$ और $\tfrac12 Li^2$ अनंत शक्ति के बिना तत्क्षण बदल नहीं
+सकतीं)।
+\end{proof}
+
+\begin{method}[प्रथम कोटि की क्षणिक अवस्था हल करना]\label{met:b1:transient-regimes:first}
+\begin{enumerate}
+  \item स्विच के बाद पाश और \omterm{thm:b1:dc-circuits:kirchhoff}{संधि नियम} लिखिए, अवयवों के नियमों के साथ; उन्हें
+        $u_C$ या $i_L$ में एक ही समीकरण तक समेटिए और उसे
+        $\tau x' + x = x_\infty$ के रूप में रखिए; अब $\tau$ और
+        $x_\infty$ पढ़ लीजिए (दूसरा वही \omterm{def:b1:transient-regimes:firstorder}{स्थायी अवस्था} है, जो $C$ की जगह खुला
+        परिपथ और $L$ की जगह तार रखकर मिलती है)।
+  \item $x_0$ को स्विच बदलने के क्षण के आरपार $u_C$ या $i_L$ के सांतत्य से
+        निकालिए, उससे \emph{पहले} वाले परिपथ का उपयोग करते हुए।
+  \item $x = x_\infty + (x_0 - x_\infty)\eu^{-t/\tau}$ लिखिए; और बाक़ी
+        राशियाँ अवकलन तथा \omterm{thm:b1:dc-circuits:kirchhoff}{पाश नियम} से निकाल लीजिए।
+\end{enumerate}
+जब संधारित्र के सामने प्रतिरोधकों और स्रोतों का कोई जाल हो, तब पहले उस जाल को
+उसके तेवेनिन तुल्य $(E_{\mathrm{Th}}, R_{\mathrm{Th}})$ से बदल दीजिए
+(\cref{ch:b1:dc-circuits}): तब $\tau = R_{\mathrm{Th}}C$,
+$u_\infty = E_{\mathrm{Th}}$।
+\end{method}
+
+\begin{proposition}[RC आवेशन का ऊर्जा-लेखा]\label{prop:b1:transient-regimes:rcenergy}
+किसी संधारित्र को $0$ से $E$ तक, किसी भी \omterm{def:b1:dc-circuits:resistor}{प्रतिरोधक} $R$ के द्वारा, आवेशित
+करने पर स्रोत $CE^2$ देता है, संधारित्र $\tfrac12 CE^2$ संचित करता है, और
+\omterm{def:b1:dc-circuits:resistor}{प्रतिरोधक} बाक़ी $\tfrac12 CE^2$ क्षय कर देता है --- $R$ चाहे कुछ भी हो।
+\end{proposition}
+
+\begin{proof}
+$i = (E/R)\eu^{-t/\tau}$।
+स्रोत $\int_0^\infty Ei\,\dd t = E \cdot (E/R)\tau = CE^2$ देता है;
+और \omterm{def:b1:dc-circuits:resistor}{प्रतिरोधक}
+$\int_0^\infty Ri^2\,\dd t = (E^2/R)\int_0^\infty \eu^{-2t/\tau}\dd t$
+$= (E^2/R)(\tau/2) = \tfrac12 CE^2$ ले लेता है; और अंतर वही संचित $\tfrac12 CE^2$ है। छोटा $R$ उतनी ही ऊर्जा अधिक
+तेज़ी से क्षय करता है।
+\end{proof}
+
+\begin{example}[रिले की कुंडली]\label{ex:b1:transient-regimes:relay}
+$L = \qty{20}{mH}$, $R = \qty{5.0}{\ohm}$, $E = \qty{10}{V}$: अतः $\tau =
+\qty{4.0}{ms}$, $i_\infty = \qty{2.0}{A}$; संपर्क तब खिंचते हैं जब
+$i$ \qty{1.5}{A} तक पहुँचे, यानी $t = -\tau\ln(1 - 0.75) =
+\qty{5.5}{ms}$ पर। परिपथ खोलने पर $i$ को \qty{2}{A} से गिरना पड़ता है; और
+कुंडली के आरपार लगा कोई ``मुक्त-चक्र'' डायोड उसे अकेले $R$ से होकर रास्ता दे
+देता है, $\tau = \qty{4}{ms}$, चिंगारी के बजाय।
+\end{example}
+
+\section{द्वितीय कोटि के निकाय}
+
+\begin{definition}[द्वितीय कोटि का मानक रूप]\label{def:b1:transient-regimes:secondorder}
+\index{द्वितीय कोटि का निकाय}\index{स्वाभाविक कोणीय आवृत्ति}\index{गुणता गुणक}\index{अवमंदन अनुपात}
+कोई राशि $x(t)$ \emph{द्वितीय कोटि का रैखिक निकाय} तब है जब
+\[
+\frac{\dd^2 x}{\dd t^2} + \frac{\omega_0}{Q}\,\frac{\dd x}{\dd t} + \omega_0^2\,x
+= \omega_0^2\,x_\infty ,
+\]
+जहाँ $\omega_0 > 0$ \emph{स्वाभाविक \omterm{def:b1:wave-propagation:signal}{कोणीय आवृत्ति}} है, $Q > 0$
+\emph{गुणता गुणक} (\omterm{def:b1:units-dimensions:dimension}{विमाहीन}), और $x_\infty$ \omterm{def:b1:transient-regimes:firstorder}{स्थायी अवस्था}।
+इसे $\omega_0/Q = 2\xi\omega_0$ भी लिखा जाता है, जहाँ $\xi = 1/2Q$
+\emph{अवमंदन अनुपात} है।
+\end{definition}
+
+\begin{proposition}[श्रेणी RLC परिपथ]\label{prop:b1:transient-regimes:rlc}
+\index{RLC परिपथ}
+संधारित्र $C$, कुंडली $L$ और \omterm{def:b1:dc-circuits:resistor}{प्रतिरोधक} $R$, जो किसी स्रोत $E$ के आरपार
+श्रेणी में जुड़े हों: संधारित्र का \omterm{def:b1:dc-circuits:voltage}{विभवांतर} मानक रूप का पालन करता है, जहाँ
+\[
+\omega_0 = \frac{1}{\sqrt{LC}}, \qquad Q = \frac{1}{R}\sqrt{\frac{L}{C}},
+\qquad u_{C,\infty} = E .
+\]
+\end{proposition}
+
+\begin{proof}
+\omterm{thm:b1:dc-circuits:kirchhoff}{पाश नियम}: $E = L\,\dd i/\dd t + Ri + u_C$, जहाँ $i = C\,\dd u_C/\dd t$:
+$LC\,u_C'' + RC\,u_C' + u_C = E$; अब $LC$ से भाग दीजिए और
+$\omega_0^2 = 1/LC$, $\omega_0/Q = R/L$ पहचान लीजिए।
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}[font=\small]
+  \draw (0,0) to[battery1, l=$E$, invert] (0,2.6) to[R=$R$] (2.4,2.6) to[L=$L$, i=$i$] (4.8,2.6) -- (4.8,2.6) to[C=$C$, v=$u_C$] (4.8,0) -- (0,0);
+  \begin{scope}[xshift=7.6cm]
+    \draw[thick] (0,0) -- (0,3.4);
+    \fill[pattern=north east lines] (-0.25,0) rectangle (0,3.4);
+    % spring
+    \draw[thick] (0,2.6) -- (0.4,2.6) \foreach \i in {0,...,5} {-- ++(0.2,0.25) -- ++(0.2,-0.5) -- ++(0.2,0.25)} -- (3.3,2.6);
+    % damper
+    \draw[thick] (0,0.8) -- (1.2,0.8);
+    \draw[thick] (1.2,0.5) -- (1.2,1.1) -- (2.2,1.1); \draw[thick] (1.2,0.5) -- (2.2,0.5);
+    \draw[thick] (1.9,0.6) -- (1.9,1.0); \draw[thick] (1.9,0.8) -- (3.3,0.8);
+    \draw[thick, fill=omDef!15] (3.3,0.2) rectangle (4.5,3.2); \node at (3.9,1.7) {$m$};
+    \draw[-Stealth] (3.9,3.5) -- (5.2,3.5) node[right] {$x$};
+    \node at (1.7,3.15) {$k$}; \node at (1.7,0.1) {$\alpha$};
+  \end{scope}
+\end{tikzpicture}
+
+{\small द्वितीय कोटि के निकाय के दो चेहरे: श्रेणी \omterm{prop:b1:transient-regimes:rlc}{RLC
+परिपथ} ($\omega_0 = 1/\sqrt{LC}$, $Q = \sqrt{L/C}/R$) और
+द्रव्यमान--स्प्रिंग--अवमंदक ($\omega_0 = \sqrt{k/m}$, $Q = \sqrt{km}/\alpha$)।
+वही समीकरण, वही तीन व्यवस्थाएँ।}
+\end{omfigure}
+
+\begin{proposition}[यांत्रिक दोलित्र]\label{prop:b1:transient-regimes:mechanical}
+\index{द्रव्यमान--स्प्रिंग--अवमंदक}\index{विद्युत--यांत्रिक सादृश्य}
+द्रव्यमान $m$, जो दृढ़ता $k$ की स्प्रिंग पर रखा हो और जिसके साथ गुणांक
+$\alpha$ का श्यान अवमंदक हो (बल $-\alpha\dot x$), साम्यावस्था से
+$x$ खिसकने पर $m\ddot x + \alpha\dot x + kx = 0$ का पालन करता है: यानी मानक रूप,
+जहाँ
+\[
+\omega_0 = \sqrt{\frac{k}{m}}, \qquad Q = \frac{\sqrt{km}}{\alpha} .
+\]
+और संगति $x \leftrightarrow q$, $\dot x \leftrightarrow i$,
+$m \leftrightarrow L$, $\alpha \leftrightarrow R$, $k \leftrightarrow 1/C$
+एक निकाय के हर परिणाम को दूसरे पर उतार देती है।
+\end{proposition}
+
+\begin{proof}
+न्यूटन का दूसरा नियम (\cref{ch:b1:newton-dynamics}), स्प्रिंग-बल
+$-kx$ और अवमंदन-बल के साथ; अब $m$ से भाग दीजिए।
+\end{proof}
+
+\begin{theorem}[तीन व्यवस्थाएँ]\label{thm:b1:transient-regimes:regimes}
+\index{अनावर्ती व्यवस्था}\index{क्रांतिक व्यवस्था}\index{छद्म-आवर्ती व्यवस्था}\index{छद्म-आवर्तकाल}
+समांगी समीकरण $x'' + (\omega_0/Q)x' +
+\omega_0^2 x = 0$ के हल $r^2 + (\omega_0/Q)r +
+\omega_0^2 = 0$ के मूलों से सधते हैं, जिसका विविक्तकर $\Delta = \omega_0^2(1/Q^2 - 4)$ है:
+\begin{itemize}
+  \item $Q < \tfrac12$, \emph{अनावर्ती}: दो वास्तविक ऋणात्मक मूल
+        $r_\pm = -\frac{\omega_0}{2Q}\big(1 \mp \sqrt{1 - 4Q^2}\big)$,
+        $x = A\eu^{r_+t} + B\eu^{r_-t}$, यानी बिना दोलन के वापसी;
+  \item $Q = \tfrac12$, \emph{क्रांतिक}: एक द्विगुण मूल $r = -\omega_0$,
+        $x = (A + Bt)\eu^{-\omega_0 t}$, यानी बिना अतिक्रमण के सबसे तेज़
+        वापसी;
+  \item $Q > \tfrac12$, \emph{छद्म-आवर्ती}: सम्मिश्र मूल
+        $r = -1/\tau \pm \iu\omega$, जहाँ
+        \[
+        \tau = \frac{2Q}{\omega_0}, \qquad
+        \omega = \omega_0\sqrt{1 - \frac{1}{4Q^2}},
+        \qquad
+        x = \eu^{-t/\tau}\big(A\cos\omega t + B\sin\omega t\big),
+        \]
+        यानी \emph{छद्म-आवर्तकाल} $T = 2\pi/\omega$ का अवमंदित दोलन,
+        अन्वालोप $\pm\sqrt{A^2 + B^2}\,\eu^{-t/\tau}$ के भीतर।
+\end{itemize}
+नियत दाएँ पक्ष के साथ पूरा हल $x_\infty$ जमा समांगी हल है; और
+$A$ तथा $B$ $x(0)$ तथा $x'(0)$ से निकल आते हैं।
+\end{theorem}
+
+\begin{proof}
+नियत गुणांकों वाले रैखिक समीकरण का अभिलक्षणिक समीकरण (गणित का पाठ्यक्रम,
+द्वितीय कोटि के रैखिक समीकरण): मूल $r = -\omega_0/2Q \pm \tfrac12\sqrt\Delta$
+हैं। $Q > \tfrac12$ के लिए
+$\sqrt\Delta = \iu\omega_0\sqrt{4 - 1/Q^2}$,
+जिससे वास्तविक भाग $-\omega_0/2Q = -1/\tau$
+और काल्पनिक भाग $\pm\omega_0\sqrt{1 - 1/4Q^2}$; और वास्तविक हल $\eu^{-t/\tau}\cos\omega t$ तथा
+$\eu^{-t/\tau}\sin\omega t$ के संयोजन हैं।
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}
+\begin{axis}[omaxis, width=11.5cm, height=6cm, xlabel={$\omega_0 t$}, ylabel={$x/x_\infty$},
+    xmin=0, xmax=16, ymin=0, ymax=1.75, xtick={0,5,10,15}, ytick={0.5,1,1.5},
+    legend style={at={(0.97,0.97)}, anchor=north east, font=\footnotesize, draw=none, fill=none}]
+  % Q=0.2: roots r = -(1/(2Q))(1 -/+ sqrt(1-4Q^2)) = -2.5(1 -/+ 0.6) = -1, -4 ; x = 1 - (4 e^{-t} - e^{-4t})/3
+  \addplot[omProp, thick, domain=0:16, samples=200] {1 - (4*exp(-x) - exp(-4*x))/3};
+  \addlegendentry{$Q = 0.2$ (अनावर्ती)}
+  \addplot[omThm, thick, domain=0:16, samples=200] {1 - (1 + x)*exp(-x)};
+  \addlegendentry{$Q = 0.5$ (क्रांतिक)}
+  % Q=3: tau=6, w = sqrt(1-1/36)=0.986 ; x = 1 - e^{-t/6}(cos wt + sin wt /(6 w))
+  \addplot[omDef, thick, domain=0:16, samples=400] {1 - exp(-x/6)*(cos(deg(0.986*x)) + sin(deg(0.986*x))/(6*0.986))};
+  \addlegendentry{$Q = 3$ (छद्म-आवर्ती)}
+  \addplot[omExo, dashed, domain=0:16, samples=2] {1};
+\end{axis}
+\end{tikzpicture}
+
+{\small तीन गुणता गुणकों के लिए, विराम से चलकर द्वितीय कोटि के निकाय की
+सोपान-अनुक्रिया। छोटा $Q$: धीमी रेंगती वापसी; $Q = \tfrac12$: बिना अतिक्रमण
+के सबसे तेज़ वापसी; बड़ा $Q$: झनझनाहट, जो लगभग $Q$
+दोलनों तक टिकती है।}
+\end{omfigure}
+
+\begin{proposition}[छद्म-आवर्ती चिह्न-लेख पर $Q$ पढ़ना]\label{prop:b1:transient-regimes:decrement}
+\index{लघुगणकीय ह्रासांक}
+\omterm{thm:b1:transient-regimes:regimes}{छद्म-आवर्ती व्यवस्था} में दो क्रमागत अधिकतम मानों का अनुपात
+$x_{n+1}/x_n = \eu^{-T/\tau}$ होता है; और \emph{\omterm{prop:b1:transient-regimes:decrement}{लघुगणकीय ह्रासांक}}
+\[
+\delta = \ln\frac{x_n}{x_{n+1}} = \frac{T}{\tau} = \frac{\pi}{Q\sqrt{1 - 1/4Q^2}}
+\approx \frac{\pi}{Q} \quad (Q \gg 1)
+\]
+$Q$ दे देता है; तथा \omterm{def:b1:wave-propagation:signal}{आयाम} के $5\%$ से नीचे गिरने से पहले दिखते दोलनों की
+संख्या लगभग $Q$ होती है। $Q \gg 1$ के लिए $\omega \approx \omega_0$
+और $T \approx 2\pi/\omega_0$।
+\end{proposition}
+
+\begin{proof}
+अन्वालोप $\eu^{-t/\tau}$ हर आवर्तकाल में $\eu^{-T/\tau}$ से गुणित हो जाता है;
+और $T/\tau = (2\pi/\omega)(\omega_0/2Q)$। अन्वालोप $\eu^{-3}
+\approx 5\%$ तक $3\tau = 6Q/\omega_0 \approx Q\,T$ पर पहुँचता है, यानी लगभग
+$Q$ आवर्तकालों के बाद।
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}
+\begin{axis}[omaxis, width=11.5cm, height=5.6cm, xlabel={$t$}, ylabel={$x$},
+    xmin=0, xmax=12.5, ymin=-1.2, ymax=1.3, xtick={2,4,6,8,10,12},
+    xticklabels={$T$,$2T$,$3T$,$4T$,$5T$,$6T$}, ytick={-1,1}, yticklabels={$-x_0$,$x_0$}]
+  \addplot[omExo, dashed, domain=0:12.5, samples=60] {exp(-x/5)};
+  \addplot[omExo, dashed, domain=0:12.5, samples=60] {-exp(-x/5)};
+  \addplot[omDef, thick, domain=0:12.5, samples=500] {exp(-x/5)*cos(deg(pi*x))};
+  \fill[omThm] (axis cs:0,1) circle (1.4pt) node[above right, font=\footnotesize] {$x_0$};
+  \fill[omThm] (axis cs:2,0.670) circle (1.4pt) node[above right, xshift=2pt, yshift=3pt, font=\footnotesize] {$x_1 = x_0\eu^{-T/\tau}$};
+  \fill[omThm] (axis cs:4,0.449) circle (1.4pt) node[above right, xshift=2pt, yshift=3pt, font=\footnotesize] {$x_2$};
+\end{axis}
+\end{tikzpicture}
+
+{\small मुक्त छद्म-आवर्ती क्षय, $x = x_0\eu^{-t/\tau}\cos\omega t$:
+क्रमागत अधिकतम मान नियत गुणक $\eu^{-T/\tau}$ से सिकुड़ते हैं, और
+$\ln(x_n/x_{n+1}) = T/\tau \approx \pi/Q$ चिह्न-लेख से ही \omterm{def:b1:transient-regimes:secondorder}{गुणता गुणक} नाप
+देता है।}
+\end{omfigure}
+
+\begin{example}[एक RLC झनझनाहट]\label{ex:b1:transient-regimes:rlcnum}
+$L = \qty{10}{mH}$, $C = \qty{100}{nF}$, $R = \qty{100}{\ohm}$:
+$\omega_0 = 1/\sqrt{10^{-9}} = \qty{3.16e4}{rad/s}$ ($f_0 =
+\qty{5.03}{kHz}$), $Q = \sqrt{L/C}/R = 316/100 = 3.16$: यानी छद्म-आवर्ती,
+$\tau = 2Q/\omega_0 = \qty{0.20}{ms}$, $\omega = 0.987\,\omega_0$,
+$T = \qty{0.20}{ms}$, और तीन दिखते दोलन। क्रांतिक प्रतिरोध
+$R_c = 2\sqrt{L/C} = \qty{632}{\ohm}$ है; उससे ऊपर विसर्जन
+अनावर्ती हो जाता है।
+\end{example}
+
+\begin{method}[द्वितीय कोटि की क्षणिक अवस्था हल करना]\label{met:b1:transient-regimes:second}
+\begin{enumerate}
+  \item समीकरण लिखिए; उसे मानक रूप में रखिए; $\omega_0$,
+        $Q$ और $x_\infty$ पढ़ लीजिए।
+  \item $Q$ से व्यवस्था तय कीजिए और सामान्य हल को
+        $x_\infty$ जमा समांगी हल के रूप में लिखिए।
+  \item $x(0)$ और $x'(0)$ को $u_C$ तथा $i_L$ के सांतत्य से निकालिए
+        (RLC के लिए: $u_C(0^+) = u_C(0^-)$ और $u_C'(0^+) = i(0^-)/C$);
+        फिर दोनों नियतांकों के लिए हल कीजिए।
+\end{enumerate}
+\end{method}
+
+\begin{example}[आरंभिक शर्तें]\label{ex:b1:transient-regimes:ic}
+पिछले उदाहरण का संधारित्र $U_0$ तक आवेशित है और
+$t = 0$ पर $L$ तथा $R$ पर बंद कर दिया जाता है (कोई स्रोत नहीं): अतः $x_\infty = 0$,
+$u_C(0) = U_0$, $u_C'(0) = i(0)/C = 0$, क्योंकि कुंडली की धारा शून्य थी।
+अतः $A = U_0$ और $-A/\tau + B\omega = 0$, $B = U_0/(\omega\tau) =
+U_0/\sqrt{4Q^2 - 1}$: यानी $u_C = U_0\eu^{-t/\tau}[\cos\omega t + \sin(\omega
+t)/\sqrt{4Q^2 - 1}]$ --- और $Q \gg 1$ के लिए बस $U_0\eu^{-t/\tau}\cos\omega_0 t$,
+जबकि धारा $i = -C\,\dd u_C/\dd t$ का शिखर $U_0\sqrt{C/L} =
+U_0/(\omega_0 L)$ के पास आता है।
+\end{example}
+
+\begin{remark}[ऊर्जा]\label{rem:b1:transient-regimes:energy}
+संचित ऊर्जा $\tfrac12 Cu_C^2 + \tfrac12 Li^2$ (या $\tfrac12 kx^2
++ \tfrac12 m\dot x^2$) दर $Ri^2$ ($\alpha\dot x^2$) से घटती है:
+अवकलन कीजिए और समीकरण का उपयोग कीजिए। हर छद्म-आवर्तकाल में ऊर्जा
+गुणक $\eu^{-2T/\tau}$ से सिकुड़ती है; $Q = 3$ के साथ उसका लगभग $88\%$
+प्रति दोलन खो जाता है। ऊँचा $Q$ का अर्थ है दोलन की तुलना में धीमा रिसाव ---
+यानी अच्छी घड़ी, तीखा अनुनाद
+(\cref{ch:b1:sinusoidal-impedance}) --- और नीचा $Q$ का अर्थ है तेज़ वापसी:
+जो किसी निलंबन या किसी मापी की सुई के लिए ठीक चुनाव है।
+\end{remark}
+
+\section{अभ्यास}
+
+\begin{exercise}[$\star$]\label{exo:b1:transient-regimes:1}
+कोई \omterm{prop:b1:transient-regimes:rcrl}{RC परिपथ}: $R = \qty{10}{k\ohm}$, $C = \qty{47}{nF}$, जो
+$E$ से आवेशित होता है। $\tau$, $u_C(\tau)/E$, और $99\%$ तक पहुँचने का समय निकालिए ($E$ के सापेक्ष)।
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b1:transient-regimes:2}
+कोई \omterm{prop:b1:transient-regimes:rcrl}{RL परिपथ}: $L = \qty{20}{mH}$, $R = \qty{5.0}{\ohm}$, $E = \qty{10}{V}$।
+$\tau$, अंतिम धारा, $t = \tau$ पर धारा, और स्विच बंद करने के ठीक बाद कुंडली
+के आरपार \omterm{def:b1:dc-circuits:voltage}{विभवांतर} निकालिए।
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b1:transient-regimes:3}
+कोई श्रेणी RLC: $L = \qty{10}{mH}$, $C = \qty{100}{nF}$, $R = \qty{100}{\ohm}$।
+$\omega_0$, $f_0$, $Q$ निकालिए; व्यवस्था का नाम लीजिए; $\tau$ और
+छद्म-आवर्तकाल दीजिए।
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b1:transient-regimes:4}
+उन्हीं $L$ और $C$ के लिए कौन-सा प्रतिरोध \omterm{thm:b1:transient-regimes:regimes}{क्रांतिक व्यवस्था} देता है?
+तब $Q$ क्या है? और $R = \qty{2}{k\ohm}$ के लिए क्या होता है?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b1:transient-regimes:5}
+कोई आवेशित संधारित्र $C = \qty{1.0}{\micro F}$ किसी अज्ञात $R$ से होकर
+विसर्जित होता है; \omterm{def:b1:dc-circuits:voltage}{विभवांतर} हर \qty{3.5}{ms} में आधा हो जाता है। दिखाइए कि
+अर्धायु $\tau\ln 2$ है और $R$ निकालिए।
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b1:transient-regimes:6}
+सीधे समाकलन से दिखाइए कि किसी संधारित्र को $0$ से $E$ तक $R$ के द्वारा
+आवेशित करने पर ठीक $\tfrac12 CE^2$ $R$ में क्षय होता है, चाहे
+$R$ कुछ भी हो। अंतरण की दक्षता का क्या होता है, और कोई उससे बेहतर कैसे कर
+सकता है?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b1:transient-regimes:7}
+किसी दोलनदर्शी पर कोई मुक्त RLC क्षय \qty{0.40}{ms} के अंतरालों पर क्रमागत
+अधिकतम मान \qty{2.0}{V}, \qty{1.5}{V}, \qty{1.12}{V} दिखाता है।
+इनसे $Q$, $\omega_0$, और $C = \qty{1.0}{\micro F}$ के साथ $L$ तथा $R$ के मान
+निकालिए।
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b1:transient-regimes:8}
+$U_0 = \qty{100}{V}$ तक आवेशित कोई संधारित्र ($C = \qty{10}{\micro F}$)
+कुंडली $L = \qty{1.0}{mH}$ पर जोड़ दिया जाता है, जिसका प्रतिरोध छोटा है ($Q \gg 1$)।
+$u_C(t)$ और $i(t)$ लिखिए, और शिखर धारा का आकलन कीजिए। शिखर पर ऊर्जा कहाँ
+बैठी होती है?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b1:transient-regimes:9}
+किसी कार का एक चौथाई भाग: $m = \qty{400}{kg}$, स्प्रिंग $k = \qty{2.0e4}{N/m}$ पर।
+$\omega_0$, $f_0$ और क्रांतिक अवमंदन गुणांक निकालिए। अवमंदक
+$\alpha = \qty{2000}{N.s/m}$ के साथ $Q$, व्यवस्था,
+छद्म-आवर्तकाल और क्षय-काल $\tau$ दीजिए।
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b1:transient-regimes:10}
+कोई कुंडली $L = \qty{0.50}{H}$ $I_0 = \qty{2.0}{A}$ ढो रही है; स्रोत
+हटा दिया जाता है और कुंडली को निस्सारक \omterm{def:b1:dc-circuits:resistor}{प्रतिरोधक} $R = \qty{100}{\ohm}$ पर छोड़ दिया जाता है।
+$i(t)$, $\tau$, कुंडली के आरपार शिखर \omterm{def:b1:dc-circuits:voltage}{विभवांतर} और क्षय हुई ऊर्जा
+दीजिए। \omterm{def:b1:dc-circuits:resistor}{प्रतिरोधक} के बिना क्या होता?
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b1:transient-regimes:11}
+कोई संधारित्र $C = \qty{1.0}{\micro F}$ $E = \qty{12}{V}$ से
+$R_1 = \qty{10}{k\ohm}$ के द्वारा आवेशित होता है, जबकि उसके आरपार $R_2 = \qty{20}{k\ohm}$
+जुड़ा है। तेवेनिन तुल्य की सहायता से \omterm{def:b1:transient-regimes:firstorder}{कालांक} और
+अंतिम \omterm{def:b1:dc-circuits:voltage}{विभवांतर} निकालिए; और $u_C(t)$ लिखिए, जहाँ $u_C(0) = 0$।
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b1:transient-regimes:12}
+\omterm{thm:b1:transient-regimes:regimes}{क्रांतिक व्यवस्था}, विराम से सोपान ($x(0) = x'(0) = 0$): दिखाइए कि
+$x = x_\infty[1 - (1 + \omega_0 t)\eu^{-\omega_0 t}]$, और $95\%$ तक, यानी
+$x_\infty$ के सापेक्ष, पहुँचने का समय संख्यात्मक रूप से निकालिए
+($1/\omega_0$ के मात्रकों में)। इसकी तुलना $Q = 5$ के लिए अन्वालोप के
+स्थिरीकरण काल से और $Q = 0.1$ पर धीमे मूल से कीजिए; और निष्कर्ष निकालिए कि
+``क्रांतिक'' ही अभियंता का लक्ष्य क्यों है।
+\end{exercise}
+
+\section{समस्या: निलंबन की अभिकल्पना}
+
+\begin{problem}[{सप्ताहांत समस्या --- वही अवकल समीकरण, प्रयोग-मेज़ पर और कार
+के नीचे: घिसा हुआ अवमंदक कितनी उछालें आने देता है, अभिकल्पक उसकी जगह क्या
+चुनता है, और एक ही संख्या दोनों में भेद कैसे कर देती है}]
+\label{pb:b1:transient-regimes:1}
+भाग I एक श्रेणी \omterm{prop:b1:transient-regimes:rlc}{RLC परिपथ} पढ़ता है, $L = \qty{10}{mH}$, $C = \qty{100}{nF}$;
+और भाग II से IV तक एक चौथाई-कार का प्रतिरूप: द्रव्यमान $m = \qty{350}{kg}$, जो
+स्प्रिंग $k = \qty{22}{kN/m}$ पर टिका है, और $-\alpha\dot x$ लगाता एक अवमंदक।
+\omterm{thm:b1:transient-regimes:regimes}{छद्म-आवर्ती व्यवस्था} में सोपान-अनुक्रिया का अतिक्रमण (दिया हुआ):
+$x_{\max}/x_\infty - 1 = \exp(-\pi\xi/\sqrt{1 - \xi^2})$, $\xi = 1/2Q$।
+
+\medskip
+\noindent\textbf{भाग I --- परिपथ।}
+\begin{enumerate}
+  \item किसी स्रोत $E$ के आरपार श्रेणी RLC के लिए \omterm{thm:b1:dc-circuits:kirchhoff}{पाश नियम} लिखिए, और
+        $u_C$ के लिए अवकल समीकरण।
+  \item उसे मानक रूप में रखिए; $\omega_0$ और $Q$ व्यक्त कीजिए।
+  \item $\omega_0$, $f_0$ और क्रांतिक प्रतिरोध $R_c$ निकालिए।
+  \item अभिलक्षणिक समीकरण और उसका विविक्तकर लिखिए; तीनों व्यवस्थाओं को
+        $Q$ के पदों में कहिए।
+  \item छद्म-आवर्ती स्थिति में $\tau$ और $\omega$ तथा $u_C(t)$ का
+        रूप दीजिए।
+  \item $R = \qty{100}{\ohm}$ के लिए $Q$, $\tau$, छद्म-आवर्तकाल,
+        और दिखते दोलनों की संख्या निकालिए।
+  \item $U_0$ तक आवेशित संधारित्र $L$ और $R$ पर $t = 0$ पर जोड़ दिया
+        जाता है। $u_C(0^+)$ और $\dd u_C/\dd t(0^+)$ दीजिए, हर एक के लिए
+        भौतिक कारण के साथ।
+\end{enumerate}
+
+\medskip
+\noindent\textbf{भाग II --- चौथाई कार।}
+\begin{enumerate}[resume]
+  \item $x$ को साम्यावस्था की स्थिति से नापते हुए, गाड़ी की देह के लिए
+        न्यूटन का दूसरा नियम लिखिए और दिखाइए कि भार बाहर हो जाता है।
+  \item समीकरण को मानक रूप में रखिए; $\omega_0$ और $Q$ को
+        $m$, $k$, $\alpha$ के पदों में दीजिए, और विद्युत--यांत्रिक
+        संगतियाँ सूचीबद्ध कीजिए।
+  \item $\omega_0$, $f_0$ और क्रांतिक गुणांक
+        $\alpha_c$ निकालिए।
+  \item अभिकल्पक $\alpha = \qty{4000}{N.s/m}$ लगाता है: $Q$,
+        $\xi$ निकालिए और व्यवस्था का नाम लीजिए।
+  \item $\tau$ और छद्म-आवर्तकाल निकालिए।
+  \item किसी सोपान (जैसे फुटपाथ का किनारा) के बाद अतिक्रमण निकालिए: क्या
+        कार आरामदेह है?
+  \item कौन-सा प्रतिरोध $R$ भाग I के परिपथ को इस निलंबन जैसा ही
+        $Q$ देगा?
+\end{enumerate}
+
+\medskip
+\noindent\textbf{भाग III --- घिसा हुआ अवमंदक।}
+तेल रिस गया है: $\alpha = \qty{1200}{N.s/m}$।
+\begin{enumerate}[resume]
+  \item $Q$, छद्म-आवर्तकाल और $\tau$ निकालिए।
+  \item क्रमागत अधिकतम मान किस गुणक से सिकुड़ते हैं? \omterm{def:b1:wave-propagation:signal}{आयाम} के $5\%$ से नीचे
+        आने से पहले कितनी उछालें दिखती हैं?
+  \item उछाल-परीक्षण: कोई कोने को $x_0 =
+        \qty{5.0}{cm}$ दबाकर छोड़ देता है। आरंभिक शर्तें, स्प्रिंग में
+        संचित ऊर्जा दीजिए, और बताइए कि वह ऊर्जा कहाँ जाती है।
+  \item पहली वापसी के दौरान देह का शिखर वेग
+        ($\approx x_0\omega_0$, जब $Q \gg 1$ हो) और अवमंदक का शिखर बल
+        आँकिए।
+  \item ठीक क्रांतिक अवमंदन ($Q = \tfrac12$) अभिकल्पक का चुनाव क्यों नहीं
+        है, जबकि वह कोई अतिक्रमण नहीं देता? (वापसी के अंतिम कुछ
+        मिलीमीटरों के बारे में सोचिए।)
+  \item घिसे अवमंदक के लिए अतिक्रमण निकालिए और भाग II से तुलना कीजिए।
+\end{enumerate}
+
+\medskip
+\noindent\textbf{भाग IV --- चिह्न-लेख से $Q$ का निदान।}
+देह पर लगा एक त्वरणमापी मुक्त क्षय दर्ज करता है।
+\begin{enumerate}[resume]
+  \item घिसी कार के लिए क्रमागत अधिकतम मान $1.00$, $0.25$, $0.062$
+        पढ़े जाते हैं (मनमाने मात्रकों में)। \omterm{prop:b1:transient-regimes:decrement}{लघुगणकीय ह्रासांक} निकालिए,
+        फिर $\xi$ यथार्थ रूप से $\delta = 2\pi\xi/\sqrt{1 - \xi^2}$ से, फिर $Q$;
+        और भाग III से तुलना कीजिए।
+  \item स्वस्थ कार के लिए कोई दूसरा अधिकतम दिखता ही नहीं; केवल
+        अतिक्रमण, $3.8\%$, पढ़ा जा सकता है। अतिक्रमण के सूत्र को उलटकर
+        $\xi$ और $Q$ निकालिए।
+  \item घिसा अवमंदक प्रति छद्म-आवर्तकाल यांत्रिक ऊर्जा का कितना अंश क्षय
+        करता है?
+  \item जिस तकनीशियन के पास कार नहीं है वह भाग I का RLC बनाता है और
+        $R$ ऐसा चुनता है कि $Q = 2.3$ हो: कौन-सा $R$, और $\omega_0 t$ के
+        सामने खींचा गया दोलनदर्शी का चिह्न-लेख कार वाले से आकृति में
+        एक-सा क्यों है?
+  \item सार लिखिए: कौन-सी \omterm{def:b1:units-dimensions:dimension}{विमाहीन} संख्या द्वितीय कोटि की किसी भी क्षणिक
+        अवस्था की आकृति तय करती है, निलंबन का अभिकल्पक किस मान पर निशाना
+        लगाता है, और ``एक से अधिक उछाल'' से चालक को क्या निष्कर्ष निकालना
+        चाहिए।
+\end{enumerate}
+\end{problem}

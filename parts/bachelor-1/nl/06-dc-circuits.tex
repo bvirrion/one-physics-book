@@ -1,0 +1,636 @@
+\chapter{Gelijkstroomkringen: de wetten van Kirchhoff en enkele stellingen}\label{ch:b1:dc-circuits}
+
+Draai de sleutel om op een koude ochtend: de startmotor kreunt, het
+dashboardlicht dooft een seconde lang en de auto hoest zich tot leven. De accu
+die zojuist nog een stabiele \qty{12.6}{V} leverde, staat op elf terwijl
+de startmotor zijn honderdvijftig \omterm{def:b1:dc-circuits:current}{ampère} trekt --- en de koplampen, parallel
+aangesloten, betalen ervoor. Alles in die seconde wordt beheerst door
+twee behoudswetten en een handvol stellingen over \omterm{def:b1:dc-circuits:linear}{lineaire netwerken}, die dit
+hoofdstuk formuleert, bewijst en toepast: de \omterm{thm:b1:dc-circuits:kirchhoff}{wetten van Kirchhoff}, de
+modellen van bronnen en \omterm{def:b1:dc-circuits:resistor}{weerstanden}, delers, Thévenin en Norton, en
+de grafische kunst van het vinden van een \omterm{met:b1:dc-circuits:loadline}{werkpunt}.
+
+\section{Stroom, spanning en het quasistationaire regime}
+
+\begin{definition}[Elektrische stroom]\label{def:b1:dc-circuits:current}
+\index{elektrische stroom}\index{ampère}
+De \emph{elektrische stroom} door een oppervlak (de doorsnede van een draad)
+is de lading die er per tijdseenheid doorheen gaat, positief geteld in een
+gekozen oriëntatie:
+\[
+i = \frac{\dd q}{\dd t} \qquad (\text{ampère: } \qty{1}{A} = \qty{1}{C/s}).
+\]
+De oriëntatie omkeren wisselt het teken van $i$. In een metaal zijn de
+ladingsdragers elektronen, die \emph{tegen} de conventionele stroomrichting in
+driften, met een fractie van een millimeter per seconde.
+\end{definition}
+
+\begin{definition}[Potentiaal en spanning]\label{def:b1:dc-circuits:voltage}
+\index{elektrische potentiaal}\index{spanning}\index{massa (nulpotentiaal)}
+Elk punt van een kring heeft een \emph{elektrische potentiaal} $V$ (volt),
+op een constante na vastgelegd door een \emph{massa} te kiezen ($V = 0$).
+De \emph{spanning} tussen $A$ en $B$ is het potentiaalverschil
+$u_{AB} = V_A - V_B$, getekend als een pijl van $B$ naar $A$. De energie die een
+lading $q$ verliest op de weg van $A$ naar $B$ is $q\,u_{AB}$ (dit sluit aan
+bij de elektrostatische potentiaal van \cref{ch:b1:potential-capacitors}).
+\end{definition}
+
+\begin{definition}[Quasistationair regime (ARQS)]\label{def:b1:dc-circuits:arqs}
+\index{quasistationair regime}\index{ARQS}
+Een kring met afmeting $\ell$ die met frequentie $f$ wordt aangedreven is in
+het \emph{quasistationaire regime} wanneer de looptijd $\ell/c$ van
+elektrische signalen erdoorheen verwaarloosbaar is tegenover de periode $1/f$:
+$\ell \ll c/f$. De stroom is dan op elk moment overal in een
+onvertakte draad dezelfde, en de onderstaande wetten gelden op elk
+moment voor tijdafhankelijke stromen en \omterm{def:b1:dc-circuits:voltage}{spanningen} (kleine letters $i$, $u$)
+net zo goed als voor stationaire ($I$, $U$).
+\end{definition}
+
+\begin{example}[Hoe quasi is quasi]\label{ex:b1:dc-circuits:arqs}
+Bij \qty{50}{Hz} is $c/f = \qty{6000}{km}$: een huis zit in het
+\omterm{def:b1:dc-circuits:arqs}{quasistationaire regime}. Bij \qty{1}{MHz}, \qty{300}{m}: een radio nog steeds. Bij \qty{2}{GHz},
+\qty{15}{cm}: de printplaat van een telefoon niet meer, en haar banen moeten
+als transmissielijnen worden behandeld --- een onderwerp van het volume van jaar 2.
+\end{example}
+
+\begin{theorem}[De wetten van Kirchhoff]\label{thm:b1:dc-circuits:kirchhoff}
+\index{wetten van Kirchhoff}\index{knooppuntregel}\index{maasregel}
+In het \omterm{def:b1:dc-circuits:arqs}{quasistationaire regime} geldt:
+\begin{enumerate}
+  \item \emph{Knooppuntregel}: in een knooppunt waar meerdere draden
+        samenkomen is de som van de aankomende stromen gelijk aan de som
+        van de vertrekkende, $\sum_{\text{in}} i_k = \sum_{\text{uit}} i_k$.
+  \item \emph{Maasregel}: langs een gesloten maas tellen de \omterm{def:b1:dc-circuits:voltage}{spanningen} op
+        tot nul, geteld met het teken dat een gekozen omlooprichting
+        oplegt: $\sum_{\text{lus}} \pm u_k = 0$.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+Lading blijft behouden en hoopt zich in het \omterm{def:b1:dc-circuits:arqs}{quasistationaire regime} niet op
+in een knooppunt: wat er per seconde aankomt vertrekt per seconde. De
+maasregel is de uitspraak dat de potentiaal een functie van de plaats is: gaat
+men de maas rond en terug naar het beginpunt, dan is de som van de
+potentiaalverschillen $V_A - V_A = 0$.
+\end{proof}
+
+\begin{notation}[Conventies en vermogen]\label{not:b1:dc-circuits:conventions}
+\index{verbruikersconventie}\index{generatorconventie}\index{elektrisch vermogen}
+Voor een component met twee aansluitingen (een \emph{tweepool}) tekent de
+\emph{verbruikersconventie} de spanningspijl en de stroompijl in
+tegengestelde richtingen; de \emph{generatorconventie} tekent ze in dezelfde
+richting. In de verbruikersconventie is het vermogen dat de tweepool
+\emph{ontvangt}
+\[
+p = u\,i \qquad (\text{watt}),
+\]
+positief voor een \omterm{def:b1:dc-circuits:resistor}{weerstand} die opwarmt, negatief voor een accu die
+levert. In de generatorconventie is $p = ui$ het vermogen dat zij
+\emph{levert}.
+\end{notation}
+
+\begin{omfigure}
+\begin{tikzpicture}[font=\small]
+  \draw (0,0) to[generic, l=tweepool, v=$u$, i=$i$] (3,0);
+  \node[below] at (1.5,-1.0) {verbruikersconventie: $p_{\text{ontvangen}} = ui$};
+  \begin{scope}[xshift=6cm]
+  \draw (0,0) to[generic, l=tweepool, v<=$u$, i=$i$] (3,0);
+  \node[below] at (1.5,-1.0) {generatorconventie: $p_{\text{geleverd}} = ui$};
+  \end{scope}
+\end{tikzpicture}
+
+{\small De twee tekenconventies voor een tweepool: pijlen tegengesteld
+(verbruiker) of gelijkgericht (generator). De natuurkunde is dezelfde; alleen
+het teken van $ui$ wordt anders gelezen.}
+\end{omfigure}
+
+\section{Tweepolen en hun modellen}
+
+\begin{definition}[Karakteristiek; weerstand; de wet van Ohm]\label{def:b1:dc-circuits:resistor}
+\index{karakteristiek (van een tweepool)}\index{weerstand}\index{wet van Ohm}\index{joule-effect}
+De \emph{karakteristiek} van een tweepool is de kromme $i(u)$ (of $u(i)$)
+die zij oplegt. Een \emph{weerstand} heeft een lineaire karakteristiek door de
+oorsprong, de \emph{wet van Ohm}
+\[
+u = R\,i \qquad (\text{verbruikersconventie}),
+\]
+waarin $R$ haar \emph{weerstandswaarde} is (ohm, $\qty{1}{\ohm} = \qty{1}{V/A}$) en
+$G = 1/R$ haar \emph{conductantie} (siemens). Zij ontvangt $p = Ri^2 =
+u^2/R \geq 0$, dat als warmte wordt afgevoerd (\emph{joule-effect}). Een draad met
+lengte $\ell$, doorsnede $S$ en soortelijke weerstand $\rho$ heeft
+$R = \rho\ell/S$.
+\end{definition}
+
+\begin{definition}[Ideale en werkelijke bronnen]\label{def:b1:dc-circuits:sources}
+\index{spanningsbron}\index{stroombron}\index{elektromotorische kracht}\index{inwendige weerstand}\index{Thevenin model@model van Thévenin}\index{model van Norton}
+Een \emph{ideale spanningsbron} legt $u = E$ op, wat de stroom ook is;
+$E$ is haar \emph{elektromotorische kracht} (emk). Een \emph{ideale
+stroombron} legt $i = I_N$ op, wat de \omterm{def:b1:dc-circuits:voltage}{spanning} ook is. Een \emph{werkelijke
+bron} (accu, generator, voeding) wordt in de generatorconventie
+gemodelleerd door
+\[
+u = E - r\,i \quad (\text{model van Thévenin: ideale emk } E \text{ in serie met } r)
+\]
+of, gelijkwaardig, door $i = I_N - u/r$ (model van Norton: ideale
+stroombron $I_N = E/r$ parallel aan $r$); $r$ is de \emph{inwendige
+\omterm{def:b1:dc-circuits:resistor}{weerstand}}. $E$ is de nullastspanning en $I_N = E/r$ de
+kortsluitstroom.
+\end{definition}
+
+\begin{proposition}[Vermogensbalans van een werkelijke bron]\label{prop:b1:dc-circuits:sourcepower}
+\index{vermogensaanpassing}
+Een werkelijke bron $(E, r)$ die een \omterm{def:b1:dc-circuits:resistor}{weerstand} $R$ voedt levert $i = E/(R + r)$
+en het vermogen
+\[
+P_R = \frac{E^2 R}{(R + r)^2},
+\]
+dat maximaal is en gelijk aan $E^2/4r$ wanneer $R = r$ (\emph{aanpassing}),
+met rendement $P_R/(Ei) = R/(R + r)$, bij dat maximum slechts $50\%$.
+\end{proposition}
+
+\begin{proof}
+Maasregel: $E = ri + Ri$. $P_R = Ri^2$; differentieer $R/(R + r)^2$:
+$\big[(R + r)^2 - 2R(R + r)\big]/(R + r)^4 = (r - R)/(R + r)^3$, nul bij
+$R = r$, positief ervóór en negatief erna. De bron levert
+$Ei = (R + r)i^2$, waarvan $ri^2$ de bron zelf opwarmt.
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}
+\begin{axis}[omaxis, width=7.6cm, height=5.2cm, xlabel={$i$}, ylabel={$u$},
+    xmin=0, xmax=1.3, ymin=0, ymax=1.3, xtick={1}, xticklabels={$I_N = E/r$},
+    ytick={1}, yticklabels={$E$}]
+  \addplot[omThm, thick, domain=0:1, samples=2] {1 - x};
+  \addplot[omDef, thick, domain=0:0.9, samples=2] {0.6*x};
+  \fill[omExo] (axis cs:0.625,0.375) circle (1.6pt);
+  \node[omExo, font=\footnotesize] (op) at (axis cs:0.98,0.92) {werkpunt};
+  \draw[-Stealth, omExo] (op.south west) -- (axis cs:0.645,0.395);
+  \node[omThm, font=\footnotesize, anchor=south west] at (axis cs:0.03,1.02) {bron $u = E - ri$};
+  \node[omDef, font=\footnotesize, right] at (axis cs:0.9,0.54) {belasting $u = Ri$};
+\end{axis}
+\end{tikzpicture}\qquad
+\begin{tikzpicture}
+\begin{axis}[omaxis, width=7.0cm, height=5cm, xlabel={$R/r$}, ylabel={$P_R$},
+    xmin=0, xmax=6, ymin=0, ymax=0.3, xtick={1,3,5}, ytick={0.25}, yticklabels={$\frac{E^2}{4r}$}]
+  \addplot[omProp, thick, domain=0:6, samples=120] {x/((x+1)^2)};
+  \draw[dashed, omExo] (axis cs:1,0) -- (axis cs:1,0.25) -- (axis cs:0,0.25);
+\end{axis}
+\end{tikzpicture}
+
+{\small Links: de karakteristieken van een werkelijke bron ($u = E - ri$) en
+van een weerstandsbelasting ($u = Ri$) snijden elkaar in het \omterm{met:b1:dc-circuits:loadline}{werkpunt}. Rechts: het
+vermogen dat de belasting ontvangt piekt bij $R = r$, waar de helft van het
+vermogen van de bron in haar eigen \omterm{def:b1:dc-circuits:resistor}{weerstand} verloren gaat.}
+\end{omfigure}
+
+\begin{example}[Een auto-accu onder belasting]\label{ex:b1:dc-circuits:battery}
+Nullast \qty{12.6}{V}; \qty{11.4}{V} terwijl de startmotor
+\qty{120}{A} trekt: $r = 1.2/120 = \qty{10}{m\ohm}$, $I_N = \qty{1260}{A}$
+(vandaar het lasgevaar van een gevallen steeksleutel). Een aangepaste belasting
+$R = \qty{10}{m\ohm}$ zou $E^2/4r = \qty{4}{kW}$ opnemen gedurende enkele
+seconden --- ongeveer wat een startmotor nodig heeft.
+\end{example}
+
+\begin{remark}[Andere tweepolen]\label{rem:b1:dc-circuits:others}
+\index{diode}
+Een \emph{diode} geleidt maar in één richting: een geïdealiseerd model is een
+open keten voor $u < U_0$ en een vaste \omterm{def:b1:dc-circuits:voltage}{spanning} $u = U_0$ (ongeveer
+\qty{0.7}{V} voor silicium, \qty{2}{} tot \qty{3}{V} voor een led) zodra zij
+geleidt. Een gloeilamp is een \omterm{def:b1:dc-circuits:resistor}{weerstand} waarvan $R$ met de temperatuur groeit,
+en dus met $i$ --- een gekromde karakteristiek. In de stationaire toestand is
+een condensator een open keten ($i = C\,\dd u/\dd t = 0$) en een
+spoel een kortsluiting ($u = L\,\dd i/\dd t = 0$); hun rol bij
+overgangsverschijnselen is \cref{ch:b1:transient-regimes}.
+\end{remark}
+
+\section{Schakelingen en delers}
+
+\begin{proposition}[Weerstanden in serie en parallel]\label{prop:b1:dc-circuits:seriesparallel}
+\index{serie (weerstanden)}\index{parallel (weerstanden)}
+\omterm{def:b1:dc-circuits:resistor}{Weerstanden} in serie (dezelfde stroom) tellen op: $R = R_1 + R_2 + \cdots$.
+\omterm{def:b1:dc-circuits:resistor}{Weerstanden} parallel (dezelfde \omterm{def:b1:dc-circuits:voltage}{spanning}) tellen hun conductanties op:
+$1/R = 1/R_1 + 1/R_2 + \cdots$; voor twee is $R = R_1R_2/(R_1 + R_2)$,
+genoteerd $R_1 \parallel R_2$.
+\end{proposition}
+
+\begin{proof}
+Serie: $u = u_1 + u_2 = (R_1 + R_2)i$ (maasregel). Parallel: $i = i_1 +
+i_2 = u/R_1 + u/R_2$ (knooppuntregel).
+\end{proof}
+
+\begin{proposition}[Spanningsdeler en stroomdeler]\label{prop:b1:dc-circuits:dividers}
+\index{spanningsdeler}\index{stroomdeler}
+Twee \omterm{def:b1:dc-circuits:resistor}{weerstanden} in serie over een \omterm{def:b1:dc-circuits:voltage}{spanning} $u$ verdelen haar evenredig met
+hun weerstandswaarden:
+\[
+u_2 = \frac{R_2}{R_1 + R_2}\,u .
+\]
+Twee \omterm{def:b1:dc-circuits:resistor}{weerstanden} parallel, gevoed door een stroom $i$, verdelen die omgekeerd
+evenredig:
+\[
+i_2 = \frac{R_1}{R_1 + R_2}\,i = \frac{G_2}{G_1 + G_2}\,i .
+\]
+\end{proposition}
+
+\begin{proof}
+Serie: $i = u/(R_1 + R_2)$ en $u_2 = R_2 i$. Parallel: $u = (R_1
+\parallel R_2)\,i$ en $i_2 = u/R_2$.
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}[font=\small]
+  \draw (0,3.2) to[R=$R_1$] (0,1.6) to[R=$R_2$, v=$u_2$] (0,0);
+  \draw[-Stealth, thick] (-1.3,0.1) -- (-1.3,3.1) node[midway, left] {$u$};
+  \fill (0,3.2) circle (1.2pt); \fill (0,0) circle (1.2pt);
+  \begin{scope}[xshift=5.5cm]
+  \draw (0,3.2) to[short, i=$i$] (1.4,3.2) to[R=$R_1$] (1.4,0) -- (0,0);
+  \draw (1.4,3.2) -- (3.0,3.2) to[short, i=$i_2$] (3.0,2.4) to[R=$R_2$] (3.0,0) -- (1.4,0);
+  \fill (0,3.2) circle (1.2pt); \fill (0,0) circle (1.2pt);
+  \end{scope}
+\end{tikzpicture}
+
+{\small \omterm{prop:b1:dc-circuits:dividers}{Spanningsdeler} (links): $u_2 = R_2 u/(R_1 + R_2)$. \omterm{prop:b1:dc-circuits:dividers}{Stroomdeler}
+(rechts): $i_2 = R_1 i/(R_1 + R_2)$ --- de stroom verkiest de
+kleinste \omterm{def:b1:dc-circuits:resistor}{weerstand}.}
+\end{omfigure}
+
+\begin{remark}[Een deler belasten]\label{rem:b1:dc-circuits:loading}
+De formule voor de deler geldt alleen als er geen stroom uit het middelpunt
+wordt getrokken. Een belasting $R_L$ over $R_2$ vervangt $R_2$ door $R_2
+\parallel R_L$ en verlaagt $u_2$ --- het ``belastingseffect'', en de
+reden dat een voltmeter een hoge \omterm{def:b1:dc-circuits:resistor}{weerstand} moet hebben en een potentiometer
+een lage vergeleken met wat zij voedt
+(\cref{exo:b1:dc-circuits:4}).
+\end{remark}
+
+\begin{method}[Een netwerk vereenvoudigen]\label{met:b1:dc-circuits:reduce}
+Om één stroom of \omterm{def:b1:dc-circuits:voltage}{spanning} te vinden in een netwerk van \omterm{def:b1:dc-circuits:resistor}{weerstanden} met één
+bron:
+\begin{enumerate}
+  \item vervang, ver van de bron beginnend, groepen in serie en parallel
+        door hun equivalenten tot er nog één \omterm{def:b1:dc-circuits:resistor}{weerstand} tegenover de bron
+        staat;
+  \item bereken de bronstroom;
+  \item loop terug en splits de stromen met \omterm{prop:b1:dc-circuits:dividers}{stroomdelers} en de
+        \omterm{def:b1:dc-circuits:voltage}{spanningen} met \omterm{prop:b1:dc-circuits:dividers}{spanningsdelers}, tot aan de gezochte tak.
+\end{enumerate}
+Bij meerdere bronnen, of voor een tak waarvan de buren veranderen, gebruik je
+de stellingen van de volgende paragraaf.
+\end{method}
+
+\section{Stellingen voor lineaire netwerken}
+
+\begin{definition}[Lineaire tweepool, lineair netwerk]\label{def:b1:dc-circuits:linear}
+\index{lineaire tweepool}
+Een tweepool heet \emph{lineair} als haar karakteristiek een rechte is
+(\omterm{def:b1:dc-circuits:resistor}{weerstand}, ideale en werkelijke bronnen); een kring die alleen uit lineaire
+tweepolen bestaat is een \emph{lineair netwerk}. Zijn onbekenden voldoen aan een
+stelsel lineaire vergelijkingen (de \omterm{thm:b1:dc-circuits:kirchhoff}{wetten van Kirchhoff} plus de
+karakteristieken), waarvan de oplossing uniek is.
+\end{definition}
+
+\begin{theorem}[Thévenin en Norton]\label{thm:b1:dc-circuits:thevenin}
+\index{Thevenin stelling@stelling van Thévenin}\index{stelling van Norton}
+Gezien vanuit twee van zijn klemmen $A$ en $B$ is elk \omterm{def:b1:dc-circuits:linear}{lineair netwerk}
+gelijkwaardig met een werkelijke bron: een emk $E_{\mathrm{Th}}$ in serie met een
+\omterm{def:b1:dc-circuits:resistor}{weerstand} $R_{\mathrm{Th}}$ (Thévenin), of een \omterm{def:b1:dc-circuits:sources}{stroombron} $I_N =
+E_{\mathrm{Th}}/R_{\mathrm{Th}}$ parallel aan $R_{\mathrm{Th}}$
+(Norton), waarbij
+\begin{itemize}
+  \item $E_{\mathrm{Th}}$ de nullastspanning $u_{AB}$ is;
+  \item $I_N$ de kortsluitstroom van $A$ naar $B$ is;
+  \item $R_{\mathrm{Th}}$ de \omterm{def:b1:dc-circuits:resistor}{weerstand} is die men tussen $A$ en $B$ ziet
+        wanneer elke onafhankelijke bron is uitgeschakeld (ideale
+        spanningsbronnen vervangen door draden, ideale stroombronnen door
+        open ketens).
+\end{itemize}
+\end{theorem}
+
+\begin{proof}[Gedeeltelijk bewijs]
+Door de lineariteit is het verband tussen de \omterm{def:b1:dc-circuits:voltage}{spanning} $u_{AB}$ en de stroom
+$i$ die aan de klemmen wordt getrokken affien: $u_{AB} = a - b\,i$. Met
+$i = 0$ volgt $a = E_{\mathrm{Th}}$; met $u_{AB} = 0$ volgt
+$b = E_{\mathrm{Th}}/I_N$. Dat $b$ gelijk is aan de \omterm{def:b1:dc-circuits:resistor}{weerstand} die men met
+uitgeschakelde bronnen ziet, volgt uit de superpositie (hieronder): het deel van $u_{AB}$
+dat alleen van de uitwendige stroom komt is wat een passief netwerk met
+\omterm{def:b1:dc-circuits:resistor}{weerstand} $R_{\mathrm{Th}}$ zou opleveren. Dat elk lineair stelsel een
+affien verband tussen in- en uitgang heeft, is de algebra van lineaire vergelijkingen.
+\end{proof}
+
+\begin{theorem}[Superpositie]\label{thm:b1:dc-circuits:superposition}
+\index{superpositiestelling}
+In een \omterm{def:b1:dc-circuits:linear}{lineair netwerk} met meerdere onafhankelijke bronnen is elke stroom of
+\omterm{def:b1:dc-circuits:voltage}{spanning} de som van de waarden die zij aanneemt wanneer elke bron alleen werkt
+en de overige zijn uitgeschakeld.
+\end{theorem}
+
+\begin{proof}
+De vergelijkingen zijn lineair in de onbekenden, met de bronnen als
+rechterlid; de oplossing is een lineaire functie van dat rechterlid en
+dus de som van de oplossingen voor elke bron afzonderlijk.
+\end{proof}
+
+\begin{proposition}[Stelling van Millman]\label{prop:b1:dc-circuits:millman}
+\index{stelling van Millman}
+Een knooppunt $N$ dat met punten van potentiaal $V_1, \dots, V_n$ is
+verbonden via \omterm{def:b1:dc-circuits:resistor}{weerstanden} $R_1, \dots, R_n$ (en met niets anders) heeft de potentiaal
+\[
+V_N = \frac{\sum_k V_k/R_k}{\sum_k 1/R_k} = \frac{\sum_k G_k V_k}{\sum_k G_k},
+\]
+het met de conductanties gewogen gemiddelde van de potentialen van zijn buren.
+\end{proposition}
+
+\begin{proof}
+Knooppuntregel in $N$: $\sum_k (V_k - V_N)/R_k = 0$; los op naar $V_N$.
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}[font=\small]
+  % network: E1=10V, R1=1k ; E2=5V, R2=2k ; common load R3=2k
+  \draw (0,0) to[battery1, l=$E_1$, invert] (0,2) to[R=$R_1$] (2.5,2) -- (2.5,2) to[R=$R_3$, v=$u$] (2.5,0) -- (0,0);
+  \draw (2.5,2) to[R=$R_2$] (5,2) to[battery1, l_=$E_2$] (5,0) -- (2.5,0);
+  \node at (2.5,2.45) {$N$};
+  \node at (6.4,1) {$\Longleftrightarrow$};
+  \begin{scope}[xshift=8.8cm]
+  \draw (0,0) to[battery1, l=$E_{\mathrm{Th}}$, invert] (0,2) to[R=$R_{\mathrm{Th}}$] (2.2,2) to[R=$R_3$, v=$u$] (2.2,0) -- (0,0);
+  \end{scope}
+\end{tikzpicture}
+
+{\small Twee bronnen die een gemeenschappelijke belasting $R_3$ voeden. Gezien
+vanaf de klemmen van $R_3$ is de rest van de kring een Thévenin-bron
+($E_{\mathrm{Th}}$, $R_{\mathrm{Th}}$); de stelling van Millman geeft de
+potentiaal van knooppunt $N$ in één regel.}
+\end{omfigure}
+
+\begin{example}[Drie wegen naar hetzelfde antwoord]\label{ex:b1:dc-circuits:threeways}
+In de figuur is $E_1 = \qty{10}{V}$, $R_1 = \qty{1.0}{k\ohm}$, $E_2 =
+\qty{5.0}{V}$, $R_2 = \qty{2.0}{k\ohm}$, $R_3 = \qty{2.0}{k\ohm}$.
+\emph{Millman}: $V_N = (10/1 + 5/2 + 0/2)/(1 + 0.5 + 0.5) = 12.5/2 =
+\qty{6.25}{V}$. \emph{Superpositie}: $E_1$ alleen ziet $R_2 \parallel
+R_3 = \qty{1}{k\ohm}$, dus $u = 10 \times 1/2 = \qty{5}{V}$; $E_2$ alleen
+ziet $R_1 \parallel R_3 = \qty{0.667}{k\ohm}$, $u = 5 \times 0.667/2.667
+= \qty{1.25}{V}$; samen \qty{6.25}{V}. \emph{Thévenin} gezien vanaf
+$R_3$: $E_{\mathrm{Th}}$ is de nullastspanning van de deler
+$(E_1, R_1, R_2, E_2)$: $E_2 + (E_1 - E_2)R_2/(R_1 + R_2) = 5 + 5 \times
+2/3 = \qty{8.33}{V}$; $R_{\mathrm{Th}} = R_1 \parallel R_2 =
+\qty{0.667}{k\ohm}$; dan is $u = 8.33 \times 2/2.667 = \qty{6.25}{V}$.
+\end{example}
+
+\section{Het werkpunt; de brug van Wheatstone}
+
+\begin{method}[Grafisch werkpunt]\label{met:b1:dc-circuits:loadline}
+\index{werkpunt}\index{belastingslijn}
+Een niet-lineaire tweepool (karakteristiek $i = g(u)$) gevoed door een
+Thévenin-bron $(E, R)$ komt tot rust waar beide betrekkingen gelden: teken de
+karakteristiek van de tweepool en de \emph{\omterm{met:b1:dc-circuits:loadline}{belastingslijn}} $u = E - Ri$ van de bron in
+dezelfde assen; hun snijpunt is het \emph{\omterm{met:b1:dc-circuits:loadline}{werkpunt}}. Het ontwerp van de
+serieweerstand van een led, van een zenerstabilisator of van de instelling van
+een transistor is precies deze constructie.
+\end{method}
+
+\begin{omfigure}
+\begin{tikzpicture}
+\begin{axis}[omaxis, width=8cm, height=5.4cm, xlabel={$u$ (\unit{V})}, ylabel={$i$ (\unit{mA})},
+    xmin=0, xmax=5.6, ymin=0, ymax=30, xtick={1,2,3,4,5}, ytick={10,20,25}]
+  \addplot[omDef, thick, domain=0:1.9, samples=2] {0};
+  \addplot[omDef, thick, domain=1.9:2.9, samples=60] {28*(exp(2.8*(x-1.9))-1)/(exp(2.8)-1)};
+  \addplot[omThm, thick, domain=0:5, samples=2] {25 - 5*x};
+  \fill[omExo] (axis cs:2.0,15) circle (1.6pt);
+  \node[omExo, font=\footnotesize] (op) at (axis cs:1.05,11.5) {werkpunt};
+  \draw[-Stealth, omExo] (op.east) -- (axis cs:1.93,14.8);
+  \node[omDef, font=\footnotesize, left] at (axis cs:2.55,25) {led};
+  \node[omThm, font=\footnotesize] at (axis cs:3.1,1.4) {belastingslijn};
+\end{axis}
+\end{tikzpicture}
+
+{\small Een led (drempel rond \qty{2}{V}) gevoed door $E = \qty{5}{V}$
+via $R = \qty{200}{\ohm}$: de \omterm{met:b1:dc-circuits:loadline}{belastingslijn} $u = E - Ri$ snijdt de
+karakteristiek van de diode bij $\qty{2.0}{V}$, \qty{15}{mA}. $R$ verhogen
+kantelt de lijn omlaag en dimt de led.}
+\end{omfigure}
+
+\begin{proposition}[Brug van Wheatstone]\label{prop:b1:dc-circuits:wheatstone}
+\index{brug van Wheatstone}
+Vier \omterm{def:b1:dc-circuits:resistor}{weerstanden} $R_1, R_2$ (de ene tak) en $R_3, R_4$ (de andere) over
+een bron $E$; de uitgang van de brug is de \omterm{def:b1:dc-circuits:voltage}{spanning} tussen de twee
+middelpunten:
+\[
+u = E\left(\frac{R_2}{R_1 + R_2} - \frac{R_4}{R_3 + R_4}\right),
+\]
+nul (de brug is \emph{in evenwicht}) precies als $R_1R_4 = R_2R_3$. Voor een
+brug in evenwicht met $R_4$ verstoord tot $R_4(1 + \epsilon)$, $\epsilon
+\ll 1$, en $R_3 = R_4$ geldt $u \approx -E\epsilon/4$.
+\end{proposition}
+
+\begin{proof}
+Twee \omterm{prop:b1:dc-circuits:dividers}{spanningsdelers}; trek af. Evenwicht: $R_2(R_3 + R_4) = R_4(R_1 +
+R_2)$, dus $R_2R_3 = R_1R_4$. Met $R_3 = R_4 = R$ en $R_1 = R_2$:
+$u = E[\tfrac12 - (1 + \epsilon)/(2 + \epsilon)] = E[(2 + \epsilon - 2 -
+2\epsilon)/(2(2 + \epsilon))] \approx -E\epsilon/4$.
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}[font=\small]
+  \draw (0,1.5) to[R=$R_1$] (2,3) to[R=$R_2$] (4,1.5) to[R=$R_4$] (2,0) to[R=$R_3$] (0,1.5);
+  \draw (2,3) to[short, *-] (2,3); \draw (2,0) to[short, *-] (2,0);
+  \draw (0,1.5) -- (-1,1.5) to[battery1, l=$E$] (-1,-1) -- (4,-1) -- (4,1.5);
+  \draw[-Stealth, omThm] (2,0.35) -- (2,2.65) ;
+  \node[omThm, right] at (2.05,1.5) {$u$};
+\end{tikzpicture}
+
+{\small De \omterm{prop:b1:dc-circuits:wheatstone}{brug van Wheatstone}: twee delers naast elkaar. In evenwicht wanneer
+$R_1R_4 = R_2R_3$ zet zij een piepkleine verandering van één \omterm{def:b1:dc-circuits:resistor}{weerstand}
+(rekstrookje, thermistor) om in een \omterm{def:b1:dc-circuits:voltage}{spanning} rond nul, die veel
+eenvoudiger te versterken is dan een kleine verandering van een grote \omterm{def:b1:dc-circuits:voltage}{spanning}.}
+\end{omfigure}
+
+\section{Oefeningen}
+
+\begin{exercise}[$\star$]\label{exo:b1:dc-circuits:1}
+Een telefoon laadt een uur lang met \qty{1.5}{A}: welke lading stroomt er, hoeveel
+elektronen? Schat of het \omterm{def:b1:dc-circuits:arqs}{quasistationaire regime} geldt voor de
+huisbedrading bij \qty{50}{Hz}, voor een schakeling van \qty{10}{cm} bij \qty{1}{MHz}
+en voor diezelfde schakeling bij \qty{1}{GHz}.
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b1:dc-circuits:2}
+Een kachel van \qty{2000}{W} op \qty{230}{V}: stroom, \omterm{def:b1:dc-circuits:resistor}{weerstand}, verbruikte
+energie in \qty{3.0}{h} (in kWh en in joule). Zijn koperen snoer van
+\qty{5.0}{m} heeft een doorsnede van \qty{1.5}{mm^2} ($\rho = \qty{1.7e-8}{\ohm.m}$):
+vermogensverlies in het snoer.
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b1:dc-circuits:3}
+Bereken met $\qty{10}{\ohm}$, $\qty{20}{\ohm}$ en $\qty{30}{\ohm}$
+de \omterm{def:b1:dc-circuits:resistor}{weerstand} van de drie in serie, van de drie parallel, en van
+$(10 \parallel 20) + 30$.
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b1:dc-circuits:4}
+Een bron van \qty{12}{V} voedt \qty{4.7}{k\ohm} en \qty{2.2}{k\ohm} in
+serie. Bereken de \omterm{def:b1:dc-circuits:voltage}{spanning} over de \qty{2.2}{k\ohm}. Er wordt vervolgens een
+apparaat met \omterm{def:b1:dc-circuits:resistor}{weerstand} \qty{2.2}{k\ohm} overheen gezet: nieuwe \omterm{def:b1:dc-circuits:voltage}{spanning}?
+Trek een conclusie over het belastingseffect.
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b1:dc-circuits:5}
+Een accu wijst \qty{12.6}{V} in nullast en \qty{11.4}{V} bij
+\qty{120}{A}. Bepaal haar \omterm{def:b1:dc-circuits:sources}{inwendige weerstand} en kortsluitstroom,
+het vermogen dat de startmotor ontvangt en het vermogen dat inwendig verloren
+gaat, en het rendement.
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b1:dc-circuits:6}
+Bepaal het Thévenin-equivalent, gezien vanaf de klemmen van de
+\omterm{def:b1:dc-circuits:resistor}{weerstand} van \qty{2.2}{k\ohm}, van de deler uit \cref{exo:b1:dc-circuits:4}
+($E = \qty{12}{V}$, $R_1 = \qty{4.7}{k\ohm}$, $R_2 = \qty{2.2}{k\ohm}$).
+Vind daarmee de belaste \omterm{def:b1:dc-circuits:voltage}{spanning} van die oefening terug.
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b1:dc-circuits:7}
+Twee accu's, $E_1 = \qty{10}{V}$ ($r_1 = \qty{1.0}{\ohm}$) en
+$E_2 = \qty{5.0}{V}$ ($r_2 = \qty{2.0}{\ohm}$), staan parallel (zelfde
+polariteit) over een belasting van \qty{2.0}{\ohm}. Bepaal de
+belastingsspanning met superpositie en daarna met Millman, en de stroom in elke
+accu. Wordt de zwakkere accu geladen of ontladen?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b1:dc-circuits:8}
+Een bron met $E = \qty{9.0}{V}$, $r = \qty{3.0}{\ohm}$. Bereken het vermogen
+dat aan belastingen van $\qty{1.0}{\ohm}$, $\qty{3.0}{\ohm}$, $\qty{12}{\ohm}$
+wordt geleverd, en het rendement in elk geval. Welke belasting zou een ingenieur
+voor een apparaat op batterijen kiezen, en waarom niet de aangepaste?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b1:dc-circuits:9}
+Een led geleidt bij \qty{2.0}{V} en moet \qty{15}{mA} voeren uit een voeding
+van \qty{5.0}{V}. Kies de serieweerstand, geef de vermogens in de
+\omterm{def:b1:dc-circuits:resistor}{weerstand} en in de led, en schets de constructie met de \omterm{met:b1:dc-circuits:loadline}{belastingslijn}. Wat
+gebeurt er bij een voeding van \qty{3.3}{V}?
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b1:dc-circuits:10}
+Een rekstrookje $R_4 = R(1 + \epsilon)$, $R = \qty{1.0}{k\ohm}$, zit in een
+\omterm{prop:b1:dc-circuits:wheatstone}{brug van Wheatstone} met drie vaste \omterm{def:b1:dc-circuits:resistor}{weerstanden} van \qty{1.0}{k\ohm} over
+\qty{5.0}{V}. Leid de uitgangsspanning af tot op eerste orde in $\epsilon$ en
+bereken haar voor $\epsilon = \num{1.0e-3}$. Waarom verdient de brug de voorkeur
+boven het meten van de \omterm{def:b1:dc-circuits:voltage}{spanning} over het strookje in een gewone deler?
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b1:dc-circuits:11}
+Twaalf gelijke \omterm{def:b1:dc-circuits:resistor}{weerstanden} $R$ vormen de ribben van een kubus. Toon met
+symmetrie aan (welke knooppunten staan op dezelfde potentiaal wanneer een
+stroom $I$ in de ene hoek binnenkomt en in de tegenoverliggende vertrekt) dat de
+\omterm{def:b1:dc-circuits:resistor}{weerstand} tussen twee tegenoverliggende hoeken $5R/6$ is.
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b1:dc-circuits:12}
+Een \omterm{def:b1:dc-circuits:sources}{stroombron} $I_N = \qty{2.0}{A}$ parallel aan \qty{4.0}{\ohm}
+is via een \omterm{def:b1:dc-circuits:resistor}{weerstand} van \qty{2.0}{\ohm} verbonden met een accu van \qty{6.0}{V}
+(verwaarloosbare \omterm{def:b1:dc-circuits:resistor}{weerstand}) waarvan de emk tegenwerkt. Zet de Norton-bron om
+naar Thévenin en bepaal de stroom door de \omterm{def:b1:dc-circuits:resistor}{weerstand} van \qty{2.0}{\ohm}
+en het vermogen dat elke bron uitwisselt.
+\end{exercise}
+
+\begin{omfigure}
+\includegraphics[width=0.58\linewidth]{images/book3/ai/b3-06-car-battery-engine-bay.png}
+
+{\small Onder de motorkap: de accu van \qty{12}{V}, haar dikke kabels en de dynamo --- het gelijkstroomnet van de weekendopgave, met honderden \omterm{def:b1:dc-circuits:current}{ampères} bij het starten.}
+\end{omfigure}
+
+\section{Probleem: Het elektrische systeem van een auto}
+
+\begin{problem}[{Weekendopgave --- één accu, een startmotor, twee
+koplampen, een dynamo en een paar meter koper: wie de stroom krijgt, wie
+betaalt, en waarom de lampen doven wanneer de motor aanslaat}]
+\label{pb:b1:dc-circuits:1}
+De accu is een werkelijke bron met emk $E = \qty{12.6}{V}$ en \omterm{def:b1:dc-circuits:sources}{inwendige
+weerstand} $r = \qty{10}{m\ohm}$. Koper: $\rho = \qty{1.7e-8}{\ohm.m}$.
+
+\medskip
+\noindent\textbf{Deel I --- De accu alleen.}
+\begin{enumerate}
+  \item Teken het Thévenin-model en schrijf $u(i)$ op in de
+        generatorconventie.
+  \item Geef de nullastspanning en de kortsluitstroom.
+        Waarom mag een gevallen sleutel de klemmen nooit overbruggen?
+  \item Schrijf het Norton-model van dezelfde accu op.
+  \item De accu voedt een \omterm{def:b1:dc-circuits:resistor}{weerstand} $R$: druk de stroom, de
+        klemspanning, het geleverde vermogen $P_R$ en het vermogen dat in
+        $r$ verloren gaat uit.
+  \item Toon aan dat $P_R$ maximaal is voor $R = r$ en bereken dat
+        maximum. Wat is dan het rendement?
+  \item Een monteur meet $u = \qty{12.48}{V}$ bij \qty{12}{A} en
+        $u = \qty{11.40}{V}$ bij \qty{120}{A}. Ga na dat beide punten op
+        het model liggen en leg uit hoe een reeks van zulke punten $E$
+        en $r$ oplevert via een rechte lijn.
+  \item De accu slaat \qty{60}{A.h} op. Hoe lang zou zij de
+        twee koplampen van \qty{55}{W} alleen kunnen voeden (neem \qty{12}{V})? Hoeveel
+        energie is dat in joule?
+\end{enumerate}
+
+\medskip
+\noindent\textbf{Deel II --- Starten met de lampen aan.}
+De startmotor is een \omterm{def:b1:dc-circuits:resistor}{weerstand} $R_s = \qty{80}{m\ohm}$; elke koplamp is
+opgegeven als \qty{55}{W} bij \qty{12.0}{V} en wordt als \omterm{def:b1:dc-circuits:resistor}{weerstand} behandeld.
+\begin{enumerate}[resume]
+  \item Bereken de \omterm{def:b1:dc-circuits:resistor}{weerstand} van één koplamp en van de twee
+        parallel.
+  \item Alleen de startmotor: stroom, klemspanning, vermogen in de startmotor,
+        vermogensverlies in de accu.
+  \item Startmotor en beide koplampen samen: gelijkwaardige
+        belastingsweerstand, totale stroom, klemspanning.
+  \item Gebruik de \omterm{prop:b1:dc-circuits:dividers}{stroomdeler} om de startmotorstroom en de
+        koplampstroom te vinden.
+  \item Bereken het vermogen dat elke koplamp nu ontvangt en vergelijk met
+        haar nominale waarde: met welke fractie doven de lampen?
+  \item Leg in twee zinnen met de maasregel uit waarom de lampen juist
+        doven doordat de startmotor een grote stroom trekt.
+  \item Zouden dikkere accukabels de lampen helpen? Beargumenteer nu
+        kwalitatief (deel IV maakt het kwantitatief).
+\end{enumerate}
+
+\medskip
+\noindent\textbf{Deel III --- Motor draait: de dynamo.}
+De dynamo is een tweede werkelijke bron, $E_a = \qty{14.2}{V}$,
+$r_a = \qty{50}{m\ohm}$, parallel aan de accu; de startmotor staat
+uit en beide koplampen branden.
+\begin{enumerate}[resume]
+  \item Teken de kring: twee werkelijke bronnen en de koplampbelasting
+        parallel tussen dezelfde twee knooppunten.
+  \item Pas de stelling van Millman toe om de gemeenschappelijke
+        klemspanning te vinden.
+  \item Leid de dynamostroom, de accustroom (let op het teken!) en de
+        koplampstroom af; controleer de knooppuntregel.
+  \item Wordt de accu geladen of ontladen? Welk vermogen ontvangt zij,
+        en welk vermogen levert de dynamo?
+  \item Vind de klemspanning terug met superpositie (elke bron
+        afzonderlijk, de andere vervangen door haar \omterm{def:b1:dc-circuits:sources}{inwendige weerstand}) en
+        controleer.
+\end{enumerate}
+
+\medskip
+\noindent\textbf{Deel IV --- Sensoren en draden.}
+\begin{enumerate}[resume]
+  \item De koelvloeistofsensor is een thermistor waarvan de \omterm{def:b1:dc-circuits:resistor}{weerstand} daalt van
+        \qty{2.0}{k\ohm} bij \qty{20}{\degreeCelsius} tot \qty{300}{\ohm} bij
+        \qty{90}{\degreeCelsius}; hij is de onderste \omterm{def:b1:dc-circuits:resistor}{weerstand} van een deler
+        gevoed door \qty{5.0}{V}, met $R_0$ als bovenste \omterm{def:b1:dc-circuits:resistor}{weerstand}. Druk de
+        uitgangsspanning uit en bereken haar bij beide temperaturen voor
+        $R_0 = \qty{775}{\ohm}$.
+  \item Toon aan dat het spanningsverschil tussen de twee temperaturen het
+        grootst is wanneer $R_0$ het meetkundig gemiddelde van de twee
+        sensorwaarden is, en controleer de waarde hierboven.
+  \item Dezelfde sensor wordt in een \omterm{prop:b1:dc-circuits:wheatstone}{brug van Wheatstone} met drie
+        \omterm{def:b1:dc-circuits:resistor}{weerstanden} van \qty{775}{\ohm} gezet: schrijf de bruguitgang op en zeg bij
+        welke temperatuur zij in evenwicht is.
+  \item De startmotorkabel is \qty{1.5}{m} lang per richting. Bereken de
+        \omterm{def:b1:dc-circuits:resistor}{weerstand} van één geleider met doorsnede \qty{16}{mm^2}, het
+        totale spanningsverlies bij \qty{140}{A} en het vermogen dat in de kabels
+        wordt gedissipeerd.
+  \item Idem met kabel van \qty{4}{mm^2}: waarom is startmotorkabel zo dik?
+  \item Vat samen: geef de klemspanning tijdens het starten, de
+        fractie van het vermogen die de startmotor bereikt, en de ene wet die
+        het doven van de lampen verklaart.
+\end{enumerate}
+\end{problem}

@@ -1,0 +1,602 @@
+\chapter{Propagação de sinais: ondas progressivas e estacionárias}\label{ch:b1:wave-propagation}
+
+Dedilhe uma corda de violão e um salão inteiro ouve uma nota; encoste
+levemente um dedo no seu meio e a nota sobe uma oitava. Fique entre dois
+alto-falantes tocando o mesmo tom e, caminhando devagar, você atravessa pontos
+de quase silêncio a cada poucos decímetros. A luz de dois furos pinta
+listras num anteparo. Nada é levado de um lugar a outro em nenhum
+desses casos --- nenhum ar, nenhuma corda, nenhum vidro viaja --- e ainda assim algo
+se propaga: um \emph{\omterm{def:b1:wave-propagation:signal}{sinal}}. Este capítulo descreve como um \omterm{def:b1:wave-propagation:signal}{sinal} se move,
+o que é uma onda senoidal e o que acontece quando duas ondas se encontram: a
+matemática da superposição, da interferência e das \omterm{thm:b1:wave-propagation:standing}{ondas estacionárias}, que
+todo capítulo posterior sobre ondas --- acústica, óptica e física quântica ---
+vai reutilizar.
+
+\begin{omfigure}
+\includegraphics[width=0.55\linewidth]{images/book3/guitar-closeup.jpg}
+
+{\small Seis cordas, seis frequências fundamentais: cada uma é uma \omterm{thm:b1:wave-propagation:standing}{onda estacionária} fixa na pestana e no cavalete, e os dedos a encurtam para elevar a altura do som.}
+\end{omfigure}
+
+\section{Sinais}
+
+\begin{definition}[Sinal; sinal senoidal]\label{def:b1:wave-propagation:signal}
+\index{sinal}\index{sinal senoidal}\index{amplitude}\index{fase}\index{frequência angular}
+Um \emph{sinal} é uma \omterm{def:b1:units-dimensions:unit}{grandeza física} que varia no tempo e carrega
+informação: a sobrepressão acústica num microfone, a tensão numa
+antena, o deslocamento transversal de um ponto de uma corda. O
+\emph{sinal senoidal}
+\[
+s(t) = A\cos(\omega t + \varphi)
+\]
+tem \emph{amplitude} $A > 0$, \emph{frequência angular} $\omega$
+(\unit{rad/s}), \emph{frequência} $f = \omega/2\pi$, \emph{período}
+$T = 1/f$ e \emph{fase inicial} $\varphi$; $\omega t + \varphi$ é
+a sua \emph{fase} no instante $t$.
+\end{definition}
+
+\begin{remark}[Espectro]\label{rem:b1:wave-propagation:spectrum}
+\index{espectro!de um sinal}\index{harmônico}
+Todo \omterm{def:b1:wave-propagation:signal}{sinal} periódico de período $T$ é uma soma de senoides de frequências
+$f_1 = 1/T$ (a \emph{fundamental}) e seus múltiplos $nf_1$ (os
+\emph{harmônicos}); a lista das suas \omterm{def:b1:wave-propagation:signal}{amplitudes} é o \emph{espectro} do
+\omterm{def:b1:wave-propagation:signal}{sinal}. Uma flauta e um violino que tocam a mesma nota compartilham a
+fundamental e diferem no espectro --- é o timbre. A
+decomposição (de Fourier) é enunciada e usada em
+\cref{ch:b1:filters-transfer-functions}; aqui ela importa porque
+as senoides se propagam de modo simples, e o que vale para cada senoide vale,
+por adição, para qualquer \omterm{def:b1:wave-propagation:signal}{sinal}.
+\end{remark}
+
+\begin{proposition}[Batimentos]\label{prop:b1:wave-propagation:beats}
+\index{batimentos}
+A soma de duas senoides de mesma \omterm{def:b1:wave-propagation:signal}{amplitude} e frequências próximas
+$f_1 > f_2$,
+\[
+A\cos(2\pi f_1 t) + A\cos(2\pi f_2 t)
+= 2A\cos\!\big(2\pi\tfrac{f_1 - f_2}{2}\,t\big)\cos\!\big(2\pi\tfrac{f_1 + f_2}{2}\,t\big),
+\]
+é uma senoide na frequência média, cuja \omterm{def:b1:wave-propagation:signal}{amplitude}
+$\abs{2A\cos(\pi(f_1 - f_2)t)}$ cresce e decresce na \emph{frequência de
+batimento} $f_1 - f_2$.
+\end{proposition}
+
+\begin{proof}
+$\cos a + \cos b = 2\cos\frac{a - b}{2}\cos\frac{a + b}{2}$. O fator
+lento se anula duas vezes por período próprio $2/(f_1 - f_2)$, de modo que a
+envoltória $\abs{\cdot}$ tem frequência $f_1 - f_2$.
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}
+\begin{axis}[omaxis, axis x line=bottom, width=11.5cm, height=4.6cm, xlabel={$t$ (\unit{s})},
+    ylabel={$s$}, xmin=0, xmax=1, ymin=-2.3, ymax=2.3, ytick={-2,0,2},
+    yticklabels={$-2A$,$0$,$2A$}, xtick={0,0.25,0.5,0.75,1}]
+  \addplot[omDef, thick, domain=0:1, samples=700] {cos(deg(2*pi*22*x)) + cos(deg(2*pi*20*x))};
+  \addplot[omThm, thick, dashed, domain=0:1, samples=200] {2*cos(deg(2*pi*1*x))};
+  \addplot[omThm, thick, dashed, domain=0:1, samples=200] {-2*cos(deg(2*pi*1*x))};
+\end{axis}
+\end{tikzpicture}
+
+{\small Batimentos entre \qty{22}{Hz} e \qty{20}{Hz}: uma oscilação de
+\qty{21}{Hz} cuja envoltória (tracejada) bate duas vezes por segundo --- a
+diferença das frequências.}
+\end{omfigure}
+
+\begin{example}[Afinando de ouvido]\label{ex:b1:wave-propagation:tuning}
+Um diapasão a \qty{440}{Hz} e uma corda a \qty{443}{Hz} soados
+juntos pulsam três vezes por segundo; apertar a corda torna a pulsação mais
+lenta, e quando ela cessa a corda está afinada. O ouvido percebe a frequência
+média (\qty{441.5}{Hz}) como a altura do som, e a envoltória de \qty{3}{Hz} como
+uma oscilação da intensidade: os batimentos tornam audível uma diferença de frequência de menos de um
+por cento.
+\end{example}
+
+\section{Ondas progressivas}
+
+\begin{definition}[Onda progressiva, celeridade]\label{def:b1:wave-propagation:travelling}
+\index{onda progressiva}\index{celeridade}\index{meio não dispersivo}
+Um \omterm{def:b1:wave-propagation:signal}{sinal} $s(x, t)$ definido ao longo de um eixo é uma \emph{onda progressiva}
+que se move no sentido $+x$ com \emph{celeridade} $c$ se
+\[
+s(x, t) = f\!\left(t - \frac{x}{c}\right) = F(x - ct)
+\]
+para alguma função $f$ (ou $F$): a forma é transportada sem deformação,
+deslocada de $c\,\Delta t$ no tempo $\Delta t$. Uma onda que se move para $-x$ é
+$g(t + x/c)$. Um meio em que toda forma se propaga sem deformação com
+o mesmo $c$ é \emph{não dispersivo}.
+\end{definition}
+
+\begin{proposition}[Atraso]\label{prop:b1:wave-propagation:delay}
+O \omterm{def:b1:wave-propagation:signal}{sinal} recebido em $x_2$ é o \omterm{def:b1:wave-propagation:signal}{sinal} emitido em $x_1 < x_2$,
+atrasado de $\tau = (x_2 - x_1)/c$: $s(x_2, t) = s(x_1, t - \tau)$.
+\end{proposition}
+
+\begin{proof}
+$s(x_2, t) = f(t - x_2/c) = f\big((t - \tau) - x_1/c\big) = s(x_1, t - \tau)$.
+\end{proof}
+
+\begin{example}[Celeridades]\label{ex:b1:wave-propagation:celerities}
+O som no ar, \qty{340}{m/s}: um trovão \qty{3}{s} depois do clarão põe
+a descarga a \qty{1}{km}. O som na água, \qty{1500}{m/s}; no aço,
+\qty{5000}{m/s}. Ondas transversais numa corda de tensão $F$ e massa
+por unidade de comprimento $\mu$: $c = \sqrt{F/\mu}$, como a análise dimensional
+previu (\cref{exo:b1:units-dimensions:5}) --- \qty{140}{m/s} para uma
+corda de violão. A luz no vácuo, $c = \qty{3.00e8}{m/s}$; no vidro,
+$c/n$. A \omterm{def:b1:wave-propagation:travelling}{celeridade} é uma propriedade do meio, não da fonte: um
+sussurro e um grito chegam juntos.
+\end{example}
+
+\begin{proposition}[Onda progressiva senoidal]\label{prop:b1:wave-propagation:sinusoidal}
+\index{comprimento de onda}\index{número de onda}\index{velocidade de fase}\index{dupla periodicidade}
+Uma fonte senoidal $s(0, t) = A\cos(\omega t)$ lança
+\[
+s(x, t) = A\cos\!\big(\omega(t - x/c)\big) = A\cos(\omega t - kx),
+\qquad k = \frac{\omega}{c} = \frac{2\pi}{\lambda},
+\qquad \lambda = cT = \frac{c}{f}.
+\]
+A onda é periódica no tempo (período $T$) e no espaço (período o
+\emph{\omterm{prop:b1:wave-propagation:sinusoidal}{comprimento de onda}} $\lambda$); $k$ é o \emph{\omterm{prop:b1:wave-propagation:sinusoidal}{número de onda}}; dois pontos
+separados por uma distância $d$ oscilam com uma diferença de \omterm{def:b1:wave-propagation:signal}{fase}
+$\Delta\varphi = 2\pi d/\lambda = kd$ --- em \omterm{def:b1:wave-propagation:signal}{fase} se $d = n\lambda$, em
+oposição de \omterm{def:b1:wave-propagation:signal}{fase} se $d = (n + \tfrac12)\lambda$. A velocidade com que uma
+crista se desloca, $v_\varphi = \omega/k$, é a \emph{\omterm{prop:b1:wave-propagation:sinusoidal}{velocidade de fase}};
+aqui $v_\varphi = c$.
+\end{proposition}
+
+\begin{proof}
+Substitua $f(u) = A\cos(\omega u)$ em $f(t - x/c)$. Com $x$ fixo, o
+\omterm{def:b1:wave-propagation:signal}{sinal} se repete após $T = 2\pi/\omega$; com $t$ fixo, ele se repete após
+$\lambda$, com $k\lambda = 2\pi$. Dois pontos $x_1$, $x_2 = x_1 + d$: as
+\omterm{def:b1:wave-propagation:signal}{fases} diferem de $kd$. Uma crista ($\omega t - kx = \text{const}$) se move com
+$\dd x/\dd t = \omega/k$.
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}
+\begin{axis}[omaxis, width=7.2cm, height=4.2cm, xlabel={$x$}, ylabel={$s(x, t_0)$},
+    xmin=0, xmax=6.5, ymin=-1.4, ymax=1.6, ytick={-1,0,1}, yticklabels={$-A$,$0$,$A$},
+    xtick={0,2,4,6}, xticklabels={$0$,$\lambda$,$2\lambda$,$3\lambda$}]
+  \addplot[omDef, thick, domain=0:6.5, samples=200] {cos(deg(pi*x))};
+  \draw[Stealth-Stealth, omThm] (axis cs:2,1.2) -- (axis cs:4,1.2) node[midway, above, font=\footnotesize] {$\lambda$};
+  \draw[-Stealth, omExo, thick] (axis cs:4.7,1.2) -- (axis cs:5.7,1.2) node[midway, above, font=\footnotesize] {$c$};
+\end{axis}
+\end{tikzpicture}\qquad
+\begin{tikzpicture}
+\begin{axis}[omaxis, width=7.2cm, height=4.2cm, xlabel={$t$}, ylabel={$s(x_0, t)$},
+    xmin=0, xmax=6.5, ymin=-1.4, ymax=1.6, ytick={-1,0,1}, yticklabels={$-A$,$0$,$A$},
+    xtick={0,2,4,6}, xticklabels={$0$,$T$,$2T$,$3T$}]
+  \addplot[omDef, thick, domain=0:6.5, samples=200] {cos(deg(pi*x))};
+  \draw[Stealth-Stealth, omThm] (axis cs:2,1.2) -- (axis cs:4,1.2) node[midway, above, font=\footnotesize] {$T$};
+\end{axis}
+\end{tikzpicture}
+
+{\small A \omterm{prop:b1:wave-propagation:sinusoidal}{dupla periodicidade} de uma \omterm{def:b1:wave-propagation:travelling}{onda progressiva} senoidal: um
+instantâneo a tempo fixo se repete a cada \omterm{prop:b1:wave-propagation:sinusoidal}{comprimento de onda} $\lambda$ e desliza com
+velocidade $c$; o \omterm{def:b1:wave-propagation:signal}{sinal} num ponto fixo se repete a cada período $T$, com
+$\lambda = cT$.}
+\end{omfigure}
+
+\begin{definition}[Dispersão]\label{def:b1:wave-propagation:dispersion}
+\index{meio dispersivo}
+Um meio é \emph{dispersivo} quando a \omterm{prop:b1:wave-propagation:sinusoidal}{velocidade de fase} depende da
+frequência. Um \omterm{def:b1:wave-propagation:signal}{sinal} não senoidal, soma de senoides, deforma-se então ao
+viajar, com as suas componentes se separando. O som no ar e a luz no
+vácuo são não dispersivos; a luz no vidro (\cref{ch:b1:rays-reflection-refraction})
+e as ondas em água profunda são dispersivas --- a ondulação longa vinda de uma tempestade
+distante chega um dia antes da marola curta.
+\end{definition}
+
+\section{Superposição e interferência}
+
+\begin{theorem}[Superposição]\label{thm:b1:wave-propagation:superposition}
+\index{princípio da superposição}
+Num meio linear, quando várias ondas se propagam juntas, o
+\omterm{def:b1:wave-propagation:signal}{sinal} resultante em cada ponto e em cada instante é a soma dos sinais que cada
+onda produziria sozinha.
+\end{theorem}
+\admitted
+
+\begin{remark}[Linearidade]\label{rem:b1:wave-propagation:linearity}
+A superposição é uma afirmação sobre as equações do meio (lineares
+no \omterm{def:b1:wave-propagation:signal}{sinal}), verdadeira enquanto as \omterm{def:b1:wave-propagation:signal}{amplitudes} permanecem pequenas: som abaixo do
+limiar da dor, luz abaixo das intensidades de corte a laser, uma corda
+dedilhada com suavidade. Dois feixes de luz se cruzam sem se perturbar;
+duas ondulações atravessam uma à outra e emergem intactas. O que se
+observa \emph{onde elas se superpõem} é o assunto da interferência.
+\end{remark}
+
+\begin{theorem}[Dois sinais senoidais de mesma frequência]\label{thm:b1:wave-propagation:fresnel}
+\index{interferência}\index{fórmula de Fresnel}\index{interferência construtiva}\index{interferência destrutiva}
+Num ponto onde chegam dois sinais senoidais de mesma frequência,
+$s_1 = A_1\cos(\omega t + \varphi_1)$ e $s_2 = A_2\cos(\omega t + \varphi_2)$,
+a soma é uma senoide de mesma frequência cuja \omterm{def:b1:wave-propagation:signal}{amplitude} satisfaz
+\[
+A^2 = A_1^2 + A_2^2 + 2A_1A_2\cos\Delta\varphi,
+\qquad \Delta\varphi = \varphi_2 - \varphi_1 .
+\]
+Para ondas cuja intensidade (potência por unidade de área) é proporcional a
+$A^2$, as intensidades obedecem à \emph{fórmula de Fresnel}
+\[
+I = I_1 + I_2 + 2\sqrt{I_1 I_2}\,\cos\Delta\varphi .
+\]
+A interferência é \emph{construtiva} ($A = A_1 + A_2$) quando
+$\Delta\varphi = 2n\pi$, e \emph{destrutiva} ($A = \abs{A_1 - A_2}$)
+quando $\Delta\varphi = (2n + 1)\pi$, $n \in \Z$.
+\end{theorem}
+
+\begin{proof}
+Desenvolvendo:
+$s_1 + s_2 = (A_1\cos\varphi_1 + A_2\cos\varphi_2)\cos\omega t
+- (A_1\sin\varphi_1 + A_2\sin\varphi_2)\sin\omega t$, isto é,
+$X\cos\omega t - Y\sin\omega t = A\cos(\omega t + \varphi)$, com $A^2 = X^2 + Y^2 =
+A_1^2 + A_2^2 + 2A_1A_2(\cos\varphi_1\cos\varphi_2 + \sin\varphi_1\sin\varphi_2)$.
+Geometricamente: $A$ é o comprimento da soma de dois vetores de comprimentos
+$A_1$, $A_2$ que formam o ângulo $\Delta\varphi$ (a lei dos cossenos).
+\end{proof}
+
+\begin{proposition}[Duas fontes em fase; diferença de caminho]\label{prop:b1:wave-propagation:pathdiff}
+\index{diferença de caminho}
+Duas fontes que emitem em \omterm{def:b1:wave-propagation:signal}{fase} no \omterm{prop:b1:wave-propagation:sinusoidal}{comprimento de onda} $\lambda$, a distâncias
+$d_1$ e $d_2$ de um ponto $M$, chegam a $M$ com
+$\Delta\varphi = 2\pi\,\delta/\lambda$, em que $\delta = d_2 - d_1$ é a
+\emph{\omterm{prop:b1:wave-propagation:pathdiff}{diferença de caminho}}. A interferência em $M$ é construtiva se
+$\delta = n\lambda$, e destrutiva se $\delta = (n + \tfrac12)\lambda$.
+\end{proposition}
+
+\begin{proof}
+Cada onda chega com o atraso de \omterm{def:b1:wave-propagation:signal}{fase} $kd_i = 2\pi d_i/\lambda$ do seu
+percurso (\cref{prop:b1:wave-propagation:sinusoidal}); a diferença vale
+$2\pi(d_2 - d_1)/\lambda$. Aplique o \cref{thm:b1:wave-propagation:fresnel}.
+\end{proof}
+
+\begin{example}[Dois alto-falantes]\label{ex:b1:wave-propagation:speakers}
+Dois alto-falantes a \qty{2.0}{m} um do outro tocam em \omterm{def:b1:wave-propagation:signal}{fase} o mesmo tom de \qty{850}{Hz}
+($\lambda = \qty{0.40}{m}$). Na mediatriz do segmento que os une,
+$\delta = 0$: som forte em toda parte. Ao longo do segmento que os une, $\delta$
+varia de $2\lambda$ por \omterm{prop:b1:wave-propagation:sinusoidal}{comprimento de onda} de deslocamento, de modo que os pontos silenciosos
+($\delta = \pm\lambda/2, \pm 3\lambda/2, \dots$) se sucedem a cada
+$\lambda/2 = \qty{20}{cm}$ --- uma \omterm{thm:b1:wave-propagation:standing}{onda estacionária}, assunto da próxima
+seção. Inverta os fios de um dos alto-falantes, para que toque em oposição de \omterm{def:b1:wave-propagation:signal}{fase}, e forte
+e fraco trocam de lugar.
+\end{example}
+
+\begin{example}[Furos de Young]\label{ex:b1:wave-propagation:young}
+\index{furos de Young}\index{interfranja}\index{caminho óptico}
+Dois furos $S_1$, $S_2$ separados por uma distância $a$, iluminados por uma única
+fonte monocromática (de modo que emitam em \omterm{def:b1:wave-propagation:signal}{fase}), enviam luz a um
+anteparo à distância $D \gg a$. Num ponto do anteparo à altura $x$
+do eixo, a \omterm{prop:b1:wave-propagation:pathdiff}{diferença de caminho} vale
+\[
+\delta = S_2M - S_1M \approx \frac{a\,x}{D}
+\]
+(para $x \ll D$: $S_{1,2}M = \sqrt{D^2 + (x \mp a/2)^2} \approx D +
+(x \mp a/2)^2/2D$, e subtraia). Franjas claras em $x = n\lambda D/a$:
+a \emph{interfranja} é
+\[
+i = \frac{\lambda D}{a} .
+\]
+Com $a = \qty{0.50}{mm}$, $D = \qty{2.0}{m}$, $\lambda = \qty{633}{nm}$:
+$i = \qty{2.5}{mm}$ --- uma régua mede o \omterm{prop:b1:wave-propagation:sinusoidal}{comprimento de onda} da luz. Num
+meio de índice $n$, a diferença a usar é a do \emph{\omterm{ex:b1:wave-propagation:young}{caminho
+óptico}}, $n \times$ comprimento, já que $\lambda = \lambda_0/n$.
+\end{example}
+
+\begin{omfigure}
+\begin{tikzpicture}[font=\small, x=1cm, y=1cm]
+  \fill (0,0.4) circle (1.5pt) node[left] {$S_1$};
+  \fill (0,-0.4) circle (1.5pt) node[left] {$S_2$};
+  \draw[Stealth-Stealth] (-0.9,0.4) -- (-0.9,-0.4) node[midway, left] {$a$};
+  \draw[thick] (5.6,-2.2) -- (5.6,2.2); \node[above] at (5.6,2.2) {anteparo};
+  \fill[omThm] (5.6,1.3) circle (1.5pt) node[right] {$M$};
+  \draw[omDef] (0,0.4) -- (5.6,1.3); \draw[omDef] (0,-0.4) -- (5.6,1.3);
+  \draw[dashed] (0,0) -- (5.6,0) node[below right] {$O$};
+  \draw[Stealth-Stealth] (5.9,0) -- (5.9,1.3) node[midway, right] {$x$};
+  \draw[Stealth-Stealth] (0,-2.0) -- (5.6,-2.0) node[midway, below] {$D$};
+  \node[omDef] at (2.8,1.2) {$d_1$}; \node[omDef] at (3.3,0.28) {$d_2$};
+  % fringes pattern
+  \begin{scope}[xshift=7.6cm]
+  \begin{axis}[omaxis, axis x line=bottom, width=4.2cm, height=5.2cm, xlabel={$I$}, ylabel={$x$},
+      xmin=0, xmax=4.6, ymin=-2.2, ymax=2.2, xtick={0,4}, xticklabels={$0$,$4I_0$},
+      ytick={-2,-1,0,1,2}, yticklabels={$-2i$,$-i$,$0$,$i$,$2i$}, anchor=origin, at={(0,0)}]
+    \addplot[omThm, thick, domain=-2.2:2.2, samples=300] ({4*cos(deg(pi*x))^2},{x});
+  \end{axis}
+  \end{scope}
+\end{tikzpicture}
+
+{\small \omterm{ex:b1:wave-propagation:young}{Furos de Young}: duas fontes em \omterm{def:b1:wave-propagation:signal}{fase}, separadas por $a$,
+alcançam o ponto $M$ de um anteparo distante por caminhos que diferem de
+$\delta \approx ax/D$. A intensidade no anteparo, $4I_0\cos^2(\pi x/i)$,
+alterna franjas claras e escuras espaçadas de $i = \lambda D/a$.}
+\end{omfigure}
+
+\begin{remark}[Coerência]\label{rem:b1:wave-propagation:coherence}
+\index{coerência}
+A fórmula de Fresnel supõe uma diferença de \omterm{def:b1:wave-propagation:signal}{fase} fixa. Duas lâmpadas separadas
+têm \omterm{def:b1:wave-propagation:signal}{fases} que saltam ao acaso bilhões de vezes por segundo; a
+média de $\cos\Delta\varphi$ é nula e as intensidades simplesmente se somam:
+nenhuma franja. A interferência exige fontes \emph{coerentes} --- na prática,
+duas ondas nascidas de uma mesma fonte, por dois furos, duas fendas, as duas
+faces de um filme fino ou um divisor de feixe. Dois alto-falantes ligados a um mesmo gerador
+são coerentes; dois cantores não são.
+\end{remark}
+
+\section{Ondas estacionárias}
+
+\begin{theorem}[Onda estacionária]\label{thm:b1:wave-propagation:standing}
+\index{onda estacionária}\index{nó}\index{ventre}
+Duas ondas senoidais de mesma \omterm{def:b1:wave-propagation:signal}{amplitude} e frequência que viajam em
+sentidos opostos somam-se em
+\[
+A\cos(\omega t - kx) + A\cos(\omega t + kx) = 2A\cos(kx)\cos(\omega t),
+\]
+uma \emph{\omterm{thm:b1:wave-propagation:standing}{onda estacionária}}: cada ponto oscila em \omterm{def:b1:wave-propagation:signal}{fase} (ou em oposição
+de \omterm{def:b1:wave-propagation:signal}{fase}) com uma \omterm{def:b1:wave-propagation:signal}{amplitude} $2A\abs{\cos kx}$ que depende da posição ---
+nula nos \emph{nós} $x = (n + \tfrac12)\lambda/2$, máxima nos
+\emph{ventres} $x = n\lambda/2$; os nós distam $\lambda/2$. Nada
+se propaga: as variáveis $x$ e $t$ estão separadas.
+\end{theorem}
+
+\begin{proof}
+$\cos a + \cos b = 2\cos\frac{a - b}{2}\cos\frac{a + b}{2}$ com
+$a = \omega t - kx$, $b = \omega t + kx$.
+\end{proof}
+
+\begin{proposition}[Modos de uma corda fixa nas duas extremidades]\label{prop:b1:wave-propagation:modes}
+\index{modo próprio}\index{frequência fundamental}\index{experiência de Melde}
+Uma corda de comprimento $L$ e \omterm{def:b1:wave-propagation:travelling}{celeridade} $c$, fixa em $x = 0$ e $x = L$, só pode
+sustentar uma \omterm{thm:b1:wave-propagation:standing}{onda estacionária} senoidal se $L$ for um número inteiro de
+meios \omterm{prop:b1:wave-propagation:sinusoidal}{comprimentos de onda}:
+\[
+\lambda_n = \frac{2L}{n}, \qquad f_n = n\,\frac{c}{2L} = n f_1,
+\qquad n = 1, 2, 3, \dots
+\]
+Esses são os seus \emph{modos}; $f_1 = c/2L$ é a \emph{fundamental},
+e os $f_n$ os seus harmônicos. Excitada numa extremidade a uma frequência próxima de
+$f_n$, a corda entra em ressonância com a forma do modo $n$ (\omterm{prop:b1:wave-propagation:modes}{experiência de
+Melde}); dedilhada, ela vibra numa superposição de modos, e o
+ouvido percebe $f_1$ como a altura do som.
+\end{proposition}
+
+\begin{proof}
+Uma extremidade fixa é um nó. A onda refletida em $x = L$ retorna e
+se superpõe à incidente, formando uma \omterm{thm:b1:wave-propagation:standing}{onda estacionária}; para que o seu nó
+caia também em $x = 0$, é preciso trocar $\cos kx$ por $\sin kx$ (deslocando
+a origem) e ter $\sin kL = 0$: $kL = n\pi$, $\lambda_n = 2L/n$, e
+$f_n = c/\lambda_n$.
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}[font=\small, x=1cm, y=1cm]
+  \foreach \n/\yo/\lab in {1/3.0/{$n = 1$: $\lambda_1 = 2L$, $f_1$}, 2/1.5/{$n = 2$: $\lambda_2 = L$, $2f_1$}, 3/0/{$n = 3$: $\lambda_3 = 2L/3$, $3f_1$}} {
+    \draw[thick] (0,\yo-0.55) -- (0,\yo+0.55); \draw[thick] (6,\yo-0.55) -- (6,\yo+0.55);
+    \draw[dashed] (0,\yo) -- (6,\yo);
+    \draw[omDef, thick, domain=0:6, samples=120, variable=\x] plot ({\x},{\yo+0.5*sin(deg(\n*pi*\x/6))});
+    \draw[omDef!50, thick, domain=0:6, samples=120, variable=\x] plot ({\x},{\yo-0.5*sin(deg(\n*pi*\x/6))});
+    \node[right] at (6.3,\yo) {\lab};
+  }
+  \foreach \x in {0,3,6} {\fill[omThm] (\x,1.5) circle (1.5pt);}
+  \foreach \x in {0,2,4,6} {\fill[omThm] (\x,0) circle (1.5pt);}
+  \node[omThm, below] at (3,1.3) {nó};
+  \node[omDef, above] at (1.5,3.55) {ventre};
+  \draw[Stealth-Stealth] (0,-0.9) -- (6,-0.9) node[midway, below] {$L$};
+\end{tikzpicture}
+
+{\small Os três primeiros modos de uma corda fixa nas duas extremidades: $n$
+meios \omterm{prop:b1:wave-propagation:sinusoidal}{comprimentos de onda} cabem em $L$; a corda oscila entre as duas formas
+extremas (escura e clara), com os nós imóveis. Frequências $f_n = nf_1$.}
+\end{omfigure}
+
+\begin{example}[Uma corda de violão]\label{ex:b1:wave-propagation:guitar}
+$L = \qty{65}{cm}$, afinada em $f_1 = \qty{110}{Hz}$: $c = 2Lf_1 =
+\qty{143}{m/s}$; com $\mu = \qty{5.0}{g/m}$ a tensão vale $F = \mu c^2
+= \qty{102}{N}$ --- dez quilogramas pendurados em cada corda. Um dedo
+que pressiona no décimo segundo traste reduz $L$ à metade e dobra $f_1$: a oitava.
+Um dedo que apenas \emph{toca} o meio da corda impõe ali um nó e
+mata todos os modos ímpares: a corda soa em $2f_1$, o ``harmônico'' dos
+violonistas.
+\end{example}
+
+\begin{remark}[Tubos, e uma antecipação]\label{rem:b1:wave-propagation:pipes}
+A coluna de ar de uma flauta, aberta nas duas extremidades, tem nós de pressão nas
+duas pontas e os mesmos modos $f_n = nc/2L$; um tubo fechado numa extremidade
+tem um nó na extremidade fechada e um ventre na aberta, de modo que
+$L = (2n + 1)\lambda/4$ e só soam os harmônicos ímpares $f = (2n + 1)c/4L$
+--- o timbre cavo do clarinete. Confinar uma onda entre duas
+paredes \emph{quantiza}, portanto, as suas frequências; quando a onda é a onda
+de matéria de um elétron num átomo, a mesma contagem de meios \omterm{prop:b1:wave-propagation:sinusoidal}{comprimentos de onda}
+quantiza a sua energia (\cref{ch:b1:quantum-introduction}).
+\end{remark}
+
+\section{Exercícios}
+
+\begin{exercise}[$\star$]\label{exo:b1:wave-propagation:1}
+O trovão chega \qty{6.0}{s} depois do clarão: a que distância caiu o raio? Um
+ping de sonar retorna após \qty{0.40}{s} na água ($c = \qty{1500}{m/s}$):
+qual é a profundidade do fundo do mar?
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b1:wave-propagation:2}
+Uma onda sonora de \qty{440}{Hz} viaja no ar (\qty{340}{m/s}). Calcule o seu
+\omterm{prop:b1:wave-propagation:sinusoidal}{comprimento de onda}, a diferença de \omterm{def:b1:wave-propagation:signal}{fase} entre dois microfones separados por \qty{20}{cm}
+ao longo da direção de propagação e as distâncias para as quais
+dois pontos oscilam em \omterm{def:b1:wave-propagation:signal}{fase}.
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b1:wave-propagation:3}
+Uma corda tem tensão \qty{80}{N} e massa por unidade de comprimento
+\qty{4.0}{g/m}: calcule $c$ e o \omterm{prop:b1:wave-propagation:sinusoidal}{comprimento de onda} de uma onda de \qty{200}{Hz}
+nela.
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b1:wave-propagation:4}
+Um diapasão de \qty{440}{Hz} e uma corda a \qty{444}{Hz}: quantos batimentos por
+segundo? Qual é o período da envoltória? A corda
+é afrouxada e os batimentos caem para \qty{1}{Hz}: qual é a sua frequência
+agora (em princípio duas respostas --- qual delas, e como você verificaria)?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b1:wave-propagation:5}
+Uma corda de \qty{0.60}{m}, $c = \qty{240}{m/s}$, fixa nas duas
+extremidades. Dê as três primeiras frequências de modo e as posições dos nós do
+terceiro modo. Onde a corda deve ser tocada para que soe em
+\qty{600}{Hz}?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b1:wave-propagation:6}
+Dois alto-falantes a \qty{2.0}{m} um do outro emitem \qty{850}{Hz} em \omterm{def:b1:wave-propagation:signal}{fase}
+($c = \qty{340}{m/s}$). Localize os pontos silenciosos no segmento que os
+une e diga o que ouve um ouvinte que caminha ao longo da mediatriz
+desse segmento. O que muda se um dos alto-falantes for ligado em oposição de \omterm{def:b1:wave-propagation:signal}{fase}?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b1:wave-propagation:7}
+\omterm{ex:b1:wave-propagation:young}{Furos de Young}: $a = \qty{0.20}{mm}$, $D = \qty{1.5}{m}$, luz de sódio
+$\lambda = \qty{589}{nm}$. Calcule a interfranja; depois para luz
+azul a \qty{450}{nm}; quantas franjas claras cabem em \qty{2.0}{cm}
+em torno do centro com a lâmpada de sódio?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b1:wave-propagation:8}
+Duas ondas coerentes de intensidades $I_0$ e $I_0$ interferem: dê
+$I_{\max}$ e $I_{\min}$. Mesma pergunta para $I_0$ e $I_0/4$. Defina
+o contraste $(I_{\max} - I_{\min})/(I_{\max} + I_{\min})$ e calcule-o
+nos dois casos.
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b1:wave-propagation:9}
+Um tubo de \qty{0.50}{m} ($c = \qty{340}{m/s}$). Dê as suas três primeiras
+frequências de ressonância se ele for fechado numa extremidade e depois se for aberto nas
+duas. Qual é o clarinete e qual é a flauta?
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b1:wave-propagation:10}
+Em água profunda, a \omterm{prop:b1:wave-propagation:sinusoidal}{velocidade de fase} de uma onda senoidal vale
+$v_\varphi = \sqrt{g\lambda/2\pi}$. Calcule-a para $\lambda = \qty{10}{m}$
+e \qty{100}{m}. Uma tempestade a \qty{1000}{km} levanta as duas: qual ondulação
+chega primeiro à costa, e com que antecedência? Por que isso torna o mar
+``dispersivo''?
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b1:wave-propagation:11}
+Mostre que tocar levemente uma corda num ponto a $L/3$ de uma extremidade
+deixa apenas os modos de frequência $3f_1, 6f_1, \dots$, e que
+dedilhar uma corda no seu meio não excita nenhum modo par. (Sugestão: o que
+um nó, ou um deslocamento máximo, nesse ponto exige do
+$\sin(n\pi x/L)$ de cada modo?)
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b1:wave-propagation:12}
+Um receptor de rádio à distância $d$ de uma parede metálica recebe a
+onda direta de um transmissor distante e a onda refletida pela
+parede, que percorre $2d$ a mais e ganha uma \omterm{def:b1:wave-propagation:signal}{fase} extra de $\pi$ na
+reflexão. Em $f = \qty{100}{MHz}$, encontre as distâncias $d$ para as quais
+o \omterm{def:b1:wave-propagation:signal}{sinal} se anula e aquelas em que ele é mais forte. Como isso
+explica os ``pontos mortos'' de um rádio de carro num túnel?
+\end{exercise}
+
+\section{Problema: a corda de Melde e o violão}
+
+\begin{problem}[{Problema de fim de semana --- uma corda vibrante numa bancada, uma
+polia e alguns pesos, depois um violão: como a contagem de
+meios comprimentos de onda fixa cada nota do braço}]
+\label{pb:b1:wave-propagation:1}
+Uma corda de massa por unidade de comprimento $\mu$ é esticada horizontalmente com uma
+tensão $F$ entre um pequeno vibrador eletromagnético em $x = L$ (que
+a sacode transversalmente com \omterm{def:b1:wave-propagation:signal}{amplitude} minúscula na frequência $f$) e um
+ponto fixo em $x = 0$; as ondas transversais nela viajam com
+$c = \sqrt{F/\mu}$ (deduzido no volume do segundo ano).
+
+\medskip
+\noindent\textbf{Parte I --- Ondas na corda.}
+\begin{enumerate}
+  \item Verifique por análise dimensional que $\sqrt{F/\mu}$ é uma velocidade.
+  \item O vibrador envia para $x = 0$ a onda
+        $s_i(x, t) = A\cos(\omega t + kx)$. Por que o \omterm{def:b1:wave-propagation:signal}{sinal} $+kx$? Dê $k$
+        em função de $f$ e $c$.
+  \item Para $\mu = \qty{1.0}{g/m}$, $F = \qty{0.90}{N}$ e
+        $f = \qty{50}{Hz}$, calcule $c$, $\lambda$ e $k$.
+  \item Dois pontos da corda distam \qty{15}{cm}. Qual é a
+        diferença de \omterm{def:b1:wave-propagation:signal}{fase} entre os seus movimentos para essa \omterm{def:b1:wave-propagation:travelling}{onda
+        progressiva}?
+  \item Para $A = \qty{2.0}{mm}$, qual é a velocidade transversal
+        máxima de um ponto da corda? Compare com $c$.
+\end{enumerate}
+
+\medskip
+\noindent\textbf{Parte II --- Reflexão e \omterm{thm:b1:wave-propagation:standing}{onda estacionária}.}
+Na extremidade fixa $x = 0$ a onda é refletida com o \omterm{def:b1:wave-propagation:signal}{sinal} invertido:
+$s_r(x, t) = -A\cos(\omega t - kx)$.
+\begin{enumerate}[resume]
+  \item Por que a onda refletida deve trazer $-kx$ na sua \omterm{def:b1:wave-propagation:signal}{fase}, e por que
+        a \omterm{def:b1:wave-propagation:signal}{amplitude} é invertida (pense no que o \omterm{def:b1:wave-propagation:signal}{sinal} total precisa ser
+        em $x = 0$)?
+  \item Mostre que $s = s_i + s_r = -2A\sin(kx)\sin(\omega t)$.
+  \item Localize os nós e os ventres; dê a distância entre dois
+        nós vizinhos.
+  \item A \omterm{def:b1:wave-propagation:signal}{amplitude} própria do vibrador é tão pequena que $x = L$ é
+        praticamente um nó. Deduza a condição sobre $L$ para uma grande
+        \omterm{thm:b1:wave-propagation:standing}{onda estacionária} (ressonância) e as frequências permitidas $f_n$.
+  \item Com $L = \qty{1.20}{m}$ e os dados da questão 3, quantos
+        meios \omterm{prop:b1:wave-propagation:sinusoidal}{comprimentos de onda} (``fusos'') aparecem? A corda está em
+        ressonância?
+  \item Mantendo $f = \qty{50}{Hz}$ e $L$, que tensões dão
+        ressonâncias com $3$ e com $6$ fusos?
+  \item Inversamente, contam-se os fusos para medir $\mu$: com
+        $F = \qty{1.6}{N}$, $3$ fusos a \qty{50}{Hz} em \qty{1.20}{m},
+        calcule $\mu$.
+  \item A tensão é imposta por uma massa $m$ pendurada numa polia,
+        $F = mg$, com $m$ conhecida a $\pm\qty{1}{g}$ em \qty{163}{g}, e
+        $L$ a $\pm\qty{2}{mm}$. Qual medida limita $\mu$, e
+        qual é a sua incerteza relativa?
+\end{enumerate}
+
+\medskip
+\noindent\textbf{Parte III --- O violão.}
+Seis cordas de comprimento vibrante $L = \qty{650}{mm}$ são afinadas em
+\qty{82.4}{Hz} (mi grave), $110$, $147$, $196$, $247$ e \qty{329.6}{Hz}
+(mi agudo).
+\begin{enumerate}[resume]
+  \item Qual modo o ouvido toma como altura do som? Exprima $c$ em cada
+        corda a partir de $L$ e da altura, e calcule-o para as duas cordas mi.
+  \item A corda mi grave tem $\mu = \qty{6.0}{g/m}$, e a mi aguda
+        $\mu = \qty{0.40}{g/m}$: calcule as suas tensões. Por que as cordas
+        graves são encapadas com metal em vez de simplesmente mais esticadas?
+  \item A música ocidental divide a oitava em doze semitons iguais:
+        cada traste multiplica a frequência por $2^{1/12}$. Mostre que o
+        $n$-ésimo traste deve ficar a uma distância $L(1 - 2^{-n/12})$ da
+        pestana, e calcule as posições dos trastes $1$, $5$, $7$ e $12$.
+  \item O espaçamento dos trastes encolhe ao subir o braço: por qual fator de um
+        traste para o seguinte?
+  \item Um capotraste preso no traste $3$ encurta todas as cordas: por qual
+        fator ele eleva cada altura, e qual é o novo comprimento
+        vibrante?
+  \item Tocar (sem pressionar) a corda mi grave sobre o traste $12$ e depois
+        sobre o traste $7$ (em $L/3$) dá dois ``harmônicos'': quais
+        frequências, e quais modos sobrevivem?
+  \item Dedilhar perto do cavalete soa mais brilhante do que dedilhar sobre a
+        boca do instrumento. Explique com as formas dos modos.
+  \item Duas cordas são afinadas a uma quinta de distância ($f_2 = 1.5f_1$). Tocadas
+        juntas, um ouvinte percebe um leve batimento a \qty{2}{Hz}
+        entre o terceiro harmônico da corda grave e o segundo
+        harmônico da aguda: qual é a razão real $f_2/f_1$, se
+        $f_1 = \qty{110}{Hz}$?
+\end{enumerate}
+
+\medskip
+\noindent\textbf{Parte IV --- Afinando com um diapasão.}
+\begin{enumerate}[resume]
+  \item A corda lá (\qty{110}{Hz}) é afinada contra o diapasão de \qty{440}{Hz}.
+        Qual harmônico da corda bate contra o diapasão? Se
+        se ouvem \qty{3}{} batimentos por segundo, quais são as duas frequências
+        possíveis da corda?
+  \item Girar a cravelha aumenta ligeiramente a tensão e os batimentos
+        aceleram: qual das duas era, e de quanto, relativamente,
+        a tensão deve mudar para chegar à altura correta?
+  \item Mostre que uma variação relativa $\dd F/F$ da tensão altera a
+        frequência de $\dd f/f = \tfrac12\,\dd F/F$.
+  \item Resuma a cadeia de resultados: como o comprimento, a tensão
+        e a massa da corda fixam a sua fundamental, como os trastes fixam a escala e como
+        os batimentos a afinam --- e nomeie a única relação por trás de tudo isso.
+\end{enumerate}
+\end{problem}

@@ -1,0 +1,686 @@
+\chapter{Warmtemotoren en machines}\label{ch:b1:heat-engines}
+
+Een automotor, een elektriciteitscentrale, een koelkast en een \omterm{def:b1:heat-engines:machine}{warmtepomp} zijn
+hetzelfde voorwerp van vier kanten bekeken: een fluïdum dat een kringproces
+doorloopt, beurtelings in contact met een warme en een koude bron, warmte met
+beide en arbeid met een as uitwisselend. De eerste hoofdwet houdt de energie bij; de
+tweede hoofdwet stelt, via de entropiebalans over één kringproces, de grens
+die geen vernuft kan verslaan --- de stelling van Carnot, de meest ingrijpende
+ongelijkheid van de techniek. Dit hoofdstuk leidt die grens af, berekent
+het ideale kringproces en de werkelijke die het benaderen (Otto, Diesel,
+Stirling), keert de machine om om koude te maken en huizen te verwarmen,
+en laat zien hoe de geproduceerde entropie van een echte machine joule voor
+joule in \omterm{thm:b1:heat-engines:lostwork}{verloren arbeid} wordt betaald.
+
+\section{Cyclische machines en de twee hoofdwetten}
+
+\begin{definition}[Thermodynamische machine]\label{def:b1:heat-engines:machine}
+\index{warmtemotor}\index{koelmachine}\index{warmtepomp}\index{warmtereservoir}
+Een \emph{thermodynamische machine} is een \omterm{def:b1:newton-dynamics:conservation}{gesloten systeem} (het werkfluïdum)
+dat een \emph{kringproces} doorloopt, zodat het periodiek naar dezelfde
+toestand terugkeert, terwijl het arbeid $W$ met de buitenwereld en warmte $Q_i$ met
+bronnen op temperaturen $T_i$ uitwisselt --- \emph{warmtereservoirs}, waarvan de
+uitwisseling de temperatuur niet verandert. Een \emph{dithermische} machine gebruikt twee
+reservoirs, de warme bron op $T_h$ en de koude bron op $T_c < T_h$.
+Zij is een \emph{motor} als zij arbeid levert ($W < 0$), een
+\emph{koelmachine} als zij wordt aangedreven ($W > 0$) om warmte aan de koude
+bron te onttrekken, en een \emph{warmtepomp} als zij wordt aangedreven om warmte aan de warme bron te geven.
+Alle grootheden worden per kringproces geteld, algebraïsch, zoals ontvangen
+door het fluïdum.
+\end{definition}
+
+\begin{theorem}[De twee hoofdwetten over een kringproces; ongelijkheid van Clausius]\label{thm:b1:heat-engines:clausius}
+\index{ongelijkheid van Clausius}
+Over één kringproces van een dithermische machine geldt
+\[
+W + Q_h + Q_c = 0 , \qquad
+\frac{Q_h}{T_h} + \frac{Q_c}{T_c} = -S_{\mathrm{created}} \leq 0 ,
+\]
+met gelijkheid in de tweede betrekking dan en slechts dan als het kringproces
+omkeerbaar is. Algemener geldt voor een willekeurig aantal reservoirs
+$\sum_i Q_i/T_i \leq 0$ (de \emph{ongelijkheid van Clausius}).
+\end{theorem}
+
+\begin{proof}
+$U$ en $S$ zijn toestandsfuncties, dus $\Delta U = 0$ en $\Delta S = 0$ over
+een kringproces. De eerste hoofdwet geeft $0 = W + Q_h + Q_c$; de entropiebalans
+(\cref{thm:b1:second-law-entropy:secondlaw}) geeft $0 = S_{\mathrm{exch}} +
+S_{\mathrm{created}}$ met $S_{\mathrm{exch}} = \sum Q_i/T_i$, omdat elk
+reservoir op zijn eigen vaste temperatuur uitwisselt
+(\cref{prop:b1:second-law-entropy:thermostat}).
+\end{proof}
+
+\begin{corollary}[Kelvin opnieuw]\label{cor:b1:heat-engines:kelvin}
+Een \emph{monothermische} machine ($Q_c = 0$) heeft $Q_h \leq 0$, en dus $W \geq 0$:
+geen enkel kringproces kan de warmte van één bron in arbeid omzetten. Een schip
+kan niet varen door de zee af te koelen --- een motor heeft een koude bron nodig om
+warmte aan af te staan, en de tweede hoofdwet zegt hoeveel hij moet afstaan.
+\end{corollary}
+
+\begin{omfigure}
+\begin{tikzpicture}[font=\small, x=1cm, y=1cm, >=Stealth]
+  % engine
+  \begin{scope}
+    \draw[fill=omThm!15, draw=omThm, thick] (-1.6,3.0) rectangle (1.6,3.7) node[midway] {warme bron $T_h$};
+    \draw[fill=omDef!15, draw=omDef, thick] (-1.6,-0.7) rectangle (1.6,0) node[midway] {koude bron $T_c$};
+    \draw[thick, rounded corners, fill=omProp!10] (-0.9,1.0) rectangle (0.9,2.0) node[midway] {motor};
+    \draw[->, omThm, very thick] (0,3.0) -- (0,2.0) node[midway, right] {$Q_h > 0$};
+    \draw[->, omDef, very thick] (0,1.0) -- (0,0) node[midway, right] {$Q_c < 0$};
+    \draw[->, omProp, very thick] (0.9,1.5) -- (2.3,1.5) node[midway, above] {$W < 0$};
+    \node[font=\footnotesize] at (0,-1.1) {$\eta = -W/Q_h$};
+  \end{scope}
+  % refrigerator / heat pump
+  \begin{scope}[xshift=6.4cm]
+    \draw[fill=omThm!15, draw=omThm, thick] (-1.6,3.0) rectangle (1.6,3.7) node[midway] {warme bron $T_h$};
+    \draw[fill=omDef!15, draw=omDef, thick] (-1.6,-0.7) rectangle (1.6,0) node[midway] {koude bron $T_c$};
+    \draw[thick, rounded corners, fill=omProp!10] (-1.1,1.0) rectangle (1.1,2.0) node[midway, align=center, font=\footnotesize] {koelmachine\\ of warmtepomp};
+    \draw[->, omThm, very thick] (0,2.0) -- (0,3.0) node[midway, right] {$Q_h < 0$};
+    \draw[->, omDef, very thick] (0,0) -- (0,1.0) node[midway, right] {$Q_c > 0$};
+    \draw[->, omProp, very thick] (-2.5,1.5) -- (-1.1,1.5) node[midway, above] {$W > 0$};
+    \node[font=\footnotesize] at (0,-1.1) {$e_f = Q_c/W$, \quad $e_p = -Q_h/W$};
+  \end{scope}
+\end{tikzpicture}
+
+{\small De twee manieren om een dithermisch kringproces te doorlopen. Links: de motor neemt warmte
+uit de warme bron, staat een deel ervan af aan de koude en levert het
+verschil als arbeid. Rechts: dezelfde machine achterstevoren pompt warmte
+van koud naar warm; zij is een \omterm{def:b1:heat-engines:machine}{koelmachine} als men $Q_c$ wil, en een \omterm{def:b1:heat-engines:machine}{warmtepomp}
+als men $|Q_h|$ wil.}
+\end{omfigure}
+
+\section{De stelling van Carnot}
+
+\begin{definition}[Rendement en prestatiecoëfficiënten]\label{def:b1:heat-engines:efficiency}
+\index{rendement!van een warmtemotor}\index{prestatiecoëfficiënt}
+Het \emph{rendement} van een motor is de geleverde arbeid per eenheid warmte
+die aan de warme bron wordt onttrokken, $\eta = -W/Q_h$; de
+\emph{prestatiecoëfficiënt} (COP) van een \omterm{def:b1:heat-engines:machine}{koelmachine} is de geproduceerde koude
+per eenheid arbeid, $e_f = Q_c/W$; die van een \omterm{def:b1:heat-engines:machine}{warmtepomp} is de warmte
+die per eenheid arbeid wordt geleverd, $e_p = -Q_h/W$. Elk is de verhouding ``wat men
+wil'' tot ``wat men betaalt''; een rendement is hoogstens~1, een COP kan
+groter dan~1 zijn.
+\end{definition}
+
+\begin{theorem}[Carnot]\label{thm:b1:heat-engines:carnot}
+\index{stelling van Carnot}\index{rendement van Carnot}
+Tussen reservoirs met $T_h > T_c$ geldt
+\[
+\eta \leq \eta_C = 1 - \frac{T_c}{T_h}, \qquad
+e_f \leq \frac{T_c}{T_h - T_c}, \qquad
+e_p \leq \frac{T_h}{T_h - T_c} = 1 + \frac{T_c}{T_h - T_c},
+\]
+met gelijkheid dan en slechts dan als het kringproces omkeerbaar is. De grenzen hangen
+alleen van de temperaturen af --- niet van het fluïdum, niet van het mechanisme.
+\end{theorem}
+
+\begin{proof}
+Voor een motor ($Q_h > 0$): $\eta = -W/Q_h = (Q_h + Q_c)/Q_h = 1 + Q_c/Q_h$,
+en de ongelijkheid van Clausius geeft $Q_c/Q_h \leq -T_c/T_h$. Voor een
+\omterm{def:b1:heat-engines:machine}{koelmachine} ($Q_c > 0$, $W > 0$): $W = -Q_h - Q_c$ met $-Q_h \geq Q_c T_h/T_c$,
+dus $W \geq Q_c(T_h/T_c - 1)$ en $e_f = Q_c/W \leq T_c/(T_h - T_c)$.
+Voor de \omterm{def:b1:heat-engines:machine}{warmtepomp} is $e_p = -Q_h/W = (W + Q_c)/W = 1 + e_f$. Gelijkheid is
+het omkeerbare geval $S_{\mathrm{created}} = 0$ overal.
+\end{proof}
+
+\begin{example}[Drie getallen]\label{ex:b1:heat-engines:numbers}
+Een stoomturbine tussen $T_h = \qty{800}{K}$ en een rivier op
+$T_c = \qty{300}{K}$: $\eta_C = 0.625$; echte centrales halen ongeveer $0.40$.
+Een huishoudkoelkast tussen $\qty{275}{K}$ binnen en een keuken op
+$\qty{298}{K}$: $e_f \leq 275/23 = 12$; echte machines geven $2$ tot $4$. Een
+\omterm{def:b1:heat-engines:machine}{warmtepomp} die een huis op $\qty{293}{K}$ verwarmt met lucht van $\qty{273}{K}$:
+$e_p \leq 293/20 = 14.7$; echte pompen geven $3$ tot $5$ --- nog altijd drie tot
+vijf keer wat dezelfde elektriciteit in een weerstand zou geven
+(\cref{pb:b1:heat-engines:1}).
+\end{example}
+
+\begin{remark}[Waarom het rendement geen~1 kan zijn]\label{rem:b1:heat-engines:why}
+Een motor ontvangt entropie $Q_h/T_h$ met de warmte die hij opneemt; arbeid
+voert er geen af; de enige uitgang is warmte die aan de koude bron wordt afgestaan,
+en die voert $|Q_c|/T_c$ mee. Omdat entropie niet vernietigd kan worden, moet ten minste
+$Q_h T_c/T_h$ aan warmte worden weggegooid, en de arbeid is wat overblijft.
+Hoe lager de koude bron en hoe hoger de warme, hoe beter --- vandaar
+de koeltorens en de jacht op steeds hetere turbinebladen.
+\end{remark}
+
+\section{Het kringproces van Carnot}
+
+\begin{definition}[Kringproces van Carnot]\label{def:b1:heat-engines:carnotcycle}
+\index{kringproces van Carnot}
+Het \emph{kringproces van Carnot} is het omkeerbare dithermische kringproces: twee omkeerbare
+isothermen, op $T_h$ (in contact met de warme bron) en op $T_c$ (met
+de koude), verbonden door twee omkeerbare adiabatische takken (isentroop,
+zonder bron in contact). Met de klok mee doorlopen in het $(V, P)$-vlak is het een
+motor; tegen de klok in een \omterm{def:b1:heat-engines:machine}{koelmachine} of \omterm{def:b1:heat-engines:machine}{warmtepomp}. In het
+\omterm{def:b1:second-law-entropy:TS}{entropiediagram} is het een rechthoek.
+\end{definition}
+
+\begin{proposition}[Kringproces van Carnot van een ideaal gas]\label{prop:b1:heat-engines:carnotgas}
+Voor $n$ \omterm{def:b1:kinetic-theory:scales}{mol} \omterm{def:b1:kinetic-theory:model}{ideaal gas} dat $A \to B$ (isotherm $T_h$,
+expansie), $B \to C$ (adiabaat), $C \to D$ (isotherm $T_c$,
+compressie), $D \to A$ (adiabaat) doorloopt:
+\[
+Q_h = nRT_h\ln\frac{V_B}{V_A}, \qquad
+Q_c = -nRT_c\ln\frac{V_B}{V_A}, \qquad
+\eta = 1 - \frac{T_c}{T_h} ,
+\]
+de waarde van Carnot --- zoals het moet zijn voor elk omkeerbaar dithermisch kringproces.
+\end{proposition}
+
+\begin{proof}
+Op een isotherm is $\Delta U = 0$, dus $Q = -W = nRT\ln(V_{\text{eind}}/
+V_{\text{begin}})$. Op de adiabaten is $TV^{\gamma-1}$ constant:
+$T_hV_B^{\gamma-1} = T_cV_C^{\gamma-1}$ en $T_hV_A^{\gamma-1} =
+T_cV_D^{\gamma-1}$, waaruit $V_C/V_D = V_B/V_A$ en $Q_c = nRT_c\ln(V_D/V_C) =
+-nRT_c\ln(V_B/V_A)$. Dan is $\eta = 1 + Q_c/Q_h = 1 - T_c/T_h$.
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}
+\begin{axis}[omaxis, axis x line=bottom, axis y line=left, width=7.6cm, height=5.6cm,
+    xlabel={$V$}, ylabel={$P$}, xmin=0, xmax=6.3, ymin=0, ymax=1.7,
+    xlabel style={at={(axis description cs:0.5,-0.06)}, anchor=north},
+    xtick=\empty, ytick=\empty, samples=60]
+  \addplot[omThm, thick, domain=1:2] {1.5/x} node[pos=0.5, above right, font=\footnotesize] {$T_h$};
+  \addplot[omProp, thick, domain=2:5.51] {0.75*(2/x)^1.4};
+  \addplot[omDef, thick, domain=2.756:5.51] {1/x} node[pos=0.2, below left, font=\footnotesize] {$T_c$};
+  \addplot[omProp, thick, domain=1:2.756] {0.3628*(2.756/x)^1.4};
+  \node[font=\footnotesize, anchor=south west] at (axis cs:0.95,1.52) {$A$};
+  \node[font=\footnotesize, anchor=south west] at (axis cs:2.05,0.77) {$B$};
+  \node[font=\footnotesize, anchor=north west] at (axis cs:5.5,0.18) {$C$};
+  \node[font=\footnotesize, anchor=north east] at (axis cs:2.7,0.35) {$D$};
+  \node[font=\footnotesize, omProp] at (axis cs:4.4,0.62) {adiabaten};
+  \draw[-Stealth, thick] (axis cs:1.45,1.1) -- (axis cs:1.55,1.0);
+  \draw[-Stealth, thick] (axis cs:4.3,0.22) -- (axis cs:4.1,0.235);
+\end{axis}
+\end{tikzpicture}\hfill
+\begin{tikzpicture}
+\begin{axis}[omaxis, axis x line=bottom, axis y line=left, width=6.2cm, height=5.6cm,
+    xlabel={$S$}, ylabel={$T$}, xmin=-1.2, xmax=4.6, ymin=0, ymax=2.2, clip=false,
+    xlabel style={at={(axis description cs:0.5,-0.1)}, anchor=north},
+    xtick={1,3}, xticklabels={$S_1$,$S_2$}, ytick={0.8,1.6}, yticklabels={$T_c$,$T_h$}]
+  \fill[omProp!20] (axis cs:1,0.8) rectangle (axis cs:3,1.6);
+  \draw[omThm, thick, -Stealth] (axis cs:1,1.6) -- (axis cs:3,1.6) node[midway, above, font=\footnotesize] {$A \to B$};
+  \draw[omProp, thick, -Stealth] (axis cs:3,1.6) -- (axis cs:3,0.8) node[midway, right, font=\footnotesize] {$B \to C$};
+  \draw[omDef, thick, -Stealth] (axis cs:3,0.8) -- (axis cs:1,0.8) node[midway, below, font=\footnotesize] {$C \to D$};
+  \draw[omProp, thick, -Stealth] (axis cs:1,0.8) -- (axis cs:1,1.6) node[midway, left, font=\footnotesize] {$D \to A$};
+  \node[font=\footnotesize] at (axis cs:2,1.2) {$-W$};
+\end{axis}
+\end{tikzpicture}
+
+{\small Het \omterm{def:b1:heat-engines:carnotcycle}{kringproces van Carnot} van een \omterm{def:b1:kinetic-theory:model}{ideaal gas}. Links: in het
+clapeyrondiagram twee isothermen en twee (steilere) adiabaten, met de klok mee doorlopen;
+de ingesloten oppervlakte is de geleverde arbeid. Rechts: hetzelfde kringproces in het
+\omterm{def:b1:second-law-entropy:TS}{entropiediagram} is een rechthoek met hoogte $T_h - T_c$ en breedte
+$Q_h/T_h$; haar oppervlakte is opnieuw $-W$, en de verhouding van die oppervlakte tot
+die onder de bovenzijde, $Q_h$, is $1 - T_c/T_h$, zo af te lezen.}
+\end{omfigure}
+
+\begin{remark}[Het kringproces van Carnot is een stelling, geen motor]\label{rem:b1:heat-engines:notengine}
+Omkeerbare isothermen vergen oneindig trage warmteoverdracht over een
+verdwijnend temperatuurverschil: een carnotmotor levert zijn maximale arbeid
+bij vermogen nul. Echte machines ruilen \omterm{def:b1:heat-engines:efficiency}{rendement} tegen vermogen door
+eindige temperatuurverschillen in hun warmtewisselaars te aanvaarden
+(\cref{exo:b1:heat-engines:10}); de waarde van Carnot blijft het plafond
+waaraan elk ontwerp wordt afgemeten.
+\end{remark}
+
+\section{Werkelijke motorkringprocessen}
+
+\begin{proposition}[Ottokringproces]\label{prop:b1:heat-engines:otto}
+\index{ottokringproces}\index{compressieverhouding}
+De geïdealiseerde benzinemotor voert lucht ($\gamma$) rond: $1 \to 2$
+adiabatische compressie van $V_1$ naar $V_2$ (\emph{\omterm{prop:b1:heat-engines:otto}{compressieverhouding}}
+$r = V_1/V_2$); $2 \to 3$ isochore verwarming (de verbranding); $3 \to 4$
+adiabatische expansie terug naar $V_1$; $4 \to 1$ isochore afkoeling (de
+uitlaat). Zijn \omterm{def:b1:heat-engines:efficiency}{rendement} is
+\[
+\eta_{\text{Otto}} = 1 - \frac{1}{r^{\gamma-1}} .
+\]
+\end{proposition}
+
+\begin{proof}
+Er wordt alleen op de isochoren warmte uitgewisseld: $Q_h = nC_{V,m}(T_3 - T_2)$ en
+$Q_c = nC_{V,m}(T_1 - T_4)$. Op de adiabaten is $TV^{\gamma-1}$ constant:
+$T_2 = T_1r^{\gamma-1}$ en $T_3 = T_4r^{\gamma-1}$, dus $T_3 - T_2 =
+(T_4 - T_1)r^{\gamma-1}$ en
+$\eta = 1 + Q_c/Q_h = 1 - (T_4 - T_1)/(T_3 - T_2) = 1 - r^{1-\gamma}$.
+\end{proof}
+
+\begin{example}[Getallen voor een benzinemotor]\label{ex:b1:heat-engines:ottonumbers}
+$r = 9$, $\gamma = 1.4$: $9^{0.4} = 2.41$ en $\eta = 0.58$. Een echte motor
+haalt ongeveer $0.30$: de verbranding is niet ogenblikkelijk, het gas is niet
+ideaal bij \qty{2500}{K}, er lekt warmte naar de wanden, en wrijving en pompen
+eisen hun deel. $r$ verhogen helpt --- tot het lucht--brandstofmengsel
+aan het eind van de compressie vanzelf ontbrandt (pingelen); de dieselmotor
+maakt van dat gebrek zijn beginsel.
+\end{example}
+
+\begin{proposition}[Dieselkringproces]\label{prop:b1:heat-engines:diesel}
+\index{dieselkringproces}
+Vervang de isochore verwarming van het \omterm{prop:b1:heat-engines:otto}{ottokringproces} door een isobare, van
+$V_2$ naar $V_3 = \rho V_2$ (\emph{injectieverhouding} $\rho > 1$): brandstof die in
+lucht wordt gespoten die al heet is door een \omterm{prop:b1:heat-engines:otto}{compressieverhouding} $r$ van $15$ tot $22$ verbrandt
+zodra zij binnenkomt. Dan is
+\[
+\eta_{\text{Diesel}} = 1 - \frac{1}{r^{\gamma-1}}\,\frac{\rho^{\gamma} - 1}{\gamma(\rho - 1)} ,
+\]
+kleiner dan de ottowaarde bij dezelfde $r$, maar bereikt met een veel
+grotere $r$ en in de praktijk dus groter ($0.40$ tot $0.45$ voor grote motoren).
+\end{proposition}
+
+\begin{proof}
+$Q_h = nC_{P,m}(T_3 - T_2)$, $Q_c = nC_{V,m}(T_1 - T_4)$, dus $\eta = 1 -
+(T_4 - T_1)/[\gamma(T_3 - T_2)]$. Met $T_2 = T_1r^{\gamma-1}$, $T_3 =
+\rho T_2$ en, op de adiabaat $3 \to 4$ ($V_4 = V_1 = rV_2$), $T_4 =
+T_3(V_3/V_4)^{\gamma-1} = \rho T_1 r^{\gamma-1}(\rho/r)^{\gamma-1} = T_1\rho^{\gamma}$:
+$\eta = 1 - (\rho^\gamma - 1)/[\gamma r^{\gamma-1}(\rho - 1)]$.
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}
+\begin{axis}[omaxis, axis x line=bottom, axis y line=left, width=7.2cm, height=5.6cm,
+    xlabel={$V$}, ylabel={$P$}, xmin=0, xmax=5.6, ymin=0, ymax=15.5, clip=false,
+    xlabel style={at={(axis description cs:0.5,-0.06)}, anchor=north},
+    xtick={1,4}, xticklabels={$V_2$,$V_1$}, ytick=\empty, samples=60]
+  \addplot[omProp, thick, domain=1:4] {x^(-1.4)*6.96};
+  \addplot[omThm, very thick] coordinates {(1,6.96) (1,13.9)};
+  \addplot[omProp, thick, domain=1:4] {13.9*x^(-1.4)};
+  \addplot[omDef, very thick] coordinates {(4,2.0) (4,1)};
+  \node[font=\footnotesize, anchor=north east] at (axis cs:3.95,0.95) {$1$};
+  \node[font=\footnotesize, anchor=east] at (axis cs:0.9,6.96) {$2$};
+  \node[font=\footnotesize, anchor=south west] at (axis cs:1.05,13.9) {$3$};
+  \node[font=\footnotesize, anchor=south west] at (axis cs:4.05,2.1) {$4$};
+  \node[font=\footnotesize, omThm, anchor=west] at (axis cs:1.15,10.5) {$Q_h$ (verbranding)};
+  \node[font=\footnotesize, omDef, anchor=west] at (axis cs:4.15,1.0) {$Q_c$ (uitlaat)};
+  \draw[-Stealth, thick] (axis cs:2.0,5.25) -- (axis cs:2.2,4.6);
+  \draw[-Stealth, thick] (axis cs:2.2,2.33) -- (axis cs:2.0,2.65);
+  \node[font=\footnotesize, omProp, anchor=west] (lblexp) at (axis cs:2.9,6.4) {expansie};
+  \draw[omProp, -Stealth] (lblexp.west) -- (axis cs:2.55,3.9);
+  \node[font=\footnotesize, omProp, anchor=west] (lblcomp) at (axis cs:4.4,4.6) {compressie};
+  \draw[omProp, -Stealth] (lblcomp.west) -- (axis cs:3.3,1.45);
+\end{axis}
+\end{tikzpicture}\hfill
+\begin{tikzpicture}
+\begin{axis}[omaxis, axis x line=bottom, axis y line=left, width=6.6cm, height=5.6cm,
+    xlabel={$r$}, ylabel={$\eta$}, xmin=0, xmax=22, ymin=0, ymax=1.05,
+    xlabel style={at={(axis description cs:0.5,-0.12)}, anchor=north},
+    xtick={5,10,15,20}, ytick={0.2,0.4,0.6,0.8,1}, samples=80]
+  \addplot[omThm, thick, domain=1:22] {1-x^(-0.4)} node[pos=0.55, above, font=\footnotesize] {Otto, $\gamma = 1.4$};
+  \addplot[omDef, thick, domain=1.5:22] {1-(2^1.4-1)/(1.4*x^0.4*(2-1))} node[pos=0.415, below right, font=\footnotesize, align=left] {Diesel,\\ $\rho = 2$};
+  \addplot[omProp, dashed, thick] coordinates {(9,0) (9,0.585)};
+  \addplot[omProp, dashed, thick] coordinates {(18,0) (18,0.632)};
+\end{axis}
+\end{tikzpicture}
+
+{\small Links: het \omterm{prop:b1:heat-engines:otto}{ottokringproces} in het clapeyrondiagram (getekend met $r = 4$): twee
+adiabaten en twee isochoren; de warmte komt binnen in het bovenste dode punt en
+verdwijnt met de uitlaat. Rechts: ideale \omterm{def:b1:heat-engines:efficiency}{rendementen} tegen de
+\omterm{prop:b1:heat-engines:otto}{compressieverhouding}; de stippellijnen markeren een benzinemotor ($r = 9$) en een
+diesel ($r = 18$, $\rho = 2$).}
+\end{omfigure}
+
+\begin{proposition}[Stirlingkringproces en de regenerator]\label{prop:b1:heat-engines:stirling}
+\index{stirlingkringproces}\index{regenerator}
+Twee isothermen ($T_c$, $T_h$) verbonden door twee isochoren. De warmte van de
+isochore takken, $\pm nC_{V,m}(T_h - T_c)$, is even groot en tegengesteld; wordt zij
+op de afkoelende tak opgeslagen in een \emph{regenerator} (een poreuze massa waar
+het gas doorheen stroomt) en op de verwarmende tak teruggegeven, dan wisselen alleen de isothermen
+met de bronnen uit, en is $\eta = 1 - T_c/T_h$: de stirlingmotor
+is in alles behalve de vorm van zijn kringproces een carnotmotor. Zonder de
+regenerator moet de isochore warmte uit de warme bron komen en is
+$\eta = \dfrac{nR(T_h - T_c)\ln(V_1/V_2)}{nRT_h\ln(V_1/V_2) + nC_{V,m}(T_h - T_c)}$,
+aanzienlijk minder (\cref{exo:b1:heat-engines:8}).
+\end{proposition}
+
+\begin{proof}
+Op de isothermen is $Q_h = nRT_h\ln(V_1/V_2)$ en $Q_c = -nRT_c\ln(V_1/V_2)$, dus
+$-W = Q_h + Q_c + 0$ zodra de isochore warmten tegen elkaar wegvallen; deel door de warmte
+die in elk geval werkelijk aan de warme bron wordt onttrokken.
+\end{proof}
+
+\begin{remark}[Stoom- en gasturbines]\label{rem:b1:heat-engines:turbines}
+Elektriciteitscentrales gebruiken geen gas in een cilinder, maar water dat wordt gekookt,
+door een turbine geëxpandeerd, gecondenseerd en teruggepompt (het
+rankinekringproces, met twee faseovergangen --- \cref{ch:b1:phase-changes}), of lucht
+die wordt samengeperst, door verbranding verhit en in een gasturbine geëxpandeerd (het
+braytonkringproces, twee adiabaten en twee isobaren). Hun analyse vergt de
+energiebalans van een stromend fluïdum, die in het volume van jaar 2 staat; de
+grens van Carnot en de logica van dit hoofdstuk gelden onveranderd.
+\end{remark}
+
+\section{Koelmachines en warmtepompen}
+
+\begin{definition}[Dampcompressiekringproces]\label{def:b1:heat-engines:vapourcycle}
+\index{dampcompressiekringproces}\index{koudemiddel}
+Vrijwel elke koelkast, vriezer, airconditioner en \omterm{def:b1:heat-engines:machine}{warmtepomp} voert
+een \emph{koudemiddel} langs vier onderdelen: een \emph{compressor}
+(ontvangt de arbeid, verhoogt de druk van de damp), een
+\emph{condensor} (de hete damp condenseert bij hoge druk en staat daarbij
+$|Q_h|$ aan de warme zijde af), een \emph{expansieventiel} (de vloeistof valt terug naar
+lage druk zonder arbeid of warmte, en verdampt deels) en een
+\emph{verdamper} (de rest kookt bij lage druk en neemt daarbij $Q_c$ van
+de koude zijde op). De warmte wordt als verdampingswarmte vervoerd, en
+de twee drukken leggen de twee kooktemperaturen vast
+(\cref{ch:b1:phase-changes}).
+\end{definition}
+
+\begin{omfigure}
+\begin{tikzpicture}[font=\small, x=1cm, y=1cm, >=Stealth, box/.style={draw, thick, rounded corners, minimum width=2.3cm, minimum height=0.8cm, align=center}]
+  \node[box, fill=omThm!12] (cond) at (0,2.2) {condensor\\ \footnotesize hoge $P$, $T_{\mathrm{cd}}$};
+  \node[box, fill=omDef!12] (evap) at (0,-2.2) {verdamper\\ \footnotesize lage $P$, $T_{\mathrm{ev}}$};
+  \node[box, fill=omProp!12] (comp) at (3.4,0) {compressor};
+  \node[box, fill=omExo!12] (valve) at (-3.4,0) {expansie-\\ ventiel};
+  \draw[->, thick] (evap.east) -| (comp.south) node[pos=0.75, right, font=\footnotesize] {damp};
+  \draw[->, thick] (comp.north) |- (cond.east) node[pos=0.25, right, font=\footnotesize] {hete damp};
+  \draw[->, thick] (cond.west) -| (valve.north) node[pos=0.75, left, font=\footnotesize] {vloeistof};
+  \draw[->, thick] (valve.south) |- (evap.west) node[pos=0.25, left, font=\footnotesize] {vloeistof + damp};
+  \draw[->, omThm, very thick] (cond.north) -- ++(0,0.8) node[above, font=\footnotesize] {$|Q_h|$ naar de warme zijde ($T_h < T_{\mathrm{cd}}$)};
+  \draw[->, omDef, very thick] (0,-3.8) node[below, font=\footnotesize] {$Q_c$ van de koude zijde ($T_c > T_{\mathrm{ev}}$)} -- (evap.south);
+  \draw[->, omProp, very thick] (5.6,0) node[right, font=\footnotesize] {$W$} -- (comp.east);
+\end{tikzpicture}
+
+{\small Het \omterm{def:b1:heat-engines:vapourcycle}{dampcompressiekringproces}. Het \omterm{def:b1:heat-engines:vapourcycle}{koudemiddel} kookt in de
+verdamper, kouder dan de koude zijde, en condenseert in de condensor,
+heter dan de warme zijde: warmte stroomt in elke wisselaar de natuurlijke
+kant op, en de compressor betaalt voor het tillen van
+$T_{\mathrm{ev}}$ naar $T_{\mathrm{cd}}$.}
+\end{omfigure}
+
+\begin{proposition}[De prijs van de temperatuurverschillen]\label{prop:b1:heat-engines:gaps}
+Een omkeerbare machine die tussen haar eigen inwendige temperaturen
+$T_{\mathrm{ev}} < T_c$ en $T_{\mathrm{cd}} > T_h$ werkt heeft $e_p = T_{\mathrm{cd}}/(T_{\mathrm{cd}} - T_{\mathrm{ev}})$,
+kleiner dan de waarde van Carnot tussen de bronnen; een echte machine
+haalt daar nog maar een deel van (meestal $0.4$ tot $0.6$). De
+prestatie van een \omterm{def:b1:heat-engines:machine}{warmtepomp} daalt dus naarmate de buitentemperatuur
+zakt en de temperatuur die het verwarmingscircuit vraagt stijgt.
+\end{proposition}
+
+\begin{proof}
+Pas \cref{thm:b1:heat-engines:carnot} toe op het fluïdum, waarvan de reservoirs
+in feite de temperaturen van de wisselaars zijn; $T_{\mathrm{cd}} - T_{\mathrm{ev}} >
+T_h - T_c$ verlaagt de verhouding.
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}
+\begin{axis}[omaxis, axis x line=bottom, axis y line=left, width=10cm, height=7cm,
+    xlabel={buitentemperatuur (\unit{\degreeCelsius})}, ylabel={$e_p$},
+    xlabel style={at={(axis description cs:0.5,-0.08)}, anchor=north},
+    xmin=-21, xmax=16, ymin=0, ymax=16, xtick={-20,-10,0,10}, ytick={2,4,...,14}, samples=80, clip=false]
+  \addplot[omThm, thick, domain=-20:1.5] {293/(20-x)};
+  \node[omThm, font=\footnotesize, anchor=west] at (axis cs:-20,13.9) {Carnot, huis / buitenlucht};
+  \addplot[omDef, thick, domain=-20:15] {313/(321-(273+x))};
+  \node[omDef, font=\footnotesize, anchor=south east] at (axis cs:15.5,10.3) {Carnot met verschillen in de wisselaars};
+  \addplot[omProp, thick, domain=-20:15] {0.55*313/(321-(273+x))};
+  \node[omProp, font=\footnotesize, anchor=south west] at (axis cs:-19.5,3.1) {echte machine};
+  \addplot[black, dashed] coordinates {(-21,1) (16,1)} node[pos=0.9, above, font=\footnotesize] {weerstand};
+\end{axis}
+\end{tikzpicture}
+
+{\small \omterm{def:b1:heat-engines:efficiency}{Prestatiecoëfficiënt} van een \omterm{def:b1:heat-engines:machine}{warmtepomp} tegen de buitentemperatuur:
+de grens van Carnot tussen huis (\qty{20}{\degreeCelsius}) en
+buitenlucht; de grens zodra de temperatuurverschillen in de wisselaars zijn meegeteld
+($T_{\mathrm{cd}} = \qty{313}{K}$, $T_{\mathrm{ev}} = T_{\mathrm{out}} - \qty{8}{K}$);
+en een realistische machine op $0.55$ daarvan. Zelfs bij \qty{-10}{\degreeCelsius} levert de echte pomp ongeveer
+drie joule warmte per joule elektriciteit, waar een weerstand er
+één geeft.}
+\end{omfigure}
+
+\begin{example}[Warmtepomp of weerstand?]\label{ex:b1:heat-engines:hpvsresistor}
+Een huis dat \qty{6}{kW} verliest bij \qty{-5}{\degreeCelsius} buiten heeft
+\qty{6}{kW} elektriciteit nodig met weerstanden; een ideale \omterm{def:b1:heat-engines:machine}{warmtepomp} van
+\qty{268}{K} naar \qty{293}{K} zou $6/11.7 = \qty{0.51}{kW}$ vragen; een echte
+met wisselaartemperaturen \qty{260}{K} en \qty{313}{K} en een
+\omterm{def:b1:transient-regimes:secondorder}{kwaliteitsfactor} $0.55$, $e_p = 0.55 \times 313/53 = 3.2$, vraagt \qty{1.9}{kW}.
+De weekendopgave werkt het hele seizoen door, entropie inbegrepen.
+\end{example}
+
+\section{Entropie en verloren arbeid}
+
+\begin{theorem}[Verloren arbeid]\label{thm:b1:heat-engines:lostwork}
+\index{verloren arbeid}
+Een dithermische motor die per kringproces de entropie $S_{\mathrm{created}}$ produceert
+levert
+\[
+-W = Q_h\Bigl(1 - \frac{T_c}{T_h}\Bigr) - T_c\,S_{\mathrm{created}} ,
+\]
+en een dithermische \omterm{def:b1:heat-engines:machine}{warmtepomp} die $|Q_h|$ levert verbruikt
+$W = |Q_h|(1 - T_c/T_h) + T_c\,S_{\mathrm{created}}$: elke geproduceerde joule per \omterm{def:b1:kinetic-theory:temperature}{kelvin}
+kost $T_c$ joule arbeid, waarbij de temperatuur van de koude bron
+de wisselkoers tussen entropie en arbeid is.
+\end{theorem}
+
+\begin{proof}
+Uit \cref{thm:b1:heat-engines:clausius} volgt $Q_c = -T_c(Q_h/T_h + S_{\mathrm{created}})$;
+vul dat in in $-W = Q_h + Q_c$. Voor de pomp schrijft men dezelfde twee betrekkingen
+met $Q_h < 0$.
+\end{proof}
+
+\begin{method}[Een machine doorlichten]\label{meth:b1:heat-engines:audit}
+Meet (of bereken) de warmten die met elke bron worden uitgewisseld en de arbeid;
+controleer de eerste hoofdwet; bereken $S_{\mathrm{created}} = -\sum Q_i/T_i$ per kringproces
+of per seconde; het verloren vermogen is $T_c\dot S_{\mathrm{created}}$; lokaliseer de
+productie (eindige temperatuurverschillen in wisselaars, wrijving, smoren,
+niet-quasistatische compressie) door de entropiebalans op elk onderdeel
+afzonderlijk toe te passen. Een onderdeel dat geen entropie produceert is het verbeteren niet waard.
+\end{method}
+
+\begin{example}[De doorlichting van een centrale]\label{ex:b1:heat-engines:audit}
+Warme bron \qty{800}{K}, rivier \qty{300}{K}, $\qty{1.0}{GW}$ elektriciteit
+bij $\eta = 0.40$: $\dot Q_h = \qty{2.5}{GW}$, $\dot Q_c = \qty{1.5}{GW}$, dus
+$\dot S_{\mathrm{created}} = 1.5/300 - 2.5/800 = \qty{1.9}{MW/K}$ en het verloren
+vermogen is $300 \times 1.9 = \qty{0.56}{GW}$: precies het gat tussen de
+carnotopbrengst $0.625 \times 2.5 = \qty{1.56}{GW}$ en de werkelijke \qty{1.0}{GW}.
+De rivier warmt op met de \qty{1.5}{GW} die zij moet afvoeren; in de zomer, als
+zij warm is en laag staat, temperen de centrales.
+\end{example}
+
+\section{Oefeningen}
+
+\begin{exercise}[$\star$]\label{exo:b1:heat-engines:1}
+Een elektriciteitscentrale neemt warmte op bij \qty{800}{K} en staat haar af aan een rivier op
+\qty{300}{K}. \omterm{thm:b1:heat-engines:carnot}{Rendement van Carnot}; als het werkelijke \omterm{def:b1:heat-engines:efficiency}{rendement} $0.40$ is en het
+\omterm{thm:b1:dc-circuits:kirchhoff}{elektrisch vermogen} \qty{1.0}{GW}, hoeveel warmte wordt er per seconde aan de brandstof onttrokken
+en aan de rivier afgestaan?
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b1:heat-engines:2}
+Een koelkast houdt haar binnenkant op \qty{275}{K} in een keuken op
+\qty{298}{K}. Maximale \omterm{def:b1:heat-engines:efficiency}{prestatiecoëfficiënt}; met een werkelijke COP van $3$,
+het \omterm{thm:b1:dc-circuits:kirchhoff}{elektrisch vermogen} dat nodig is om de \qty{100}{W} af te voeren die door
+de wanden naar binnen lekt.
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b1:heat-engines:3}
+Ideaal \omterm{def:b1:heat-engines:efficiency}{rendement} van een \omterm{prop:b1:heat-engines:otto}{ottokringproces} met $r = 9$ en $\gamma = 1.4$; en met
+$r = 11$ (een moderne motor met directe inspuiting). Waarom niet $r = 20$?
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b1:heat-engines:4}
+Een \omterm{def:b1:heat-engines:machine}{warmtepomp} verwarmt een huis op \qty{300}{K} met buitenlucht van \qty{280}{K}.
+Maximale $e_p$; \omterm{thm:b1:dc-circuits:kirchhoff}{elektrisch vermogen} voor een warmtevraag van \qty{5}{kW} met
+die ideale pomp en met een echte met $e_p = 3.5$; vergelijk met een
+weerstand.
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b1:heat-engines:5}
+Eén \omterm{def:b1:kinetic-theory:scales}{mol} \omterm{def:b1:kinetic-theory:model}{ideaal gas} ($\gamma = 1.4$) doorloopt een \omterm{def:b1:heat-engines:carnotcycle}{kringproces van Carnot} tussen
+$T_h = \qty{500}{K}$ en $T_c = \qty{300}{K}$; de warme isotherm brengt het van
+\qty{1.0}{L} naar \qty{3.0}{L}. Bereken $V_C$, $V_D$, $Q_h$, $Q_c$, $W$ en
+controleer het \omterm{def:b1:heat-engines:efficiency}{rendement}.
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b1:heat-engines:6}
+Een uitvinder beweert een cyclische machine te hebben die per kringproces \qty{1000}{J}
+onttrekt aan een bron op \qty{400}{K}, \qty{800}{J} afstaat aan een bron op
+\qty{300}{K} en \qty{200}{J} arbeid levert. Mogelijk? Geproduceerde entropie
+per kringproces. Een tweede uitvinder beweert \qty{300}{J} arbeid uit dezelfde
+\qty{1000}{J} te halen, met \qty{700}{J} afgestaan. Mogelijk? Hoeveel arbeid kan men
+hoogstens uit die \qty{1000}{J} halen?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b1:heat-engines:7}
+\omterm{prop:b1:heat-engines:diesel}{Dieselkringproces} met $r = 18$, $\rho = 2$, $\gamma = 1.4$: \omterm{def:b1:heat-engines:efficiency}{rendement};
+vergelijk met een \omterm{prop:b1:heat-engines:otto}{ottokringproces} met dezelfde $r$ en met het \omterm{prop:b1:heat-engines:otto}{ottokringproces} bij
+$r = 9$. Waarom kan de diesel zo'n grote $r$ gebruiken?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b1:heat-engines:8}
+\omterm{prop:b1:heat-engines:stirling}{Stirlingkringproces} van één \omterm{def:b1:kinetic-theory:scales}{mol} \omterm{prop:b1:kinetic-theory:Ugas}{tweeatomig gas} ($C_{V,m} = \tfrac52R$) tussen
+\qty{600}{K} en \qty{300}{K} met een volumeverhouding $V_1/V_2 = 2$. Arbeid per
+kringproces; \omterm{def:b1:heat-engines:efficiency}{rendement} met een volmaakte regenerator en zonder.
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b1:heat-engines:9}
+Twee gelijke blokken met warmtecapaciteit $C = \qty{4.0}{kJ/K}$ op $T_1 =
+\qty{400}{K}$ en $T_2 = \qty{300}{K}$ worden als bronnen van een motor gebruikt
+tot zij dezelfde temperatuur $T_f$ bereiken. Toon aan dat de grootste arbeid
+bij een omkeerbare motor wordt verkregen, dat dan $T_f = \sqrt{T_1T_2}$, en
+bereken $W_{\max}$. Wat zou $T_f$ zijn als de blokken gewoon in contact werden
+gebracht, en hoeveel entropie wordt er dan geproduceerd?
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b1:heat-engines:10}
+\emph{Motor bij maximaal vermogen.} Een omkeerbare motor werkt tussen
+inwendige temperaturen $x$ en $y$, en wisselt warmte met de bronnen uit
+door wisselaars met geleidbaarheid $K$: $\dot Q_h = K(T_h - x)$ en
+$|\dot Q_c| = K(y - T_c)$. (a) Schrijf het vermogen $P$ en de entropievoorwaarde
+van de omkeerbare kern op. (b) Toon aan dat $y = xT_c/(2x - T_h)$ en
+dat $P = \frac{K}{2}\bigl[(T_h + T_c) - u - T_hT_c/u\bigr]$ met $u = 2x - T_h$.
+(c) Maximaliseer over $u$ en toon aan dat het \omterm{def:b1:heat-engines:efficiency}{rendement} bij maximaal vermogen
+$\eta^\ast = 1 - \sqrt{T_c/T_h}$ is. (d) Getallen voor $T_h = \qty{800}{K}$,
+$T_c = \qty{300}{K}$; vergelijk met \cref{exo:b1:heat-engines:1}.
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b1:heat-engines:11}
+\emph{Absorptiekoelmachine.} Een machine zonder bewegende delen neemt
+de warmte $Q_h$ op van een brander op $T_h$, de warmte $Q_c$ van een koude
+ruimte op $T_c$, en staat warmte af aan de kamer op $T_0$ ($T_c < T_0 <
+T_h$), zonder arbeid. Toon aan dat
+$Q_c/Q_h \leq \bigl(1 - T_0/T_h\bigr)\,T_c/(T_0 - T_c)$, duid de
+twee factoren, en bereken de grens voor $T_h = \qty{400}{K}$, $T_0 =
+\qty{300}{K}$, $T_c = \qty{275}{K}$.
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b1:heat-engines:12}
+\emph{Verwarmen met elektriciteit, op drie manieren.} Elektriciteit wordt gemaakt in een
+thermische centrale met \omterm{def:b1:heat-engines:efficiency}{rendement} $0.40$. Hoeveel warmte bereikt per joule
+brandstofwarmte een huis (a) via een weerstand, (b) via een
+\omterm{def:b1:heat-engines:machine}{warmtepomp} met $e_p = 3.5$, (c) als de brandstof rechtstreeks in een ketel
+met \omterm{def:b1:heat-engines:efficiency}{rendement} $0.90$ wordt verbrand? (d) Het ideaal: een omkeerbare motor tussen
+\qty{800}{K} en \qty{293}{K} die een omkeerbare \omterm{def:b1:heat-engines:machine}{warmtepomp} tussen
+\qty{273}{K} en \qty{293}{K} aandrijft --- hoeveel warmte per joule brandstof, en
+waarom is het antwoord groter dan één zonder dat het met iets in tegenspraak is?
+\end{exercise}
+
+\begin{omfigure}
+\includegraphics[width=0.58\linewidth]{images/book3/ai/b3-24-heat-pump-winter.png}
+
+{\small Een lucht/\omterm{def:b1:heat-engines:machine}{water-warmtepomp} in de winter: zij haalt warmte uit koude buitenlucht en levert het huis drie tot vier keer de elektrische energie die zij verbruikt --- de weekendopgave.}
+\end{omfigure}
+
+\section{Probleem: De warmtepomp van het huis}
+
+\begin{problem}[{Weekendopgave --- een huis een winter lang verwarmen:
+de rekening met weerstanden, met gas, met een ideale warmtepomp en met een
+echte, en waar de elektriciteit van die echte blijft}]
+\label{pb:b1:heat-engines:1}
+Een huis verliest warmte met het tempo $K(T_{\mathrm{in}} - T_{\mathrm{out}})$ met
+$K = \qty{250}{W/K}$; het wordt op $T_{\mathrm{in}} = \qty{20}{\degreeCelsius}$ gehouden.
+Ontwerpbuitentemperatuur $\qty{-5}{\degreeCelsius}$; stookseizoen:
+$200$ dagen met een gemiddelde buitentemperatuur van \qty{7}{\degreeCelsius}.
+Prijzen: elektriciteit 0.25~\texteuro{} per \unit{kW h}, gas 0.10~\texteuro{} per
+\unit{kW h}; $\qty{1}{kW h} = \qty{3.6}{MJ}$.
+
+\medskip
+\noindent\textbf{Deel I --- Het huis en de oude manieren.}
+\begin{enumerate}
+  \item Verwarmingsvermogen dat bij de ontwerptemperatuur nodig is.
+  \item Energie die over het seizoen nodig is, in joule en in \unit{kW h}.
+  \item Kosten van het seizoen met elektrische weerstanden.
+  \item Kosten met een gasketel met \omterm{def:b1:heat-engines:efficiency}{rendement} $0.90$.
+  \item De elektriciteit komt uit een thermische centrale met \omterm{def:b1:heat-engines:efficiency}{rendement}
+        $0.40$. Brandstofenergie die de weerstanden en de ketel per seizoen
+        verbruiken; becommentarieer ``elektrisch verwarmen is thermodynamisch
+        verspilling''.
+\end{enumerate}
+
+\medskip
+\noindent\textbf{Deel II --- De ideale \omterm{def:b1:heat-engines:machine}{warmtepomp}.}
+\begin{enumerate}[resume]
+  \item Definieer $e_p$ en bewijs, uit de twee hoofdwetten over één kringproces, dat
+        $e_p \leq T_{\mathrm{in}}/(T_{\mathrm{in}} - T_{\mathrm{out}})$.
+  \item Ideale $e_p$ bij de ontwerptemperatuur, en het \omterm{thm:b1:dc-circuits:kirchhoff}{elektrisch vermogen}
+        dat dan nodig is.
+  \item Ideale $e_p$ bij de gemiddelde temperatuur van het seizoen, en (met die
+        waarde voor het hele seizoen) de elektriciteit over het seizoen.
+  \item Verklaar fysisch waarom $e_p$ daalt wanneer de buitentemperatuur
+        daalt, en waarom dat het slechtst denkbare gedrag is voor een
+        verwarmingstoestel.
+  \item In het ontwerppunt neemt de ideale pomp \qty{0.53}{kW} op en
+        levert zij \qty{6.25}{kW}: waar komen de andere \qty{5.7}{kW} vandaan,
+        en waarom is het afkoelen van koude buitenlucht om een warm huis te verwarmen
+        niet in strijd met de tweede hoofdwet?
+\end{enumerate}
+
+\medskip
+\noindent\textbf{Deel III --- De echte machine.}
+De pomp doorloopt een \omterm{def:b1:heat-engines:vapourcycle}{dampcompressiekringproces}. Het \omterm{def:b1:heat-engines:vapourcycle}{koudemiddel} verdampt bij
+$T_{\mathrm{ev}} = T_{\mathrm{out}} - \qty{8}{K}$ en condenseert bij
+$T_{\mathrm{cd}} = \qty{313}{K}$ (het water van een vloerverwarmingscircuit loopt op
+\qty{35}{\degreeCelsius}); de machine haalt $0.55$ van de carnotwaarde
+tussen $T_{\mathrm{ev}}$ en $T_{\mathrm{cd}}$. Verdampingswarmte van
+het \omterm{def:b1:heat-engines:vapourcycle}{koudemiddel}: $L = \qty{200}{kJ/kg}$.
+\begin{enumerate}[resume]
+  \item Noem de vier onderdelen van het kringproces, zeg in welk ervan het fluïdum
+        $Q_c$ ontvangt, $|Q_h|$ afstaat en $W$ ontvangt, en waarom de
+        verdamper kouder moet zijn dan de buitenlucht en de
+        condensor heter dan het huis.
+  \item Bij de ontwerptemperatuur: $T_{\mathrm{ev}}$, en de carnotwaarde van $e_p$
+        tussen $T_{\mathrm{ev}}$ en $T_{\mathrm{cd}}$.
+  \item Werkelijke $e_p$, opgenomen \omterm{thm:b1:dc-circuits:kirchhoff}{elektrisch vermogen}, en warmte die aan de
+        buitenlucht wordt onttrokken, bij de ontwerptemperatuur.
+  \item Massastroom van het \omterm{def:b1:heat-engines:vapourcycle}{koudemiddel} door de verdamper.
+  \item Dezelfde vragen (werkelijke $e_p$, \omterm{thm:b1:dc-circuits:kirchhoff}{elektrisch vermogen}) bij de gemiddelde
+        temperatuur van \qty{7}{\degreeCelsius}, waar het huis
+        \qty{3.25}{kW} verliest.
+  \item Geef $e_p$ als functie van $T_{\mathrm{out}}$; elektriciteit en kosten
+        over het seizoen, met de $e_p$ bij de gemiddelde temperatuur.
+        Vergelijk met deel~I.
+  \item Brandstofenergie die de centrale voor het warmtepompseizoen
+        verbruikt; vergelijk met de weerstanden en de ketel.
+  \item Een koudegolf bij \qty{-15}{\degreeCelsius}: warmtevraag, werkelijke $e_p$,
+        \omterm{thm:b1:dc-circuits:kirchhoff}{elektrisch vermogen} als de pomp die zou kunnen leveren. De capaciteit van de compressor
+        daalt in werkelijkheid met $T_{\mathrm{ev}}$ en de pomp kan er maar
+        \qty{3.8}{kW} leveren: benodigd vermogen aan bijverwarming, en
+        de betekenis van ``een \omterm{def:b1:heat-engines:machine}{warmtepomp} dimensioneren''.
+  \item Had het huis oude radiatoren die water van
+        \qty{60}{\degreeCelsius} vragen ($T_{\mathrm{cd}} = \qty{338}{K}$): werkelijke $e_p$
+        en \omterm{thm:b1:dc-circuits:kirchhoff}{elektrisch vermogen} bij de ontwerptemperatuur; concludeer over de
+        keuze van de afgiftesystemen.
+\end{enumerate}
+
+\medskip
+\noindent\textbf{Deel IV --- Waar de elektriciteit blijft.}
+\begin{enumerate}[resume]
+  \item Toon aan dat voor een \omterm{def:b1:heat-engines:machine}{warmtepomp} die $|Q_h|$ aan het huis op
+        $T_{\mathrm{in}}$ levert vanuit buitenlucht op $T_{\mathrm{out}}$ geldt
+        $W = |Q_h|(1 - T_{\mathrm{out}}/T_{\mathrm{in}}) + T_{\mathrm{out}}S_{\mathrm{created}}$.
+  \item Entropie die in het ontwerppunt per seconde wordt geproduceerd door de warmteoverdracht
+        over de condensor (van \qty{313}{K} naar het huis) en
+        over de verdamper (van de buitenlucht naar \qty{260}{K}).
+  \item \omterm{thm:b1:dc-circuits:kirchhoff}{Elektrisch vermogen} dat deze twee temperatuurverschillen kosten; welk deel van
+        de opgenomen \qty{1.92}{kW}.
+  \item Totale entropie die de echte machine per seconde produceert (vergelijk
+        haar \qty{1.92}{kW} met de ideale \qty{0.53}{kW}); aandeel van de
+        wisselaars; noem de andere bronnen.
+  \item Halveer de twee verschillen (\qty{4}{K} en \qty{10}{K}): entropie die
+        in de wisselaars wordt geproduceerd en bespaard \omterm{thm:b1:dc-circuits:kirchhoff}{elektrisch vermogen}; wat kost het halveren
+        van een verschil de ontwerper?
+  \item Vat samen in drie getallen: kilowattuur warmte per
+        kilowattuur elektriciteit over het seizoen; kosten over het seizoen
+        tegenover gas; en, met elektriciteit op \qty{60}{g} CO$_2$ per
+        \unit{kW h} en gas op \qty{200}{g}, de koolstof die elke
+        route uitstoot.
+\end{enumerate}
+\end{problem}

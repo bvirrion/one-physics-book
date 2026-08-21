@@ -1,0 +1,687 @@
+\chapter{Máquinas térmicas}\label{ch:b1:heat-engines}
+
+O motor de um carro, uma usina elétrica, uma geladeira e uma \omterm{def:b1:heat-engines:machine}{bomba de calor}
+são o mesmo objeto visto de quatro lados: um fluido levado por um ciclo, em
+contato alternadamente com uma fonte quente e uma fria, trocando calor com
+as duas e trabalho com um eixo. A primeira lei faz a contabilidade da
+energia; a segunda, pelo balanço de entropia ao longo de um ciclo, fixa o
+limite que nenhuma esperteza vence --- o teorema de Carnot, a desigualdade
+de maiores consequências de toda a engenharia. Este capítulo deduz esse
+limite, calcula o ciclo ideal e os ciclos reais que dele se aproximam
+(Otto, Diesel, Stirling), inverte a máquina para fazer frio e para aquecer
+casas, e mostra como a entropia criada por uma máquina real é paga, joule a
+joule, em \omterm{thm:b1:heat-engines:lostwork}{trabalho perdido}.
+
+\section{Máquinas cíclicas e as duas leis}
+
+\begin{definition}[Máquina termodinâmica]\label{def:b1:heat-engines:machine}
+\index{máquina térmica}\index{refrigerador}\index{bomba de calor}\index{termostato}
+Uma \emph{máquina termodinâmica} é um \omterm{def:b1:newton-dynamics:conservation}{sistema fechado} (o fluido de
+trabalho) levado por um \emph{ciclo}, de modo que ele volta
+periodicamente ao mesmo estado, enquanto troca trabalho $W$ com o exterior
+e calor $Q_i$ com fontes às temperaturas $T_i$ --- os \emph{termostatos},
+cuja temperatura a troca não altera. Uma máquina \emph{ditérmica} usa dois
+termostatos, a fonte quente a $T_h$ e a fonte fria a $T_c < T_h$.
+Ela é uma \emph{máquina motriz} se fornece trabalho ($W < 0$), um
+\emph{refrigerador} se é acionada ($W > 0$) para tirar calor da fonte
+fria, e uma \emph{bomba de calor} se é acionada para ceder calor à fonte
+quente. Todas as grandezas são contadas ao longo de um ciclo,
+algebricamente, como recebidas pelo fluido.
+\end{definition}
+
+\begin{theorem}[As duas leis num ciclo; desigualdade de Clausius]\label{thm:b1:heat-engines:clausius}
+\index{desigualdade de Clausius}
+Ao longo de um ciclo de uma máquina ditérmica,
+\[
+W + Q_h + Q_c = 0 , \qquad
+\frac{Q_h}{T_h} + \frac{Q_c}{T_c} = -S_{\mathrm{created}} \leq 0 ,
+\]
+com igualdade na segunda relação se e somente se o ciclo for
+reversível. Mais geralmente, para um número qualquer de \omterm{def:b1:heat-engines:machine}{termostatos},
+$\sum_i Q_i/T_i \leq 0$ (\emph{desigualdade de Clausius}).
+\end{theorem}
+
+\begin{proof}
+$U$ e $S$ são funções de estado, logo $\Delta U = 0$ e $\Delta S = 0$ ao longo
+de um ciclo. A primeira lei dá $0 = W + Q_h + Q_c$; o balanço de entropia
+(\cref{thm:b1:second-law-entropy:secondlaw}) dá $0 = S_{\mathrm{exch}} +
+S_{\mathrm{created}}$ com $S_{\mathrm{exch}} = \sum Q_i/T_i$, pois cada
+\omterm{def:b1:heat-engines:machine}{termostato} troca à sua própria temperatura fixa
+(\cref{prop:b1:second-law-entropy:thermostat}).
+\end{proof}
+
+\begin{corollary}[Kelvin de novo]\label{cor:b1:heat-engines:kelvin}
+Uma máquina \emph{monotérmica} ($Q_c = 0$) tem $Q_h \leq 0$, donde $W \geq 0$:
+nenhum ciclo pode converter em trabalho o calor de uma única fonte. Um
+navio não pode navegar esfriando o mar --- uma máquina motriz precisa de uma
+fonte fria onde rejeitar calor, e a segunda lei diz quanto ela tem de rejeitar.
+\end{corollary}
+
+\begin{omfigure}
+\begin{tikzpicture}[font=\small, x=1cm, y=1cm, >=Stealth]
+  % engine
+  \begin{scope}
+    \draw[fill=omThm!15, draw=omThm, thick] (-1.6,3.0) rectangle (1.6,3.7) node[midway] {fonte quente $T_h$};
+    \draw[fill=omDef!15, draw=omDef, thick] (-1.6,-0.7) rectangle (1.6,0) node[midway] {fonte fria $T_c$};
+    \draw[thick, rounded corners, fill=omProp!10] (-0.9,1.0) rectangle (0.9,2.0) node[midway] {máquina};
+    \draw[->, omThm, very thick] (0,3.0) -- (0,2.0) node[midway, right] {$Q_h > 0$};
+    \draw[->, omDef, very thick] (0,1.0) -- (0,0) node[midway, right] {$Q_c < 0$};
+    \draw[->, omProp, very thick] (0.9,1.5) -- (2.3,1.5) node[midway, above] {$W < 0$};
+    \node[font=\footnotesize] at (0,-1.1) {$\eta = -W/Q_h$};
+  \end{scope}
+  % refrigerator / heat pump
+  \begin{scope}[xshift=6.4cm]
+    \draw[fill=omThm!15, draw=omThm, thick] (-1.6,3.0) rectangle (1.6,3.7) node[midway] {fonte quente $T_h$};
+    \draw[fill=omDef!15, draw=omDef, thick] (-1.6,-0.7) rectangle (1.6,0) node[midway] {fonte fria $T_c$};
+    \draw[thick, rounded corners, fill=omProp!10] (-1.1,1.0) rectangle (1.1,2.0) node[midway, align=center, font=\footnotesize] {refrigerador\\ ou bomba de calor};
+    \draw[->, omThm, very thick] (0,2.0) -- (0,3.0) node[midway, right] {$Q_h < 0$};
+    \draw[->, omDef, very thick] (0,0) -- (0,1.0) node[midway, right] {$Q_c > 0$};
+    \draw[->, omProp, very thick] (-2.5,1.5) -- (-1.1,1.5) node[midway, above] {$W > 0$};
+    \node[font=\footnotesize] at (0,-1.1) {$e_f = Q_c/W$, \quad $e_p = -Q_h/W$};
+  \end{scope}
+\end{tikzpicture}
+
+{\small Os dois sentidos de um ciclo ditérmico. À esquerda: a máquina
+motriz toma calor da fonte quente, rejeita parte dele à fria e fornece a
+diferença como trabalho. À direita: a mesma máquina acionada ao contrário
+bombeia calor do frio para o quente; é um \omterm{def:b1:heat-engines:machine}{refrigerador} se se quer $Q_c$, e
+uma \omterm{def:b1:heat-engines:machine}{bomba de calor} se se quer $|Q_h|$.}
+\end{omfigure}
+
+\section{O teorema de Carnot}
+
+\begin{definition}[Rendimento e coeficientes de desempenho]\label{def:b1:heat-engines:efficiency}
+\index{rendimento!de uma máquina térmica}\index{coeficiente de desempenho}
+O \emph{rendimento} de uma máquina motriz é o trabalho fornecido por
+unidade de calor tomado da fonte quente, $\eta = -W/Q_h$; o
+\emph{coeficiente de desempenho} (COP) de um \omterm{def:b1:heat-engines:machine}{refrigerador} é o frio
+produzido por unidade de trabalho, $e_f = Q_c/W$; o de uma \omterm{def:b1:heat-engines:machine}{bomba de calor} é
+o calor cedido por unidade de trabalho, $e_p = -Q_h/W$. Cada um é a razão
+entre ``o que se quer'' e ``o que se paga''; um rendimento vale no máximo~1,
+mas um COP pode passar de~1.
+\end{definition}
+
+\begin{theorem}[Carnot]\label{thm:b1:heat-engines:carnot}
+\index{teorema de Carnot}\index{rendimento de Carnot}
+Entre \omterm{def:b1:heat-engines:machine}{termostatos} $T_h > T_c$,
+\[
+\eta \leq \eta_C = 1 - \frac{T_c}{T_h}, \qquad
+e_f \leq \frac{T_c}{T_h - T_c}, \qquad
+e_p \leq \frac{T_h}{T_h - T_c} = 1 + \frac{T_c}{T_h - T_c},
+\]
+com igualdade se e somente se o ciclo for reversível. Os limites dependem
+só das temperaturas --- não do fluido, não do mecanismo.
+\end{theorem}
+
+\begin{proof}
+Para uma máquina motriz ($Q_h > 0$): $\eta = -W/Q_h = (Q_h + Q_c)/Q_h = 1 + Q_c/Q_h$,
+e a desigualdade de Clausius dá $Q_c/Q_h \leq -T_c/T_h$. Para um
+\omterm{def:b1:heat-engines:machine}{refrigerador} ($Q_c > 0$, $W > 0$): $W = -Q_h - Q_c$ com $-Q_h \geq Q_c T_h/T_c$,
+logo $W \geq Q_c(T_h/T_c - 1)$ e $e_f = Q_c/W \leq T_c/(T_h - T_c)$.
+Para a \omterm{def:b1:heat-engines:machine}{bomba de calor}, $e_p = -Q_h/W = (W + Q_c)/W = 1 + e_f$. A igualdade é
+o caso reversível $S_{\mathrm{created}} = 0$ em toda parte.
+\end{proof}
+
+\begin{example}[Três números]\label{ex:b1:heat-engines:numbers}
+Uma turbina a vapor entre $T_h = \qty{800}{K}$ e um rio a
+$T_c = \qty{300}{K}$: $\eta_C = 0.625$; as usinas reais chegam a uns $0.40$.
+Uma geladeira doméstica entre $\qty{275}{K}$ dentro e uma cozinha a
+$\qty{298}{K}$: $e_f \leq 275/23 = 12$; as máquinas reais dão $2$ a $4$. Uma
+\omterm{def:b1:heat-engines:machine}{bomba de calor} que aquece uma casa a $\qty{293}{K}$ a partir do ar a $\qty{273}{K}$:
+$e_p \leq 293/20 = 14.7$; as bombas reais dão $3$ a $5$ --- ainda assim, três a
+cinco vezes o que a mesma eletricidade daria numa resistência
+(\cref{pb:b1:heat-engines:1}).
+\end{example}
+
+\begin{remark}[Por que o rendimento não pode ser~1]\label{rem:b1:heat-engines:why}
+Uma máquina motriz recebe a entropia $Q_h/T_h$ com o calor que toma; o
+trabalho não leva nenhuma embora; a única saída é o calor rejeitado à fonte
+fria, que leva $|Q_c|/T_c$. Como a entropia não pode ser destruída, pelo
+menos $Q_h T_c/T_h$ de calor tem de ser jogado fora, e o trabalho é o que
+sobra. Quanto mais baixa a fonte fria e mais alta a quente, melhor --- daí
+as torres de resfriamento e a busca de pás de turbina cada vez mais quentes.
+\end{remark}
+
+\section{O ciclo de Carnot}
+
+\begin{definition}[Ciclo de Carnot]\label{def:b1:heat-engines:carnotcycle}
+\index{ciclo de Carnot}
+O \emph{ciclo de Carnot} é o ciclo ditérmico reversível: duas isotermas
+reversíveis, a $T_h$ (em contato com a fonte quente) e a $T_c$ (com a
+fria), ligadas por dois trechos adiabáticos reversíveis (isentrópicos,
+sem fonte em contato). Percorrido no sentido horário no plano $(V, P)$ ele é
+uma máquina motriz; no sentido anti-horário, um \omterm{def:b1:heat-engines:machine}{refrigerador} ou uma \omterm{def:b1:heat-engines:machine}{bomba
+de calor}. No \omterm{def:b1:second-law-entropy:TS}{diagrama entrópico} ele é um retângulo.
+\end{definition}
+
+\begin{proposition}[Ciclo de Carnot de um gás perfeito]\label{prop:b1:heat-engines:carnotgas}
+Para $n$ \omterm{def:b1:kinetic-theory:scales}{mols} de \omterm{def:b1:kinetic-theory:model}{gás perfeito} levados por $A \to B$ (isoterma $T_h$,
+expansão), $B \to C$ (adiabática), $C \to D$ (isoterma $T_c$,
+compressão), $D \to A$ (adiabática):
+\[
+Q_h = nRT_h\ln\frac{V_B}{V_A}, \qquad
+Q_c = -nRT_c\ln\frac{V_B}{V_A}, \qquad
+\eta = 1 - \frac{T_c}{T_h} ,
+\]
+o valor de Carnot --- como tem de ser para qualquer ciclo ditérmico reversível.
+\end{proposition}
+
+\begin{proof}
+Numa isoterma $\Delta U = 0$, logo $Q = -W = nRT\ln(V_{\text{final}}/
+V_{\text{inicial}})$. Nas adiabáticas $TV^{\gamma-1}$ é constante:
+$T_hV_B^{\gamma-1} = T_cV_C^{\gamma-1}$ e $T_hV_A^{\gamma-1} =
+T_cV_D^{\gamma-1}$, donde $V_C/V_D = V_B/V_A$ e $Q_c = nRT_c\ln(V_D/V_C) =
+-nRT_c\ln(V_B/V_A)$. Então $\eta = 1 + Q_c/Q_h = 1 - T_c/T_h$.
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}
+\begin{axis}[omaxis, axis x line=bottom, axis y line=left, width=7.6cm, height=5.6cm,
+    xlabel={$V$}, ylabel={$P$}, xmin=0, xmax=6.3, ymin=0, ymax=1.7,
+    xlabel style={at={(axis description cs:0.5,-0.06)}, anchor=north},
+    xtick=\empty, ytick=\empty, samples=60]
+  \addplot[omThm, thick, domain=1:2] {1.5/x} node[pos=0.5, above right, font=\footnotesize] {$T_h$};
+  \addplot[omProp, thick, domain=2:5.51] {0.75*(2/x)^1.4};
+  \addplot[omDef, thick, domain=2.756:5.51] {1/x} node[pos=0.2, below left, font=\footnotesize] {$T_c$};
+  \addplot[omProp, thick, domain=1:2.756] {0.3628*(2.756/x)^1.4};
+  \node[font=\footnotesize, anchor=south west] at (axis cs:0.95,1.52) {$A$};
+  \node[font=\footnotesize, anchor=south west] at (axis cs:2.05,0.77) {$B$};
+  \node[font=\footnotesize, anchor=north west] at (axis cs:5.5,0.18) {$C$};
+  \node[font=\footnotesize, anchor=north east] at (axis cs:2.7,0.35) {$D$};
+  \node[font=\footnotesize, omProp] at (axis cs:4.4,0.62) {adiabáticas};
+  \draw[-Stealth, thick] (axis cs:1.45,1.1) -- (axis cs:1.55,1.0);
+  \draw[-Stealth, thick] (axis cs:4.3,0.22) -- (axis cs:4.1,0.235);
+\end{axis}
+\end{tikzpicture}\hfill
+\begin{tikzpicture}
+\begin{axis}[omaxis, axis x line=bottom, axis y line=left, width=6.2cm, height=5.6cm,
+    xlabel={$S$}, ylabel={$T$}, xmin=-1.2, xmax=4.6, ymin=0, ymax=2.2, clip=false,
+    xlabel style={at={(axis description cs:0.5,-0.1)}, anchor=north},
+    xtick={1,3}, xticklabels={$S_1$,$S_2$}, ytick={0.8,1.6}, yticklabels={$T_c$,$T_h$}]
+  \fill[omProp!20] (axis cs:1,0.8) rectangle (axis cs:3,1.6);
+  \draw[omThm, thick, -Stealth] (axis cs:1,1.6) -- (axis cs:3,1.6) node[midway, above, font=\footnotesize] {$A \to B$};
+  \draw[omProp, thick, -Stealth] (axis cs:3,1.6) -- (axis cs:3,0.8) node[midway, right, font=\footnotesize] {$B \to C$};
+  \draw[omDef, thick, -Stealth] (axis cs:3,0.8) -- (axis cs:1,0.8) node[midway, below, font=\footnotesize] {$C \to D$};
+  \draw[omProp, thick, -Stealth] (axis cs:1,0.8) -- (axis cs:1,1.6) node[midway, left, font=\footnotesize] {$D \to A$};
+  \node[font=\footnotesize] at (axis cs:2,1.2) {$-W$};
+\end{axis}
+\end{tikzpicture}
+
+{\small O \omterm{def:b1:heat-engines:carnotcycle}{ciclo de Carnot} de um \omterm{def:b1:kinetic-theory:model}{gás perfeito}. À esquerda: no diagrama de
+Clapeyron, duas isotermas e duas adiabáticas (mais inclinadas), percorridas
+no sentido horário; a área encerrada é o trabalho fornecido. À direita: o
+mesmo ciclo no \omterm{def:b1:second-law-entropy:TS}{diagrama entrópico} é um retângulo de altura $T_h - T_c$ e
+largura $Q_h/T_h$; a sua área é de novo $-W$, e a razão entre essa área e a
+área sob o lado de cima, $Q_h$, vale $1 - T_c/T_h$ a \omterm{def:b1:optical-instruments:eye}{olho} nu.}
+\end{omfigure}
+
+\begin{remark}[O ciclo de Carnot é um teorema, não um motor]\label{rem:b1:heat-engines:notengine}
+As isotermas reversíveis exigem uma transferência de calor infinitamente
+lenta através de uma diferença de temperatura que tende a zero: uma máquina
+de Carnot fornece o seu trabalho máximo com potência nula. As máquinas
+reais trocam \omterm{def:b1:heat-engines:efficiency}{rendimento} por potência aceitando diferenças finitas de
+temperatura nos seus trocadores (\cref{exo:b1:heat-engines:10}); o valor de
+Carnot continua sendo o teto com que todo projeto é comparado.
+\end{remark}
+
+\section{Ciclos de máquinas reais}
+
+\begin{proposition}[Ciclo Otto]\label{prop:b1:heat-engines:otto}
+\index{ciclo Otto}\index{taxa de compressão}
+O motor a gasolina idealizado leva o ar ($\gamma$) por: $1 \to 2$
+compressão adiabática de $V_1$ a $V_2$ (\emph{\omterm{prop:b1:heat-engines:otto}{taxa de compressão}}
+$r = V_1/V_2$); $2 \to 3$ aquecimento isocórico (a combustão); $3 \to 4$
+expansão adiabática de volta a $V_1$; $4 \to 1$ resfriamento isocórico (o
+escapamento). O seu \omterm{def:b1:heat-engines:efficiency}{rendimento} vale
+\[
+\eta_{\text{Otto}} = 1 - \frac{1}{r^{\gamma-1}} .
+\]
+\end{proposition}
+
+\begin{proof}
+O calor só é trocado nas isocóricas: $Q_h = nC_{V,m}(T_3 - T_2)$ e
+$Q_c = nC_{V,m}(T_1 - T_4)$. Nas adiabáticas $TV^{\gamma-1}$ é constante:
+$T_2 = T_1r^{\gamma-1}$ e $T_3 = T_4r^{\gamma-1}$, logo $T_3 - T_2 =
+(T_4 - T_1)r^{\gamma-1}$ e
+$\eta = 1 + Q_c/Q_h = 1 - (T_4 - T_1)/(T_3 - T_2) = 1 - r^{1-\gamma}$.
+\end{proof}
+
+\begin{example}[Números para um motor a gasolina]\label{ex:b1:heat-engines:ottonumbers}
+$r = 9$, $\gamma = 1.4$: $9^{0.4} = 2.41$ e $\eta = 0.58$. Um motor real dá
+uns $0.30$: a combustão não é instantânea, o gás não é perfeito a
+\qty{2500}{K}, o calor foge para as paredes, e o atrito e o bombeamento
+cobram a sua parte. Aumentar $r$ ajuda --- até que a mistura ar--combustível
+se acenda sozinha no fim da compressão (a detonação); o motor diesel
+transforma esse vício no seu princípio.
+\end{example}
+
+\begin{proposition}[Ciclo Diesel]\label{prop:b1:heat-engines:diesel}
+\index{ciclo Diesel}
+Substitua o aquecimento isocórico do \omterm{prop:b1:heat-engines:otto}{ciclo Otto} por um isobárico, de
+$V_2$ a $V_3 = \rho V_2$ (\emph{razão de corte} $\rho > 1$): o combustível
+injetado no ar já quente por uma \omterm{prop:b1:heat-engines:otto}{taxa de compressão} $r$ de $15$ a $22$ queima
+à medida que chega. Então
+\[
+\eta_{\text{Diesel}} = 1 - \frac{1}{r^{\gamma-1}}\,\frac{\rho^{\gamma} - 1}{\gamma(\rho - 1)} ,
+\]
+menor que o valor de Otto para o mesmo $r$, mas atingido com $r$ muito
+maiores, e por isso maior na prática ($0.40$ a $0.45$ nos motores grandes).
+\end{proposition}
+
+\begin{proof}
+$Q_h = nC_{P,m}(T_3 - T_2)$, $Q_c = nC_{V,m}(T_1 - T_4)$, logo $\eta = 1 -
+(T_4 - T_1)/[\gamma(T_3 - T_2)]$. Com $T_2 = T_1r^{\gamma-1}$, $T_3 =
+\rho T_2$ e, na adiabática $3 \to 4$ ($V_4 = V_1 = rV_2$), $T_4 =
+T_3(V_3/V_4)^{\gamma-1} = \rho T_1 r^{\gamma-1}(\rho/r)^{\gamma-1} = T_1\rho^{\gamma}$:
+$\eta = 1 - (\rho^\gamma - 1)/[\gamma r^{\gamma-1}(\rho - 1)]$.
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}
+\begin{axis}[omaxis, axis x line=bottom, axis y line=left, width=7.2cm, height=5.6cm,
+    xlabel={$V$}, ylabel={$P$}, xmin=0, xmax=5.6, ymin=0, ymax=15.5, clip=false,
+    xlabel style={at={(axis description cs:0.5,-0.06)}, anchor=north},
+    xtick={1,4}, xticklabels={$V_2$,$V_1$}, ytick=\empty, samples=60]
+  \addplot[omProp, thick, domain=1:4] {x^(-1.4)*6.96};
+  \addplot[omThm, very thick] coordinates {(1,6.96) (1,13.9)};
+  \addplot[omProp, thick, domain=1:4] {13.9*x^(-1.4)};
+  \addplot[omDef, very thick] coordinates {(4,2.0) (4,1)};
+  \node[font=\footnotesize, anchor=north east] at (axis cs:3.95,0.95) {$1$};
+  \node[font=\footnotesize, anchor=east] at (axis cs:0.9,6.96) {$2$};
+  \node[font=\footnotesize, anchor=south west] at (axis cs:1.05,13.9) {$3$};
+  \node[font=\footnotesize, anchor=south west] at (axis cs:4.05,2.1) {$4$};
+  \node[font=\footnotesize, omThm, anchor=west] at (axis cs:1.15,10.5) {$Q_h$ (combustão)};
+  \node[font=\footnotesize, omDef, anchor=west] at (axis cs:4.15,1.0) {$Q_c$ (escapamento)};
+  \draw[-Stealth, thick] (axis cs:2.0,5.25) -- (axis cs:2.2,4.6);
+  \draw[-Stealth, thick] (axis cs:2.2,2.33) -- (axis cs:2.0,2.65);
+  \node[font=\footnotesize, omProp, anchor=west] (lblexp) at (axis cs:2.9,6.4) {expansão};
+  \draw[omProp, -Stealth] (lblexp.west) -- (axis cs:2.55,3.9);
+  \node[font=\footnotesize, omProp, anchor=west] (lblcomp) at (axis cs:4.4,4.6) {compressão};
+  \draw[omProp, -Stealth] (lblcomp.west) -- (axis cs:3.3,1.45);
+\end{axis}
+\end{tikzpicture}\hfill
+\begin{tikzpicture}
+\begin{axis}[omaxis, axis x line=bottom, axis y line=left, width=6.6cm, height=5.6cm,
+    xlabel={$r$}, ylabel={$\eta$}, xmin=0, xmax=22, ymin=0, ymax=1.05,
+    xlabel style={at={(axis description cs:0.5,-0.12)}, anchor=north},
+    xtick={5,10,15,20}, ytick={0.2,0.4,0.6,0.8,1}, samples=80]
+  \addplot[omThm, thick, domain=1:22] {1-x^(-0.4)} node[pos=0.55, above, font=\footnotesize] {Otto, $\gamma = 1.4$};
+  \addplot[omDef, thick, domain=1.5:22] {1-(2^1.4-1)/(1.4*x^0.4*(2-1))} node[pos=0.415, below right, font=\footnotesize, align=left] {Diesel,\\ $\rho = 2$};
+  \addplot[omProp, dashed, thick] coordinates {(9,0) (9,0.585)};
+  \addplot[omProp, dashed, thick] coordinates {(18,0) (18,0.632)};
+\end{axis}
+\end{tikzpicture}
+
+{\small À esquerda: o \omterm{prop:b1:heat-engines:otto}{ciclo Otto} no diagrama de Clapeyron (desenhado com $r = 4$): duas
+adiabáticas e duas isocóricas; o calor entra no ponto morto superior e sai
+com o escapamento. À direita: \omterm{def:b1:heat-engines:efficiency}{rendimentos} ideais em função da \omterm{prop:b1:heat-engines:otto}{taxa de
+compressão}; as linhas tracejadas marcam um motor a gasolina ($r = 9$) e um
+diesel ($r = 18$, $\rho = 2$).}
+\end{omfigure}
+
+\begin{proposition}[Ciclo Stirling e o regenerador]\label{prop:b1:heat-engines:stirling}
+\index{ciclo Stirling}\index{regenerador}
+Duas isotermas ($T_c$, $T_h$) ligadas por duas isocóricas. O calor dos
+trechos isocóricos, $\pm nC_{V,m}(T_h - T_c)$, é igual e de sinais opostos; se ele
+for armazenado no trecho de resfriamento num \emph{regenerador} (uma massa
+porosa através da qual o gás escoa) e devolvido no trecho de aquecimento, só
+as isotermas trocam com as fontes, e $\eta = 1 - T_c/T_h$: o motor Stirling
+é um motor de Carnot em tudo menos na forma do seu ciclo. Sem o
+regenerador o calor das isocóricas tem de vir da fonte quente e
+$\eta = \dfrac{nR(T_h - T_c)\ln(V_1/V_2)}{nRT_h\ln(V_1/V_2) + nC_{V,m}(T_h - T_c)}$,
+bem menor (\cref{exo:b1:heat-engines:8}).
+\end{proposition}
+
+\begin{proof}
+Nas isotermas $Q_h = nRT_h\ln(V_1/V_2)$ e $Q_c = -nRT_c\ln(V_1/V_2)$, logo
+$-W = Q_h + Q_c + 0$ assim que os calores isocóricos se cancelam; divida pelo calor
+efetivamente tirado da fonte quente em cada caso.
+\end{proof}
+
+\begin{remark}[Turbinas a vapor e a gás]\label{rem:b1:heat-engines:turbines}
+As usinas elétricas não usam um gás num cilindro, mas água fervida,
+expandida através de uma turbina, condensada e bombeada de volta (o ciclo
+Rankine, com duas mudanças de fase --- \cref{ch:b1:phase-changes}), ou ar
+comprimido, aquecido pela combustão e expandido numa turbina a gás (o ciclo
+Brayton, duas adiabáticas e duas isobáricas). A sua análise exige o balanço
+de energia de um fluido em escoamento, dado no volume do segundo ano; o
+limite de Carnot e a lógica deste capítulo se aplicam sem mudança.
+\end{remark}
+
+\section{Refrigeradores e bombas de calor}
+
+\begin{definition}[Ciclo de compressão de vapor]\label{def:b1:heat-engines:vapourcycle}
+\index{ciclo de compressão de vapor}\index{fluido refrigerante}
+Quase toda geladeira, congelador, ar-condicionado e \omterm{def:b1:heat-engines:machine}{bomba de calor} faz um
+\emph{fluido refrigerante} circular por quatro componentes: um \emph{compressor}
+(recebe o trabalho e eleva a pressão do vapor), um
+\emph{condensador} (o vapor quente se liquefaz a alta pressão, liberando
+$|Q_h|$ para o lado quente), uma \emph{válvula de expansão} (o líquido cai à
+baixa pressão sem trabalho nem calor, e em parte vira vapor) e um
+\emph{evaporador} (o resto ferve a baixa pressão, absorvendo $Q_c$ do
+lado frio). O calor é transportado como calor latente de vaporização, e
+as duas pressões fixam as duas temperaturas de ebulição
+(\cref{ch:b1:phase-changes}).
+\end{definition}
+
+\begin{omfigure}
+\begin{tikzpicture}[font=\small, x=1cm, y=1cm, >=Stealth, box/.style={draw, thick, rounded corners, minimum width=2.3cm, minimum height=0.8cm, align=center}]
+  \node[box, fill=omThm!12] (cond) at (0,2.2) {condensador\\ \footnotesize $P$ alta, $T_{\mathrm{cd}}$};
+  \node[box, fill=omDef!12] (evap) at (0,-2.2) {evaporador\\ \footnotesize $P$ baixa, $T_{\mathrm{ev}}$};
+  \node[box, fill=omProp!12] (comp) at (3.4,0) {compressor};
+  \node[box, fill=omExo!12] (valve) at (-3.4,0) {válvula de\\ expansão};
+  \draw[->, thick] (evap.east) -| (comp.south) node[pos=0.75, right, font=\footnotesize] {vapor};
+  \draw[->, thick] (comp.north) |- (cond.east) node[pos=0.25, right, font=\footnotesize] {vapor quente};
+  \draw[->, thick] (cond.west) -| (valve.north) node[pos=0.75, left, font=\footnotesize] {líquido};
+  \draw[->, thick] (valve.south) |- (evap.west) node[pos=0.25, left, font=\footnotesize] {líquido + vapor};
+  \draw[->, omThm, very thick] (cond.north) -- ++(0,0.8) node[above, font=\footnotesize] {$|Q_h|$ para o lado quente ($T_h < T_{\mathrm{cd}}$)};
+  \draw[->, omDef, very thick] (0,-3.8) node[below, font=\footnotesize] {$Q_c$ do lado frio ($T_c > T_{\mathrm{ev}}$)} -- (evap.south);
+  \draw[->, omProp, very thick] (5.6,0) node[right, font=\footnotesize] {$W$} -- (comp.east);
+\end{tikzpicture}
+
+{\small O \omterm{def:b1:heat-engines:vapourcycle}{ciclo de compressão de vapor}. O \omterm{def:b1:heat-engines:vapourcycle}{fluido refrigerante} ferve no
+evaporador, mais frio do que o lado frio, e condensa no condensador, mais
+quente do que o lado quente: o calor escoa no sentido natural em cada
+trocador, e o compressor paga por erguê-lo de
+$T_{\mathrm{ev}}$ a $T_{\mathrm{cd}}$.}
+\end{omfigure}
+
+\begin{proposition}[O preço das diferenças de temperatura]\label{prop:b1:heat-engines:gaps}
+Uma máquina reversível que trabalha entre as suas próprias temperaturas
+internas $T_{\mathrm{ev}} < T_c$ e $T_{\mathrm{cd}} > T_h$ tem $e_p = T_{\mathrm{cd}}/(T_{\mathrm{cd}} - T_{\mathrm{ev}})$,
+menor que o valor de Carnot entre as fontes; uma máquina real atinge
+uma fração (tipicamente $0.4$ a $0.6$) até mesmo desse valor. O
+desempenho de uma \omterm{def:b1:heat-engines:machine}{bomba de calor} cai, portanto, quando a temperatura
+externa baixa e quando a temperatura exigida pelo circuito de aquecimento sobe.
+\end{proposition}
+
+\begin{proof}
+Aplique o \cref{thm:b1:heat-engines:carnot} ao fluido, cujos \omterm{def:b1:heat-engines:machine}{termostatos}
+são, de fato, as temperaturas dos trocadores; $T_{\mathrm{cd}} - T_{\mathrm{ev}} >
+T_h - T_c$ baixa a razão.
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}
+\begin{axis}[omaxis, axis x line=bottom, axis y line=left, width=10cm, height=7cm,
+    xlabel={temperatura externa (\unit{\degreeCelsius})}, ylabel={$e_p$},
+    xlabel style={at={(axis description cs:0.5,-0.08)}, anchor=north},
+    xmin=-21, xmax=16, ymin=0, ymax=16, xtick={-20,-10,0,10}, ytick={2,4,...,14}, samples=80, clip=false]
+  \addplot[omThm, thick, domain=-20:1.5] {293/(20-x)};
+  \node[omThm, font=\footnotesize, anchor=west] at (axis cs:-20,13.9) {Carnot, casa / ar externo};
+  \addplot[omDef, thick, domain=-20:15] {313/(321-(273+x))};
+  \node[omDef, font=\footnotesize, anchor=south east] at (axis cs:15.5,10.3) {Carnot com as diferenças nos trocadores};
+  \addplot[omProp, thick, domain=-20:15] {0.55*313/(321-(273+x))};
+  \node[omProp, font=\footnotesize, anchor=south west] at (axis cs:-19.5,3.1) {máquina real};
+  \addplot[black, dashed] coordinates {(-21,1) (16,1)} node[pos=0.9, above, font=\footnotesize] {resistência};
+\end{axis}
+\end{tikzpicture}
+
+{\small \omterm{def:b1:heat-engines:efficiency}{Coeficiente de desempenho} de uma \omterm{def:b1:heat-engines:machine}{bomba de calor} em função da
+temperatura externa: o limite de Carnot entre a casa (\qty{20}{\degreeCelsius}) e
+o ar externo; o limite quando se contam as diferenças de temperatura nos trocadores
+($T_{\mathrm{cd}} = \qty{313}{K}$, $T_{\mathrm{ev}} = T_{\mathrm{out}} - \qty{8}{K}$);
+e uma máquina realista a $0.55$ deste último. Mesmo a \qty{-10}{\degreeCelsius} a bomba real fornece cerca de
+três joules de calor por joule de eletricidade, onde uma resistência dá
+um.}
+\end{omfigure}
+
+\begin{example}[Bomba de calor ou resistência?]\label{ex:b1:heat-engines:hpvsresistor}
+Uma casa que perde \qty{6}{kW} com \qty{-5}{\degreeCelsius} lá fora precisa de
+\qty{6}{kW} de eletricidade com resistências; uma \omterm{def:b1:heat-engines:machine}{bomba de calor} ideal de
+\qty{268}{K} a \qty{293}{K} precisaria de $6/11.7 = \qty{0.51}{kW}$; uma real
+com temperaturas de trocador de \qty{260}{K} e \qty{313}{K} e um \omterm{def:b1:transient-regimes:secondorder}{fator de
+qualidade} $0.55$, $e_p = 0.55 \times 313/53 = 3.2$, precisa de \qty{1.9}{kW}.
+O problema de fim de semana percorre a estação inteira, entropia incluída.
+\end{example}
+
+\section{Entropia e trabalho perdido}
+
+\begin{theorem}[Trabalho perdido]\label{thm:b1:heat-engines:lostwork}
+\index{trabalho perdido}
+Uma máquina motriz ditérmica que cria a entropia $S_{\mathrm{created}}$ por ciclo
+fornece
+\[
+-W = Q_h\Bigl(1 - \frac{T_c}{T_h}\Bigr) - T_c\,S_{\mathrm{created}} ,
+\]
+e uma \omterm{def:b1:heat-engines:machine}{bomba de calor} ditérmica que fornece $|Q_h|$ consome
+$W = |Q_h|(1 - T_c/T_h) + T_c\,S_{\mathrm{created}}$: cada joule por \omterm{def:b1:kinetic-theory:temperature}{kelvin}
+criado custa $T_c$ joules de trabalho, sendo a temperatura da fonte fria
+a taxa de câmbio entre entropia e trabalho.
+\end{theorem}
+
+\begin{proof}
+Pelo \cref{thm:b1:heat-engines:clausius}, $Q_c = -T_c(Q_h/T_h + S_{\mathrm{created}})$;
+substitua em $-W = Q_h + Q_c$. Para a bomba, escreva as mesmas duas relações
+com $Q_h < 0$.
+\end{proof}
+
+\begin{method}[Auditar uma máquina]\label{meth:b1:heat-engines:audit}
+Meça (ou calcule) os calores trocados com cada fonte e o trabalho;
+verifique a primeira lei; calcule $S_{\mathrm{created}} = -\sum Q_i/T_i$ por ciclo
+ou por segundo; a potência perdida vale $T_c\dot S_{\mathrm{created}}$; localize a
+criação (diferenças finitas de temperatura nos trocadores, atrito,
+estrangulamento, compressão não quase-estática) aplicando o balanço de
+entropia a cada componente, um a um. Um componente que não cria entropia
+não vale a pena melhorar.
+\end{method}
+
+\begin{example}[A auditoria de uma usina]\label{ex:b1:heat-engines:audit}
+Fonte quente \qty{800}{K}, rio \qty{300}{K}, $\qty{1.0}{GW}$ de eletricidade
+a $\eta = 0.40$: $\dot Q_h = \qty{2.5}{GW}$, $\dot Q_c = \qty{1.5}{GW}$, logo
+$\dot S_{\mathrm{created}} = 1.5/300 - 2.5/800 = \qty{1.9}{MW/K}$ e a potência
+perdida vale $300 \times 1.9 = \qty{0.56}{GW}$: exatamente o intervalo entre a
+produção de Carnot $0.625 \times 2.5 = \qty{1.56}{GW}$ e o \qty{1.0}{GW} real.
+O rio esquenta com os \qty{1.5}{GW} que tem de levar embora; no verão, quando
+ele está quente e baixo, as usinas reduzem a carga.
+\end{example}
+
+\section{Exercícios}
+
+\begin{exercise}[$\star$]\label{exo:b1:heat-engines:1}
+Uma usina toma calor a \qty{800}{K} e o rejeita num rio a
+\qty{300}{K}. \omterm{thm:b1:heat-engines:carnot}{Rendimento de Carnot}; se o \omterm{def:b1:heat-engines:efficiency}{rendimento} real é $0.40$ e a
+produção elétrica é \qty{1.0}{GW}, calor tomado do combustível e calor
+rejeitado no rio por segundo.
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b1:heat-engines:2}
+Uma geladeira mantém o seu interior a \qty{275}{K} numa cozinha a
+\qty{298}{K}. \omterm{def:b1:heat-engines:efficiency}{Coeficiente de desempenho} máximo; com um COP real de $3$,
+\omterm{thm:b1:dc-circuits:kirchhoff}{potência elétrica} necessária para retirar os \qty{100}{W} que entram pelas
+paredes.
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b1:heat-engines:3}
+\omterm{def:b1:heat-engines:efficiency}{Rendimento} ideal de um \omterm{prop:b1:heat-engines:otto}{ciclo Otto} com $r = 9$ e $\gamma = 1.4$; e com
+$r = 11$ (um motor moderno de injeção direta). Por que não $r = 20$?
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b1:heat-engines:4}
+Uma \omterm{def:b1:heat-engines:machine}{bomba de calor} aquece uma casa a \qty{300}{K} a partir do ar externo a \qty{280}{K}.
+$e_p$ máximo; \omterm{thm:b1:dc-circuits:kirchhoff}{potência elétrica} para uma demanda de aquecimento de
+\qty{5}{kW} com essa bomba ideal e com uma real de $e_p = 3.5$; compare com
+uma resistência.
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b1:heat-engines:5}
+Um \omterm{def:b1:kinetic-theory:scales}{mol} de \omterm{def:b1:kinetic-theory:model}{gás perfeito} ($\gamma = 1.4$) percorre um \omterm{def:b1:heat-engines:carnotcycle}{ciclo de Carnot} entre
+$T_h = \qty{500}{K}$ e $T_c = \qty{300}{K}$; a isoterma quente o leva de
+\qty{1.0}{L} a \qty{3.0}{L}. Calcule $V_C$, $V_D$, $Q_h$, $Q_c$, $W$ e
+verifique o \omterm{def:b1:heat-engines:efficiency}{rendimento}.
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b1:heat-engines:6}
+Um inventor afirma ter uma máquina cíclica que toma \qty{1000}{J} por ciclo
+de uma fonte a \qty{400}{K}, rejeita \qty{800}{J} numa fonte a
+\qty{300}{K} e fornece \qty{200}{J} de trabalho. É possível? Entropia criada
+por ciclo. Um segundo inventor afirma tirar \qty{300}{J} de trabalho dos mesmos
+\qty{1000}{J}, rejeitando \qty{700}{J}. É possível? Qual é o máximo de
+trabalho que alguém pode tirar desses \qty{1000}{J}?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b1:heat-engines:7}
+\omterm{prop:b1:heat-engines:diesel}{Ciclo Diesel} com $r = 18$, $\rho = 2$, $\gamma = 1.4$: \omterm{def:b1:heat-engines:efficiency}{rendimento};
+compare com um \omterm{prop:b1:heat-engines:otto}{ciclo Otto} de mesmo $r$ e com o \omterm{prop:b1:heat-engines:otto}{ciclo Otto} a
+$r = 9$. Por que o diesel pode usar um $r$ tão grande?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b1:heat-engines:8}
+\omterm{prop:b1:heat-engines:stirling}{Ciclo Stirling} de um \omterm{def:b1:kinetic-theory:scales}{mol} de \omterm{prop:b1:kinetic-theory:Ugas}{gás diatômico} ($C_{V,m} = \tfrac52R$) entre
+\qty{600}{K} e \qty{300}{K} com uma razão de volumes $V_1/V_2 = 2$. Trabalho
+por ciclo; \omterm{def:b1:heat-engines:efficiency}{rendimento} com um regenerador perfeito e sem regenerador.
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b1:heat-engines:9}
+Dois blocos idênticos de capacidade térmica $C = \qty{4.0}{kJ/K}$ a $T_1 =
+\qty{400}{K}$ e $T_2 = \qty{300}{K}$ são usados como fontes de uma máquina
+até chegarem a uma temperatura comum $T_f$. Mostre que o trabalho máximo
+se obtém com uma máquina reversível, que então $T_f = \sqrt{T_1T_2}$, e
+calcule $W_{\max}$. Que $T_f$ se teria se os blocos fossem simplesmente
+postos em contato, e qual é a entropia então criada?
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b1:heat-engines:10}
+\emph{Máquina a potência máxima.} Uma máquina reversível trabalha entre
+temperaturas internas $x$ e $y$, e troca calor com as fontes
+através de trocadores de condutância $K$: $\dot Q_h = K(T_h - x)$ e
+$|\dot Q_c| = K(y - T_c)$. (a) Escreva a potência $P$ e a condição de
+entropia do núcleo reversível. (b) Mostre que $y = xT_c/(2x - T_h)$ e
+que $P = \frac{K}{2}\bigl[(T_h + T_c) - u - T_hT_c/u\bigr]$ com $u = 2x - T_h$.
+(c) Maximize em $u$ e mostre que o \omterm{def:b1:heat-engines:efficiency}{rendimento} a potência máxima vale
+$\eta^\ast = 1 - \sqrt{T_c/T_h}$. (d) Números para $T_h = \qty{800}{K}$ e
+$T_c = \qty{300}{K}$; compare com o \cref{exo:b1:heat-engines:1}.
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b1:heat-engines:11}
+\emph{\omterm{def:b1:heat-engines:machine}{Refrigerador} por absorção.} Uma máquina sem peças móveis toma
+o calor $Q_h$ de um queimador a $T_h$, o calor $Q_c$ de uma câmara
+fria a $T_c$, e rejeita calor para a sala a $T_0$ ($T_c < T_0 <
+T_h$), sem trabalho algum. Mostre que
+$Q_c/Q_h \leq \bigl(1 - T_0/T_h\bigr)\,T_c/(T_0 - T_c)$, interprete os
+dois fatores e calcule o limite para $T_h = \qty{400}{K}$, $T_0 =
+\qty{300}{K}$, $T_c = \qty{275}{K}$.
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b1:heat-engines:12}
+\emph{Aquecer com eletricidade, de três maneiras.} A eletricidade é
+produzida numa usina térmica de \omterm{def:b1:heat-engines:efficiency}{rendimento} $0.40$. Por joule de calor do
+combustível, quanto calor chega a uma casa (a) por uma resistência, (b) por
+uma \omterm{def:b1:heat-engines:machine}{bomba de calor} de $e_p = 3.5$, (c) se o combustível for queimado
+diretamente numa caldeira de \omterm{def:b1:heat-engines:efficiency}{rendimento} $0.90$? (d) O ideal: uma máquina
+reversível entre \qty{800}{K} e \qty{293}{K} acionando uma \omterm{def:b1:heat-engines:machine}{bomba de calor}
+reversível entre \qty{273}{K} e \qty{293}{K} --- quanto calor por joule de
+combustível, e por que a resposta é maior do que um sem contradizer nada?
+\end{exercise}
+
+\begin{omfigure}
+\includegraphics[width=0.58\linewidth]{images/book3/ai/b3-24-heat-pump-winter.png}
+
+{\small Uma \omterm{def:b1:heat-engines:machine}{bomba de calor} com captação no ar, no inverno: ela tira calor do ar externo frio e entrega à casa três a quatro vezes a energia elétrica que consome --- é o problema de fim de semana.}
+\end{omfigure}
+
+\section{Problema: a bomba de calor da casa}
+
+\begin{problem}[{Problema de fim de semana --- aquecer uma casa durante um
+inverno: a conta com resistências, com gás, com uma bomba de calor ideal e
+com uma real, e para onde vai a eletricidade da real}]
+\label{pb:b1:heat-engines:1}
+Uma casa perde calor à taxa $K(T_{\mathrm{in}} - T_{\mathrm{out}})$ com
+$K = \qty{250}{W/K}$; ela é mantida a $T_{\mathrm{in}} = \qty{20}{\degreeCelsius}$.
+Temperatura externa de projeto: $\qty{-5}{\degreeCelsius}$; estação de
+aquecimento: $200$ dias com temperatura externa média de \qty{7}{\degreeCelsius}.
+Preços: eletricidade 0.25~\texteuro{} por \unit{kW h}, gás 0.10~\texteuro{} por
+\unit{kW h}; $\qty{1}{kW h} = \qty{3.6}{MJ}$.
+
+\medskip
+\noindent\textbf{Parte I --- A casa e os meios antigos.}
+\begin{enumerate}
+  \item Potência de aquecimento necessária na temperatura de projeto.
+  \item Energia necessária ao longo da estação, em joules e em \unit{kW h}.
+  \item Custo da estação com resistências elétricas.
+  \item Custo com uma caldeira a gás de \omterm{def:b1:heat-engines:efficiency}{rendimento} $0.90$.
+  \item A eletricidade vem de uma usina térmica de \omterm{def:b1:heat-engines:efficiency}{rendimento}
+        $0.40$. Energia de combustível consumida, por estação, pelas
+        resistências e pela caldeira; comente a frase ``o aquecimento
+        elétrico é um desperdício termodinâmico''.
+\end{enumerate}
+
+\medskip
+\noindent\textbf{Parte II --- A \omterm{def:b1:heat-engines:machine}{bomba de calor} ideal.}
+\begin{enumerate}[resume]
+  \item Defina $e_p$ e demonstre, a partir das duas leis num ciclo, que
+        $e_p \leq T_{\mathrm{in}}/(T_{\mathrm{in}} - T_{\mathrm{out}})$.
+  \item $e_p$ ideal na temperatura de projeto e a \omterm{thm:b1:dc-circuits:kirchhoff}{potência elétrica} então
+        necessária.
+  \item $e_p$ ideal na temperatura média da estação e (tomando esse valor
+        para toda a estação) a eletricidade sazonal.
+  \item Explique fisicamente por que $e_p$ cai quando a temperatura externa
+        cai, e por que esse é o pior comportamento possível para um
+        aparelho de aquecimento.
+  \item No ponto de projeto a bomba ideal consome \qty{0.53}{kW} e
+        fornece \qty{6.25}{kW}: de onde vêm os outros \qty{5.7}{kW}, e
+        por que esfriar o ar externo frio para aquecer uma casa quente
+        não viola a segunda lei?
+\end{enumerate}
+
+\medskip
+\noindent\textbf{Parte III --- A máquina real.}
+A bomba funciona num \omterm{def:b1:heat-engines:vapourcycle}{ciclo de compressão de vapor}. O \omterm{def:b1:heat-engines:vapourcycle}{fluido refrigerante}
+evapora a $T_{\mathrm{ev}} = T_{\mathrm{out}} - \qty{8}{K}$ e condensa a
+$T_{\mathrm{cd}} = \qty{313}{K}$ (a água de um circuito de piso aquecido
+circula a \qty{35}{\degreeCelsius}); a máquina atinge $0.55$ do valor de
+Carnot calculado entre $T_{\mathrm{ev}}$ e $T_{\mathrm{cd}}$. Calor latente do
+\omterm{def:b1:heat-engines:vapourcycle}{fluido refrigerante}: $L = \qty{200}{kJ/kg}$.
+\begin{enumerate}[resume]
+  \item Nomeie os quatro componentes do ciclo, diga em qual deles o fluido
+        recebe $Q_c$, cede $|Q_h|$ e recebe $W$, e por que o
+        evaporador tem de ser mais frio que o ar externo e o
+        condensador mais quente que a casa.
+  \item Na temperatura de projeto: $T_{\mathrm{ev}}$ e o $e_p$ de Carnot
+        entre $T_{\mathrm{ev}}$ e $T_{\mathrm{cd}}$.
+  \item $e_p$ real, \omterm{thm:b1:dc-circuits:kirchhoff}{potência elétrica} consumida e calor tirado do
+        ar externo, na temperatura de projeto.
+  \item Vazão mássica de \omterm{def:b1:heat-engines:vapourcycle}{fluido refrigerante} através do evaporador.
+  \item As mesmas perguntas ($e_p$ real, \omterm{thm:b1:dc-circuits:kirchhoff}{potência elétrica}) na
+        temperatura média de \qty{7}{\degreeCelsius}, em que a casa perde
+        \qty{3.25}{kW}.
+  \item Dê $e_p$ em função de $T_{\mathrm{out}}$; eletricidade e custo
+        sazonais, tomando para a estação o $e_p$ da temperatura média.
+        Compare com a Parte~I.
+  \item Energia de combustível consumida na usina para a estação com \omterm{def:b1:heat-engines:machine}{bomba
+        de calor}; compare com as resistências e com a caldeira.
+  \item Uma onda de frio a \qty{-15}{\degreeCelsius}: demanda de calor, $e_p$
+        real, \omterm{thm:b1:dc-circuits:kirchhoff}{potência elétrica} se a bomba pudesse fornecê-la. A capacidade
+        do compressor de fato cai com $T_{\mathrm{ev}}$ e a bomba só consegue
+        fornecer \qty{3.8}{kW} ali: potência das resistências de apoio
+        necessária, e o sentido de ``dimensionar uma \omterm{def:b1:heat-engines:machine}{bomba de calor}''.
+  \item Se a casa tivesse radiadores antigos que exigem água a
+        \qty{60}{\degreeCelsius} ($T_{\mathrm{cd}} = \qty{338}{K}$): $e_p$ real
+        e \omterm{thm:b1:dc-circuits:kirchhoff}{potência elétrica} na temperatura de projeto; conclua sobre a
+        escolha dos emissores.
+\end{enumerate}
+
+\medskip
+\noindent\textbf{Parte IV --- Para onde vai a eletricidade.}
+\begin{enumerate}[resume]
+  \item Mostre que, para uma \omterm{def:b1:heat-engines:machine}{bomba de calor} que fornece $|Q_h|$ à casa a
+        $T_{\mathrm{in}}$ a partir do ar externo a $T_{\mathrm{out}}$,
+        $W = |Q_h|(1 - T_{\mathrm{out}}/T_{\mathrm{in}}) + T_{\mathrm{out}}S_{\mathrm{created}}$.
+  \item No ponto de projeto, entropia criada por segundo pela
+        transferência de calor no condensador (de \qty{313}{K} à casa) e
+        no evaporador (do ar externo a \qty{260}{K}).
+  \item \omterm{thm:b1:dc-circuits:kirchhoff}{Potência elétrica} que essas duas diferenças de temperatura custam;
+        fração dos \qty{1.92}{kW} consumidos.
+  \item Entropia total criada por segundo pela máquina real (compare
+        os seus \qty{1.92}{kW} com os \qty{0.53}{kW} ideais); parcela dos
+        trocadores; cite as outras fontes.
+  \item Reduza à metade as duas diferenças (\qty{4}{K} e \qty{10}{K}): entropia criada
+        nos trocadores e \omterm{thm:b1:dc-circuits:kirchhoff}{potência elétrica} economizada; o que custa ao
+        projetista reduzir uma diferença à metade?
+  \item Resuma em três números: quilowatt-horas de calor por
+        quilowatt-hora de eletricidade ao longo da estação; custo sazonal
+        contra o do gás; e, com a eletricidade a \qty{60}{g} de CO$_2$ por
+        \unit{kW h} e o gás a \qty{200}{g}, o carbono emitido por cada
+        via.
+\end{enumerate}
+\end{problem}

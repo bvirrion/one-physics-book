@@ -1,0 +1,528 @@
+\chapter{Travail, énergie et énergie potentielle}\label{ch:b1:work-and-energy}
+
+Un cycliste cesse de pédaler au sommet d'une côte et arrive en bas à une
+vitesse qui dépend du dénivelé, non de la forme de la route. Un sauteur
+à l'élastique tombe de soixante mètres et s'arrête, un instant,
+exactement là où la traction du câble a mangé toute la vitesse que la
+chute lui avait donnée. Un atome d'hydrogène lié à un atome de chlore
+vibre dans un puits dont la profondeur est l'énergie qu'il en coûte pour
+briser la molécule. Dans chaque cas, un seul nombre passe d'une forme à
+l'autre --- mouvement, hauteur, allongement, liaison --- et, sommé, il
+ne change pas. Ce chapitre construit cette comptabilité à partir de la
+deuxième loi de Newton~: \omterm{def:b1:work-and-energy:work}{travail} et puissance, théorème de l'\omterm{thm:b1:work-and-energy:ke}{énergie
+cinétique}, \omterm{def:b1:work-and-energy:conservative}{énergies potentielles} pour les forces qui en admettent une,
+et \omterm{thm:b1:work-and-energy:em}{conservation de l'énergie mécanique}, qui réduit bien des problèmes de
+dynamique à une ligne d'algèbre et explique, par la forme d'un \omterm{def:b1:work-and-energy:turning}{puits de
+potentiel}, quelles positions sont stables.
+
+\begin{omfigure}
+\includegraphics[width=0.58\linewidth]{images/book3/ai/b3-13-lecture-hall-pendulum.png}
+
+{\small Le pendule du conférencier~: lâchée depuis le nez, la boule de bowling revient au nez et pas plus loin --- l'\omterm{thm:b1:work-and-energy:em}{énergie mécanique} se conserve, et n'est jamais dépassée.}
+\end{omfigure}
+
+\section{Puissance et travail}
+
+\begin{definition}[Puissance et travail d'une force]\label{def:b1:work-and-energy:work}
+\index{puissance (d'une force)}\index{travail}
+La \emph{puissance} d'une force $\vect F$ qui s'exerce sur un point se
+déplaçant à la vitesse $\vect v$ vaut
+\[
+\mathcal P = \vect F\cdot\vect v \qquad (\text{en watts}),
+\]
+et son \emph{travail} entre les instants $t_1$ et $t_2$ (positions $A$ et
+$B$) est la puissance accumulée,
+\[
+W_{A\to B} = \int_{t_1}^{t_2}\vect F\cdot\vect v\,\dd t
+= \int_A^B \vect F\cdot\dd\vect\ell \qquad (\text{en joules}),
+\]
+somme des \emph{travaux élémentaires} $\delta W = \vect F\cdot\dd\vect\ell$
+le long des déplacements élémentaires $\dd\vect\ell = \vect v\,\dd t$ de
+la \omterm{def:b1:point-kinematics:frame}{trajectoire}. Le travail est positif si la force pousse dans le sens
+du mouvement (travail \emph{moteur}), négatif si elle s'y oppose
+(travail \emph{résistant}), nul si elle lui est perpendiculaire.
+\end{definition}
+
+\begin{proposition}[Les travaux que l'on rencontre]\label{prop:b1:work-and-energy:works}
+\begin{itemize}
+  \item Force constante~: $W_{A\to B} = \vect F\cdot\vect{AB}$, quel que
+        soit le chemin. Poids~: $W = mg(z_A - z_B)$, $z$ compté vers le haut.
+  \item Ressort de raideur $k$, de l'allongement $x_A$ à $x_B$~:
+        $W = \tfrac12 k(x_A^2 - x_B^2)$.
+  \item \omterm{prop:b1:newton-dynamics:friction}{Réaction normale} d'une surface fixe, tension d'un fil sur un
+        corps qui se déplace perpendiculairement~: $W = 0$ (force $\perp$ déplacement).
+  \item Frottement de glissement et traînée~: $W < 0$ toujours (la force
+        s'oppose au mouvement relatif), et dépend de la longueur du chemin.
+\end{itemize}
+\end{proposition}
+
+\begin{proof}
+Pour $\vect F$ constante~: $\int\vect F\cdot\dd\vect\ell = \vect F\cdot\int\dd\vect\ell
+= \vect F\cdot\vect{AB}$~; avec $\vect F = -mg\vect e_z$, $\vect F\cdot\vect{AB}
+= -mg(z_B - z_A)$. Ressort~: $\vect F\cdot\dd\vect\ell = -kx\,\dd x$, et
+$\int_{x_A}^{x_B}-kx\,\dd x = \tfrac12 k(x_A^2 - x_B^2)$. Frottement~: $\vect T
+= -\mu N\vect v/v$, donc $\vect T\cdot\vect v = -\mu Nv < 0$.
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}[font=\small, x=1cm, y=1cm]
+  \draw[omDef, thick, domain=0:6, samples=60] plot (\x, {0.35*\x + 0.9*sin(deg(0.7*\x))});
+  \fill (0,0) circle (1.4pt) node[below] {$A$};
+  \fill (6,{2.1+0.9*sin(deg(4.2))}) circle (1.4pt) node[right] {$B$};
+  % point at x=2.4: y = 0.84+0.9*sin(96.3deg)=0.84+0.894=1.734 ; slope 0.35+0.63cos(96.3)=0.35-0.069=0.28
+  \coordinate (M) at (2.4,1.734);
+  \fill[omThm] (M) circle (1.6pt); \node[above left] at (M) {$M$};
+  \draw[-Stealth, omThm, very thick] (M) -- ++(1.1,0.31) node[right] {$\dd\vect\ell$};
+  \draw[-Stealth, omProp, very thick] (M) -- ++(1.4,-0.9) node[below right] {$\vect F$};
+  \draw ($(M)+(0.55,0.15)$) arc (15.6:-32.7:0.57); \node at ($(M)+(0.85,-0.12)$) {$\alpha$};
+  \node[omExo, font=\footnotesize] at (3.6,3.4) {$\delta W = \vect F\cdot\dd\vect\ell = F\,\dd\ell\cos\alpha$};
+\end{tikzpicture}
+
+{\small Le \omterm{def:b1:work-and-energy:work}{travail} élémentaire d'une force le long d'un petit
+déplacement de son point d'application~: seule la composante de
+$\vect F$ dans le sens du mouvement travaille. Sommé le long du chemin
+de $A$ à $B$, il donne $W_{A\to B}$.}
+\end{omfigure}
+
+\section{Le théorème de l'énergie cinétique}
+
+\begin{theorem}[Théorèmes de l'énergie cinétique et de la puissance]\label{thm:b1:work-and-energy:ke}
+\index{énergie cinétique}\index{théorème de l'énergie cinétique}
+Dans un \omterm{thm:b1:newton-dynamics:laws}{référentiel galiléen}, l'\emph{\omterm{thm:b1:work-and-energy:ke}{énergie cinétique}}
+$E_k = \tfrac12 mv^2$ d'un \omterm{def:b1:point-kinematics:frame}{point matériel} obéit à
+\[
+\frac{\dd E_k}{\dd t} = \sum\mathcal P_i = \Big(\sum\vect F_i\Big)\cdot\vect v,
+\qquad
+E_k(B) - E_k(A) = \sum_i W_{i,A\to B}:
+\]
+la variation d'\omterm{thm:b1:work-and-energy:ke}{énergie cinétique} entre deux positions égale le \omterm{def:b1:work-and-energy:work}{travail}
+total de toutes les forces appliquées le long du chemin.
+\end{theorem}
+
+\begin{proof}
+Multiplions scalairement la deuxième loi de Newton par $\vect v$~: $m\vect a\cdot\vect v =
+\tfrac{\dd}{\dd t}(\tfrac12 m\vect v\cdot\vect v) = \dd E_k/\dd t$, tandis que
+$(\sum\vect F_i)\cdot\vect v = \sum\mathcal P_i$. Puis on intègre en temps.
+\end{proof}
+
+\begin{example}[Distance de freinage]\label{ex:b1:work-and-energy:braking}
+Une voiture de \qty{1000}{kg} à \qty{100}{km/h} ($E_k = \qty{386}{kJ}$),
+freinée par une force constante de \qty{7.0}{kN}, s'arrête après
+$d = E_k/F = \qty{55}{m}$~: la distance croît comme le \emph{carré} de la
+vitesse. Comme la force de freinage maximale vaut $\mu_smg$
+(\cref{ch:b1:newton-dynamics}), la plus courte distance d'arrêt est
+$v^2/2\mu_sg$ quelle que soit la masse de la voiture --- et elle double
+sur route mouillée, où $\mu_s$ est divisé par deux.
+\end{example}
+
+\section{Forces conservatives et énergie potentielle}
+
+\begin{definition}[Force conservative~; énergie potentielle]\label{def:b1:work-and-energy:conservative}
+\index{force conservative}\index{énergie potentielle}
+Une force est \emph{conservative} si son \omterm{def:b1:work-and-energy:work}{travail} entre deux points ne
+dépend pas du chemin suivi. De façon équivalente, il existe une fonction
+de la position, l'\emph{énergie potentielle} $E_p$, telle que
+\[
+W_{A\to B} = E_p(A) - E_p(B) = -\Delta E_p ,
+\qquad \delta W = -\dd E_p ,
+\]
+$E_p$ étant définie à une constante additive près (un choix d'origine).
+\end{definition}
+
+\begin{proposition}[Force et énergie potentielle]\label{prop:b1:work-and-energy:gradient}
+\index{gradient}
+Une \omterm{def:b1:work-and-energy:conservative}{force conservative} dérive de son \omterm{def:b1:work-and-energy:conservative}{énergie potentielle}~:
+\[
+\vect F = -\overrightarrow{\operatorname{grad}}\,E_p
+= -\frac{\partial E_p}{\partial x}\,\vect e_x
+- \frac{\partial E_p}{\partial y}\,\vect e_y
+- \frac{\partial E_p}{\partial z}\,\vect e_z ,
+\]
+et à une dimension $F_x = -\dd E_p/\dd x$~: la force pointe vers les
+\omterm{def:b1:work-and-energy:conservative}{énergies potentielles} décroissantes, «~vers le bas~» sur le graphe de $E_p$.
+\end{proposition}
+
+\begin{proof}
+$\delta W = F_x\dd x + F_y\dd y + F_z\dd z = -\dd E_p = -(\partial_xE_p\,\dd x
++ \partial_yE_p\,\dd y + \partial_zE_p\,\dd z)$ pour tout déplacement~:
+on identifie les coefficients (différentielle d'une fonction de
+plusieurs variables, cours de mathématiques).
+\end{proof}
+
+\begin{proposition}[Les énergies potentielles usuelles]\label{prop:b1:work-and-energy:eps}
+\index{énergie potentielle!de pesanteur}\index{énergie potentielle!élastique}
+\begin{itemize}
+  \item Poids~: $E_p = mgz + \text{const}$ ($z$ vers le haut).
+  \item Ressort~: $E_p = \tfrac12 k(\ell - \ell_0)^2 + \text{const}$.
+  \item Gravitation newtonienne d'une masse $M$~: $E_p = -GMm/r + \text{const}$,
+        la constante étant d'ordinaire choisie pour que $E_p \to 0$ à l'infini.
+  \item Force électrostatique sur une charge $q$ dans un potentiel $V$~:
+        $E_p = qV$ (\cref{ch:b1:potential-capacitors}).
+\end{itemize}
+Le frottement de glissement et la traînée fluide ne sont \emph{pas}
+conservatifs (leur \omterm{def:b1:work-and-energy:work}{travail} dépend du chemin, et il est toujours négatif).
+\end{proposition}
+
+\begin{proof}
+Chacune se lit sur les travaux de la
+\cref{prop:b1:work-and-energy:works}~: $W = -\Delta E_p$. Pour la
+gravitation, $\vect F = -GMm/r^2\,\vect e_r$ et
+$\delta W = -GMm\,\dd r/r^2 = -\dd(-GMm/r)$.
+\end{proof}
+
+\section{L'énergie mécanique}
+
+\begin{theorem}[Énergie mécanique]\label{thm:b1:work-and-energy:em}
+\index{énergie mécanique}\index{conservation de l'énergie mécanique}
+Soit $E_m = E_k + E_p$ l'\emph{\omterm{thm:b1:work-and-energy:em}{énergie mécanique}}, $E_p$ étant la somme
+des \omterm{def:b1:work-and-energy:conservative}{énergies potentielles} des \omterm{def:b1:work-and-energy:conservative}{forces conservatives}. Alors
+\[
+\Delta E_m = W_{\text{nc}} ,
+\]
+où figure le \omterm{def:b1:work-and-energy:work}{travail} total des forces non conservatives. Si celles-ci ne
+travaillent pas (pas de frottement, ou forces de liaison
+perpendiculaires au mouvement), $E_m$ se \emph{conserve}~: le mouvement
+est \emph{conservatif}.
+\end{theorem}
+
+\begin{proof}
+$\Delta E_k = W_{\text{c}} + W_{\text{nc}} = -\Delta E_p + W_{\text{nc}}$.
+\end{proof}
+
+\begin{method}[Utiliser l'énergie]\label{met:b1:work-and-energy:method}
+Lorsqu'un problème demande une \emph{vitesse à une position} (ni une
+date, ni une force), il faut essayer l'énergie d'abord~:
+\begin{enumerate}
+  \item lister les forces~; repérer celles qui travaillent et celles qui
+        sont conservatives~;
+  \item écrire $E_m$ aux deux positions, avec une origine claire pour $E_p$~;
+  \item les égaler (en ajoutant $W_{\text{nc}}$ si le frottement agit) et
+        résoudre en la vitesse ou la position cherchée.
+\end{enumerate}
+L'énergie ne donne jamais la durée ni les forces de liaison~; pour
+celles-là, on revient à la loi de Newton --- souvent avec la vitesse que
+l'énergie vient de fournir.
+\end{method}
+
+\begin{example}[La loi des vitesses de la boucle]\label{ex:b1:work-and-energy:loop}
+Sur la boucle sans frottement du \cref{pb:b1:point-kinematics:1}, la
+réaction du rail est normale au mouvement et ne travaille pas~: $E_m$
+se conserve. Avec $z = R(1 - \cos\theta)$ au-dessus du bas, $\tfrac12 mv^2 + mgR(1 -
+\cos\theta) = \tfrac12 mv_0^2$~: c'est la loi des vitesses $v^2 = v_0^2 - 2gR(1 -
+\cos\theta)$ qui y était utilisée, établie ici en une ligne. La vitesse
+d'entrée minimale $\sqrt{5gR}$ découle alors de la condition au sommet
+$v^2 \geq gR$ de l'\cref{ex:b1:newton-dynamics:circles}.
+\end{example}
+
+\begin{example}[Énergie perdue par frottement]\label{ex:b1:work-and-energy:friction}
+Un bloc descend une pente d'angle $\alpha$ et de hauteur $h$ avec un
+frottement de glissement $\mu_d$~: $W_{\text{nc}} = -\mu_dmg\cos\alpha \times
+h/\sin\alpha = -\mu_dmgh\cot\alpha$, donc $\tfrac12 mv^2 = mgh(1 - \mu_d\cot\alpha)$.
+Pour $h = \qty{2.0}{m}$, $\alpha = 30^\circ$, $\mu_d = 0.20$~: $v =
+\qty{5.1}{m/s}$ au lieu de $\qty{6.3}{m/s}$~; un tiers de l'\omterm{def:b1:work-and-energy:conservative}{énergie
+potentielle} est passé en chaleur.
+\end{example}
+
+\section{Équilibre, stabilité et portraits de phase}
+
+\begin{proposition}[Équilibre et stabilité à une dimension]\label{prop:b1:work-and-energy:stability}
+\index{équilibre!stable, instable}\index{petites oscillations}
+Pour un point qui se déplace sur un axe sous l'effet d'une \omterm{def:b1:work-and-energy:conservative}{force
+conservative} d'\omterm{def:b1:work-and-energy:conservative}{énergie potentielle} $E_p(x)$~:
+\begin{itemize}
+  \item il est en \emph{équilibre} en $x_0$ si et seulement si
+        $F(x_0) = -E_p'(x_0) = 0$~: aux extrémums de $E_p$~;
+  \item l'équilibre est \emph{stable} si $E_p$ y présente un minimum
+        local ($E_p''(x_0) > 0$)~: un petit écart produit une force de
+        rappel~; il est \emph{instable} en un maximum~;
+  \item au voisinage d'un équilibre stable, les petits mouvements sont
+        harmoniques, avec
+        \[
+        \omega_0^2 = \frac{E_p''(x_0)}{m} .
+        \]
+\end{itemize}
+\end{proposition}
+
+\begin{proof}
+La formule de Taylor (cours de mathématiques)~: $E_p(x) \approx E_p(x_0) +
+\tfrac12 E_p''(x_0)(x - x_0)^2$, donc $F \approx -E_p''(x_0)(x - x_0)$ et
+$m\ddot x = -E_p''(x_0)(x - x_0)$ --- un ressort de raideur $E_p''(x_0)$.
+Pour $E_p'' < 0$, la «~raideur~» est négative~: éloignement exponentiel.
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}
+\begin{axis}[omaxis, axis x line=bottom, axis y line=left, width=10.5cm, height=5.8cm, xlabel={$x$}, ylabel={$E_p$},
+    xlabel style={at={(axis description cs:0.5,-0.06)}, anchor=north},
+    xmin=-2.3, xmax=2.5, ymin=-1.5, ymax=1.6, xtick={-1,1}, xticklabels={$-a$,$a$}, ytick=\empty]
+  \addplot[omDef, thick, domain=-2.15:2.15, samples=200] {x^4 - 2*x^2 + 0.3*x};
+  \addplot[omThm, dashed, domain=-2.3:2.5, samples=2] {-0.45};
+  \addplot[omExo, dashed, domain=-2.3:2.5, samples=2] {0.9};
+  \node[omThm, font=\footnotesize, anchor=east] at (axis cs:2.45,-0.3) {$E_1$};
+  \node[omExo, font=\footnotesize, anchor=east] at (axis cs:2.45,1.05) {$E_2$};
+  \node[font=\footnotesize, below] at (axis cs:-1.08,-0.7) {stable};
+  \node[font=\footnotesize, above] at (axis cs:0.08,0.08) {instable};
+  \node[font=\footnotesize, below] at (axis cs:0.97,-1.1) {stable};
+  \draw[Stealth-Stealth, omThm] (axis cs:-1.56,-0.45) -- (axis cs:-0.47,-0.45);
+  \draw[Stealth-Stealth, omThm] (axis cs:0.42,-0.45) -- (axis cs:1.48,-0.45);
+\end{axis}
+\end{tikzpicture}
+
+{\small Un paysage de potentiel à une dimension~: les minimums sont des
+équilibres stables, le maximum un équilibre instable. Un point d'énergie
+$E_1$ inférieure à la barrière est piégé dans un puits, entre deux
+\emph{\omterm{def:b1:work-and-energy:turning}{points de rebroussement}} (où $E_p = E_1$, flèches), et oscille~;
+avec $E_2$ au-dessus de la barrière, il passe librement d'un puits à l'autre.}
+\end{omfigure}
+
+\begin{definition}[Points de rebroussement~; mouvement lié et libre]\label{def:b1:work-and-energy:turning}
+\index{point de rebroussement}\index{mouvement lié}\index{puits de potentiel}\index{barrière de potentiel}
+Pour un mouvement conservatif à une dimension d'énergie $E_m$, le point
+ne peut se trouver que là où $E_p(x) \leq E_m$ (puisque $E_k \geq 0$)~;
+les points où $E_p = E_m$ sont les \emph{points de rebroussement}, où la
+vitesse s'annule et change de sens. Piégé entre deux points de
+rebroussement dans un \emph{puits de potentiel}, le mouvement est
+\emph{lié} et périodique~; s'il peut atteindre l'infini, il est
+\emph{libre}~; une \emph{barrière de potentiel} plus haute que $E_m$ ne
+peut pas être franchie.
+\end{definition}
+
+\begin{definition}[Portrait de phase]\label{def:b1:work-and-energy:phase}
+\index{portrait de phase}
+Le \emph{portrait de phase} d'un mouvement à une dimension est la
+famille des courbes décrites par le point $(x, \dot x)$ dans le
+\emph{plan de phase}. Pour un système conservatif, chaque courbe est une
+ligne de niveau $\tfrac12 m\dot x^2 +
+E_p(x) = E_m$~: courbes fermées autour des équilibres stables
+(oscillations), courbes ouvertes pour un mouvement libre, et, passant
+par les équilibres instables, les \emph{séparatrices} qui distinguent
+les deux. Les courbes sont parcourues dans le sens des aiguilles d'une
+montre ($\dot x > 0$ signifie $x$ croissant) et ne se coupent jamais.
+\end{definition}
+
+\begin{omfigure}
+\begin{tikzpicture}
+\begin{axis}[omaxis, width=11cm, height=6.2cm, xlabel={$\theta$}, ylabel={$\dot\theta/\omega_0$},
+    xmin=-7.2, xmax=7.2, ymin=-2.6, ymax=2.6, xtick={-6.283,-3.1416,0,3.1416,6.283},
+    xticklabels={$-2\pi$,$-\pi$,$0$,$\pi$,$2\pi$}, ytick={-2,2}]
+  % closed curves: thetadot^2 = 2(e - (1 - cos theta)) with e<2 ; thetadot = ±sqrt(2(e-1+cos))
+  \foreach \e/\tm in {0.3/0.795, 1.0/1.5708, 1.7/2.346} {
+    \foreach \sh in {0, 6.2832, -6.2832} {
+      \addplot[omDef, thick, domain=-\tm:\tm, samples=200] ({x+\sh},{sqrt(max(0,2*(\e-1+cos(deg(x)))))});
+      \addplot[omDef, thick, domain=-\tm:\tm, samples=200] ({x+\sh},{-sqrt(max(0,2*(\e-1+cos(deg(x)))))});
+    }
+  }
+  % separatrix e=2
+  \addplot[omThm, thick, domain=-7.2:7.2, samples=400] {sqrt(2*(1+cos(deg(x))))};
+  \addplot[omThm, thick, domain=-7.2:7.2, samples=400] {-sqrt(2*(1+cos(deg(x))))};
+  % rotations e=2.5, 3.2
+  \foreach \e in {2.6,3.4} {
+    \addplot[omProp, thick, domain=-7.2:7.2, samples=300] {sqrt(2*(\e-1+cos(deg(x))))};
+    \addplot[omProp, thick, domain=-7.2:7.2, samples=300] {-sqrt(2*(\e-1+cos(deg(x))))};
+  }
+  \fill (axis cs:0,0) circle (1.5pt); \fill (axis cs:3.1416,0) circle (1.5pt); \fill (axis cs:-3.1416,0) circle (1.5pt);
+\end{axis}
+\end{tikzpicture}
+
+{\small \omterm{def:b1:work-and-energy:phase}{Portrait de phase} du \omterm{ex:b1:newton-dynamics:pendulum}{pendule simple}, $\tfrac12\dot\theta^2 +
+\omega_0^2(1 - \cos\theta) = \text{const}$. Courbes fermées (en bleu)~:
+oscillations autour de l'équilibre stable $\theta = 0$~; courbes
+ouvertes (en orange)~: rotations complètes~; entre les deux, la
+séparatrice (en rouge) qui passe par les équilibres instables
+$\theta = \pm\pi$, mouvement qui atteint tout juste le sommet.}
+\end{omfigure}
+
+\begin{example}[Le paysage du pendule]\label{ex:b1:work-and-energy:pendulum}
+$E_p = -mg\ell\cos\theta$~: minimum en $\theta = 0$, $E_p'' = mg\ell$, donc
+$\omega_0^2 = g\ell/(m\ell^2) = g/\ell$ --- le résultat des \omterm{prop:b1:work-and-energy:stability}{petites
+oscillations} de l'\cref{ex:b1:newton-dynamics:pendulum}, lu sur la
+courbure du puits~; maximum en $\theta = \pi$, le pendule renversé,
+instable. Pour une énergie $E_m < mg\ell$~: oscillation entre
+$\pm\theta_{\max}$~; pour $E_m > mg\ell$~: il passe le sommet et
+tourne~; pour $E_m = mg\ell$~: la séparatrice, une approche
+infiniment lente du sommet.
+\end{example}
+
+\section{Exercices}
+
+\begin{exercise}[$\star$]\label{exo:b1:work-and-energy:1}
+Une caisse de \qty{20}{kg} est soulevée de \qty{3.0}{m} à vitesse
+constante en \qty{5.0}{s}. \omterm{def:b1:work-and-energy:work}{Travail} de la force de levage, \omterm{def:b1:work-and-energy:work}{travail} du
+poids, puissance fournie. La même caisse poussée sur \qty{3.0}{m} le
+long d'un sol de coefficient $\mu_d = 0.30$~: \omterm{def:b1:work-and-energy:work}{travail} du frottement.
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b1:work-and-energy:2}
+\omterm{thm:b1:work-and-energy:ke}{Énergie cinétique} d'une voiture de \qty{1000}{kg} à \qty{100}{km/h}~;
+distance d'arrêt avec une force de freinage constante de \qty{7.0}{kN}~;
+qu'advient-il de cette distance si la vitesse double~?
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b1:work-and-energy:3}
+Un ressort de raideur \qty{500}{N/m} est comprimé de \qty{10}{cm} puis
+relâché contre une bille de \qty{50}{g} sur un rail horizontal sans
+frottement. Énergie stockée~; vitesse de la bille.
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b1:work-and-energy:4}
+Un pendule de longueur \qty{1.0}{m} est lâché sans vitesse à $60^\circ$~:
+vitesse en bas par l'énergie~; puis, par la loi de Newton, la tension en
+ce point (en unités de $mg$).
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b1:work-and-energy:5}
+Un bloc part du repos sur une pente à $30^\circ$ de hauteur \qty{2.0}{m},
+avec $\mu_d = 0.20$. Vitesse en bas par le théorème de l'énergie~;
+fraction de l'\omterm{def:b1:work-and-energy:conservative}{énergie potentielle} initiale perdue par frottement.
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b1:work-and-energy:6}
+À l'aide de $E_p = -GMm/r$, montrer que la vitesse nécessaire pour
+échapper à l'attraction terrestre depuis la surface vaut
+$v_e = \sqrt{2GM/R}$, et la calculer ($M = \qty{5.97e24}{kg}$,
+$R = \qty{6.37e6}{m}$). Quelle est la vitesse de libération d'un astre de
+même masse volumique et de rayon double~?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b1:work-and-energy:7}
+Saut à l'élastique~: un sauteur de \qty{70}{kg}, câble de longueur à
+vide \qty{20}{m} et de raideur \qty{50}{N/m}, s'élance sans vitesse.
+Trouver l'allongement maximal du câble, la hauteur totale de chute et la
+tension maximale (en unités du poids). Où la vitesse est-elle la plus
+grande~?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b1:work-and-energy:8}
+Un cycliste (\qty{80}{kg} avec le vélo) gravit une pente de $5\%$ à
+\qty{5.0}{m/s} contre une traînée $\tfrac12\rho C_xSv^2$ avec
+$C_xS = \qty{0.50}{m^2}$. Puissance contre la pesanteur, contre la
+traînée, au total.
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b1:work-and-energy:9}
+Un point de masse $m$ a pour \omterm{def:b1:work-and-energy:conservative}{énergie potentielle}
+$E_p(x) = E_0[(x/a)^4 - 2(x/a)^2]$. Trouver les équilibres et leur
+stabilité, la profondeur des puits, et la \omterm{def:b1:wave-propagation:signal}{pulsation} des \omterm{prop:b1:work-and-energy:stability}{petites
+oscillations} autour d'un équilibre stable.
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b1:work-and-energy:10}
+Pour l'oscillateur harmonique $E_p = \tfrac12 kx^2$, montrer que les
+courbes de phase sont des ellipses, donner leurs demi-axes pour une
+énergie $E$, et expliquer pourquoi elles sont toutes parcourues en le
+même temps.
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b1:work-and-energy:11}
+Un petit objet part du repos au sommet d'une demi-sphère sans frottement
+de rayon $R$. À l'aide de l'énergie et de la loi de Newton, trouver
+l'angle par rapport à la verticale auquel il quitte la surface, la
+hauteur correspondante et sa vitesse à cet instant.
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b1:work-and-energy:12}
+Une voiture à \qty{90}{km/h} s'arrête en \qty{80}{m} en dérapant, roues
+bloquées. Trouver $\mu_d$ par l'énergie. Où est passée l'énergie~?
+Pourquoi un système antiblocage (roues qui continuent de rouler)
+arrête-t-il plus court~?
+\end{exercise}
+
+\section{Problème~: le puits d'énergie d'une liaison chimique}
+
+\begin{problem}[{Problème du week-end --- deux atomes, une courbe~:
+l'énergie potentielle d'une liaison lue comme un paysage --- son fond,
+ses parois, les petites vibrations tout en bas, et l'énergie qu'il faut
+pour en sortir}]
+\label{pb:b1:work-and-energy:1}
+L'interaction des deux atomes d'une molécule diatomique est modélisée
+par l'\omterm{def:b1:work-and-energy:conservative}{énergie potentielle}
+\[
+E_p(r) = \epsilon\left[\left(\frac{\sigma}{r}\right)^{12} - 2\left(\frac{\sigma}{r}\right)^{6}\right],
+\]
+où $r$ est la distance entre les noyaux. Pour le chlorure d'hydrogène,
+on prend $\epsilon = \qty{4.4}{eV}$ et $\sigma = \qty{0.127}{nm}$, et
+l'on fait bouger l'atome d'hydrogène léger ($m = \qty{1.67e-27}{kg}$)
+tandis que le chlore, lourd, reste immobile.
+$\qty{1}{eV} = \qty{1.60e-19}{J}$~; $k_B = \qty{1.38e-23}{J/K}$~;
+$N_A = \num{6.02e23}$.
+
+\medskip
+\noindent\textbf{Partie I --- Le paysage.}
+\begin{enumerate}
+  \item Donner les limites de $E_p$ quand $r \to 0$ et $r \to \infty$, et
+        esquisser la courbe.
+  \item Montrer que $E_p$ n'a qu'un seul minimum, en $r = \sigma$, de
+        valeur $-\epsilon$.
+  \item Avec $u = (\sigma/r)^6$, montrer que $E_p = \epsilon(u^2 - 2u)$~:
+        une parabole en $u$. En retrouver le minimum.
+  \item Exprimer la force $F(r)$ (positive si elle est répulsive) et
+        donner son signe de part et d'autre de $\sigma$.
+  \item Calculer $E_p$ et $F$ en $r = 1.2\sigma$ (en eV et en nN).
+  \item Quelle est l'énergie de dissociation de la molécule, en eV et en
+        \unit{kJ/mol}~? (Énergie de liaison mesurée de HCl~: \qty{431}{kJ/mol}.)
+  \item Vérifier le critère de stabilité en $r = \sigma$~: calculer
+        $E_p''(\sigma)$.
+\end{enumerate}
+
+\medskip
+\noindent\textbf{Partie II --- Les petites vibrations.}
+\begin{enumerate}[resume]
+  \item Écrire le développement de Taylor à l'ordre deux de $E_p$ autour
+        de $\sigma$ et identifier une raideur effective $k$.
+  \item Calculer $k$ (en \unit{N/m}).
+  \item En déduire la \omterm{def:b1:wave-propagation:signal}{pulsation}, la fréquence et la \omterm{prop:b1:wave-propagation:sinusoidal}{longueur d'onde} de
+        la vibration, ainsi que son \omterm{prop:b1:wave-propagation:sinusoidal}{nombre d'onde} $1/\lambda$ en \unit{cm^{-1}}.
+  \item La vibration mesurée de HCl est à \qty{2990}{cm^{-1}}. Commenter
+        l'accord et ce que le modèle capture correctement.
+  \item À \qty{300}{K}, l'énergie de vibration moyenne est de l'ordre de
+        $k_BT$. Estimer l'\omterm{def:b1:wave-propagation:signal}{amplitude} de la vibration et la comparer à $\sigma$.
+  \item En déduire la vitesse maximale de l'atome d'hydrogène dans cette
+        vibration.
+\end{enumerate}
+
+\medskip
+\noindent\textbf{Partie III --- Grandes oscillations et sortie du puits.}
+\begin{enumerate}[resume]
+  \item Décrire le \omterm{def:b1:work-and-energy:phase}{portrait de phase}~: quelles énergies donnent des
+        courbes fermées, lesquelles des courbes ouvertes, et qu'est-ce
+        qui les sépare~?
+  \item Pour $E_m = -\epsilon/2$, trouver les deux \omterm{def:b1:work-and-energy:turning}{points de
+        rebroussement} (en unités de $\sigma$).
+  \item Montrer que leur milieu est au-delà de $\sigma$, et expliquer
+        pourquoi chauffer (élever l'énergie de vibration) fait croître la
+        longueur moyenne de la liaison --- l'origine de la dilatation
+        thermique.
+  \item La période des grandes oscillations est-elle plus longue ou plus
+        courte que $2\pi/\omega_0$~? Argumenter à partir de la forme des
+        parois.
+  \item Depuis $E_m = -\epsilon/2$, quelle énergie faut-il fournir pour
+        dissocier la molécule~? Si on la donne sous forme d'\omterm{thm:b1:work-and-energy:ke}{énergie
+        cinétique} de l'atome d'hydrogène en $r = \sigma$, quelle vitesse
+        cela représente-t-il~?
+  \item Deux atomes qui s'approchent de loin avec une énergie totale
+        positive ne peuvent pas former d'eux-mêmes une molécule liée.
+        Pourquoi~? Que faut-il~?
+\end{enumerate}
+
+\medskip
+\noindent\textbf{Partie IV --- \omterm{def:b1:work-and-energy:work}{Travail}, force et température.}
+\begin{enumerate}[resume]
+  \item Calculer le \omterm{def:b1:work-and-energy:work}{travail} de la force de liaison lorsque $r$ passe de
+        $2\sigma$ à $\sigma$. Est-elle motrice ou résistante sur ce trajet~?
+  \item Calculer le \omterm{def:b1:work-and-energy:work}{travail} qu'un opérateur extérieur doit fournir pour
+        étirer la liaison de $\sigma$ à $1.5\sigma$ à vitesse
+        infiniment lente.
+  \item Calculer $F$ en $r = 0.9\sigma$ et comparer à $r = 1.2\sigma$~:
+        que dit cette dissymétrie sur la compression face à l'étirement~?
+  \item À quelle température $k_BT$ égalerait-il $\epsilon$~? Pourquoi
+        les molécules se dissocient-elles en pratique à des températures
+        bien plus basses~?
+  \item Un meilleur modèle (celui de Morse) change la forme des parois
+        mais garde un minimum à la longueur de liaison. Lesquels des
+        résultats ci-dessus survivent tels quels dans leur méthode, et
+        quels nombres changeraient~?
+  \item Récapituler les trois usages faits des méthodes énergétiques~:
+        trouver l'équilibre, trouver la fréquence de vibration, et
+        trouver ce qu'il faut pour s'échapper.
+\end{enumerate}
+\end{problem}

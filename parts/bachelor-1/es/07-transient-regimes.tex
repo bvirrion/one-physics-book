@@ -1,0 +1,544 @@
+\chapter{Regímenes transitorios: primer y segundo orden}\label{ch:b1:transient-regimes}
+
+Basta empujar hacia abajo la esquina de un coche aparcado y soltar. Un
+coche en buen estado sube una vez y se detiene; un coche con los
+amortiguadores gastados cabecea dos o tres veces antes de calmarse. En un
+laboratorio de electrónica aparecen esos mismos dos comportamientos en un
+osciloscopio cuando un condensador se descarga a través de una bobina: un
+retorno suave, o una oscilación que se extingue. Ambos son el
+\emph{transitorio} entre un \omterm{def:b1:transient-regimes:firstorder}{régimen permanente} y otro, y ambos obedecen la
+misma pequeña familia de ecuaciones diferenciales lineales --- de primer
+orden para un único almacén de energía, de segundo orden para dos que
+intercambian. Este capítulo las resuelve de una vez por todas, nombra sus
+parámetros (\omterm{def:b1:transient-regimes:firstorder}{constante de tiempo}, frecuencia propia, \omterm{def:b1:transient-regimes:secondorder}{factor de calidad}) y
+muestra cómo los mismos números describen un circuito y una suspensión.
+
+\begin{omfigure}
+\includegraphics[width=0.60\linewidth]{images/book3/ai/b3-07-rlc-breadboard-oscilloscope.png}
+
+{\small Una bobina, un condensador y un \omterm{def:b1:dc-circuits:resistor}{resistor} sobre una placa de pruebas, y en el osciloscopio la oscilación amortiguada que sigue a un escalón: el \omterm{thm:b1:transient-regimes:regimes}{régimen seudoperiódico} de este capítulo.}
+\end{omfigure}
+
+\section{Sistemas de primer orden}
+
+\begin{definition}[Sistema lineal de primer orden]\label{def:b1:transient-regimes:firstorder}
+\index{sistema de primer orden}\index{constante de tiempo}\index{régimen transitorio}\index{régimen permanente}
+Una magnitud $x(t)$ obedece una \emph{ecuación lineal de primer orden con
+coeficientes constantes} cuando
+\[
+\tau\,\frac{\dd x}{\dd t} + x = x_\infty ,
+\]
+con $\tau > 0$ la \emph{constante de tiempo} y $x_\infty$ una constante (el
+valor impuesto por la fuente). Su \emph{régimen permanente} es
+$x = x_\infty$; el \emph{régimen transitorio} es la aproximación a él
+desde el valor inicial $x(0) = x_0$.
+\end{definition}
+
+\begin{theorem}[Solución]\label{thm:b1:transient-regimes:firstorder}
+La única solución con $x(0) = x_0$ es
+\[
+x(t) = x_\infty + (x_0 - x_\infty)\,\eu^{-t/\tau} .
+\]
+La distancia al \omterm{def:b1:transient-regimes:firstorder}{régimen permanente} se reduce en el factor $\eu^{-1} \approx
+0.37$ cada $\tau$: se ha recorrido el $63\%$ del camino en $\tau$, el
+$95\%$ en $3\tau$ y el $99\%$ en $4.6\tau$. La tangente en el origen
+alcanza $x_\infty$ en $t = \tau$.
+\end{theorem}
+
+\begin{proof}
+$y = x - x_\infty$ obedece $\tau y' + y = 0$, cuyas soluciones son
+$y = K\eu^{-t/\tau}$ (el curso de matemáticas sobre ecuaciones
+diferenciales lineales demuestra que no hay otras); $K = x_0 - x_\infty$.
+La pendiente en $0$ vale $-(x_0 - x_\infty)/\tau$, que cerraría la
+distancia en un tiempo $\tau$.
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}
+\begin{axis}[omaxis, width=9.4cm, height=5.4cm, xlabel={$t$}, ylabel={$x$},
+    xmin=0, xmax=5, ymin=0, ymax=1.35, xtick={1,2,3,4,5},
+    xticklabels={$\tau$,$2\tau$,$3\tau$,$4\tau$,$5\tau$},
+    ytick={0.632,1}, yticklabels={$0.63$,$x_\infty$}]
+  \addplot[omExo, dashed, domain=0:5, samples=2] {1};
+  \addplot[omExo, dashed, domain=0:1, samples=2] {x};
+  \addplot[omDef, thick, domain=0:5, samples=100] {1 - exp(-x)};
+  \draw[dashed, omExo] (axis cs:1,0) -- (axis cs:1,0.632) -- (axis cs:0,0.632);
+  \draw[dashed, omExo] (axis cs:3,0) -- (axis cs:3,0.95);
+  \node[omExo, below right, font=\footnotesize] at (axis cs:3,0.95) {$0.95\,x_\infty$};
+  \node[omDef, font=\footnotesize, below right] at (axis cs:2.2,0.75) {$x_\infty(1 - \eu^{-t/\tau})$};
+\end{axis}
+\end{tikzpicture}
+
+{\small La respuesta de primer orden a un escalón desde $x_0 = 0$: la
+tangente inicial corta la asíntota en $t = \tau$; el $63\%$ del camino en
+$\tau$ y el $95\%$ en $3\tau$. Todo transitorio de primer orden es esta
+curva, dilatada por $\tau$ y desplazada por $x_0$ y $x_\infty$.}
+\end{omfigure}
+
+\begin{proposition}[Circuitos RC y RL]\label{prop:b1:transient-regimes:rcrl}
+\index{circuito RC}\index{circuito RL}
+Un condensador $C$ que se carga a través de un \omterm{def:b1:dc-circuits:resistor}{resistor} $R$ desde una
+fuente ideal $E$ obedece $RC\,\dd u_C/\dd t + u_C = E$: $\tau = RC$,
+$u_{C,\infty} = E$. Una bobina $L$ en serie con $R$ sometida a $E$ obedece $(L/R)\,\dd i/\dd t + i =
+E/R$: $\tau = L/R$, $i_\infty = E/R$. Retirada la fuente ($E \to 0$), esas
+mismas ecuaciones describen la descarga hacia cero.
+\end{proposition}
+
+\begin{proof}
+\omterm{thm:b1:dc-circuits:kirchhoff}{Ley de las mallas} $E = Ri + u_C$ con $i = C\,\dd u_C/\dd t$; \omterm{thm:b1:dc-circuits:kirchhoff}{ley de las
+mallas} $E = Ri + L\,\dd i/\dd t$.
+\end{proof}
+
+\begin{proposition}[Condiciones de continuidad]\label{prop:b1:transient-regimes:continuity}
+\index{continuidad (de $u_C$, de $i_L$)}
+La tensión en bornes de un condensador y la corriente por una bobina son
+funciones continuas del tiempo: en un instante de conmutación $t_0$,
+$u_C(t_0^+) = u_C(t_0^-)$ e $i_L(t_0^+) = i_L(t_0^-)$. Las corrientes en
+los \omterm{def:b1:dc-circuits:resistor}{resistores} y las tensiones en las bobinas sí pueden saltar.
+\end{proposition}
+
+\begin{proof}
+Un salto de $u_C$ exigiría $i = C\,\dd u_C/\dd t$ infinita, y un salto de
+$i_L$ exigiría $u = L\,\dd i/\dd t$ infinita; ambas cosas son imposibles
+en un circuito de tensiones y corrientes finitas (dicho de otro modo, las
+energías almacenadas $\tfrac12 Cu_C^2$ y $\tfrac12 Li^2$ no pueden cambiar
+instantáneamente sin una potencia infinita).
+\end{proof}
+
+\begin{method}[Resolver un transitorio de primer orden]\label{met:b1:transient-regimes:first}
+\begin{enumerate}
+  \item Escríbanse las leyes de mallas y de nudos después de la
+        conmutación, junto con las leyes de los componentes; redúzcase a
+        una única ecuación en $u_C$ o en $i_L$ y pásese a la forma
+        $\tau x' + x = x_\infty$; léanse $\tau$ y $x_\infty$ (este último
+        es también el \omterm{def:b1:transient-regimes:firstorder}{régimen permanente} que se obtiene sustituyendo $C$
+        por un circuito abierto y $L$ por un hilo).
+  \item Hállese $x_0$ por la continuidad de $u_C$ o de $i_L$ en el
+        instante de conmutación, usando el circuito \emph{anterior} a ella.
+  \item Escríbase $x = x_\infty + (x_0 - x_\infty)\eu^{-t/\tau}$; dedúzcanse
+        las demás magnitudes por derivación y por la \omterm{thm:b1:dc-circuits:kirchhoff}{ley de las mallas}.
+\end{enumerate}
+Cuando el condensador ve una red de \omterm{def:b1:dc-circuits:resistor}{resistores} y fuentes, sustitúyase
+antes esa red por su equivalente de Thévenin $(E_{\mathrm{Th}}, R_{\mathrm{Th}})$
+(\cref{ch:b1:dc-circuits}): $\tau = R_{\mathrm{Th}}C$,
+$u_\infty = E_{\mathrm{Th}}$.
+\end{method}
+
+\begin{proposition}[Balance energético de la carga RC]\label{prop:b1:transient-regimes:rcenergy}
+Al cargar un condensador de $0$ a $E$ a través de un \omterm{def:b1:dc-circuits:resistor}{resistor} $R$
+cualquiera, la fuente aporta $CE^2$, el condensador almacena
+$\tfrac12 CE^2$ y el \omterm{def:b1:dc-circuits:resistor}{resistor} disipa el otro $\tfrac12 CE^2$ --- sea cual sea $R$.
+\end{proposition}
+
+\begin{proof}
+$i = (E/R)\eu^{-t/\tau}$; la fuente aporta $\int_0^\infty Ei\,\dd t
+= E \cdot (E/R)\tau = CE^2$; el \omterm{def:b1:dc-circuits:resistor}{resistor} toma $\int_0^\infty Ri^2\,\dd t
+= (E^2/R)\int_0^\infty \eu^{-2t/\tau}\dd t = (E^2/R)(\tau/2) = \tfrac12 CE^2$;
+la diferencia es la energía almacenada $\tfrac12 CE^2$. Una $R$ menor
+disipa la misma energía más deprisa.
+\end{proof}
+
+\begin{example}[La bobina de un relé]\label{ex:b1:transient-regimes:relay}
+$L = \qty{20}{mH}$, $R = \qty{5.0}{\ohm}$, $E = \qty{10}{V}$: $\tau =
+\qty{4.0}{ms}$, $i_\infty = \qty{2.0}{A}$; los contactos se cierran cuando
+$i$ llega a \qty{1.5}{A}, es decir en $t = -\tau\ln(1 - 0.75) =
+\qty{5.5}{ms}$. Al abrir el circuito, $i$ debe caer desde \qty{2}{A}; un
+diodo de rueda libre en paralelo con la bobina le ofrece un camino a
+través de $R$ solo, con $\tau = \qty{4}{ms}$, en vez de una chispa.
+\end{example}
+
+\section{Sistemas de segundo orden}
+
+\begin{definition}[Forma canónica de segundo orden]\label{def:b1:transient-regimes:secondorder}
+\index{sistema de segundo orden}\index{frecuencia angular propia}\index{factor de calidad}\index{factor de amortiguamiento}
+Una magnitud $x(t)$ es un \emph{sistema lineal de segundo orden} cuando
+\[
+\frac{\dd^2 x}{\dd t^2} + \frac{\omega_0}{Q}\,\frac{\dd x}{\dd t} + \omega_0^2\,x
+= \omega_0^2\,x_\infty ,
+\]
+con $\omega_0 > 0$ la \emph{\omterm{def:b1:wave-propagation:signal}{frecuencia angular} propia}, $Q > 0$ el
+\emph{factor de calidad} (\omterm{def:b1:units-dimensions:dimension}{adimensional}) y $x_\infty$ el \omterm{def:b1:transient-regimes:firstorder}{régimen
+permanente}. También se escribe $\omega_0/Q = 2\xi\omega_0$, con
+$\xi = 1/2Q$ el \emph{factor de amortiguamiento}.
+\end{definition}
+
+\begin{proposition}[El circuito RLC serie]\label{prop:b1:transient-regimes:rlc}
+\index{circuito RLC}
+Un condensador $C$, una bobina $L$ y un \omterm{def:b1:dc-circuits:resistor}{resistor} $R$ en serie sometidos a
+una fuente $E$: la tensión del condensador obedece la forma canónica con
+\[
+\omega_0 = \frac{1}{\sqrt{LC}}, \qquad Q = \frac{1}{R}\sqrt{\frac{L}{C}},
+\qquad u_{C,\infty} = E .
+\]
+\end{proposition}
+
+\begin{proof}
+\omterm{thm:b1:dc-circuits:kirchhoff}{Ley de las mallas}: $E = L\,\dd i/\dd t + Ri + u_C$ con $i = C\,\dd u_C/\dd t$:
+$LC\,u_C'' + RC\,u_C' + u_C = E$; divídase por $LC$ e identifíquense
+$\omega_0^2 = 1/LC$ y $\omega_0/Q = R/L$.
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}[font=\small]
+  \draw (0,0) to[battery1, l=$E$, invert] (0,2.6) to[R=$R$] (2.4,2.6) to[L=$L$, i=$i$] (4.8,2.6) -- (4.8,2.6) to[C=$C$, v=$u_C$] (4.8,0) -- (0,0);
+  \begin{scope}[xshift=7.6cm]
+    \draw[thick] (0,0) -- (0,3.4);
+    \fill[pattern=north east lines] (-0.25,0) rectangle (0,3.4);
+    % spring
+    \draw[thick] (0,2.6) -- (0.4,2.6) \foreach \i in {0,...,5} {-- ++(0.2,0.25) -- ++(0.2,-0.5) -- ++(0.2,0.25)} -- (3.3,2.6);
+    % damper
+    \draw[thick] (0,0.8) -- (1.2,0.8);
+    \draw[thick] (1.2,0.5) -- (1.2,1.1) -- (2.2,1.1); \draw[thick] (1.2,0.5) -- (2.2,0.5);
+    \draw[thick] (1.9,0.6) -- (1.9,1.0); \draw[thick] (1.9,0.8) -- (3.3,0.8);
+    \draw[thick, fill=omDef!15] (3.3,0.2) rectangle (4.5,3.2); \node at (3.9,1.7) {$m$};
+    \draw[-Stealth] (3.9,3.5) -- (5.2,3.5) node[right] {$x$};
+    \node at (1.7,3.15) {$k$}; \node at (1.7,0.1) {$\alpha$};
+  \end{scope}
+\end{tikzpicture}
+
+{\small Las dos caras del \omterm{def:b1:transient-regimes:secondorder}{sistema de segundo orden}: el \omterm{prop:b1:transient-regimes:rlc}{circuito RLC} serie
+($\omega_0 = 1/\sqrt{LC}$, $Q = \sqrt{L/C}/R$) y el conjunto
+masa--resorte--amortiguador ($\omega_0 = \sqrt{k/m}$, $Q = \sqrt{km}/\alpha$).
+La misma ecuación y los mismos tres regímenes.}
+\end{omfigure}
+
+\begin{proposition}[El oscilador mecánico]\label{prop:b1:transient-regimes:mechanical}
+\index{masa--resorte--amortiguador}\index{analogía electromecánica}
+Una masa $m$ sobre un resorte de rigidez $k$ con un amortiguador viscoso
+de coeficiente $\alpha$ (fuerza $-\alpha\dot x$), separada $x$ de la
+posición de equilibrio, obedece $m\ddot x + \alpha\dot x + kx = 0$: la
+forma canónica con
+\[
+\omega_0 = \sqrt{\frac{k}{m}}, \qquad Q = \frac{\sqrt{km}}{\alpha} .
+\]
+La correspondencia $x \leftrightarrow q$, $\dot x \leftrightarrow i$,
+$m \leftrightarrow L$, $\alpha \leftrightarrow R$, $k \leftrightarrow 1/C$
+lleva todo resultado de un sistema al otro.
+\end{proposition}
+
+\begin{proof}
+La segunda ley de Newton (\cref{ch:b1:newton-dynamics}) con la fuerza del
+resorte $-kx$ y la fuerza de amortiguamiento; divídase por $m$.
+\end{proof}
+
+\begin{theorem}[Los tres regímenes]\label{thm:b1:transient-regimes:regimes}
+\index{régimen aperiódico}\index{régimen crítico}\index{régimen seudoperiódico}\index{seudoperiodo}
+Las soluciones de la ecuación homogénea $x'' + (\omega_0/Q)x' +
+\omega_0^2 x = 0$ las gobiernan las raíces de $r^2 + (\omega_0/Q)r +
+\omega_0^2 = 0$, de discriminante $\Delta = \omega_0^2(1/Q^2 - 4)$:
+\begin{itemize}
+  \item $Q < \tfrac12$, \emph{aperiódico}: dos raíces reales negativas
+        $r_\pm = -\frac{\omega_0}{2Q}\big(1 \mp \sqrt{1 - 4Q^2}\big)$,
+        $x = A\eu^{r_+t} + B\eu^{r_-t}$, un retorno sin oscilación;
+  \item $Q = \tfrac12$, \emph{crítico}: una raíz doble $r = -\omega_0$,
+        $x = (A + Bt)\eu^{-\omega_0 t}$, el retorno más rápido sin
+        sobreoscilación;
+  \item $Q > \tfrac12$, \emph{seudoperiódico}: raíces complejas
+        $r = -1/\tau \pm \iu\omega$ con
+        \[
+        \tau = \frac{2Q}{\omega_0}, \qquad
+        \omega = \omega_0\sqrt{1 - \frac{1}{4Q^2}},
+        \qquad
+        x = \eu^{-t/\tau}\big(A\cos\omega t + B\sin\omega t\big),
+        \]
+        una oscilación amortiguada de \emph{seudoperiodo} $T = 2\pi/\omega$
+        dentro de la envolvente $\pm\sqrt{A^2 + B^2}\,\eu^{-t/\tau}$.
+\end{itemize}
+La solución completa con segundo miembro constante es $x_\infty$ más la
+solución homogénea; $A$ y $B$ se obtienen de $x(0)$ y $x'(0)$.
+\end{theorem}
+
+\begin{proof}
+Ecuación característica de una ecuación lineal con coeficientes constantes
+(curso de matemáticas, ecuaciones lineales de segundo orden): las raíces
+son $r = -\omega_0/2Q \pm \tfrac12\sqrt\Delta$. Para $Q > \tfrac12$,
+$\sqrt\Delta = \iu\omega_0\sqrt{4 - 1/Q^2}$, lo que da la parte real
+$-\omega_0/2Q = -1/\tau$ y la parte imaginaria $\pm\omega_0\sqrt{1 - 1/4Q^2}$;
+las soluciones reales son las combinaciones de $\eu^{-t/\tau}\cos\omega t$
+y $\eu^{-t/\tau}\sin\omega t$.
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}
+\begin{axis}[omaxis, width=11.5cm, height=6cm, xlabel={$\omega_0 t$}, ylabel={$x/x_\infty$},
+    xmin=0, xmax=16, ymin=0, ymax=1.75, xtick={0,5,10,15}, ytick={0.5,1,1.5},
+    legend style={at={(0.97,0.97)}, anchor=north east, font=\footnotesize, draw=none, fill=none}]
+  % Q=0.2: roots r = -(1/(2Q))(1 -/+ sqrt(1-4Q^2)) = -2.5(1 -/+ 0.6) = -1, -4 ; x = 1 - (4 e^{-t} - e^{-4t})/3
+  \addplot[omProp, thick, domain=0:16, samples=200] {1 - (4*exp(-x) - exp(-4*x))/3};
+  \addlegendentry{$Q = 0.2$ (aperiodic)}
+  \addplot[omThm, thick, domain=0:16, samples=200] {1 - (1 + x)*exp(-x)};
+  \addlegendentry{$Q = 0.5$ (critical)}
+  % Q=3: tau=6, w = sqrt(1-1/36)=0.986 ; x = 1 - e^{-t/6}(cos wt + sin wt /(6 w))
+  \addplot[omDef, thick, domain=0:16, samples=400] {1 - exp(-x/6)*(cos(deg(0.986*x)) + sin(deg(0.986*x))/(6*0.986))};
+  \addlegendentry{$Q = 3$ (pseudo-periodic)}
+  \addplot[omExo, dashed, domain=0:16, samples=2] {1};
+\end{axis}
+\end{tikzpicture}
+
+{\small Respuesta a un escalón, partiendo del reposo, de un \omterm{def:b1:transient-regimes:secondorder}{sistema de
+segundo orden}, para tres \omterm{def:b1:transient-regimes:secondorder}{factores de calidad}. $Q$ pequeño: una subida
+lenta; $Q = \tfrac12$: el retorno más rápido sin sobreoscilación; $Q$
+grande: una oscilación que dura alrededor de $Q$ periodos.}
+\end{omfigure}
+
+\begin{proposition}[Leer $Q$ en un registro seudoperiódico]\label{prop:b1:transient-regimes:decrement}
+\index{decremento logarítmico}
+En \omterm{thm:b1:transient-regimes:regimes}{régimen seudoperiódico}, dos máximos sucesivos están en la razón
+$x_{n+1}/x_n = \eu^{-T/\tau}$; el \emph{\omterm{prop:b1:transient-regimes:decrement}{decremento logarítmico}}
+\[
+\delta = \ln\frac{x_n}{x_{n+1}} = \frac{T}{\tau} = \frac{\pi}{Q\sqrt{1 - 1/4Q^2}}
+\approx \frac{\pi}{Q} \quad (Q \gg 1)
+\]
+da $Q$; el número de oscilaciones visibles antes de que la \omterm{def:b1:wave-propagation:signal}{amplitud} baje
+del $5\%$ es del orden de $Q$. Para $Q \gg 1$, $\omega \approx \omega_0$
+y $T \approx 2\pi/\omega_0$.
+\end{proposition}
+
+\begin{proof}
+La envolvente $\eu^{-t/\tau}$ se multiplica por $\eu^{-T/\tau}$ en cada
+periodo; $T/\tau = (2\pi/\omega)(\omega_0/2Q)$. La envolvente llega a $\eu^{-3}
+\approx 5\%$ en $3\tau = 6Q/\omega_0 \approx Q\,T$, es decir al cabo de
+unos $Q$ periodos.
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}
+\begin{axis}[omaxis, width=11.5cm, height=5.6cm, xlabel={$t$}, ylabel={$x$},
+    xmin=0, xmax=12.5, ymin=-1.2, ymax=1.3, xtick={2,4,6,8,10,12},
+    xticklabels={$T$,$2T$,$3T$,$4T$,$5T$,$6T$}, ytick={-1,1}, yticklabels={$-x_0$,$x_0$}]
+  \addplot[omExo, dashed, domain=0:12.5, samples=60] {exp(-x/5)};
+  \addplot[omExo, dashed, domain=0:12.5, samples=60] {-exp(-x/5)};
+  \addplot[omDef, thick, domain=0:12.5, samples=500] {exp(-x/5)*cos(deg(pi*x))};
+  \fill[omThm] (axis cs:0,1) circle (1.4pt) node[above right, font=\footnotesize] {$x_0$};
+  \fill[omThm] (axis cs:2,0.670) circle (1.4pt) node[above right, xshift=2pt, yshift=3pt, font=\footnotesize] {$x_1 = x_0\eu^{-T/\tau}$};
+  \fill[omThm] (axis cs:4,0.449) circle (1.4pt) node[above right, xshift=2pt, yshift=3pt, font=\footnotesize] {$x_2$};
+\end{axis}
+\end{tikzpicture}
+
+{\small Decaimiento libre seudoperiódico, $x = x_0\eu^{-t/\tau}\cos\omega t$:
+los máximos sucesivos se reducen en el factor constante $\eu^{-T/\tau}$, y
+$\ln(x_n/x_{n+1}) = T/\tau \approx \pi/Q$ mide el \omterm{def:b1:transient-regimes:secondorder}{factor de calidad} a
+partir del registro.}
+\end{omfigure}
+
+\begin{example}[Una oscilación RLC]\label{ex:b1:transient-regimes:rlcnum}
+$L = \qty{10}{mH}$, $C = \qty{100}{nF}$, $R = \qty{100}{\ohm}$:
+$\omega_0 = 1/\sqrt{10^{-9}} = \qty{3.16e4}{rad/s}$ ($f_0 =
+\qty{5.03}{kHz}$), $Q = \sqrt{L/C}/R = 316/100 = 3.16$: seudoperiódico,
+$\tau = 2Q/\omega_0 = \qty{0.20}{ms}$, $\omega = 0.987\,\omega_0$,
+$T = \qty{0.20}{ms}$, tres oscilaciones visibles. La resistencia crítica
+vale $R_c = 2\sqrt{L/C} = \qty{632}{\ohm}$; por encima de ella la descarga
+es aperiódica.
+\end{example}
+
+\begin{method}[Resolver un transitorio de segundo orden]\label{met:b1:transient-regimes:second}
+\begin{enumerate}
+  \item Escríbase la ecuación; pásese a la forma canónica; léanse
+        $\omega_0$, $Q$ y $x_\infty$.
+  \item Decídase el régimen a partir de $Q$ y escríbase la solución
+        general como $x_\infty$ más la solución homogénea.
+  \item Hállense $x(0)$ y $x'(0)$ por la continuidad de $u_C$ y de $i_L$
+        (para el RLC: $u_C(0^+) = u_C(0^-)$ y $u_C'(0^+) = i(0^-)/C$);
+        despéjense las dos constantes.
+\end{enumerate}
+\end{method}
+
+\begin{example}[Condiciones iniciales]\label{ex:b1:transient-regimes:ic}
+El condensador del ejemplo anterior se carga a $U_0$ y, en $t = 0$, se
+cierra sobre $L$ y $R$ (sin fuente): $x_\infty = 0$, $u_C(0) = U_0$,
+$u_C'(0) = i(0)/C = 0$, pues la corriente de la bobina era nula. Por
+tanto $A = U_0$ y $-A/\tau + B\omega = 0$, $B = U_0/(\omega\tau) =
+U_0/\sqrt{4Q^2 - 1}$: $u_C = U_0\eu^{-t/\tau}[\cos\omega t + \sin(\omega
+t)/\sqrt{4Q^2 - 1}]$ --- para $Q \gg 1$, simplemente $U_0\eu^{-t/\tau}\cos\omega_0 t$,
+y la corriente $i = -C\,\dd u_C/\dd t$ tiene un máximo cercano a $U_0\sqrt{C/L} =
+U_0/(\omega_0 L)$.
+\end{example}
+
+\begin{remark}[Energía]\label{rem:b1:transient-regimes:energy}
+La energía almacenada $\tfrac12 Cu_C^2 + \tfrac12 Li^2$ (o $\tfrac12 kx^2
++ \tfrac12 m\dot x^2$) decrece a razón de $Ri^2$ ($\alpha\dot x^2$):
+derívese y úsese la ecuación. En cada seudoperiodo la energía se reduce en
+el factor $\eu^{-2T/\tau}$; con $Q = 3$ se pierde alrededor del $88\%$ por
+oscilación. Un $Q$ alto significa una fuga lenta comparada con la
+oscilación --- un buen reloj, una resonancia aguda
+(\cref{ch:b1:sinusoidal-impedance}) --- y un $Q$ bajo, un retorno rápido:
+lo que conviene a una suspensión o a la aguja de un aparato de medida.
+\end{remark}
+
+\section{Ejercicios}
+
+\begin{exercise}[$\star$]\label{exo:b1:transient-regimes:1}
+Un \omterm{prop:b1:transient-regimes:rcrl}{circuito RC}: $R = \qty{10}{k\ohm}$, $C = \qty{47}{nF}$, cargado desde
+$E$. Calcúlense $\tau$, $u_C(\tau)/E$ y el tiempo para llegar al $99\%$ de $E$.
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b1:transient-regimes:2}
+Un \omterm{prop:b1:transient-regimes:rcrl}{circuito RL}: $L = \qty{20}{mH}$, $R = \qty{5.0}{\ohm}$, $E = \qty{10}{V}$.
+Calcúlense $\tau$, la corriente final, la corriente en $t = \tau$ y la
+tensión en bornes de la bobina justo después de cerrar el interruptor.
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b1:transient-regimes:3}
+Un RLC serie: $L = \qty{10}{mH}$, $C = \qty{100}{nF}$, $R = \qty{100}{\ohm}$.
+Calcúlense $\omega_0$, $f_0$ y $Q$; nómbrese el régimen; dense $\tau$ y el
+seudoperiodo.
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b1:transient-regimes:4}
+Con los mismos $L$ y $C$, ¿qué resistencia da el \omterm{thm:b1:transient-regimes:regimes}{régimen crítico}? ¿Cuánto
+vale entonces $Q$? ¿Qué ocurre para $R = \qty{2}{k\ohm}$?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b1:transient-regimes:5}
+Un condensador cargado $C = \qty{1.0}{\micro F}$ se descarga a través de
+una $R$ desconocida; la tensión se reduce a la mitad cada \qty{3.5}{ms}.
+Muéstrese que el tiempo de semirreducción vale $\tau\ln 2$ y hállese $R$.
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b1:transient-regimes:6}
+Muéstrese por integración directa que cargar un condensador de $0$ a $E$ a
+través de $R$ disipa exactamente $\tfrac12 CE^2$ en $R$, con independencia
+de $R$. ¿En qué queda el rendimiento de la transferencia y cómo podría
+mejorarse?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b1:transient-regimes:7}
+En un osciloscopio, una descarga libre de un RLC muestra máximos
+sucesivos de \qty{2.0}{V}, \qty{1.5}{V} y \qty{1.12}{V} separados
+\qty{0.40}{ms}. Dedúzcanse $Q$, $\omega_0$ y, con
+$C = \qty{1.0}{\micro F}$, los valores de $L$ y $R$.
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b1:transient-regimes:8}
+Un condensador cargado a $U_0 = \qty{100}{V}$ ($C = \qty{10}{\micro F}$)
+se conmuta sobre una bobina $L = \qty{1.0}{mH}$ de resistencia pequeña
+($Q \gg 1$). Escríbanse $u_C(t)$ e $i(t)$, y estímese la corriente máxima.
+¿Dónde está la energía en ese máximo?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b1:transient-regimes:9}
+Un cuarto de coche: $m = \qty{400}{kg}$ sobre un resorte $k = \qty{2.0e4}{N/m}$.
+Calcúlense $\omega_0$, $f_0$ y el coeficiente de amortiguamiento crítico.
+Con un amortiguador $\alpha = \qty{2000}{N.s/m}$, dense $Q$, el régimen, el
+seudoperiodo y el tiempo de decaimiento $\tau$.
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b1:transient-regimes:10}
+Una bobina $L = \qty{0.50}{H}$ lleva $I_0 = \qty{2.0}{A}$; se desconecta la
+fuente y la bobina queda sobre un \omterm{def:b1:dc-circuits:resistor}{resistor} de descarga $R = \qty{100}{\ohm}$.
+Dense $i(t)$, $\tau$, la tensión máxima en bornes de la bobina y la
+energía disipada. ¿Qué ocurriría sin el \omterm{def:b1:dc-circuits:resistor}{resistor}?
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b1:transient-regimes:11}
+Un condensador $C = \qty{1.0}{\micro F}$ se carga desde $E = \qty{12}{V}$
+a través de $R_1 = \qty{10}{k\ohm}$ mientras $R_2 = \qty{20}{k\ohm}$ está
+conectado en paralelo con él. Usando un equivalente de Thévenin, hállense
+la \omterm{def:b1:transient-regimes:firstorder}{constante de tiempo} y la tensión final; escríbase $u_C(t)$ a partir de
+$u_C(0) = 0$.
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b1:transient-regimes:12}
+\omterm{thm:b1:transient-regimes:regimes}{Régimen crítico}, escalón desde el reposo ($x(0) = x'(0) = 0$): muéstrese
+que $x = x_\infty[1 - (1 + \omega_0 t)\eu^{-\omega_0 t}]$ y hállese
+numéricamente el tiempo necesario para alcanzar el $95\%$ de $x_\infty$
+(en unidades de $1/\omega_0$). Compárese con el tiempo de establecimiento
+de la envolvente para $Q = 5$ y con el de la raíz lenta cuando $Q = 0.1$;
+conclúyase por qué el \omterm{thm:b1:transient-regimes:regimes}{régimen crítico} es el objetivo del ingeniero.
+\end{exercise}
+
+\section{Problema: diseñar una suspensión}
+
+\begin{problem}[{Problema de fin de semana --- la misma ecuación
+diferencial en un banco de laboratorio y bajo un coche: cuántos rebotes
+permite un amortiguador gastado, qué elige en su lugar el diseñador y cómo
+un solo número distingue los dos casos}]
+\label{pb:b1:transient-regimes:1}
+La Parte I estudia un \omterm{prop:b1:transient-regimes:rlc}{circuito RLC} serie, $L = \qty{10}{mH}$, $C = \qty{100}{nF}$;
+las Partes II--IV, un modelo de cuarto de coche: una masa $m = \qty{350}{kg}$
+apoyada en un resorte $k = \qty{22}{kN/m}$ y un amortiguador que ejerce
+$-\alpha\dot x$. Sobreoscilación de una respuesta a un escalón en \omterm{thm:b1:transient-regimes:regimes}{régimen
+seudoperiódico} (dato): $x_{\max}/x_\infty - 1 = \exp(-\pi\xi/\sqrt{1 - \xi^2})$, $\xi = 1/2Q$.
+
+\medskip
+\noindent\textbf{Parte I --- El circuito.}
+\begin{enumerate}
+  \item Escríbase la \omterm{thm:b1:dc-circuits:kirchhoff}{ley de las mallas} para el RLC serie sometido a una
+        fuente $E$, y la ecuación diferencial de $u_C$.
+  \item Pásese a la forma canónica; exprésense $\omega_0$ y $Q$.
+  \item Calcúlense $\omega_0$, $f_0$ y la resistencia crítica $R_c$.
+  \item Escríbanse la ecuación característica y su discriminante;
+        enúnciense los tres regímenes en función de $Q$.
+  \item En el caso seudoperiódico, dense $\tau$ y $\omega$ y la forma de
+        $u_C(t)$.
+  \item Para $R = \qty{100}{\ohm}$ calcúlense $Q$, $\tau$, el
+        seudoperiodo y el número de oscilaciones visibles.
+  \item El condensador, cargado a $U_0$, se conmuta sobre $L$ y $R$ en
+        $t = 0$. Dense $u_C(0^+)$ y $\dd u_C/\dd t(0^+)$, con la razón
+        física de cada uno.
+\end{enumerate}
+
+\medskip
+\noindent\textbf{Parte II --- El cuarto de coche.}
+\begin{enumerate}[resume]
+  \item Midiendo $x$ desde la posición de equilibrio, escríbase la segunda
+        ley de Newton para la carrocería y muéstrese que el peso
+        desaparece.
+  \item Pásese la ecuación a la forma canónica; dense $\omega_0$ y $Q$ en
+        función de $m$, $k$ y $\alpha$, y enumérense las correspondencias
+        electromecánicas.
+  \item Calcúlense $\omega_0$, $f_0$ y el coeficiente crítico
+        $\alpha_c$.
+  \item El diseñador monta $\alpha = \qty{4000}{N.s/m}$: calcúlense $Q$ y
+        $\xi$, y nómbrese el régimen.
+  \item Calcúlense $\tau$ y el seudoperiodo.
+  \item Calcúlese la sobreoscilación tras un escalón (un bordillo): ¿es
+        cómodo el coche?
+  \item ¿Qué resistencia $R$ daría al circuito de la Parte I el mismo $Q$
+        que esta suspensión?
+\end{enumerate}
+
+\medskip
+\noindent\textbf{Parte III --- El amortiguador gastado.}
+Se ha perdido aceite: $\alpha = \qty{1200}{N.s/m}$.
+\begin{enumerate}[resume]
+  \item Calcúlense $Q$, el seudoperiodo y $\tau$.
+  \item ¿En qué factor se reducen los máximos sucesivos? ¿Cuántos rebotes
+        se ven antes de que la \omterm{def:b1:wave-propagation:signal}{amplitud} baje del $5\%$?
+  \item La prueba del rebote: se empuja la esquina hacia abajo $x_0 =
+        \qty{5.0}{cm}$ y se suelta. Dense las condiciones iniciales, la
+        energía almacenada en el resorte y dígase adónde va esa energía.
+  \item Estímense la velocidad máxima de la carrocería durante el primer
+        retorno ($\approx x_0\omega_0$ para $Q \gg 1$) y la fuerza máxima
+        del amortiguador.
+  \item ¿Por qué el amortiguamiento exactamente crítico ($Q = \tfrac12$)
+        no es la elección del diseñador, pese a no dar sobreoscilación?
+        (Piénsese en los últimos milímetros del retorno.)
+  \item Calcúlese la sobreoscilación del amortiguador gastado y compárese
+        con la Parte II.
+\end{enumerate}
+
+\medskip
+\noindent\textbf{Parte IV --- Diagnosticar $Q$ a partir de un registro.}
+Un acelerómetro sobre la carrocería registra el decaimiento libre.
+\begin{enumerate}[resume]
+  \item Para el coche gastado, los máximos sucesivos valen $1.00$, $0.25$
+        y $0.062$ (unidades arbitrarias). Calcúlese el \omterm{prop:b1:transient-regimes:decrement}{decremento
+        logarítmico}, dedúzcase $\xi$ exactamente de
+        $\delta = 2\pi\xi/\sqrt{1 - \xi^2}$ y después $Q$; compárese con
+        la Parte III.
+  \item En el coche sano no se ve un segundo máximo; solo puede leerse la
+        sobreoscilación, del $3.8\%$. Invirtiendo la fórmula de la
+        sobreoscilación, hállense $\xi$ y $Q$.
+  \item ¿Qué fracción de la energía mecánica disipa por seudoperiodo el
+        amortiguador gastado?
+  \item Un técnico que no tiene un coche a mano monta el RLC de la Parte I
+        con una $R$ elegida para que $Q = 2.3$: ¿qué $R$, y por qué el
+        registro del osciloscopio, representado frente a $\omega_0 t$,
+        tiene exactamente la misma forma que el del coche?
+  \item Resúmase: qué número \omterm{def:b1:units-dimensions:dimension}{adimensional} decide la forma de cualquier
+        transitorio de segundo orden, qué valor busca quien diseña una
+        suspensión y qué debe concluir un conductor de ``más de un
+        rebote''.
+\end{enumerate}
+\end{problem}

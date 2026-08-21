@@ -1,0 +1,566 @@
+\chapter{المضخّم العملياتي}\label{ch:b1:operational-amplifier}
+
+مقياس تشوّه ملصق بعارضة جسر تتغير مقاومته بمقدار
+جزء من ألف حين تمرّ شاحنة؛ \omterm{prop:b1:dc-circuits:wheatstone}{وجسر ويتستون} المحيط به
+(\cref{ch:b1:dc-circuits}) يحوّل ذلك إلى مليفولطين. ومليفولطان
+لا يشغّلان شيئًا. وبين المقياس والإنذار الذي سيغلق
+الجسر أمام المرور تقع شريحة في حجم الظفر، تُباع
+ببضعة سنتات، تضرب الإشارة في ألف، وترشّحها،
+وتقارنها بعتبة، وتضيء مصباحًا --- أربع مهام في مركّبة
+واحدة بأربعة توصيلات مختلفة. ويقدّم هذا الفصل
+\omterm{def:b1:operational-amplifier:opamp}{المضخّم العملياتي} عبر نموذجه المثالي، ويشتقّ حفنة
+الدارات التي يُبنى منها كل جهاز، ويبيّن ماذا يحدث
+حين تُنزع التغذية الراجعة.
+
+\section{المركّبة ونموذجها المثالي}
+
+\begin{definition}[المضخّم العملياتي]\label{def:b1:operational-amplifier:opamp}
+\index{مضخّم عملياتي}\index{توتر الإشباع}\index{الكسب في الحلقة المفتوحة}
+\emph{المضخّم العملياتي} دارة متكاملة لها مدخلان
+--- المدخل \emph{غير القالب} عند الكمون $V_+$ و
+المدخل \emph{القالب} عند $V_-$ --- ومخرج واحد عند الكمون $V_s$،
+يغذّيه مصدران $\pm V_{\mathrm{cc}}$ (عادةً
+$\pm\qty{15}{V}$) لا يُرسمان عادةً في المخططات. وهو يضخّم
+الفرق $\epsilon = V_+ - V_-$:
+\[
+V_s = \mu\,\epsilon \quad\text{ما دام } \abs{V_s} < V_{\mathrm{sat}},
+\]
+حيث \emph{الكسب في الحلقة المفتوحة} $\mu$ من رتبة $10^5$ و
+\emph{توتر الإشباع} $V_{\mathrm{sat}}$ أدنى قليلًا من
+$V_{\mathrm{cc}}$. وحين يتجاوز $\mu\abs\epsilon$ القيمة $V_{\mathrm{sat}}$
+يعلق الخرج عند $+V_{\mathrm{sat}}$ أو $-V_{\mathrm{sat}}$: وهو النظام
+\emph{المشبَع}.
+\end{definition}
+
+\begin{definition}[المضخّم العملياتي المثالي]\label{def:b1:operational-amplifier:ideal}
+\index{مضخّم عملياتي مثالي}\index{قصر تخيلي}\index{نظام خطي}
+يفترض النموذج \emph{المثالي}: (أ) ألّا يدخل أيّ تيار إلى أيّ من المدخلين،
+$i_+ = i_- = 0$ (أي \omterm{def:b1:sinusoidal-impedance:impedance}{ممانعة} دخل لانهائية)؛ (ب) أن يفرض الخرج
+توتره مهما يكن التيار المسحوب (أي \omterm{def:b1:sinusoidal-impedance:impedance}{ممانعة} خرج معدومة)؛ (ج)
+أن يكون الكسب لانهائيًّا، $\mu \to \infty$. وفي \emph{النظام الخطي} (حيث $\abs{V_s}
+< V_{\mathrm{sat}}$) يفرض الافتراض الثالث
+\[
+\epsilon = V_+ - V_- = 0 :
+\]
+أي إن المدخلين على الكمون نفسه (وهو ``القصر التخيلي'')
+مع أنه لا يمرّ بينهما أيّ تيار.
+\end{definition}
+
+\begin{omfigure}
+\begin{tikzpicture}[font=\small]
+  \node[op amp] (oa) at (0,0) {};
+  \draw (oa.-) -- ++(-0.8,0) node[left] {$V_-$};
+  \draw (oa.+) -- ++(-0.8,0) node[left] {$V_+$};
+  \draw (oa.out) -- ++(0.6,0) node[right] {$V_s$};
+  \draw (oa.up) -- ++(0,0.3) node[above, font=\footnotesize] {$+V_{\mathrm{cc}}$};
+  \draw (oa.down) -- ++(0,-0.3) node[below, font=\footnotesize] {$-V_{\mathrm{cc}}$};
+  \begin{scope}[xshift=6.2cm]
+  \begin{axis}[omaxis, axis y line=left, width=6.4cm, height=4.6cm, xlabel={$\epsilon$}, ylabel={$V_s$},
+      xmin=-2.2, xmax=2.2, ymin=-1.5, ymax=1.5, xtick={-0.15,0.15}, xticklabels={,},
+      ytick={-1,1}, yticklabels={$-V_{\mathrm{sat}}$,$+V_{\mathrm{sat}}$}, anchor=origin, at={(0,0)}]
+    \addplot[omThm, thick, domain=-2.2:-0.15, samples=2] {-1};
+    \addplot[omThm, thick, domain=-0.15:0.15, samples=2] {x/0.15};
+    \addplot[omThm, thick, domain=0.15:2.2, samples=2] {1};
+    \node[omThm, font=\footnotesize] at (axis cs:1.3,0.6) {مشبَع};
+    \node[omThm, font=\footnotesize] at (axis cs:-1.2,-0.6) {مشبَع};
+    \node[omThm, font=\footnotesize, right] at (axis cs:0.2,-0.55) {خطي، ميله $\mu$};
+  \end{axis}
+  \end{scope}
+\end{tikzpicture}
+
+{\small \omterm{def:b1:operational-amplifier:opamp}{المضخّم العملياتي}: الرمز بمدخليه، ومميِّزته
+في النقل $V_s(\epsilon)$ --- قطعة خطية شديدة الانحدار
+ميلها $\mu \sim 10^5$ (رُسمت أقلّ انحدارًا بكثير)، ثم إشباع عند
+$\pm V_{\mathrm{sat}}$. وفي النموذج المثالي تكون القطعة الخطية
+شاقولية: $\epsilon = 0$.}
+\end{omfigure}
+
+\begin{proposition}[التغذية الراجعة السالبة والنظام الخطي]\label{prop:b1:operational-amplifier:feedback}
+\index{تغذية راجعة سالبة}\index{تغذية راجعة موجبة}
+إذا وُصل الخرج راجعًا إلى المدخل \emph{القالب} عبر
+شبكة (أي \omterm{prop:b1:operational-amplifier:feedback}{تغذية راجعة سالبة})، كان للدارة نقطة عمل خطية مستقرة
+عند $\epsilon = 0$ وانطبقت قواعد المضخّم المثالي. وإذا أُعيد
+الخرج إلى المدخل غير القالب (أي \omterm{prop:b1:operational-amplifier:feedback}{تغذية راجعة موجبة})، أو لم يُعَد
+أصلًا، أُشبع المضخّم: $V_s = \pm V_{\mathrm{sat}}$
+حسب إشارة $\epsilon$.
+\end{proposition}
+
+\begin{proof}[برهان جزئي]
+مع \omterm{prop:b1:operational-amplifier:feedback}{التغذية الراجعة السالبة}، لنفترض أن $V_s$ ارتفع قليلًا فوق قيمته
+التوازنية؛ فيرتفع $V_-$ عبر شبكة التغذية الراجعة، وينخفض $\epsilon$،
+ويسحب المضخّم $V_s$ إلى الأسفل من جديد: فيُصحَّح الاضطراب.
+أما مع \omterm{prop:b1:operational-amplifier:feedback}{التغذية الراجعة الموجبة} فالاضطراب نفسه يرفع $V_+$،
+ويزيد $\epsilon$، ويدفع $V_s$ أبعد حتى يُشبع.
+أما الحجة الكاملة (نموذج من الرتبة الأولى للمضخّم، $\mu(j\omega)
+= \mu_0/(1 + j\omega/\omega_0)$، واستقرار المعادلة التفاضلية
+الناتجة) فموضوع مجلد السنة الثانية؛ والقاعدة
+أعلاه هي ما يُستعمل.
+\end{proof}
+
+\begin{remark}[المضخّمات الحقيقية]\label{rem:b1:operational-amplifier:real}
+\index{جداء الكسب في عرض النطاق}\index{معدل الانزلاق}\index{توتر الإزاحة عند الدخل}
+ثلاثة انحرافات عن المثالي تهمّ عمليًّا. \omterm{def:b1:operational-amplifier:opamp}{فالكسب في الحلقة المفتوحة}
+يهبط مع التواتر كالمقدار $\mu_0/(1 + jf/f_0)$ حيث $f_0 \sim \qty{10}{Hz}$:
+والجداء $\mu_0 f_0 = f_T \sim \qty{1}{MHz}$ (وهو \emph{\omterm{rem:b1:operational-amplifier:real}{جداء الكسب في
+عرض النطاق}}) هو \omterm{thm:b1:sinusoidal-impedance:resonance}{عرض النطاق} المتاح لتابع، وللدارة ذات
+الكسب $G$ في الحلقة المغلقة عرض نطاق $f_T/G$. ولا يستطيع الخرج التغير
+أسرع من \emph{\omterm{rem:b1:operational-amplifier:real}{معدل الانزلاق}}، $\sim\qty{1}{V/\micro s}$. كما أن
+\emph{توتر إزاحة} صغيرًا عند الدخل ($\sim\qty{1}{mV}$) يُضخَّم مثل
+الإشارة --- وهو قاتل لمداخل بالمليفولط ما لم يُعدَّل.
+\end{remark}
+
+\section{الدارات الخطية الأساسية}
+
+\begin{method}[تحليل دارة مضخّم عملياتي مثالي في النظام الخطي]\label{met:b1:operational-amplifier:method}
+\begin{enumerate}
+  \item تحقق من أن التغذية الراجعة تذهب إلى المدخل القالب.
+  \item اكتب $i_+ = i_- = 0$: فعقدتا الدخل تحققان قانون
+        العقد لكيرشوف بلا تيار داخل إلى المضخّم (فتنطبق المجزّئات ومبرهنة
+        ميلمان).
+  \item اكتب $V_+ = V_-$ وحلّ لإيجاد $V_s$.
+  \item تحقق بعد ذلك من أن $\abs{V_s} < V_{\mathrm{sat}}$؛ فإن لم يكن كذلك
+        كان المضخّم مشبَعًا وكانت النتيجة $\pm V_{\mathrm{sat}}$.
+\end{enumerate}
+\end{method}
+
+\begin{proposition}[التابع والمضخّم غير القالب والمضخّم القالب]\label{prop:b1:operational-amplifier:basic}
+\index{تابع توتر}\index{مضخّم غير قالب}\index{مضخّم قالب}\index{أرضي تخيلي}
+\begin{itemize}
+  \item \emph{التابع}: الخرج موصول بالمدخل $V_-$ والدخل على $V_+$:
+        $V_s = V_e$؛ \omterm{def:b1:sinusoidal-impedance:impedance}{وممانعة} دخل لانهائية \omterm{def:b1:sinusoidal-impedance:impedance}{وممانعة} خرج معدومة.
+  \item \emph{\omterm{prop:b1:operational-amplifier:basic}{المضخّم غير القالب}}: الخرج إلى $V_-$ عبر
+        مجزّئ $R_2$ (تغذية راجعة) و $R_1$ (إلى الأرضي)، والدخل على $V_+$:
+        \[
+        V_s = \left(1 + \frac{R_2}{R_1}\right)V_e .
+        \]
+  \item \emph{\omterm{prop:b1:operational-amplifier:basic}{المضخّم القالب}}: $V_+$ مؤرَّض، والدخل عبر
+        $R_1$ إلى $V_-$، والتغذية الراجعة $R_2$ من الخرج إلى $V_-$:
+        \[
+        V_s = -\frac{R_2}{R_1}\,V_e ,
+        \]
+        مع بقاء $V_-$ عند كمون الأرضي (وهو \emph{\omterm{prop:b1:operational-amplifier:basic}{أرضي تخيلي}})
+        \omterm{def:b1:sinusoidal-impedance:impedance}{وممانعة} دخل $R_1$.
+\end{itemize}
+\end{proposition}
+
+\begin{proof}
+التابع: $V_- = V_s$ و $V_+ = V_e$؛ ويعطي $\epsilon = 0$ أن $V_s = V_e$.
+وغير القالب: لا تيار داخل إلى $V_-$، فيعطي المجزّئ $V_- =
+V_sR_1/(R_1 + R_2)$؛ ثم نساويه بالمقدار $V_+ = V_e$. والقالب: $V_- = V_+ = 0$؛
+وقانون العقد عند $V_-$ مع $i_- = 0$: $(V_e - 0)/R_1 + (V_s - 0)/R_2 = 0$.
+ويقدّم المنبع $V_e/R_1$: \omterm{def:b1:sinusoidal-impedance:impedance}{فممانعة} الدخل $R_1$.
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}[font=\small]
+  % follower (+ input up)
+  \node[op amp, noinv input up] (a) at (0,0) {};
+  \draw (a.+) -- ++(-0.6,0) node[left] {$V_e$};
+  \draw (a.out) -- ++(0.5,0) node[right] {$V_s$};
+  \draw (a.out) ++(0.25,0) -- ++(0,-1.3) -| ($(a.-)+(-0.4,0)$) -- (a.-);
+  \node[below, font=\footnotesize] at (0,-1.7) {تابع: $V_s = V_e$};
+  % non-inverting (+ input up)
+  \begin{scope}[xshift=5.6cm]
+  \node[op amp, noinv input up] (b) at (0,0) {};
+  \draw (b.+) -- ++(-0.8,0) node[left] {$V_e$};
+  \draw (b.out) -- ++(0.6,0) node[right] {$V_s$};
+  \coordinate (j) at ($(b.-)+(-0.5,0)$);
+  \draw (b.-) -- (j);
+  \coordinate (f) at ($(j)+(0,-1.0)$);
+  \coordinate (o) at ($(b.out)+(0.3,0)$);
+  \draw (o) -- (o |- f) to[R=$R_2$] (f) -- (j);
+  \draw (f) to[R=$R_1$] ++(0,-1.6) node[ground]{};
+  \node[below, font=\footnotesize] at (0,-3.7) {غير قالب: $V_s = (1 + R_2/R_1)V_e$};
+  \end{scope}
+  % inverting (- input up)
+  \begin{scope}[xshift=11.3cm]
+  \node[op amp] (c) at (0,0) {};
+  \draw (c.+) -- ++(-0.4,0) node[ground]{};
+  \coordinate (m) at ($(c.-)+(-0.5,0)$);
+  \draw (c.-) -- (m) to[R=$R_1$] ++(-1.5,0) node[left] {$V_e$};
+  \draw (c.out) -- ++(0.6,0) node[right] {$V_s$};
+  \coordinate (f2) at ($(m)+(0,1.3)$);
+  \coordinate (o2) at ($(c.out)+(0.3,0)$);
+  \draw (o2) -- (o2 |- f2) to[R=$R_2$] (f2) -- (m);
+  \node[below, font=\footnotesize] at (0,-1.7) {قالب: $V_s = -(R_2/R_1)V_e$};
+  \end{scope}
+\end{tikzpicture}
+
+{\small المضخّمات الأساسية الثلاثة. في كلٍّ منها يغذّي الخرج
+المدخلَ القالب، ويعمل المضخّم في نظامه الخطي، ويثبّت
+نسبُ المقاومات وحدها الكسبَ --- لا $\mu$ الخاصّ بالمضخّم،
+وهو هائل وسيّئ التحديد.}
+\end{omfigure}
+
+\begin{example}[لماذا التابع]\label{ex:b1:operational-amplifier:follower}
+محسّ مقاومته التيفنانية \qty{10}{k\ohm} يغذّي حمولة \qty{1}{k\ohm}
+فلا يقدّم إلا $1/11$ من توتر دارته المفتوحة
+(\cref{rem:b1:dc-circuits:loading}). وتابع بينهما لا يسحب
+تيارًا من المحسّ ويقود الحمولة من خرج معدوم \omterm{def:b1:sinusoidal-impedance:impedance}{الممانعة}:
+فيصل التوتر كاملًا. والتابع \emph{مكيِّف
+\omterm{def:b1:sinusoidal-impedance:impedance}{ممانعة}} --- وهو يجعل قاعدة التتالي في
+\cref{prop:b1:filters-transfer-functions:cascade} تامة.
+\end{example}
+
+\begin{proposition}[المضخّم الجامع والمضخّم الفارقي]\label{prop:b1:operational-amplifier:sumdiff}
+\index{مضخّم جامع}\index{مضخّم فارقي}
+المدخلان $V_1, V_2$ عبر $R_1, R_2$ إلى العقدة القالبة، والتغذية الراجعة
+$R_f$، و $V_+$ مؤرَّض:
+\[
+V_s = -R_f\left(\frac{V_1}{R_1} + \frac{V_2}{R_2}\right)
+\quad (\text{مضخّم جامع}).
+\]
+ومع $V_1$ عبر $R_1$ إلى $V_-$ (والتغذية الراجعة $R_2$) و $V_2$ عبر
+$R_1$ إلى $V_+$ (مع $R_2$ من $V_+$ إلى الأرضي):
+\[
+V_s = \frac{R_2}{R_1}\,(V_2 - V_1)
+\quad (\text{مضخّم فارقي}).
+\]
+\end{proposition}
+
+\begin{proof}
+الجامع: قانون العقد عند \omterm{prop:b1:operational-amplifier:basic}{الأرضي التخيلي}، $V_1/R_1 + V_2/R_2 + V_s/R_f =
+0$. والفارقي: $V_+ = V_2R_2/(R_1 + R_2)$ (بالمجزّئ)؛ وقانون العقد عند $V_-$:
+$(V_1 - V_-)/R_1 + (V_s - V_-)/R_2 = 0$، ومنه $V_s = V_-(1 + R_2/R_1) -
+V_1R_2/R_1$؛ ثم نضع $V_- = V_+$ ونبسّط.
+\end{proof}
+
+\section{المكامِل والدارة المشتقّة}
+
+\begin{proposition}[المكامِل]\label{prop:b1:operational-amplifier:integrator}
+\index{مكامِل (مضخّم عملياتي)}
+الدخل عبر $R$ إلى $V_-$، ومكثف $C$ تغذيةً راجعة، و $V_+$
+مؤرَّض:
+\[
+V_s(t) = -\frac{1}{RC}\int_0^t V_e(t')\,\dd t' + V_s(0),
+\qquad
+\underline H = -\frac{1}{jRC\omega} .
+\]
+يهبط الكسب \qty{20}{dB} لكل عقد عند كل تواتر ويكون الطور
+$+90^\circ$: أي مكامِل تامّ --- إلى أن تدفع أصغر إزاحة أو
+انحياز، بعد مكاملتها إلى الأبد، الخرجَ إلى الإشباع.
+\end{proposition}
+
+\begin{proof}
+\omterm{prop:b1:operational-amplifier:basic}{الأرضي التخيلي}: التيار $V_e/R$ يجري إلى المكثف، والتوتر بين
+$V_-$ والخرج هو $-V_s$؛ ومنه $C\,\dd(-V_s)/\dd t
+= V_e/R$، وبالترميز العقدي $\underline H = -1/(jRC\omega)$.
+\end{proof}
+
+\begin{remark}[ترويض المكامِل]\label{rem:b1:operational-amplifier:pseudo}
+\index{شبه مكامِل}
+مقاومة $R'$ على التفرع مع $C$ تعطي
+\[
+\underline H = -\frac{R'/R}{1 + jR'C\omega},
+\]
+أي \omterm{prop:b1:filters-transfer-functions:lowpass1}{مرشّح تمرير منخفض} من الرتبة الأولى كسبه في التيار المستمر $-R'/R$ وتواتر قطعه $1/R'C$، وهو
+يكامل من أجل $\omega \gg 1/R'C$ لكنه لا ينجرف إلى الإشباع. وكذلك \omterm{prop:b1:filters-transfer-functions:highpass1}{الدارة المشتقّة} (مكثف عند الدخل و
+مقاومة تغذيةً راجعة: $V_s = -RC\,\dd V_e/\dd t$ و $\underline H =
+-jRC\omega$) تضخّم ضجيج التواترات العالية بلا حدّ ما لم تحدّ
+مقاومة صغيرة على التسلسل كسبَها.
+\end{remark}
+
+\begin{omfigure}
+\begin{tikzpicture}[font=\small]
+  \node[op amp] (c) at (0,0) {};
+  \draw (c.+) -- ++(-0.4,0) node[ground]{};
+  \draw (c.-) -- ++(-0.3,0) coordinate (m1) to[R=$R$] ++(-1.8,0) node[left] {$V_e$};
+  \draw (c.out) -- ++(0.5,0) node[right] {$V_s$};
+  \draw (c.out) ++(0.25,0) |- ++(0,1.2) to[C=$C$] ++(-2.1,0) -| (m1);
+  \begin{scope}[xshift=7.3cm, yshift=-1.2cm]
+  \begin{axis}[omaxis, axis x line=bottom, axis y line=left, xlabel style={at={(axis description cs:0.5,-0.16)}, anchor=north},
+      width=6.4cm, height=4.2cm, xmode=log, xlabel={$\omega$ ($\log$)}, ylabel={$G_{\mathrm{dB}}$},
+      xmin=0.01, xmax=100, ymin=-45, ymax=48, ytick={40,20,0,-20,-40}, xtick={0.01,0.1,1,10,100},
+      xticklabels={$0.01$,$0.1$,$1$,$10$,$100$}, anchor=origin, at={(0,0)}]
+    \addplot[omDef, thick, domain=0.01:100, samples=2] {-20*log10(x)};
+    \addplot[omThm, thick, domain=0.01:100, samples=200] {20 - 10*log10(1 + (x/0.1)^2)};
+    \node[omDef, font=\footnotesize, rotate=-32] at (axis cs:8,-10) {مكامِل};
+    \node[omThm, font=\footnotesize, anchor=west] at (axis cs:0.012,29) {شبه مكامِل};
+  \end{axis}
+  \end{scope}
+\end{tikzpicture}
+
+{\small المكامِل \omterm{def:b1:filters-transfer-functions:bode}{ومخطط بودي} له (بالأزرق، \qty{-20}{dB/decade}
+على امتداده كله، وكسب لانهائي في التيار المستمر)؛ ومع مقاومة على طرفَي $C$ يُحدّ الكسب
+عند التواترات المنخفضة (بالأحمر): أي \omterm{prop:b1:filters-transfer-functions:lowpass1}{مرشّح تمرير منخفض} يكامل فوق
+تواتر قطعه.}
+\end{omfigure}
+
+\begin{example}[مثلث من مربع]\label{ex:b1:operational-amplifier:triangle}
+$R = \qty{10}{k\ohm}$ و $C = \qty{100}{nF}$ و $1/RC = \qty{1000}{s^{-1}}$.
+وموجة مربعة عند \qty{1}{kHz} قدرها $\pm\qty{1}{V}$ تعطي مثلثًا ميله
+$\mp\qty{1000}{V/s}$ وسعته $ET/4RC = \qty{0.25}{V}$ --- بلا
+التوهين $1/\omega$ الذي في \omterm{prop:b1:transient-regimes:rcrl}{دارة RC} سلبية، وبخرج معدوم \omterm{def:b1:sinusoidal-impedance:impedance}{الممانعة}
+يغذّي المرحلة التالية.
+\end{example}
+
+\section{المرشّحات الفعّالة}
+
+\begin{proposition}[تمرير منخفض فعّال من الرتبة الأولى]\label{prop:b1:operational-amplifier:activelp}
+\index{مرشّح فعّال}
+\omterm{prop:b1:operational-amplifier:basic}{المضخّم القالب} مع مكثف $C$ على طرفَي مقاومة تغذيته
+الراجعة $R_2$ له
+\[
+\underline H = -\frac{R_2/R_1}{1 + jR_2C\omega}:
+\]
+أي تمرير منخفض كسبه في التيار المستمر $-R_2/R_1$ (وقد يتجاوز $1$) وتواتر قطعه
+$\omega_c = 1/R_2C$، \omterm{def:b1:sinusoidal-impedance:impedance}{بممانعة} خرج معدومة --- فتتتالى المراحل بالضرب
+البسيط.
+\end{proposition}
+
+\begin{proof}
+\omterm{prop:b1:operational-amplifier:basic}{مضخّم قالب} مع \omterm{def:b1:sinusoidal-impedance:impedance}{ممانعة} التغذية الراجعة $R_2 \parallel 1/jC\omega
+= R_2/(1 + jR_2C\omega)$ بدلًا من $R_2$.
+\end{proof}
+
+\section{بلا تغذية راجعة سالبة: المقارِنات}
+
+\begin{proposition}[المقارِن]\label{prop:b1:operational-amplifier:comparator}
+\index{مقارِن}
+بلا تغذية راجعة يكون المضخّم المثالي مشبَعًا:
+$V_s = +V_{\mathrm{sat}}$ إذا كان $V_+ > V_-$، و $-V_{\mathrm{sat}}$ إذا كان
+$V_+ < V_-$. ومع مرجع $V_{\mathrm{ref}}$ على أحد المدخلين و
+إشارة على الآخر، يخبر الخرج هل تتجاوز الإشارة
+المرجع --- أي محوّل ببتّ واحد.
+\end{proposition}
+
+\begin{proof}
+يتجاوز $\mu\epsilon$ القيمة $V_{\mathrm{sat}}$ من أجل أيّ $\abs\epsilon >
+V_{\mathrm{sat}}/\mu \sim \qty{0.1}{mV}$.
+\end{proof}
+
+\begin{proposition}[قادح شميت]\label{prop:b1:operational-amplifier:schmitt}
+\index{قادح شميت}\index{تخلّف}
+أعِد كسرًا $\beta = R_1/(R_1 + R_2)$ من الخرج إلى $V_+$
+(مجزّئ $R_1$ إلى الأرضي و $R_2$ من الخرج) وطبّق الإشارة
+$V_e$ على $V_-$. عندئذٍ ينتقل الخرج من $+V_{\mathrm{sat}}$ إلى
+$-V_{\mathrm{sat}}$ حين يرتفع $V_e$ فوق $+\beta V_{\mathrm{sat}}$، ويعود
+حين يهبط $V_e$ دون $-\beta V_{\mathrm{sat}}$: أي عتبتان و
+\emph{تخلّف} عرضه $2\beta V_{\mathrm{sat}}$، محصَّن ضد ضجيج
+أصغر من ذلك العرض.
+\end{proposition}
+
+\begin{proof}
+\omterm{prop:b1:operational-amplifier:feedback}{تغذية راجعة موجبة}: فالحالة مشبَعة. فإذا كان $V_s = +V_{\mathrm{sat}}$ كان $V_+ =
+\beta V_{\mathrm{sat}}$، وبقي $\epsilon = \beta V_{\mathrm{sat}} - V_e$
+موجبًا حتى يتجاوز $V_e$ القيمة $\beta V_{\mathrm{sat}}$؛ عندئذٍ ينقلب
+الخرج، ويهبط $V_+$ إلى $-\beta V_{\mathrm{sat}}$، وتدوم الحالة الجديدة
+حتى يهبط $V_e$ دون تلك القيمة.
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}[font=\small]
+  \node[op amp] (s) at (0,0) {};
+  \draw (s.-) -- ++(-0.8,0) node[left] {$V_e$};
+  \draw (s.out) -- ++(0.6,0) node[right] {$V_s$};
+  \coordinate (j) at ($(s.+)+(-0.6,0)$);
+  \coordinate (f) at ($(j)+(0,-1.0)$);
+  \coordinate (o) at ($(s.out)+(0.3,0)$);
+  \draw (s.+) -- (j);
+  \draw (o) -- (o |- f) to[R=$R_2$] (f) -- (j);
+  \draw (f) to[R=$R_1$] ++(0,-1.6) node[ground]{};
+  \begin{scope}[xshift=7.8cm, yshift=-0.9cm]
+  \begin{axis}[omaxis, axis x line=bottom, axis y line=left, width=6.4cm, height=4.6cm, xlabel={$V_e$}, ylabel={$V_s$},
+      xlabel style={at={(axis description cs:0.5,-0.12)}, anchor=north},
+      xmin=-2.2, xmax=2.2, ymin=-1.5, ymax=1.5, xtick={-1,1}, xticklabels={$-\beta V_{\mathrm{sat}}$,$\beta V_{\mathrm{sat}}$},
+      ytick={-1,1}, yticklabels={$-V_{\mathrm{sat}}$,$+V_{\mathrm{sat}}$}, anchor=origin, at={(0,0)}]
+    \draw[omThm, thick, -Stealth] (axis cs:-2.2,1) -- (axis cs:0.2,1);
+    \draw[omThm, thick] (axis cs:0.2,1) -- (axis cs:1,1) -- (axis cs:1,-1);
+    \draw[omThm, thick, -Stealth] (axis cs:2.2,-1) -- (axis cs:-0.2,-1);
+    \draw[omThm, thick] (axis cs:-0.2,-1) -- (axis cs:-1,-1) -- (axis cs:-1,1);
+  \end{axis}
+  \end{scope}
+\end{tikzpicture}
+
+{\small \omterm{prop:b1:operational-amplifier:schmitt}{قادح شميت}: \omterm{prop:b1:operational-amplifier:feedback}{التغذية الراجعة الموجبة} عبر $R_1$ و $R_2$
+تعطي عتبتين $\pm\beta V_{\mathrm{sat}}$. وينقلب الخرج
+من العالي إلى المنخفض حين يرتفع $V_e$ فوق العتبة العليا، ومن المنخفض إلى العالي
+حين يهبط دون العتبة الدنيا (بالأسهم): أي دورة تخلّف.}
+\end{omfigure}
+
+\begin{example}[مذبذب الاسترخاء]\label{ex:b1:operational-amplifier:astable}
+\index{مذبذب الاسترخاء}
+أعِد وصل خرج \omterm{prop:b1:operational-amplifier:schmitt}{قادح شميت} إلى مدخله القالب نفسه
+عبر $R$، مع $C$ من $V_-$ إلى الأرضي. عندئذٍ يُشحن المكثف
+نحو $\pm V_{\mathrm{sat}}$ ويقلب القادح كلما بلغ
+$\pm\beta V_{\mathrm{sat}}$: فيكون الخرج موجة مربعة، ويكون توتر المكثف
+سلسلة أقواس أسّية، ويكون الدور
+\[
+T = 2RC\ln\frac{1 + \beta}{1 - \beta}
+\]
+(\cref{exo:b1:operational-amplifier:12}): أي $2.2\,RC$ من أجل $\beta = \tfrac12$.
+فلا دخل، ومكثف واحد، وساعة --- أي جملة تتذبذب
+لأنها لا تستطيع الاستقرار، وهو موضوع يعود مع مذبذبات
+التغذية الراجعة في مجلد السنة الثانية.
+\end{example}
+
+\section{تمارين}
+
+\begin{exercise}[$\star$]\label{exo:b1:operational-amplifier:1}
+\omterm{prop:b1:operational-amplifier:basic}{مضخّم غير قالب} له $R_1 = \qty{1.0}{k\ohm}$ و $R_2 =
+\qty{9.0}{k\ohm}$ و $V_{\mathrm{sat}} = \qty{15}{V}$. فما الكسب؟ وما الخرج من أجل
+$V_e = \qty{0.50}{V}$؟ وما أكبر دخل قبل الإشباع؟
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b1:operational-amplifier:2}
+\omterm{prop:b1:operational-amplifier:basic}{مضخّم قالب} له $R_1 = \qty{10}{k\ohm}$ و $R_2 = \qty{100}{k\ohm}$.
+أعطِ الكسب \omterm{def:b1:sinusoidal-impedance:impedance}{وممانعة} الدخل والتيار المسحوب من منبع \qty{1.0}{V} والخرج.
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b1:operational-amplifier:3}
+محسّ مقاومته الداخلية \qty{10}{k\ohm} وتوتر دارته المفتوحة
+\qty{1.0}{V} يجب أن يقود حمولة \qty{1.0}{k\ohm}. فما التوتر على طرفَي
+الحمولة دون تابع بينهما ومعه؟
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b1:operational-amplifier:4}
+\omterm{prop:b1:operational-amplifier:sumdiff}{مضخّم جامع} له $R_f = \qty{10}{k\ohm}$ ومدخلاه عبر
+\qty{10}{k\ohm} و\qty{20}{k\ohm}. اكتب $V_s$؛ واحسبه من أجل
+$V_1 = \qty{1.0}{V}$ و $V_2 = \qty{2.0}{V}$.
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b1:operational-amplifier:5}
+اشتقّ \omterm{prop:b1:operational-amplifier:sumdiff}{للمضخّم الفارقي} العلاقة $V_s = (R_2/R_1)(V_2 - V_1)$. ومع
+$R_1 = \qty{10}{k\ohm}$ و $R_2 = \qty{100}{k\ohm}$ و $V_1 = \qty{1.00}{V}$ و
+$V_2 = \qty{1.05}{V}$: ما الخرج؟ وماذا حلّ بالمقدار \qty{1}{V} المشترك
+بين المدخلين؟
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b1:operational-amplifier:6}
+مكامِل مع $R = \qty{10}{k\ohm}$ و $C = \qty{100}{nF}$، وخرجه
+معدوم ابتداءً. تُطبَّق قفزة \qty{1.0}{V}: فما ميل الخرج و
+الزمن اللازم للإشباع (\qty{15}{V})؟ ومع موجة مربعة عند \qty{1.0}{kHz} قدرها
+$\pm\qty{1.0}{V}$: ما شكل الخرج وسعته؟
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b1:operational-amplifier:7}
+تُضاف مقاومة \qty{1.0}{M\ohm} على طرفَي مكثف المكامِل
+السابق. أعطِ \omterm{def:b1:filters-transfer-functions:H}{دالة النقل} والكسب في التيار المستمر \omterm{def:b1:filters-transfer-functions:bode}{وتواتر
+القطع} والكسب عند \qty{1.0}{kHz}؛ وفي أيّ مجال تظلّ
+الدارة تكامل؟
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b1:operational-amplifier:8}
+صمّم \omterm{prop:b1:filters-transfer-functions:lowpass1}{مرشّح تمرير منخفض} فعّالًا قالبًا كسبه \qty{20}{dB} في
+\omterm{def:b1:filters-transfer-functions:bode}{نطاق التمرير} وتواتر قطعه \qty{500}{Hz}، مستعملًا $R_1 = \qty{1.0}{k\ohm}$.
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b1:operational-amplifier:9}
+مضخّم حقيقي له $\mu_0 = 10^5$ و $f_T = \qty{1.0}{MHz}$. ومن أجل
+\omterm{prop:b1:operational-amplifier:basic}{مضخّم غير قالب} مصمَّم لكسب قدره $100$: أوجد الكسب الفعلي في التيار المستمر
+(مع إبقاء $\mu_0$ منتهيًا في التحليل)، \omterm{thm:b1:sinusoidal-impedance:resonance}{وعرض النطاق}. وما عرض نطاق
+تابع؟
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b1:operational-amplifier:10}
+مقارِن مع $V_{\mathrm{ref}} = \qty{2.0}{V}$ على $V_-$ يراقب
+إشارة ترتفع ببطء وتحمل \qty{50}{mV} من الضجيج. صف الخرج
+وهي تعبر \qty{2.0}{V}. وما العلاج؟
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b1:operational-amplifier:11}
+\omterm{prop:b1:operational-amplifier:schmitt}{قادح شميت} مع $R_1 = \qty{1.0}{k\ohm}$ و $R_2 = \qty{9.0}{k\ohm}$ و
+$V_{\mathrm{sat}} = \qty{15}{V}$: اشتقّ العتبتين واحسبهما.
+وارسم $V_s$ من أجل $V_e$ مثلثي سعته \qty{3}{V}.
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b1:operational-amplifier:12}
+مذبذب استرخاء مع $R_1 = R_2$ (أي $\beta = \tfrac12$). اشتقّ
+الدور $T = 2RC\ln\frac{1 + \beta}{1 - \beta}$ من شحن $C$
+عبر $R$ بين العتبتين؛ واختر $R$ من أجل \qty{1.0}{kHz}
+مع $C = \qty{100}{nF}$؛ وارسم $V_s(t)$ و $V_C(t)$.
+\end{exercise}
+
+\section{مسألة: سلسلة قياس لمقياس تشوّه}
+
+\begin{problem}[{مسألة نهاية الأسبوع --- من مليفولطين على عارضة
+جسر إلى مصباح أحمر: توابع ومضخّم فارقي ومرشّح
+فعّال وقادح شميت، والنقصان اللذان يقرّران
+هل تعمل السلسلة}]
+\label{pb:b1:operational-amplifier:1}
+مقياس تشوّه مقاومته $R(1 + \epsilon)$ حيث $R = \qty{1.00}{k\ohm}$ و
+$0 \leq \epsilon \leq \num{2.0e-3}$، يشكّل \omterm{prop:b1:dc-circuits:wheatstone}{جسر ويتستون} مع
+ثلاث مقاومات ثابتة \qty{1.00}{k\ohm}، يغذّيه $E = \qty{5.00}{V}$.
+وخرج الجسر $u = V_B - V_A$ (بين النقطتين الوسطيتين) هو
+$u \approx E\epsilon/4$ (وتُختار الإشارة بالتوصيل). والمضخّمات:
+مثالية ما لم يُذكر خلاف ذلك؛ و $V_{\mathrm{sat}} = \qty{15}{V}$؛ وعند الحاجة،
+$f_T = \qty{1.0}{MHz}$، ومعدل انزلاق \qty{0.5}{V/\micro s}، وإزاحة دخل
+\qty{1}{mV}.
+
+\medskip
+\noindent\textbf{الجزء I --- الجسر وتحميله.}
+\begin{enumerate}
+  \item ذكّر لماذا يكون $u \approx E\epsilon/4$ من أجل $\epsilon$ صغير.
+  \item احسب $u$ عند المدى الكامل (أي $\epsilon = \num{2.0e-3}$).
+  \item أعطِ كمون كل نقطة وسطى (بالنسبة إلى طرف الجسر
+        السالب) عند تشوّه معدوم وعند المدى الكامل. وماذا تسمّى
+        قيمتهما المشتركة؟
+  \item كل نقطة وسطى خرجُ مجزّئ من مقاومتين \qty{1}{k\ohm}: فما
+        المقاومة التيفنانية المرئية بين
+        النقطتين الوسطيتين؟
+  \item يُوصل مضخّم مقاومة دخله \qty{10}{k\ohm}
+        على طرفَي خرج الجسر: فأيّ كسر من $u$
+        يتلقاه؟
+  \item لماذا يعالج تابعٌ على كل نقطة وسطى هذا؟ اذكر الخاصيتين
+        المستعملتين.
+  \item ما توترا خرج التابعين (بدلالة $V_A$ و
+        $V_B$)، وأيّ تيار يسحبانه من الجسر؟
+\end{enumerate}
+
+\medskip
+\noindent\textbf{الجزء II --- تضخيم الفرق.}
+\begin{enumerate}[resume]
+  \item يغذّي التابعان مضخّمًا فارقيًّا ($R_1$ عند كلا
+        المدخلين، و $R_2$ تغذيةً راجعة وإلى الأرضي). اشتقّ $V_s =
+        (R_2/R_1)(V_B - V_A)$.
+  \item اختر $R_1 = \qty{10}{k\ohm}$ و $R_2$ من أجل كسب قدره $100$.
+  \item مرحلة ثانية غير قالبة تضرب في $10$: أعطِ
+        مقاومتيها والكسب الكلي والخرج عند المدى الكامل.
+  \item تقع النقطتان الوسطيتان قرب $E/2 = \qty{2.5}{V}$ (وهو توتر
+        النمط المشترك). فماذا يفعل به \omterm{prop:b1:operational-amplifier:sumdiff}{مضخّم فارقي} مطابَق تمامًا؟
+        وإذا اختلّت إحدى نسب المقاومات بمقدار $1\%$، فقدّر
+        التوتر الزائف منسوبًا إلى الدخل وقارنه بالإشارة.
+  \item للمضخّم الأول إزاحة دخل قدرها \qty{1}{mV}. فأيّ خطأ في الخرج
+        ينتجه بعد الكسب الكلي؟ واستنتج.
+  \item مع $f_T = \qty{1}{MHz}$، ما عرض نطاق كل مرحلة؟
+        وهل يكفي لإشارة دون \qty{5}{Hz}؟
+  \item يجب أن يتأرجح الخرج بمقدار \qty{2.5}{V} حين تصل شاحنة في
+        نحو \qty{10}{ms}: فهل يحدّ \omterm{rem:b1:operational-amplifier:real}{معدل الانزلاق} ذلك؟
+\end{enumerate}
+
+\medskip
+\noindent\textbf{الجزء III --- الترشيح.}
+تحمل الإشارة المضخَّمة همهمة عند \qty{50}{Hz} ملتقَطة من
+الشبكة.
+\begin{enumerate}[resume]
+  \item صمّم \omterm{prop:b1:filters-transfer-functions:lowpass1}{مرشّح تمرير منخفض} فعّالًا قالبًا كسبه $-1$ وتواتر قطعه
+        \qty{10}{Hz}، مستعملًا $R_1 = R_2 = \qty{16}{k\ohm}$: أوجد $C$.
+  \item احسب توهينه عند \qty{50}{Hz} \omterm{def:b1:filters-transfer-functions:bode}{بالديسيبل}.
+  \item احسب انزياح الطور عند \qty{5}{Hz} والتأخير الموافق.
+        وهل هو مقبول لإنذار؟
+  \item لماذا يُفضَّل \omterm{prop:b1:operational-amplifier:activelp}{مرشّح فعّال} هنا على \omterm{def:b1:filters-transfer-functions:H}{مرشّح} RC سلبي
+        (لسببين)؟
+  \item تُوضع مرحلة ثانية مماثلة على التتالي: فما التوهين عند \qty{50}{Hz}؟
+        ولماذا تكون قاعدة الجداء تامة هنا؟
+\end{enumerate}
+
+\medskip
+\noindent\textbf{الجزء IV --- العتبة والإنذار.}
+يجب أن ينطلق الإنذار حين يتجاوز التشوّه \num{1.6e-3}.
+\begin{enumerate}[resume]
+  \item أيّ توتر خرج للسلسلة يوافق ذلك؟ ومقارِن
+        بهذا المرجع: ما حالتا خرجه؟
+  \item ما زالت الإشارة المرشَّحة تحمل \qty{50}{mV} من الضجيج قرب
+        العتبة. فماذا يفعل المقارِن البسيط؟
+  \item \omterm{prop:b1:operational-amplifier:schmitt}{قادح شميت} مع المرجع على أحد المدخلين وتغذية راجعة
+        $\beta$: بيّن أن العتبتين هما $V_{\mathrm{ref}} \pm
+        \beta V_{\mathrm{sat}}$؛ واختر $\beta$ من أجل $\pm\qty{0.10}{V}$
+        وأعطِ $R_1$ و $R_2$.
+  \item اذكر العتبتين بالفولط وبالتشوّه.
+  \item يقود الخرج ثنائي LED (\qty{2.0}{V} و\qty{13}{mA}) عبر
+        مقاومة: احسبها. وما الذي يحمي الثنائي حين يكون الخرج
+        عند $-V_{\mathrm{sat}}$؟
+  \item لخّص السلسلة مرحلةً مرحلة، وسمِّ الانحرافين عن
+        المثالية اللذين يفرضان حدودها الحقيقية.
+\end{enumerate}
+\end{problem}

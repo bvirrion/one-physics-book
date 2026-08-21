@@ -1,0 +1,635 @@
+\chapter{Circuitos em corrente contínua: leis de Kirchhoff e teoremas}\label{ch:b1:dc-circuits}
+
+Gire a chave numa manhã fria: o motor de partida geme, as luzes do painel
+enfraquecem por um segundo e o carro pega. A bateria que
+entregava \qty{12.6}{V} estáveis um instante antes cai para onze enquanto
+o motor de partida puxa os seus cento e cinquenta \omterm{def:b1:dc-circuits:current}{ampères} --- e os faróis,
+ligados em paralelo, pagam a conta. Tudo o que acontece nesse segundo é regido por
+duas leis de conservação e por um punhado de teoremas sobre \omterm{def:b1:dc-circuits:linear}{circuitos lineares},
+que este capítulo enuncia, demonstra e aplica: as \omterm{thm:b1:dc-circuits:kirchhoff}{leis de Kirchhoff}, os
+modelos de fontes e \omterm{def:b1:dc-circuits:resistor}{resistores}, os divisores, Thévenin e Norton, e
+a arte gráfica de encontrar um \omterm{met:b1:dc-circuits:loadline}{ponto de operação}.
+
+\section{Corrente, tensão e regime quase estacionário}
+
+\begin{definition}[Corrente elétrica]\label{def:b1:dc-circuits:current}
+\index{corrente elétrica}\index{ampère}
+A \emph{corrente elétrica} através de uma superfície (a seção reta de um fio)
+é a carga que a atravessa por unidade de tempo, contada positivamente numa
+orientação escolhida:
+\[
+i = \frac{\dd q}{\dd t} \qquad (\text{ampères: } \qty{1}{A} = \qty{1}{C/s}).
+\]
+Inverter a orientação troca o sinal de $i$. Num metal os
+portadores são elétrons, que derivam \emph{contra} o sentido convencional
+da corrente, a uma fração de milímetro por segundo.
+\end{definition}
+
+\begin{definition}[Potencial e tensão]\label{def:b1:dc-circuits:voltage}
+\index{potencial elétrico}\index{tensão}\index{terra (elétrica)}
+Cada ponto de um circuito tem um \emph{potencial elétrico} $V$ (volts),
+definido a menos de uma constante fixada pela escolha de uma \emph{terra} ($V = 0$).
+A \emph{tensão} entre $A$ e $B$ é a diferença de potencial
+$u_{AB} = V_A - V_B$, desenhada como uma seta de $B$ para $A$. A energia que uma
+carga $q$ perde ao ir de $A$ a $B$ vale $q\,u_{AB}$ (isso se liga
+ao potencial eletrostático do \cref{ch:b1:potential-capacitors}).
+\end{definition}
+
+\begin{definition}[Regime quase estacionário (ARQS)]\label{def:b1:dc-circuits:arqs}
+\index{regime quase estacionário}\index{ARQS}
+Um circuito de dimensão $\ell$ excitado na frequência $f$ está no
+\emph{regime quase estacionário} quando o tempo de propagação $\ell/c$ dos
+sinais elétricos ao longo dele é desprezível frente ao período $1/f$:
+$\ell \ll c/f$. A corrente é então a mesma em todos os pontos de um
+fio sem derivação em cada instante, e as leis abaixo se aplicam a cada
+instante a correntes e tensões variáveis no tempo (minúsculas $i$, $u$)
+exatamente como às constantes ($I$, $U$).
+\end{definition}
+
+\begin{example}[Quão quase é quase]\label{ex:b1:dc-circuits:arqs}
+A \qty{50}{Hz}, $c/f = \qty{6000}{km}$: uma casa está no \omterm{def:b1:dc-circuits:arqs}{regime quase
+estacionário}. A \qty{1}{MHz}, \qty{300}{m}: um rádio ainda está. A \qty{2}{GHz},
+\qty{15}{cm}: a placa de circuito de um celular não está, e as suas trilhas devem ser
+tratadas como linhas de transmissão --- assunto do volume do segundo ano.
+\end{example}
+
+\begin{theorem}[Leis de Kirchhoff]\label{thm:b1:dc-circuits:kirchhoff}
+\index{leis de Kirchhoff}\index{lei dos nós}\index{lei das malhas}
+No \omterm{def:b1:dc-circuits:arqs}{regime quase estacionário}:
+\begin{enumerate}
+  \item \emph{\omterm{thm:b1:dc-circuits:kirchhoff}{Lei dos nós}}: num nó onde chegam vários fios, a soma das
+        correntes que chegam é igual à soma das correntes que saem,
+        $\sum_{\text{entram}} i_k = \sum_{\text{saem}} i_k$.
+  \item \emph{\omterm{thm:b1:dc-circuits:kirchhoff}{Lei das malhas}}: ao longo de uma malha fechada qualquer, as tensões somam
+        zero quando contadas com o sinal dado por um sentido de percurso
+        escolhido: $\sum_{\text{malha}} \pm u_k = 0$.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+A carga se conserva e, no \omterm{def:b1:dc-circuits:arqs}{regime quase estacionário}, não se acumula
+num nó: o que chega por segundo sai por segundo. A \omterm{thm:b1:dc-circuits:kirchhoff}{lei das malhas} é
+a afirmação de que o potencial é uma função da posição: ao percorrer
+uma malha e voltar ao ponto de partida, a soma das quedas de
+potencial vale $V_A - V_A = 0$.
+\end{proof}
+
+\begin{notation}[Convenções e potência]\label{not:b1:dc-circuits:conventions}
+\index{convenção receptor}\index{convenção gerador}\index{potência elétrica}
+Para um componente de dois terminais (um \emph{dipolo}), a \emph{\omterm{thm:b1:dc-circuits:kirchhoff}{convenção
+receptor}} desenha a seta de \omterm{def:b1:dc-circuits:voltage}{tensão} e a seta de corrente em sentidos
+opostos; a \emph{\omterm{thm:b1:dc-circuits:kirchhoff}{convenção gerador}} as desenha no mesmo
+sentido. Na \omterm{thm:b1:dc-circuits:kirchhoff}{convenção receptor}, a potência \emph{recebida} pelo
+dipolo vale
+\[
+p = u\,i \qquad (\text{watts}),
+\]
+positiva para um \omterm{def:b1:dc-circuits:resistor}{resistor} que aquece, negativa para uma bateria que
+fornece. Na \omterm{thm:b1:dc-circuits:kirchhoff}{convenção gerador}, $p = ui$ é a potência
+\emph{fornecida}.
+\end{notation}
+
+\begin{omfigure}
+\begin{tikzpicture}[font=\small]
+  \draw (0,0) to[generic, l=dipolo, v=$u$, i=$i$] (3,0);
+  \node[below] at (1.5,-1.0) {convenção receptor: $p_{\text{recebida}} = ui$};
+  \begin{scope}[xshift=6cm]
+  \draw (0,0) to[generic, l=dipolo, v<=$u$, i=$i$] (3,0);
+  \node[below] at (1.5,-1.0) {convenção gerador: $p_{\text{fornecida}} = ui$};
+  \end{scope}
+\end{tikzpicture}
+
+{\small As duas convenções de sinal para um dipolo: setas opostas
+(receptor) ou alinhadas (gerador). A física é a mesma; apenas o
+sinal de $ui$ é lido de outro modo.}
+\end{omfigure}
+
+\section{Dipolos e seus modelos}
+
+\begin{definition}[Característica; resistor; lei de Ohm]\label{def:b1:dc-circuits:resistor}
+\index{característica (de um dipolo)}\index{resistor}\index{lei de Ohm}\index{efeito Joule}
+A \emph{característica} de um dipolo é a curva $i(u)$ (ou $u(i)$)
+que ele impõe. Um \emph{resistor} tem característica linear passando pela
+origem, a \emph{lei de Ohm}
+\[
+u = R\,i \qquad (\text{convenção receptor}),
+\]
+sendo $R$ a sua \emph{resistência} (ohms, $\qty{1}{\ohm} = \qty{1}{V/A}$) e
+$G = 1/R$ a sua \emph{condutância} (siemens). Ele recebe $p = Ri^2 =
+u^2/R \geq 0$, dissipada em calor (\emph{efeito Joule}). Um fio de
+comprimento $\ell$, seção $S$ e resistividade $\rho$ tem
+$R = \rho\ell/S$.
+\end{definition}
+
+\begin{definition}[Fontes ideais e reais]\label{def:b1:dc-circuits:sources}
+\index{fonte de tensão}\index{fonte de corrente}\index{força eletromotriz}\index{resistência interna}\index{Thevenin, modelo de@Thévenin, modelo de}\index{Norton, modelo de}
+Uma \emph{fonte de \omterm{def:b1:dc-circuits:voltage}{tensão} ideal} impõe $u = E$ qualquer que seja a corrente;
+$E$ é a sua \emph{força eletromotriz} (fem). Uma \emph{fonte de corrente
+ideal} impõe $i = I_N$ qualquer que seja a \omterm{def:b1:dc-circuits:voltage}{tensão}. Uma \emph{fonte real}
+(bateria, gerador, fonte de alimentação) é modelada, na \omterm{thm:b1:dc-circuits:kirchhoff}{convenção
+gerador}, por
+\[
+u = E - r\,i \quad (\text{modelo de Thévenin: fem ideal } E \text{ em série com } r)
+\]
+ou, de modo equivalente, por $i = I_N - u/r$ (modelo de Norton: fonte de corrente
+ideal $I_N = E/r$ em paralelo com $r$); $r$ é a \emph{resistência
+interna}. $E$ é a \omterm{def:b1:dc-circuits:voltage}{tensão} em circuito aberto e $I_N = E/r$ a
+corrente de curto-circuito.
+\end{definition}
+
+\begin{proposition}[Balanço de potência de uma fonte real]\label{prop:b1:dc-circuits:sourcepower}
+\index{transferência máxima de potência}
+Uma fonte real $(E, r)$ que alimenta um \omterm{def:b1:dc-circuits:resistor}{resistor} $R$ entrega $i = E/(R + r)$
+e a potência
+\[
+P_R = \frac{E^2 R}{(R + r)^2},
+\]
+máxima e igual a $E^2/4r$ quando $R = r$ (\emph{casamento de impedâncias}),
+com rendimento $P_R/(Ei) = R/(R + r)$, de apenas $50\%$ no máximo.
+\end{proposition}
+
+\begin{proof}
+\omterm{thm:b1:dc-circuits:kirchhoff}{Lei das malhas}: $E = ri + Ri$. $P_R = Ri^2$; derive $R/(R + r)^2$:
+$\big[(R + r)^2 - 2R(R + r)\big]/(R + r)^4 = (r - R)/(R + r)^3$, nulo em
+$R = r$, positivo antes e negativo depois. A fonte fornece
+$Ei = (R + r)i^2$, dos quais $ri^2$ aquecem a própria fonte.
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}
+\begin{axis}[omaxis, width=7.6cm, height=5.2cm, xlabel={$i$}, ylabel={$u$},
+    xmin=0, xmax=1.3, ymin=0, ymax=1.3, xtick={1}, xticklabels={$I_N = E/r$},
+    ytick={1}, yticklabels={$E$}]
+  \addplot[omThm, thick, domain=0:1, samples=2] {1 - x};
+  \addplot[omDef, thick, domain=0:0.9, samples=2] {0.6*x};
+  \fill[omExo] (axis cs:0.625,0.375) circle (1.6pt);
+  \node[omExo, font=\footnotesize] (op) at (axis cs:0.98,0.92) {ponto de operação};
+  \draw[-Stealth, omExo] (op.south west) -- (axis cs:0.645,0.395);
+  \node[omThm, font=\footnotesize, anchor=south west] at (axis cs:0.03,1.02) {fonte $u = E - ri$};
+  \node[omDef, font=\footnotesize, right] at (axis cs:0.9,0.54) {carga $u = Ri$};
+\end{axis}
+\end{tikzpicture}\qquad
+\begin{tikzpicture}
+\begin{axis}[omaxis, width=7.0cm, height=5cm, xlabel={$R/r$}, ylabel={$P_R$},
+    xmin=0, xmax=6, ymin=0, ymax=0.3, xtick={1,3,5}, ytick={0.25}, yticklabels={$\frac{E^2}{4r}$}]
+  \addplot[omProp, thick, domain=0:6, samples=120] {x/((x+1)^2)};
+  \draw[dashed, omExo] (axis cs:1,0) -- (axis cs:1,0.25) -- (axis cs:0,0.25);
+\end{axis}
+\end{tikzpicture}
+
+{\small À esquerda: as características de uma fonte real ($u = E - ri$) e
+de uma carga resistiva ($u = Ri$) se cruzam no \omterm{met:b1:dc-circuits:loadline}{ponto de operação}. À direita: a
+potência entregue à carga é máxima em $R = r$, onde metade da potência da
+fonte é desperdiçada na sua própria resistência.}
+\end{omfigure}
+
+\begin{example}[Uma bateria de carro sob carga]\label{ex:b1:dc-circuits:battery}
+Circuito aberto \qty{12.6}{V}; \qty{11.4}{V} enquanto o motor de partida puxa
+\qty{120}{A}: $r = 1.2/120 = \qty{10}{m\ohm}$, $I_N = \qty{1260}{A}$
+(daí o perigo, digno de solda, de uma chave que caia nos terminais). Uma carga casada
+$R = \qty{10}{m\ohm}$ tomaria $E^2/4r = \qty{4}{kW}$ por alguns
+segundos --- mais ou menos o que um motor de partida precisa.
+\end{example}
+
+\begin{remark}[Outros dipolos]\label{rem:b1:dc-circuits:others}
+\index{diodo}
+Um \emph{diodo} conduz num só sentido: um modelo idealizado é um
+circuito aberto para $u < U_0$ e uma \omterm{def:b1:dc-circuits:voltage}{tensão} fixa $u = U_0$ (cerca de
+\qty{0.7}{V} para o silício, \qty{2}{} a \qty{3}{V} para um LED) quando ele
+conduz. Uma lâmpada de filamento é um \omterm{def:b1:dc-circuits:resistor}{resistor} cujo $R$ cresce com a
+temperatura, portanto com $i$ --- uma característica curva. Em regime
+permanente um capacitor é um circuito aberto ($i = C\,\dd u/\dd t = 0$) e um
+indutor é um curto-circuito ($u = L\,\dd i/\dd t = 0$); o seu papel nos
+transitórios é o \cref{ch:b1:transient-regimes}.
+\end{remark}
+
+\section{Associações e divisores}
+
+\begin{proposition}[Resistores em série e em paralelo]\label{prop:b1:dc-circuits:seriesparallel}
+\index{série (resistores)}\index{paralelo (resistores)}
+\omterm{def:b1:dc-circuits:resistor}{Resistores} em série (mesma corrente) somam-se: $R = R_1 + R_2 + \cdots$.
+\omterm{def:b1:dc-circuits:resistor}{Resistores} em paralelo (mesma \omterm{def:b1:dc-circuits:voltage}{tensão}) somam as suas condutâncias:
+$1/R = 1/R_1 + 1/R_2 + \cdots$; para dois, $R = R_1R_2/(R_1 + R_2)$,
+escrito $R_1 \parallel R_2$.
+\end{proposition}
+
+\begin{proof}
+Série: $u = u_1 + u_2 = (R_1 + R_2)i$ (\omterm{thm:b1:dc-circuits:kirchhoff}{lei das malhas}). Paralelo: $i = i_1 +
+i_2 = u/R_1 + u/R_2$ (\omterm{thm:b1:dc-circuits:kirchhoff}{lei dos nós}).
+\end{proof}
+
+\begin{proposition}[Divisores de tensão e de corrente]\label{prop:b1:dc-circuits:dividers}
+\index{divisor de tensão}\index{divisor de corrente}
+Dois \omterm{def:b1:dc-circuits:resistor}{resistores} em série sob uma \omterm{def:b1:dc-circuits:voltage}{tensão} $u$ a repartem em proporção às
+suas resistências:
+\[
+u_2 = \frac{R_2}{R_1 + R_2}\,u .
+\]
+Dois \omterm{def:b1:dc-circuits:resistor}{resistores} em paralelo alimentados por uma corrente $i$ a repartem em
+proporção inversa:
+\[
+i_2 = \frac{R_1}{R_1 + R_2}\,i = \frac{G_2}{G_1 + G_2}\,i .
+\]
+\end{proposition}
+
+\begin{proof}
+Série: $i = u/(R_1 + R_2)$ e $u_2 = R_2 i$. Paralelo: $u = (R_1
+\parallel R_2)\,i$ e $i_2 = u/R_2$.
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}[font=\small]
+  \draw (0,3.2) to[R=$R_1$] (0,1.6) to[R=$R_2$, v=$u_2$] (0,0);
+  \draw[-Stealth, thick] (-1.3,0.1) -- (-1.3,3.1) node[midway, left] {$u$};
+  \fill (0,3.2) circle (1.2pt); \fill (0,0) circle (1.2pt);
+  \begin{scope}[xshift=5.5cm]
+  \draw (0,3.2) to[short, i=$i$] (1.4,3.2) to[R=$R_1$] (1.4,0) -- (0,0);
+  \draw (1.4,3.2) -- (3.0,3.2) to[short, i=$i_2$] (3.0,2.4) to[R=$R_2$] (3.0,0) -- (1.4,0);
+  \fill (0,3.2) circle (1.2pt); \fill (0,0) circle (1.2pt);
+  \end{scope}
+\end{tikzpicture}
+
+{\small \omterm{prop:b1:dc-circuits:dividers}{Divisor de tensão} (à esquerda): $u_2 = R_2 u/(R_1 + R_2)$. \omterm{prop:b1:dc-circuits:dividers}{Divisor
+de corrente} (à direita): $i_2 = R_1 i/(R_1 + R_2)$ --- a corrente prefere a
+resistência menor.}
+\end{omfigure}
+
+\begin{remark}[Carregar um divisor]\label{rem:b1:dc-circuits:loading}
+A fórmula do divisor só vale se nada drenar corrente do
+ponto médio. Uma carga $R_L$ ligada em paralelo com $R_2$ substitui $R_2$ por $R_2
+\parallel R_L$ e abaixa $u_2$ --- é o ``efeito de carga'', e a
+razão pela qual um voltímetro deve ter resistência alta e um potenciômetro
+resistência baixa em comparação com o que alimenta
+(\cref{exo:b1:dc-circuits:4}).
+\end{remark}
+
+\begin{method}[Reduzindo uma rede]\label{met:b1:dc-circuits:reduce}
+Para encontrar uma corrente ou uma \omterm{def:b1:dc-circuits:voltage}{tensão} numa rede de \omterm{def:b1:dc-circuits:resistor}{resistores} com uma única
+fonte:
+\begin{enumerate}
+  \item começando longe da fonte, substitua os grupos em série e em paralelo
+        pelos seus equivalentes até que um único \omterm{def:b1:dc-circuits:resistor}{resistor} fique diante da
+        fonte;
+  \item calcule a corrente da fonte;
+  \item volte atrás, repartindo correntes com \omterm{prop:b1:dc-circuits:dividers}{divisores de corrente} e
+        tensões com \omterm{prop:b1:dc-circuits:dividers}{divisores de tensão}, até o ramo desejado.
+\end{enumerate}
+Com várias fontes, ou para um ramo cujos vizinhos mudam, use
+os teoremas da próxima seção.
+\end{method}
+
+\section{Teoremas dos circuitos lineares}
+
+\begin{definition}[Dipolo linear, circuito linear]\label{def:b1:dc-circuits:linear}
+\index{dipolo linear}
+Um dipolo é \emph{linear} se a sua característica é uma reta
+(\omterm{def:b1:dc-circuits:resistor}{resistor}, fontes ideais e reais); um circuito feito apenas de dipolos
+lineares é um \emph{circuito linear}. As suas incógnitas obedecem a um sistema de
+equações lineares (as \omterm{thm:b1:dc-circuits:kirchhoff}{leis de Kirchhoff} mais as características), cuja
+solução é única.
+\end{definition}
+
+\begin{theorem}[Thévenin e Norton]\label{thm:b1:dc-circuits:thevenin}
+\index{Thevenin, teorema de@Thévenin, teorema de}\index{Norton, teorema de}
+Visto de dois dos seus terminais $A$ e $B$, todo \omterm{def:b1:dc-circuits:linear}{circuito linear} é
+equivalente a uma fonte real: uma fem $E_{\mathrm{Th}}$ em série com uma
+resistência $R_{\mathrm{Th}}$ (Thévenin), ou uma \omterm{def:b1:dc-circuits:sources}{fonte de corrente} $I_N =
+E_{\mathrm{Th}}/R_{\mathrm{Th}}$ em paralelo com $R_{\mathrm{Th}}$
+(Norton), em que
+\begin{itemize}
+  \item $E_{\mathrm{Th}}$ é a \omterm{def:b1:dc-circuits:voltage}{tensão} em circuito aberto $u_{AB}$;
+  \item $I_N$ é a corrente de curto-circuito de $A$ para $B$;
+  \item $R_{\mathrm{Th}}$ é a resistência vista entre $A$ e $B$
+        quando toda fonte independente é desligada (as \omterm{def:b1:dc-circuits:sources}{fontes de tensão}
+        ideais substituídas por fios, as \omterm{def:b1:dc-circuits:sources}{fontes de corrente} ideais por
+        circuitos abertos).
+\end{itemize}
+\end{theorem}
+
+\begin{proof}[Demonstração parcial]
+Por linearidade, a relação entre a \omterm{def:b1:dc-circuits:voltage}{tensão} $u_{AB}$ e a corrente
+$i$ drenada nos terminais é afim: $u_{AB} = a - b\,i$. Fazer
+$i = 0$ identifica $a = E_{\mathrm{Th}}$; fazer $u_{AB} = 0$ dá
+$b = E_{\mathrm{Th}}/I_N$. Que $b$ seja igual à resistência vista com as
+fontes anuladas decorre da superposição (abaixo): a parte de $u_{AB}$
+devida apenas à corrente externa é o que uma rede passiva de
+resistência $R_{\mathrm{Th}}$ produziria. Que todo sistema linear tenha
+uma relação entrada--saída afim é a álgebra das equações lineares.
+\end{proof}
+
+\begin{theorem}[Superposição]\label{thm:b1:dc-circuits:superposition}
+\index{teorema da superposição}
+Num \omterm{def:b1:dc-circuits:linear}{circuito linear} com várias fontes independentes, qualquer corrente ou
+\omterm{def:b1:dc-circuits:voltage}{tensão} é a soma dos valores que ela assume quando cada fonte age sozinha,
+com as demais desligadas.
+\end{theorem}
+
+\begin{proof}
+As equações são lineares nas incógnitas, com as fontes no
+segundo membro; a solução é uma função linear desse segundo
+membro, portanto a soma das soluções para cada fonte separadamente.
+\end{proof}
+
+\begin{proposition}[Teorema de Millman]\label{prop:b1:dc-circuits:millman}
+\index{teorema de Millman}
+Um nó $N$ ligado a pontos de potenciais $V_1, \dots, V_n$ através de
+resistências $R_1, \dots, R_n$ (e a mais nada) tem o potencial
+\[
+V_N = \frac{\sum_k V_k/R_k}{\sum_k 1/R_k} = \frac{\sum_k G_k V_k}{\sum_k G_k},
+\]
+a média dos potenciais dos seus vizinhos ponderada pelas condutâncias.
+\end{proposition}
+
+\begin{proof}
+\omterm{thm:b1:dc-circuits:kirchhoff}{Lei dos nós} em $N$: $\sum_k (V_k - V_N)/R_k = 0$; isole $V_N$.
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}[font=\small]
+  % network: E1=10V, R1=1k ; E2=5V, R2=2k ; common load R3=2k
+  \draw (0,0) to[battery1, l=$E_1$, invert] (0,2) to[R=$R_1$] (2.5,2) -- (2.5,2) to[R=$R_3$, v=$u$] (2.5,0) -- (0,0);
+  \draw (2.5,2) to[R=$R_2$] (5,2) to[battery1, l_=$E_2$] (5,0) -- (2.5,0);
+  \node at (2.5,2.45) {$N$};
+  \node at (6.4,1) {$\Longleftrightarrow$};
+  \begin{scope}[xshift=8.8cm]
+  \draw (0,0) to[battery1, l=$E_{\mathrm{Th}}$, invert] (0,2) to[R=$R_{\mathrm{Th}}$] (2.2,2) to[R=$R_3$, v=$u$] (2.2,0) -- (0,0);
+  \end{scope}
+\end{tikzpicture}
+
+{\small Duas fontes alimentando uma carga comum $R_3$. Vista dos
+terminais de $R_3$, o resto do circuito é uma fonte de Thévenin
+($E_{\mathrm{Th}}$, $R_{\mathrm{Th}}$); o teorema de Millman dá o
+potencial do nó $N$ em uma linha.}
+\end{omfigure}
+
+\begin{example}[Três caminhos para a mesma resposta]\label{ex:b1:dc-circuits:threeways}
+Na figura, $E_1 = \qty{10}{V}$, $R_1 = \qty{1.0}{k\ohm}$, $E_2 =
+\qty{5.0}{V}$, $R_2 = \qty{2.0}{k\ohm}$, $R_3 = \qty{2.0}{k\ohm}$.
+\emph{Millman}: $V_N = (10/1 + 5/2 + 0/2)/(1 + 0.5 + 0.5) = 12.5/2 =
+\qty{6.25}{V}$. \emph{Superposição}: $E_1$ sozinha vê $R_2 \parallel
+R_3 = \qty{1}{k\ohm}$, logo $u = 10 \times 1/2 = \qty{5}{V}$; $E_2$ sozinha
+vê $R_1 \parallel R_3 = \qty{0.667}{k\ohm}$, $u = 5 \times 0.667/2.667
+= \qty{1.25}{V}$; total \qty{6.25}{V}. \emph{Thévenin} visto de
+$R_3$: $E_{\mathrm{Th}}$ é a \omterm{def:b1:dc-circuits:voltage}{tensão} em circuito aberto do divisor
+$(E_1, R_1, R_2, E_2)$: $E_2 + (E_1 - E_2)R_2/(R_1 + R_2) = 5 + 5 \times
+2/3 = \qty{8.33}{V}$; $R_{\mathrm{Th}} = R_1 \parallel R_2 =
+\qty{0.667}{k\ohm}$; então $u = 8.33 \times 2/2.667 = \qty{6.25}{V}$.
+\end{example}
+
+\section{Ponto de operação; a ponte de Wheatstone}
+
+\begin{method}[Ponto de operação gráfico]\label{met:b1:dc-circuits:loadline}
+\index{ponto de operação}\index{reta de carga}
+Um dipolo não linear (característica $i = g(u)$) alimentado por uma fonte de
+Thévenin $(E, R)$ se estabiliza onde as duas relações valem: trace a
+característica do dipolo e a \emph{\omterm{met:b1:dc-circuits:loadline}{reta de carga}} da fonte, $u = E - Ri$, nos
+mesmos eixos; a interseção é o \emph{\omterm{met:b1:dc-circuits:loadline}{ponto de operação}}. Dimensionar
+o \omterm{def:b1:dc-circuits:resistor}{resistor} em série de um LED, um regulador Zener ou a polarização de um transistor
+é exatamente essa construção.
+\end{method}
+
+\begin{omfigure}
+\begin{tikzpicture}
+\begin{axis}[omaxis, width=8cm, height=5.4cm, xlabel={$u$ (\unit{V})}, ylabel={$i$ (\unit{mA})},
+    xmin=0, xmax=5.6, ymin=0, ymax=30, xtick={1,2,3,4,5}, ytick={10,20,25}]
+  \addplot[omDef, thick, domain=0:1.9, samples=2] {0};
+  \addplot[omDef, thick, domain=1.9:2.9, samples=60] {28*(exp(2.8*(x-1.9))-1)/(exp(2.8)-1)};
+  \addplot[omThm, thick, domain=0:5, samples=2] {25 - 5*x};
+  \fill[omExo] (axis cs:2.0,15) circle (1.6pt);
+  \node[omExo, font=\footnotesize] (op) at (axis cs:1.05,11.5) {ponto de operação};
+  \draw[-Stealth, omExo] (op.east) -- (axis cs:1.93,14.8);
+  \node[omDef, font=\footnotesize, left] at (axis cs:2.55,25) {LED};
+  \node[omThm, font=\footnotesize] at (axis cs:3.1,1.4) {reta de carga};
+\end{axis}
+\end{tikzpicture}
+
+{\small Um LED (limiar perto de \qty{2}{V}) alimentado por $E = \qty{5}{V}$
+através de $R = \qty{200}{\ohm}$: a \omterm{met:b1:dc-circuits:loadline}{reta de carga} $u = E - Ri$ cruza a
+característica do diodo em $\qty{2.0}{V}$, \qty{15}{mA}. Aumentar $R$
+inclina a reta para baixo e enfraquece o LED.}
+\end{omfigure}
+
+\begin{proposition}[Ponte de Wheatstone]\label{prop:b1:dc-circuits:wheatstone}
+\index{ponte de Wheatstone}
+Quatro \omterm{def:b1:dc-circuits:resistor}{resistores} $R_1, R_2$ (um ramo) e $R_3, R_4$ (o outro) sob
+uma fonte $E$; a saída da ponte é a \omterm{def:b1:dc-circuits:voltage}{tensão} entre os dois
+pontos médios:
+\[
+u = E\left(\frac{R_2}{R_1 + R_2} - \frac{R_4}{R_3 + R_4}\right),
+\]
+nula (a ponte está \emph{equilibrada}) se e só se $R_1R_4 = R_2R_3$. Para uma
+ponte equilibrada com $R_4$ perturbado para $R_4(1 + \epsilon)$, $\epsilon
+\ll 1$, e $R_3 = R_4$: $u \approx -E\epsilon/4$.
+\end{proposition}
+
+\begin{proof}
+Dois \omterm{prop:b1:dc-circuits:dividers}{divisores de tensão}; subtraia. Equilíbrio: $R_2(R_3 + R_4) = R_4(R_1 +
+R_2)$, isto é,\ $R_2R_3 = R_1R_4$. Com $R_3 = R_4 = R$ e $R_1 = R_2$:
+$u = E[\tfrac12 - (1 + \epsilon)/(2 + \epsilon)] = E[(2 + \epsilon - 2 -
+2\epsilon)/(2(2 + \epsilon))] \approx -E\epsilon/4$.
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}[font=\small]
+  \draw (0,1.5) to[R=$R_1$] (2,3) to[R=$R_2$] (4,1.5) to[R=$R_4$] (2,0) to[R=$R_3$] (0,1.5);
+  \draw (2,3) to[short, *-] (2,3); \draw (2,0) to[short, *-] (2,0);
+  \draw (0,1.5) -- (-1,1.5) to[battery1, l=$E$] (-1,-1) -- (4,-1) -- (4,1.5);
+  \draw[-Stealth, omThm] (2,0.35) -- (2,2.65) ;
+  \node[omThm, right] at (2.05,1.5) {$u$};
+\end{tikzpicture}
+
+{\small A \omterm{prop:b1:dc-circuits:wheatstone}{ponte de Wheatstone}: dois divisores lado a lado. Equilibrada quando
+$R_1R_4 = R_2R_3$, ela converte uma variação minúscula de uma das resistências
+(extensômetro, termistor) numa \omterm{def:b1:dc-circuits:voltage}{tensão} em torno de zero, muito
+mais fácil de amplificar do que uma pequena variação de uma \omterm{def:b1:dc-circuits:voltage}{tensão} grande.}
+\end{omfigure}
+
+\section{Exercícios}
+
+\begin{exercise}[$\star$]\label{exo:b1:dc-circuits:1}
+Um celular carrega a \qty{1.5}{A} durante uma hora: que carga circula, quantos
+elétrons? Estime se o \omterm{def:b1:dc-circuits:arqs}{regime quase estacionário} vale para a
+instalação de uma casa a \qty{50}{Hz}, para um circuito de \qty{10}{cm} a \qty{1}{MHz}
+e para o mesmo circuito a \qty{1}{GHz}.
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b1:dc-circuits:2}
+Um aquecedor de \qty{2000}{W} em \qty{230}{V}: corrente, resistência, energia
+consumida em \qty{3.0}{h} (em kWh e em joules). O seu cabo de cobre de \qty{5.0}{m}
+tem seção de \qty{1.5}{mm^2} ($\rho = \qty{1.7e-8}{\ohm.m}$):
+potência perdida no cabo.
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b1:dc-circuits:3}
+Com $\qty{10}{\ohm}$, $\qty{20}{\ohm}$ e $\qty{30}{\ohm}$: calcule
+a resistência dos três em série, em paralelo e de
+$(10 \parallel 20) + 30$.
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b1:dc-circuits:4}
+Uma fonte de \qty{12}{V} alimenta \qty{4.7}{k\ohm} e \qty{2.2}{k\ohm} em
+série. Calcule a \omterm{def:b1:dc-circuits:voltage}{tensão} sobre o \omterm{def:b1:dc-circuits:resistor}{resistor} de \qty{2.2}{k\ohm}. Um aparelho de
+resistência \qty{2.2}{k\ohm} é então ligado em paralelo com ele: nova \omterm{def:b1:dc-circuits:voltage}{tensão}?
+Conclua sobre o efeito de carga.
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b1:dc-circuits:5}
+Uma bateria marca \qty{12.6}{V} em aberto e \qty{11.4}{V} enquanto fornece
+\qty{120}{A}. Encontre a sua \omterm{def:b1:dc-circuits:sources}{resistência interna} e a corrente de curto-circuito,
+a potência entregue ao motor de partida e a potência perdida internamente, e o
+rendimento.
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b1:dc-circuits:6}
+Encontre o equivalente de Thévenin, visto dos terminais do \omterm{def:b1:dc-circuits:resistor}{resistor} de
+\qty{2.2}{k\ohm}, do divisor do \cref{exo:b1:dc-circuits:4}
+($E = \qty{12}{V}$, $R_1 = \qty{4.7}{k\ohm}$, $R_2 = \qty{2.2}{k\ohm}$).
+Use-o para reencontrar a \omterm{def:b1:dc-circuits:voltage}{tensão} sob carga daquele exercício.
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b1:dc-circuits:7}
+Duas baterias, $E_1 = \qty{10}{V}$ ($r_1 = \qty{1.0}{\ohm}$) e
+$E_2 = \qty{5.0}{V}$ ($r_2 = \qty{2.0}{\ohm}$), são ligadas em
+paralelo (mesma polaridade) a uma carga de \qty{2.0}{\ohm}. Encontre a \omterm{def:b1:dc-circuits:voltage}{tensão}
+na carga por superposição, depois por Millman, e a corrente em cada
+bateria. A bateria mais fraca está carregando ou descarregando?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b1:dc-circuits:8}
+Uma fonte $E = \qty{9.0}{V}$, $r = \qty{3.0}{\ohm}$. Calcule a potência
+entregue a cargas de $\qty{1.0}{\ohm}$, $\qty{3.0}{\ohm}$, $\qty{12}{\ohm}$,
+e o rendimento em cada caso. Que carga um engenheiro escolheria para
+um aparelho a pilha, e por que não a casada?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b1:dc-circuits:9}
+Um LED conduz a \qty{2.0}{V} e deve conduzir \qty{15}{mA} a partir de uma
+alimentação de \qty{5.0}{V}. Escolha o \omterm{def:b1:dc-circuits:resistor}{resistor} em série, as potências no
+\omterm{def:b1:dc-circuits:resistor}{resistor} e no LED, e esboce a construção da \omterm{met:b1:dc-circuits:loadline}{reta de carga}. O que
+acontece se a alimentação for de \qty{3.3}{V}?
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b1:dc-circuits:10}
+Um extensômetro $R_4 = R(1 + \epsilon)$, $R = \qty{1.0}{k\ohm}$, está numa
+\omterm{prop:b1:dc-circuits:wheatstone}{ponte de Wheatstone} com três \omterm{def:b1:dc-circuits:resistor}{resistores} fixos de \qty{1.0}{k\ohm} sob
+\qty{5.0}{V}. Deduza a tensão de saída em primeira ordem em $\epsilon$ e
+calcule-a para $\epsilon = \num{1.0e-3}$. Por que a ponte é preferível
+a medir a \omterm{def:b1:dc-circuits:voltage}{tensão} do extensômetro num divisor simples?
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b1:dc-circuits:11}
+Doze \omterm{def:b1:dc-circuits:resistor}{resistores} idênticos $R$ formam as arestas de um cubo. Usando a
+simetria (que nós estão ao mesmo potencial quando uma corrente $I$
+entra por um vértice e sai pelo oposto), mostre que a
+resistência entre vértices opostos vale $5R/6$.
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b1:dc-circuits:12}
+Uma \omterm{def:b1:dc-circuits:sources}{fonte de corrente} $I_N = \qty{2.0}{A}$ em paralelo com \qty{4.0}{\ohm}
+é ligada, através de um \omterm{def:b1:dc-circuits:resistor}{resistor} de \qty{2.0}{\ohm}, a uma bateria de \qty{6.0}{V}
+(resistência desprezível) cuja fem se opõe a ela. Converta a fonte de
+Norton em Thévenin e encontre a corrente no \omterm{def:b1:dc-circuits:resistor}{resistor} de \qty{2.0}{\ohm}
+e a potência trocada por cada fonte.
+\end{exercise}
+
+\begin{omfigure}
+\includegraphics[width=0.58\linewidth]{images/book3/ai/b3-06-car-battery-engine-bay.png}
+
+{\small Sob o capô: a bateria de \qty{12}{V}, os seus cabos grossos e o alternador --- a rede de corrente contínua do problema de fim de semana, com centenas de \omterm{def:b1:dc-circuits:current}{ampères} na partida.}
+\end{omfigure}
+
+\section{Problema: o sistema elétrico de um carro}
+
+\begin{problem}[{Problema de fim de semana --- uma bateria, um motor de partida, dois
+faróis, um alternador e alguns metros de cobre: quem recebe a
+corrente, quem paga a conta e por que as luzes enfraquecem quando o motor gira}]
+\label{pb:b1:dc-circuits:1}
+A bateria é uma fonte real, de fem $E = \qty{12.6}{V}$ e \omterm{def:b1:dc-circuits:sources}{resistência
+interna} $r = \qty{10}{m\ohm}$. Cobre: $\rho = \qty{1.7e-8}{\ohm.m}$.
+
+\medskip
+\noindent\textbf{Parte I --- A bateria sozinha.}
+\begin{enumerate}
+  \item Desenhe o modelo de Thévenin e escreva $u(i)$ na \omterm{thm:b1:dc-circuits:kirchhoff}{convenção
+        gerador}.
+  \item Dê a \omterm{def:b1:dc-circuits:voltage}{tensão} em circuito aberto e a corrente de curto-circuito.
+        Por que uma chave que caia jamais deve unir os terminais?
+  \item Escreva o modelo de Norton da mesma bateria.
+  \item A bateria alimenta um \omterm{def:b1:dc-circuits:resistor}{resistor} $R$: exprima a corrente, a
+        \omterm{def:b1:dc-circuits:voltage}{tensão} nos terminais, a potência $P_R$ entregue e a potência perdida
+        em $r$.
+  \item Mostre que $P_R$ é máxima para $R = r$ e calcule esse
+        máximo. Qual é o rendimento nesse caso?
+  \item Um técnico mede $u = \qty{12.48}{V}$ a \qty{12}{A} e
+        $u = \qty{11.40}{V}$ a \qty{120}{A}. Verifique que os dois pontos estão
+        sobre o modelo e explique como uma série desses pontos dá $E$
+        e $r$ por um ajuste de reta.
+  \item A bateria armazena \qty{60}{A.h}. Por quanto tempo ela poderia alimentar
+        sozinha os dois faróis de \qty{55}{W} (tome \qty{12}{V})? Quanta
+        energia é isso em joules?
+\end{enumerate}
+
+\medskip
+\noindent\textbf{Parte II --- Dando a partida com os faróis acesos.}
+O motor de partida é um \omterm{def:b1:dc-circuits:resistor}{resistor} $R_s = \qty{80}{m\ohm}$; cada farol é
+especificado em \qty{55}{W} sob \qty{12.0}{V} e é tratado como um \omterm{def:b1:dc-circuits:resistor}{resistor}.
+\begin{enumerate}[resume]
+  \item Calcule a resistência de um farol e a dos dois em
+        paralelo.
+  \item Motor de partida sozinho: corrente, \omterm{def:b1:dc-circuits:voltage}{tensão} nos terminais, potência no motor de partida,
+        potência perdida na bateria.
+  \item Motor de partida e os dois faróis juntos: resistência de carga
+        equivalente, corrente total, \omterm{def:b1:dc-circuits:voltage}{tensão} nos terminais.
+  \item Use o \omterm{prop:b1:dc-circuits:dividers}{divisor de corrente} para encontrar a corrente do motor de partida e a
+        corrente dos faróis.
+  \item Calcule a potência que cada farol recebe agora e compare com
+        a sua especificação: em que fração as luzes enfraquecem?
+  \item Explique em duas frases, com a \omterm{thm:b1:dc-circuits:kirchhoff}{lei das malhas}, por que as luzes
+        enfraquecem precisamente porque o motor de partida drena uma corrente grande.
+  \item Cabos de bateria mais grossos ajudariam os faróis? Justifique
+        qualitativamente agora (a Parte IV quantifica).
+\end{enumerate}
+
+\medskip
+\noindent\textbf{Parte III --- Motor em funcionamento: o alternador.}
+O alternador é uma segunda fonte real, $E_a = \qty{14.2}{V}$,
+$r_a = \qty{50}{m\ohm}$, em paralelo com a bateria; o motor de partida está
+desligado e os dois faróis estão acesos.
+\begin{enumerate}[resume]
+  \item Desenhe o circuito: duas fontes reais e a carga dos faróis em
+        paralelo entre os mesmos dois nós.
+  \item Aplique o teorema de Millman para encontrar a \omterm{def:b1:dc-circuits:voltage}{tensão} comum nos terminais.
+  \item Deduza a corrente do alternador, a corrente da bateria (sinal!) e
+        a corrente dos faróis; verifique a \omterm{thm:b1:dc-circuits:kirchhoff}{lei dos nós}.
+  \item A bateria está carregando ou descarregando? Que potência ela
+        recebe, e que potência o alternador fornece?
+  \item Reencontre a \omterm{def:b1:dc-circuits:voltage}{tensão} nos terminais por superposição (cada fonte
+        sozinha, a outra substituída pela sua \omterm{def:b1:dc-circuits:sources}{resistência interna}) e
+        verifique.
+\end{enumerate}
+
+\medskip
+\noindent\textbf{Parte IV --- Sensores e fios.}
+\begin{enumerate}[resume]
+  \item O sensor do líquido de arrefecimento é um termistor cuja resistência cai de
+        \qty{2.0}{k\ohm} a \qty{20}{\degreeCelsius} para \qty{300}{\ohm} a
+        \qty{90}{\degreeCelsius}; ele é o \omterm{def:b1:dc-circuits:resistor}{resistor} inferior de um divisor
+        alimentado por \qty{5.0}{V}, sendo o \omterm{def:b1:dc-circuits:resistor}{resistor} superior $R_0$. Exprima a
+        \omterm{def:b1:dc-circuits:voltage}{tensão} de saída e calcule-a nas duas temperaturas para
+        $R_0 = \qty{775}{\ohm}$.
+  \item Mostre que a excursão da saída entre as duas temperaturas é
+        máxima quando $R_0$ é a média geométrica dos dois valores do
+        sensor, e verifique o valor acima.
+  \item O mesmo sensor é posto numa \omterm{prop:b1:dc-circuits:wheatstone}{ponte de Wheatstone} com três
+        \omterm{def:b1:dc-circuits:resistor}{resistores} de \qty{775}{\ohm}: escreva a saída da ponte e diga em
+        que temperatura ela está equilibrada.
+  \item O cabo do motor de partida tem \qty{1.5}{m} de comprimento em cada sentido. Calcule a
+        resistência de um condutor de seção \qty{16}{mm^2}, a
+        queda de \omterm{def:b1:dc-circuits:voltage}{tensão} total a \qty{140}{A} e a potência dissipada nos
+        cabos.
+  \item O mesmo com cabo de \qty{4}{mm^2}: por que o cabo do motor de partida é tão grosso?
+  \item Resuma: dê a \omterm{def:b1:dc-circuits:voltage}{tensão} nos terminais durante a partida, a
+        fração da potência que chega ao motor de partida e a única lei que
+        explica o enfraquecimento das luzes.
+\end{enumerate}
+\end{problem}
