@@ -1,6 +1,645 @@
 \chapter{Units, Dimensions, and Measurement}\label{ch:b1:units-dimensions}
 
-% TODO: course, examples, figures, and 8--12 graded exercises
-% (see CONTRIBUTING.md). Placeholder until written.
+In a basement laboratory a pendulum swings, a stopwatch clicks, and a
+student writes $g = \qty{9.77}{m/s^2}$. Is that the ``right'' value? The
+textbook says $9.81$. Whether the two numbers agree, whether the experiment
+was well designed, which of its steps limited it --- none of this can be
+decided from the digits alone. Physics measures, and a measurement without
+its uncertainty is a rumor. This chapter sets up the common language of
+every chapter to come: \omterm{def:b1:units-dimensions:unit}{units}, \omterm{def:b1:units-dimensions:dimension}{dimensions}, orders of magnitude, and the
+honest arithmetic of uncertainties.
 
-\emph{This chapter has not been written yet.}
+\begin{omfigure}
+\includegraphics[width=0.46\linewidth]{images/book3/kibble-balance-nist.jpg}
+
+{\small The NIST-4 Kibble balance, one of the instruments that now realize the kilogram from Planck's constant: a mass is weighed against an electromagnetic force measured in electrical \omterm{def:b1:units-dimensions:unit}{units}. Photograph: J.~L.~Lee, NIST (public domain).}
+\end{omfigure}
+
+\section{The International System of Units}
+
+\begin{definition}[Physical quantity and unit]\label{def:b1:units-dimensions:unit}
+A \emph{physical quantity}\index{physical quantity} is a property that
+can be measured: a length, a duration, a mass, a current. Measuring it
+means comparing it with a reference quantity of the same kind, the
+\emph{unit}\index{unit}: the result is a number times a unit,
+$\ell = \qty{1.257}{m}$. The number alone means nothing; the unit alone
+measures nothing.
+\end{definition}
+
+\begin{definition}[Base units of the SI]\label{def:b1:units-dimensions:si}
+\index{SI (International System of Units)}\index{base unit}
+The \emph{International System of \omterm{def:b1:units-dimensions:unit}{Units}} (SI) rests on seven
+\emph{base \omterm{def:b1:units-dimensions:unit}{units}}: the second (\unit{s}), the meter (\unit{m}), the
+kilogram (\unit{kg}), the ampere (\unit{A}), the kelvin (\unit{K}), the
+mole (\unit{mol}) and the candela (\unit{cd}). Since 2019 each is
+defined by fixing the numerical value of a constant of nature: the
+cesium hyperfine frequency $\Delta\nu_{\mathrm{Cs}} = \qty{9192631770}{Hz}$
+defines the second; the speed of light $c = \qty{299792458}{m/s}$ then
+defines the meter; the Planck constant
+$h = \qty{6.62607015e-34}{J.s}$ defines the kilogram; the elementary
+charge $e = \qty{1.602176634e-19}{C}$ the ampere; the Boltzmann constant
+$k_B = \qty{1.380649e-23}{J/K}$ the kelvin; the Avogadro constant
+$N_A = \qty{6.02214076e23}{mol^{-1}}$ the mole; and a fixed luminous
+efficacy $K_{\mathrm{cd}}$ the candela. Every other \omterm{def:b1:units-dimensions:unit}{unit} is a
+\emph{derived unit}\index{derived unit}, a product of powers of base
+\omterm{def:b1:units-dimensions:unit}{units}: $\qty{1}{N} = \qty{1}{kg.m/s^2}$, $\qty{1}{J} = \qty{1}{N.m}$,
+$\qty{1}{W} = \qty{1}{J/s}$, $\qty{1}{V} = \qty{1}{W/A}$,
+$\qty{1}{Pa} = \qty{1}{N/m^2}$.
+\end{definition}
+
+\begin{omfigure}
+\begin{tikzpicture}[font=\footnotesize, scale=0.95]
+  \def\R{3.3} \def\r{1.75}
+  \foreach \i/\a/\u/\c in {1/90/{\unit{s}}/{$\Delta\nu_{\mathrm{Cs}}$},
+      2/141.4/{\unit{m}}/{$c$}, 3/192.9/{\unit{kg}}/{$h$},
+      4/244.3/{\unit{A}}/{$e$}, 5/295.7/{\unit{K}}/{$k_B$},
+      6/347.1/{\unit{mol}}/{$N_A$}, 7/38.6/{\unit{cd}}/{$K_{\mathrm{cd}}$}}{
+    \node[draw, omDef, thick, circle, minimum size=8.2mm, fill=omDef!8]
+      (U\i) at (\a:\R) {\u};
+    \node[draw, omThm, circle, minimum size=7.5mm, fill=omThm!6]
+      (C\i) at (\a:\r) {\c};
+    \draw[-Stealth, omExo] (C\i) -- (U\i);
+  }
+  \draw[omExo, dashed, -Stealth] (U1) to[bend right=22] (U2);
+  \draw[omExo, dashed, -Stealth] (U2) to[bend right=22] (U3);
+  \draw[omExo, dashed, -Stealth] (U3) to[bend right=22] (U4);
+\end{tikzpicture}
+
+{\small The seven \omterm{def:b1:units-dimensions:si}{base units} (outer ring) and the seven defining
+constants (inner ring). A fixed constant defines its \omterm{def:b1:units-dimensions:unit}{unit} only together
+with \omterm{def:b1:units-dimensions:unit}{units} already defined (dashed): $c$ turns seconds into meters, $h$
+needs the meter and the second to define the kilogram, $e$ needs the
+second to define the ampere.}
+\end{omfigure}
+
+\begin{remark}[Names and symbols]\label{rem:b1:units-dimensions:names}
+\omterm{def:b1:units-dimensions:unit}{Units} named after people are written lowercase in full (newton, joule,
+pascal) and capitalized as symbols (\unit{N}, \unit{J}, \unit{Pa});
+capitalized in full, the word is the person. Prefixes scale by powers of
+ten, from p ($10^{-12}$) through n, $\mu$, m, k, M, G to T
+($10^{12}$); the
+kilogram is the one \omterm{def:b1:units-dimensions:si}{base unit} carrying a prefix in its name.
+\end{remark}
+
+\begin{example}[Unpacking a derived unit]\label{ex:b1:units-dimensions:unpack}
+The volt: $\unit{V} = \unit{W/A} = \unit{J/(A.s)} = \unit{kg.m^2/(A.s^3)}$.
+The ohm: $\unit{\ohm} = \unit{V/A} = \unit{kg.m^2/(A^2.s^3)}$. The farad:
+$\unit{F} = \unit{C/V} = \unit{A.s/V} = \unit{A^2.s^4/(kg.m^2)}$. Such
+unpacking is the safest check that a formula has been remembered
+correctly --- the next section makes it systematic.
+\end{example}
+
+\section{Dimensional analysis}
+
+\begin{definition}[Dimension]\label{def:b1:units-dimensions:dimension}
+\index{dimension}\index{dimensionless}
+The \emph{dimension} of a quantity $X$, written $[X]$, records how $X$
+is built from the seven base quantities, independently of the \omterm{def:b1:units-dimensions:unit}{units}
+chosen: length $L$, mass $M$, time $T$, electric current $I$,
+temperature $\Theta$, amount of substance $N$, luminous intensity $J$.
+A speed has dimension $[v] = L\,T^{-1}$, a force
+$[F] = M\,L\,T^{-2}$, an energy $[E] = M\,L^2\,T^{-2}$. A quantity of
+dimension $1$ (an angle, a ratio, a refractive index) is
+\emph{dimensionless}.
+\end{definition}
+
+\begin{theorem}[Principle of dimensional homogeneity]\label{thm:b1:units-dimensions:homogeneity}
+\index{dimensional homogeneity}
+In a physical law, the two sides of an equality have the same \omterm{def:b1:units-dimensions:dimension}{dimension},
+and every term of a sum has the \omterm{def:b1:units-dimensions:dimension}{dimension} of the whole. The argument of
+an exponential, a logarithm, a sine or a cosine is \omterm{def:b1:units-dimensions:dimension}{dimensionless}.
+\end{theorem}
+
+\begin{proof}
+The laws of physics do not depend on the \omterm{def:b1:units-dimensions:unit}{units} humans choose. Changing
+the \omterm{def:b1:units-dimensions:unit}{unit} of length by a factor $\lambda$ multiplies every quantity of
+\omterm{def:b1:units-dimensions:dimension}{dimension} $L^a \cdots$ by $\lambda^{-a}$: an equality between terms of
+different \omterm{def:b1:units-dimensions:dimension}{dimensions} would hold in one system of \omterm{def:b1:units-dimensions:unit}{units} and fail in
+another. For a function such as $\exp$, the series
+$1 + x + x^2/2 + \dots$ adds powers of $x$ of different \omterm{def:b1:units-dimensions:dimension}{dimensions}
+unless $x$ is \omterm{def:b1:units-dimensions:dimension}{dimensionless}.
+\end{proof}
+
+\begin{method}[Checking a formula]\label{met:b1:units-dimensions:check}
+\begin{enumerate}
+  \item Write the \omterm{def:b1:units-dimensions:dimension}{dimension} of every symbol.
+  \item Reduce each side (each term) to a product $L^a M^b T^c \cdots$.
+  \item Equal exponents on both sides: the formula \emph{may} be right.
+        Unequal: it is certainly wrong --- a missing factor $g$, a
+        squared quantity that should be plain, an exponent with
+        \omterm{def:b1:units-dimensions:dimension}{dimensions}.
+\end{enumerate}
+A homogeneous formula can still be wrong by a \omterm{def:b1:units-dimensions:dimension}{dimensionless} factor
+($2$, $\pi$, $\tfrac12$): \omterm{def:b1:units-dimensions:dimension}{dimensions} never see those.
+\end{method}
+
+\begin{example}[The period of a pendulum]\label{ex:b1:units-dimensions:pendulum}
+A pendulum of length $\ell$ and mass $m$ swings in gravity $g$. Suppose
+its period is $\tau = k\,\ell^\alpha m^\beta g^\gamma$ with $k$
+\omterm{def:b1:units-dimensions:dimension}{dimensionless}. Then $T = L^\alpha M^\beta (L T^{-2})^\gamma =
+L^{\alpha+\gamma} M^\beta T^{-2\gamma}$, so $\beta = 0$,
+$\gamma = -\tfrac12$, $\alpha = \tfrac12$:
+\[
+\tau = k\sqrt{\ell/g} .
+\]
+Without solving a single equation of motion: the mass drops out, and
+doubling the length multiplies the period by $\sqrt2$. Dynamics
+(\cref{ch:b1:oscillators-resonance}) will supply $k = 2\pi$ for small
+swings.
+\end{example}
+
+\begin{proposition}[Dimensionless groups]\label{prop:b1:units-dimensions:pi}
+\index{dimensionless group}
+If a quantity $Y$ depends on $n$ quantities $X_1, \dots, X_n$ that
+involve $r$ independent base \omterm{def:b1:units-dimensions:dimension}{dimensions}, the relation can be rewritten
+between $n + 1 - r$ \omterm{def:b1:units-dimensions:dimension}{dimensionless} combinations of the $X_i$ and $Y$.
+When $n + 1 - r = 1$, the single combination must be a constant, and
+dimensional analysis gives the law up to a numerical factor.
+\end{proposition}
+\admitted
+
+\begin{remark}[Using the proposition]\label{rem:b1:units-dimensions:pi}
+The general statement (the Vaschy--Buckingham theorem) is a piece of
+linear algebra on the exponent vectors. What matters here is the recipe:
+list the relevant quantities, count \omterm{def:b1:units-dimensions:dimension}{dimensions}, form the \omterm{prop:b1:units-dimensions:pi}{dimensionless
+groups}. In \cref{ex:b1:units-dimensions:pendulum}, $n = 3$
+($\ell, m, g$), $r = 3$ ($L, M, T$), so a single group
+$\tau\sqrt{g/\ell}$ exists and must be constant. Drag on a sphere of
+radius $R$ moving at speed $v$ in a fluid of density $\rho$ and viscosity
+$\eta$ involves $n = 4$ quantities and $r = 3$ \omterm{def:b1:units-dimensions:dimension}{dimensions}: two groups,
+$F/(\rho v^2 R^2)$ and $\rho v R/\eta$ (the Reynolds number), and
+\omterm{def:b1:units-dimensions:dimension}{dimensions} alone cannot say how the first depends on the second ---
+experiment must.
+\end{remark}
+
+\section{Orders of magnitude}
+
+\begin{definition}[Order of magnitude]\label{def:b1:units-dimensions:oom}
+\index{order of magnitude}
+The \emph{order of magnitude} of a quantity is the power of ten nearest
+to it: $\qty{6.4e6}{m}$ (the Earth's radius) has order of magnitude
+$10^7$; $\qty{3e3}{m}$ has order $10^3$; $\qty{3.2e3}{m}$ is closer to
+$10^3$ than to $10^4$ on a logarithmic scale (the boundary is
+$\sqrt{10} \approx 3.16$). Two quantities are ``of the same order'' when
+their ratio is below about $3$.
+\end{definition}
+
+\begin{method}[Estimating]\label{met:b1:units-dimensions:estimate}
+To estimate a quantity nobody has measured for you:
+\begin{enumerate}
+  \item break it into factors you can estimate to within a factor of
+        $2$ or $3$ each;
+  \item estimate each factor, keeping one significant figure;
+  \item multiply, keeping the power of ten and one digit.
+\end{enumerate}
+Errors in different factors partly cancel; the result is usually right
+to within a factor of $3$ to $10$, which is often all one needs to rule
+a hypothesis in or out.
+\end{method}
+
+\begin{example}[The mass of the atmosphere]\label{ex:b1:units-dimensions:atmosphere}
+Atmospheric pressure $P_0 \approx \qty{1e5}{Pa}$ is the weight of the
+air column above one square meter, $P_0 = m_{\text{col}}\,g$, so
+$m_{\text{col}} \approx 10^5/10 = \qty{1e4}{kg}$ per square meter. The
+Earth's surface is $4\pi R^2 \approx 4 \times 3 \times (6\times10^6)^2
+\approx \qty{5e14}{m^2}$; the atmosphere weighs about
+$\qty{5e18}{kg}$. The accepted value is $\qty{5.1e18}{kg}$ --- the
+estimate needed only $P_0$ and $R$.
+\end{example}
+
+\begin{definition}[Significant figures]\label{def:b1:units-dimensions:sigfig}
+\index{significant figures}
+The \emph{significant figures} of a written number are its digits from
+the first non-zero one: $0.0820$ has three, $\num{8.20e-2}$ the same
+three, $820$ is ambiguous (two or three) unless written \num{8.2e2} or
+\num{8.20e2}. A result is written with the significant figures its
+uncertainty allows (\cref{met:b1:units-dimensions:writing} below):
+not ``$g = \qty{9.7723}{m/s^2}$'' when the fourth digit is unknown.
+\end{definition}
+
+\section{Measurement uncertainty}
+
+\begin{definition}[Measurand, error, uncertainty]\label{def:b1:units-dimensions:uncertainty}
+\index{measurand}\index{measurement error}\index{standard uncertainty}
+The \emph{measurand} is the quantity one intends to measure. Repeating
+a measurement gives scattered values: the measurement is
+\emph{variable}. The \emph{error} of one result is its unknown
+difference to the true value; the \emph{standard uncertainty} $u(x)$ of
+a result $x$ is the standard deviation of the values one could
+reasonably attribute to the measurand --- a quantity one \emph{can}
+evaluate. Its sources: the operator (reaction time, parallax), the
+environment (temperature, vibrations), the instrument (resolution,
+calibration), the method (a model that is only approximately true).
+\end{definition}
+
+\begin{proposition}[Type A evaluation]\label{prop:b1:units-dimensions:typeA}
+\index{uncertainty!type A}
+From $n$ independent repeated values $x_1, \dots, x_n$ of mean
+$\bar x = \frac1n \sum x_i$ and experimental standard deviation
+\[
+s = \sqrt{\frac{1}{n-1}\sum_{i=1}^n (x_i - \bar x)^2},
+\]
+the best estimate of the \omterm{def:b1:units-dimensions:uncertainty}{measurand} is $\bar x$ and its \omterm{def:b1:units-dimensions:uncertainty}{standard
+uncertainty} is
+\[
+u(\bar x) = \frac{s}{\sqrt n} .
+\]
+\end{proposition}
+
+\begin{proof}[Partial proof]
+That $s$ estimates the spread of a single measurement is the definition
+of the experimental standard deviation ($n - 1$ rather than $n$ because
+the mean itself was estimated from the data). That the mean of $n$
+independent values scatters $\sqrt n$ times less than one value is the
+addition of variances: the variance of a sum of $n$ independent
+variables is $n$ times the variance of one, so the variance of the
+mean is $s^2 n / n^2 = s^2/n$. The probability course of this year
+proves both statements.
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}
+\begin{axis}[omaxis, width=9.6cm, height=5.6cm, xlabel={$T$ (\unit{s})},
+    ylabel={count}, ymin=0, ymax=16, xmin=1.962, xmax=2.058,
+    xtick={1.97,1.99,2.01,2.03,2.05},
+    x tick label style={/pgf/number format/fixed, /pgf/number format/precision=2}]
+  \addplot[ybar, bar width=7.5pt, fill=omDef!35, draw=omDef] coordinates
+    {(1.97,1) (1.98,3) (1.99,7) (2.00,12) (2.01,14) (2.02,8) (2.03,4) (2.04,1)};
+  \addplot[omThm, thick, domain=1.962:2.058, samples=80] {12.5*exp(-((x-2.009)^2)/(2*0.016^2))};
+  \draw[dashed, omExo] (axis cs:2.009,0) -- (axis cs:2.009,15.2) node[above, font=\footnotesize] {$\bar T$};
+  \draw[Stealth-Stealth, omExo] (axis cs:1.993,7.6) -- (axis cs:2.025,7.6)
+    node[midway, below, font=\footnotesize] {$2s$};
+\end{axis}
+\end{tikzpicture}
+
+{\small Fifty timings of the same pendulum period, binned by
+\qty{0.01}{s}. Their spread is $s \approx \qty{0.016}{s}$ (one timing);
+the mean of the fifty is known to $s/\sqrt{50} \approx \qty{0.002}{s}$.
+The bell curve is the Gaussian of the same mean and spread.}
+\end{omfigure}
+
+\begin{proposition}[Type B evaluation]\label{prop:b1:units-dimensions:typeB}
+\index{uncertainty!type B}
+When a value is read once, its uncertainty is evaluated from what is
+known of the instrument. If the true value can lie anywhere between
+$x - a$ and $x + a$ with no preference (a \emph{uniform} distribution of
+half-width $a$),
+\[
+u(x) = \frac{a}{\sqrt 3} .
+\]
+For a scale graduated in steps $\delta$ (half-width $a = \delta/2$),
+$u = \delta/(2\sqrt3) = \delta/\sqrt{12}$; the same applies to the last
+digit of a digital display. A manufacturer's tolerance quoted as
+``$\pm a$'' is treated the same way unless the data sheet says
+otherwise.
+\end{proposition}
+
+\begin{proof}
+The variance of a uniform distribution on $[x - a, x + a]$ is
+$\frac{1}{2a}\int_{-a}^{a} t^2\,\dd t = \frac{1}{2a}\cdot\frac{2a^3}{3}
+= \frac{a^2}{3}$; its standard deviation is $a/\sqrt3$.
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}[font=\small, x=1.5cm, y=1.6cm]
+  \draw[-Stealth] (-0.3,0) -- (4.3,0) node[right] {value};
+  \draw[-Stealth] (0,-0.15) -- (0,1.55) node[above] {density};
+  \draw[omDef, very thick] (0.3,0) -- (1.2,0) -- (1.2,1) -- (2.8,1) -- (2.8,0) -- (3.7,0);
+  \fill[omDef!20] (1.2,0) rectangle (2.8,1);
+  \node[below] at (1.2,0) {$x - a$};
+  \node[below] at (2.8,0) {$x + a$};
+  \node[below] at (2.0,0) {$x$};
+  \node[left] at (0,1) {$\dfrac{1}{2a}$};
+  \draw[dashed] (0,1) -- (1.2,1);
+  \draw[Stealth-Stealth, omThm, thick] (2.0-0.577*0.8,1.18) -- (2.0+0.577*0.8,1.18)
+    node[midway, above] {$2u = 2a/\sqrt3$};
+  \draw[dashed, omThm] (2.0,0) -- (2.0,1.18);
+\end{tikzpicture}
+
+{\small A reading known only to lie within $\pm a$: uniform density
+$1/(2a)$, standard deviation $a/\sqrt3 \approx 0.58\,a$ --- smaller than
+$a$, because the extremes are no likelier than the center.}
+\end{omfigure}
+
+\begin{theorem}[Combined uncertainty]\label{thm:b1:units-dimensions:propagation}
+\index{uncertainty!combined}\index{propagation of uncertainties}
+Let $y = f(x_1, \dots, x_n)$ be computed from independent measured
+values with standard uncertainties $u(x_i)$. Then
+\[
+u(y)^2 = \sum_{i=1}^n \left(\frac{\partial f}{\partial x_i}\right)^2 u(x_i)^2 .
+\]
+In particular:
+\begin{itemize}
+  \item sum or difference $y = x_1 \pm x_2$:
+        $u(y)^2 = u(x_1)^2 + u(x_2)^2$;
+  \item product or quotient $y = x_1 x_2$ or $x_1/x_2$:
+        $\left(\dfrac{u(y)}{y}\right)^2 = \left(\dfrac{u(x_1)}{x_1}\right)^2
+        + \left(\dfrac{u(x_2)}{x_2}\right)^2$;
+  \item power $y = k\,x^\alpha$: $\dfrac{u(y)}{\abs y} = \abs\alpha\,\dfrac{u(x)}{\abs x}$.
+\end{itemize}
+\end{theorem}
+
+\begin{proof}
+For small deviations $\delta x_i$, the first-order Taylor expansion
+gives $\delta y = \sum_i (\partial f/\partial x_i)\,\delta x_i$. The
+deviations are independent and of zero mean, so the variance of the sum
+is the sum of the variances, each scaled by the square of its
+coefficient --- the displayed formula. The special cases follow:
+$\partial(x_1 x_2)/\partial x_1 = x_2$ gives
+$u(y)^2 = x_2^2 u(x_1)^2 + x_1^2 u(x_2)^2$, divide by $y^2 = x_1^2 x_2^2$;
+for $y = kx^\alpha$, $\partial y/\partial x = \alpha y/x$.
+\end{proof}
+
+\begin{example}[The density of a cylinder]\label{ex:b1:units-dimensions:density}
+A cylinder: $m = \qty{47.32}{g}$ ($u = \qty{0.01}{g}$),
+$d = \qty{12.00}{mm}$ ($u = \qty{0.02}{mm}$), $h = \qty{50.2}{mm}$
+($u = \qty{0.1}{mm}$). $\rho = 4m/(\pi d^2 h)$, so the relative
+uncertainty squared adds $(0.01/47.32)^2 = \num{4.5e-8}$,
+$(2 \times 0.02/12.00)^2 = \num{1.1e-5}$ and
+$(0.1/50.2)^2 = \num{4.0e-6}$: the diameter dominates, because it is
+squared and measured to $0.17\%$. $u(\rho)/\rho = \sqrt{\num{1.5e-5}}
+= 0.39\%$; $\rho = \qty{8334}{kg/m^3}$, so $u(\rho) = \qty{33}{kg/m^3}$:
+$\rho = (8.33 \pm 0.03)\times10^3\ \unit{kg/m^3}$ --- brass.
+\end{example}
+
+\begin{method}[Writing a result]\label{met:b1:units-dimensions:writing}
+\begin{enumerate}
+  \item Round the uncertainty to one significant figure (two if the
+        first is $1$ or $2$).
+  \item Round the value to the same decimal place.
+  \item Write value and uncertainty with the \omterm{def:b1:units-dimensions:unit}{unit}:
+        $g = \qty{9.77\pm0.03}{m/s^2}$, or $g = \qty{9.77}{m/s^2}$,
+        $u(g) = \qty{0.03}{m/s^2}$.
+\end{enumerate}
+Keep extra digits \emph{during} the calculation; round only at the end.
+\end{method}
+
+\begin{definition}[Normalized deviation]\label{def:b1:units-dimensions:zscore}
+\index{normalized deviation}\index{compatibility of two results}
+Two results $x_1 \pm u_1$ and $x_2 \pm u_2$ of the same \omterm{def:b1:units-dimensions:uncertainty}{measurand} are
+compared through their \emph{normalized deviation}
+\[
+z = \frac{\abs{x_1 - x_2}}{\sqrt{u_1^2 + u_2^2}} .
+\]
+They are \emph{compatible} when $z \leq 2$; a larger $z$ points to an
+unaccounted effect --- or an underestimated uncertainty. When $x_2$ is
+a reference value with no quoted uncertainty, take $u_2 = 0$.
+\end{definition}
+
+\begin{remark}[Why 2]\label{rem:b1:units-dimensions:why2}
+If the two results scatter as Gaussians, their difference has standard
+deviation $\sqrt{u_1^2 + u_2^2}$, and a Gaussian exceeds twice its
+standard deviation in about $5\%$ of cases. ``$z \leq 2$'' is a
+convention, not a theorem: it accepts roughly one good measurement in
+twenty as a false disagreement.
+\end{remark}
+
+\section{Fitting a model to data}
+
+\begin{proposition}[Least-squares line]\label{prop:b1:units-dimensions:regression}
+\index{linear regression}\index{least squares}
+Given $n$ points $(x_i, y_i)$ expected to obey $y = a x + b$, the
+straight line minimizing the sum of squared vertical distances
+$\sum_i (y_i - a x_i - b)^2$ has
+\[
+a = \frac{\sum_i (x_i - \bar x)(y_i - \bar y)}{\sum_i (x_i - \bar x)^2},
+\qquad
+b = \bar y - a\,\bar x .
+\]
+\end{proposition}
+
+\begin{proof}
+The sum is a quadratic function of $(a, b)$; setting both partial
+derivatives to zero gives two linear equations: $\sum_i (y_i - ax_i - b) = 0$,
+which is $\bar y = a \bar x + b$, and $\sum_i x_i (y_i - ax_i - b) = 0$.
+Substituting $b$ into the second and centering the variables yields $a$.
+The minimization itself is carried out in the mathematics course on
+functions of two variables.
+\end{proof}
+
+\begin{method}[Validating a model graphically]\label{met:b1:units-dimensions:fit}
+\begin{enumerate}
+  \item Choose variables that make the expected law a straight line:
+        $\tau^2$ against $\ell$ for the pendulum, $\ln y$ against
+        $\ln x$ for a power law $y = Cx^\alpha$ (slope $\alpha$).
+  \item Plot the points \emph{with their uncertainty bars}.
+  \item Fit the line; the model is acceptable if the bars straddle the
+        line without a systematic trend of the residuals, and if the
+        intercept is what the model predicts (zero, here).
+  \item Read the physics off the slope, with its uncertainty.
+\end{enumerate}
+\end{method}
+
+\begin{omfigure}
+\begin{tikzpicture}
+\begin{axis}[omaxis, width=9.4cm, height=6cm, xlabel={$\ell$ (\unit{m})},
+    ylabel={$\tau^2$ (\unit{s^2})}, xmin=0, xmax=1.35, ymin=0, ymax=5.4,
+    xtick={0,0.4,0.8,1.2}, ytick={0,1,2,3,4,5}]
+  \addplot[omThm, thick, domain=0:1.3, samples=2] {4.035*x + 0.004};
+  \addplot[only marks, mark=*, omDef, error bars/.cd, y dir=both, y explicit]
+    coordinates {(0.400,1.62) +- (0,0.02) (0.600,2.41) +- (0,0.02)
+                 (0.800,3.25) +- (0,0.03) (1.000,4.04) +- (0,0.04)
+                 (1.200,4.84) +- (0,0.05)};
+\end{axis}
+\end{tikzpicture}
+
+{\small $\tau^2$ against $\ell$ for five pendulum lengths, with
+uncertainty bars; the least-squares line passes through the origin
+within uncertainty and its slope $4\pi^2/g$ gives $g$.}
+\end{omfigure}
+
+\begin{example}[Reading $g$ from a slope]\label{ex:b1:units-dimensions:slope}
+The five points of the figure have $\bar\ell = \qty{0.800}{m}$,
+$\overline{\tau^2} = \qty{3.232}{s^2}$, and the sums
+$\sum (\ell_i - \bar\ell)(\tau_i^2 - \overline{\tau^2}) = \qty{1.614}{m.s^2}$,
+$\sum (\ell_i - \bar\ell)^2 = \qty{0.400}{m^2}$: slope
+$a = \qty{4.035}{s^2/m}$, intercept $b = \qty{0.004}{s^2}$, negligible. With
+$\tau^2 = (4\pi^2/g)\,\ell$, $g = 4\pi^2/a = \qty{9.78}{m/s^2}$.
+\end{example}
+
+\section{Exercises}
+
+\begin{exercise}[$\star$]\label{exo:b1:units-dimensions:1}
+Express the joule, the watt, the pascal and the coulomb in \omterm{def:b1:units-dimensions:si}{base units}.
+Deduce that $\unit{Pa.m^3}$ is a \omterm{def:b1:units-dimensions:unit}{unit} of energy.
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b1:units-dimensions:2}
+Give the \omterm{def:b1:units-dimensions:dimension}{dimensions} of a pressure, a power, an electric charge, a
+voltage, and of the constants $G$ (in $F = Gm_1m_2/r^2$), $h$ (in
+$E = h\nu$) and $k_B$ (in $E = k_B T$).
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b1:units-dimensions:3}
+Are these formulas homogeneous? $v = \sqrt{2gh}$;
+$E = \tfrac12 m v$; $P = \rho g h$ for a pressure; $x = v_0 t +
+\tfrac12 g t^2$; $T = 2\pi\sqrt{g/\ell}$; $I = I_0 \eu^{-t/RC}$.
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b1:units-dimensions:4}
+A ruler is graduated in millimeters; a digital balance displays
+\qty{0.01}{g} steps; a voltmeter's data sheet promises ``$\pm 0.5\%$ of
+the reading''. Give the type B \omterm{def:b1:units-dimensions:uncertainty}{standard uncertainty} of a \qty{12.7}{cm}
+length, a \qty{5.43}{g} mass and a \qty{4.80}{V} reading.
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b1:units-dimensions:5}
+The speed $v$ of waves on a stretched string depends on its tension $F$
+(a force) and its mass per \omterm{def:b1:units-dimensions:unit}{unit} length $\mu$. Find $v$ up to a
+\omterm{def:b1:units-dimensions:dimension}{dimensionless} factor. Same question for the speed of sound in a gas of
+pressure $P$ and density $\rho$.
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b1:units-dimensions:6}
+Eight timings of the same fall, in milliseconds: $452$, $447$, $461$,
+$455$, $449$, $458$, $444$, $454$. Compute the mean, the experimental
+standard deviation and the \omterm{def:b1:units-dimensions:uncertainty}{standard uncertainty} of the mean; write the
+result.
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b1:units-dimensions:7}
+A resistance is measured as $R = U/I$ with $U = \qty{4.80}{V}$,
+$u(U) = \qty{0.03}{V}$ and $I = \qty{12.4}{mA}$, $u(I) = \qty{0.2}{mA}$.
+Compute $R$ and $u(R)$; which measurement should be improved first?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b1:units-dimensions:8}
+Two groups measure the speed of sound: $\qty{343\pm4}{m/s}$ and
+$\qty{336\pm3}{m/s}$. Are they compatible? A third group finds
+$\qty{352\pm2}{m/s}$: compatible with the first? with the second?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b1:units-dimensions:9}
+The volume of a sphere is computed from its diameter $d = \qty{25.40}{mm}$
+measured with a caliper, $u(d) = \qty{0.02}{mm}$. Compute $V$, its
+relative and absolute uncertainty, and write the result.
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b1:units-dimensions:10}
+A small sphere of radius $R$ falls slowly in a viscous liquid; the drag
+depends on $R$, on the speed $v$ and on the viscosity $\eta$, of
+\omterm{def:b1:units-dimensions:dimension}{dimension} $M L^{-1} T^{-1}$. Show that $F = k\,\eta R v$. At high
+speed the drag depends instead on $R$, $v$ and the fluid density $\rho$:
+find the new law. Estimate, for a raindrop ($R = \qty{1}{mm}$,
+$v = \qty{5}{m/s}$, air: $\rho = \qty{1.2}{kg/m^3}$,
+$\eta = \qty{1.8e-5}{Pa.s}$), which regime applies by comparing the two
+estimates.
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b1:units-dimensions:11}
+Four measurements of the voltage across a resistor for increasing
+currents: $(I, U) = (\qty{2.0}{mA}, \qty{0.41}{V})$, $(\qty{4.0}{mA},
+\qty{0.78}{V})$, $(\qty{6.0}{mA}, \qty{1.22}{V})$, $(\qty{8.0}{mA},
+\qty{1.59}{V})$. Compute the least-squares slope and intercept; deduce
+$R$; is the intercept compatible with zero if each $U$ carries
+$u = \qty{0.02}{V}$?
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b1:units-dimensions:12}
+From $G = \qty{6.67e-11}{m^3/(kg.s^2)}$, $h = \qty{6.63e-34}{J.s}$ and
+$c = \qty{3.00e8}{m/s}$, build by dimensional analysis a length, a
+time and a mass (the Planck \omterm{def:b1:units-dimensions:unit}{units}). Compute them and compare with the
+size of a proton (\qty{1e-15}{m}) and with a human mass.
+\end{exercise}
+
+\begin{omfigure}
+\includegraphics[width=0.60\linewidth]{images/book3/ai/b3-01-lab-bench-measuring.png}
+
+{\small The raw material of the chapter: a caliper, a stopwatch, a ball, a rule, and a column of repeated readings that never quite agree.}
+\end{omfigure}
+
+\section{Problem: Measuring $g$ with a pendulum}
+
+\begin{problem}[{Weekend problem --- a string, a bob, a stopwatch and a
+tape: how well can a kitchen table measure the gravitational field of
+the Earth, and which of its four numbers is the weak one}]
+\label{pb:b1:units-dimensions:1}
+A pendulum is a steel ball hung from a fixed point by a light string;
+small swings have period $\tau = 2\pi\sqrt{\ell/g}$ where $\ell$ is the
+distance from the suspension point to the ball's center. The aim is a
+value of $g$ with a defensible uncertainty.
+
+\medskip
+\noindent\textbf{Part I --- The model.}
+\begin{enumerate}
+  \item Check the homogeneity of $\tau = 2\pi\sqrt{\ell/g}$.
+  \item The ball has mass $m$. Argue by \omterm{def:b1:units-dimensions:dimension}{dimensions} alone that the
+        period cannot depend on $m$ if it depends only on $\ell$, $g$
+        and $m$.
+  \item The period also depends, slightly, on the amplitude $\theta_0$
+        of the swing. Why does dimensional analysis allow this, and what
+        must one do experimentally to make the formula applicable?
+  \item Express $g$ as a function of $\ell$ and $\tau$.
+\end{enumerate}
+
+\medskip
+\noindent\textbf{Part II --- Measuring the length.}
+The tape measure is graduated in millimeters; the string is
+\qty{99.0}{cm} from suspension to the top of the ball, the ball's
+diameter is \qty{2.00}{cm}, both read once.
+\begin{enumerate}[resume]
+  \item Compute $\ell$.
+  \item Evaluate the type B uncertainty of a single reading on the
+        tape.
+  \item Locating the suspension point and the ball's center adds an
+        estimated $\pm\qty{5}{mm}$ of possible error (uniform). Combine
+        with the previous item into $u(\ell)$, and give the relative
+        uncertainty $u(\ell)/\ell$.
+\end{enumerate}
+
+\medskip
+\noindent\textbf{Part III --- Measuring the period.}
+To reduce the effect of reaction time, one times ten periods. Eight
+such timings, in seconds: $20.12$, $20.05$, $20.18$, $20.09$, $20.15$,
+$20.02$, $20.11$, $20.08$.
+\begin{enumerate}[resume]
+  \item Why time ten periods rather than one? Why repeat the timing
+        eight times?
+  \item Compute the mean $\overline{t_{10}}$ and the experimental
+        standard deviation $s$ of the eight timings.
+  \item Deduce the \omterm{def:b1:units-dimensions:uncertainty}{standard uncertainty} of the mean, then the period
+        $\tau$ and its uncertainty $u(\tau)$.
+  \item Compare $u(\tau)/\tau$ with $u(\ell)/\ell$.
+\end{enumerate}
+
+\medskip
+\noindent\textbf{Part IV --- The result and its weak point.}
+\begin{enumerate}[resume]
+  \item Compute $g$.
+  \item Write $u(g)/g$ in terms of $u(\ell)/\ell$ and $u(\tau)/\tau$,
+        and compute it.
+  \item Write the result in the standard form.
+  \item Compare with the reference value $\qty{9.81}{m/s^2}$ through
+        the \omterm{def:b1:units-dimensions:zscore}{normalized deviation}. Verdict?
+  \item Which of the two measured quantities limits the precision of
+        $g$? Propose two concrete improvements and say by how much each
+        would reduce the relative uncertainty.
+  \item Suppose that, by a careless alignment, every length was
+        overestimated by \qty{5}{mm}. Is this accounted for in the
+        uncertainty budget? What name does this kind of error carry,
+        and how would one detect it?
+\end{enumerate}
+
+\medskip
+\noindent\textbf{Part V --- Five lengths and a straight line.}
+The experiment is repeated for $\ell = 0.400$, $0.600$, $0.800$,
+$1.000$ and \qty{1.200}{m}, giving $\tau^2 = 1.62$, $2.41$, $3.25$,
+$4.04$ and \qty{4.84}{s^2}, each with $u(\tau^2) \approx 1\%$.
+\begin{enumerate}[resume]
+  \item Why plot $\tau^2$ against $\ell$ rather than $\tau$ against
+        $\ell$?
+  \item Compute $\bar\ell$ and $\overline{\tau^2}$.
+  \item Compute the least-squares slope $a$ and intercept $b$.
+  \item Deduce $g$ from the slope.
+  \item Interpret the intercept: what would a clearly non-zero $b$
+        reveal?
+  \item The computer's fit reports $u(a) = \qty{0.05}{s^2/m}$. Deduce
+        $u(g)$ and write the result.
+  \item Compare the single-length result of Part IV with this one by
+        the \omterm{def:b1:units-dimensions:zscore}{normalized deviation}.
+  \item A student proposes to measure instead one swing of a
+        \qty{10}{m} pendulum in a stairwell with the same tape and
+        stopwatch. Estimate the relative uncertainty on $g$ that this
+        would give, and conclude on the best strategy.
+\end{enumerate}
+\end{problem}

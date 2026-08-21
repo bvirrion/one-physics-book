@@ -1,0 +1,669 @@
+\chapter{Magnetostatics: Field, Forces, and Dipoles}\label{ch:b1:magnetostatics}
+
+A compass needle swings when a wire nearby carries a current: that
+observation of Ørsted's, in 1820, joined two sciences that had grown up
+apart, electricity and magnetism, and within months Ampère had the law
+of the force between currents and Biot and Savart the field of a wire.
+This chapter is the statics of the \omterm{def:b1:magnetostatics:field}{magnetic field}: what currents create
+(field maps, the \omterm{thm:b1:magnetostatics:biotsavart}{Biot--Savart law}, and Ampère's theorem, the magnetic
+twin of \omterm{thm:b1:electrostatics-gauss:gauss}{Gauss's law}), what the field does to currents (the \omterm{thm:b1:magnetostatics:laplace}{Laplace
+force}, which runs every motor and every meter), and the \omterm{def:b1:magnetostatics:moment}{magnetic
+dipole}, the current loop that explains the compass, the magnet and the
+Earth's own field.
+
+\begin{omfigure}
+\includegraphics[width=0.34\linewidth]{images/book3/compass.jpg}
+
+{\small The oldest instrument of magnetism: a compass needle is a small \omterm{def:b1:magnetostatics:moment}{magnetic dipole} aligning with the Earth's field.}
+\end{omfigure}
+
+\begin{omfigure}
+\includegraphics[width=0.58\linewidth]{images/book3/ai/b3-28-oersted-compass-wire.png}
+
+{\small Ørsted's experiment: close the circuit and the needle swings --- a current creates a \omterm{def:b1:magnetostatics:field}{magnetic field}, circling the wire.}
+\end{omfigure}
+
+\section{Sources and field maps}
+
+\begin{definition}[Magnetostatic field]\label{def:b1:magnetostatics:field}
+\index{magnetic field}\index{field line!magnetic}\index{tesla}
+Steady currents (charges in steady motion) create at every point a
+\emph{magnetic field} $\vect B$ (tesla, \unit{T}), defined by the force
+$q\vect v\wedge\vect B$ it exerts on a moving test charge
+(\cref{def:b1:charged-particles:lorentz}). Its \emph{\omterm{def:b1:electrostatics-gauss:field}{field lines}} are
+tangent to $\vect B$ and oriented along it. Permanent magnets create
+fields of the same nature, from the microscopic currents of their
+atoms. Orders of magnitude: Earth \qty{5e-5}{T}; a fridge magnet
+\qty{0.01}{T}; an MRI scanner \qty{1.5}{T} to \qty{3}{T}; the largest
+steady laboratory fields \qty{45}{T}.
+\end{definition}
+
+\begin{proposition}[Field maps]\label{prop:b1:magnetostatics:maps}
+\index{right-hand rule}\index{flux conservation (magnetic)}
+\begin{enumerate}
+  \item A straight wire: circles centred on the wire, in planes
+        perpendicular to it, oriented by the \emph{right-hand rule}
+        (thumb along the current, fingers along $\vect B$).
+  \item A circular loop: lines threading the loop along its axis and
+        closing round outside; far away, the map of a small magnet.
+  \item A long solenoid: parallel, dense, uniform lines inside; almost
+        no field outside; the map of a bar magnet, whose ``north'' face
+        is the one the lines leave.
+  \item \omterm{def:b1:magnetostatics:field}{Magnetic field} lines have no beginning and no end: they close
+        on themselves or run to infinity. Equivalently the \emph{flux of
+        $\vect B$ through any closed surface is zero} --- there are no
+        magnetic charges.
+\end{enumerate}
+\end{proposition}
+\admitted
+
+\begin{omfigure}
+\begin{tikzpicture}[font=\small, x=1cm, y=1cm, >=Stealth]
+  % wire seen end-on
+  \begin{scope}
+    \foreach \r in {0.5,1.0,1.5,2.0} \draw[omDef, thick, postaction={decorate, decoration={markings, mark=at position 0.125 with {\arrow{>}}, mark=at position 0.625 with {\arrow{>}}}}] (0,0) circle (\r);
+    \fill[omThm] (0,0) circle (3pt); \draw[omThm] (0,0) circle (5pt);
+    \node[font=\footnotesize] at (0,-2.55) {straight wire ($I$ toward the reader)};
+  \end{scope}
+  % loop seen from the side
+  \begin{scope}[xshift=5.6cm, fl/.style={omDef, thick, postaction={decorate, decoration={markings, mark=at position 0.06 with {\arrow{>}}}}}]
+    \draw[omDef, thick, -Stealth] (-2.3,0) -- (2.3,0);
+    \foreach \s in {1,-1} {
+      \draw[fl] plot[smooth cycle] coordinates {(0,{0.5*\s}) (0.8,{0.55*\s}) (1.5,{0.9*\s}) (1.7,{1.5*\s}) (1.2,{2.0*\s}) (0,{2.1*\s}) (-1.2,{2.0*\s}) (-1.7,{1.5*\s}) (-1.5,{0.9*\s}) (-0.8,{0.55*\s})};
+      \draw[fl] plot[smooth cycle] coordinates {(0,{0.8*\s}) (0.5,{0.85*\s}) (0.75,{1.0*\s}) (0.75,{1.3*\s}) (0.5,{1.5*\s}) (0,{1.55*\s}) (-0.5,{1.5*\s}) (-0.75,{1.3*\s}) (-0.75,{1.0*\s}) (-0.5,{0.85*\s})};
+    }
+    \draw[omThm, very thick] (0,1) circle (4pt); \draw[omThm, very thick] (0,-1) circle (4pt);
+    \fill[white] (0,1) circle (3.5pt); \fill[white] (0,-1) circle (3.5pt);
+    \fill[omThm] (0,1) circle (1.2pt); \node[omThm, font=\scriptsize] at (0,-1) {$\times$};
+    \node[font=\footnotesize] at (0,-2.55) {loop (section): lines thread it};
+  \end{scope}
+  % solenoid
+  \begin{scope}[xshift=10.9cm]
+    \foreach \x in {-1.6,-1.2,...,1.6} {\fill[omThm] (\x,0.9) circle (2pt); \node[omThm, font=\scriptsize] at (\x,-0.9) {$\times$};}
+    \foreach \y in {-0.6,-0.2,0.2,0.6} \draw[omDef, thick, -Stealth] (-2.3,\y) -- (2.3,\y);
+    \draw[omDef, thick, postaction={decorate, decoration={markings, mark=at position 0.5 with {\arrow{>}}}}] (2.3,0.6) .. controls (3.0,0.9) and (3.0,2.0) .. (0,2.1) .. controls (-3.0,2.0) and (-3.0,0.9) .. (-2.3,0.6);
+    \draw[omDef, thick, postaction={decorate, decoration={markings, mark=at position 0.5 with {\arrow{>}}}}] (2.3,-0.6) .. controls (3.0,-0.9) and (3.0,-2.0) .. (0,-2.1) .. controls (-3.0,-2.0) and (-3.0,-0.9) .. (-2.3,-0.6);
+    \node[font=\footnotesize] at (0,-2.55) {solenoid (section): uniform inside};
+  \end{scope}
+\end{tikzpicture}
+
+{\small Three field maps. A dot is a current toward the reader, a cross
+a current away. The lines of a wire are circles; those of a loop thread
+it and close outside; those of a long solenoid are straight and uniform
+inside and close far away, where the field is weak --- in every case
+they have neither source nor sink.}
+\end{omfigure}
+
+\begin{proposition}[Symmetries of $\vect B$]\label{prop:b1:magnetostatics:symmetry}
+\index{symmetry (of a field)!magnetic}
+$\vect B$ behaves under mirror reflection \emph{oppositely} to $\vect E$
+(it is a \emph{pseudo-vector}, built from a cross product): at a point
+of a plane of \emph{symmetry} of the currents, $\vect B$ is
+\emph{perpendicular} to the plane; at a point of a plane of
+\emph{antisymmetry} (the mirror image reverses the currents), $\vect B$
+lies \emph{in} the plane. Invariances transfer as for $\vect E$.
+\end{proposition}
+
+\begin{proof}
+The field of a current element is $\propto I\,\dd\vect l\wedge\vect e_r$
+(below); a mirror reverses one factor of a cross product relative to the
+image of a true vector, so the image of $\vect B$ is the opposite of the
+mirror image of the arrow. On a symmetry plane $\vect B$ must equal the
+opposite of its own mirror image, hence be normal to the plane; on an
+antisymmetry plane, the opposite of the opposite: in the plane.
+\end{proof}
+
+\begin{example}[Using the symmetries]\label{ex:b1:magnetostatics:symmetryuse}
+For a straight wire, any plane containing the wire is a symmetry plane,
+so at every point $\vect B$ is perpendicular to the plane through the
+wire and the point: orthoradial, $\vect B = B(r)\,\vect e_\theta$ by
+invariance along and around the wire. For a loop, the plane of the loop
+is a symmetry plane: on it $\vect B$ is normal to the loop; the axis
+lies in every antisymmetry plane containing it: on the axis $\vect B$ is
+along the axis.
+\end{example}
+
+\section{The Biot--Savart law}
+
+\begin{theorem}[Biot--Savart]\label{thm:b1:magnetostatics:biotsavart}
+\index{Biot--Savart law}\index{permeability of vacuum}
+A circuit carrying the current $I$ creates at $M$ the field
+\[
+\vect B(M) = \frac{\mu_0}{4\pi}\sum_{\text{circuit}} \frac{I\,\dd\vect l\wedge\vect e_{PM}}{PM^2} ,
+\]
+sum over the elements $\dd\vect l$ of the circuit at points $P$,
+oriented along the current, with $\vect e_{PM}$ the unit vector from
+$P$ to $M$, and $\mu_0 = 4\pi \times 10^{-7}\,\unit{T.m/A}$ the
+\emph{\omterm{thm:b1:magnetostatics:biotsavart}{permeability of vacuum}}. Each element contributes a field
+perpendicular to itself and to the line $PM$, falling as $1/PM^2$.
+\end{theorem}
+\admitted
+
+\begin{proposition}[Wire, loop, solenoid]\label{prop:b1:magnetostatics:three}
+\index{field of a straight wire}\index{field of a loop}\index{field of a solenoid}
+\begin{enumerate}
+  \item Infinite straight wire, at distance $r$: $B = \dfrac{\mu_0I}{2\pi r}$.
+  \item Circular loop of radius $R$, on its axis at distance $z$ from
+        the centre: $B_z = \dfrac{\mu_0IR^2}{2(R^2 + z^2)^{3/2}} = \dfrac{\mu_0I}{2R}
+        \sin^3\alpha$, with $\alpha$ the half-angle under which the loop is
+        seen from $M$; at the centre $B = \mu_0I/2R$.
+  \item Solenoid of $n$ turns per metre, on its axis: $B = \tfrac12\mu_0nI
+        (\cos\alpha_1 - \cos\alpha_2)$, with $\alpha_1, \alpha_2$ the angles under
+        which the two ends are seen; for a long solenoid, $B = \mu_0nI$
+        inside, half that at an end.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+(1) $M$ at distance $r$ from the wire, $P$ at abscissa $z$ along it:
+$\dd\vect l\wedge\vect e_{PM}$ has magnitude $\dd z\,\sin\beta = \dd z\cdot r/PM$
+with $PM = \sqrt{r^2 + z^2}$, and all contributions are orthoradial:
+$B = \dfrac{\mu_0I}{4\pi}\displaystyle\int_{-\infty}^{\infty}\dfrac{r\,\dd z}{(r^2 + z^2)^{3/2}}
+= \dfrac{\mu_0I}{4\pi}\,\dfrac{2}{r}$. (2) Each element of the loop is at
+the same distance $\sqrt{R^2 + z^2}$ from $M$, perpendicular to
+$\vect e_{PM}$; its field has magnitude $\mu_0I\,\dd l/4\pi(R^2 + z^2)$, and
+only the axial component, the fraction $R/\sqrt{R^2 + z^2}$ of it,
+survives the sum round the loop: $B_z = \mu_0I\cdot2\pi R\cdot R/4\pi(R^2 +
+z^2)^{3/2}$. (3) A slice $\dd z'$ of solenoid is a loop of current
+$nI\,\dd z'$; with $z' - z = R/\tan\alpha$, $\dd z' = -R\,\dd\alpha/\sin^2\alpha$,
+and $B = \dfrac{\mu_0nI}{2}\displaystyle\int\sin^3\alpha\,\dfrac{\dd\alpha}{\sin^2\alpha}$ over
+the solenoid $= \tfrac12\mu_0nI(\cos\alpha_1 - \cos\alpha_2)$; infinitely
+long, $\alpha_1 \to 0$, $\alpha_2 \to \pi$.
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}[font=\small, x=1cm, y=1cm, >=Stealth]
+  \begin{scope}
+    \draw[omThm, very thick, -Stealth] (0,-2.2) -- (0,2.4) node[right] {$I$};
+    \fill[omThm] (0,0.4) circle (1.5pt) node[left, font=\footnotesize] {$P$};
+    \draw[omThm, very thick] (0,0.4) -- (0,0.75);
+    \node[omThm, font=\footnotesize, anchor=east] at (-0.1,0.85) {$\dd\vect l$};
+    \fill (2.2,-0.6) circle (1.5pt) node[below right, font=\footnotesize] {$M$};
+    \draw[dashed] (0,0.4) -- (2.2,-0.6) node[midway, above, font=\footnotesize] {$\vect e_{PM}$};
+    \draw[dashed] (0,-0.6) -- (2.2,-0.6) node[midway, below, font=\footnotesize] {$r$};
+    \node[omDef, font=\footnotesize] at (2.2,-0.6) [xshift=14pt, yshift=10pt] {$\odot\ \dd\vect B$};
+    \node[font=\footnotesize] at (1.0,-2.55) {Biot--Savart for a wire};
+  \end{scope}
+  \begin{scope}[xshift=6.6cm]
+    \draw[omThm, very thick] (0,0) ellipse (0.45 and 1.3);
+    \draw[dashed] (-0.3,0) -- (3.6,0);
+    \fill (2.6,0) circle (1.5pt) node[below, font=\footnotesize] {$M$};
+    \draw[dashed] (0,1.3) -- (2.6,0); \draw[dashed] (0,-1.3) -- (2.6,0);
+    \draw (2.0,0) arc[start angle=180, end angle=153.4, radius=0.6];
+    \node[font=\footnotesize] at (1.75,0.22) {$\alpha$};
+    \draw[<->] (0,0) -- (0,1.3) node[midway, left, font=\footnotesize] {$R$};
+    \draw[<->] (0,-1.5) -- (2.6,-1.5) node[midway, below, font=\footnotesize] {$z$};
+    \draw[omDef, thick, -Stealth] (2.6,0) -- (3.4,0) node[above, font=\footnotesize] {$\vect B$};
+    \node[font=\footnotesize] at (1.6,-2.55) {loop: $B = \frac{\mu_0 I}{2R}\sin^3\alpha$};
+  \end{scope}
+  \begin{scope}[xshift=12.4cm]
+    \draw[omThm, thick] (-1.6,0.8) rectangle (1.6,0.9); \draw[omThm, thick] (-1.6,-0.9) rectangle (1.6,-0.8);
+    \draw[dashed] (-2.2,0) -- (2.2,0);
+    \fill (0.3,0) circle (1.5pt) node[below, font=\footnotesize] {$M$};
+    \draw[dashed] (0.3,0) -- (-1.6,0.85); \draw[dashed] (0.3,0) -- (1.6,0.85);
+    \draw (-0.3,0) arc[start angle=180, end angle=156, radius=0.6];
+    \node[font=\footnotesize] at (-0.5,0.32) {$\alpha_1$};
+    \draw (0.9,0) arc[start angle=0, end angle=33, radius=0.6];
+    \node[font=\footnotesize] at (1.15,0.32) {$\alpha_2$};
+    \node[font=\footnotesize] at (0,-2.55) {solenoid: $\frac12\mu_0 nI(\cos\alpha_1 - \cos\alpha_2)$};
+  \end{scope}
+\end{tikzpicture}
+
+{\small The three Biot--Savart computations of the chapter: the element
+$\dd\vect l$ of a wire and its contribution at $M$, perpendicular to the
+plane of the figure; the loop seen from $M$ under the half-angle
+$\alpha$; the solenoid, whose ends are seen under $\alpha_1$ and
+$\alpha_2$.}
+\end{omfigure}
+
+\begin{example}[Orders of magnitude]\label{ex:b1:magnetostatics:orders}
+A \qty{10}{A} wire at \qty{1}{cm}: $B = 2 \times 10^{-7} \times 10/0.01 =
+\qty{2e-4}{T}$, four times the Earth's field --- the compass does swing.
+A coil of $100$ turns, radius \qty{5}{cm}, \qty{2}{A}: $\mu_0NI/2R =
+\qty{2.5}{mT}$ at its centre. A solenoid of $1000$ turns per metre at
+\qty{5}{A}: \qty{6.3}{mT}; with an iron core of relative permeability
+$1000$, several \omterm{def:b1:magnetostatics:field}{tesla} would follow if iron did not saturate near
+\qty{2}{T} --- the ceiling of every electromagnet, which is why the
+strongest fields come from superconducting coils without iron.
+\end{example}
+
+\section{Ampère's law}
+
+\begin{theorem}[Ampère]\label{thm:b1:magnetostatics:ampere}
+\index{Ampère's law}\index{circulation!of the magnetic field}
+The circulation of $\vect B$ along any closed oriented curve $\Gamma$
+equals $\mu_0$ times the total current crossing any surface bounded by
+$\Gamma$, counted positively when it crosses in the direction given by
+the right-hand rule from the orientation of $\Gamma$:
+\[
+\oint_\Gamma \vect B\cdot\dd\vect l = \mu_0 I_{\text{enclosed}} .
+\]
+\end{theorem}
+
+\begin{proof}
+For a circle of radius $r$ centred on a straight wire, $\vect B$ is
+tangent with magnitude $\mu_0I/2\pi r$ everywhere, so the circulation is
+$2\pi r \times \mu_0I/2\pi r = \mu_0I$, independent of $r$; for a curve not
+enclosing the wire the contributions cancel. The general case is
+admitted (Year 2 volume).
+\end{proof}
+
+\begin{method}[Using Ampère's law]\label{meth:b1:magnetostatics:ampere}
+As for Gauss: (1) symmetries give the direction of $\vect B$ and the
+variable it depends on; (2) choose an \emph{Amperian loop} through $M$
+on which $\vect B$ is either tangent with constant magnitude or
+perpendicular; (3) count the current through it; (4) solve. It works
+for infinite wires and cylinders, infinite solenoids and toroids, and
+infinite current sheets.
+\end{method}
+
+\begin{proposition}[Cylinder, solenoid, toroid]\label{prop:b1:magnetostatics:ampereapps}
+\begin{enumerate}
+  \item A cylindrical wire of radius $a$ carrying $I$ uniformly:
+        $B = \dfrac{\mu_0Ir}{2\pi a^2}$ inside, $\dfrac{\mu_0I}{2\pi r}$ outside
+        --- the maximum is at the surface.
+  \item An infinite solenoid of $n$ turns per metre: $\vect B = \mu_0nI\,
+        \vect e_z$ uniform inside, $\vect 0$ outside, whatever the shape of
+        its cross-section.
+  \item A toroid of $N$ turns: $B = \dfrac{\mu_0NI}{2\pi r}$ inside the
+        windings, zero outside --- a solenoid closed on itself, with no
+        stray field.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+(1) Circle of radius $r$: $2\pi rB = \mu_0I(r/a)^2$ or $\mu_0I$. (2) $\vect B$
+is axial by symmetry and, by Ampère on a rectangle with both long sides
+outside, uniform outside, hence zero (it vanishes at infinity); a
+rectangle with one long side inside, of length $\ell$, gives $B\ell =
+\mu_0n\ell I$. (3) Circle of radius $r$ inside the torus: $2\pi rB =
+\mu_0NI$; outside, the enclosed current is zero.
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}
+\begin{axis}[omaxis, axis x line=bottom, axis y line=left, width=7.4cm, height=5.2cm,
+    xlabel={$r/a$}, ylabel={$B$ (units of $\mu_0I/2\pi a$)},
+    xlabel style={at={(axis description cs:0.5,-0.1)}, anchor=north},
+    xmin=0, xmax=4, ymin=0, ymax=1.25, xtick={1,2,3}, ytick={0.5,1}, samples=60]
+  \addplot[omDef, very thick, domain=0:1] {x};
+  \addplot[omDef, very thick, domain=1:4] {1/x} node[pos=0.3, above right, font=\footnotesize] {$\propto 1/r$};
+  \node[omDef, font=\footnotesize, anchor=north west] at (axis cs:0.1,0.9) {$\propto r$};
+\end{axis}
+\end{tikzpicture}\hfill
+\begin{tikzpicture}[font=\small, x=1cm, y=1cm, >=Stealth]
+  \foreach \x in {-2.0,-1.6,...,2.0} {\fill[omThm] (\x,0.9) circle (2pt); \node[omThm, font=\scriptsize] at (\x,-0.9) {$\times$};}
+  \foreach \y in {-0.55,-0.15,0.25,0.65} \draw[omDef, thick, -Stealth] (-2.6,\y) -- (2.6,\y);
+  \draw[omProp, very thick, dashed, -Stealth] (-1.2,0.2) -- (1.2,0.2) node[midway, below, font=\footnotesize] {$\ell$};
+  \draw[omProp, very thick, dashed] (1.2,0.2) -- (1.2,1.5) -- (-1.2,1.5) -- (-1.2,0.2);
+  \node[omProp, font=\footnotesize] at (0,1.85) {Amperian rectangle: $B\ell = \mu_0 n\ell I$};
+  \node[font=\footnotesize] at (0,-1.5) {$\vect B = \vect 0$ outside, $\mu_0 nI$ inside};
+\end{tikzpicture}
+
+{\small Left: the field of a thick wire, linear inside and in $1/r$
+outside, largest at the surface. Right: the Amperian rectangle that
+gives the field of an infinite solenoid --- only the side inside
+contributes to the circulation.}
+\end{omfigure}
+
+\section{The Laplace force}
+
+\begin{theorem}[Laplace force]\label{thm:b1:magnetostatics:laplace}
+\index{Laplace force}
+A conductor element $\dd\vect l$ carrying $I$ in a field $\vect B$
+receives the force $\dd\vect F = I\,\dd\vect l\wedge\vect B$; a straight
+segment $\vect L$ in a uniform field receives $\vect F = I\vect L\wedge\vect B$,
+of magnitude $ILB\sin\theta$, perpendicular to both the wire and the
+field.
+\end{theorem}
+
+\begin{proof}
+The charge carriers in $\dd\vect l$ (number $n\,S\,\dd l$, charge $q$,
+drift velocity $\vect v$) each feel $q\vect v\wedge\vect B$; their sum is
+$nSq\,\dd l\,\vect v\wedge\vect B = I\,\dd\vect l\wedge\vect B$ since $I = nqvS$
+and $\vect v$ is along $\dd\vect l$. The carriers transmit the force to the
+lattice of the wire through their collisions.
+\end{proof}
+
+\begin{proposition}[Force between parallel wires]\label{prop:b1:magnetostatics:parallel}
+\index{ampere (definition)}
+Two long parallel wires a distance $d$ apart carrying $I_1$ and $I_2$
+attract each other if the currents are parallel, repel if antiparallel,
+with the force per unit length
+\[
+\frac{F}{\ell} = \frac{\mu_0I_1I_2}{2\pi d} .
+\]
+Two wires \qty{1}{m} apart carrying \qty{1}{A} feel $2 \times 10^{-7}$~N per
+metre --- the definition of the \omterm{def:b1:dc-circuits:current}{ampere} from 1948 to 2019, and the
+origin of the value $\mu_0 = 4\pi \times 10^{-7}$.
+\end{proposition}
+
+\begin{proof}
+Wire~1 creates $\mu_0I_1/2\pi d$ at wire~2, perpendicular to it; the
+\omterm{thm:b1:magnetostatics:laplace}{Laplace force} on a length $\ell$ of wire~2 is $I_2\ell \times \mu_0I_1/2\pi d$,
+directed toward wire~1 when the currents are parallel (check with the
+right-hand rule).
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}[font=\small, x=1cm, y=1cm, >=Stealth]
+  \begin{scope}
+    \draw[omThm, very thick, -Stealth] (-0.8,-1.6) -- (-0.8,1.6) node[above] {$I_1$};
+    \draw[omThm, very thick, -Stealth] (0.8,-1.6) -- (0.8,1.6) node[above] {$I_2$};
+    \draw[omDef, thick, ->] (-0.8,0) -- (-0.1,0) node[midway, above, font=\footnotesize] {$\vect F$};
+    \draw[omDef, thick, ->] (0.8,0) -- (0.1,0);
+    \node[omProp, font=\scriptsize] at (0.8,-0.5) [xshift=10pt] {$\odot\ \vect B_1$};
+    \node[font=\footnotesize] at (0,-2.1) {parallel currents attract};
+  \end{scope}
+  \begin{scope}[xshift=4.6cm]
+    \draw[omThm, very thick, -Stealth] (-0.8,-1.6) -- (-0.8,1.6) node[above] {$I_1$};
+    \draw[omThm, very thick, -Stealth] (0.8,1.6) node[above] {$I_2$} -- (0.8,-1.6);
+    \draw[omDef, thick, ->] (-0.8,0) -- (-1.5,0) node[midway, above, font=\footnotesize] {$\vect F$};
+    \draw[omDef, thick, ->] (0.8,0) -- (1.5,0);
+    \node[font=\footnotesize] at (0,-2.1) {antiparallel: repel};
+  \end{scope}
+  \begin{scope}[xshift=10.2cm]
+    \draw[omThm, very thick] (-2.2,0.9) -- (2.2,0.9); \draw[omThm, very thick] (-2.2,-0.9) -- (2.2,-0.9);
+    \draw[omThm, very thick, -Stealth] (0.3,0.9) -- (0.3,-0.9) node[midway, right, font=\footnotesize] {$I$};
+    \draw[omThm, very thick] (0.15,0.9) rectangle (0.45,-0.9);
+    \foreach \x in {-1.8,-1.2,-0.6,1.0,1.6} \foreach \y in {-0.45,0.45} \node[omProp, font=\scriptsize] at (\x,\y) {$\times$};
+    \node[omProp, font=\footnotesize] at (-1.2,1.25) {$\vect B$ into the page};
+    \draw[omDef, very thick, ->] (0.3,0) -- (1.6,0);
+    \node[omDef, font=\footnotesize, anchor=north west] at (0.85,-0.2) {$\vect F = I\vect L\wedge\vect B$};
+    \node[font=\footnotesize] at (0,-2.1) {rails: the simplest motor};
+  \end{scope}
+\end{tikzpicture}
+
+{\small The \omterm{thm:b1:magnetostatics:laplace}{Laplace force}: between parallel wires (left, middle) and on
+a sliding bar carrying a current across a field (right) --- the Laplace
+rails, whose energy balance is the subject of \cref{ch:b1:induction}.}
+\end{omfigure}
+
+\section{The magnetic dipole}
+
+\begin{definition}[Magnetic moment]\label{def:b1:magnetostatics:moment}
+\index{magnetic moment}\index{magnetic dipole}
+A plane loop of area $S$ carrying $I$, oriented by the right-hand rule
+(normal $\vect n$ along the thumb when the fingers follow $I$), has the
+\emph{magnetic moment} $\vect m = IS\,\vect n$ (\unit{A.m^2}); for $N$
+turns, $NIS\,\vect n$. Seen from distances $r \gg \sqrt S$ the loop is a
+\emph{magnetic dipole}: its field has exactly the form of the \omterm{def:b1:potential-capacitors:dipole}{electric
+dipole}'s with $\vect p/\varepsilon_0 \to \mu_0\vect m$:
+\[
+B_r = \frac{\mu_0}{4\pi}\,\frac{2m\cos\theta}{r^3}, \qquad
+B_\theta = \frac{\mu_0}{4\pi}\,\frac{m\sin\theta}{r^3} .
+\]
+A bar magnet, an atom, the Earth are magnetic dipoles: the Earth's
+moment is \qty{8e22}{A.m^2}, an electron's \qty{9.3e-24}{A.m^2} (the
+Bohr magneton).
+\end{definition}
+
+\begin{proof}
+On the axis the loop field $\mu_0IR^2/2z^3$ for $z \gg R$ equals
+$\mu_0 \cdot 2m/4\pi z^3$ with $m = I\pi R^2$, matching $B_r$ at $\theta = 0$;
+the full angular form is admitted.
+\end{proof}
+
+\begin{theorem}[Dipole in a field]\label{thm:b1:magnetostatics:dipoleinfield}
+\index{magnetic dipole!torque}\index{magnetic dipole!energy}
+A \omterm{def:b1:magnetostatics:moment}{magnetic moment} $\vect m$ in a uniform field $\vect B$ feels no net
+force, a \omterm{def:b1:angular-momentum:moment}{torque} $\vect\Gamma = \vect m\wedge\vect B$ that aligns it with
+the field, and has the \omterm{def:b1:work-and-energy:conservative}{potential energy} $E_p = -\vect m\cdot\vect B$. In a
+non-uniform field it is pulled toward the strong-field region when
+aligned (and pushed away when anti-aligned).
+\end{theorem}
+
+\begin{proof}
+For a rectangular loop $a \times b$ with $\vect n$ at angle $\theta$ to
+$\vect B$: the \omterm{thm:b1:magnetostatics:laplace}{Laplace forces} on the two sides of length $b$ parallel to
+the axis of rotation are $\pm IbB$, opposite, a distance $a\sin\theta$
+apart: a couple of moment $IabB\sin\theta = mB\sin\theta$, tending to
+reduce $\theta$; the forces on the other two sides are opposite and
+collinear. Energy: $\Gamma = -\dd E_p/\dd\theta$ with $\Gamma = -mB\sin\theta$
+gives $E_p = -mB\cos\theta$. Any plane loop is a sum of small rectangles;
+the non-uniform case is admitted.
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}[font=\small, x=1cm, y=1cm, >=Stealth]
+  \begin{scope}
+    % rectangular loop seen from above, B horizontal
+    \foreach \y in {-1.4,-0.7,0,0.7,1.4} \draw[omProp, ->] (-2.8,\y) -- (2.8,\y);
+    \node[omProp, font=\footnotesize] at (2.5,1.7) {$\vect B$};
+    \draw[omThm, very thick] (-0.9,-0.55) -- (0.9,0.55);
+    \fill[omThm] (-0.9,-0.55) circle (3pt); \node[omThm, font=\footnotesize] at (0.9,0.55) {$\otimes$};
+    \draw[omDef, very thick, ->] (-0.9,-0.55) -- (-0.9,-1.6) node[left, font=\footnotesize] {$\vect F$};
+    \draw[omDef, very thick, ->] (0.9,0.55) -- (0.9,1.6) node[right, font=\footnotesize] {$-\vect F$};
+    \draw[very thick, ->] (0,0) -- (-0.66,1.08) node[above left, font=\footnotesize] {$\vect m$};
+    \draw (0,0.6) arc[start angle=90, end angle=121.4, radius=0.6] node[midway, above, font=\footnotesize] {$\theta$};
+    \node[font=\footnotesize] at (0,-2.95) {couple $mB\sin\theta$: the loop turns to align $\vect m$ with $\vect B$};
+  \end{scope}
+  \begin{scope}[xshift=8.6cm]
+    % compass / dipole field lines of a magnet
+    \draw[fill=omThm!20, draw=omThm, thick] (-1.0,-0.3) rectangle (0,0.3); \node[omThm, font=\footnotesize] at (-0.5,0) {S};
+    \draw[fill=omDef!20, draw=omDef, thick] (0,-0.3) rectangle (1.0,0.3); \node[omDef, font=\footnotesize] at (0.5,0) {N};
+    \foreach \K in {1.4,2.0,2.6} {
+      \draw[omDef, thick, domain=8:172, samples=90, postaction={decorate, decoration={markings, mark=at position 0.5 with {\arrow{>}}}}] plot ({\K*sin(\x)*sin(\x)*cos(\x)}, {\K*sin(\x)*sin(\x)*sin(\x)});
+      \draw[omDef, thick, domain=188:352, samples=90, postaction={decorate, decoration={markings, mark=at position 0.5 with {\arrow{<}}}}] plot ({\K*sin(\x)*sin(\x)*cos(\x)}, {\K*sin(\x)*sin(\x)*sin(\x)});
+    }
+    \draw[->, very thick] (-0.6,0) -- (0.6,0); \node[font=\footnotesize] at (0,-0.5) {$\vect m$};
+    \node[font=\footnotesize] at (0,-2.95) {a magnet: the field of a dipole, lines from N round to S};
+  \end{scope}
+\end{tikzpicture}
+
+{\small Left: a current loop in a uniform field, seen along its axis of
+rotation --- the \omterm{thm:b1:magnetostatics:laplace}{Laplace forces} on the two sides form a couple that
+aligns the moment with the field. Right: the \omterm{def:b1:magnetostatics:field}{field lines} of a bar
+magnet are those of a \omterm{def:b1:magnetostatics:moment}{magnetic dipole}, identical in shape to the
+\omterm{def:b1:potential-capacitors:dipole}{electric dipole}'s, leaving the north face and returning to the south.}
+\end{omfigure}
+
+\begin{example}[The compass and the Earth]\label{ex:b1:magnetostatics:compass}
+A compass needle is a small magnet, moment $m \sim \qty{0.1}{A.m^2}$; in the
+horizontal component of the Earth's field, $B_h \approx \qty{2e-5}{T}$, the
+\omterm{def:b1:angular-momentum:moment}{torque} $mB_h\sin\theta$ turns it north, and it oscillates about north with
+period $2\pi\sqrt{J/mB_h} \sim \qty{1}{s}$ (\cref{exo:b1:magnetostatics:9}).
+The Earth's own dipole, \qty{8e22}{A.m^2}, is equivalent to a current of
+a few billion \omterm{def:b1:dc-circuits:current}{amperes} circling in the liquid iron core; the field it
+makes at the surface is the weakest of the chapter and the first one
+anybody used.
+\end{example}
+
+\section{Exercises}
+
+\begin{exercise}[$\star$]\label{exo:b1:magnetostatics:1}
+Field at \qty{1.0}{cm} from a straight wire carrying \qty{10}{A}; current
+needed to reach \qty{1}{T} at that distance; distance at which a
+\qty{100}{A} wire's field equals the Earth's \qty{5e-5}{T}.
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b1:magnetostatics:2}
+Field at the centre of a coil of $100$ turns, radius \qty{5.0}{cm},
+carrying \qty{2.0}{A}; on its axis at \qty{5.0}{cm} and at \qty{50}{cm}
+from the centre.
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b1:magnetostatics:3}
+A solenoid of $1000$ turns per metre carries \qty{5.0}{A}: field inside,
+far from the ends; at the very end. Number of turns of \qty{0.5}{mm}
+wire one can wind per metre in a single layer, and the field then at
+\qty{5}{A}.
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b1:magnetostatics:4}
+Force on a \qty{1.0}{m} wire carrying \qty{10}{A} perpendicular to a
+\qty{0.10}{T} field; on the same wire at \qty{30}{\degree} to the field.
+A motor has $100$ such wires on a rotor of radius \qty{5}{cm}: \omterm{def:b1:angular-momentum:moment}{torque}
+(\omterm{def:b1:units-dimensions:oom}{order of magnitude}).
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b1:magnetostatics:5}
+Field of a finite straight segment at distance $d$ from its line, its
+ends seen under angles $\alpha_1$ and $\alpha_2$ (measured from the
+perpendicular): $B = \dfrac{\mu_0I}{4\pi d}(\sin\alpha_2 - \sin\alpha_1)$. Check
+the infinite-wire limit. Field at the centre of a square loop of side
+$a$.
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b1:magnetostatics:6}
+\emph{Helmholtz coils.} Two identical coils ($N$ turns, radius $R$) on a
+common axis, a distance $R$ apart, carry the same current in the same
+sense. Field at the midpoint; show that the first \emph{and second}
+derivatives of $B$ along the axis vanish there. Numbers: $N = 100$,
+$R = \qty{15}{cm}$, $I = \qty{1.0}{A}$.
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b1:magnetostatics:7}
+A copper wire of radius \qty{2.0}{mm} carries \qty{100}{A}. Field at the
+surface, at \qty{1.0}{mm} from the axis, at \qty{1.0}{cm}. Sketch $B(r)$.
+The wire is now the inner conductor of a coaxial cable whose sheath
+carries the return current: field outside the sheath.
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b1:magnetostatics:8}
+Force per metre between two wires \qty{1}{m} apart at \qty{1}{A}; between
+two bus bars \qty{10}{cm} apart carrying \qty{10}{kA}; under a short
+circuit of \qty{100}{kA}. What must hold the bars?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b1:magnetostatics:9}
+A compass needle, moment $m = \qty{0.10}{A.m^2}$, \omterm{prop:b1:angular-momentum:inertia}{moment of inertia}
+$J = \qty{1.0e-7}{kg.m^2}$, in a horizontal field $B_h = \qty{2.0e-5}{T}$.
+\omterm{def:b1:angular-momentum:moment}{Torque} at \qty{90}{\degree}; work to turn it from north to south; period
+of \omterm{prop:b1:work-and-energy:stability}{small oscillations}. How does one measure $B_h$ with it?
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b1:magnetostatics:10}
+\emph{The Earth as a dipole.} (a) Show that on its axis, far away, a
+loop's field is $B = \mu_0m/2\pi z^3$ with $m = I\pi R^2$; compare with the
+\omterm{def:b1:potential-capacitors:dipole}{electric dipole}. (b) The field at the magnetic pole is about
+\qty{6e-5}{T}: deduce the Earth's \omterm{def:b1:potential-capacitors:dipole}{dipole moment}. (c) Current in a loop
+of radius \qty{3000}{km} (the core) that would produce it. (d) Field at
+the equator on the dipole model; the angle of dip of the field at
+latitude \qty{45}{\degree} (use $B_r$ and $B_\theta$).
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b1:magnetostatics:11}
+\emph{Finite solenoid.} Length $L = \qty{20}{cm}$, radius $R = \qty{2.0}{cm}$,
+$n = \qty{2000}{m^{-1}}$, $I = \qty{3.0}{A}$. Field at the centre and at an
+end from the course formula; fraction of the infinite-solenoid value;
+at what distance outside along the axis has the field fallen to
+$1\%$ of the central value? Sketch $B(z)$ along the axis.
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b1:magnetostatics:12}
+\emph{Magnetic pressure.} In a long solenoid the field is $B$ inside
+and $0$ outside; the windings carry the surface current $K = nI$ per
+metre of length. (a) Show that the field \emph{at} the windings, the
+average of inside and outside, is $B/2$, and that the \omterm{thm:b1:magnetostatics:laplace}{Laplace force} on
+them is an outward pressure $p = B^2/2\mu_0$. (b) Numbers for
+\qty{1}{T}, \qty{10}{T}, \qty{45}{T}; compare with atmospheric pressure and
+with the tensile strength of steel (\qty{1}{GPa}). (c) What limits the
+strongest steady magnets?
+\end{exercise}
+
+\begin{omfigure}
+\includegraphics[width=0.50\linewidth]{images/book3/transmission-line.jpg}
+
+{\small A \omterm{def:b1:dc-circuits:voltage}{high-voltage} transmission line: three conductors per circuit whose currents sum to zero, so that their fields cancel at a distance. Photograph: Stefan Andrej Shambora, CC~BY~2.0.}
+\end{omfigure}
+
+\section{Problem: The cable, the line and the meter}
+
+\begin{problem}[{Weekend problem --- Ampère's law on a coaxial cable,
+Laplace forces on a power line, and the design of a moving-coil
+galvanometer}]
+\label{pb:b1:magnetostatics:1}
+$\mu_0 = 4\pi \times 10^{-7}$~SI; copper resistivity $\rho = \qty{1.7e-8}{\ohm.m}$.
+
+\medskip
+\noindent\textbf{Part I --- The coaxial cable.}
+A cable carries $I = \qty{1.0}{A}$ along a solid copper core of radius
+$a = \qty{0.50}{mm}$ and back along a sheath of inner radius $b =
+\qty{2.5}{mm}$ and outer radius $c = \qty{3.0}{mm}$; currents are uniform
+over each conductor's section.
+\begin{enumerate}
+  \item Symmetries and invariances: direction of $\vect B$ and the
+        variable it depends on.
+  \item $B(r)$ in the core, between the conductors, and outside the
+        cable, by \omterm{thm:b1:magnetostatics:ampere}{Ampère's law}.
+  \item Values at $r = a$ and $r = b$.
+  \item The core is replaced by a thin copper tube of the same radius
+        $a$ carrying the same current: what changes in each region?
+  \item $B(r)$ inside the sheath ($b < r < c$); check the values at $b$
+        and $c$; sketch $B(r)$ from $0$ to \qty{4}{mm}.
+  \item \omterm{thm:b1:magnetostatics:laplace}{Laplace force} on the sheath: direction (attraction or
+        repulsion from the core?) and magnitude per unit area, taking the
+        field at the sheath as the average of its values at $b$ and $c$.
+        Same for a pulsed current of \qty{10}{kA}.
+  \item Why is the coaxial geometry used for \omterm{def:b1:wave-propagation:signal}{signals}? Compare with a
+        pair of parallel wires $d = \qty{2}{mm}$ apart: field at a distance
+        $D = \qty{10}{cm}$ from the pair (superpose two wires).
+\end{enumerate}
+
+\medskip
+\noindent\textbf{Part II --- The power line.}
+Two horizontal conductors $d = \qty{1.0}{m}$ apart, $h = \qty{10}{m}$ above
+the ground, carry $I = \qty{500}{A}$ in opposite directions.
+\begin{enumerate}[resume]
+  \item Field of one conductor at the point of the ground below the
+        midpoint; show that the two fields combine into a vertical field
+        and give its value; compare with the Earth's and with the
+        \qty{100}{\micro T} exposure guideline.
+  \item Show that at distances $D \gg d$ the field of the pair falls as
+        $\mu_0Id/2\pi D^2$: why faster than a single wire?
+  \item Field at \qty{1.0}{m} below one conductor, where a technician
+        might work.
+  \item Force per metre between the conductors; attraction or
+        repulsion? Same under a \qty{20}{kA} short-circuit current.
+  \item Force on a \qty{300}{m} span, normal and in short circuit;
+        compare with the span's weight (\qty{1.0}{kg/m}); what do the lines
+        do during a short circuit?
+  \item A three-phase line carries three currents of the same \omterm{def:b1:wave-propagation:signal}{amplitude}
+        shifted by \qty{120}{\degree}: show that their sum vanishes at
+        every instant, and what this implies for the far field.
+  \item A compass at the point of question~8, where the Earth's
+        horizontal field is \qty{2.0e-5}{T}: does the line's field
+        deflect it? (Consider its direction.)
+\end{enumerate}
+
+\medskip
+\noindent\textbf{Part III --- The moving-coil galvanometer.}
+A rectangular coil, $N = 200$ turns, sides $a = \qty{2.0}{cm}$ (parallel to
+the axis of rotation) and $b = \qty{3.0}{cm}$, turns about its axis in the
+gap between cylindrical pole pieces where the field, $B = \qty{0.20}{T}$,
+is \emph{radial}: always in the plane of the coil, perpendicular to its
+sides $a$. A spiral spring exerts the restoring \omterm{def:b1:angular-momentum:moment}{torque} $-C\theta$ with
+$C = \qty{1.0e-5}{N.m/rad}$. \omterm{prop:b1:angular-momentum:inertia}{Moment of inertia} of the coil and needle:
+$J = \qty{6.7e-8}{kg.m^2}$.
+\begin{enumerate}[resume]
+  \item \omterm{thm:b1:magnetostatics:laplace}{Laplace forces} on the four sides; which ones produce a \omterm{def:b1:angular-momentum:moment}{torque}
+        about the axis?
+  \item \omterm{def:b1:angular-momentum:moment}{Torque} for a current $I$; why does the radial field make it
+        independent of $\theta$?
+  \item Deflection $\theta$ at equilibrium; sensitivity in radians per
+        milliampere; current for a full-scale deflection of \qty{1.2}{rad}.
+  \item The coil is wound with copper wire of diameter \qty{0.10}{mm}:
+        resistance of the coil; \omterm{def:b1:dc-circuits:voltage}{voltage} across it and power dissipated at
+        full scale.
+  \item Equation of motion of the coil; natural period of the
+        oscillations about the equilibrium.
+  \item The motion of the coil in the field induces a braking \omterm{def:b1:angular-momentum:moment}{torque}
+        $-\alpha\dot\theta$ (\cref{ch:b1:induction}); value of $\alpha$ for
+        critical damping, and why one wants it.
+  \item Series \omterm{def:b1:dc-circuits:resistor}{resistor} to make a \qty{10}{V} full-scale voltmeter; shunt
+        \omterm{def:b1:dc-circuits:resistor}{resistor} to make a \qty{1.0}{A} full-scale ammeter.
+  \item \omterm{def:b1:magnetostatics:moment}{Magnetic moment} of the coil at full scale; energy $-\vect m\cdot
+        \vect B$ it would have, aligned, in a uniform \qty{0.20}{T} field;
+        compare with the energy stored in the spring at full scale.
+  \item If the field were \emph{uniform} instead of radial, show that the
+        scale would no longer be linear: write the equilibrium condition
+        with $\theta$ measured from the position where the coil's plane
+        contains $\vect B$.
+  \item A \qty{50}{Hz} current of \qty{0.5}{mA} \omterm{def:b1:wave-propagation:signal}{amplitude} is fed to the
+        meter: what does the needle show, and why? (Compare \qty{50}{Hz}
+        with the \omterm{def:b1:oscillators-resonance:harmonic}{natural frequency}.)
+  \item Sum up the three scenes in three numbers, and say what single
+        law produced each.
+\end{enumerate}
+\end{problem}

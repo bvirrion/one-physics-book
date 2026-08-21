@@ -1,0 +1,540 @@
+\chapter{Filters and Transfer Functions}\label{ch:b1:filters-transfer-functions}
+
+Inside a loudspeaker cabinet a coil and a capacitor decide, without a
+single transistor, that the bass goes to the big cone and the treble to
+the small dome. An oscilloscope's ``AC'' button removes a slowly
+drifting offset and keeps the wiggle on top of it. A power supply turns
+a pulsating rectified mains into a steady \omterm{def:b1:dc-circuits:voltage}{voltage} with one capacitor.
+All three are \emph{\omterm{def:b1:filters-transfer-functions:H}{filters}}: \omterm{def:b1:dc-circuits:linear}{linear circuits} that treat each frequency
+differently. Because any periodic \omterm{def:b1:wave-propagation:signal}{signal} is a sum of sinusoids, knowing
+what a circuit does to every sinusoid --- its \omterm{def:b1:filters-transfer-functions:H}{transfer function} --- is
+knowing what it does to everything. This chapter defines \omterm{def:b1:filters-transfer-functions:H}{transfer
+functions}, draws their \omterm{def:b1:filters-transfer-functions:bode}{Bode diagrams} for the first- and second-order
+circuits of the previous chapters, and uses them to predict how a
+square wave comes out of a \omterm{def:b1:filters-transfer-functions:H}{filter}.
+
+\section{Transfer function and Bode diagram}
+
+\begin{definition}[Transfer function]\label{def:b1:filters-transfer-functions:H}
+\index{transfer function}\index{gain}\index{filter}
+A \omterm{def:b1:dc-circuits:linear}{linear circuit} with an input \omterm{def:b1:dc-circuits:voltage}{voltage} $\underline U_e$ and an output
+\omterm{def:b1:dc-circuits:voltage}{voltage} $\underline U_s$ (taken with nothing connected at the output) has
+the \emph{transfer function}
+\[
+\underline H(j\omega) = \frac{\underline U_s}{\underline U_e},
+\qquad G(\omega) = \abs{\underline H}, \qquad \varphi(\omega) = \arg\underline H,
+\]
+the \emph{gain} $G$ (ratio of \omterm{def:b1:wave-propagation:signal}{amplitudes}) and the phase shift $\varphi$
+of the output relative to the input. A \emph{filter} is such a circuit
+used for its frequency dependence: a sinusoid of \omterm{def:b1:wave-propagation:signal}{amplitude} $E$ at
+$\omega$ comes out as $G(\omega)E\cos(\omega t + \varphi(\omega))$.
+\end{definition}
+
+\begin{definition}[Decibels; Bode diagram]\label{def:b1:filters-transfer-functions:bode}
+\index{decibel}\index{Bode diagram}\index{cutoff frequency}\index{passband}
+The \omterm{def:b1:filters-transfer-functions:H}{gain} in \emph{decibels} is $G_{\mathrm{dB}} = 20\log_{10}G$: a factor
+$10$ is \qty{20}{dB}, a factor $2$ is \qty{6}{dB}, $1/\sqrt2$ is
+\qty{-3}{dB}. The \emph{Bode diagram} plots $G_{\mathrm{dB}}$ and
+$\varphi$ against $\log_{10}\omega$ (or $f$). The \emph{cutoff
+frequency} is where $G$ falls to $G_{\max}/\sqrt2$ (\qty{-3}{dB} from
+the maximum); the \emph{passband} is the range of frequencies within
+\qty{3}{dB} of the maximum. A decade is a factor $10$ in frequency, an
+octave a factor $2$.
+\end{definition}
+
+\begin{method}[Nature of a filter at a glance]\label{met:b1:filters-transfer-functions:nature}
+Before computing, look at the limits: at very low frequency a capacitor
+is an open circuit and a coil a wire; at very high frequency the
+reverse. Replace each and read whether the output is the input
+(passes) or zero (blocked). Passes low, blocks high: low-pass; the
+reverse: high-pass; blocks both: band-pass; passes both: band-stop.
+Then compute $\underline H$ by a \omterm{prop:b1:dc-circuits:dividers}{voltage divider}.
+\end{method}
+
+\section{First-order filters}
+
+\begin{proposition}[First-order low-pass]\label{prop:b1:filters-transfer-functions:lowpass1}
+\index{low-pass filter}\index{integrator}
+The RC divider with output across $C$ (or the RL divider with output
+across $R$) has
+\[
+\underline H = \frac{1}{1 + j\omega/\omega_c}, \qquad
+\omega_c = \frac{1}{RC} \ \Big(\text{or } \frac{R}{L}\Big),
+\qquad G = \frac{1}{\sqrt{1 + (\omega/\omega_c)^2}}, \qquad
+\varphi = -\arctan\frac{\omega}{\omega_c} .
+\]
+Bode asymptotes: $G_{\mathrm{dB}} = 0$ for $\omega \ll \omega_c$, a
+straight line falling \qty{20}{dB} per decade for $\omega \gg \omega_c$,
+meeting at $\omega_c$ where the true curve is \qty{-3}{dB} and
+$\varphi = -45^\circ$. For $\omega \gg \omega_c$, $\underline H \approx
+\omega_c/(j\omega)$: the output is proportional to the \emph{integral}
+of the input --- the \omterm{def:b1:filters-transfer-functions:H}{filter} is an integrator there.
+\end{proposition}
+
+\begin{proof}
+\omterm{prop:b1:dc-circuits:dividers}{Voltage divider}:
+\[
+\underline H = \frac{1/jC\omega}{R + 1/jC\omega} = \frac{1}{1 + jRC\omega} .
+\]
+Far above cutoff, $1 + j\omega/\omega_c \approx j\omega/\omega_c$, and
+dividing a \omterm{def:b1:sinusoidal-impedance:complex}{complex amplitude} by $j\omega$ is integrating
+(\cref{prop:b1:sinusoidal-impedance:rules}): $u_s \approx \omega_c\int u_e\,\dd t$.
+$20\log(\omega_c/\omega)$ loses \qty{20}{dB} per tenfold $\omega$.
+\end{proof}
+
+\begin{proposition}[First-order high-pass]\label{prop:b1:filters-transfer-functions:highpass1}
+\index{high-pass filter}\index{differentiator}
+The CR divider with output across $R$ (or LR with output across $L$)
+has
+\[
+\underline H = \frac{j\omega/\omega_c}{1 + j\omega/\omega_c},
+\qquad G = \frac{\omega/\omega_c}{\sqrt{1 + (\omega/\omega_c)^2}},
+\qquad \varphi = \frac{\pi}{2} - \arctan\frac{\omega}{\omega_c},
+\]
+rising \qty{20}{dB} per decade below $\omega_c$, flat above, \qty{-3}{dB}
+and $+45^\circ$ at $\omega_c$. For $\omega \ll \omega_c$, $\underline H
+\approx j\omega/\omega_c$: the output is proportional to the
+\emph{derivative} of the input.
+\end{proposition}
+
+\begin{proof}
+$\underline H = R/(R + 1/jC\omega) = jRC\omega/(1 + jRC\omega)$;
+multiplying by $j\omega$ is differentiating.
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}
+\begin{axis}[omaxis, axis x line=bottom, axis y line=left, xlabel style={at={(axis description cs:0.5,-0.14)}, anchor=north}, width=7.4cm, height=5.2cm, xmode=log, xlabel={$\omega/\omega_c$},
+    ylabel={$G_{\mathrm{dB}}$}, xmin=0.01, xmax=100, ymin=-42, ymax=6,
+    ytick={0,-20,-40}, yticklabels={$0$,$-20$,$-40$},
+    xtick={0.01,0.1,1,10,100}, xticklabels={$10^{-2}$,$10^{-1}$,$1$,$10$,$10^{2}$}]
+  \addplot[omExo, dashed, domain=0.01:1, samples=2] {0};
+  \addplot[omExo, dotted, domain=0.01:100, samples=2] {-3};
+  \addplot[omExo, dashed, domain=1:100, samples=2] {-20*log10(x)};
+  \addplot[omDef, thick, domain=0.01:100, samples=200] {-10*log10(1 + x^2)};
+  \addplot[omThm, thick, domain=0.01:100, samples=200] {-10*log10(1 + 1/x^2)};
+  \node[omDef, font=\footnotesize] at (axis cs:0.05,-7) {low-pass};
+  \node[omThm, font=\footnotesize] at (axis cs:30,-9) {high-pass};
+\end{axis}
+\end{tikzpicture}\qquad
+\begin{tikzpicture}
+\begin{axis}[omaxis, axis x line=bottom, axis y line=left, xlabel style={at={(axis description cs:0.5,-0.14)}, anchor=north}, width=7.0cm, height=5.2cm, xmode=log, xlabel={$\omega/\omega_c$},
+    ylabel={$\varphi$}, xmin=0.01, xmax=100, ymin=-1.8, ymax=1.8,
+    ytick={-1.5708,-0.7854,0,0.7854,1.5708}, yticklabels={$-\frac{\pi}{2}$,$-\frac{\pi}{4}$,$0$,$\frac{\pi}{4}$,$\frac{\pi}{2}$},
+    xtick={0.01,0.1,1,10,100}, xticklabels={$10^{-2}$,$10^{-1}$,$1$,$10$,$10^{2}$}]
+  \addplot[omDef, thick, domain=0.01:100, samples=200] {-rad(atan(x))};
+  \addplot[omThm, thick, domain=0.01:100, samples=200] {rad(90 - atan(x))};
+\end{axis}
+\end{tikzpicture}
+
+{\small \omterm{def:b1:filters-transfer-functions:bode}{Bode diagrams} of the first-order low-pass (blue) and high-pass
+(red): \omterm{def:b1:filters-transfer-functions:H}{gain} in \omterm{def:b1:filters-transfer-functions:bode}{decibels} with the asymptotes (dashed) meeting at the
+cutoff, where the true \omterm{def:b1:filters-transfer-functions:H}{gain} is \qty{-3}{dB}, and phase, which crosses
+$\mp45^\circ$ at the cutoff.}
+\end{omfigure}
+
+\begin{example}[AC coupling]\label{ex:b1:filters-transfer-functions:accoupling}
+An oscilloscope's AC input is a high-pass with $f_c \approx \qty{10}{Hz}$:
+a \qty{1}{kHz} \omterm{def:b1:wave-propagation:signal}{signal} riding on a \qty{5}{V} offset comes through at
+\qty{-0.0002}{dB} with its offset removed. But a \qty{50}{Hz} square
+wave is visibly distorted --- its flat tops sag --- because at
+\qty{50}{Hz} the \omterm{def:b1:filters-transfer-functions:H}{filter} is only one decade above its cutoff and the
+\omterm{def:b1:wave-propagation:signal}{signal}'s low harmonics are shifted in phase
+(\cref{exo:b1:filters-transfer-functions:12}).
+\end{example}
+
+\section{Second-order filters}
+
+\begin{proposition}[The series RLC as three filters]\label{prop:b1:filters-transfer-functions:rlc}
+\index{band-pass filter}\index{second-order filter}
+With $x = \omega/\omega_0$, $\omega_0 = 1/\sqrt{LC}$ and $Q =
+\sqrt{L/C}/R$, the series RLC fed by $\underline U_e$ gives, according to
+where the output is taken:
+\begin{align*}
+\text{across } C:&\quad \underline H = \frac{1}{1 - x^2 + jx/Q}, \\
+\text{across } R:&\quad \underline H = \frac{jx/Q}{1 - x^2 + jx/Q} = \frac{1}{1 + jQ(x - 1/x)}, \\
+\text{across } L:&\quad \underline H = \frac{-x^2}{1 - x^2 + jx/Q}:
+\end{align*}
+a low-pass, a band-pass and a high-pass of second order. Far from
+$\omega_0$ the low-pass and high-pass fall by \qty{40}{dB} per decade,
+the band-pass by \qty{20}{dB} per decade on each side; the band-pass
+has its maximum $1$ at $\omega_0$ and the bandwidth $\Delta\omega =
+\omega_0/Q$ of \cref{thm:b1:sinusoidal-impedance:resonance}.
+\end{proposition}
+
+\begin{proof}
+\omterm{prop:b1:dc-circuits:dividers}{Voltage dividers} with the total \omterm{def:b1:sinusoidal-impedance:impedance}{impedance} $R + j(L\omega - 1/C\omega)$;
+multiply numerator and denominator by $jC\omega$ and use
+$LC\omega_0^2 = 1$, $RC\omega_0 = 1/Q$. The band-pass is the current
+resonance of the previous chapter read as a \omterm{def:b1:dc-circuits:voltage}{voltage} across $R$.
+\end{proof}
+
+\begin{proposition}[Second-order low-pass: the role of $Q$]\label{prop:b1:filters-transfer-functions:lowpass2}
+\index{resonance!of a filter}
+For the low-pass, $G = 1/\sqrt{(1 - x^2)^2 + x^2/Q^2}$: for
+$Q > 1/\sqrt2$ the \omterm{def:b1:filters-transfer-functions:H}{gain} rises above $1$ near $\omega_0$ (resonance, peak
+$\approx Q$ for large $Q$); for $Q = 1/\sqrt2$ it is ``maximally flat'',
+$G = 1/\sqrt{1 + x^4}$, exactly \qty{-3}{dB} at $\omega_0$; for smaller
+$Q$ it droops early. The phase runs from $0$ to $-\pi$, through $-\pi/2$
+at $\omega_0$.
+\end{proposition}
+
+\begin{proof}
+$(1 - x^2)^2 + x^2/Q^2 = 1 + x^4 + x^2(1/Q^2 - 2)$: the middle term
+vanishes for $Q^2 = \tfrac12$, is negative (peak) above, positive
+(droop) below; the behavior near $x = 1$ was analyzed in
+\cref{prop:b1:sinusoidal-impedance:overvoltage}.
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}
+\begin{axis}[omaxis, axis x line=bottom, axis y line=left, xlabel style={at={(axis description cs:0.5,-0.14)}, anchor=north}, width=7.4cm, height=5.4cm, xmode=log, xlabel={$\omega/\omega_0$},
+    ylabel={$G_{\mathrm{dB}}$}, xmin=0.1, xmax=10, ymin=-45, ymax=15,
+    ytick={10,0,-20,-40}, xtick={0.1,1,10}, xticklabels={$0.1$,$1$,$10$},
+    legend style={at={(0.03,0.03)}, anchor=south west, font=\footnotesize, draw=none, fill=none}]
+  \addplot[omDef, thick, domain=0.1:10, samples=300] {-10*log10((1 - x^2)^2 + x^2/9)};
+  \addlegendentry{$Q = 3$}
+  \addplot[omThm, thick, domain=0.1:10, samples=300] {-10*log10(1 + x^4)};
+  \addlegendentry{$Q = 1/\sqrt2$}
+  \addplot[omProp, thick, domain=0.1:10, samples=300] {-10*log10((1 - x^2)^2 + x^2/0.04)};
+  \addlegendentry{$Q = 0.2$}
+  \addplot[omExo, dashed, domain=1:10, samples=2] {-40*log10(x)};
+\end{axis}
+\end{tikzpicture}\qquad
+\begin{tikzpicture}
+\begin{axis}[omaxis, axis x line=bottom, axis y line=left, xlabel style={at={(axis description cs:0.5,-0.14)}, anchor=north}, width=7.0cm, height=5.4cm, xmode=log, xlabel={$\omega/\omega_0$},
+    ylabel={$G_{\mathrm{dB}}$}, xmin=0.1, xmax=10, ymin=-45, ymax=5,
+    ytick={0,-20,-40}, xtick={0.1,1,10}, xticklabels={$0.1$,$1$,$10$},
+    legend style={at={(0.03,0.97)}, anchor=north west, font=\footnotesize, draw=none, fill=none}]
+  \addplot[omExo, dotted, domain=0.1:10, samples=2, forget plot] {-3};
+  \addplot[omDef, thick, domain=0.1:10, samples=400] {-10*log10(1 + 100*(x - 1/x)^2)};
+  \addlegendentry{$Q = 10$}
+  \addplot[omThm, thick, domain=0.1:10, samples=300] {-10*log10(1 + (x - 1/x)^2)};
+  \addlegendentry{$Q = 1$}
+\end{axis}
+\end{tikzpicture}
+
+{\small \omterm{prop:b1:filters-transfer-functions:rlc}{Second-order filters} from the series RLC. Left, the low-pass
+(output across $C$) for three $Q$: a resonance peak, the maximally
+flat response, or an early droop, all joining the \qty{-40}{dB/decade}
+asymptote (dashed). Right, the band-pass (output across $R$): a peak
+of width $\omega_0/Q$ falling \qty{20}{dB/decade} on each side.}
+\end{omfigure}
+
+\begin{example}[A crossover]\label{ex:b1:filters-transfer-functions:crossover}
+A loudspeaker's woofer and tweeter, each \qty{8}{\ohm}, share the
+amplifier through a low-pass (a series coil) and a high-pass (a series
+capacitor) cut at \qty{2}{kHz}: $L = R/\omega_c = \qty{0.64}{mH}$,
+$C = 1/R\omega_c = \qty{10}{\micro F}$. At \qty{2}{kHz} each driver gets
+\qty{-3}{dB}, i.e.\ half the power, and $G_L^2 + G_H^2 = 1$ at every
+frequency: the power is shared, not lost. The weekend problem designs
+a steeper version.
+\end{example}
+
+\section{Filtering a periodic signal}
+
+\begin{theorem}[Fourier decomposition]\label{thm:b1:filters-transfer-functions:fourier}
+\index{Fourier series}\index{harmonic}\index{spectrum!of a periodic signal}
+A periodic \omterm{def:b1:wave-propagation:signal}{signal} of period $T = 2\pi/\omega$ (reasonably regular) is
+the sum of a constant and of sinusoids at the multiples of $\omega$:
+\[
+s(t) = c_0 + \sum_{n = 1}^{\infty} c_n\cos(n\omega t + \varphi_n),
+\]
+where $c_0 = \langle s\rangle$ is its average value; the term $n = 1$ is
+the \emph{fundamental}, the others the \emph{harmonics}, and the
+\omterm{def:b1:wave-propagation:signal}{amplitudes} $c_n$ form the \emph{spectrum}. A square wave of \omterm{def:b1:wave-propagation:signal}{amplitude}
+$\pm E$ has $c_n = 4E/(n\pi)$ for odd $n$ and $0$ for even $n$; a
+triangle wave of \omterm{def:b1:wave-propagation:signal}{amplitude} $\pm E$ has $c_n = 8E/(n\pi)^2$ for odd $n$.
+\end{theorem}
+\admitted
+
+\begin{remark}[What to take from it]\label{rem:b1:filters-transfer-functions:fourier}
+The theorem and the computation of the $c_n$ belong to the Year 2
+mathematics course. Here it is a tool: sharp corners need many
+harmonics (the square wave's fall off only as $1/n$), smooth \omterm{def:b1:wave-propagation:signal}{signals}
+need few (the triangle's as $1/n^2$). A \omterm{def:b1:wave-propagation:signal}{signal}'s harmonic content is
+what an instrument's timbre is made of, and what a \omterm{def:b1:filters-transfer-functions:H}{filter} acts on.
+\end{remark}
+
+\begin{proposition}[Linear filtering of a periodic signal]\label{prop:b1:filters-transfer-functions:filtering}
+Through a \omterm{def:b1:filters-transfer-functions:H}{filter} of \omterm{def:b1:filters-transfer-functions:H}{transfer function} $\underline H$, the \omterm{def:b1:wave-propagation:signal}{signal} of the
+theorem becomes
+\[
+s_{\text{out}}(t) = G(0)\,c_0 + \sum_{n \geq 1} G(n\omega)\,c_n\cos\!\big(n\omega t + \varphi_n + \varphi(n\omega)\big):
+\]
+each harmonic is scaled by the \omterm{def:b1:filters-transfer-functions:H}{gain} and shifted by the phase at
+\emph{its own} frequency, then the pieces are added. Hence:
+\begin{itemize}
+  \item a low-pass with $\omega_c \ll \omega$ keeps essentially $c_0$:
+        it \emph{averages} (smoothing, ripple removal), and turns a
+        square wave into a small triangle (integration);
+  \item a high-pass with $\omega_c \ll \omega$ removes $c_0$ and passes
+        the rest (AC coupling); with $\omega_c \gg \omega$ it
+        differentiates (spikes at the edges of a square wave);
+  \item a band-pass tuned to $n\omega$ with $Q \gg 1$ extracts the
+        $n$-th harmonic alone: a sinusoid out of a square wave.
+\end{itemize}
+\end{proposition}
+
+\begin{proof}
+Superposition for a \omterm{def:b1:dc-circuits:linear}{linear circuit} (\cref{thm:b1:dc-circuits:superposition})
+applied to the sum of sinusoidal inputs, each treated by
+\cref{def:b1:filters-transfer-functions:H}.
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}
+\begin{axis}[omaxis, axis x line=bottom, width=6.6cm, height=4.8cm, xlabel={harmonic $n$}, ylabel={$c_n/c_1$},
+    xmin=0, xmax=10, ymin=0, ymax=1.15, xtick={1,3,5,7,9}, ytick={0.5,1}]
+  \addplot[ybar, bar width=7pt, fill=omDef!35, draw=omDef] coordinates {(1,1) (3,0.333) (5,0.2) (7,0.143) (9,0.111)};
+  \addplot[ybar, bar width=3.5pt, fill=omThm, draw=omThm] coordinates
+    {(1,0.7071) (3,0.1054) (5,0.0392) (7,0.0202) (9,0.0123)};
+  \node[omDef, font=\footnotesize] at (axis cs:6.0,0.9) {square wave (blue)};
+  \node[omThm, font=\footnotesize] at (axis cs:6.0,0.7) {after low-pass (red)};
+\end{axis}
+\end{tikzpicture}\hfill
+\begin{tikzpicture}
+\begin{axis}[omaxis, axis x line=bottom, width=6.6cm, height=4.8cm, xlabel={$t/T$}, ylabel={$u$},
+    xmin=0, xmax=2, ymin=-1.3, ymax=1.3, xtick={0.5,1,1.5,2}, ytick={-1,1}, yticklabels={$-E$,$E$}]
+  % square wave
+  \addplot[omDef!60, thick, const plot, domain=0:2, samples=5] coordinates {(0,1) (0.5,-1) (1,1) (1.5,-1) (2,-1)};
+  % RC response with tau = T/(2pi) (wc = w): on each half period u = s + (u0 - s) e^{-t/tau}; steady amplitude A = tanh(T/(4 tau)) = tanh(pi/2)=0.917
+  \addplot[omThm, thick, domain=0:0.5, samples=60] {1 - (1 + 0.917)*exp(-2*pi*x)};
+  \addplot[omThm, thick, domain=0.5:1, samples=60] {-1 + (1 + 0.917)*exp(-2*pi*(x-0.5))};
+  \addplot[omThm, thick, domain=1:1.5, samples=60] {1 - (1 + 0.917)*exp(-2*pi*(x-1))};
+  \addplot[omThm, thick, domain=1.5:2, samples=60] {-1 + (1 + 0.917)*exp(-2*pi*(x-1.5))};
+  % tau = T/(20 pi): wc = 10 w: amplitude tanh(5 pi)=1
+  \addplot[omProp, thick, domain=0:0.5, samples=80] {1 - 2*exp(-20*pi*x)};
+  \addplot[omProp, thick, domain=0.5:1, samples=80] {-1 + 2*exp(-20*pi*(x-0.5))};
+  \addplot[omProp, thick, domain=1:1.5, samples=80] {1 - 2*exp(-20*pi*(x-1))};
+  \addplot[omProp, thick, domain=1.5:2, samples=80] {-1 + 2*exp(-20*pi*(x-1.5))};
+\end{axis}
+\end{tikzpicture}
+
+{\small A square wave through a first-order low-pass. Left: its
+spectrum (odd harmonics in $1/n$) and the spectrum after a \omterm{def:b1:filters-transfer-functions:H}{filter} cut
+at the fundamental. Right: the time \omterm{def:b1:wave-propagation:signal}{signal} for $\omega_c = \omega$ (red,
+exponential arcs) and $\omega_c = 10\omega$ (orange, rounded corners
+only); with $\omega_c \ll \omega$ the output would be a small triangle
+around the average.}
+\end{omfigure}
+
+\begin{example}[Numbers]\label{ex:b1:filters-transfer-functions:numbers}
+A \qty{1}{kHz} square wave of \omterm{def:b1:wave-propagation:signal}{amplitude} \qty{5}{V}: harmonics of
+\qty{6.37}{V} at \qty{1}{kHz}, \qty{2.12}{V} at \qty{3}{kHz},
+\qty{1.27}{V} at \qty{5}{kHz}. Through an RC low-pass cut at
+\qty{10}{Hz} ($\tau = \qty{16}{ms}$) the output is a triangle of
+\omterm{def:b1:wave-propagation:signal}{amplitude} $ET/4\tau \approx \qty{80}{mV}$ around zero; through a
+band-pass tuned to \qty{3}{kHz} with $Q = 20$, a \qty{2.1}{V} sinusoid
+at \qty{3}{kHz} with only a few percent of the neighbors
+(\cref{exo:b1:filters-transfer-functions:8}).
+\end{example}
+
+\section{Cascading filters}
+
+\begin{proposition}[Cascade and loading]\label{prop:b1:filters-transfer-functions:cascade}
+\index{cascade (of filters)}\index{loading (of a filter)}
+Two \omterm{def:b1:filters-transfer-functions:H}{filters} in cascade have $\underline H = \underline H_1\underline H_2$
+--- \omterm{def:b1:filters-transfer-functions:H}{gains} multiply, \omterm{def:b1:filters-transfer-functions:bode}{decibels} and phases add --- \emph{provided the second
+does not load the first}, i.e.\ draws negligible current from its
+output. Otherwise the divider relations must be rewritten for the
+combined network. An operational-amplifier follower
+(\cref{ch:b1:operational-amplifier}) between stages makes the product
+rule exact.
+\end{proposition}
+
+\begin{proof}
+$\underline H_1$ was defined with an open output; if the next stage's
+input \omterm{def:b1:sinusoidal-impedance:impedance}{impedance} is much larger than the first stage's output \omterm{def:b1:sinusoidal-impedance:impedance}{impedance}
+(its Th\'evenin resistance), the output \omterm{def:b1:dc-circuits:voltage}{voltage} is unchanged and the
+second stage sees exactly $\underline U_{s1}$ as its input.
+\end{proof}
+
+\begin{example}[Two RC stages]\label{ex:b1:filters-transfer-functions:tworc}
+Two identical RC low-passes back to back do \emph{not} give
+$1/(1 + j\omega/\omega_c)^2$: the second stage's $R$ loads the first.
+The exact result is $\underline H = 1/[1 - (\omega/\omega_c)^2 +
+3j\omega/\omega_c]$, \qty{-9.5}{dB} at $\omega_c$ instead of the
+\qty{-6}{dB} the product rule promises, though both reach the same
+\qty{-40}{dB/decade} slope eventually.
+\end{example}
+
+\section{Exercises}
+
+\begin{exercise}[$\star$]\label{exo:b1:filters-transfer-functions:1}
+Convert to \omterm{def:b1:filters-transfer-functions:bode}{decibels}: \omterm{def:b1:filters-transfer-functions:H}{gains} $0.5$, $10$, $1/\sqrt2$, $100$. Convert to
+ratios: \qty{-40}{dB}, \qty{+6}{dB}. Two \omterm{def:b1:filters-transfer-functions:H}{filters} in cascade (no loading)
+give \qty{-6}{dB} and \qty{-20}{dB} at some frequency: overall \omterm{def:b1:filters-transfer-functions:H}{gain}?
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b1:filters-transfer-functions:2}
+RC low-pass, $R = \qty{10}{k\ohm}$, $C = \qty{16}{nF}$: \omterm{def:b1:filters-transfer-functions:bode}{cutoff frequency},
+and the \omterm{def:b1:filters-transfer-functions:H}{gain} in \omterm{def:b1:filters-transfer-functions:bode}{decibels} at \qty{100}{Hz}, \qty{1}{kHz}, \qty{10}{kHz},
+\qty{100}{kHz}.
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b1:filters-transfer-functions:3}
+Without computing, give the nature (low-, high-, band-pass) of: (a)
+$R$ in series, $C$ across the output; (b) $C$ in series, $R$ across the
+output; (c) $L$ in series, $C$ across the output; (d) $L$ and $C$ in
+series, $R$ across the output.
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b1:filters-transfer-functions:4}
+A \qty{1.0}{kHz} square wave of \omterm{def:b1:wave-propagation:signal}{amplitude} \qty{5.0}{V}: give the
+frequencies and \omterm{def:b1:wave-propagation:signal}{amplitudes} of its first three non-zero harmonics. Why
+does it have no even harmonics?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b1:filters-transfer-functions:5}
+A CR high-pass cut at \qty{10}{kHz} receives a triangle wave of
+\omterm{def:b1:wave-propagation:signal}{amplitude} \qty{1.0}{V} at \qty{100}{Hz}. Explain why it behaves as a
+differentiator and give the shape and \omterm{def:b1:wave-propagation:signal}{amplitude} of the output.
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b1:filters-transfer-functions:6}
+An RC low-pass cut at \qty{10}{Hz} receives a \qty{1.0}{kHz} square
+wave of \omterm{def:b1:wave-propagation:signal}{amplitude} $\pm\qty{1.0}{V}$. Show that the output is a triangle
+and compute its \omterm{def:b1:wave-propagation:signal}{amplitude}.
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b1:filters-transfer-functions:7}
+A series RLC low-pass with $L = \qty{10}{mH}$, $C = \qty{100}{nF}$: give
+$f_0$; find $R$ for the maximally flat response; give the \omterm{def:b1:filters-transfer-functions:H}{gain} in
+\omterm{def:b1:filters-transfer-functions:bode}{decibels} at $f_0$ and at $10f_0$.
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b1:filters-transfer-functions:8}
+A band-pass ($Q = 20$) tuned to \qty{3.0}{kHz} receives the \qty{1}{kHz}
+square wave of \cref{exo:b1:filters-transfer-functions:4}. Compute the
+\omterm{def:b1:filters-transfer-functions:H}{gain} at $1$, $3$ and \qty{5}{kHz}, and the output \omterm{def:b1:wave-propagation:signal}{amplitudes} of these
+harmonics; describe the output.
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b1:filters-transfer-functions:9}
+Two identical RC low-passes ($R = \qty{1.0}{k\ohm}$, $C = \qty{159}{nF}$)
+in cascade. Compute the exact \omterm{def:b1:filters-transfer-functions:H}{transfer function} (the second loads the
+first) and the \omterm{def:b1:filters-transfer-functions:H}{gain} at $\omega_c = 1/RC$; compare with the product of
+the two separate \omterm{def:b1:filters-transfer-functions:H}{gains}.
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b1:filters-transfer-functions:10}
+Sketch the Bode asymptotes of $\underline H = (1 + j\omega/\omega_1)/
+(1 + j\omega/\omega_2)$ with $\omega_1 = \qty{100}{rad/s}$, $\omega_2 =
+\qty{1e4}{rad/s}$: slopes, corners, the high-frequency plateau in
+\omterm{def:b1:filters-transfer-functions:bode}{decibels}, and the phase at $\sqrt{\omega_1\omega_2}$.
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b1:filters-transfer-functions:11}
+A full-wave rectified sine (\qty{50}{Hz} mains) has average $2E/\pi$ and
+a first harmonic at \qty{100}{Hz} of \omterm{def:b1:wave-propagation:signal}{amplitude} $4E/3\pi$. An RC
+low-pass must reduce the \qty{100}{Hz} ripple below $1\%$ of the
+average: find the required \omterm{def:b1:filters-transfer-functions:bode}{cutoff frequency} and \omterm{def:b1:transient-regimes:firstorder}{time constant}. Why is
+a capacitor alone (with the load resistance) the usual choice?
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b1:filters-transfer-functions:12}
+The AC coupling of an oscilloscope is a high-pass with $C = \qty{0.10}{\micro F}$
+and $R = \qty{160}{k\ohm}$. Compute $f_c$. A square wave is applied: show
+that each flat top becomes a decaying exponential and compute the sag
+(fraction lost over a half period) at \qty{50}{Hz} and at \qty{1}{kHz}.
+\end{exercise}
+
+\begin{omfigure}
+\includegraphics[width=0.50\linewidth]{images/book3/ai/b3-09-loudspeaker-crossover.png}
+
+{\small Inside a two-way loudspeaker: the crossover's coils and capacitors are the low-pass and \omterm{prop:b1:filters-transfer-functions:highpass1}{high-pass filters} that send bass to the woofer and treble to the tweeter.}
+\end{omfigure}
+
+\section{Problem: The loudspeaker crossover}
+
+\begin{problem}[{Weekend problem --- a woofer, a tweeter, a coil and a
+capacitor: how a passive crossover splits the music, why the simplest
+one leaks bass into the tweeter, and what a real voice coil does to the
+design}]
+\label{pb:b1:filters-transfer-functions:1}
+The woofer and the tweeter are first modeled as pure resistances
+$R = \qty{8.0}{\ohm}$. The amplifier is an ideal \omterm{def:b1:dc-circuits:sources}{voltage source}
+$\underline U_e$. The crossover frequency is $f_c = \qty{2.0}{kHz}$.
+
+\medskip
+\noindent\textbf{Part I --- First-order crossover.}
+The woofer is fed through a series coil $L$, the tweeter through a
+series capacitor $C$.
+\begin{enumerate}
+  \item Define the \omterm{def:b1:filters-transfer-functions:H}{transfer function} of each branch (\omterm{def:b1:dc-circuits:voltage}{voltage} across the
+        driver over $\underline U_e$) and the \omterm{def:b1:filters-transfer-functions:H}{gain} in \omterm{def:b1:filters-transfer-functions:bode}{decibels}.
+  \item Show that the woofer branch is a first-order low-pass and give
+        its cutoff $\omega_c$ in terms of $R$ and $L$.
+  \item Compute $L$ for $f_c = \qty{2.0}{kHz}$.
+  \item Show that the tweeter branch is a first-order high-pass; give
+        $\omega_c$ and compute $C$.
+  \item Give each driver's \omterm{def:b1:filters-transfer-functions:H}{gain} in \omterm{def:b1:filters-transfer-functions:bode}{decibels} at $f_c$, at \qty{200}{Hz}
+        and at \qty{20}{kHz}.
+  \item Show that $G_L^2 + G_H^2 = 1$ at every frequency. What does
+        this mean for the power drawn from the amplifier?
+  \item Give the phase of each branch at $f_c$; by how much do the two
+        drivers' \omterm{def:b1:dc-circuits:voltage}{voltages} differ in phase there?
+  \item What are the slopes of the two responses, in dB per octave, far
+        from $f_c$?
+\end{enumerate}
+
+\medskip
+\noindent\textbf{Part II --- Second-order crossover.}
+The woofer is now fed through a series coil $L$ with a capacitor $C$
+in parallel with the driver.
+\begin{enumerate}[resume]
+  \item Show that $\underline H = 1/(1 - LC\omega^2 + jL\omega/R)$.
+  \item Identify $\omega_0$ and $Q$ in terms of $L$, $C$, $R$.
+  \item For $Q = 1/\sqrt2$ show that $G = 1/\sqrt{1 + (\omega/\omega_0)^4}$
+        and that the \omterm{def:b1:filters-transfer-functions:H}{gain} is \qty{-3}{dB} at $\omega_0$.
+  \item Compute $L$ and $C$ for $f_0 = \qty{2.0}{kHz}$ and $Q = 1/\sqrt2$.
+  \item Compute the \omterm{def:b1:filters-transfer-functions:H}{gain} in \omterm{def:b1:filters-transfer-functions:bode}{decibels} at \qty{4}{kHz} and \qty{8}{kHz};
+        deduce the slope in dB per octave.
+  \item The tweeter branch swaps the roles of $L$ and $C$ (series $C$,
+        shunt $L$): write its \omterm{def:b1:filters-transfer-functions:H}{transfer function} without new
+        calculation.
+  \item Compute the phase of each branch at $f_0$. What must be done to
+        the tweeter's wiring, and why?
+\end{enumerate}
+
+\medskip
+\noindent\textbf{Part III --- Music through the crossover.}
+\begin{enumerate}[resume]
+  \item A cello note at \qty{220}{Hz} carries harmonics up to the 20th.
+        Which harmonics go mostly to the tweeter, with the first-order
+        crossover?
+  \item What happens to the 9th harmonic?
+  \item A \qty{1.0}{kHz} square wave is used as a test \omterm{def:b1:wave-propagation:signal}{signal}. With the
+        first-order crossover, give the \omterm{def:b1:filters-transfer-functions:H}{gain} of each branch for its
+        fundamental, third and fifth harmonics.
+  \item The amplifier develops a \qty{1}{V} DC offset by accident. Which
+        driver is protected, and by what?
+  \item With the first-order crossover, what fraction of the \omterm{def:b1:dc-circuits:voltage}{voltage}
+        and of the power of a \qty{500}{Hz} tone reaches the tweeter?
+        Same with the second-order. Why does this matter for the
+        tweeter's survival?
+\end{enumerate}
+
+\medskip
+\noindent\textbf{Part IV --- A real voice coil.}
+The woofer is actually $R = \qty{8.0}{\ohm}$ in series with a voice-coil
+inductance $L_{vc} = \qty{0.50}{mH}$.
+\begin{enumerate}[resume]
+  \item Compute the woofer's \omterm{def:b1:sinusoidal-impedance:impedance}{impedance} (modulus) at \qty{2}{kHz} and at
+        \qty{8}{kHz}.
+  \item Recompute the first-order woofer \omterm{def:b1:filters-transfer-functions:H}{gain} at \qty{2}{kHz} and
+        \qty{8}{kHz} with this \omterm{def:b1:sinusoidal-impedance:impedance}{impedance}, and compare with the ideal
+        \qty{-3}{dB} and \qty{-12.3}{dB}. What happened to the roll-off?
+  \item A ``Zobel network'' --- $R_z = R$ in series with $C_z =
+        L_{vc}/R^2$ --- is connected in parallel with the woofer. Show
+        that the combination behaves as a pure resistance $R$ at all
+        frequencies, and compute $C_z$.
+  \item The amplifier delivers \qty{50}{W} into \qty{8}{\ohm}: what rms
+        \omterm{def:b1:dc-circuits:voltage}{voltage} is that, and what power does each driver receive at
+        $f_c$ (first-order crossover)? At \qty{500}{Hz}, how much reaches
+        the tweeter?
+  \item Summarize the trade-offs: slope, phase, component count,
+        protection of the tweeter, and the need for a Zobel network.
+\end{enumerate}
+\end{problem}

@@ -16,8 +16,8 @@ for the school years, PCSI and PC* for university years 1–2, an L3 de
 physique for year 3 — **pure physics, no chemistry**. Grades 1–6, where
 the French primaire taught no physics, use age-adapted chapters.
 
-**Current state: Books 1 and 2 written, each in seven languages; Books
-3–5 structure only.**
+**Current state: Books 1 and 2 written, each in eight languages; Book 3
+written in English; Books 4–5 structure only.**
 
 - **Book 1** (Primary & Middle School, grades 1–9): 71 chapters + 71
   solutions files (~435 pp), 142 figures, photographs and AI-generated
@@ -30,18 +30,56 @@ the French primaire taught no physics, use age-adapted chapters.
   per chapter (star ramp 5×★ / 6×★★ / 4×★★★, in that order), one
   ~20-question "weekend problem" per chapter, a full solution for every
   exercise and problem keyed by label, ~4,500 generated `\omterm` links.
-- **Language editions**: both books ship in `fr`, `nl`, `es`, `pt`, `hi`
-  and `ar` alongside English — bodies under `parts/<year>/<lang>/` and
+- **Book 3** (University Year 1): 30 chapters in `parts/bachelor-1/`
+  (the 28 original PCSI-derived headlines plus *Signal Propagation* as
+  ch.~05 and *Introduction to Quantum Physics* as ch.~30), ~320 pp,
+  ~150 TikZ/pgfplots/circuitikz figures plus photographs
+  (`images/book3/`, credited in `frontmatter/image-credits-book3.tex`)
+  and AI illustrations (`images/book3/ai/`, prompts in `PROMPTS.md`),
+  exactly 12 exercises per chapter (4×★ / 5×★★ / 3×★★★), one
+  25-question weekend problem per chapter, a full solution for every
+  exercise and problem, ~2,300 generated `\omterm` links
+  (`tools/term_config/book3_en.py` is curated). English only so far.
+  The level guard is math Book 3 (Year 1): no surface integrals, div or
+  curl — Gauss's and Ampère's laws are stated in integral form and used
+  through symmetry; no wave equation in ch.~05.
+- **Language editions**: both books ship in `fr`, `nl`, `es`, `pt`, `hi`,
+  `ar` and `id` alongside English — bodies under `parts/<year>/<lang>/` and
   `parts/<year>/solutions/<lang>/`, one entry file each, all registered
   in `latexmkrc` and `.github/workflows/release.yml`. Every edition is
   gated by `tools/check_translation.sh` and self-scored under
   `translation_scores/book_<N>/<lang>/`. See the workspace-root
   `translation_instruction.md` before touching any of them.
+- **`tools/id_apply.py` is how a translated body should be written.** A
+  translated chapter is a set of line-range replacements on the English
+  canon; every line not named is copied byte-identically, so labels,
+  `\cref` targets, solution keys, `\foreach` lists, `xtick=`, `\qty{}{}`
+  and every math display cannot drift. The tool refuses to write a file
+  unless eleven ordered censuses survive against its English twin —
+  including the math-span sequence (Indonesian absorbs numerals into
+  words) and a **per-range `\[ \]` count** (a range covering `\[` but
+  stopping before `\]` duplicates the delimiter, passes every whole-file
+  census, and kills the build). Run `python3 tools/id_apply.py --help`.
+- **Indonesian (`id`) needs a prose gate, and it is not optional.** Gates
+  5–7 assume the target script differs from English, so residual English
+  is visibly foreign. Indonesian is written in the *same alphabet* as the
+  source, so a forgotten sentence, a forgotten TikZ node, a forgotten
+  `\text{…}` or an untranslated environment **optional title** is
+  indistinguishable from correct output: a tree can pass every structural
+  gate, build with zero errors, and still be part English.
+  `tools/check_indonesian_prose.py` (gate 8) keys on a curated list of
+  English words that are *not* Indonesian, plus suffix rules, a
+  sentence-density rule and a comparison of every title against its
+  English twin. Its word lists carry a physics block — `air` is
+  Indonesian for *water* and is deliberately ungated, while the English
+  plurals `magnets`, `gases`, `atoms`, … are gated because Indonesian
+  pluralises by reduplication. The edition identity, glossary and traps
+  live in `../indonesian_style_card.md`.
 - `tools/term_config/book{1,2}_*.py` are curated configs, not stubs —
   regenerate links after editing those books' definitions or prose.
 
 The invariant checks below are live for Books 1 and 2 and must stay
-green. Books 3–5 still have placeholder chapter bodies (a TODO comment
+green. Books 4–5 still have placeholder chapter bodies (a TODO comment
 and an "unwritten" line) with header-only solutions files, English only.
 
 `CONTRIBUTING.md` holds the authoritative style/structure conventions;

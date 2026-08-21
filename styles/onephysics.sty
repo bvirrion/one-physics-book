@@ -29,6 +29,7 @@
 \def\om@lang@nl{nl}%
 \def\om@lang@es{es}%
 \def\om@lang@pt{pt}%
+\def\om@lang@id{id}%
 \def\om@lang@hi{hi}%
 \def\om@lang@ar{ar}%
 \newif\ifom@hindi
@@ -119,6 +120,12 @@
   \DeclareRobustCommand{\textls}[2][]{#2}%
 \fi
 \RequirePackage[a4paper,inner=2.2cm,outer=2.2cm,top=2.4cm,bottom=2.6cm,headheight=14pt]{geometry}
+% Ragged bottom: the books are full of unbreakable figure blocks (omfigure)
+% and statement boxes; with the book class's default \flushbottom, a block
+% that does not fit makes TeX stretch the glue above it to keep the bottom
+% margin aligned, leaving large blank gaps mid-page. Pages ending a little
+% short are the standard remedy; line and page breaks are unchanged.
+\raggedbottom
 
 % babel: only for non-English editions (keeps English builds unchanged).
 % Compare expanded token lists so \newcommand{\booklang}{fr} matches.
@@ -177,6 +184,25 @@
           brazilian/portuguese.ldf not found; building Portuguese without babel.
           Install texlive-lang-portuguese for hyphenation}%
       }%
+    }%
+  }%
+\fi
+
+% Indonesian: babel-indonesian declares no shorthands, no active characters
+% and no command redefinitions (its "extras" hook is empty), so neither the
+% babel-spanish \% trap nor any of the Hindi/Arabic script work applies here.
+% shorthands=off is kept only for the house reason: our labels carry colons.
+% The engine stays pdfTeX and hyphenation comes from hyph-id through babel.
+\ifx\om@booklang@exp\om@lang@id
+  \IfFileExists{bahasai.ldf}{%
+    \RequirePackage[bahasai,shorthands=off]{babel}%
+  }{%
+    \IfFileExists{indonesian.ldf}{%
+      \RequirePackage[indonesian,shorthands=off]{babel}%
+    }{%
+      \PackageWarning{onephysics}{%
+        bahasai/indonesian.ldf not found; building Indonesian without babel.
+        Install texlive-lang-other (babel-indonesian) for hyphenation}%
     }%
   }%
 \fi
@@ -288,7 +314,7 @@
 % Units: \qty{3.5}{m/s}, \unit{kW.h}, \num{6.02e23}. list/range separators in
 % text mode so they inherit the surrounding font.
 \RequirePackage{siunitx}
-\sisetup{per-mode=symbol, output-decimal-marker={.}, range-units=single}
+\sisetup{per-mode=symbol, output-decimal-marker={.}, range-units=single, uncertainty-mode=separate}
 % Hindi (XeTeX + Noto Sans Devanagari): siunitx v3 injects Unicode µ (U+00B5)
 % and Ω (U+2126) under XeTeX; those glyphs are absent from the Devanagari face.
 % Redeclare prefixes/units with math symbols (math-micro options were removed in v3).
