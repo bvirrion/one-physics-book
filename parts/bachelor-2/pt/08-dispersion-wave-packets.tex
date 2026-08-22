@@ -1,0 +1,557 @@
+\chapter{Dispersão e pacotes de ondas}\label{ch:b2:dispersion-wave-packets}
+
+Jogue uma pedra num lago e observe o anel de ondulações: novas cristas
+nascem na sua borda interna, correm para fora através do anel e morrem na
+borda externa --- o anel, como um todo, anda mais devagar que as cristas dentro dele.
+Sente-se numa praia depois de uma tempestade distante e a ondulação longa e lenta chega
+um dia antes da marola curta: o mar separa as ondas por comprimento de onda. O
+primeiro cabo telegráfico transatlântico, em 1858, transformava pontos e traços
+nítidos num borrão que levava minutos para ser lido. Nos três casos a
+celeridade de uma onda depende de sua frequência: o meio é
+\emph{dispersivo}. Este capítulo apresenta a \omterm{def:b2:dispersion-wave-packets:relation}{relação de dispersão}, o
+\omterm{def:b2:dispersion-wave-packets:complex}{número de onda complexo} que carrega tanto a propagação quanto a absorção, a
+\omterm{prop:b2:dispersion-wave-packets:group}{velocidade de grupo} com que um pacote --- e sua energia, e sua
+informação --- de fato viaja, e a linha por onde a telegrafia,
+a televisão e a internet trafegaram: o \omterm{prop:b2:dispersion-wave-packets:coax}{cabo coaxial}.
+
+\section{A relação de dispersão}
+
+\begin{definition}[Relação de dispersão; velocidade de fase]\label{def:b2:dispersion-wave-packets:relation}
+\index{relação de dispersão}\index{velocidade de fase}\index{meio dispersivo}
+Um meio linear, homogêneo e invariante no tempo admite as ondas
+planas monocromáticas $\underline s = A\,\eu^{\iu(\omega t - kx)}$ (notação
+complexa; o sinal físico é a parte real), desde que $\omega$ e $k$
+satisfaçam a \emph{relação de dispersão} do meio, $\mathcal D(\omega, k)
+= 0$, resolvida como $k(\omega)$ ou $\omega(k)$. Para $k$ real a onda viaja
+sem se deformar com a \emph{velocidade de fase}
+\[
+v_\varphi = \frac\omega k .
+\]
+O meio é \emph{não dispersivo} quando $v_\varphi$ não depende de
+$\omega$ (então $\omega = ck$ e todo sinal se propaga sem deformação --- a
+\omterm{thm:b2:waves-on-strings:equation}{equação de d'Alembert}), e \emph{dispersivo} caso contrário.
+\end{definition}
+
+\begin{proof}
+Inserir $\eu^{\iu(\omega t - kx)}$ numa equação linear de coeficientes
+constantes transforma cada $\partial_t$ em $\iu\omega$ e cada $\partial_x$ em
+$-\iu k$, deixando uma relação algébrica. A corda, a onda sonora e
+a barra deram $\omega^2 = c^2k^2$.
+\end{proof}
+
+\begin{example}[Dispersivos e não dispersivos]\label{ex:b2:dispersion-wave-packets:examples}
+\index{equação de Klein--Gordon}\index{ondas em águas profundas}
+(i) Uma corda sobre um leito elástico (força restauradora $-Ky$ por unidade de comprimento,
+ou uma cadeia de pêndulos), $\mu\partial_t^2y = T\partial_x^2y - Ky$: $\omega^2 = \omega_c^2
++ c^2k^2$ com $\omega_c = \sqrt{K/\mu}$ --- a relação de \emph{Klein--Gordon},
+a mesma de um plasma e de um guia de ondas
+(\cref{ch:b2:waves-in-media,ch:b2:guided-waves}): $v_\varphi = c/\sqrt{1 -
+\omega_c^2/\omega^2} > c$, e nenhum $k$ real abaixo do \emph{corte} $\omega_c$.
+(ii) Ondas de gravidade em águas profundas: $\omega^2 = gk$ (admitido), $v_\varphi =
+\sqrt{g/k} = \sqrt{g\lambda/2\pi}$: as ondas longas são mais rápidas --- \qty{12.5}{m/s} para
+\qty{100}{m}, \qty{40}{m/s} para \qty{1}{km}. (iii) A \omterm{prop:b2:waves-on-strings:chain}{cadeia de átomos}, $\omega =
+2\omega_0|\sin(ka/2)|$ (\cref{ch:b2:waves-on-strings}). (iv) A luz no vidro,
+$k = n(\omega)\omega/c$, e é por isso que um prisma abre um espectro.
+\end{example}
+
+\begin{omfigure}
+\begin{tikzpicture}
+\begin{axis}[omaxis, axis x line=bottom, axis y line=left, width=6.2cm, height=4.6cm,
+    xlabel={$k$}, ylabel={$\omega$}, xmin=0, xmax=3, ymin=0, ymax=3.3, xtick=\empty, ytick={1}, yticklabels={$\omega_c$}, samples=80,
+    xlabel style={at={(axis description cs:1.0,0.0)}, anchor=west},
+    ylabel style={at={(axis description cs:0.0,1.0)}, anchor=south},
+    legend style={font=\scriptsize, at={(0.03,0.97)}, anchor=north west, draw=none, fill=none}]
+  \addplot[omDef, thick, domain=0:3] {x};
+  \addplot[omThm, thick, domain=0:3] {sqrt(1+x*x)};
+  \addplot[omProp, thick, domain=0:3] {1.6*sqrt(x)};
+  \legend{$\omega = ck$, $\omega^2 = \omega_c^2 + c^2k^2$, $\omega^2 = gk$}
+\end{axis}
+\end{tikzpicture}
+\hfill
+\begin{tikzpicture}
+\begin{axis}[omaxis, axis x line=bottom, axis y line=left, width=6.2cm, height=4.6cm,
+    xlabel={$\omega/\omega_c$}, ylabel={$v/c$}, xmin=0, xmax=4, ymin=0, ymax=2.6, xtick={1,2,3}, ytick={1}, samples=100,
+    xlabel style={at={(axis description cs:0.5,-0.12)}, anchor=north},
+    ylabel style={at={(axis description cs:-0.1,0.5)}, rotate=90, anchor=south},
+    legend style={font=\scriptsize, at={(0.97,0.95)}, anchor=north east, draw=none, fill=none}]
+  \addplot[omThm, thick, domain=1.08:4] {1/sqrt(1-1/(x*x))};
+  \addplot[omDef, thick, domain=1.0:4] {sqrt(1-1/(x*x))};
+  \addplot[black, dashed, domain=0:4] {1};
+  \legend{$v_\varphi$, $v_g$}
+  \node[font=\scriptsize, anchor=west, align=left] at (axis cs:0.05,1.9) {sem\\propagação};
+\end{axis}
+\end{tikzpicture}
+
+{\small À esquerda: três \omterm{def:b2:dispersion-wave-packets:relation}{relações de dispersão} --- uma reta para um
+meio não dispersivo, a hipérbole de Klein--Gordon com seu corte,
+a parábola das \omterm{ex:b2:dispersion-wave-packets:examples}{ondas em águas profundas}. À direita: para a relação de Klein--Gordon
+a \omterm{def:b2:dispersion-wave-packets:relation}{velocidade de fase} excede $c$ e a \omterm{prop:b2:dispersion-wave-packets:group}{velocidade de grupo} fica
+abaixo dela, com $v_\varphi v_g = c^2$.}
+\end{omfigure}
+
+\begin{definition}[Número de onda complexo: propagação e atenuação]\label{def:b2:dispersion-wave-packets:complex}
+\index{número de onda complexo}\index{atenuação}\index{onda evanescente}\index{profundidade de penetração}
+Quando a \omterm{def:b2:dispersion-wave-packets:relation}{relação de dispersão} dá, para $\omega$ real, um
+$\underline k = k' - \iu k''$ complexo, a onda é
+\[
+\underline s = A\,\eu^{-k''x}\,\eu^{\iu(\omega t - k'x)} :
+\]
+ela se propaga a $v_\varphi = \omega/k'$ e sua amplitude decai como
+$\eu^{-x/\delta}$ com o \emph{comprimento de atenuação} $\delta = 1/k''$ (ela deve
+decair no sentido de sua propagação: $k'$ e $k''$ de mesmo sinal).
+Se $\underline k$ é puramente imaginário, $\underline k = -\iu\kappa$, a onda é
+\emph{evanescente}: $A\,\eu^{-\kappa x}\eu^{\iu\omega t}$, uma oscilação estacionária
+cuja amplitude morre ao longo da distância $1/\kappa$ sem propagar
+coisa alguma --- o caso do meio de Klein--Gordon abaixo de seu corte,
+$\kappa = \sqrt{\omega_c^2 - \omega^2}/c$, e de um metal em frequências ópticas.
+\end{definition}
+
+\begin{example}[Uma corda amortecida]\label{ex:b2:dispersion-wave-packets:damped}
+Uma corda num fluido viscoso, $\mu\partial_t^2y + \alpha\partial_ty = T\partial_x^2y$:
+$\underline k^2 = (\omega^2 - \iu\alpha\omega/\mu)/c^2$. Para amortecimento fraco ($\alpha \ll \mu
+\omega$), $\underline k \approx \dfrac\omega c\Bigl(1 - \iu\dfrac{\alpha}{2\mu\omega}\Bigr)$: a onda
+mantém sua celeridade e perde amplitude ao longo de $\delta = 2\mu c/\alpha = 2Z/\alpha$,
+independentemente da frequência --- uma perda \emph{dissipativa} e não dispersiva,
+de \qty{8.7}{dB} por comprimento $\delta$.
+\end{example}
+
+\section{Pacotes de ondas e velocidade de grupo}
+
+\begin{proposition}[Batimentos; velocidade de grupo]\label{prop:b2:dispersion-wave-packets:group}
+\index{velocidade de grupo}\index{pacote de ondas}\index{batimentos}
+Duas ondas de mesma amplitude e frequências vizinhas $\omega \pm
+\delta\omega$, com números de onda $k \pm \delta k$, superpõem-se em
+\[
+s = 2A\cos(\delta\omega\,t - \delta k\,x)\cos(\omega t - kx) :
+\]
+uma portadora em $(\omega, k)$ que se move a $v_\varphi = \omega/k$, modulada por uma
+envoltória lenta que se move a $\delta\omega/\delta k$. Um \emph{\omterm{prop:b2:dispersion-wave-packets:group}{pacote de ondas}} --- uma
+superposição de ondas monocromáticas com números de onda numa banda estreita
+em torno de $k_0$ --- viaja, como um todo, com a \emph{\omterm{prop:b2:dispersion-wave-packets:group}{velocidade de grupo}}
+\[
+v_g = \frac{\dd\omega}{\dd k}\Bigr|_{k_0} ,
+\]
+que é a velocidade de sua energia e da informação que ele carrega.
+Num meio não dispersivo $v_g = v_\varphi = c$; caso contrário o pacote
+se deforma ao andar (ele se \emph{alarga}), tanto mais depressa quanto maior for
+$\dd^2\omega/\dd k^2$ e quanto mais estreito for o complemento de seu espectro, sua
+largura espacial.
+\end{proposition}
+
+\begin{proof}
+A fórmula de transformação de soma em produto dá os batimentos. Para um pacote, escreva $s =
+\int a(k)\eu^{\iu(\omega(k)t - kx)}\dd k$ (uma superposição de Fourier --- a
+integral de Fourier é estudada no volume de matemática do Ano 3; aqui só
+se usa sua interpretação como soma contínua de senoides), com
+$a(k)$ concentrado em $k_0$. Expanda $\omega(k) \approx \omega_0 + v_g(k - k_0)$: então
+$s \approx \eu^{\iu(\omega_0t - k_0x)}\int a(k)\eu^{\iu(k - k_0)(v_gt - x)}\dd k$, uma
+portadora vezes uma envoltória que é função apenas de $x - v_gt$ --- a
+envoltória se move a $v_g$. O termo seguinte, $\tfrac12\omega''(k_0)(k - k_0)^2t$,
+desfasa as componentes no tempo e alarga a envoltória. A energia
+de um pacote está onde sua envoltória está; e todo sinal também.
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}
+\begin{axis}[omaxis, axis x line=middle, axis y line=none, width=13.6cm, height=4.0cm,
+    xmin=0, xmax=60, ymin=-3.1, ymax=3.3, xtick=\empty, samples=600, xlabel={$x$}, clip=false,
+    xlabel style={at={(axis description cs:1.0,0.5)}, anchor=west}]
+  \addplot[omDef, thick, domain=0:60] {2*cos(deg(0.12*x))*cos(deg(2.2*x))};
+  \addplot[omThm, thick, domain=0:60] {2*cos(deg(0.12*x))};
+  \addplot[omThm, thick, domain=0:60] {-2*cos(deg(0.12*x))};
+  \draw[omThm, very thick, ->] (axis cs:9,2.6) -- (axis cs:15,2.6) node[above, font=\scriptsize, pos=0.5] {$v_g$};
+  \draw[omDef, very thick, ->] (axis cs:38,-2.6) -- (axis cs:48,-2.6) node[below, font=\scriptsize, pos=0.5] {$v_\varphi$};
+\end{axis}
+\end{tikzpicture}
+
+{\small Batimentos: duas frequências vizinhas produzem uma portadora rápida
+(que se move com a \omterm{def:b2:dispersion-wave-packets:relation}{velocidade de fase}) sob uma envoltória lenta (que se move com a
+\omterm{prop:b2:dispersion-wave-packets:group}{velocidade de grupo}); num \omterm{def:b2:dispersion-wave-packets:relation}{meio dispersivo} as duas celeridades diferem e as
+cristas deslizam através da envoltória.}
+\end{omfigure}
+
+\begin{example}[Águas profundas: as cristas ultrapassam o grupo]\label{ex:b2:dispersion-wave-packets:deepwater}
+$\omega = \sqrt{gk}$: $v_g = \tfrac12\sqrt{g/k} = \tfrac12v_\varphi$. Um grupo de
+ondulação anda à metade da celeridade de suas cristas: ao observar um trem de ondas,
+veem-se cristas surgindo atrás do grupo, atravessando-o e
+sumindo à frente --- exatamente o anel do lago. Uma tempestade a \qty{3000}{km}
+de distância manda sua ondulação de \qty{15}{s} ($\lambda = gT^2/2\pi = \qty{350}{m}$, $v_g =
+gT/4\pi = \qty{11.7}{m/s}$) em três dias, e suas ondas de \qty{8}{s} ($v_g =
+\qty{6.2}{m/s}$) em cinco e meio: pelos horários de chegada dos
+diferentes períodos, os oceanógrafos localizam a tempestade.
+\end{example}
+
+\begin{omfigure}
+\includegraphics[width=0.56\linewidth]{images/book4/ai/b4-08-boat-wake-aerial.png}
+
+{\small A esteira de uma lancha num lago calmo: o padrão em plumas fica dentro de uma cunha de ângulo fixo porque a energia de cada onda de água viaja à metade da celeridade de suas cristas --- a dispersão tornada visível.}
+\end{omfigure}
+
+
+\begin{example}[Klein--Gordon: mais rápido que a luz, e nem por isso]\label{ex:b2:dispersion-wave-packets:superluminal}
+Para $\omega^2 = \omega_c^2 + c^2k^2$: $v_\varphi = \omega/k$ e $v_g = c^2k/\omega$, de modo que
+$v_\varphi v_g = c^2$: a \omterm{def:b2:dispersion-wave-packets:relation}{velocidade de fase} excede $c$ (na ionosfera, as cristas de uma
+onda de \qty{10}{MHz} andam mais rápido que a luz), mas a \omterm{prop:b2:dispersion-wave-packets:group}{velocidade de
+grupo}, que carrega o sinal, fica abaixo dela. Uma \omterm{def:b2:dispersion-wave-packets:relation}{velocidade de fase}
+não transporta energia nem informação --- as cristas são como a
+mancha do facho de um farol varrendo uma nuvem distante.
+\end{example}
+
+\begin{remark}[Alargamento]\label{rem:b2:dispersion-wave-packets:spreading}
+Um pacote de largura espacial $\Delta x$ contém números de onda ao longo de $\Delta k \sim
+1/\Delta x$ (a reciprocidade de Fourier, admitida); as \omterm{prop:b2:dispersion-wave-packets:group}{velocidades de grupo} de suas
+componentes diferem de $\Delta v_g \approx |\omega''|\Delta k$, de modo que após um tempo $t$ ele
+se alargou de $|\omega''|\Delta k\,t$: sua largura dobra após $t_{\text{al}}
+\sim \Delta x^2/|\omega''|$. Um pacote de dez ondas de águas profundas de \qty{100}{m}
+($\Delta x \approx \qty{1}{km}$, $\omega'' = -\tfrac14\sqrt{g/k^3} = \qty{-50}{m^2/s}$)
+dobra em cerca de seis horas; um pulso de luz de \qty{1}{ns} numa
+fibra óptica se alarga dezenas de picossegundos por quilômetro --- o
+limite da taxa de bits dos enlaces longos. O \omterm{prop:b2:dispersion-wave-packets:group}{pacote de ondas} quântico do
+\cref{ch:b2:schrodinger-wave-functions} se alarga pela mesma razão.
+\end{remark}
+
+\section{O cabo coaxial}
+
+\begin{proposition}[Equações dos telegrafistas; linha sem perdas]\label{prop:b2:dispersion-wave-packets:coax}
+\index{cabo coaxial}\index{equações dos telegrafistas}\index{impedância característica}\index{linha de transmissão}
+Um \omterm{prop:b2:dispersion-wave-packets:coax}{cabo coaxial} (ou qualquer linha de dois condutores) tem, por unidade de comprimento, uma
+indutância $\Lambda$ e uma capacitância $\Gamma$. A tensão $v(x, t)$ entre
+os condutores e a corrente $i(x, t)$ no condutor interno obedecem às
+\emph{\omterm{prop:b2:dispersion-wave-packets:coax}{equações dos telegrafistas}}
+\[
+\frac{\partial v}{\partial x} = -\Lambda\frac{\partial i}{\partial t} , \qquad
+\frac{\partial i}{\partial x} = -\Gamma\frac{\partial v}{\partial t} ,
+\]
+donde a \omterm{thm:b2:waves-on-strings:equation}{equação de d'Alembert} para $v$ e $i$ com
+\[
+c = \frac1{\sqrt{\Lambda\Gamma}} , \qquad
+v = Z_c\,i \ \text{para uma onda rumo a } +x, \quad Z_c = \sqrt{\frac\Lambda\Gamma} ,
+\]
+sendo $Z_c$ a \emph{\omterm{prop:b2:dispersion-wave-packets:coax}{impedância característica}} da linha. Para um
+\omterm{prop:b2:dispersion-wave-packets:coax}{cabo coaxial} de raios $a < b$ preenchido com um dielétrico de
+permissividade relativa $\varepsilon_r$, $\Lambda = \dfrac{\mu_0}{2\pi}\ln\dfrac ba$, $\Gamma =
+\dfrac{2\pi\varepsilon_0\varepsilon_r}{\ln(b/a)}$, de modo que $c = c_0/\sqrt{\varepsilon_r}$ (cerca de
+\qty{2e8}{m/s}, dois terços da velocidade da luz) e $Z_c = \dfrac{60\,\Omega}
+{\sqrt{\varepsilon_r}}\ln\dfrac ba$: \qty{50}{\ohm} ou \qty{75}{\ohm} nos cabos usuais.
+\end{proposition}
+
+\begin{proof}
+Modele a fatia $[x, x + \dd x]$ como uma indutância em série $\Lambda\dd x$ e uma
+capacitância em derivação $\Gamma\dd x$: a queda de tensão ao longo da fatia vale
+$\Lambda\dd x\,\partial_ti$, e a corrente perdida na capacitância vale $\Gamma\dd x
+\,\partial_tv$. Derive cruzadamente. Para $v = f(x - ct)$, a primeira equação
+dá $i = f(x - ct)/\Lambda c = v/\sqrt{\Lambda/\Gamma}$. Os valores de $\Lambda$ e
+$\Gamma$ são os do capacitor cilíndrico e do indutor coaxial
+calculados no volume do Ano 1.
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}[font=\small]
+  \begin{scope}
+    \draw (0,0) to[L, l=$\Lambda\,\dd x$] (2.2,0) to[C, l=$\Gamma\,\dd x$] (2.2,-1.6);
+    \draw (0,-1.6) -- (2.2,-1.6);
+    \draw (2.2,0) -- (3.8,0); \draw (2.2,-1.6) -- (3.8,-1.6);
+    \draw[->] (0.1,0.35) -- (0.7,0.35); \node[font=\footnotesize] at (0.4,0.6) {$i(x)$};
+    \draw[->] (2.9,0.35) -- (3.5,0.35); \node[font=\footnotesize] at (3.2,0.6) {$i(x+\dd x)$};
+    \node[font=\footnotesize] at (-0.3,-0.8) {$v(x)$}; \node[font=\footnotesize] at (4.6,-0.8) {$v(x+\dd x)$};
+    \draw (-0.6,-0.2) -- (-0.6,-1.4); \draw[->] (-0.6,-1.4) -- (-0.6,-0.3);
+    \node[font=\footnotesize] at (1.6,-2.3) {uma fatia da linha};
+  \end{scope}
+  \begin{scope}[xshift=8.4cm, yshift=-0.8cm]
+    \draw[thick, fill=omExo!30] (0,0) circle (1.3);
+    \draw[thick, fill=omDef!15] (0,0) circle (1.05);
+    \draw[thick, fill=omThm!40] (0,0) circle (0.3);
+    \draw[<->] (0,0) -- (30:0.3) node[pos=1.6, font=\footnotesize] {$a$};
+    \draw[<->] (0,0) -- (-50:1.05) node[pos=0.6, right, font=\footnotesize] {$b$};
+    \node[font=\footnotesize] at (0,1.65) {$\varepsilon_r$ dielétrico, malha, núcleo};
+    \node[font=\footnotesize] at (0,-1.75) {$Z_c = \dfrac{60\,\Omega}{\sqrt{\varepsilon_r}}\ln\dfrac ba$};
+  \end{scope}
+\end{tikzpicture}
+
+{\small À esquerda: o circuito equivalente de uma fatia $\dd x$ de uma linha
+sem perdas --- indutância em série, capacitância em derivação --- de onde saem as
+\omterm{prop:b2:dispersion-wave-packets:coax}{equações dos telegrafistas}. À direita: um \omterm{prop:b2:dispersion-wave-packets:coax}{cabo coaxial} em corte; seus
+$\Lambda$ e $\Gamma$ dependem apenas da razão dos raios e do
+dielétrico.}
+\end{omfigure}
+
+\begin{omfigure}
+\includegraphics[width=0.46\linewidth]{images/book3/coaxial-cable.jpg}
+
+{\small Um \omterm{prop:b2:dispersion-wave-packets:coax}{cabo coaxial}: núcleo interno, dielétrico, condutor externo trançado --- uma \omterm{prop:b2:dispersion-wave-packets:coax}{linha de transmissão} cujas indutância e capacitância por metro fixam sua celeridade e sua \omterm{prop:b2:dispersion-wave-packets:coax}{impedância característica}.}
+\end{omfigure}
+
+\begin{proposition}[Linha com perdas; a condição sem distorção]\label{prop:b2:dispersion-wave-packets:lossy}
+\index{condição de Heaviside}\index{lei dos quadrados de Kelvin}
+Com uma resistência em série $R$ e uma condutância em derivação $G$ por unidade de
+comprimento, as equações tornam-se $\partial_xv = -\Lambda\partial_ti - Ri$, $\partial_xi =
+-\Gamma\partial_tv - Gv$, e a \omterm{def:b2:dispersion-wave-packets:relation}{relação de dispersão} $\underline k^2 = (\Lambda\omega -
+\iu R)(\Gamma\omega - \iu G)$: a linha é dispersiva e atenuante. Dois
+limites: (i) $R/\Lambda = G/\Gamma$ (\omterm{prop:b2:dispersion-wave-packets:lossy}{condição de Heaviside}, obtida acrescentando
+indutância): $\underline k = \omega\sqrt{\Lambda\Gamma} - \iu\sqrt{RG}$, e toda frequência
+viaja com a mesma celeridade e a mesma \omterm{def:b2:dispersion-wave-packets:complex}{atenuação} --- a linha
+\emph{atenua}, mas não \emph{distorce}. (ii) $\Lambda \approx 0$, $G \approx 0$
+(os primeiros cabos submarinos): $\partial_x^2v = R\Gamma\,\partial_tv$, uma
+equação de \emph{difusão} --- um pulso não se propaga, mas se espalha,
+alcançando a distância $L$ ao cabo de um tempo $\sim R\Gamma L^2$ (\omterm{prop:b2:dispersion-wave-packets:lossy}{lei dos quadrados
+de Kelvin}), cem vezes maior para um cabo dez vezes mais comprido.
+\end{proposition}
+
+\begin{proof}
+Insira $\eu^{\iu(\omega t - kx)}$: $-\iu kv = -(\iu\omega\Lambda + R)i$, $-\iu ki = -(\iu
+\omega\Gamma + G)v$; multiplique. Sob a \omterm{prop:b2:dispersion-wave-packets:lossy}{condição de Heaviside} o produto é um
+quadrado perfeito. O limite difusivo descarta os termos $\iu\omega\Lambda$ e $G$.
+\end{proof}
+
+\begin{example}[Três cabos]\label{ex:b2:dispersion-wave-packets:cables}
+O cabo transatlântico de 1858: um único fio de cobre em guta-percha,
+$R \approx \qty{3}{\ohm/km}$, $\Gamma \approx \qty{0.3}{\micro F/km}$, $L = \qty{3000}{km}$:
+$R\Gamma = \qty{9e-10}{s/m^2}$ e $R\Gamma L^2 \approx \qty{8}{s}$ por ponto: uma palavra por
+minuto, e as tentativas dos operadores de forçar o sinal
+com \qty{2}{kV} destruíram o isolamento em poucas semanas. Uma linha telefônica
+carregada com bobinas a cada \qty{2}{km} para satisfazer a \omterm{prop:b2:dispersion-wave-packets:lossy}{condição de Heaviside}
+(1900): fala nítida por centenas de quilômetros. Um \omterm{prop:b2:dispersion-wave-packets:coax}{cabo coaxial} moderno de \qty{50}{\ohm}:
+$c = \qty{2e8}{m/s}$, $\Lambda = \qty{0.25}{\micro H/m}$, $\Gamma =
+\qty{100}{pF/m}$, e uma \omterm{def:b2:dispersion-wave-packets:complex}{atenuação}, devida ao efeito pelicular nos
+condutores (\cref{ch:b2:waves-in-media}), que cresce como $\sqrt f$: alguns
+\omterm{def:b2:sound-waves:decibel}{decibéis} por cem metros a \qty{100}{MHz}.
+\end{example}
+
+\begin{method}[Ler uma relação de dispersão]\label{met:b2:dispersion-wave-packets:method}
+(1) Escreva a \omterm{thm:b2:waves-on-strings:equation}{equação de onda} do meio em notação complexa e
+resolva para $\underline k(\omega)$. (2) Com $k$ real: calcule $v_\varphi = \omega/k$ e
+$v_g = \dd\omega/\dd k$ (ou $1/(\dd k/\dd\omega)$); compare: dispersivo ou não,
+normal ($v_g < v_\varphi$) ou anômalo. (3) Com $k$ complexo: separe em
+propagação ($k'$) e \omterm{def:b2:dispersion-wave-packets:complex}{atenuação} ($k''$, comprimento $1/k''$); puramente
+imaginário significa evanescente, sem transporte. (4) Uma frequência de corte
+separa uma banda que se propaga de outra evanescente. (5) Para um sinal,
+raciocine sobre a envoltória, a $v_g$, e nunca sobre as cristas.
+\end{method}
+
+\section{Exercícios}
+
+\begin{exercise}[$\star$]\label{exo:b2:dispersion-wave-packets:1}
+\omterm{ex:b2:dispersion-wave-packets:examples}{Ondas em águas profundas}, $\omega^2 = gk$. (a) \omterm{def:b2:dispersion-wave-packets:relation}{Velocidade de fase}, \omterm{prop:b2:dispersion-wave-packets:group}{velocidade de grupo} e
+período de uma ondulação de \qty{100}{m}. (b) Uma ondulação de período \qty{14}{s}:
+comprimento de onda, $v_\varphi$, $v_g$; tempo para sua energia atravessar \qty{5000}{km}.
+(c) Por que a marola de período \qty{2}{s} não chega lá de jeito nenhum?
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b2:dispersion-wave-packets:2}
+Um meio obedece a $\omega^2 = \omega_c^2 + c^2k^2$ com $\omega_c = 2\pi \times \qty{1e7}{rad/s}$
+e $c = \qty{3e8}{m/s}$. Para $f = \qty{20}{MHz}$: $k$, $v_\varphi$, $v_g$ e
+o produto deles. Para $f = \qty{5}{MHz}$: $\kappa$ e a \omterm{def:b2:dispersion-wave-packets:complex}{profundidade de penetração}.
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b2:dispersion-wave-packets:3}
+Dois diapasões a \qty{440}{Hz} e \qty{444}{Hz}: frequência de batimento e
+período das variações de intensidade sonora. Duas ondas de água de comprimentos
+\qty{100}{m} e \qty{110}{m}: frequências, comprimento de onda e celeridade da
+envoltória; compare com $v_g$ a \qty{105}{m}.
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b2:dispersion-wave-packets:4}
+Um \omterm{prop:b2:dispersion-wave-packets:coax}{cabo coaxial}: condutor interno de \qty{0.9}{mm} de diâmetro, externo de
+\qty{3.0}{mm}, polietileno ($\varepsilon_r = 2.3$). $\Lambda$, $\Gamma$, celeridade das ondas,
+\omterm{prop:b2:dispersion-wave-packets:coax}{impedância característica}, atraso por metro; comprimento de cabo equivalente
+a um atraso de \qty{10}{ns}. O mesmo cabo com ar em vez de polietileno.
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b2:dispersion-wave-packets:5}
+\emph{A corda rígida.} Uma corda de piano real obedece a $\mu\partial_t^2y = T\partial_x^2y
+- EI\,\partial_x^4y$ ($EI$ a rigidez à flexão). (a) \omterm{def:b2:dispersion-wave-packets:relation}{Relação de dispersão},
+\omterm{def:b2:dispersion-wave-packets:relation}{velocidades de fase} e de grupo. (b) Para a corda lá$_4$ do
+\cref{ch:b2:waves-on-strings} ($T = \qty{685}{N}$, $\mu = \qty{6.1}{g/m}$, $EI =
+\qty{9.8e-3}{N.m^2}$), aumento relativo de $v_\varphi$ para o oitavo
+harmônico ($k = 8\pi/L$, $L = \qty{0.38}{m}$); confira com a inarmonicidade
+encontrada lá. (c) A dispersão é normal ou anômala? Com que aspecto fica um
+beliscão brusco depois de algumas idas e voltas?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b2:dispersion-wave-packets:6}
+\emph{Corda amortecida.} $\mu\partial_t^2y + \alpha\partial_ty = T\partial_x^2y$. (a) Deduza
+a \omterm{def:b2:dispersion-wave-packets:relation}{relação de dispersão}. (b) Para $\alpha \ll \mu\omega$, mostre que $k' \approx \omega/c$ e
+$k'' \approx \alpha/2Z$; \omterm{def:b2:dispersion-wave-packets:complex}{atenuação} em \omterm{def:b2:sound-waves:decibel}{decibéis} por metro. (c) Números: $\mu =
+\qty{5}{g/m}$, $T = \qty{50}{N}$, $\alpha = \qty{0.02}{kg.m^{-1}.s^{-1}}$, $f =
+\qty{100}{Hz}$: verifique a aproximação e dê $\delta$. (d) A corda amortecida é
+dispersiva? Em que regime de $\alpha$ ela passaria a ser?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b2:dispersion-wave-packets:7}
+\emph{Ondas capilares.} As ondas de água curtas são governadas pela \omterm{rem:b2:viscous-flows:capillarity}{tensão superficial}: $\omega^2 =
+\gamma k^3/\rho$ ($\gamma = \qty{0.072}{N/m}$); a relação completa é $\omega^2 = gk +
+\gamma k^3/\rho$. (a) $v_\varphi$ e $v_g$ para ondas capilares puras; qual é a
+maior? (b) Mostre que a \omterm{def:b2:dispersion-wave-packets:relation}{velocidade de fase} da relação completa é
+mínima em $\lambda_m = 2\pi\sqrt{\gamma/\rho g}$ e calcule $\lambda_m$ e $v_{\min}$.
+(c) Um barco mais lento que $v_{\min}$ não deixa esteira: por quê? (d) Gotas de chuva num
+lago fazem anéis cujas cristas ficam atrás do anel: em que regime?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b2:dispersion-wave-packets:8}
+\emph{Alargamento.} Um pacote de largura inicial $\Delta x_0$ dobra de largura
+depois de $t_{\text{al}} \approx \Delta x_0^2/|\omega''(k_0)|$. (a) Um grupo de \omterm{ex:b2:dispersion-wave-packets:examples}{ondas em águas
+profundas}, $\lambda = \qty{50}{m}$, $\Delta x_0 = \qty{500}{m}$. (b) Um pulso de luz numa
+fibra de vidro: $\omega'' \approx \qty{-0.16}{m^2/s}$; um pulso de \qty{10}{ps} ($\Delta x_0 =
+\qty{2}{mm}$): tempo de alargamento e distância percorrida nesse meio-tempo; o mesmo
+para um pulso de \qty{1}{ns}. Por que os enlaces ópticos longos usam pulsos mais longos ou
+fibra com compensação de dispersão?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b2:dispersion-wave-packets:9}
+\emph{O cabo submarino.} $R = \qty{3}{\ohm/km}$, $\Gamma = \qty{0.3}{\micro F/km}$,
+com $\Lambda$ e $G$ desprezíveis. (a) Mostre que $v$ obedece a uma equação de difusão e
+dê sua difusividade. (b) \omterm{def:b2:dispersion-wave-packets:relation}{Relação de dispersão} $\underline k(\omega)$; \omterm{def:b2:dispersion-wave-packets:relation}{velocidade de
+fase} e comprimento de \omterm{def:b2:dispersion-wave-packets:complex}{atenuação} a \qty{1}{Hz} e a \qty{10}{Hz}. (c)
+Tempo para um sinal "chegar" a \qty{3000}{km} ($\sim R\Gamma L^2$); palavras por
+minuto. (d) A cura de Heaviside: a indutância por quilômetro necessária para
+$R/\Lambda = G/\Gamma$ se $G = \qty{1e-7}{S/km}$; por que era difícil acrescentá-la?
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b2:dispersion-wave-packets:10}
+\emph{A energia viaja com a \omterm{prop:b2:dispersion-wave-packets:group}{velocidade de grupo}.} Corda sobre um leito elástico:
+$\mu\partial_t^2y = T\partial_x^2y - Ky$, onda $y = A\cos(\omega t - kx)$ com $\omega^2 =
+\omega_c^2 + c^2k^2$. (a) Densidade de energia $e = \tfrac12\mu(\partial_ty)^2 + \tfrac12T
+(\partial_xy)^2 + \tfrac12Ky^2$ e fluxo $\mathcal P = -T\partial_xy\,\partial_ty$: verifique
+$\partial_te + \partial_x\mathcal P = 0$. (b) Médias temporais $\langle e\rangle$ e
+$\langle\mathcal P\rangle$ para a onda. (c) Mostre que $\langle\mathcal P\rangle/
+\langle e\rangle = c^2k/\omega = v_g$, e não $v_\varphi$. (d) O que acontece com o
+fluxo de energia abaixo do corte?
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b2:dispersion-wave-packets:11}
+\emph{Ondulação e tsunami.} Ondas de água de comprimento $\lambda$ sobre profundidade $h$
+obedecem a $\omega^2 = gk\tanh kh$ (admitido). (a) Recupere os limites de águas profundas e de
+águas rasas ($kh \ll 1$); celeridade das ondas em águas rasas; elas
+são dispersivas? (b) Um tsunami de $\lambda = \qty{200}{km}$ sobre \qty{4}{km} de oceano:
+que limite, celeridade, período; tempo para atravessar \qty{8000}{km}. (c) Sua
+amplitude em mar aberto é \qty{0.5}{m}: energia por unidade de comprimento de crista
+(admita $E = \tfrac12\rho gA^2$ por unidade de área) para uma frente de \qty{1000}{km}; o que
+acontece quando a profundidade cai a \qty{10}{m}, se o fluxo de energia $Ev_g$ se
+conserva (lei de Green, $A \propto h^{-1/4}$)? (d) Uma ondulação de \qty{100}{m}
+que chega a uma praia: a que profundidade ela começa a sentir o fundo,
+e por que suas cristas ficam paralelas à costa?
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b2:dispersion-wave-packets:12}
+\emph{Um pulso numa linha.} Um cabo de \qty{50}{\ohm} e comprimento $\ell = \qty{100}{m}$
+($c = \qty{2e8}{m/s}$) é alimentado em $x = 0$ por um gerador de resistência
+interna \qty{50}{\ohm} e terminado em $x = \ell$ por uma carga $R_L$. (a) Mostre
+que uma onda que chega à extremidade é refletida com o coeficiente
+em tensão $r = (R_L - Z_c)/(R_L + Z_c)$ (escreva $v$ e $i$ como ondas incidente
+mais refletida e imponha a lei de Ohm na carga). (b) Valores para
+$R_L = 50$, $0$, $\infty$ e \qty{150}{\ohm}. (c) Envia-se um pulso de \qty{1}{ns} e \qty{1}{V}:
+o que o osciloscópio junto ao gerador mostra, e quando, para cada
+carga; por que os \qty{50}{\ohm} do gerador importam. (d) Um defeito num cabo
+enterrado devolve um eco depois de \qty{1.8}{\micro s}: onde ele está? (Reflectometria
+no domínio do tempo.)
+\end{exercise}
+
+\section{Problema: O cabo e o mar}
+
+\begin{problem}[{Problema de fim de semana --- a dispersão em ação: o cabo
+telegráfico que borrava os pontos, a ondulação que anuncia uma tempestade, o
+tsunami que atravessa um oceano e o pacote que se alarga}]
+\label{pb:b2:dispersion-wave-packets:1}
+
+\medskip
+\noindent\textbf{Parte I --- O cabo telegráfico.}
+O cabo transatlântico de 1866: $R = \qty{2.0}{\ohm/km}$, $\Gamma = \qty{0.25}{\micro F/km}$,
+$\Lambda = \qty{0.5}{mH/km}$, $G$ desprezível, comprimento $L = \qty{3500}{km}$.
+\begin{enumerate}
+  \item Escreva as \omterm{prop:b2:dispersion-wave-packets:coax}{equações dos telegrafistas} com $R$ e deduza a
+        \omterm{def:b2:dispersion-wave-packets:relation}{relação de dispersão} $\underline k^2 = \Gamma\omega(\Lambda\omega - \iu R)$.
+  \item Em que frequência $\Lambda\omega$ iguala $R$? Conclua que, para as
+        frequências telegráficas (alguns hertz), a linha está no
+        regime difusivo.
+  \item Nesse regime, $\underline k = \sqrt{-\iu R\Gamma\omega}$: dê $k'$ e $k''$
+        (lembre que $\sqrt{-\iu} = (1 - \iu)/\sqrt2$); \omterm{def:b2:dispersion-wave-packets:relation}{velocidade de fase} e
+        comprimento de \omterm{def:b2:dispersion-wave-packets:complex}{atenuação} a \qty{1}{Hz}; e a \qty{4}{Hz}.
+  \item \omterm{def:b2:dispersion-wave-packets:complex}{Atenuação} em \omterm{def:b2:sound-waves:decibel}{decibéis} ao longo de todo o cabo a \qty{1}{Hz} e
+        a \qty{4}{Hz}. Que frequência sobrevive? O que isso faz com um
+        ponto nítido?
+  \item A estimativa de Kelvin para o tempo de trânsito, $R\Gamma L^2$; a taxa
+        prática do cabo em palavras por minuto, se uma palavra tem cerca de
+        $10$ pontos e traços e os pontos não podem se superpor.
+  \item Heaviside propôs aumentar $\Lambda$: que valor faz $\Lambda\omega = R$
+        a \qty{4}{Hz}, e quais seriam então a celeridade e a \omterm{def:b2:dispersion-wave-packets:complex}{atenuação}
+        (tome $G = 0$, de modo que a condição $R/\Lambda = G/\Gamma$ não pode ser
+        satisfeita exatamente --- use a relação geral nessa frequência)?
+  \item Uma fibra óptica moderna transporta \qty{1e10}{bit/s}: compare com a
+        questão 5, em potências de dez.
+\end{enumerate}
+
+\medskip
+\noindent\textbf{Parte II --- A ondulação.}
+Águas profundas: $\omega^2 = gk$.
+\begin{enumerate}[resume]
+  \item \omterm{def:b2:dispersion-wave-packets:relation}{Velocidades de fase} e de grupo em função do período $T$.
+  \item Uma tempestade a \qty{4000}{km} de uma costa gera ondas de períodos
+        de \qty{6}{s} a \qty{18}{s}: horário de chegada de cada extremo;
+        duração do evento de ondulação.
+  \item Mostre que numa costa à distância $D$ o período que chega obedece a
+        $1/T = gt/4\pi D$, com $t$ contado desde a tempestade: $1/T$ cresce
+        linearmente no tempo. Uma boia registra $T = \qty{16}{s}$ num dia ao meio-dia
+        e $T = \qty{12}{s}$ exatamente \qty{24}{h} depois: distância da
+        tempestade.
+  \item A energia por unidade de área de uma ondulação de amplitude $A$ vale $\tfrac12\rho
+        gA^2$; potência que atravessa uma linha de \qty{1}{m} de crista, para $A =
+        \qty{1.5}{m}$, $T = \qty{12}{s}$. (Use a \omterm{prop:b2:dispersion-wave-packets:group}{velocidade de grupo} --- por quê?)
+  \item Uma usina de ondas com \qty{1}{km} de frente e $30\%$ de rendimento:
+        potência elétrica; compare com uma turbina eólica (\qty{3}{MW}).
+  \item Um barco a \qty{5}{m/s} em águas profundas deixa uma esteira estacionária
+        atrás de si: que comprimento de onda tem \omterm{def:b2:dispersion-wave-packets:relation}{velocidade de fase} igual à
+        celeridade do barco e por isso o acompanha? Por que o padrão se arrasta em
+        V, mais estreito do que o espalhamento das próprias cristas sugeriria
+        (pense em $v_g = v_\varphi/2$)?
+  \item Observando um grupo de ondulação de uma falésia, descreva o que uma
+        crista individual faz durante o tempo em que o grupo passa por uma
+        boia fixa; quantas cristas contém um grupo de duração
+        \qty{2}{min} com $T = \qty{12}{s}$, e a quantas "vidas" de crista
+        isso corresponde?
+\end{enumerate}
+
+\medskip
+\noindent\textbf{Parte III --- O tsunami.}
+$\omega^2 = gk\tanh kh$; profundidade do Pacífico $h = \qty{4.0}{km}$.
+\begin{enumerate}[resume]
+  \item Um terremoto levanta uma área de fundo de mar de \qty{100}{km} em
+        \qty{2}{m}; a onda tem $\lambda \approx \qty{200}{km}$: verifique que ela é uma
+        onda de águas rasas e dê sua celeridade, seu período e o tempo para
+        alcançar uma costa a \qty{6000}{km}.
+  \item Ela é dispersiva? Compare com a ondulação da Parte II: ela
+        chega antes ou depois do que a ondulação chegaria? Qual delas chega como
+        um pulso único?
+  \item Sua altura em mar aberto é \qty{0.6}{m}: energia por metro quadrado;
+        energia total de uma frente de \qty{500}{km} espalhada por um
+        comprimento de onda; compare com uma explosão de \qty{1}{Mt} (\qty{4.2e15}{J}).
+  \item Lei de Green: altura quando a profundidade cai a \qty{20}{m} perto da
+        costa (fluxo de energia $\tfrac12\rho gA^2v_g$ conservado, $v_g = \sqrt{gh}$);
+        celeridade e comprimento de onda ali; por que a onda então empina e
+        arrebenta como um muro.
+  \item Um navio no alto-mar não percebe o tsunami passando: por quê?
+  \item Marégrafos separados por \qty{6000}{km} registram a onda: o que o
+        tempo de trajeto dá, e por que a celeridade medida é ligeiramente
+        menor que $\sqrt{gh}$ sobre um oceano de profundidade variável.
+\end{enumerate}
+
+\medskip
+\noindent\textbf{Parte IV --- O pacote que se alarga.}
+\begin{enumerate}[resume]
+  \item Para águas profundas, calcule $\omega''(k) = \dd^2\omega/\dd k^2$ e seu valor
+        para $\lambda = \qty{100}{m}$.
+  \item Um pacote de \qty{10}{} dessas ondas ($\Delta x_0 \approx \qty{1}{km}$) é
+        solto: tempo de alargamento $\Delta x_0^2/|\omega''|$; distância percorrida
+        pelo pacote nesse meio-tempo.
+  \item Explique em palavras por que um pacote de espectro mais estreito
+        (trem mais longo) se alarga mais devagar, e por que o tsunami da
+        Parte III quase não se alarga.
+  \item A mesma estimativa para um elétron de comprimento de onda \qty{0.1}{nm}
+        localizado em \qty{1}{nm}, com $\omega = \hbar k^2/2m$ ($\hbar =
+        \qty{1.05e-34}{J.s}$, $m = \qty{9.1e-31}{kg}$): tempo de alargamento e
+        distância percorrida --- o primeiro contato com o \omterm{prop:b2:dispersion-wave-packets:group}{pacote de ondas}
+        quântico do \cref{ch:b2:schrodinger-wave-functions}.
+  \item Reúna numa tabela: para o cabo, a ondulação, o tsunami e
+        o elétron, a \omterm{def:b2:dispersion-wave-packets:relation}{relação de dispersão}, $v_\varphi$, $v_g$ e
+        se o meio alarga ou apenas atenua.
+\end{enumerate}
+\end{problem}

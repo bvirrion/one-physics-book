@@ -1,0 +1,628 @@
+\chapter{Elektronika: Umpan Balik, Osilator dan Perolehan Sinyal}\label{ch:b2:feedback-oscillators}
+
+Dekatkanlah sebuah mikrofon terlalu jauh ke pengeras suara yang
+disuapinya dan aulanya penuh lolongan: penguatnya mendengar dirinya
+sendiri, dan derau yang amat kecil tumbuh menjadi jeritan pada satu nada
+tertentu. Setelah dijinakkan, simpal yang sama itu menjadi jantung setiap
+jam, radio dan penyintesis --- sebuah \emph{osilator} yang membuat
+gelombang sinus dari tak lebih daripada penguatan dan sebuah tapis. Jilid
+Tahun ke-1 membangun penguat, tapis dan pembanding dengan penguat
+operasional; bab ini menutup simpal di sekelilingnya, menanyakan kapan
+sebuah simpal mantap dan kapan ia berosilasi, membangun dua osilator ---
+satu sinusoidal, satu persegi --- lalu beralih ke dua langkah yang dengannya
+sebuah sinyal terukur sampai ke komputer: \emph{mencuplik}nya, dan
+menariknya keluar dari derau dengan \emph{\omterm{prop:b2:feedback-oscillators:lockin}{deteksi serentak}}.
+
+\begin{omfigure}
+\includegraphics[width=0.58\linewidth]{images/book4/ai/b4-09-electronics-bench-oscillator.png}
+
+{\small Sebuah papan rangkai, sebuah pembangkit fungsi dan sebuah osiloskop: meja kerja tempat sebuah simpal \omterm{def:b2:feedback-oscillators:loop}{umpan balik} ditutup --- dan tempat orang menemukan, ketika penguatnya mulai bernyanyi, bahwa ia telah menjadi sebuah osilator.}
+\end{omfigure}
+
+
+\section{Umpan balik dan kemantapan}
+
+\begin{definition}[Simpal tertutup; penguatan simpal]\label{def:b2:feedback-oscillators:loop}
+\index{umpan balik}\index{penguatan simpal}\index{fungsi alih simpal tertutup}
+Sebuah penguat berfungsi alih $\underline A(\jmath\omega)$ menerima
+masukan $\underline e$ ditambah pecahan $\underline\beta(\jmath\omega)\,\underline s$ dari
+keluarannya sendiri $\underline s$ (umpan balik positif; untuk umpan balik negatif ubahlah
+tanda $\beta$). Fungsi alih \emph{simpal tertutup} dan
+\emph{penguatan simpal}nya adalah
+\[
+\underline H = \frac{\underline s}{\underline e} = \frac{\underline A}{1 - \underline A\,\underline\beta} ,
+\qquad \underline T = \underline A\,\underline\beta .
+\]
+\end{definition}
+
+\begin{theorem}[Kemantapan sebuah simpal linear; syarat osilasi]\label{thm:b2:feedback-oscillators:stability}
+\index{kemantapan (sistem linear)}\index{syarat Barkhausen}\index{persamaan ciri}
+Dengan mengganti $\jmath\omega$ dengan peubah kompleks $p$, evolusi bebas
+simpalnya diatur akar \emph{\omterm{thm:b2:feedback-oscillators:stability}{persamaan ciri}}nya
+$1 - \underline A(p)\underline\beta(p) = 0$ (yaitu kutub $\underline H$): tiap akar
+$p_i$ menyumbang ragam $\eu^{p_it}$. Simpalnya \emph{mantap} apabila semua
+akarnya berbagian nyata negatif (tiap ragamnya mati); ia
+\emph{berosilasi}, dengan amplitudo yang tumbuh, apabila sebuah akar berbagian
+nyata positif. Perbatasannya --- sepasang akar murni khayal $\pm\jmath
+\omega_0$, yakni sinusoida yang berkelanjutan --- dicapai ketika
+\[
+\underline A(\jmath\omega_0)\,\underline\beta(\jmath\omega_0) = 1
+\]
+(\emph{\omterm{thm:b2:feedback-oscillators:stability}{syarat Barkhausen}}: \omterm{def:b2:feedback-oscillators:loop}{penguatan simpal} bermodulus satu dan berfase
+nol pada $\omega_0$). Untuk penyebut orde dua $ap^2 + bp + c$
+simpalnya mantap jika dan hanya jika $a$, $b$, $c$ bertanda sama.
+\end{theorem}
+
+\begin{proof}
+Persamaan diferensial simpalnya diperoleh dari $\underline s(1 -
+\underline A\underline\beta) = \underline A\underline e$ dengan membaca tiap pangkat $\jmath\omega$
+sebagai turunan waktu; penyelesaian homogennya adalah $\eu^{p_it}$
+dengan $p_i$ akar polinomialnya. Pertumbuhan atau peluruhannya menyusul dari
+tanda $\operatorname{Re}p_i$; untuk polinomial orde dua akarnya
+berbagian nyata negatif tepat ketika koefisiennya bertanda sama
+(jumlahnya $-b/a$ dan hasil kalinya $c/a$). \omterm{thm:b2:feedback-oscillators:stability}{Syarat Barkhausen}
+adalah keberadaan sebuah akar di $p = \jmath\omega_0$.
+\end{proof}
+
+\begin{remark}[Bagaimana sebuah osilator bermula dan berhenti]\label{rem:b2:feedback-oscillators:start}
+Sebuah osilator dirancang dengan \omterm{def:b2:feedback-oscillators:loop}{penguatan simpal} yang sedikit \emph{lebih besar} daripada
+satu pada $\omega_0$: derau yang hadir saat dinyalakan memuat frekuensi itu,
+yang tumbuh secara eksponensial sementara yang lain mati. Teori linearnya lalu
+meramalkan amplitudo tak hingga; kenyataannya suatu \emph{ketaklinearan} ---
+kejenuhan penguatnya, atau sebuah unsur yang sengaja dibuat tak linear ---
+menurunkan penguatan efektifnya sementara amplitudonya tumbuh, sampai
+\omterm{def:b2:feedback-oscillators:loop}{penguatan simpalnya} rata-rata tepat satu: amplitudonya menetap. Setiap osilator
+yang sungguhan karena itu merupakan simpal linear bagi frekuensinya dan simpal tak linear
+bagi amplitudonya; makin lembut pembatasannya, makin murni
+gelombang sinusnya.
+\end{remark}
+
+\section{Osilator jembatan Wien}
+
+\begin{proposition}[Osilator jembatan Wien]\label{prop:b2:feedback-oscillators:wien}
+\index{osilator jembatan Wien}\index{jaringan Wien}
+Sebuah penguat operasional dalam tatanan tak membalik berpenguatan $K = 1 + R_2/R_1$
+mengumpanbalikkan keluarannya ke masukan $+$-nya lewat \emph{\omterm{prop:b2:feedback-oscillators:wien}{jaringan Wien}}:
+$R$ dan $C$ terseri, lalu $R$ dan $C$ terparalel ke tanah. Fungsi alih
+jaringannya adalah
+\[
+\underline\beta(\jmath\omega) = \frac1{3 + \jmath(RC\omega - 1/RC\omega)} ,
+\]
+nyata dan maksimum ($= 1/3$) pada $\omega_0 = 1/RC$. \omterm{def:b2:feedback-oscillators:loop}{Penguatan simpalnya} $K\underline\beta$
+sama dengan satu pada $\omega_0$ ketika $K = 3$: rangkaiannya lalu melangsungkan
+sebuah sinusoida pada
+\[
+f_0 = \frac1{2\pi RC} .
+\]
+Tegangan $v$ pada masukan $+$-nya menuruti
+\[
+\frac{\dd^2v}{\dd t^2} + \frac{3 - K}{RC}\,\frac{\dd v}{\dd t} + \frac{v}{R^2C^2} = 0 :
+\]
+untuk $K < 3$ osilasinya mati, untuk $K > 3$ ia tumbuh (peredaman
+negatif) dengan tetapan waktu $2RC/(K - 3)$, sampai kejenuhan penguat
+operasionalnya membatasinya.
+\end{proposition}
+
+\begin{proof}
+Pembagi tegangan: cabang serinya $Z_s = R + 1/\jmath C\omega$, cabang
+paralelnya $Z_p = R/(1 + \jmath RC\omega)$; $\underline\beta = Z_p/(Z_s + Z_p)$, yang
+menyederhana menjadi bentuk yang diberikan. Simpalnya: $\underline v = \underline\beta K\underline v$, yakni
+$[3 + \jmath(RC\omega - 1/RC\omega)]\underline v = K\underline v$; kalikanlah dengan $\jmath\omega RC$
+lalu bacalah $\jmath\omega \to \dd/\dd t$: $R^2C^2\ddot v + (3 - K)RC\dot v + v = 0$.
+Koefisien peredamannya berubah tanda pada $K = 3$.
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}[font=\small, x=1cm, y=1cm, >=Stealth, scale=0.9, every node/.style={transform shape}]
+  \begin{scope}
+    \node[draw, thick, minimum width=1.4cm, minimum height=0.8cm] (A) at (0,0) {$\underline A$};
+    \node[draw, thick, minimum width=1.4cm, minimum height=0.8cm] (B) at (0,-1.7) {$\underline\beta$};
+    \draw[thick] (-2.3,0) circle (0.2); \node at (-2.3,0) {$+$};
+    \draw[thick, ->] (-3.2,0) -- (-2.5,0) node[above, pos=0.3, font=\footnotesize] {$\underline e$};
+    \draw[thick, ->] (-2.1,0) -- (A.west);
+    \draw[thick, ->] (A.east) -- (2.0,0) node[above, pos=0.6, font=\footnotesize] {$\underline s$};
+    \draw[thick] (1.4,0) -- (1.4,-1.7) -- (B.east);
+    \draw[thick, ->] (B.west) -- (-2.3,-1.7) -- (-2.3,-0.2);
+    \node[font=\footnotesize] at (-0.3,-2.7) {$\underline H = \dfrac{\underline A}{1 - \underline A\underline\beta}$};
+  \end{scope}
+\end{tikzpicture}
+\hfill
+\begin{tikzpicture}[font=\small, scale=0.78, every node/.style={transform shape}]
+    \draw (0,0) node[op amp, noinv input down] (oa) {};
+    % negative feedback: R2 from output to - input, R1 from - input to ground
+    \coordinate (M) at ($(oa.-)+(-0.7,0)$);
+    \draw (oa.-) -- (M);
+    \draw (M) to[R, l_=$R_1$] ++(-1.6,0) node[ground, rotate=-90]{};
+    \draw (M) -- ++(0,1.4) coordinate (T) to[R, l=$R_2$] (T -| oa.out) -- (oa.out);
+    % Wien network: from output down, series C and R to node P, P to + input; P to ground via R and via C
+    \coordinate (P) at (-3.4,-2.3);
+    \draw (oa.out) -- ++(0.6,0) coordinate (O) -- (O |- P) to[C, l=$C$] ++(-1.6,0) to[R, l=$R$] (P);
+    \draw (P) -- (P |- oa.+) -- (oa.+);
+    \draw (P) to[R, l_=$R$] ++(0,-1.6) node[ground]{};
+    \draw (P) -- ++(-1.1,0) coordinate (Q) to[C, l_=$C$] ++(0,-1.6) node[ground]{};
+    \draw (O) to[short, -o] ++(0.5,0) node[right, font=\footnotesize] {$s$};
+\end{tikzpicture}
+
+{\small Kiri: sebuah simpal \omterm{def:b2:feedback-oscillators:loop}{umpan balik} --- keluarannya diumpanbalikkan, lewat
+$\underline\beta$, ke masukan penguatnya. Kanan: \omterm{prop:b2:feedback-oscillators:wien}{osilator jembatan
+Wien} --- sebuah penguat tak membalik berpenguatan $1 + R_2/R_1$ yang
+keluarannya kembali ke masukan $+$-nya lewat jaringan $RC$
+seri--paralel; ia berosilasi pada $1/2\pi RC$ ketika penguatannya mencapai 3.}
+\end{omfigure}
+
+\begin{example}[Sebuah sumber 1 kHz]\label{ex:b2:feedback-oscillators:wiennumbers}
+$R = \qty{15.9}{k\ohm}$, $C = \qty{10}{nF}$: $f_0 = \qty{1.00}{kHz}$. Dengan $R_1 =
+\qty{10}{k\ohm}$ dan $R_2 = \qty{21}{k\ohm}$, $K = 3.1$: amplitudonya tumbuh sebesar
+$\eu$ tiap $2RC/0.1 = \qty{3.2}{ms}$ dari derau saat dinyalakan, mencapai
+kejenuhan dalam beberapa puluh milisekon; sinus yang terpotong lalu
+kaya harmonik. Mengganti $R_1$ dengan lampu pijar kecil, yang
+hambatannya naik ketika ia menghangat, menarik $K$ turun tepat ke $3$ pada
+amplitudo yang sedang: sebuah gelombang sinus dengan cacat kurang dari $0.1\%$,
+yaitu rangkaian pembangkit sinyal laboratorium yang pertama.
+\end{example}
+
+\section{Pembanding berhisteresis; multivibrator astabil}
+
+\begin{proposition}[Pembanding berhisteresis]\label{prop:b2:feedback-oscillators:schmitt}
+\index{pembanding berhisteresis}\index{pemicu Schmitt}
+Sebuah penguat operasional dengan \omterm{def:b2:feedback-oscillators:loop}{umpan balik} \emph{positif} --- keluarannya disuapkan ke masukan $+$-nya
+lewat pembagi $R_1$, $R_2$ (masukan $+$-nya lalu berada pada $\beta s$ dengan
+$\beta = R_1/(R_1 + R_2)$ ketika sinyal $e$ dikenakan pada masukan $-$-nya)
+--- tak mempunyai rezim linear yang mantap: keluarannya berada pada $+V_{\text{jenuh}}$ atau
+$-V_{\text{jenuh}}$ lalu berjungkit
+\begin{align*}
+&\text{dari } +V_{\text{jenuh}} \text{ ke } -V_{\text{jenuh}} \text{ ketika } e \text{ naik melampaui } +\beta V_{\text{jenuh}} ,\\
+&\text{dari } -V_{\text{jenuh}} \text{ ke } +V_{\text{jenuh}} \text{ ketika } e \text{ turun di bawah } -\beta V_{\text{jenuh}} .
+\end{align*}
+Kedua ambangnya berbeda: \emph{histeresis} $2\beta V_{\text{jenuh}}$ membuat
+pembandingnya kebal terhadap derau yang lebih kecil daripada itu, dan daurnya dalam
+bidang $(e, s)$ adalah persegi panjang yang dilalui searah jarum jam.
+\end{proposition}
+
+\begin{proof}
+Dengan $s = +V_{\text{jenuh}}$ masukan $+$-nya berada pada $+\beta V_{\text{jenuh}}$; keluarannya
+tetap positif selama $e < \beta V_{\text{jenuh}}$, lalu berjungkit ketika $e$ menyeberanginya
+--- sesudah itu masukan $+$-nya berada pada $-\beta V_{\text{jenuh}}$, sehingga $e$ harus
+turun di bawah nilai itu untuk menjungkitkannya kembali. (Dalam rezim linear \omterm{def:b2:feedback-oscillators:loop}{umpan balik}
+positifnya akan membuat setiap simpangan tumbuh: ia tak mantap.)
+\end{proof}
+
+\begin{proposition}[Multivibrator astabil]\label{prop:b2:feedback-oscillators:astable}
+\index{multivibrator astabil}\index{osilator relaksasi}
+Umpankanlah keluaran pembanding berhisteresisnya kembali ke masukan $-$-nya sendiri
+lewat rangkaian $RC$ ($R$ dari $s$ ke masukan $-$-nya, $C$ dari sana
+ke tanah). Kapasitornya mengisi menuju $\pm V_{\text{jenuh}}$ lalu menjungkitkan
+pembandingnya tiap kali ia mencapai sebuah ambang: gelombang persegi pada $s$,
+gelombang nyaris segitiga pada $C$, dengan periode
+\[
+T = 2RC\,\ln\frac{1 + \beta}{1 - \beta} .
+\]
+Untuk $\beta = 1/2$, $T = 2RC\ln3 \approx 2.2RC$. \emph{\omterm{prop:b2:feedback-oscillators:astable}{Osilator relaksasi}}
+semacam itu mendetakkan mikrokontroler, mengedipkan lampu penunjuk dan membangkitkan
+gelombang segitiga dan persegi sebuah pembangkit fungsi.
+\end{proposition}
+
+\begin{proof}
+Dengan $s = +V_{\text{jenuh}}$, tegangan kapasitornya $v_C$ beranjak dari
+$-\beta V_{\text{jenuh}}$ menuju $+V_{\text{jenuh}}$ sebagai $v_C = V_{\text{jenuh}} - (1 + \beta)
+V_{\text{jenuh}}\eu^{-t/RC}$, dan mencapai $+\beta V_{\text{jenuh}}$ sesudah $RC\ln[(1 + \beta)
+/(1 - \beta)]$; pembandingnya berjungkit dan separuh daur setangkupnya menyusul.
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}
+\begin{axis}[omaxis, axis x line=middle, axis y line=middle, width=5.6cm, height=4.6cm,
+    xlabel={$e$}, ylabel={$s$}, xmin=-1.6, xmax=1.6, ymin=-1.5, ymax=1.5,
+    xtick=\empty, ytick=\empty, clip=false]
+  \node[font=\scriptsize, anchor=north] at (axis cs:-0.5,-1.55) {$-\beta V_{\text{jenuh}}$};
+  \node[font=\scriptsize, anchor=north] at (axis cs:0.5,-1.55) {$\beta V_{\text{jenuh}}$};
+  \node[font=\scriptsize, anchor=east] at (axis cs:-1.55,1) {$V_{\text{jenuh}}$};
+  \node[font=\scriptsize, anchor=east] at (axis cs:-1.55,-1) {$-V_{\text{jenuh}}$};
+  \draw[dotted] (axis cs:-0.5,0) -- (axis cs:-0.5,-1.5); \draw[dotted] (axis cs:0.5,0) -- (axis cs:0.5,-1.5);
+  \addplot[omDef, very thick] coordinates {(-1.5,1) (0.5,1)};
+  \addplot[omDef, very thick, ->] coordinates {(0.5,1) (0.5,-1)};
+  \addplot[omDef, very thick] coordinates {(0.5,-1) (-0.5,-1)};
+  \addplot[omDef, very thick, ->] coordinates {(-0.5,-1) (-0.5,1)};
+  \addplot[omDef, very thick] coordinates {(-0.5,-1) (1.5,-1)};
+\end{axis}
+\end{tikzpicture}
+\hfill
+\begin{tikzpicture}
+\begin{axis}[omaxis, axis x line=middle, axis y line=left, width=8.0cm, height=4.6cm,
+    xlabel={$t$}, ylabel={}, xmin=0, xmax=4.4, ymin=-1.4, ymax=1.4, xtick=\empty, ytick={-1,-0.5,0.5,1},
+    yticklabels={$-V_{\text{jenuh}}$, $-\beta V_{\text{jenuh}}$, $\beta V_{\text{jenuh}}$, $V_{\text{jenuh}}$}, tick label style={font=\scriptsize}, samples=60,
+    xlabel style={at={(axis description cs:1.0,0.5)}, anchor=west},
+    legend style={font=\scriptsize, at={(0.5,1.02)}, anchor=south, legend columns=2, draw=none, fill=none}]
+  \addplot[omThm, thick] coordinates {(0,1) (1.1,1) (1.1,-1) (2.2,-1) (2.2,1) (3.3,1) (3.3,-1) (4.4,-1)};
+  \addplot[omDef, thick, domain=0:1.1] {1-1.5*exp(-x)};
+  \addplot[omDef, thick, domain=1.1:2.2] {-1+1.5*exp(-(x-1.1))};
+  \addplot[omDef, thick, domain=2.2:3.3] {1-1.5*exp(-(x-2.2))};
+  \addplot[omDef, thick, domain=3.3:4.4] {-1+1.5*exp(-(x-3.3))};
+  \legend{$s$ (persegi), $v_C$}
+\end{axis}
+\end{tikzpicture}
+
+{\small Kiri: daur sebuah \omterm{prop:b2:feedback-oscillators:schmitt}{pembanding berhisteresis} --- dua ambang,
+sebuah persegi panjang yang dilalui searah jarum jam. Kanan: \omterm{prop:b2:feedback-oscillators:astable}{multivibrator astabil} ---
+tegangan kapasitornya ulang-alik di antara kedua ambangnya dan keluarannya
+adalah gelombang persegi.}
+\end{omfigure}
+
+\section{Mencuplik sebuah sinyal}
+
+\begin{theorem}[Pencuplikan; kriteria Nyquist--Shannon]\label{thm:b2:feedback-oscillators:shannon}
+\index{pencuplikan}\index{kriteria Nyquist--Shannon}\index{pengaliasan}\index{tapis anti-alias}
+Sebuah sinyal \emph{dicuplik} apabila hanya nilainya $s(nT_s)$ pada
+saat $nT_s$ yang disimpan, dengan $f_s = 1/T_s$ yaitu \emph{laju cuplik}nya.
+Spektrum sinyal tercuplik adalah spektrum $s$ yang berulang
+di sekitar tiap kelipatan $f_s$. Sinyal yang spektrumnya terkurung
+di bawah $f_{\max}$ dapat dibangun ulang secara eksak dari cuplikannya jika dan
+hanya jika
+\[
+f_s > 2f_{\max} ;
+\]
+pada hal lainnya salinannya bertindihan dan komponen pada $f > f_s/2$ muncul kembali
+pada frekuensi \emph{alias} $|f - nf_s|$ (untuk bilangan bulat $n$ yang
+membawanya ke bawah $f_s/2$), tak terbedakan dari komponen berfrekuensi rendah
+yang sejati. Dari situlah \emph{\omterm{thm:b2:feedback-oscillators:shannon}{tapis anti-alias}} yang dipasang di depan setiap
+pencuplik: sebuah tapis lolos-rendah yang membuang segalanya di atas $f_s/2$.
+\end{theorem}
+
+\begin{proof}
+Mencuplik berarti mengalikan $s(t)$ dengan rentetan pulsa sempit berkala
+berperiode $T_s$, yang deret Fouriernya memuat semua harmonik $nf_s$
+(jilid matematika tahun ini); mengalikan $s$ dengan $\cos(2\pi nf_st)$
+menggeser spektrumnya sebesar $\pm nf_s$ --- dari situlah salinannya. Keduanya tidak
+bertindihan jika dan hanya jika $f_{\max} < f_s - f_{\max}$; sebuah tapis lolos-rendah berambang $f_s/2$ lalu
+memulihkan spektrum aslinya secara eksak (diterima tanpa bukti). Pengaliasan: cuplikan
+$\cos(2\pi ft)$ dan cuplikan $\cos(2\pi(f - nf_s)t)$ pada $t = mT_s$
+berimpit, sebab $2\pi nf_smT_s = 2\pi nm$.
+\end{proof}
+
+\begin{example}[Roda pedati, cakram padat dan osiloskop]\label{ex:b2:feedback-oscillators:alias}
+Sebuah film pada $24$ citra tiap sekon mencuplik dunianya pada \qty{24}{Hz}: sebuah
+roda berjeruji $12$ yang berputar $2.1$ putaran tiap sekon menyajikan sebuah jeruji
+$25.2$ kali tiap sekon, $1.2$ di luar $f_s$ --- ia tampak berputar perlahan
+maju, dan mundur $1.9$ putaran tiap sekon. Sebuah cakram padat mencuplik
+pada \qty{44.1}{kHz} untuk memperdengarkan bunyi sampai \qty{20}{kHz}, dengan
+\omterm{thm:b2:feedback-oscillators:shannon}{tapis anti-alias} yang curam antara $20$ dan \qty{22}{kHz}. Sebuah osiloskop digital
+yang diatur pada \qty{1}{MS/s} menampilkan sinus \qty{999}{kHz} sebagai sinus \qty{1}{kHz} ---
+jebakan pertama pengukuran digital.
+\end{example}
+
+\begin{omfigure}
+\begin{tikzpicture}
+\begin{axis}[omaxis, axis x line=middle, axis y line=none, width=13.6cm, height=4.0cm,
+    xmin=0, xmax=10, ymin=-1.4, ymax=1.5, xtick=\empty, samples=400, xlabel={$t$},
+    xlabel style={at={(axis description cs:1.0,0.5)}, anchor=west},
+    legend style={font=\scriptsize, at={(0.5,1.02)}, anchor=south, legend columns=3, draw=none, fill=none}]
+  \addplot[omDef, thick, domain=0:10] {cos(deg(2*pi*0.9*x))};
+  \addplot[omThm, thick, dashed, domain=0:10] {cos(deg(2*pi*0.1*x))};
+  \addplot[only marks, mark=*, mark size=1.6pt, black, samples=11, domain=0:10] {cos(deg(2*pi*0.9*x))};
+  \legend{$f = 0.9f_s$, alias di $0.1f_s$, cuplikan}
+\end{axis}
+\end{tikzpicture}
+
+{\small Pengaliasan: sebuah sinusoida pada $0.9f_s$ dan satu lagi pada $0.1f_s$ melewati
+cuplikan yang sama; sekali tercuplik, keduanya tak dapat dibedakan --- dari situlah
+kriteria $f_s > 2f_{\max}$.}
+\end{omfigure}
+
+\begin{remark}[Kuantisasi]\label{rem:b2:feedback-oscillators:quantization}
+\index{kuantisasi}\index{pengubah analog ke digital}
+\omterm{rem:b2:feedback-oscillators:quantization}{Pengubah analog ke digitalnya} juga membulatkan tiap cuplikan ke salah satu dari
+$2^N$ tingkat ($N$ bit): galat pembulatannya, paling banyak separuh langkah, bertindak
+sebagai derau bernilai rms $\Delta/\sqrt{12}$ bagi langkah $\Delta$, dan
+jangkauan dinamiknya (sinus terbesar terhadap derau itu) sekitar $6N + 2$ dB ---
+\qty{98}{dB} bagi $16$ bit sebuah cakram padat, \qty{74}{dB} bagi osiloskop
+$12$ bit. Laju cuplik dan resolusi adalah dua bilangan pada
+label setiap pendigit.
+\end{remark}
+
+\section{Deteksi serentak}
+
+\begin{proposition}[Deteksi serentak]\label{prop:b2:feedback-oscillators:lockin}
+\index{deteksi serentak}\index{penguat serentak}\index{demodulasi}
+Sebuah sinyal berfrekuensi diketahui, $s(t) = A\cos(\omega_0t + \varphi)$, yang terkubur dalam
+derau $n(t)$ beramplitudo jauh lebih besar yang tersebar pada pita lebar,
+dikalikan dengan acuan $r(t) = \cos\omega_0t$ berfrekuensi sama
+lalu dilewatkan tapis lolos-rendah berambang $f_c \ll f_0$:
+\[
+s(t)r(t) = \tfrac12A\cos\varphi + \tfrac12A\cos(2\omega_0t + \varphi)
+\ \xrightarrow{\ \text{lolos-rendah}\ }\ \tfrac12A\cos\varphi .
+\]
+Keluarannya adalah tegangan searah yang sebanding dengan amplitudo sinyalnya (dan
+dengan kosinus fasenya relatif terhadap acuannya), sementara deraunya
+menyusut menjadi bagian spektrumnya yang terletak dalam $\pm f_c$ dari $f_0$
+--- yaitu lebar pita $2f_c$ yang dapat dibuat sesempit apa pun (sepersekian
+hertz bagi tapis bertetapan waktu beberapa sekon). Komponen pada frekuensi
+$f$ yang lain tergeser ke $f \pm f_0$ lalu ditolak tapisnya.
+\end{proposition}
+
+\begin{proof}
+$\cos a\cos b = \tfrac12[\cos(a - b) + \cos(a + b)]$; tapisnya menyimpan suku
+selisihnya bagi sinyalnya, sedangkan suku $2\omega_0$ dan setiap komponen derau
+pada $f$ tergeser ke $|f - f_0|$ dan $f + f_0$ --- hanya
+derau yang semula berada dalam $f_c$ dari $f_0$ yang mendarat di bawah $f_c$.
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}[font=\small, x=1cm, y=1cm, >=Stealth]
+  \node[draw, thick, minimum width=1.5cm, minimum height=0.8cm] (S) at (0,0) {sensor};
+  \node[draw, thick, circle, minimum size=0.7cm] (M) at (2.6,0) {$\times$};
+  \node[draw, thick, minimum width=1.6cm, minimum height=0.8cm] (F) at (5.0,0) {lolos-rendah};
+  \node[draw, thick, minimum width=1.7cm, minimum height=0.8cm] (R) at (2.6,-1.9) {acuan $\omega_0$};
+  \draw[thick, ->] (S) -- (M) node[above, pos=0.5, font=\footnotesize] {$s + n$};
+  \draw[thick, ->] (M) -- (F);
+  \draw[thick, ->] (F) -- (7.0,0) node[right, font=\footnotesize] {$\tfrac12A\cos\varphi$};
+  \draw[thick, ->] (R) -- (M);
+  \draw[thick, ->] (R.west) -- (-0.2,-1.9) -- (-0.2,-0.5) node[left, font=\footnotesize, pos=0.5] {memodulasi};
+\end{tikzpicture}
+\hfill
+\begin{tikzpicture}
+\begin{axis}[omaxis, axis x line=bottom, axis y line=left, width=5.6cm, height=4.0cm,
+    xlabel={$f$}, ylabel={}, xmin=0, xmax=3, ymin=0, ymax=1.3, xtick={1,2}, xticklabels={$f_0$, $2f_0$}, ytick=\empty, samples=200,
+    xlabel style={at={(axis description cs:1.0,0.0)}, anchor=west}]
+  \addplot[omExo!60, thick, domain=0:3] {0.35+0.1*sin(deg(11*x))+0.08*cos(deg(23*x))};
+  \addplot[omThm, very thick] coordinates {(1,0) (1,1.1)};
+  \addplot[omDef, thick, fill=omDef!30, domain=0.9:1.1] {1.2} \closedcycle;
+  \node[font=\scriptsize, omDef, anchor=west] at (axis cs:1.15,1.15) {disimpan};
+  \node[font=\scriptsize] at (axis cs:2.2,0.6) {derau};
+\end{axis}
+\end{tikzpicture}
+
+{\small \omterm{prop:b2:feedback-oscillators:lockin}{Deteksi serentak}: keluaran sensornya, yaitu sinyal ditambah derau
+lebar, dikalikan dengan acuan berfrekuensi sinyalnya sendiri lalu
+ditapis lolos-rendah; hanya derau dalam pita sempit di sekitar $f_0$
+(yang diarsir) yang bertahan, dan sinyalnya keluar sebagai taraf searah.}
+\end{omfigure}
+
+\begin{example}[Menemukan satu mikrovolt]\label{ex:b2:feedback-oscillators:microvolt}
+Sebuah fotodioda menyerahkan sinyal \qty{10}{\micro V} ketika cahayanya dipenggal
+pada \qty{1}{kHz}, di atas derau putih \qty{50}{nV/\sqrt{Hz}} sepanjang
+\qty{100}{kHz} (\qty{16}{\micro V} rms: lebih besar daripada sinyalnya). Sesudah \omterm{prop:b2:feedback-oscillators:lockin}{deteksi
+serentak} dengan tapis bertetapan waktu $\tau = \qty{1}{s}$ (lebar pita
+derau $1/4\tau = \qty{0.25}{Hz}$) deraunya menjadi $50\,\text{nV} \times \sqrt{0.25}
+= \qty{25}{nV}$: nisbah sinyal terhadap derau sebesar $400$ --- dengan harga
+menunggu beberapa sekon tiap titik. Muslihat yang sama, dengan nama
+\emph{demodulasi}, memulihkan musik dari pembawa radio bermodulasi amplitudo dan
+data dari sebuah modem.
+\end{example}
+
+\begin{method}[Merancang sebuah rantai pengukuran]\label{met:b2:feedback-oscillators:method}
+(1) Modulasikanlah besaran yang hendak diukur pada frekuensi $f_0$ yang jauh dari
+deraunya (pemenggal, jembatan bolak-balik). (2) Kuatkanlah dengan lebar pita yang meliputi
+$f_0$. (3) Deteksilah secara serentak dengan tapis yang tetapan waktunya
+paling panjang yang mampu ditanggung pengukurannya: deraunya turun sebagai
+$1/\sqrt\tau$. (4) Cupliklah keluarannya yang lambat pada laju di atas dua kali lebar
+pitanya, sesudah sebuah \omterm{thm:b2:feedback-oscillators:shannon}{tapis anti-alias}, dengan bit yang cukup bagi
+resolusi yang dituntut. (5) Periksalah rantainya dengan sinyal yang diketahui, dan periksalah bahwa
+tak ada bagiannya yang berosilasi: setiap penguat berumpan balik adalah osilator
+yang berpotensi.
+\end{method}
+
+\section{Latihan}
+
+\begin{exercise}[$\star$]\label{exo:b2:feedback-oscillators:1}
+Sebuah \omterm{prop:b2:feedback-oscillators:wien}{osilator jembatan Wien} dengan $R = \qty{10}{k\ohm}$, $C = \qty{10}{nF}$:
+tentukanlah frekuensinya; penguatan yang diperlukan; nilai $R_1$, $R_2$ bagi $K = 3.05$ dengan $R_1 =
+\qty{10}{k\ohm}$; tetapan waktu pertumbuhan amplitudonya. Komponen mana yang
+menetapkan frekuensinya, mana yang menetapkan penyalaannya?
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b2:feedback-oscillators:2}
+\omterm{prop:b2:feedback-oscillators:schmitt}{Pembanding berhisteresis} dengan $V_{\text{jenuh}} = \qty{\pm 13}{V}$, $R_1 = \qty{1.0}{k\ohm}$,
+$R_2 = \qty{4.0}{k\ohm}$: tentukanlah ambangnya dan lebar histeresisnya. Sebuah sinyal berderau
+yang menyeberangi nol dengan derau \qty{2}{V}: berapa kali keluarannya
+berjungkit tiap penyeberangan, dengan dan tanpa histeresis?
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b2:feedback-oscillators:3}
+\omterm{prop:b2:feedback-oscillators:astable}{Multivibrator astabil} dengan $R = \qty{10}{k\ohm}$, $C = \qty{100}{nF}$, $\beta = 0.5$:
+tentukanlah periode dan frekuensinya; $R$ bagi \qty{1.0}{kHz}; amplitudo gelombang
+segitiga pada kapasitornya; apa yang terjadi pada $T$ jika $\beta$ dinaikkan menjadi $0.9$?
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b2:feedback-oscillators:4}
+(a) Sebuah cakram padat mencuplik pada \qty{44.1}{kHz}: frekuensi maksimum yang diperdengarkan. (b) Sebuah
+ultrasonik \qty{30}{kHz} bocor ke dalam rekamannya: pada frekuensi berapa
+ia muncul? (c) Sebuah roda berjeruji $8$ yang difilmkan pada \qty{25}{citra/s} berputar
+$3.2$ putaran/s: gerak semunya. (d) Sebuah osiloskop pada \qty{10}{MS/s}
+memperlihatkan sinus \qty{100}{kHz} yang bersih; sinyal sejatinya dapat berupa frekuensi
+lain yang mana saja?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b2:feedback-oscillators:5}
+Simpal dengan polinomial ciri (a) $p^2 + 3p + 2$, (b) $p^2 - p +
+4$, (c) $p^2 + 4$, (d) $p^3 + 2p^2 + 2p + 1$, (e) $p^3 + p + 1$: carilah atau
+bahaslah akarnya; simpal mana yang mantap, mana yang berosilasi, mana yang tumbuh?
+(Bagi yang kubik, bernalarlah pada tanda bagian nyatanya: misalnya tunjukkanlah (e)
+mempunyai satu akar nyata negatif dan dua akar kompleks berbagian nyata
+positif, dengan memakai hasil kali dan jumlah akarnya.)
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b2:feedback-oscillators:6}
+\emph{\omterm{prop:b2:feedback-oscillators:wien}{Jaringan Wien}.} (a) Turunkanlah $\underline\beta(\jmath\omega)$ dari pembaginya.
+(b) Sketsalah modulus dan fasenya; tunjukkanlah bahwa fasenya nol hanya pada
+$\omega_0$ dan bahwa modulusnya lalu $1/3$. (c) Tuliskanlah persamaan
+diferensial simpalnya bagi penguatan $K$ lalu bahaslah $K < 3$, $K = 3$, $K > 3$.
+(d) Dengan $K = 3.2$, mulai dari derau \qty{1}{mV}, berapa lama sampai
+amplitudonya mencapai \qty{10}{V}? Mengapa amplitudo akhirnya tidak bergantung pada
+derau awalnya?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b2:feedback-oscillators:7}
+\emph{Pembangkit segitiga.} Sebuah pengintegral (penguat operasional, $R$, $C$) disuapi
+keluaran persegi $\pm V_{\text{jenuh}}$ sebuah \omterm{prop:b2:feedback-oscillators:schmitt}{pembanding berhisteresis} yang masukannya
+adalah keluaran pengintegralnya; ambang pembandingnya adalah
+$\pm V_{\text{jenuh}}R_1/R_2$. (a) Tunjukkanlah bahwa keluaran pengintegralnya sebuah segitiga;
+kemiringannya. (b) Periodenya $T = 4RCR_1/R_2$. (c) Angka: $R = \qty{10}{k\ohm}$,
+$C = \qty{10}{nF}$, $R_1/R_2 = 0.5$. (d) Keunggulannya atas astabil yang sederhana
+bagi sebuah pembangkit fungsi.
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b2:feedback-oscillators:8}
+Kuantisasi. (a) Sebuah pengubah $16$ bit pada $\pm\qty{1}{V}$: langkahnya, derau
+kuantisasi rms-nya, jangkauan dinamiknya dalam dB. (b) $12$ bit pada
+\qty{1}{MS/s}: laju bitnya; hal yang sama bagi $8$ bit pada \qty{1}{GS/s} (sebuah osiloskop
+cepat). (c) Sebuah sinyal \qty{1}{mV} pada pengubah $16$ bitnya: berapa
+langkah? Apa yang harus dilakukan sebelum pengubahnya? (d) Mengapa sistem audio
+yang baik menambahkan sedikit derau sebelum mengkuantisasi?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b2:feedback-oscillators:9}
+Sebuah sinyal memuat komponen \qty{1.0}{kHz} dan \qty{9.0}{kHz} lalu
+dicuplik pada \qty{10}{kS/s}. (a) Di manakah masing-masingnya muncul? (b) Sebuah
+\omterm{thm:b2:feedback-oscillators:shannon}{tapis anti-alias} $RC$ orde pertama dengan $f_c = \qty{2}{kHz}$ ditambahkan:
+\omterm{def:b2:dispersion-wave-packets:complex}{pelemahannya} pada \qty{9}{kHz} dalam dB; cukupkah jika \qty{40}{dB} yang diinginkan? (c)
+Orde tapis yang diperlukan (\omterm{def:b2:dispersion-wave-packets:complex}{pelemahannya} $\approx 20n$ dB tiap dekade); atau,
+sebagai alternatif, laju cuplik yang diperlukan dengan tapis orde pertamanya. (d)
+Mengapa pengubah modern mencuplik berlebih lalu menapis secara digital?
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b2:feedback-oscillators:10}
+\emph{\omterm{prop:b2:feedback-oscillators:lockin}{Deteksi serentak}.} Masukan $A\cos(\omega_0t + \varphi) + n(t)$ dikalikan dengan $\cos\omega_0t$
+lalu ditapis tapis lolos-rendah orde pertama bertetapan waktu $\tau$. (a) Keluaran
+searahnya. (b) Tunjukkanlah bahwa komponen derau pada $f = f_0 + \delta f$ memberi, sesudah
+tapisnya, amplitudo yang berkurang dengan faktor $1/\sqrt{1 + (2\pi\delta f\tau)^2}$;
+simpulkanlah lebar pita derau setaranya $B = 1/4\tau$ (terimalah $\int_0^\infty
+\dd x/(1 + x^2) = \pi/2$). (c) Sebuah sinyal \qty{1}{\micro V} dalam \qty{1}{mV} rms
+derau putih sepanjang \qty{10}{kHz}: rapat deraunya; $\tau$ bagi nisbah sinyal
+terhadap derau sebesar $10$; waktu pengukurannya. (d) Sebuah bocoran \qty{50}{Hz} sebesar \qty{1}{mV}
+mencemari masukannya, dengan $f_0 = \qty{1}{kHz}$: ke mana ia pergi, dan
+seberapa besar ia dilemahkan untuk $\tau = \qty{1}{s}$?
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b2:feedback-oscillators:11}
+\emph{Kuarsa.} Sebuah kristal kuarsa berperilaku, dekat resonansinya, sebagai
+cabang seri $L$, $C$, $r$ ($L = \qty{8000}{H}$, $C = \qty{3.0}{fF}$, $r =
+\qty{30}{k\ohm}$) yang terparalel dengan $C_0 = \qty{1.5}{pF}$. (a) Frekuensi resonansi
+serinya dan faktor kualitasnya $Q = L\omega_0/r$. (b) Mengapa osilator
+yang dibangun di sekelilingnya menahan frekuensinya sampai satu bagian dalam $10^6$ sementara jembatan
+Wiennya menyimpang berpersen-persen (pikirkanlah kemiringan fase $\dd\varphi/\dd\omega$
+jaringan \omterm{def:b2:feedback-oscillators:loop}{umpan baliknya} dekat resonansi, $\sim 2Q/\omega_0$)? (c) Sebuah kristal jam
+pada \qty{32768}{Hz} dibagi $2^{15}$: hasilnya; frekuensinya
+berubah sebagai $-0.04\,\text{ppm}\,(T - \qty{25}{\degreeCelsius})^2$: galatnya tiap
+bulan pada \qty{5}{\degreeCelsius}. (d) Mengapa \qty{32768}{Hz} yang dipilih dan bukan
+\qty{1}{MHz}?
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b2:feedback-oscillators:12}
+\emph{Hambatan negatif.} Sebuah penguat operasional mempunyai $R_2$ dari keluarannya ke masukan
+$-$-nya, $R_1$ dari masukan $-$-nya ke tanah, dan $R$ dari keluarannya ke masukan $+$-nya;
+dwikutub yang terlihat antara masukan $+$-nya dan tanah itulah yang dikaji (rezim
+linear). (a) Tunjukkanlah bahwa ia berperilaku sebagai hambatan $-RR_1/R_2$. (b) Dwikutub
+ini disambungkan melintasi rangkaian $LC$ paralel yang hambatan ruginya
+$R_p$ (terparalel): tuliskanlah persamaan tegangannya lalu carilah
+syarat osilasi yang berkelanjutan beserta frekuensinya. (c) Angka: $L
+= \qty{10}{mH}$, $C = \qty{100}{nF}$, $R_p = \qty{50}{k\ohm}$; pilihlah $R$, $R_1 =
+R_2$. (d) Apa yang membatasi amplitudonya, dan bagaimana osilator ini
+dibandingkan dengan jembatan Wien?
+\end{exercise}
+
+\section{Soal: Sebuah rantai pengukuran serentak}
+
+\begin{problem}[{Soal akhir pekan --- dari osilator acuannya sampai hasil
+yang terdigitalkan: mengukur sepuluh mikrovolt sinyal cahaya di bawah
+satu milivolt derau}]
+\label{pb:b2:feedback-oscillators:1}
+
+Sebuah cahaya samar hendak diukur dengan sebuah fotodioda. Cahayanya dipenggal
+oleh roda berputar pada $f_0 = \qty{1.00}{kHz}$, sehingga keluaran
+fotodiodanya berupa sinusoida beramplitudo $A = \qty{10}{\micro V}$ pada $f_0$ (sesudah
+penguat pertama), yang di atasnya menumpang derau putih berkerapatan spektral
+$e_n = \qty{50}{nV/\sqrt{Hz}}$ sepanjang lebar pita \qty{100}{kHz}, ditambah
+bocoran jala-jala \qty{50}{Hz} sebesar \qty{1.0}{mV}. Frekuensi pemenggalnya sendiri
+ditetapkan sebuah \omterm{prop:b2:feedback-oscillators:wien}{osilator jembatan Wien}.
+
+\medskip
+\noindent\textbf{Bagian I --- Osilator acuan.}
+Jembatan Wien dengan $C = \qty{10}{nF}$, penguat operasional yang menjenuh pada $\pm\qty{12}{V}$.
+\begin{enumerate}
+  \item $R$ bagi $f_0 = \qty{1.00}{kHz}$.
+  \item Turunkanlah fungsi alih \omterm{prop:b2:feedback-oscillators:wien}{jaringan Wiennya} lalu periksalah
+        bahwa fasenya lenyap pada $f_0$ dengan modulus $1/3$.
+  \item Tuliskanlah persamaan diferensial simpalnya bagi penguatan $K$; untuk
+        $K = 3.15$, waktu bagi amplitudonya untuk tumbuh dengan faktor $1000$.
+  \item Amplitudonya akhirnya dibatasi kejenuhan: lukiskanlah
+        bentuk gelombangnya, dan mengapa harmoniknya penting bagi sebuah acuan.
+  \item Sebuah termistor menggantikan $R_1$ (hambatannya turun ketika ia
+        menghangat) atau sebuah lampu (naik): yang mana yang memantapkan penguatannya pada 3,
+        dan bagaimana?
+  \item Kapasitornya menyimpang $+1\%$ karena suhu: frekuensi barunya.
+        Mengapa pemenggalnya lalu tetap bekerja bagi pengukurannya (apa
+        yang harus dilakukan acuannya)?
+  \item \omterm{prop:b2:feedback-oscillators:wien}{Jaringan Wiennya} mempunyai faktor kualitas sekitar $1/3$: apa
+        siratnya bagi kemurnian frekuensinya dibandingkan dengan
+        kuarsa ($Q \sim 10^5$)?
+\end{enumerate}
+
+\medskip
+\noindent\textbf{Bagian II --- Sinyal dan derau.}
+\begin{enumerate}[resume]
+  \item Nilai rms derau putihnya sepanjang seluruh \qty{100}{kHz};
+        nisbah sinyal terhadap derau pada keluaran penguatnya.
+  \item Sebuah tapis lolos-pita berfaktor kualitas $Q = 10$ yang berpusat pada $f_0$
+        (lebar pita derau $\approx f_0/Q$) disisipkan: rms derau dan SNR-nya.
+        Mengapa ini belum memadai bagi pengukuran yang teliti (pikirkanlah
+        simpangan dan \qty{50}{Hz}-nya)?
+  \item Mengapa cahayanya dipenggal pada \qty{1}{kHz} alih-alih mengukur arus
+        foto searahnya secara langsung? (Penguat mempunyai derau ``$1/f$'' yang naik
+        di bawah beberapa ratus hertz.)
+  \item Amplitudo sinyalnya jika roda pemenggalnya menghasilkan modulasi
+        persegi alih-alih sinus: harmonik mana yang disimpan \omterm{prop:b2:feedback-oscillators:lockin}{deteksi
+        serentaknya}, dan dengan amplitudo berapa (koefisien Fourier $4/\pi$ bagi
+        nada dasar sebuah gelombang persegi beramplitudo satuan)?
+  \item Fotodiodanya juga menerima cahaya ruangan pada \qty{100}{Hz}
+        (lampu neon): apa yang dilakukan rantainya terhadapnya?
+\end{enumerate}
+
+\medskip
+\noindent\textbf{Bagian III --- \omterm{prop:b2:feedback-oscillators:lockin}{Deteksi serentak}.}
+Sinyal yang telah dikuatkan dikalikan dengan acuan $\cos(2\pi f_0t)$
+lalu ditapis tapis lolos-rendah orde pertama bertetapan waktu $\tau$.
+\begin{enumerate}[resume]
+  \item Keluaran pengalinya bagi sinyalnya sendirian (fase $\varphi$
+        antara sinyal dan acuannya); suku searahnya.
+  \item \omterm{def:b2:dispersion-wave-packets:complex}{Pelemahan} suku $2f_0$ oleh tapisnya untuk $\tau = \qty{1}{s}$
+        (dalam dB).
+  \item Lebar pita derau setaranya $1/4\tau$; rms derau pada keluarannya
+        untuk $\tau = \qty{1}{s}$ dan SNR-nya; hal yang sama untuk $\tau = \qty{10}{s}$.
+  \item Ke mana bocoran \qty{50}{Hz}-nya berakhir, dan dengan
+        \omterm{def:b2:dispersion-wave-packets:complex}{pelemahan} berapa untuk $\tau = \qty{1}{s}$?
+  \item Fase $\varphi$-nya tak diketahui: apa yang hilang jika $\varphi = \qty{60}{\degree}$?
+        Lukiskanlah detektor serentak dua kanal (sefase dan kuadratur) serta
+        bagaimana ia memulihkan $A$ berapa pun $\varphi$-nya.
+  \item Waktu tanggap pengukurannya (waktu untuk mencapai $99\%$ nilai
+        akhirnya) untuk $\tau = \qty{1}{s}$; imbal balik yang dinyatakannya.
+  \item Acuannya menyimpang ke \qty{1001}{Hz} sementara pemenggalnya tetap pada
+        \qty{1000}{Hz}: keluaran detektor serentaknya; mengapa acuannya harus
+        diambil dari pemenggalnya sendiri.
+\end{enumerate}
+
+\medskip
+\noindent\textbf{Bagian IV --- Mendigitalkan.}
+\begin{enumerate}[resume]
+  \item Keluaran detektor serentaknya dicuplik komputer: laju minimum bagi
+        $\tau = \qty{1}{s}$ (ambillah lebar pita keluarannya sebagai $1/2\pi\tau$); sebuah
+        pilihan yang nyaman.
+  \item Sebagai alternatif sinyal mentah \qty{1}{kHz}-nya didigitalkan lalu
+        deteksinya dikerjakan dalam perangkat lunak: laju cuplik minimum; deraunya
+        membentang sampai \qty{100}{kHz} --- apa yang harus dilakukan sebelum mencuplik,
+        dan \omterm{def:b2:dispersion-wave-packets:complex}{pelemahan} berapa pada \qty{100}{kHz} yang diberikan pencuplikan pada
+        \qty{20}{kS/s} dengan tapis orde empat yang dipotong pada \qty{5}{kHz}
+        (\qty{80}{dB} tiap dekade)?
+  \item Sebuah pengubah $16$ bit pada $\pm\qty{1}{V}$: langkahnya; sinyal \qty{10}{\micro V}
+        yang dikuatkan $1000$ kali: berapa langkah, dan apakah deraunya
+        menolong atau merugikan?
+  \item Detektor serentak digital: komputernya mengalikan tiap cuplikan dengan
+        $\cos(2\pi f_0nT_s)$ lalu merata-ratakan $N$ cuplikan. Pada \qty{20}{kS/s},
+        berapa $N$ bagi rerata \qty{1}{s}; dengan faktor berapa derau putihnya
+        berkurang, dan samakah itu dengan tapis analognya?
+  \item Sebuah sinyal \qty{1}{kHz} yang dicuplik pada \qty{999}{S/s}: apa yang dilihat
+        komputernya? Bagaimana ini berkaitan dengan asas detektor
+        serentaknya sendiri?
+  \item Rangkumlah rantainya dalam sebuah tabel: tiap tahapnya, apa yang dilakukannya pada
+        sinyalnya, apa yang dilakukannya pada deraunya.
+\end{enumerate}
+\end{problem}

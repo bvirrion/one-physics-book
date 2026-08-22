@@ -1,0 +1,600 @@
+\chapter{Condução do calor}\label{ch:b2:heat-conduction}
+
+Toque num trilho de metal e num banco de madeira na mesma manhã fria: o
+trilho parece mais frio, embora um termômetro dê a ambos a mesma
+temperatura. Ponha uma panela no fogão e seu cabo esquenta só depois de um
+tempo; cave dois metros no verão e o solo ainda estará frio do
+inverno; um processador que dissipa cem watts num centímetro
+quadrado não derrete porque um bloco de alumínio com aletas está sobre
+ele. Tudo isso é \emph{condução do calor}, o transporte de energia
+interna através da matéria pela agitação de suas moléculas, sem nenhum
+escoamento de matéria --- e tudo isso obedece a uma lei, a de Fourier, e a uma
+equação, a equação do calor, que é a \omterm{thm:b2:particle-diffusion:equation}{equação de difusão} do
+capítulo anterior com a temperatura no lugar da densidade. Este capítulo monta
+a lei e a equação a partir de um balanço de energia, resolve-as nos
+casos que importam (paredes estacionárias e suas \omterm{prop:b2:heat-conduction:resistance}{resistências térmicas},
+aquecimento periódico e a onda térmica, aletas de resfriamento), introduz a
+troca com um fluido (a lei de Newton e o \omterm{def:b2:heat-conduction:biot}{número de Biot}) e calcula
+a entropia que a condução cria --- pois o calor só flui ladeira abaixo.
+
+\begin{omfigure}
+\includegraphics[width=0.58\linewidth]{images/book4/ai/b4-25-cpu-heat-sink.png}
+
+{\small Um dissipador com aletas sobre um processador: cem watts conduzidos
+para fora de um centímetro quadrado de silício, espalhados por uma base metálica
+e entregues ao ar por aletas que multiplicam a superfície trinta vezes.}
+\end{omfigure}
+
+\section{A lei de Fourier}
+
+\begin{definition}[Densidade de corrente de calor]\label{def:b2:heat-conduction:flux}
+A \emph{densidade de corrente de calor}\index{densidade de corrente de calor}
+$\vect{j}_Q$ (em \unit{W/m^2}) é o vetor tal que a energia
+transferida por condução através de um elemento de superfície orientado
+$\dd\vect S$ durante $\dd t$ vale $\vect{j}_Q\cdot\dd\vect S\,\dd t$; o
+\emph{fluxo térmico}\index{fluxo térmico} (uma potência, em watts) através de uma
+superfície $S$ é $\Phi = \iint_S\vect{j}_Q\cdot\dd\vect S$.
+\end{definition}
+
+\begin{theorem}[Lei de Fourier]\label{thm:b2:heat-conduction:fourier}
+Num meio em repouso cuja temperatura não é uniforme,
+\[
+\vect{j}_Q = -\lambda\,\vect{\operatorname{grad}}\,T ,
+\]
+onde a \emph{condutividade térmica}\index{condutividade térmica}
+$\lambda > 0$ (em \unit{W/m/K}) depende do material e, fracamente, da
+temperatura. O calor desce o \omterm{def:b2:maxwell-equations:operators}{gradiente} de temperatura, do quente para o
+frio --- a segunda lei embutida numa lei linear.
+\end{theorem}
+
+\begin{proof}
+Fenomenológica, como a lei de Fick, e com a mesma justificativa
+microscópica: as moléculas (ou os elétrons livres de um metal, ou as
+vibrações da rede) carregam sua energia num passeio aleatório, e mais
+dela vem do lado quente.
+\end{proof}
+
+\begin{example}[Condutividades]\label{ex:b2:heat-conduction:values}
+Metais (os elétrons carregam o calor tanto quanto a corrente ---
+as condutividades acompanham uma à outra): cobre \qty{400}{W/m/K}, alumínio
+\qty{240}{W/m/K}, aço \qty{50}{W/m/K}. Sólidos isolantes: concreto
+\qty{1.5}{W/m/K}, vidro \qty{1}{W/m/K}, tijolo \qty{0.8}{W/m/K}, madeira
+\qty{0.15}{W/m/K}. Líquidos: água \qty{0.6}{W/m/K}. Gases: ar
+\qty{0.026}{W/m/K} --- e os melhores isolantes, lã de vidro ou espuma a
+\qty{0.04}{W/m/K}, são em sua maior parte ar parado, aprisionado para que não
+possa convectar. Quatro ordens de grandeza do cobre ao ar.
+\end{example}
+
+\section{O balanço de energia e a equação do calor}
+
+\begin{theorem}[Balanço local de energia]\label{thm:b2:heat-conduction:balance}
+Num sólido (ou num fluido em repouso) de massa volúmica $\rho$ e calor específico
+$c$, com uma potência $p$ liberada por unidade de volume (efeito Joule, uma
+reação química ou nuclear, radiação absorvida),
+\[
+\rho c\,\frac{\partial T}{\partial t} = -\operatorname{div}\vect{j}_Q + p ,
+\qquad\text{em uma dimensão}\quad
+\rho c\,\frac{\partial T}{\partial t} = -\frac{\partial j_Q}{\partial x} + p .
+\]
+\end{theorem}
+
+\begin{proof}
+Primeiro princípio para a fatia entre $x$ e $x + \dd x$ (seção $S$,
+volume fixo, logo sem trabalho): sua energia interna $\rho c\,T\,S\,\dd x$
+varia em $\dd t$ pelo calor recebido, $[j_Q(x) - j_Q(x+\dd x)]S\,\dd t
+= -\partial_x j_Q\,\dd x\,S\,\dd t$, mais $p\,S\,\dd x\,\dd t$. Em três
+dimensões o calor que entra num volume fixo através de sua superfície fechada
+vale $-\iint\vect{j}_Q\cdot\dd\vect S = -\iiint\operatorname{div}\vect{j}_Q\,\dd\tau$.
+\end{proof}
+
+\begin{theorem}[Equação do calor]\label{thm:b2:heat-conduction:equation}
+Para $\lambda$, $\rho$, $c$ uniformes,
+\[
+\frac{\partial T}{\partial t} = a\,\Delta T + \frac{p}{\rho c},
+\qquad a = \frac{\lambda}{\rho c} \quad\text{(a \emph{difusividade térmica}\index{difusividade térmica}, em \unit{m^2/s})} .
+\]
+Vale tudo o que se disse da \omterm{thm:b2:particle-diffusion:equation}{equação de difusão}: linearidade,
+irreversibilidade, suavização, e as escalas $L \sim \sqrt{at}$, $t \sim
+L^2/a$.
+\end{theorem}
+
+\begin{proof}
+Insira a lei de Fourier no balanço: $\rho c\,\partial_t T =
+\lambda\Delta T + p$.
+\end{proof}
+
+\begin{example}[Difusividades e tempos]\label{ex:b2:heat-conduction:times}
+Cobre $a = \qty{1.1e-4}{m^2/s}$, ar \qty{2e-5}{m^2/s}, concreto e
+tijolo $\approx \qty{5e-7}{m^2/s}$, água \qty{1.4e-7}{m^2/s}, madeira
+\qty{1e-7}{m^2/s}. O calor atravessa um centímetro de cobre num segundo, um
+centímetro de tijolo em três minutos, uma parede de \qty{20}{cm} num dia
+(razão pela qual paredes espessas suavizam o ciclo dia--noite), a
+meia espessura de \qty{1.5}{cm} de um bife em um quarto de hora (os tempos de
+cozimento variam com o quadrado da espessura), e um quilômetro de rocha
+em $10^{12}\,\unit{s}$, trinta mil anos --- a Terra ainda está
+esfriando desde sua formação.
+\end{example}
+
+\section{Regime estacionário: resistências térmicas}
+
+\begin{proposition}[Resistência térmica de uma parede]\label{prop:b2:heat-conduction:resistance}
+No regime estacionário sem fontes, uma parede de espessura $e$,
+área $S$ e condutividade $\lambda$, entre as temperaturas $T_1$ e
+$T_2$, tem um perfil linear e transporta o fluxo
+\[
+\Phi = \frac{T_1 - T_2}{R_{\text{th}}}, \qquad
+R_{\text{th}} = \frac{e}{\lambda S}\quad\text{(em \unit{K/W})} :
+\]
+sua \emph{resistência térmica}\index{resistência térmica}. A temperatura
+faz o papel do potencial, e o fluxo o da corrente: resistências em
+série (camadas de uma parede) se somam, resistências em paralelo (parede e
+janela) somam seus inversos. Para uma casca cilíndrica (o isolamento de
+uma tubulação) entre os raios $r_1 < r_2$ e de comprimento $\ell$,
+$R_{\text{th}} = \ln(r_2/r_1)/2\pi\lambda\ell$; para uma casca esférica,
+$(1/r_1 - 1/r_2)/4\pi\lambda$.
+\end{proposition}
+
+\begin{proof}
+$\dd^2T/\dd x^2 = 0$: perfil afim, $j_Q = \lambda(T_1 - T_2)/e$
+uniforme, $\Phi = j_QS$. Em geometria cilíndrica $\Phi = -\lambda\,2\pi
+r\ell\,\dd T/\dd r$ é o mesmo em todo $r$ (não há acumulação), logo
+$T = A - (\Phi/2\pi\lambda\ell)\ln r$; em geometria esférica, $\Phi =
+-4\pi r^2\lambda\,\dd T/\dd r$ dá $T = A + \Phi/4\pi\lambda r$.
+\end{proof}
+
+\begin{proposition}[Troca com um fluido: a lei de Newton]\label{prop:b2:heat-conduction:newton}
+Uma superfície sólida a $T_{\text{s}}$ em contato com um fluido a $T_{\text{f}}$
+(longe da superfície) perde a densidade de fluxo
+\[
+j_Q = h\,(T_{\text{s}} - T_{\text{f}}) ,
+\]
+onde o \emph{coeficiente de troca térmica}\index{coeficiente de troca
+térmica} $h$ (em \unit{W/m^2/K}) resume a condução através
+da fina camada de fluido que adere à parede e a convecção que a
+renova: $h \approx 5$--\qty{25}{W/m^2/K} para o ar em convecção natural ou
+leve, $50$--\qty{500}{W/m^2/K} para ar forçado, $10^3$--$10^4$
+para a água. A superfície acrescenta então uma \emph{resistência de película} $1/hS$ em
+série com a parede.
+\end{proposition}
+
+\begin{proof}
+Fenomenológica: o movimento do fluido não é calculado, ele é resumido
+em $h$ (medido, ou dado pelas correlações da mecânica dos fluidos).
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}[scale=0.9, >=stealth]
+  % camadas da parede
+  \fill[omExo!15] (0,0) rectangle (1.6,2.6);
+  \fill[omDef!12] (1.6,0) rectangle (2.6,2.6);
+  \fill[gray!15] (2.6,0) rectangle (2.8,2.6);
+  \draw (0,0) rectangle (2.8,2.6);
+  \draw (1.6,0) -- (1.6,2.6); \draw (2.6,0) -- (2.6,2.6);
+  \node[font=\scriptsize] at (0.8,2.85) {tijolo};
+  \node[font=\scriptsize] at (2.1,2.85) {lã};
+  \node[font=\scriptsize, right] at (2.9,1.3) {interior $T_{\text{i}}$};
+  \node[font=\scriptsize, left] at (-0.1,1.3) {exterior $T_{\text{o}}$};
+  \draw[->, omThm, thick] (3.6,0.7) -- (-0.8,0.7) node[midway, below, font=\scriptsize] {$\Phi$};
+  % cadeia de resistências
+  \begin{scope}[yshift=-1.6cm]
+    \draw (-0.8,0) -- (0.2,0);
+    \draw (0.2,-0.18) rectangle (1.0,0.18); \node[font=\tiny] at (0.6,0) {$1/h_{\text{o}}S$};
+    \draw (1.0,0) -- (1.4,0);
+    \draw (1.4,-0.18) rectangle (2.4,0.18); \node[font=\tiny] at (1.9,0) {$e_1/\lambda_1 S$};
+    \draw (2.4,0) -- (2.8,0);
+    \draw (2.8,-0.18) rectangle (3.8,0.18); \node[font=\tiny] at (3.3,0) {$e_2/\lambda_2 S$};
+    \draw (3.8,0) -- (4.2,0);
+    \draw (4.2,-0.18) rectangle (5.0,0.18); \node[font=\tiny] at (4.6,0) {$1/h_{\text{i}}S$};
+    \draw (5.0,0) -- (5.6,0);
+    \fill (-0.8,0) circle (1.5pt) node[above, font=\scriptsize] {$T_{\text{o}}$};
+    \fill (5.6,0) circle (1.5pt) node[above, font=\scriptsize] {$T_{\text{i}}$};
+  \end{scope}
+  % perfil
+  \begin{scope}[xshift=7.2cm]
+    \draw[->] (0,0) -- (3.4,0) node[right, font=\scriptsize] {$x$};
+    \draw[->] (0,0) -- (0,2.8) node[above, font=\scriptsize] {$T$};
+    \draw[omDef, thick] (0,0.4) -- (0.3,0.6) -- (1.6,0.9) -- (2.6,2.4) -- (2.8,2.45) -- (3.2,2.6);
+    \draw[dashed] (0.3,0) -- (0.3,0.6); \draw[dashed] (1.6,0) -- (1.6,0.9); \draw[dashed] (2.6,0) -- (2.6,2.4); \draw[dashed] (2.8,0) -- (2.8,2.45);
+    \node[font=\scriptsize, below] at (0.95,0) {tijolo};
+    \node[font=\scriptsize, below] at (2.1,0) {lã};
+    \node[font=\scriptsize, left] at (0,0.4) {$T_{\text{o}}$};
+    \node[font=\scriptsize, right] at (3.2,2.6) {$T_{\text{i}}$};
+  \end{scope}
+\end{tikzpicture}
+
+{\small Uma parede composta e seu circuito térmico: película, tijolo, lã,
+película em série. À direita: o perfil de temperatura --- quase toda a queda
+se dá através da camada de maior resistência, a lã, embora ela seja
+a mais fina.}
+\end{omfigure}
+
+\begin{example}[Uma parede e uma janela]\label{ex:b2:heat-conduction:wall}
+Por metro quadrado: tijolo de \qty{20}{cm} a \qty{0.8}{W/m/K}, $R =
+\qty{0.25}{m^2.K/W}$; as duas películas, $1/8 + 1/25 = \qty{0.165}{m^2.K/W}$:
+total $0.415$, ou seja, $U = 1/R = \qty{2.4}{W/m^2/K}$ e, para uma diferença de \qty{20}{K},
+\qty{48}{W/m^2}. Acrescente \qty{10}{cm} de lã de vidro, $R =
+\qty{2.5}{m^2.K/W}$: o total é $2.9$, $U = \qty{0.34}{W/m^2/K}$ ---
+sete vezes menos. Uma vidraça simples, \qty{4}{mm} a \qty{1}{W/m/K},
+é toda película: $R = 0.004 + 0.165$, $U \approx \qty{6}{W/m^2/K}$; uma
+camada de \qty{12}{mm} de ar parado entre duas vidraças acrescenta $0.012/0.026 =
+\qty{0.46}{m^2.K/W}$ e divide a perda por mais de três.
+\end{example}
+
+\begin{definition}[Número de Biot]\label{def:b2:heat-conduction:biot}
+Para um sólido de tamanho $L$ que troca com um fluido, o \emph{número
+de Biot}\index{número de Biot}
+\[
+\mathrm{Bi} = \frac{hL}{\lambda} = \frac{\text{resistência interna } L/\lambda S}{\text{resistência de película } 1/hS}
+\]
+compara as duas. Se $\mathrm{Bi} \ll 1$ o sólido tem temperatura uniforme
+a cada instante e esfria como um todo, exponencialmente, com
+a constante de tempo $\tau = \rho c V/hS$; se $\mathrm{Bi} \gg 1$ a
+superfície fica à temperatura do fluido e o interior conduz em seu
+próprio ritmo $L^2/a$.
+\end{definition}
+
+\section{Aquecimento periódico: a onda térmica}
+
+\begin{proposition}[Onda térmica num semiespaço]\label{prop:b2:heat-conduction:wave}
+Se a superfície $x = 0$ de um semiespaço é mantida a $T(0,t) = T_0 +
+\theta_0\cos\omega t$, a temperatura no interior é, no regime
+estabelecido,
+\[
+T(x,t) = T_0 + \theta_0\,\eu^{-x/\delta}\cos\Big(\omega t - \frac{x}{\delta}\Big),
+\qquad \delta = \sqrt{\frac{2a}{\omega}} :
+\]
+uma onda que se propaga para dentro à velocidade $\omega\delta =
+\sqrt{2a\omega}$ e é amortecida ao longo de uma \emph{\omterm{def:b2:dispersion-wave-packets:complex}{profundidade de penetração}} $\delta$
+por radiano de fase --- de $\eu^{-2\pi} = 2 \times 10^{-3}$ por
+comprimento de onda. As oscilações rápidas penetram menos que as lentas.
+\end{proposition}
+
+\begin{proof}
+Procure $\underline T = \theta_0\eu^{\iu(\omega t - \underline k x)}$:
+$\iu\omega = -a\underline k^2$, logo $\underline k^2 = -\iu\omega/a$,
+$\underline k = (1 - \iu)\sqrt{\omega/2a} = (1 - \iu)/\delta$ (a raiz
+que decai para $x > 0$). Tome a parte real.
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}
+  \begin{axis}[omaxis, width=9cm, height=4.8cm, xmin=0, xmax=4.6, ymin=-1.1, ymax=1.1,
+    xlabel={$x/\delta$}, ylabel={$(T - T_0)/\theta_0$}, xtick={1,2,3,4}, ytick={-1,1}, clip=false,
+    axis x line=middle, axis y line=left,
+    legend style={font=\scriptsize, at={(0.98,0.04)}, anchor=south east, draw=none, fill=none}]
+    \addplot[omDef, thick, domain=0:4.6, samples=120] {exp(-x)*cos(deg(-x))};
+    \addlegendentry{$\omega t = 0$}
+    \addplot[omThm, thick, domain=0:4.6, samples=120] {exp(-x)*cos(deg(pi/2-x))};
+    \addlegendentry{$\omega t = \pi/2$}
+    \addplot[omExo, thick, domain=0:4.6, samples=120] {exp(-x)*cos(deg(pi-x))};
+    \addlegendentry{$\omega t = \pi$}
+    \addplot[gray, dashed, domain=0:4.6, samples=60] {exp(-x)};
+    \addplot[gray, dashed, domain=0:4.6, samples=60] {-exp(-x)};
+  \end{axis}
+\end{tikzpicture}
+
+{\small A onda térmica em três instantes: a oscilação da superfície
+penetra como uma onda amortecida, com a amplitude caindo como $\eu^{-x/\delta}$
+(tracejado) e a fase atrasada de $x/\delta$ --- em $x = \pi\delta$ a
+temperatura é oposta à da superfície.}
+\end{omfigure}
+
+\begin{example}[O solo, a adega e o vinho]\label{ex:b2:heat-conduction:soil}
+Solo, $a \approx \qty{5e-7}{m^2/s}$. Ciclo diário, $\omega = 2\pi/\qty{86400}{s}$:
+$\delta = \qty{12}{cm}$ --- meio metro abaixo o dia desapareceu. Ciclo anual:
+$\delta = \qty{2.2}{m}$; nessa profundidade a variação de \qty{10}{K} entre verão e inverno
+cai a \qty{3.7}{K} e se atrasa de um radiano, dois meses: a adega é
+mais fria em março e mais quente em setembro, e a \qty{5}{m} ela está a
+\qty{1}{K} de ser constante --- a adega que guarda o vinho. A mesma
+matemática dá a \omterm{def:b2:dispersion-wave-packets:complex}{profundidade de penetração} do eletromagnetismo
+(\cref{ch:b2:waves-in-media}): mesma equação, mesmo $\sqrt{2/(\text{difusividade}
+\times\omega)}$.
+\end{example}
+
+\section{Aletas}
+
+\begin{proposition}[A aleta de resfriamento]\label{prop:b2:heat-conduction:fin}
+Uma haste ou placa fina (seção $S$, perímetro $p$, condutividade $\lambda$)
+presa em $x = 0$ a uma parede a $T_0$, num fluido a $T_{\text{f}}$ com
+o coeficiente $h$, tem a temperatura em excesso $\theta = T - T_{\text{f}}$
+obedecendo a
+\[
+\frac{\dd^2\theta}{\dd x^2} = m^2\theta, \qquad m = \sqrt{\frac{hp}{\lambda S}} ;
+\]
+para uma aleta longa, $\theta = \theta_0\eu^{-mx}$ e a aleta evacua $\Phi =
+\sqrt{hp\lambda S}\,\theta_0$ --- tanto quanto uma superfície nua de comprimento $\sqrt{\lambda
+S/hp} = 1/m$, com uma temperatura que caiu a $\theta_0/\eu$ em
+$x = 1/m$. Para uma aleta de comprimento finito $L$ (ponta adiabática), $\theta =
+\theta_0\cosh m(L-x)/\cosh mL$ e sua \emph{eficiência}\index{eficiência
+de uma aleta} --- o fluxo dividido pelo de uma aleta isotérmica a $\theta_0$ ---
+vale $\eta = \tanh(mL)/mL$.
+\end{proposition}
+
+\begin{proof}
+Balanço estacionário da fatia $[x, x + \dd x]$: conduzido para dentro,
+$-\lambda S\theta'(x)$; para fora, $-\lambda S\theta'(x + \dd x)$; perdido para o
+fluido, $hp\,\theta\,\dd x$: $\lambda S\theta'' = hp\theta$. O fluxo na
+base é $-\lambda S\theta'(0)$: $\lambda Sm\theta_0$ para a aleta longa,
+$\lambda Sm\theta_0\tanh mL$ para a finita, a comparar com
+$hpL\theta_0$. O \omterm{def:b2:heat-conduction:biot}{número de Biot} através da espessura da aleta, $ht/\lambda$, deve
+ser pequeno para o tratamento unidimensional.
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}
+  \begin{axis}[omaxis, width=6.4cm, height=4.4cm, xmin=0, xmax=3.2, ymin=0, ymax=1.12,
+    xlabel={$mx$}, ylabel={$\theta/\theta_0$}, xtick={1,2,3}, ytick={1}, clip=false,
+    legend style={font=\scriptsize, at={(0.98,0.98)}, anchor=north east, draw=none, fill=none}]
+    \addplot[omDef, thick, domain=0:3.2, samples=60] {exp(-x)};
+    \addlegendentry{aleta longa}
+    \addplot[omExo, thick, domain=0:1.2, samples=60] {cosh(1.2-x)/cosh(1.2)};
+    \addlegendentry{$mL = 1.2$}
+    \addplot[omThm, thick, domain=0:0.5, samples=30] {cosh(0.5-x)/cosh(0.5)};
+    \addlegendentry{$mL = 0.5$}
+  \end{axis}
+  \begin{scope}[xshift=7.2cm, yshift=0.3cm, scale=0.8, >=stealth]
+    \fill[gray!25] (0,0) rectangle (0.5,3.2);
+    \fill[omDef!20] (0.5,1.4) rectangle (4.2,1.8);
+    \draw (0.5,1.4) rectangle (4.2,1.8);
+    \node[font=\scriptsize, rotate=90] at (0.25,1.6) {parede $T_0$};
+    \draw[->, omThm, thick] (0.6,1.6) -- (1.6,1.6) node[right, font=\scriptsize] {$-\lambda S\theta'$};
+    \foreach \x in {1.2,2.0,2.8,3.6}{
+      \draw[->, omExo] (\x,1.85) -- (\x,2.4);
+      \draw[->, omExo] (\x,1.35) -- (\x,0.8);
+    }
+    \node[font=\scriptsize, omExo] at (2.4,2.7) {$hp\,\theta\,\dd x$};
+    \node[font=\scriptsize] at (2.4,0.45) {fluido $T_{\text{f}}$};
+  \end{scope}
+\end{tikzpicture}
+
+{\small À esquerda: a temperatura ao longo de uma aleta, para uma aleta longa e duas
+finitas (ponta adiabática) --- além de $mx \approx 2$ uma aleta acrescenta pouco. À direita:
+o balanço de uma fatia: condução ao longo dela, convecção para fora pelo
+perímetro.}
+\end{omfigure}
+
+\begin{example}[Um dissipador]\label{ex:b2:heat-conduction:sink}
+Aletas de alumínio de \qty{1}{mm} de espessura ($p/S \approx 2/t = \qty{2000}{m^{-1}}$),
+\qty{30}{mm} de altura, em ar forçado com $h = \qty{50}{W/m^2/K}$: $m =
+\sqrt{2h/\lambda t} = \qty{20}{m^{-1}}$, $mL = 0.6$, $\eta = 0.89$ --- as
+aletas trabalham a $89\%$ de sua área. Trinta delas, com \qty{60}{mm} de largura,
+oferecem \qty{0.11}{m^2} onde o quadrado nu de \qty{60}{mm} oferecia
+\qty{0.0036}{m^2}: uma resistência $1/\eta hA = \qty{0.2}{K/W}$ em vez de
+\qty{5.6}{K/W}; \qty{100}{W} elevam a base de \qty{20}{K} em vez de
+\qty{560}{K}. Aletas mais longas ganham pouco (a $\tanh$ satura), mais finas
+perdem eficiência: $mL \approx 1$ é o compromisso do engenheiro.
+\end{example}
+
+\section{A entropia criada pela condução}
+
+\begin{proposition}[Produção de entropia]\label{prop:b2:heat-conduction:entropy}
+Um fluxo $\Phi$ conduzido de um corpo a $T_{\text{h}}$ para um corpo a
+$T_{\text{c}} < T_{\text{h}}$ através de uma parede estacionária cria entropia à
+taxa
+\[
+\dot S_{\text{c}} = \Phi\Big(\frac{1}{T_{\text{c}}} - \frac{1}{T_{\text{h}}}\Big) > 0 ;
+\]
+localmente, a condução cria $\sigma_s = \lambda\,(\vect{\operatorname{grad}}\,T)^2/T^2
+\ge 0$ por unidade de volume e de tempo --- nula somente onde a temperatura é
+uniforme. A condução do calor é irreversível: a mesma energia, entregue a
+uma temperatura mais baixa, pode fornecer menos trabalho.
+\end{proposition}
+
+\begin{proof}
+O estado da parede não muda, de modo que sua entropia é constante: o corpo
+quente perde $\Phi/T_{\text{h}}$ por unidade de tempo, o frio ganha
+$\Phi/T_{\text{c}}$; a diferença é criada. Localmente, o balanço de
+entropia $\partial_t(\rho s) + \operatorname{div}(\vect{j}_Q/T) = \sigma_s$
+com $\rho T\partial_t s = -\operatorname{div}\vect{j}_Q$ dá $\sigma_s =
+\vect{j}_Q\cdot\vect{\operatorname{grad}}(1/T) = -\vect{j}_Q\cdot
+\vect{\operatorname{grad}}\,T/T^2 = \lambda(\vect{\operatorname{grad}}\,T)^2/T^2$.
+\end{proof}
+
+\begin{method}[Estimativas de condução]\label{meth:b2:heat-conduction:method}
+(1) Estacionário: monte o circuito térmico --- paredes $e/\lambda S$, películas
+$1/hS$, cascas $\ln(r_2/r_1)/2\pi\lambda\ell$; série e paralelo.
+(2) Transitório: $\mathrm{Bi} = hL/\lambda$; se pequeno, $\tau = \rho cV/hS$; se
+grande, $t \sim L^2/a$. (3) Periódico: $\delta = \sqrt{2a/\omega}$, amortecimento
+$\eu^{-x/\delta}$, atraso $x/\delta$. (4) Fontes: $p$ por unidade de volume, perfis
+parabólicos. (5) Aletas: $m = \sqrt{hp/\lambda S}$, $\eta = \tanh(mL)/mL$. (6)
+Entropia: $\Phi(1/T_{\text{c}} - 1/T_{\text{h}})$.
+\end{method}
+
+\section{Exercícios}
+
+\begin{exercise}[$\star$]\label{exo:b2:heat-conduction:1}
+Uma parede de tijolo de \qty{20}{cm} de espessura ($\lambda = \qty{0.8}{W/m/K}$), de \qty{100}{m^2},
+entre \qty{20}{\celsius} dentro e \qty{0}{\celsius} fora
+(superfícies a essas temperaturas): densidade de fluxo, fluxo total; com
+\qty{10}{cm} de lã de vidro (\qty{0.04}{W/m/K}) acrescentados.
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b2:heat-conduction:2}
+Difusividades: cobre ($\lambda = 400$, $\rho = 8900$, $c = \qty{385}{J/kg/K}$),
+concreto ($1.5$, $2300$, $900$), madeira ($0.15$, $600$, $2500$). Tempos para o calor
+atravessar \qty{1}{cm} e \qty{20}{cm} de cada um; a crosta de \qty{30}{km} da
+Terra.
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b2:heat-conduction:3}
+Vidro simples (\qty{4}{mm}, $\lambda = \qty{1}{W/m/K}$) com películas $h_{\text{i}}
+= 8$, $h_{\text{o}} = \qty{25}{W/m^2/K}$; vidro duplo com uma camada de \qty{12}{mm}
+de ar parado (\qty{0.026}{W/m/K}): valores de $U$ e fluxos para
+\qty{20}{K}. Por que o vidro duplo real é cerca de duas vezes pior que esta
+estimativa, e o que fazem o argônio e os revestimentos de baixa emissividade?
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b2:heat-conduction:4}
+Cozimento: $a = \qty{1.4e-7}{m^2/s}$ para a carne. Tempo para o centro de um
+bife de \qty{3}{cm} sentir a frigideira; de um assado de \qty{12}{cm}. Um peru
+duas vezes mais pesado: quanto mais tempo (a dimensão varia com a raiz cúbica
+da massa)?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b2:heat-conduction:5}
+\emph{Fonte interna.} Um cilindro de raio $R$ libera $p$ por unidade de
+volume; superfície a $T_{\text{s}}$. (a) Mostre que $T(r) = T_{\text{s}} +
+p(R^2 - r^2)/4\lambda$. (b) Fio de cobre, $R = \qty{1}{mm}$, $j =
+\qty{1e7}{A/m^2}$, $\gamma = \qty{6e7}{S/m}$: $p$ e a diferença entre o centro e a
+superfície. (c) Vareta de combustível nuclear, $R = \qty{5}{mm}$, $p = \qty{3e8}{W/m^3}$,
+$\lambda = \qty{3}{W/m/K}$: mesma pergunta. (d) Comente.
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b2:heat-conduction:6}
+\emph{O solo.} (a) Deduza $\delta = \sqrt{2a/\omega}$. (b) Solo,
+$a = \qty{5e-7}{m^2/s}$: \omterm{def:b2:dispersion-wave-packets:complex}{profundidades de penetração} diária e anual. (c) Profundidade
+em que a amplitude anual é um décimo da da superfície; atraso de fase
+ali. (d) Um cano de água não deve congelar onde a temperatura da superfície
+no inverno cai a \qty{-10}{\celsius} em torno de uma média de
+\qty{10}{\celsius}: profundidade mínima (onda anual).
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b2:heat-conduction:7}
+\emph{Biot.} (a) Esfera de cobre de raio \qty{1}{cm}, no ar ($h =
+\qty{10}{W/m^2/K}$): \omterm{def:b2:heat-conduction:biot}{número de Biot}, constante de tempo de seu resfriamento. (b) Uma
+batata ($\lambda = \qty{0.5}{W/m/K}$, $a = \qty{1.4e-7}{m^2/s}$, raio
+\qty{3}{cm}) num forno com $h = \qty{20}{W/m^2/K}$: \omterm{def:b2:heat-conduction:biot}{número de Biot}; que
+tempo governa seu cozimento? (c) Por que a esfera de um termopar é feita pequena?
+(d) Por que uma xícara de café esfria mais depressa quando mexida ou soprada ---
+que resistência muda?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b2:heat-conduction:8}
+\emph{Uma aleta.} (a) Deduza $\theta'' = m^2\theta$ e a solução da aleta longa.
+(b) Aleta de alumínio de \qty{1}{mm} de espessura e \qty{30}{mm} de altura, em convecção
+natural com $h = \qty{20}{W/m^2/K}$: $m$, $mL$, eficiência. (c) Por que
+fator a aleta multiplica a área de troca de sua base, e o
+fluxo? (d) Por que uma aleta muito longa ou muito fina é um desperdício de metal?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b2:heat-conduction:9}
+\emph{Tubulações.} (a) Deduza a resistência de uma casca cilíndrica. (b) Uma
+tubulação de vapor, de raio externo \qty{5}{cm} a \qty{150}{\celsius}, envolvida em
+\qty{5}{cm} de lã de vidro, com ar a \qty{20}{\celsius} e $h =
+\qty{10}{W/m^2/K}$ do lado de fora: perda por metro, comparada com a da tubulação nua.
+(c) Mostre que a resistência total do isolamento mais a película tem um
+mínimo no \emph{raio crítico} $r_{\text{c}} = \lambda/h$. (d) Para um
+fio elétrico de raio \qty{1}{mm} com uma capa plástica ($\lambda =
+\qty{0.2}{W/m/K}$), a capa esfria ou aquece o cobre?
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b2:heat-conduction:10}
+\emph{Entropia.} A parede do \cref{exo:b2:heat-conduction:1} (nua)
+entre \qty{293}{K} e \qty{273}{K}. (a) Entropia criada por segundo.
+(b) Calcule $\int\sigma_s\,\dd V$ com o perfil linear e verifique que
+concorda. (c) Entropia criada uma vez isolada. (d) O trabalho que uma
+máquina reversível poderia ter extraído dos \qty{8}{kW} entre
+essas temperaturas, e o que resta dele depois da parede.
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b2:heat-conduction:11}
+\emph{Por que o metal parece frio.} (a) Para a onda térmica, calcule o
+fluxo na superfície $j_Q(0,t)$ e mostre que ele se adianta à temperatura da superfície de
+$\pi/4$, com a amplitude $\sqrt{\lambda\rho c\,\omega}\,\theta_0$. A
+grandeza $b = \sqrt{\lambda\rho c}$ é a \emph{efusividade}. (b) Dois
+semiespaços a $T_1$ e $T_2$ são postos em contato: admitindo que
+cada um segue então um perfil erfc com a temperatura de superfície comum
+$T_{\text{c}}$, e escrevendo a continuidade do fluxo no contato,
+mostre que $T_{\text{c}} = (b_1T_1 + b_2T_2)/(b_1 + b_2)$. (c) Pele
+($b \approx \qty{1000}{J/m^2/K/s^{1/2}}$, \qty{33}{\celsius}) tocando
+cobre ($b = 37000$) ou madeira ($b = 400$) a \qty{20}{\celsius}: temperaturas
+de contato. (d) Por que um piso de cerâmica parece mais frio que um tapete à
+mesma temperatura, e por que a sensação é apenas transitória?
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b2:heat-conduction:12}
+\emph{Resfriar uma placa.} Uma placa $-L < x < L$ a $T_0$ é mergulhada em $t =
+0$ num banho a $T_{\text{f}}$ com $h \to \infty$. (a) Mostre que $\theta =
+T - T_{\text{f}}$ admite as soluções $\cos(k_nx)\,\eu^{-ak_n^2t}$ com $k_n
+= (2n+1)\pi/2L$. (b) Desenvolva a condição inicial em série de Fourier
+sobre esses modos e escreva a solução completa. (c) Depois dos primeiros
+instantes, que modo sobrevive, e qual é a constante de tempo? (d) Tempo
+para o centro de um bife de \qty{3}{cm} ($a = \qty{1.4e-7}{m^2/s}$) chegar
+a $1\%$ do banho.
+\end{exercise}
+
+\section{Problema: isolar uma casa, resfriar um processador}
+
+\begin{problem}[{Problema de fim de semana --- condução na escala de um
+edifício e de um chip}]\label{pb:b2:heat-conduction:1}
+Dados: tijolo $\lambda = \qty{0.8}{W/m/K}$, $\rho = \qty{1800}{kg/m^3}$, $c =
+\qty{840}{J/kg/K}$; lã de vidro \qty{0.04}{W/m/K}; vidro \qty{1}{W/m/K}; ar
+parado \qty{0.026}{W/m/K}; alumínio \qty{240}{W/m/K}, $\rho = \qty{2700}{kg/m^3}$,
+$c = \qty{900}{J/kg/K}$; silício \qty{150}{W/m/K}; pasta térmica
+\qty{5}{W/m/K}; solo $a = \qty{5e-7}{m^2/s}$, $\lambda = \qty{1}{W/m/K}$;
+películas $h_{\text{i}} = 8$, $h_{\text{o}} = \qty{25}{W/m^2/K}$.
+
+\textbf{Parte I --- A casa.}
+Uma casa tem \qty{100}{m^2} de paredes (tijolo de \qty{20}{cm}) e \qty{20}{m^2}
+de janelas de vidro simples (\qty{4}{mm}); dentro \qty{20}{\celsius},
+fora \qty{0}{\celsius}.
+\begin{enumerate}
+  \item Resistência por metro quadrado apenas do tijolo; densidade de fluxo
+        se suas faces estivessem às duas temperaturas.
+  \item Com as duas películas: $R$ e $U = 1/R$ por metro quadrado; o mesmo
+        com \qty{10}{cm} de lã de vidro acrescentados.
+  \item $U$ do vidro simples; de um vidro duplo com \qty{12}{mm}
+        de ar parado.
+  \item Perda total da casa antes e depois de isolar as paredes
+        e duplicar as janelas.
+  \item Ao longo de uma temporada de aquecimento de $2500$ graus-dia (a integral da
+        diferença de temperatura ao longo da temporada, em \unit{K.dia}),
+        energia perdida antes e depois, em quilowatt-horas.
+  \item Temperatura da face interna da parede, nua e isolada;
+        por que uma parede fria é desconfortável e cria mofo?
+  \item Tempo de difusão através do tijolo; o que ele faz com o
+        ciclo dia--noite?
+\end{enumerate}
+
+\textbf{Parte II --- O solo sob a casa.}
+\begin{enumerate}[resume]
+  \item Deduza a \omterm{def:b2:dispersion-wave-packets:complex}{profundidade de penetração} $\delta = \sqrt{2a/\omega}$ de uma
+        onda térmica.
+  \item $\delta$ diário e anual no solo.
+  \item Profundidade em que a variação diária cai a $1\%$; amplitude anual
+        a \qty{2.2}{m} e a \qty{5}{m} para uma variação de \qty{10}{K}
+        na superfície.
+  \item Atraso de fase a \qty{2.2}{m}, em dias: quando a adega é mais fria?
+  \item Fluxo de calor na superfície devido à onda anual (amplitude e fase);
+        compare sua amplitude com o fluxo geotérmico de \qty{0.06}{W/m^2}.
+  \item O \omterm{def:b2:maxwell-equations:operators}{gradiente} geotérmico vale \qty{30}{K/km}: confira-o contra o
+        fluxo e $\lambda$, e explique por que ele é invisível nas
+        estações da adega.
+\end{enumerate}
+
+\textbf{Parte III --- O processador.}
+Um chip dissipa \qty{100}{W} numa pastilha de \qty{1}{cm^2} e \qty{0.5}{mm}
+de espessura; uma camada de \qty{50}{\micro m} de pasta sobre \qty{10}{cm^2} o une
+a um dissipador de alumínio: base de \qty{60}{mm} $\times$ \qty{60}{mm} $\times$
+\qty{5}{mm}, trinta aletas de \qty{60}{mm} de largura, \qty{30}{mm} de altura e \qty{1}{mm}
+de espessura; um ventilador dá $h = \qty{50}{W/m^2/K}$; ambiente a \qty{25}{\celsius}.
+\begin{enumerate}[resume]
+  \item Densidade de fluxo através da pastilha; resistência da pastilha.
+  \item Resistência da pasta; e se uma folga de ar de \qty{50}{\micro m}
+        a substituísse.
+  \item Parâmetro de aleta $m$, $mL$, eficiência; verifique o \omterm{def:b2:heat-conduction:biot}{número de Biot}
+        através da espessura da aleta.
+  \item Área total das aletas e resistência das aletas; resistência da
+        base (condução através de \qty{5}{mm}); temperatura de junção.
+  \item O mesmo sem aletas (quadrado nu de \qty{60}{mm}): conclusão.
+  \item O ventilador para ($h = \qty{10}{W/m^2/K}$): temperatura de junção;
+        o que faz o processador a \qty{100}{\celsius}?
+  \item Massa e capacidade térmica do dissipador; sua constante de tempo $RC$;
+        e a da pastilha sozinha (\qty{0.1}{g}, \qty{700}{J/kg/K}).
+  \item Por que os bons dissipadores têm base de cobre ou tubos de calor?
+\end{enumerate}
+
+\textbf{Parte IV --- Entropia.}
+\begin{enumerate}[resume]
+  \item Entropia criada por segundo pelo envelope nu da casa
+        (questão 4) entre \qty{293}{K} e \qty{273}{K}; depois do
+        isolamento.
+  \item Entropia criada pelos \qty{100}{W} do chip ao passarem da
+        junção ao ambiente; e pela conversão do trabalho elétrico
+        em calor na pastilha.
+  \item Mostre que, para uma parede, $\int\sigma_s\,\dd V = \Phi(1/T_{\text{c}} -
+        1/T_{\text{h}})$.
+  \item Resuma em cinco linhas o que governa uma parede, uma aleta, uma adega
+        e um chip.
+\end{enumerate}
+\end{problem}

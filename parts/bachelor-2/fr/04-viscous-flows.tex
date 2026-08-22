@@ -1,0 +1,576 @@
+\chapter{Écoulements visqueux}\label{ch:b2:viscous-flows}
+
+Penchez un pot de miel et il coule en un ruban lent et épais~; penchez un
+pot d'eau et elle a disparu. Traînez une cuillère dans chacun~: le miel
+résiste, et résiste encore à toute vitesse~; l'eau y prend à peine garde
+tant que vous allez lentement, puis se met à tourbillonner. La différence est la
+\emph{\omterm{def:b2:viscous-flows:viscosity}{viscosité}} --- le frottement interne d'un fluide --- et la lutte entre \omterm{def:b2:viscous-flows:viscosity}{viscosité}
+et inertie, résumée en un seul nombre, celui de Reynolds, décide si un
+écoulement rampe en couches ordonnées ou bascule dans la turbulence. Ce chapitre
+ajoute la force visqueuse à l'\omterm{thm:b2:euler-bernoulli:euler}{équation d'Euler}, résout les deux \omterm{def:b2:viscous-flows:reynolds}{écoulements
+laminaires} dont se sert tout ingénieur, et explique pourquoi, à grand \omterm{def:b2:viscous-flows:reynolds}{nombre de Reynolds},
+la \omterm{def:b2:viscous-flows:viscosity}{viscosité} se cache dans une mince couche à la paroi et coûte pourtant à chaque
+voiture, chaque navire et chaque avion l'essentiel de son carburant.
+
+\begin{omfigure}
+\includegraphics[width=0.34\linewidth]{images/book4/ai/b4-04-honey-spoon-viscous.png}
+
+{\small Le miel coule en un ruban mince et régulier qui s'enroule en arrivant~: une \omterm{def:b2:viscous-flows:viscosity}{viscosité} dix mille fois celle de l'eau rend l'inertie sans objet --- un écoulement rampant.}
+\end{omfigure}
+
+
+\section{Viscosité et équation de Navier--Stokes}
+
+\begin{definition}[Viscosité newtonienne]\label{def:b2:viscous-flows:viscosity}
+\index{viscosité}\index{viscosité dynamique}\index{viscosité cinématique}\index{contrainte de cisaillement}\index{fluide newtonien}
+Dans un écoulement de cisaillement plan $\vect v = v_x(y)\,\vect e_x$, le fluide situé au-dessus d'une
+surface $y = $ const exerce sur le fluide situé au-dessous (à travers un élément
+de surface $\dd S$) la force tangentielle
+\[
+\dd\vect F = \eta\,\frac{\dd v_x}{\dd y}\,\dd S\;\vect e_x ,
+\]
+qui entraîne la couche la plus lente vers l'avant et est freinée en retour.
+La \emph{contrainte de cisaillement} vaut $\tau = \eta\,\dd v_x/\dd y$~; le coefficient
+$\eta$ (unité \unit{Pa.s}) est la \emph{viscosité dynamique} du fluide,
+et $\nu = \eta/\rho$ (\unit{m^2/s}) sa \emph{viscosité cinématique}. Un fluide
+dont le $\eta$ ne dépend pas du taux de cisaillement est dit \emph{newtonien}~:
+l'eau, l'air, les huiles, l'alcool~; le sang, la peinture, le ketchup et les polymères fondus ne le
+sont pas. Ordres de grandeur à \qty{20}{\degreeCelsius}~: air $\eta =
+\qty{1.8e-5}{Pa.s}$ ($\nu = \qty{1.5e-5}{m^2/s}$), eau $\qty{1.0e-3}{Pa.s}$
+($\nu = \qty{1.0e-6}{m^2/s}$), huile d'olive $\qty{0.08}{Pa.s}$, glycérol
+$\qty{1.5}{Pa.s}$, miel $\sim\qty{10}{Pa.s}$. Les liquides deviennent plus fluides quand on les
+chauffe, les gaz plus visqueux.
+\end{definition}
+
+\begin{proposition}[Densité de force visqueuse~; condition d'adhérence]\label{prop:b2:viscous-flows:density}
+\index{condition d'adhérence}\index{densité de force visqueuse}
+Dans l'écoulement de cisaillement plan, la force visqueuse résultante sur une tranche de fluide
+comprise entre $y$ et $y + \dd y$ vaut, par unité de volume, $\eta\,\dd^2v_x/\dd y^2$~:
+la \omterm{def:b2:viscous-flows:viscosity}{viscosité} agit comme une densité volumique de force $\eta\,\Delta\vect v$ (le
+laplacien pris composante par composante), résultat valable pour tout
+\omterm{cor:b2:fluid-kinematics:incompressible}{écoulement incompressible}. À une paroi solide le fluide \emph{adhère}~: sa
+vitesse est celle de la paroi (la \emph{\omterm{prop:b2:viscous-flows:density}{condition d'adhérence}}), ce qui explique que
+la poussière reste sur une pale de ventilateur et qu'une paroi subisse une traînée visqueuse.
+\end{proposition}
+
+\begin{proof}
+La tranche est tirée par $\eta\,v_x'(y + \dd y)\dd S$ par le dessus et par
+$-\eta\,v_x'(y)\dd S$ par le dessous~: au total $\eta v_x''\,\dd y\,\dd S$. La forme
+générale est admise (elle résulte de l'écriture de la contrainte comme fonction linéaire
+symétrique des gradients de vitesse). La \omterm{prop:b2:viscous-flows:density}{condition d'adhérence} est
+expérimentale.
+\end{proof}
+
+\begin{theorem}[Équation de Navier--Stokes]\label{thm:b2:viscous-flows:ns}
+\index{équation de Navier--Stokes}
+Un \omterm{def:b2:viscous-flows:viscosity}{fluide newtonien} incompressible obéit à
+\[
+\rho\Bigl(\frac{\partial\vect v}{\partial t} + (\vect v\cdot\operatorname{\vect{grad}})
+\vect v\Bigr) = -\operatorname{\vect{grad}}P + \rho\vect g + \eta\,\Delta\vect v ,
+\qquad \operatorname{div}\vect v = 0 ,
+\]
+avec la \omterm{prop:b2:viscous-flows:density}{condition d'adhérence} sur toute paroi. L'\omterm{thm:b2:euler-bernoulli:euler}{équation d'Euler} en est le cas
+$\eta = 0$.
+\end{theorem}
+\admitted
+
+\begin{omfigure}
+\begin{tikzpicture}[font=\small, x=1cm, y=1cm, >=Stealth]
+  \begin{scope}
+    \draw[thick] (-0.2,0) -- (3.6,0); \fill[pattern=north east lines] (-0.2,-0.18) rectangle (3.6,0);
+    \draw[thick, omExo] (-0.2,2.2) -- (3.6,2.2); \fill[pattern=north east lines, pattern color=omExo] (-0.2,2.2) rectangle (3.6,2.38);
+    \draw[omExo, very thick, ->] (1.4,2.6) -- (2.6,2.6) node[right, font=\footnotesize] {$U$};
+    \foreach \y in {0.4,0.8,...,2.0} \draw[omDef, thick, ->] (0.4,\y) -- ({0.4+1.1*\y/2.2*1.8},\y);
+    \draw[omDef, thick] (0.4,0) -- (2.2,2.2);
+    \node[font=\footnotesize] at (1.8,-0.5) {Couette~: $v_x = Uy/h$, $\tau = \eta U/h$};
+    \draw[<->] (3.3,0) -- (3.3,2.2) node[midway, right, font=\footnotesize] {$h$};
+  \end{scope}
+  \begin{scope}[xshift=7.2cm]
+    \draw[thick, fill=omDef!10] (0,0.6) rectangle (3.0,1.6);
+    \draw[omThm, very thick, ->] (1.5,1.6) -- (2.6,1.6) node[above, font=\footnotesize] {$\eta v_x'(y+\dd y)\,\dd S$};
+    \draw[omThm, very thick, ->] (1.5,0.6) -- (0.4,0.6) node[below, font=\footnotesize] {$\eta v_x'(y)\,\dd S$};
+    \node[font=\footnotesize] at (-0.5,1.6) {$y + \dd y$};
+    \node[font=\footnotesize] at (-0.4,0.6) {$y$};
+    \node[font=\footnotesize] at (1.5,-0.5) {résultante~: $\eta\,v_x''\,\dd y\,\dd S$};
+  \end{scope}
+\end{tikzpicture}
+
+{\small À gauche~: l'écoulement de Couette plan entre une plaque fixe et une plaque
+qui se déplace à $U$ --- un profil linéaire, la même \omterm{def:b2:viscous-flows:viscosity}{contrainte de cisaillement} sur chaque
+couche. À droite~: les forces visqueuses sur une tranche de fluide~; elles se compensent sauf si
+le profil de vitesse est courbe.}
+\end{omfigure}
+
+\begin{example}[Contrainte de cisaillement sur une table]\label{ex:b2:viscous-flows:table}
+Un film d'huile de \qty{0.1}{mm} ($\eta = \qty{0.1}{Pa.s}$) entre une plaque et une
+table, la plaque glissant à \qty{1}{m/s}~: $\tau = \eta U/h = \qty{1}{kPa}$, soit une
+force de \qty{100}{N} sur un dixième de mètre carré --- c'est le principe du
+\omterm{def:b2:rigid-body-mechanics:pivot}{palier} lubrifié, où la traînée visqueuse remplace un frottement sec
+cent fois plus grand. Du miel sur une cuillère, \qty{10}{Pa.s}, sur \qty{1}{mm} d'épaisseur,
+qui s'écoule à \qty{1}{mm/s}~: $\tau = \qty{10}{Pa}$, exactement le poids d'un
+millimètre de miel par unité d'aire --- d'où cette vitesse d'écoulement.
+\end{example}
+
+\section{Le nombre de Reynolds}
+
+\begin{definition}[Nombre de Reynolds]\label{def:b2:viscous-flows:reynolds}
+\index{nombre de Reynolds}\index{écoulement laminaire}\index{écoulement turbulent}
+Pour un écoulement de vitesse caractéristique $U$ et de longueur caractéristique $L$, le \emph{nombre
+de Reynolds}
+\[
+\mathrm{Re} = \frac{\rho UL}{\eta} = \frac{UL}{\nu}
+\]
+est le rapport des ordres de grandeur du terme d'inertie
+$\rho(\vect v\cdot\operatorname{\vect{grad}})\vect v \sim \rho U^2/L$ et du
+terme visqueux $\eta\Delta\vect v \sim \eta U/L^2$ dans l'\omterm{thm:b2:viscous-flows:ns}{équation de Navier--Stokes}.
+À $\mathrm{Re} \ll 1$ l'inertie est négligeable et l'écoulement est
+\emph{rampant} (visqueux, réversible, régulier)~; à $\mathrm{Re} \gg 1$
+la \omterm{def:b2:viscous-flows:viscosity}{viscosité} est négligeable sauf au voisinage des parois et l'écoulement est celui d'un
+\omterm{def:b2:euler-bernoulli:perfect}{fluide parfait} --- jusqu'à ce que, au-delà d'un seuil de l'ordre de $10^3$ (environ $2000$
+à $3000$ dans une conduite, sur le diamètre), il devienne \emph{turbulent}~:
+non stationnaire, chaotique, plein de tourbillons à toutes les échelles. Entre les deux, un
+écoulement est \emph{laminaire}~: stationnaire et en couches.
+\end{definition}
+
+\begin{example}[Nombres de Reynolds d'écoulements courants]\label{ex:b2:viscous-flows:revalues}
+Une bactérie (\qty{1}{\micro m}, \qty{30}{\micro m/s}, dans l'eau)~: $\mathrm{Re} =
+3 \times 10^{-5}$ --- elle vit dans un monde sans inertie, où arrêter
+son flagelle l'arrête en un diamètre atomique. Le sang dans un capillaire~:
+$10^{-3}$~; un grain de poussière qui tombe~: $10^{-2}$~; un poisson rouge~: $10^3$~; un nageur~:
+$10^6$~; une voiture à \qty{30}{m/s} (\qty{4}{m})~: $8 \times 10^6$~; un avion de ligne~: $10^8$~;
+le Gulf Stream~: $10^{11}$. Deux écoulements de même géométrie et de même
+\omterm{def:b2:viscous-flows:reynolds}{nombre de Reynolds} sont \emph{semblables}~: c'est ce qui permet d'essayer une maquette de \qty{1}{m}
+de navire en bassin des carènes, ou un avion en soufflerie.
+\end{example}
+
+\section{Écoulements laminaires~: Couette, Poiseuille, Stokes}
+
+\begin{proposition}[Écoulement de Poiseuille dans une conduite]\label{prop:b2:viscous-flows:poiseuille}
+\index{écoulement de Poiseuille}\index{résistance hydraulique}
+Dans une conduite cylindrique horizontale de rayon $R$ et de longueur $L$, mise en mouvement par
+la différence de pression $\Delta P = P_1 - P_2$ entre ses extrémités, l'\omterm{def:b2:viscous-flows:reynolds}{écoulement
+laminaire} stationnaire est
+\[
+v(r) = \frac{\Delta P}{4\eta L}\,(R^2 - r^2) , \qquad
+D_V = \frac{\pi R^4}{8\eta L}\,\Delta P :
+\]
+un profil parabolique, maximal sur l'axe, de vitesse moyenne
+$\langle v\rangle = v_{\max}/2$. Le débit est proportionnel à la
+chute de pression (loi de Poiseuille) avec la \emph{\omterm{prop:b2:viscous-flows:poiseuille}{résistance hydraulique}}
+$R_h = \Delta P/D_V = 8\eta L/\pi R^4$ --- et à la \emph{puissance quatrième} du
+rayon. La \omterm{def:b2:viscous-flows:viscosity}{contrainte de cisaillement} à la paroi vaut $\tau_w = \Delta P\,R/2L = 4\eta\langle v
+\rangle/R$. Valable tant que $\mathrm{Re} = 2R\langle v\rangle/\nu \lesssim 2000$.
+\end{proposition}
+
+\begin{proof}
+Stationnaire, $\vect v = v(r)\vect e_z$ (le terme convectif est donc nul~: $\vect v
+\cdot\operatorname{\vect{grad}}$ agit selon $z$, direction selon laquelle rien ne
+varie). Navier--Stokes selon $z$~: $0 = -\partial_zP + \eta\Delta v$, et
+radialement $\partial_rP = 0$~: $P$ ne dépend que de $z$, $\Delta v$ que de $r$, donc
+les deux membres valent une constante, $\partial_zP = -\Delta P/L$. En coordonnées
+cylindriques $\Delta v = \frac1r\frac{\dd}{\dd r}\bigl(r\frac{\dd v}{\dd r}\bigr)$
+(énoncé~; c'est le bilan des forces visqueuses sur une coquille cylindrique,
+$2\pi rL\,\eta v'$ en $r$ et en $r + \dd r$). En intégrant deux fois avec $v$
+fini sur l'axe et $v(R) = 0$ on obtient la parabole~; $D_V = \int_0^Rv\,2\pi
+r\,\dd r$. La contrainte pariétale vaut $-\eta v'(R)$~; de façon équivalente, la force
+de pression $\pi R^2\Delta P$ équilibre le frottement pariétal $2\pi RL\tau_w$.
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}[font=\small, x=1cm, y=1cm, >=Stealth]
+  \begin{scope}
+    \draw[thick] (-2.8,1.0) -- (2.8,1.0) (-2.8,-1.0) -- (2.8,-1.0);
+    \fill[pattern=north east lines] (-2.8,1.0) rectangle (2.8,1.15); \fill[pattern=north east lines] (-2.8,-1.0) rectangle (2.8,-1.15);
+    \draw[omDef, thick, domain=-1:1, samples=40] plot ({-0.9+1.8*(1-\x*\x)},\x);
+    \foreach \y in {-0.8,-0.6,...,0.8} \draw[omDef, ->] (-0.9,\y) -- ({-0.9+1.8*(1-\y*\y)-0.05},\y);
+    \draw[dashed] (-0.9,-1) -- (-0.9,1);
+    \node[omDef, font=\footnotesize] at (1.6,0.3) {$v_{\max}$};
+    \node[font=\footnotesize] at (-2.3,0.0) {$P_1$}; \node[font=\footnotesize] at (2.4,0.0) {$P_2$};
+    \node[font=\footnotesize] at (0,-1.5) {$v(r) = \dfrac{\Delta P}{4\eta L}(R^2 - r^2)$};
+  \end{scope}
+  \begin{scope}[xshift=7.6cm]
+    \draw[thick] (-2.2,0) -- (2.2,0) (-2.2,0.5) -- (2.2,0.5) (-2.2,-0.5) -- (2.2,-0.5);
+    \draw[thick] (-2.2,-0.5) -- (-2.2,0.5) (2.2,-0.5) -- (2.2,0.5);
+    \fill[omDef!15] (-2.2,0) rectangle (2.2,0.5);
+    \draw[omThm, very thick, ->] (-3.2,0.25) -- (-2.25,0.25) node[pos=0.2, above, font=\footnotesize] {$P_1$};
+    \draw[omThm, very thick, ->] (3.2,0.25) -- (2.25,0.25) node[pos=0.2, above, font=\footnotesize] {$P_2$};
+    \draw[omProp, very thick, ->] (0.8,0.5) -- (-0.4,0.5) node[above, font=\footnotesize, pos=0.9] {$\tau(r+\dd r)$};
+    \draw[omProp, very thick, ->] (-0.4,0.0) -- (0.8,0.0) node[below, font=\footnotesize, pos=0.9] {$\tau(r)$};
+    \node[font=\footnotesize] at (0,-1.3) {coquille $[r, r + \dd r]$~: pression $=$ frottement visqueux};
+  \end{scope}
+\end{tikzpicture}
+
+{\small À gauche~: l'\omterm{prop:b2:viscous-flows:poiseuille}{écoulement de Poiseuille} --- le profil parabolique dans une conduite,
+entretenu par la chute de pression $P_1 - P_2$. À droite~: le bilan des forces sur une
+coquille cylindrique de fluide~: la différence de pression sur ses bases est
+équilibrée par les contraintes visqueuses sur ses surfaces intérieure et extérieure.}
+\end{omfigure}
+
+\begin{example}[La puissance quatrième]\label{ex:b2:viscous-flows:fourth}
+Une aiguille de seringue de diamètre intérieur \qty{0.4}{mm} et de longueur \qty{3}{cm},
+de l'eau, une pression du pouce de \qty{20}{kPa}~: $D_V = \pi(2 \times 10^{-4})^4 \times 2 \times
+10^4/(8 \times 10^{-3} \times 0.03) = \qty{0.42}{mL/s}$~; une aiguille deux fois plus large
+en donne seize fois plus. Une artère rétrécie par une plaque à $70\%$ de son
+rayon offre $(1/0.7)^4 = 4.2$ fois sa résistance~: le corps compense
+en élevant la pression en amont, ce qui explique en partie que l'athérosclérose
+et l'hypertension aillent de pair.
+\end{example}
+
+\begin{proposition}[Force de Stokes]\label{prop:b2:viscous-flows:stokes}
+\index{loi de Stokes}\index{vitesse limite}\index{sédimentation}
+Une sphère de rayon $R$ se déplaçant à la vitesse $v$ dans un fluide à
+$\mathrm{Re} = 2\rho vR/\eta \ll 1$ subit la traînée
+\[
+F = 6\pi\eta Rv ,
+\]
+opposée à sa vitesse. Une sphère de masse volumique $\rho_s$ tombant dans un fluide
+de masse volumique $\rho$ atteint la \emph{\omterm{prop:b2:viscous-flows:stokes}{vitesse limite}} $v_\infty =
+\dfrac{2R^2(\rho_s - \rho)g}{9\eta}$ --- c'est la loi de la sédimentation,
+des centrifugeuses et des gouttes d'huile de Millikan.
+\end{proposition}
+
+\begin{proof}
+La traînée est admise (c'est la solution exacte des équations de l'écoulement
+rampant autour d'une sphère, aux deux tiers du frottement visqueux, au tiers de
+la pression). \omterm{prop:b2:viscous-flows:stokes}{Vitesse limite}~: le poids diminué de la poussée d'Archimède, $\tfrac43\pi R^3(\rho_s -
+\rho)g$, égale la traînée~; toujours vérifier $\mathrm{Re} \ll 1$ ensuite.
+\end{proof}
+
+\begin{example}[Brouillard, pluie et poussière]\label{ex:b2:viscous-flows:fog}
+Une gouttelette de brouillard de \qty{10}{\micro m} de diamètre tombe dans l'air à $2 \times (5 \times
+10^{-6})^2 \times 10^4/(9 \times 1.8 \times 10^{-5}) = \qty{3}{mm/s}$ ($\mathrm{Re} = 2 \times
+10^{-3}$)~: le moindre courant ascendant la maintient en l'air, ce qui explique que les nuages
+flottent. Une goutte de pluie de \qty{1}{mm} donnerait \qty{30}{m/s} et $\mathrm{Re} \approx 2000$~:
+Stokes ne s'applique plus, et la traînée quadratique de la section suivante
+donne les \qty{4}{m/s} observés. Un grain de poussière de \qty{10}{\micro m} ($\rho_s =
+\qty{2500}{kg/m^3}$) sédimente à \qty{8}{mm/s}, un mètre en deux minutes ---
+une poussière plus fine reste en suspension des heures.
+\end{example}
+
+\section{Grand nombre de Reynolds~: couches limites et traînée}
+
+\begin{proposition}[La couche limite]\label{prop:b2:viscous-flows:bl}
+\index{couche limite}
+À grand \omterm{def:b2:viscous-flows:reynolds}{nombre de Reynolds}, l'écoulement autour d'un corps est celui d'un \omterm{def:b2:euler-bernoulli:perfect}{fluide
+parfait} partout, sauf dans une mince \emph{\omterm{prop:b2:viscous-flows:bl}{couche limite}} le long de la paroi,
+où la vitesse passe de sa valeur extérieure $U$ à zéro (adhérence).
+Le long d'une plaque plane son épaisseur croît comme
+\[
+\delta(x) \sim \sqrt{\frac{\nu x}{U}} = \frac{x}{\sqrt{\mathrm{Re}_x}} ,
+\qquad \mathrm{Re}_x = \frac{Ux}{\nu} ,
+\]
+où $x$ est la distance au bord d'attaque~; la couche elle-même devient
+turbulente au-delà de $\mathrm{Re}_x \sim 5 \times 10^5$. Le frottement visqueux sur la
+paroi, et le \emph{décollement} de la couche derrière un corps émoussé (qui
+laisse un sillage turbulent de basse pression), sont les deux sources de traînée.
+\end{proposition}
+
+\begin{proof}
+Ordre de grandeur~: une \omterm{def:b2:fluid-kinematics:particle}{particule de fluide} met le temps $x/U$ à parcourir
+la plaque, pendant lequel l'influence de la paroi diffuse dans le
+fluide --- le terme visqueux $\nu\,\partial^2v/\partial y^2$ est une diffusion de
+quantité de mouvement de diffusivité $\nu$, qui atteint la distance $\sqrt{\nu t}$ en
+un temps $t$ (\cref{ch:b2:particle-diffusion}). D'où $\delta \sim \sqrt{\nu x
+/U}$. La théorie complète (celle de Prandtl) est admise.
+\end{proof}
+
+\begin{proposition}[Traînée à grand nombre de Reynolds]\label{prop:b2:viscous-flows:drag}
+\index{coefficient de traînée}\index{crise de traînée}
+La traînée sur un corps de maître-couple $S$ se déplaçant à la vitesse $v$ dans un fluide s'écrit
+\[
+F = \tfrac12\rho v^2\,S\,C_x ,
+\]
+où le \emph{\omterm{prop:b2:viscous-flows:drag}{coefficient de traînée}} $C_x$ dépend de la forme et de
+$\mathrm{Re}$. Pour une sphère, $C_x = 24/\mathrm{Re}$ à $\mathrm{Re} \ll 1$ (Stokes,
+avec $\mathrm{Re}$ construit sur le diamètre), puis environ $0.4$--$0.5$, presque
+constant, de $\mathrm{Re} \approx 10^3$ à $2 \times 10^5$, où il chute
+brutalement à $0.1$ environ (la \emph{\omterm{prop:b2:viscous-flows:drag}{crise de traînée}}~: la \omterm{prop:b2:viscous-flows:bl}{couche limite} devient
+turbulente, adhère plus longtemps à la surface et le sillage se resserre --- les
+alvéoles d'une balle de golf la déclenchent plus tôt). Les corps profilés ont
+$C_x \approx 0.05$~; une voiture $0.3$~; un cycliste $0.9$~; une plaque plane face à l'écoulement
+$1.2$. La puissance nécessaire pour aller à $v$ vaut $Fv \propto v^3$.
+\end{proposition}
+\admitted
+
+\begin{omfigure}
+\begin{tikzpicture}
+\begin{axis}[omaxis, axis x line=bottom, axis y line=left, width=8.0cm, height=5.0cm,
+    xmode=log, ymode=log, xmin=0.1, xmax=1e7, ymin=0.05, ymax=300,
+    xlabel={$\mathrm{Re} = \rho v\,2R/\eta$}, ylabel={$C_x$},
+    xlabel style={at={(axis description cs:0.5,-0.12)}, anchor=north},
+    ylabel style={at={(axis description cs:-0.12,0.5)}, rotate=90, anchor=south},
+    xtick={0.1,10,1000,1e5,1e7}, ytick={0.1,1,10,100}, samples=100]
+  \addplot[omThm, thick, domain=0.1:2] {24/x};
+  \addplot[omThm, thick, domain=2:1000] {24/x*(1+0.15*x^0.687)};
+  \addplot[omThm, thick, domain=1000:2e5] {0.44};
+  \addplot[omThm, thick] coordinates {(2e5,0.44) (3.5e5,0.1)};
+  \addplot[omThm, thick, domain=3.5e5:1e7] {0.1+0.1*ln(x/3.5e5)/ln(30)};
+  \addplot[omDef, dashed, thick, domain=0.1:100] {24/x};
+  \node[font=\scriptsize, omDef, anchor=west] at (axis cs:6,40) {$24/\mathrm{Re}$ (Stokes)};
+  \node[font=\scriptsize] at (axis cs:1.5e4,0.9) {plateau $\approx 0.45$};
+  \node[font=\scriptsize] at (axis cs:1e6,0.06) {crise de traînée};
+\end{axis}
+\end{tikzpicture}
+\hfill
+\begin{tikzpicture}[font=\small, x=1cm, y=1cm, >=Stealth]
+  \draw[thick] (0,0) -- (5.0,0); \fill[pattern=north east lines] (0,-0.15) rectangle (5.0,0);
+  \draw[omDef, thick, domain=0.05:5.0, samples=40] plot (\x,{0.55*sqrt(\x)});
+  \foreach \x in {0.8,2.0,3.6} {
+    \foreach \y in {0.1,0.2,...,1.4} {
+      \pgfmathsetmacro{\d}{0.55*sqrt(\x)}
+      \pgfmathsetmacro{\u}{min(1,\y/\d)}
+      \draw[omThm, ->] (\x,\y) -- ({\x+0.9*\u*(2-(\u)*(1))*0.5+0.0},\y);
+    }
+  }
+  \draw[omThm, very thick, ->] (-0.9,1.6) -- (-0.1,1.6) node[above, font=\footnotesize, pos=0.3] {$U$};
+  \node[omDef, font=\footnotesize] at (4.2,1.55) {$\delta(x) \sim \sqrt{\nu x/U}$};
+  \node[font=\footnotesize] at (2.5,-0.5) {couche limite sur une plaque plane};
+\end{tikzpicture}
+
+{\small À gauche~: le \omterm{prop:b2:viscous-flows:drag}{coefficient de traînée} d'une sphère en fonction du \omterm{def:b2:viscous-flows:reynolds}{nombre de
+Reynolds} (échelles logarithmiques)~: la \omterm{prop:b2:viscous-flows:stokes}{loi de Stokes} à faible $\mathrm{Re}$, un plateau voisin de
+$0.45$, et la \omterm{prop:b2:viscous-flows:drag}{crise de traînée} vers $\mathrm{Re} = 2 \times 10^5$. À droite~: la
+\omterm{prop:b2:viscous-flows:bl}{couche limite} qui s'épaissit le long d'une plaque plane~; à l'extérieur l'écoulement est
+celui d'un \omterm{def:b2:euler-bernoulli:perfect}{fluide parfait}.}
+\end{omfigure}
+
+\begin{example}[Un cycliste, une voiture]\label{ex:b2:viscous-flows:cyclist}
+Un cycliste ($SC_x = \qty{0.35}{m^2}$) à \qty{10}{m/s}~: $F = 0.5 \times 1.2 \times 100
+\times 0.35 = \qty{21}{N}$, $P = \qty{210}{W}$ --- un effort soutenable~; à \qty{15}{m/s}
+(\qty{54}{km/h}) il faudrait \qty{710}{W}, d'où l'intérêt de prendre la roue au sprint.
+Une voiture ($SC_x = \qty{0.7}{m^2}$) à \qty{130}{km/h}~: \qty{550}{N}, \qty{20}{kW} contre
+le seul air --- la consommation sur autoroute est pour l'essentiel de la traînée.
+\end{example}
+
+\begin{remark}[Tension superficielle]\label{rem:b2:viscous-flows:capillarity}
+\index{tension superficielle}\index{pression de Laplace}\index{longueur capillaire}
+Une seconde force réside aux frontières d'un liquide~: sa surface libre
+se comporte comme une membrane tendue de tension $\gamma$ (\unit{N/m}~; eau
+\qty{0.072}{N/m}), parce qu'il manque aux molécules de surface la moitié de leurs voisines.
+La pression à l'intérieur d'une goutte de rayon $R$ dépasse la pression extérieure de
+la \emph{\omterm{rem:b2:viscous-flows:capillarity}{pression de Laplace}} $2\gamma/R$ (\qty{1.4}{kPa} dans une goutte de \qty{0.1}{mm},
+\qty{14}{bar} dans une goutte de \qty{10}{nm})~; la \omterm{rem:b2:viscous-flows:capillarity}{tension superficielle} l'emporte sur la pesanteur en dessous de
+la \emph{\omterm{rem:b2:viscous-flows:capillarity}{longueur capillaire}} $\sqrt{\gamma/\rho g} = \qty{2.7}{mm}$ pour l'eau ---
+la taille des gouttes de rosée, du ménisque dans un verre, de l'ascension dans un
+tube capillaire ($h = 2\gamma/\rho gr$, loi de Jurin). C'est pourquoi de petits insectes marchent
+sur l'eau, pourquoi les poils d'un pinceau se collent quand il est mouillé, et pourquoi un
+jet liquide se brise en gouttes.
+\end{remark}
+
+\begin{method}[Quel régime~?]\label{met:b2:viscous-flows:regime}
+Avant tout calcul d'écoulement visqueux, calculer $\mathrm{Re}$. $\mathrm{Re} \ll 1$~:
+Stokes et écoulement rampant, traînée $\propto v$, chutes de pression $\propto$ au
+débit. $\mathrm{Re}$ jusqu'à $\sim\!2000$ dans une conduite~: laminaire, Poiseuille. Au-delà~:
+turbulent --- Poiseuille sous-estime gravement la perte~; utiliser la
+loi empirique $\Delta P = \lambda(L/D)\,\tfrac12\rho\langle v\rangle^2$ avec $\lambda
+\approx 0.3/\mathrm{Re}^{1/4}$ pour les conduites lisses, et $F = \tfrac12\rho v^2SC_x$ pour les
+corps. Dans tous les cas, vérifier ensuite que le $\mathrm{Re}$ calculé
+à partir du résultat s'accorde avec le régime supposé.
+\end{method}
+
+\section{Exercices}
+
+\begin{exercise}[$\star$]\label{exo:b2:viscous-flows:1}
+Une plaque de \qty{0.50}{m^2} glisse à \qty{2.0}{m/s} sur un film d'huile de \qty{0.20}{mm}
+($\eta = \qty{0.25}{Pa.s}$). \omterm{def:b2:viscous-flows:viscosity}{Contrainte de cisaillement}, force sur la plaque, puissance
+dissipée~; comparer au frottement sec ($f = 0.3$) si la plaque pèse
+\qty{10}{kg}.
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b2:viscous-flows:2}
+\omterm{def:b2:viscous-flows:reynolds}{Nombres de Reynolds} de~: (a) une bactérie de \qty{2}{\micro m} à \qty{30}{\micro m/s} dans
+l'eau~; (b) un nageur (\qty{1.8}{m}, \qty{1.5}{m/s})~; (c) une voiture (\qty{4}{m},
+\qty{30}{m/s}) dans l'air~; (d) le sang dans l'aorte (\qty{2.5}{cm}, \qty{0.33}{m/s},
+$\nu = \qty{3.3e-6}{m^2/s}$)~; (e) de l'huile ($\eta = \qty{0.1}{Pa.s}$, $\rho =
+\qty{900}{kg/m^3}$) à \qty{0.5}{m/s} dans une conduite de \qty{1}{cm}. Régime de chacun.
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b2:viscous-flows:3}
+De l'eau est poussée à travers une aiguille de \qty{0.40}{mm} (diamètre intérieur) et \qty{3.0}{cm}
+sous \qty{20}{kPa}. Débit~; temps pour injecter \qty{5}{mL}~; vitesse maximale
+et \omterm{def:b2:viscous-flows:reynolds}{nombre de Reynolds}~; contrainte pariétale. Et avec une aiguille de \qty{0.80}{mm}~?
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b2:viscous-flows:4}
+\omterm{prop:b2:viscous-flows:stokes}{Vitesses limites} dans l'air ($\eta = \qty{1.8e-5}{Pa.s}$) (a) d'un grain de pollen de \qty{20}{\micro m}
+($\rho_s = \qty{1100}{kg/m^3}$), (b) d'une particule de fumée de \qty{2}{\micro m}
+($\rho_s = \qty{2000}{kg/m^3}$), (c) d'une goutte de bruine de \qty{0.2}{mm}.
+Vérifier $\mathrm{Re}$ dans chaque cas~; temps pour tomber de \qty{1}{m}.
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b2:viscous-flows:5}
+Une conduite d'eau de diamètre \qty{30}{cm} transporte \qty{0.10}{m^3/s} sur
+\qty{1.0}{km}. (a) Vitesse moyenne et \omterm{def:b2:viscous-flows:reynolds}{nombre de Reynolds}. (b) Chute de pression si
+la loi de Poiseuille s'appliquait. (c) Chute réelle avec $\lambda = 0.3/\mathrm{Re}^{1/4}$~;
+rapport à (b)~; puissance de pompage. (d) Le même débit dans deux conduites
+parallèles de \qty{21}{cm} (même section totale)~: chute et puissance.
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b2:viscous-flows:6}
+Des cellules de \qty{10}{\micro m} de diamètre et de masse volumique \qty{1050}{kg/m^3} dans l'eau.
+(a) Vitesse de sédimentation sous la pesanteur~; temps pour parcourir \qty{5}{cm}. (b) Dans
+une centrifugeuse à $1000\,g$. (c) Vitesse de rotation minimale pour $1000\,g$ à
+\qty{10}{cm} de rayon. (d) Pourquoi peut-on séparer d'abord les plus grosses particules~?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b2:viscous-flows:7}
+Un cycliste ($SC_x = \qty{0.35}{m^2}$, \omterm{prop:b2:rigid-body-mechanics:power}{résistance au roulement} \qty{4}{N}) roule à
+\qty{12}{m/s}. (a) Traînée et puissance totale. (b) À \qty{15}{m/s}. (c) Contre un
+vent debout de \qty{5}{m/s} à \qty{12}{m/s} de vitesse sol. (d) Prendre la roue réduit
+$C_x$ de $30\%$~: puissance économisée. (e) En descente à $5\%$ sans pédaler
+(masse \qty{80}{kg})~: \omterm{prop:b2:viscous-flows:stokes}{vitesse limite}.
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b2:viscous-flows:8}
+Traînée quadratique. (a) \omterm{prop:b2:viscous-flows:stokes}{Vitesse limite} d'une balle de golf (\qty{46}{g}, \qty{43}{mm},
+$C_x = 0.25$) et d'un parachutiste (\qty{80}{kg}, $SC_x = \qty{0.7}{m^2}$, puis
+$\qty{25}{m^2}$ parachute ouvert). (b) Équation du mouvement pour une chute
+partant du repos avec traînée quadratique~; montrer que $v = v_\infty\tanh(gt/v_\infty)$. (c)
+Temps et distance pour que le parachutiste atteigne $90\%$ de $v_\infty$.
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b2:viscous-flows:9}
+\emph{Viscosimètre de Couette.} Un cylindre de rayon \qty{5.0}{cm} et de hauteur
+\qty{10}{cm} tourne à \qty{10}{rad/s} à l'intérieur d'un cylindre fixe, l'entrefer de
+\qty{1.0}{mm} étant rempli du liquide à étudier~; le couple nécessaire vaut
+\qty{2.0e-2}{N.m}. (a) En traitant l'entrefer comme un écoulement de Couette plan, taux
+et \omterm{def:b2:viscous-flows:viscosity}{contrainte de cisaillement}. (b) \omterm{def:b2:viscous-flows:viscosity}{Viscosité}. (c) \omterm{def:b2:viscous-flows:reynolds}{Nombre de Reynolds} de l'écoulement dans l'entrefer~;
+l'écoulement est-il laminaire~? (d) Pourquoi fait-on l'entrefer mince~?
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b2:viscous-flows:10}
+\emph{Un réseau vasculaire.} Le sang ($\eta = \qty{3.5}{mPa.s}$) s'écoule à
+\qty{5.0}{L/min}. (a) \omterm{prop:b2:viscous-flows:poiseuille}{Résistance hydraulique} de l'aorte (rayon \qty{1.25}{cm},
+longueur \qty{40}{cm}) et chute de pression le long de celle-ci. (b) Les $10^{10}$
+capillaires (rayon \qty{4}{\micro m}, longueur \qty{1}{mm}) sont en parallèle~:
+résistance de l'un, de tous, et chute de pression aux bornes du lit
+capillaire. (c) Les artérioles ($10^8$, rayon \qty{10}{\micro m}, longueur
+\qty{2}{mm})~: mêmes questions~; où se situe la résistance de la circulation~?
+(d) La chute totale vaut \qty{13}{kPa}~: puissance du ventricule gauche,
+et quelle fraction des \qty{100}{W} de l'organisme. (e) Un médicament dilate les
+artérioles de $10\%$~: effet sur la résistance totale.
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b2:viscous-flows:11}
+\emph{\omterm{prop:b2:viscous-flows:bl}{Couche limite} et traînée de frottement.} Une plaque plane de longueur $L$ et de
+largeur $b$ se déplace dans son plan à $U$. En régime laminaire la contrainte pariétale
+vaut $\tau_w = 0.332\,\rho U^2/\sqrt{\mathrm{Re}_x}$ (Blasius). (a) Montrer que
+la \omterm{def:b2:rigid-body-mechanics:contact}{force de frottement} sur une face vaut $F = 0.664\,\rho U^2bL/\sqrt{\mathrm{Re}_L}$.
+(b) Épaisseur de \omterm{prop:b2:viscous-flows:bl}{couche limite} au bord de fuite d'une plaque de \qty{1}{m}
+dans l'eau à \qty{0.3}{m/s}, et force sur une plaque de \qty{1}{m^2} (les deux
+faces). (c) À \qty{10}{m/s}~: $\mathrm{Re}_L$, et pourquoi la formule ne
+s'applique plus. (d) Coque d'un navire (\qty{100}{m}, \qty{10}{m/s})~: estimation de l'épaisseur
+de \omterm{prop:b2:viscous-flows:bl}{couche limite} à la poupe en admettant la loi turbulente $\delta \approx
+0.37x/\mathrm{Re}_x^{1/5}$.
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b2:viscous-flows:12}
+\emph{Un film qui ruisselle.} Un film liquide d'épaisseur $h$ s'écoule le long d'une
+paroi verticale sous la pesanteur, en régime stationnaire, l'air n'exerçant aucune contrainte sur
+sa surface libre. (a) Écrire Navier--Stokes pour $\vect v = v(y)\vect e_z$ ($y$
+étant la distance à la paroi, $z$ orienté vers le bas) et les conditions aux limites.
+(b) Montrer que $v(y) = \dfrac{\rho g}{2\eta}(2hy - y^2)$ et calculer le débit
+par unité de largeur $q = \rho gh^3/3\eta$. (c) Une couche de peinture fraîche ($\eta =
+\qty{0.5}{Pa.s}$, $\rho = \qty{1200}{kg/m^3}$) de \qty{0.2}{mm} d'épaisseur~: vitesse
+de surface et débit~; de combien la surface descend-elle en \qty{10}{min}~? Pourquoi
+la peinture coule-t-elle si on l'applique trop épaisse~? (d) Du miel ($\eta = \qty{10}{Pa.s}$)
+sur \qty{2}{mm} d'épaisseur sur une cuillère verticale~: vitesse de surface.
+\end{exercise}
+
+\begin{omfigure}
+\includegraphics[width=0.34\linewidth]{images/book4/karman-vortex-street.jpg}
+
+{\small Une allée tourbillonnaire de von Kármán dans les nuages en aval d'une île, vue de l'espace~: le sillage d'un cylindre à un \omterm{def:b2:viscous-flows:reynolds}{nombre de Reynolds} de quelques centaines, dessiné à l'échelle de la centaine de kilomètres (NASA).}
+\end{omfigure}
+
+\section{Problème~: le sang, le pétrole brut et la pluie}
+
+\begin{problem}[{Problème du week-end --- les mêmes lois visqueuses dans une artère,
+dans un oléoduc de mille kilomètres, et dans une goutte qui tombe}]
+\label{pb:b2:viscous-flows:1}
+
+\medskip
+\noindent\textbf{Partie I --- Le sang.}
+Sang~: $\rho = \qty{1060}{kg/m^3}$, $\eta = \qty{3.5e-3}{Pa.s}$ (traité comme
+newtonien)~; débit cardiaque $D_V = \qty{5.0}{L/min}$.
+\begin{enumerate}
+  \item Aorte, rayon \qty{1.25}{cm}~: vitesse moyenne, \omterm{def:b2:viscous-flows:reynolds}{nombre de Reynolds}, régime.
+  \item Si l'écoulement dans l'aorte était celui de Poiseuille, que vaudraient la
+        vitesse maximale et la contrainte pariétale~? (L'endothélium
+        perçoit des contraintes de l'ordre de \qty{1}{Pa}.)
+  \item Un capillaire, de rayon \qty{4.0}{\micro m}, transporte le sang à
+        \qty{0.30}{mm/s}~: \omterm{def:b2:viscous-flows:reynolds}{nombre de Reynolds}~; chute de pression sur sa
+        longueur de \qty{1.0}{mm}, en pascals et en millimètres de mercure
+        (\qty{1}{mmHg} = \qty{133}{Pa}).
+  \item Temps mis par un globule rouge pour traverser le capillaire~; pourquoi est-ce le
+        bon ordre de grandeur pour les échanges gazeux~?
+  \item Artérioles (rayon \qty{10}{\micro m}, longueur \qty{2.0}{mm}, $10^8$
+        en parallèle)~: résistance de l'ensemble et chute de pression
+        à ses bornes au débit cardiaque maximal.
+  \item La chute totale des artères aux veines vaut \qty{13}{kPa}~: puissance
+        mécanique fournie par le ventricule gauche. Comparer à un
+        organisme de \qty{100}{W}.
+  \item Une sténose réduit de $40\%$ le rayon d'une artère coronaire
+        sur une faible longueur~: facteur d'augmentation de sa résistance~; pourquoi
+        le muscle cardiaque en aval peut encore être alimenté au repos mais
+        pas à l'effort.
+  \item Lors d'un effort intense le débit cardiaque atteint \qty{25}{L/min}~:
+        \omterm{def:b2:viscous-flows:reynolds}{nombre de Reynolds} dans l'aorte, et régime.
+  \item Le sang n'est pas newtonien~: sa \omterm{def:b2:viscous-flows:viscosity}{viscosité} apparente diminue à fort
+        taux de cisaillement et augmente à faible taux. Lequel des vaisseaux ci-dessus est le
+        plus affecté, et dans quel sens~?
+\end{enumerate}
+
+\medskip
+\noindent\textbf{Partie II --- L'oléoduc.}
+Un oléoduc de pétrole brut~: diamètre $D = \qty{1.2}{m}$, longueur $L = \qty{1300}{km}$,
+débit $D_V = \qty{3.0}{m^3/s}$~; pétrole $\rho = \qty{850}{kg/m^3}$, $\eta =
+\qty{2.0e-2}{Pa.s}$ maintenu chaud. Frottement turbulent~: $\Delta P = \lambda
+(L/D)\tfrac12\rho\langle v\rangle^2$, $\lambda = 0.316/\mathrm{Re}^{1/4}$.
+\begin{enumerate}[resume]
+  \item Vitesse moyenne et \omterm{def:b2:viscous-flows:reynolds}{nombre de Reynolds}~; régime.
+  \item Chute de pression par kilomètre et sur toute la ligne.
+  \item La conduite supporte \qty{80}{bar}~: nombre minimal de stations de pompage
+        le long de la ligne.
+  \item Puissance de pompage totale~; énergie par mètre cube de pétrole livré,
+        comparée au contenu énergétique du pétrole (\qty{36}{GJ/m^3}).
+  \item Quelle chute la loi de Poiseuille prédirait-elle~? Commenter le coût
+        de la turbulence (et pourquoi on injecte dans certains oléoducs des
+        additifs polymères qui retardent la turbulence).
+  \item En hiver, non chauffé, le pétrole atteindrait $\eta = \qty{2.0}{Pa.s}$~:
+        nouveau \omterm{def:b2:viscous-flows:reynolds}{nombre de Reynolds} et régime~; chute de pression sur la ligne
+        avec la loi appropriée. Conclusion pour la conception (la ligne
+        réelle est calorifugée et le pétrole maintenu chaud).
+  \item Temps de transit du pétrole d'un bout à l'autre.
+  \item Contrainte pariétale dans le cas chaud et turbulent, déduite de la
+        chute de pression~; \omterm{def:b2:rigid-body-mechanics:contact}{force de frottement} totale sur la paroi.
+  \item Le même débit dans une conduite de \qty{1.0}{m}~: par quel facteur la
+        chute de pression turbulente est-elle modifiée~?
+  \item Un grain de sable de \qty{0.10}{mm} ($\rho_s = \qty{2650}{kg/m^3}$) est emporté
+        par le pétrole chaud~: vitesse de sédimentation de Stokes, \omterm{def:b2:viscous-flows:reynolds}{nombre de Reynolds} du
+        grain, temps pour traverser la conduite. Comparer aux
+        fluctuations turbulentes de vitesse, quelques pour cent de $\langle v
+        \rangle$~: le sable sédimente-t-il dans l'oléoduc en service~? À
+        l'arrêt~?
+\end{enumerate}
+
+\medskip
+\noindent\textbf{Partie III --- Les gouttes.}
+Air~: $\rho = \qty{1.2}{kg/m^3}$, $\eta = \qty{1.8e-5}{Pa.s}$~; eau $\rho_w =
+\qty{1000}{kg/m^3}$, $\gamma = \qty{0.072}{N/m}$.
+\begin{enumerate}[resume]
+  \item Gouttelette de nuage, diamètre \qty{10}{\micro m}~: \omterm{prop:b2:viscous-flows:stokes}{vitesse limite} de Stokes,
+        \omterm{def:b2:viscous-flows:reynolds}{nombre de Reynolds}, temps pour tomber de \qty{1}{km}~; pourquoi le nuage subsiste.
+  \item Bruine, \qty{0.20}{mm}~: vitesse de Stokes et \omterm{def:b2:viscous-flows:reynolds}{nombre de Reynolds}~; Stokes
+        est-il encore fiable~?
+  \item Goutte de pluie, \qty{2.0}{mm}~: montrer que Stokes échoue, et trouver la \omterm{prop:b2:viscous-flows:stokes}{vitesse
+        limite} avec $C_x = 0.5$. Temps pour tomber de \qty{1}{km}.
+  \item Dans un courant ascendant de \qty{1}{cm/s}, la gouttelette de nuage monte-t-elle ou
+        descend-elle~? Quel courant ascendant retiendrait la goutte de bruine~?
+  \item \omterm{rem:b2:viscous-flows:capillarity}{Pression de Laplace} dans les trois gouttes~; comparer à la
+        \omterm{thm:b2:euler-bernoulli:bernoulli}{pression dynamique} $\tfrac12\rho v_\infty^2$ pour chacune, et expliquer pourquoi
+        les grosses gouttes de pluie s'aplatissent et se brisent au-delà de \qty{5}{mm} environ.
+  \item Donner en un tableau, pour les huit écoulements de ce problème, le
+        \omterm{def:b2:viscous-flows:reynolds}{nombre de Reynolds} et la loi qui le gouverne.
+\end{enumerate}
+\end{problem}

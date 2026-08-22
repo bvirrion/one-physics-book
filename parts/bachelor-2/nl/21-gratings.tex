@@ -1,0 +1,562 @@
+\chapter{Meergolvige interferentie en tralies}\label{ch:b2:gratings}
+
+Kantel een compactschijf onder een lamp en zij werpt een regenboog: haar
+spiraal van putjes, anderhalve micrometer uit elkaar, is een tralie ---
+duizenden kleine weerkaatsende strookjes, die elk een kopie van de golf
+terugzenden, alle interfererend. Twee golven geven de zachte
+$\cos^2$-strepen van de vorige hoofdstukken; duizend geven strepen die
+duizend keer smaller zijn, scherp genoeg om twee golflengten te
+scheiden die één deel op honderdduizend verschillen. Dat is het
+instrument waarmee de samenstelling van de zon en de snelheid van
+sterrenstelsels werden afgelezen, en dat in elke spectrometer zit. Dit
+hoofdstuk telt $N$ golven op, leidt de \omterm{prop:b2:gratings:equation}{tralievergelijking} af, haar
+dispersie en haar oplossend vermogen, en ontmoet het andere meergolvige
+werktuig, de fabry-pérotholte die de resonator van de laser zal worden.
+
+\begin{omfigure}
+\includegraphics[width=0.54\linewidth]{images/book4/ai/b4-21-cd-diffraction-colours.png}
+
+{\small Een compactschijf in zonlicht: haar spiraal van putjes,
+$\qty{1.6}{\micro m}$ uit elkaar, is een weerkaatsingstralie, en elke orde
+spreidt het witte licht tot een spectrum.}
+\end{omfigure}
+
+\section{Interferentie van $N$ golven}
+
+\begin{theorem}[$N$ gelijke golven met rekenkundig oplopende fase]\label{thm:b2:gratings:nwaves}
+\index{meergolvige interferentie}\index{hoofdmaximum}\index{nevenmaximum}\index{fasor}
+$N$ coherente golven met gelijke amplitude $a$, die elk over de fase $\varphi$
+bij de vorige achterblijven, tellen op tot een golf met amplitude $A(\varphi)$ en
+intensiteit
+\[
+A = a\,\frac{\sin(N\varphi/2)}{\sin(\varphi/2)} , \qquad
+I(\varphi) = I_0\,\frac{\sin^2(N\varphi/2)}{\sin^2(\varphi/2)} :
+\]
+\emph{hoofdmaxima} met intensiteit $N^2I_0$ waar $\varphi = 2\pi p$ (alle
+golven in fase), met hoekhalfbreedte $2\pi/N$ in $\varphi$ (de eerste nullen
+liggen bij $\varphi = 2\pi p \pm 2\pi/N$), gescheiden door $N - 2$
+\emph{nevenmaxima} die niet hoger zijn dan ongeveer $4.5\%$ van de
+hoofdmaxima bij grote $N$. Hoe
+meer golven, hoe scherper en helderder de pieken: de breedte
+krimpt als $1/N$, de hoogte groeit als $N^2$, de energie (hun product)
+als $N$.
+\end{theorem}
+
+\begin{proof}
+Complexe amplituden $a\eu^{\iu k\varphi}$, $k = 0, \dots, N - 1$: een meetkundige
+reeks,
+$a(1 - \eu^{\iu N\varphi})/(1 - \eu^{\iu\varphi}) = a\eu^{\iu(N - 1)\varphi/2}\sin(N\varphi/2)
+/\sin(\varphi/2)$.
+Nullen waar $\sin(N\varphi/2) = 0$ maar $\sin(\varphi/2) \ne 0$:
+$\varphi = 2\pi
+m/N$, met $m$ geen veelvoud van $N$. In het fasorbeeld
+sluiten de $N$ pijlen
+zich bij de nullen tot een regelmatige veelhoek en liggen zij bij de hoofdmaxima
+op één lijn.
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}[font=\small, x=1cm, y=1cm, >=Stealth]
+  \begin{scope}
+    \foreach \k in {0,1,2,3,4} {
+      \draw[omDef, thick, ->] ({0.9*sin(\k*36)},{0.9-0.9*cos(\k*36)}) -- ({0.9*sin((\k+1)*36)},{0.9-0.9*cos((\k+1)*36)});
+    }
+    \draw[omThm, very thick, ->] (0,0) -- ({0.9*sin(180)},{0.9-0.9*cos(180)});
+    \node[font=\footnotesize] at (0.3,-0.4) {$N = 5$, $\varphi = 36^\circ$};
+    \node[omThm, font=\footnotesize] at (0.45,1.0) {$A$};
+  \end{scope}
+  \begin{scope}[xshift=3.2cm]
+    \foreach \k in {0,1,2,3,4} {
+      \draw[omDef, thick, ->] ({0.55*sin(\k*72)},{0.55-0.55*cos(\k*72)}) -- ({0.55*sin((\k+1)*72)},{0.55-0.55*cos((\k+1)*72)});
+    }
+    \node[font=\footnotesize] at (0.0,-0.4) {$\varphi = 72^\circ$: nul};
+  \end{scope}
+  \begin{scope}[xshift=9.0cm]
+    \begin{axis}[omaxis, axis x line=bottom, axis y line=left, width=7.4cm, height=4.2cm, at={(0,-1.6cm)},
+        xlabel={$\varphi/2\pi$}, ylabel={$I/N^2I_0$}, xmin=-0.1, xmax=1.1, ymin=0, ymax=1.08, xtick={0,0.5,1}, ytick={0.5,1}, samples=500,
+        xlabel style={at={(axis description cs:0.5,-0.14)}, anchor=north},
+        ylabel style={at={(axis description cs:-0.1,0.5)}, rotate=90, anchor=south},
+        legend style={font=\scriptsize, at={(0.5,-0.3)}, anchor=north, draw=none, fill=none, legend columns=3}]
+      \addplot[omDef, thick, domain=-0.1:1.1] {cos(deg(pi*x))^2};
+      \addplot[omThm, thick, domain=-0.1:1.1] {(sin(deg(5*pi*x))/(5*sin(deg(pi*x))+1e-9))^2};
+      \addplot[omProp, thick, domain=-0.1:1.1] {(sin(deg(12*pi*x))/(12*sin(deg(pi*x))+1e-9))^2};
+      \legend{$N = 2$, $N = 5$, $N = 12$}
+    \end{axis}
+  \end{scope}
+\end{tikzpicture}
+
+{\small Links: de fasorsom van vijf gelijke golven --- een regelmatige waaier
+waarvan de koorde de resultante is; hij sluit zich tot een vijfhoek, en verdwijnt,
+bij $\varphi = 2\pi/5$. Rechts: de intensiteit voor $2$, $5$ en $12$ golven,
+genormeerd
+op haar piek: de hoofdmaxima verscherpen als $1/N$.}
+\end{omfigure}
+
+\section{Het buigingstralie}
+
+\begin{proposition}[Tralievergelijking]\label{prop:b2:gratings:equation}
+\index{buigingstralie}\index{tralievergelijking}\index{orde (tralie)}\index{hoekdispersie}
+Een \emph{tralie} is een stel van $N$ gelijke, gelijk verdeelde, evenwijdige spleten
+(of groeven) met periode $a$. Een vlakke golf die onder de hoek $\theta_0$
+met de normaal invalt, wordt door elke spleet opnieuw uitgezonden; in de
+richting $\theta$ hebben
+de golven van naburige spleten het \omterm{thm:b2:two-wave-interference:formula}{wegverschil}
+$\delta = a(\sin\theta
+- \sin\theta_0)$, en versterken zij elkaar in de
+richtingen
+\[
+a\,(\sin\theta_p - \sin\theta_0) = p\lambda , \qquad p = 0, \pm1, \pm2, \dots
+\]
+--- de \emph{orden} van het tralie. De orde nul is de onafgebogen
+bundel voor elke golflengte; elke andere orde spreidt de golflengten,
+met de \emph{hoekdispersie}
+\[
+\frac{\dd\theta}{\dd\lambda} = \frac{p}{a\cos\theta} ,
+\]
+groter voor een fijner tralie en een hogere orde; de hoogste orde is
+$|p| \le a(1 + |\sin\theta_0|)/\lambda$. Een \emph{weerkaatsingstralie}
+(groeven getrokken
+op een spiegel) gehoorzaamt dezelfde vergelijking met de weerkaatste hoeken.
+\end{proposition}
+
+\begin{proof}
+De fase tussen opeenvolgende spleten is $\varphi = 2\pi\delta/\lambda$; de
+hoofdmaxima
+van \cref{thm:b2:gratings:nwaves} liggen bij $\delta = p\lambda$.
+Differentieer $a\sin\theta = p\lambda + a\sin\theta_0$ bij vaste $p$, $\theta_0$.
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}[font=\small, x=1cm, y=1cm, >=Stealth]
+  \begin{scope}
+    \draw[thick] (0,-1.8) -- (0,-1.3) (0,-1.0) -- (0,-0.5) (0,-0.2) -- (0,0.3) (0,0.6) -- (0,1.1) (0,1.4) -- (0,1.9);
+    \foreach \y in {-1.15,-0.35,0.45,1.25} \draw[omDef, thick, ->] (0.1,\y) -- (2.6,{\y+0.9});
+    \draw[omDef, thick, ->] (-2.4,0) -- (-0.1,0) node[above, pos=0.4, font=\footnotesize] {$\theta_0 = 0$};
+    \draw[dashed] (0.1,-0.35) -- (2.6,-0.35); \draw (1.6,-0.35) arc[start angle=0, end angle=19.8, radius=1.6]; \node[font=\footnotesize] at (1.95,-0.1) {$\theta$};
+    \draw[omThm, dashed] (0.1,0.45) -- (0.355,-0.258);
+    \draw[omThm, very thick] (0.1,-0.35) -- (0.355,-0.258);
+    \node[omThm, font=\footnotesize] at (0.85,-0.6) {$a\sin\theta$};
+    \draw[<->] (-0.35,-0.35) -- (-0.35,0.45) node[midway, left, font=\footnotesize] {$a$};
+    \node[font=\footnotesize] at (0.8,-2.3) {$a(\sin\theta - \sin\theta_0) = p\lambda$};
+  \end{scope}
+  \begin{scope}[xshift=8.0cm]
+    \draw[thick] (-2.8,0) -- (2.8,0);
+    \fill[omExo!70] (-0.2,0.1) rectangle (0.2,0.9); \node[font=\footnotesize] at (0,1.15) {$p = 0$};
+    \fill[omDef!70] (0.7,0.1) rectangle (0.95,0.9); \fill[omThm!70] (1.3,0.1) rectangle (1.6,0.9);
+    \fill[omDef!70] (-0.95,0.1) rectangle (-0.7,0.9); \fill[omThm!70] (-1.6,0.1) rectangle (-1.3,0.9);
+    \node[font=\footnotesize] at (1.15,1.15) {$p = 1$}; \node[font=\footnotesize] at (-1.15,1.15) {$p = -1$};
+    \fill[omDef!70] (1.7,0.1) rectangle (2.0,0.9); \fill[omThm!70] (2.5,0.1) rectangle (2.8,0.9); \node[font=\footnotesize] at (2.25,1.15) {$p = 2$};
+    \fill[omDef!70] (-2.0,0.1) rectangle (-1.7,0.9); \fill[omThm!70] (-2.8,0.1) rectangle (-2.5,0.9);
+    \node[font=\footnotesize, omDef] at (0.8,-0.35) {violet}; \node[font=\footnotesize, omThm] at (1.5,-0.35) {rood};
+    \node[font=\footnotesize] at (0,-0.9) {spectra van opeenvolgende orden, wijder met $p$};
+  \end{scope}
+\end{tikzpicture}
+
+{\small Links: het tralie --- naburige spleten zenden opnieuw uit met het
+\omterm{thm:b2:two-wave-interference:formula}{wegverschil} $a\sin\theta$ bij loodrechte inval. Rechts: op een scherm de
+witte orde nul en de spectra van de orden $\pm1$, $\pm2$, violet
+het dichtst bij het midden, breder (en uiteindelijk overlappend) naarmate
+$p$ groeit.}
+\end{omfigure}
+
+\begin{example}[Een tralie voor het practicum en een cd]\label{ex:b2:gratings:examples}
+Een tralie met $600$ lijnen per millimeter ($a = \qty{1.67}{\micro m}$) bij
+loodrechte
+inval zendt licht van \qty{500}{nm} naar $\sin\theta = 0.3$,
+$\theta = \qty{17.5}{\degree}$ in
+de eerste orde, $\qty{36.9}{\degree}$ in de tweede, en heeft geen derde orde
+($3 \times 0.3 > 1$); zijn spectrum van de eerste orde loopt van \qty{13.9}{\degree}
+(\qty{400}{nm}) tot \qty{24.8}{\degree} (\qty{700}{nm}). Een compactschijf,
+$a =
+\qty{1.6}{\micro m}$, is zo'n tralie in weerkaatsing --- vandaar de
+regenboog,
+en het feit dat een dvd ($a = \qty{0.74}{\micro m}$) hem wijder spreidt. Het
+rood van de tweede orde (\qty{700}{nm} bij $\sin\theta = 0.84$) overlapt het violet
+van de derde: voorbij de eerste overlappen de orden, een ongemak dat met filters
+of een prisma wordt verholpen.
+\end{example}
+
+\section{Oplossend vermogen}
+
+\begin{proposition}[Oplossend vermogen van een tralie]\label{prop:b2:gratings:resolution}
+\index{oplossend vermogen (tralie)}\index{criterium van Rayleigh (spectraal)}
+Twee dicht bijeen liggende golflengten $\lambda$ en
+$\lambda + \Delta\lambda$ zijn in orde $p$ net opgelost
+wanneer het \omterm{thm:b2:gratings:nwaves}{hoofdmaximum} van de ene op de eerste nul van de andere valt
+(het criterium van Rayleigh), wat gebeurt voor
+\[
+\frac\lambda{\Delta\lambda} = pN :
+\]
+is het \emph{oplossend vermogen} de orde maal het aantal belichte
+lijnen. Men kan het ook schrijven als $W(\sin\theta - \sin\theta_0)/\lambda$
+met $W = Na$ de
+breedte van het tralie: het grootste \omterm{thm:b2:two-wave-interference:formula}{wegverschil} over het tralie,
+in golflengten --- en daarom gebruiken grote spectrografen tralies van tientallen
+centimeters breed en werken zij onder scherende hoeken.
+\end{proposition}
+
+\begin{proof}
+Het maximum van orde $p$ voor $\lambda + \Delta\lambda$ ligt bij
+$\varphi = 2\pi p$ voor die
+golflengte, dat wil zeggen bij $\delta = p(\lambda + \Delta\lambda)$; de
+eerste nul van het maximum
+voor $\lambda$ ligt bij $\delta = p\lambda + \lambda/N$. Gelijkstellen:
+$p\Delta\lambda = \lambda/N$. Dan
+$pN =
+Na(\sin\theta - \sin\theta_0)/\lambda$.
+\end{proof}
+
+\begin{example}[De natriumlijnen scheiden]\label{ex:b2:gratings:sodium}
+De doublet, $\Delta\lambda = \qty{0.6}{nm}$ bij \qty{589}{nm}, vergt
+$R = 1000$: duizend
+lijnen in de eerste orde, \qty{2}{mm} van een tralie met \qty{600}{lijnen/mm}.
+Haar eigen lijnbreedte, \qty{0.02}{nm}, vergt $R = 30\,000$: een tralie van
+\qty{5}{cm}
+in de eerste orde, of \qty{2.5}{cm} in de tweede --- en een tralie van
+\qty{10}{cm} met \qty{1200}{lijnen/mm} in de tweede orde haalt
+$240\,000$ en lost \qty{0.0025}{nm} op: de breedte van een lijn verbreed door
+de warmtebeweging van de atomen, en de dopplerverschuiving van een ster die
+met \qty{1}{km/s} beweegt.
+\end{example}
+
+\begin{omfigure}
+\begin{tikzpicture}
+\begin{axis}[omaxis, axis x line=bottom, axis y line=left, width=8.0cm, height=4.4cm,
+    xlabel={$\delta - p\lambda$ (eenheden van $\lambda/N$)}, ylabel={$I$}, xmin=-2.5, xmax=3.5, ymin=0, ymax=1.5, xtick={-2,-1,0,1,2,3}, ytick=\empty, samples=400,
+    xlabel style={at={(axis description cs:0.5,-0.14)}, anchor=north},
+    ylabel style={at={(axis description cs:-0.06,0.5)}, rotate=90, anchor=south},
+    legend style={font=\scriptsize, at={(0.97,0.95)}, anchor=north east, draw=none, fill=none}]
+  \addplot[omDef, thick, domain=-2.5:3.5] {(sin(deg(pi*x))/(pi*x+1e-9))^2};
+  \addplot[omThm, thick, domain=-2.5:3.5] {(sin(deg(pi*(x-1)))/(pi*(x-1)+1e-9))^2};
+  \addplot[black, dashed, domain=-2.5:3.5] {(sin(deg(pi*x))/(pi*x+1e-9))^2+(sin(deg(pi*(x-1)))/(pi*(x-1)+1e-9))^2};
+  \legend{$\lambda$, $\lambda + \Delta\lambda$, som}
+\end{axis}
+\end{tikzpicture}
+
+{\small Het criterium van Rayleigh: de piek van de ene golflengte op de eerste
+nul van de andere; de som (streepjes) toont een dal van ongeveer $20\%$ tussen
+twee opgeloste lijnen.}
+\end{omfigure}
+
+\section{De fabry-pérotholte}
+
+\begin{proposition}[Meergolvige interferentie door verdeling van de amplitude]\label{prop:b2:gratings:fabryperot}
+\index{fabry-pérotinterferometer}\index{functie van Airy}\index{finesse}\index{vrij spectraal bereik}
+Twee evenwijdige gedeeltelijk weerkaatsende spiegels (intensiteitsweerkaatsing $R$)
+op afstand $L$ laten een golf bij loodrechte inval alleen door voor zover
+de golven die $0, 1, 2, \dots$ keer ertussen zijn gekaatst in fase
+optellen: met $\varphi = 4\pi L/\lambda$ de fase van een heen-en-terugreis
+is de doorgelaten
+intensiteit (de \omterm{prop:b2:gratings:fabryperot}{functie van Airy})
+\[
+\frac{I_t}{I_0} = \frac1{1 + F\sin^2(\varphi/2)} , \qquad F = \frac{4R}{(1 - R)^2} :
+\]
+scherpe pieken van volledige doorlating bij $2L = p\lambda$ (de \emph{resonanties}
+van de holte, in frequentie gescheiden door het \emph{vrije spectrale bereik}
+$c/2L$), met betrekkelijke breedte $1/\mathcal F$ met de \emph{finesse}
+$\mathcal F = \pi
+\sqrt R/(1 - R)$ --- $30$ voor $R = 0.9$, $300$ voor
+$R = 0.99$. Zij evenaart het tralie
+in oplossend vermogen ($p\mathcal F$ met $p = 2L/\lambda \sim 10^5$, dus
+$R \sim
+10^7$) en is, op zichzelf gesloten, de resonator van de laser
+(\cref{ch:b2:laser}).
+\end{proposition}
+
+\begin{proof}
+Elke heen-en-terugreis vermenigvuldigt de amplitude met $R\eu^{\iu\varphi}$ (op een
+constante fase na); de doorgelaten amplitude is
+$t^2a\sum(R\eu^{\iu\varphi})^k =
+t^2a/(1 - R\eu^{\iu\varphi})$ met
+$t^2 = 1 - R$; haar gekwadrateerde modulus is
+$(1 - R)^2/
+(1 - 2R\cos\varphi + R^2) = (1 - R)^2/[(1 - R)^2 + 4R\sin^2(\varphi/2)]$.
+Pieken bij
+$\varphi = 2\pi p$; halve maximumwaarde waar $F\sin^2(\varphi/2) = 1$, dat
+wil zeggen $\Delta\varphi \approx
+4/\sqrt F = 2(1 - R)/\sqrt R$, tegen de
+$2\pi$ tussen de pieken.
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}
+\begin{axis}[omaxis, axis x line=bottom, axis y line=left, width=9.0cm, height=4.4cm,
+    xlabel={$\varphi/2\pi$}, ylabel={$I_t/I_0$}, xmin=-0.2, xmax=2.2, ymin=0, ymax=1.1, xtick={0,1,2}, ytick={0.5,1}, samples=800,
+    xlabel style={at={(axis description cs:0.5,-0.14)}, anchor=north},
+    ylabel style={at={(axis description cs:-0.08,0.5)}, rotate=90, anchor=south},
+    legend style={font=\scriptsize, at={(0.5,-0.3)}, anchor=north, draw=none, fill=none, legend columns=3}]
+  \addplot[omDef, thick, domain=-0.2:2.2] {1/(1+4*0.3/0.49*sin(deg(pi*x))^2)};
+  \addplot[omThm, thick, domain=-0.2:2.2] {1/(1+4*0.8/0.04*sin(deg(pi*x))^2)};
+  \addplot[omProp, thick, domain=-0.2:2.2] {1/(1+4*0.95/0.0025*sin(deg(pi*x))^2)};
+  \legend{$R = 0.3$, $R = 0.8$, $R = 0.95$}
+\end{axis}
+\end{tikzpicture}
+
+{\small De airydoorlating van een fabry-pérotholte: volledige
+doorlating bij de resonanties $2L = p\lambda$, met pieken die smaller worden
+naarmate de
+weerkaatsing van de spiegels groeit.}
+\end{omfigure}
+
+\begin{method}[Tralieberekeningen]\label{met:b2:gratings:method}
+(1) Periode $a = 1/(\text{lijnen per mm})$; \omterm{prop:b2:gratings:equation}{tralievergelijking} met de
+tekens van de hoeken. (2) Zet de orden op een rij die bestaan ($|\sin\theta| \le 1$)
+en ga hun overlap na ($p\lambda_{\max}$ tegen $(p + 1)\lambda_{\min}$). (3)
+Dispersie $p/a\cos\theta$, met de brandpuntsafstand omgezet in een plaats op
+de detector:
+$\dd x = f\,\dd\theta$. (4) Oplossend vermogen $pN$ met $N$ het aantal
+werkelijk belichte lijnen; vergelijk $\lambda/R$ met de op te lossen structuur.
+(5) Voeg voor werkelijke instrumenten de breedte van de ingangsspleet toe (zij
+vervaagt de lijnen) en de pixels van de detector.
+\end{method}
+
+\section{Opgaven}
+
+\begin{exercise}[$\star$]\label{exo:b2:gratings:1}
+Een tralie met $500$ lijnen per millimeter bij loodrechte inval,
+$\lambda =
+\qty{550}{nm}$: hoeken van de orden; hoogste orde; hoekbreedte
+van het
+zichtbare spectrum van de eerste orde ($400$--\qty{700}{nm}); hetzelfde tralie bij
+\qty{30}{\degree} inval: orden aan elke kant.
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b2:gratings:2}
+De natriumdoublet met een tralie van $600$ lijnen/mm en een lens met
+$f =
+\qty{50}{cm}$: hoekscheiding en lineaire scheiding van de twee lijnen
+op de
+detector in de eerste en de tweede orde; pixelgrootte die nodig is om ze
+apart te zien.
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b2:gratings:3}
+Oplossend vermogen van een tralie van \qty{2}{cm} met $600$ lijnen/mm in de
+orden $1$, $2$,
+$3$; kleinste opgeloste $\Delta\lambda$ bij \qty{550}{nm}; scheidt het de
+natriumdoublet?
+De H$\alpha$-lijn van waterstof van haar deuteriumtweeling (\qty{0.18}{nm}
+uit elkaar)?
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b2:gratings:4}
+Een compactschijf ($a = \qty{1.6}{\micro m}$) en een dvd
+($a = \qty{0.74}{\micro m}$) belicht bij
+loodrechte inval: hoeken van violet en rood in de eerste orde; welke orden
+bestaan voor elk; waarom toont de cd twee regenbogen en de dvd er één?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b2:gratings:5}
+\emph{Het patroon van $N$ spleten.} (a) Toon aan dat er tussen twee hoofdmaxima
+$N - 1$ nullen en $N - 2$ nevenmaxima liggen. (b) Voor grote $N$,
+intensiteit van het eerste nevenmaximum ten opzichte van het \omterm{thm:b2:gratings:nwaves}{hoofdmaximum}
+(bij $N\varphi/2 \approx 3\pi/2$): ongeveer $1/22$. (c) Schets het patroon voor
+$N = 3$ en $N = 6$ en geef de hoogten van de nevenmaxima voor
+$N = 3$. (d) Aandeel van de totale energie in de hoofdmaxima voor
+grote $N$ (vergelijk de integralen van de piek, breedte $\propto 1/N$, hoogte
+$\propto N^2$, met de rest).
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b2:gratings:6}
+\emph{Overlappende orden.} (a) Toon aan dat orde $p$ van $\lambda_{\max}$
+orde $p + 1$ van $\lambda_{\min}$ overlapt wanneer
+$p\lambda_{\max} > (p + 1)\lambda_{\min}$; voor $400$--\qty{700}{nm},
+vanaf welke orde? (b) \omterm{prop:b2:gratings:fabryperot}{Vrij spectraal bereik} in orde $p$:
+$\Delta\lambda_{\text{FSR}}
+= \lambda/p$. (c) Een spectrograaf werkt in orde
+$20$ nabij \qty{500}{nm} (een
+echelletralie): \omterm{prop:b2:gratings:fabryperot}{vrij spectraal bereik}; hoe wordt de overlap weggenomen
+(dwarsdisperser)? (d) Het vrije spectrale bereik van de fabry-pérot is $c/2L$:
+schrijf het in golflengte en vergelijk het met dat van het tralie.
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b2:gratings:7}
+\emph{Geblazeerd tralie.} Een weerkaatsingstralie heeft zijn groeven gekanteld over
+de blazehoek $\beta$, zodat elk facet spiegelend weerkaatst in de
+richting waar men de orde $p$ wil. (a) Voor de littrowopstelling
+($\theta = \theta_0 = \beta$): toon aan dat $2a\sin\beta = p\lambda$;
+blazehoek voor \qty{500}{nm}
+in de eerste orde met $1200$ lijnen/mm. (b) Waarom zendt de blaze het meeste
+licht in één orde (denk aan de omhullende van de buiging van één facet,
+\cref{ch:b2:diffraction})? (c) Hetzelfde tralie is geblazeerd
+voor \qty{1}{\micro m}: in welke orde is het doeltreffend bij \qty{500}{nm}? (d)
+Oplossend vermogen van een tralie van \qty{10}{cm} in littrow bij
+$\beta = \qty{64}{\degree}$,
+$\lambda = \qty{500}{nm}$ (gebruik $R = 2W\sin\beta/\lambda$).
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b2:gratings:8}
+\emph{De spleet.} De ingangsspleet van een spectrometer, van breedte $s$, wordt
+met vergroting $1$ op de detector afgebeeld; het tralie ($600$ lijnen/mm,
+\qty{5}{cm}, orde $1$, $f = \qty{50}{cm}$) disperseert. (a) Breedte van een lijn op
+de detector door de spleet alleen voor $s = \qty{50}{\micro m}$, in nm. (b)
+Breedte door het oplossend vermogen van het tralie. (c) Welke overheerst;
+spleetbreedte
+waarbij de twee gelijk zijn. (d) Waarom de spleet niet nog verder sluiten?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b2:gratings:9}
+\emph{Fabry-pérot.} Spiegels $R = 0.95$, $L = \qty{5}{mm}$,
+$\lambda = \qty{600}{nm}$.
+(a) Orde $p$, \omterm{prop:b2:gratings:fabryperot}{vrij spectraal bereik} in frequentie en in golflengte. (b)
+Finesse; breedte van een doorlatingspiek in frequentie en golflengte. (c)
+Oplossend vermogen $p\mathcal F$; vergelijk met het tralie van \qty{10}{cm}.
+(d) Waarom
+wordt een fabry-pérot altijd met een voorfilter of een tralie gebruikt?
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b2:gratings:10}
+\emph{De grens van een tralie.} (a) Toon aan dat
+$R = pN = W(\sin\theta - \sin\theta_0)
+/\lambda \le 2W/\lambda$: het
+oplossend vermogen kan de breedte van het
+tralie in golflengten, maal twee, niet overtreffen. (b) Duid dat: het grootste
+\omterm{thm:b2:two-wave-interference:formula}{wegverschil} tussen de uiterste stralen. (c) Een tralie van \qty{30}{cm} bij
+\qty{500}{nm}: uiterste $R$; kleinste door dopplerverschuiving oplosbare snelheid
+($\Delta\lambda/\lambda = v/c$). (d) Waarom halen sterrenkundigen niettemin
+\qty{1}{m/s}
+(denk aan het meten van de plaats van een lijn tot op een fractie van haar breedte,
+met vele lijnen)?
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b2:gratings:11}
+\emph{Bragg.} Een kristal is een driedimensionaal tralie: röntgenstralen
+die door opeenvolgende atoomvlakken op afstand $d$ worden weerkaatst, onder de
+scherende hoek $\theta$, interfereren opbouwend wanneer $2d\sin\theta = p\lambda$
+(Bragg). (a) Leid dat af uit het \omterm{thm:b2:two-wave-interference:formula}{wegverschil} tussen twee vlakken.
+(b) K$\alpha$-straling van koper (\qty{0.154}{nm}) op steenzout
+($d = \qty{0.282}{nm}$):
+de bragghoeken. (c) Waarom geven zichtbare golflengten geen
+braggweerkaatsing van kristallen, en wat zegt het omgekeerde (geen
+röntgenbuiging van glas) over glas? (d) Waarom moet $\lambda < 2d$?
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b2:gratings:12}
+\emph{Fasegestuurde reeks.} $N$ gelijke antennes op een lijn, op afstand $a$, gevoed
+met dezelfde amplitude en een fasestap $\psi$ tussen buren. (a)
+Toon aan dat het uitgestraalde veld in de richting $\theta$ dat van de
+som van $N$ golven is met $\varphi = 2\pi a\sin\theta/\lambda - \psi$: de
+hoofdbundel wijst
+waar $\sin\theta = \lambda\psi/2\pi a$. (b) Halfbreedte van de hoofdbundel,
+$\Delta\theta
+\approx \lambda/Na\cos\theta$. (c) Waarom moet
+$a \le \lambda/2$ om bij het sturen een tweede hoofdbundel
+(een tralielob) te vermijden? (d) Een radar met $64$ elementen op
+$\lambda/2$, $\lambda = \qty{3}{cm}$: bundelbreedte; tijd om $90^\circ$ af
+te tasten in stappen van één
+bundelbreedte als de fasen in \qty{1}{\micro s} omschakelen.
+\end{exercise}
+
+\section{Vraagstuk: een spectrograaf voor een ster}
+
+\begin{problem}[{Weekendvraagstuk --- de spectrograaf ontwerpen die
+het licht van een ster afleest: het tralie, de detector, de lijnen van
+waterstof, en de schommeling van een planeet}]
+\label{pb:b2:gratings:1}
+
+Een spectrograaf: ingangsspleet, collimator met brandpuntsafstand
+$f_1 =
+\qty{1.0}{m}$, een weerkaatsingstralie met $1200$ lijnen/mm en
+breedte $W =
+\qty{12}{cm}$, een camera met $f_2 = \qty{1.0}{m}$, een
+detector met pixels van \qty{15}{\micro m}.
+Hij werkt in de eerste orde, rond \qty{550}{nm}, met het
+tralie bij \qty{20}{\degree} inval.
+
+\medskip
+\noindent\textbf{Deel I --- Het tralie.}
+\begin{enumerate}
+  \item Periode van het tralie; aantal belichte lijnen als de bundel
+        de hele breedte bedekt.
+  \item Buigingshoek van \qty{550}{nm} in de eerste orde; van
+        \qty{400}{nm} en \qty{700}{nm}; hoekbreedte van het zichtbare
+        spectrum.
+  \item Hoekdispersie bij \qty{550}{nm}; lineaire dispersie op de
+        detector in nm per mm en nm per pixel.
+  \item Oplossend vermogen; kleinste opgeloste $\Delta\lambda$ bij \qty{550}{nm}; in
+        pixels.
+  \item Valt het violet van de tweede orde op het zichtbare van de eerste
+        orde? Welk filter neemt het weg?
+  \item Lengte van de detector die nodig is voor het hele zichtbare spectrum in
+        de eerste orde.
+  \item Het tralie is geblazeerd bij \qty{17}{\degree}: voor welke golflengte is
+        het bij deze inval in de eerste orde het doeltreffendst (gebruik
+        de littrowschatting $2a\sin\beta = \lambda$)?
+  \item Het tralie geeft $80\%$ van het licht terug bij de blazegolflengte
+        en de telescoop plus optiek $40\%$: aandeel van de fotonen van de ster
+        dat de detector bereikt.
+\end{enumerate}
+
+\medskip
+\noindent\textbf{Deel II --- Lijnen.}
+\begin{enumerate}[resume]
+  \item De balmerlijnen van waterstof van de ster: H$\alpha$ \qty{656.3}{nm},
+        H$\beta$ \qty{486.1}{nm}, H$\gamma$ \qty{434.0}{nm}: hun plaatsen op de
+        detector ten opzichte van \qty{550}{nm}.
+  \item H$\alpha$ van een deuteriumatoom is \qty{0.18}{nm} korter: gescheiden?
+        Over hoeveel pixels?
+  \item De natriumdoublet in het spectrum van de ster: scheiding in
+        pixels; en de breedte van elke lijn als de dampkring van de ster
+        haar tot \qty{0.05}{nm} verbreedt.
+  \item De ingangsspleet is \qty{100}{\micro m} breed, afgebeeld met
+        vergroting $f_2/f_1$: haar breedte op de detector in pixels en
+        in nm; is de spectrograaf spleetbegrensd of traliebegrensd?
+  \item Het licht van de telescoop komt als een schijf van \qty{1}{''} aan
+        de hemel, die de telescoop ($f = \qty{20}{m}$) \qty{100}{\micro m}
+        breed maakt bij de spleet: aandeel van het licht dat verloren gaat
+        als de spleet
+        tot \qty{50}{\micro m} wordt versmald (neem de schijf gelijkmatig).
+  \item Waarom geeft een smallere spleet scherpere lijnen maar ruisiger
+        spectra?
+\end{enumerate}
+
+\medskip
+\noindent\textbf{Deel III --- De ster beweegt.}
+\begin{enumerate}[resume]
+  \item Een ster wijkt met \qty{30}{km/s}: dopplerverschuiving van H$\alpha$ in nm
+        en in pixels.
+  \item De baanbeweging van de aarde voegt over het jaar $\pm\qty{30}{km/s}$ toe:
+        waarom moet die worden afgetrokken, en tot welke nauwkeurigheid als men
+        \qty{100}{m/s} wil?
+  \item Een planeet laat haar ster met \qty{10}{m/s} schommelen:
+        verschuiving in nm en
+        in pixels; ligt zij onder de oplossing? Verklaar hoe het meten van
+        het midden van een lijn tot op een honderdste van haar breedte, over
+        duizend lijnen, haar terugwint (statistische winst $\sqrt{N}$).
+  \item De temperatuur van het instrument verandert \qty{1}{K}, en het
+        tralie (glas, uitzetting \qty{1e-5}{K^{-1}}) zet uit: verschuiving van de
+        lijnen in pixels; welke stabiliteit is nodig voor \qty{10}{m/s}?
+  \item Een ijklamp (thorium--argon) zet honderden bekende
+        lijnen op dezelfde detector: verklaar haar rol.
+\end{enumerate}
+
+\medskip
+\noindent\textbf{Deel IV --- Alternatieven.}
+\begin{enumerate}[resume]
+  \item Hetzelfde tralie met $300$ lijnen/mm getrokken en in
+        de vierde orde gebruikt (met een dwarsdisperser om de orden te sorteren):
+        buigingshoek, oplossend vermogen, dispersie en \omterm{prop:b2:gratings:fabryperot}{vrij
+        spectraal bereik} bij \qty{550}{nm}; wat is er veranderd, wat niet?
+  \item Een fabry-pérotetalon ($L = \qty{1}{mm}$, $R = 0.9$) vóór
+        de spleet geplaatst: \omterm{prop:b2:gratings:fabryperot}{vrij spectraal bereik} in nm, finesse, piekbreedte; hoe
+        ziet zijn kam van doorlatingspieken er op de detector uit,
+        en waarvoor dient hij?
+  \item Een prisma van \qty{60}{\degree} in glas met
+        $\dd n/\dd\lambda = \qty{-1e-4}{nm^{-1}}$
+        heeft nabij de minimale afwijking de hoekdispersie
+        $\dd D/\dd\lambda \approx 2\,\dd n/\dd\lambda$:
+        vergelijk met die van het tralie; waarom hebben tralies
+        prisma's vervangen?
+  \item Waarom worden de grootste sterrenkundige spectrografen gebouwd met
+        tralies van een meter breed en onder grote hoeken gebruikt (de grens
+        $2W/\lambda$)?
+  \item Een ster van magnitude 8 levert \qty{1e4}{} fotonen per seconde en
+        per nanometer bij de telescoop: fotonen per pixel per seconde
+        op de detector, en de signaal-ruisverhouding van een belichting van
+        \qty{100}{s}
+        (alleen fotonruis).
+  \item Vat samen: de drie getallen die een spectrograaf beschrijven
+        (dispersie, oplossend vermogen, \omterm{prop:b2:gratings:fabryperot}{vrij spectraal bereik}) en wat
+        elk ervan bepaalt.
+\end{enumerate}
+\end{problem}

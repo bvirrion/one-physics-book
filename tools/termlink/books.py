@@ -21,7 +21,7 @@ LANGS = {
     1: ("en", "fr", "nl", "es", "pt", "hi", "ar", "id"),
     2: ("en", "fr", "nl", "es", "pt", "hi", "ar", "id"),
     3: ("en", "fr", "nl", "es", "pt", "hi", "ar", "id"),
-    4: ("en",),
+    4: ("en", "fr", "nl", "es", "pt", "hi", "ar", "id"),
     5: ("en",),
 }
 

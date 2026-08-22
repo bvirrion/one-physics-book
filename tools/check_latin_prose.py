@@ -93,6 +93,17 @@ NODE_RE = re.compile(
     r"\{([^{}]*(?:\{[^{}]*\}[^{}]*)*)\}"
     r"|(?:xlabel|ylabel|zlabel|title)\s*=\s*\{([^{}]*(?:\{[^{}]*\}[^{}]*)*)\}")
 
+# pgfplots' \legend{...} and \addlegendentry{...} MACROS -- the one piece of visible figure text that
+# no gate in this project could see. The KEY form, "legend entries={...}", is
+# covered by the sibling gates' TIKZ_TEXT_KEYS; the macro form carries no "=",
+# and check_duplicated_lines below cannot help either, because a \legend is
+# always INSIDE an axis environment and everything inside one is skipped by
+# design. Book 4 carries 18 of them, several with real English ("disk, , no
+# friction", "lost, pressure recovered", "copper, sea water"). Two levels of
+# nesting are allowed: an entry may hold $\operatorname{Re}(\dots)$.
+LEGEND_RE = re.compile(
+    r"\\(?:legend|addlegendentry)\s*\{((?:[^{}]|\{(?:[^{}]|\{[^{}]*\})*\})*)\}")
+
 # Environments whose bodies are drawing code, copied byte-identically by
 # design. A "duplicated English line" inside one of these is not a defect --
 # it is the applier doing exactly what it promises.
@@ -102,6 +113,18 @@ DRAW_ENV_OPEN = re.compile(
 DRAW_ENV_CLOSE = re.compile(
     r"\\end\{(?:tikzpicture|axis|semilogxaxis|semilogyaxis|loglogaxis|"
     r"scope|circuitikz|groupplot|pgfonlayer)\}")
+# A DISPLAYED-MATH body is copied byte-identically by design too, and the
+# "$" guard below cannot see it: an align* line carries no $ delimiters at all.
+# Translating the \text{} label on one line of an align* therefore made the
+# NEXT line -- pure mathematics, identical by construction and enforced as such
+# by id_apply's math census -- report as a duplicated English line. Found on the
+# Spanish Book 4 edition (11-maxwell-equations), where every edition that
+# translates that label would have seen it.
+MATH_ENV_OPEN = re.compile(
+    r"\\begin\{(?:align|alignat|equation|gather|multline|eqnarray|split|aligned|gathered|cases|array|[pbvVB]matrix|smallmatrix|dmath)\*?\}|\\\[")
+MATH_ENV_CLOSE = re.compile(
+    r"\\end\{(?:align|alignat|equation|gather|multline|eqnarray|split|aligned|gathered|cases|array|[pbvVB]matrix|smallmatrix|dmath)\*?\}|\\\]")
+
 # A continuation line of drawing code carries no leading macro to key on:
 # "xmin=0, xmax=4.3, ymin=0, ymax=21, xtick={0,1,2,3,4},". Key on the shape.
 DRAW_OPTION_LINE = re.compile(
@@ -171,6 +194,8 @@ def _fragments(text):
         out.append(("node",
                     m.group(1) if m.group(1) is not None else m.group(2),
                     m.start()))
+    for m in LEGEND_RE.finditer(text):
+        out.append(("legend", m.group(1), m.start()))
     return out
 
 
@@ -194,9 +219,11 @@ def check_duplicated_lines(path, body, en_body, findings):
     depth = 0
     for i, ln in enumerate(lines):
         s = ln.strip()
-        # Track drawing environments: everything inside one is copied
-        # byte-identically on purpose, so a "duplicate" there means nothing.
-        opens, closes = len(DRAW_ENV_OPEN.findall(ln)), len(DRAW_ENV_CLOSE.findall(ln))
+        # Track drawing AND displayed-math environments: everything inside one
+        # is copied byte-identically on purpose, so a "duplicate" there means
+        # nothing.
+        opens = len(DRAW_ENV_OPEN.findall(ln)) + len(MATH_ENV_OPEN.findall(ln))
+        closes = len(DRAW_ENV_CLOSE.findall(ln)) + len(MATH_ENV_CLOSE.findall(ln))
         was_inside = depth > 0
         depth = max(0, depth + opens - closes)
         if was_inside or opens:

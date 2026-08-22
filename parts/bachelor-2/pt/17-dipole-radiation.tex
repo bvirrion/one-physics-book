@@ -1,0 +1,492 @@
+\chapter{Radiação de dipolo e espalhamento}\label{ch:b2:dipole-radiation}
+
+Por que o céu é azul, e por que ele é mais azul a ângulo reto do Sol
+--- e ali polarizado, como abelhas e fotógrafos sabem? Por que uma
+torre de rádio precisa ter dezenas de metros de altura, e por que ela nada irradia
+para cima? As duas perguntas têm a mesma resposta: uma carga elétrica
+oscilante irradia \omterm{thm:b2:plane-waves-polarization:wave}{ondas eletromagnéticas}, com uma
+potência que cresce com a quarta potência da frequência e um diagrama
+que se anula ao longo do eixo de oscilação. Este capítulo enuncia o
+campo do \emph{\omterm{thm:b2:dipole-radiation:field}{dipolo oscilante}}, o mais simples dos sistemas radiantes,
+dele extrai a antena e a radiação de uma carga acelerada,
+e o aplica às moléculas do ar, cada uma uma antena minúscula
+que reemite a luz do Sol: o \omterm{prop:b2:dipole-radiation:rayleigh}{espalhamento Rayleigh}.
+
+\begin{omfigure}
+\includegraphics[width=0.54\linewidth]{images/book4/ai/b4-17-radio-mast-blue-sky.png}
+
+{\small Uma torre de transmissão sob um céu azul: um dipolo vertical de dezenas de metros irradiando rumo ao horizonte e, acima dele, o céu iluminado por bilhões de dipolos moleculares que reirradiam o Sol.}
+\end{omfigure}
+
+
+\section{O campo de um dipolo oscilante}
+
+\begin{theorem}[Campo de radiação de um dipolo elétrico]\label{thm:b2:dipole-radiation:field}
+\index{dipolo oscilante}\index{zona de radiação}\index{retardo}
+Um dipolo de momento $\vect p(t) = p_0\cos\omega t\,\vect e_z$, de tamanho $a$, na
+origem, irradia. Na \emph{\omterm{thm:b2:dipole-radiation:field}{zona de radiação}} --- a distâncias $r \gg
+\lambda = 2\pi c/\omega \gg a$ --- seu campo, em coordenadas esféricas $(r,
+\theta, \varphi)$ em torno do eixo do dipolo, vale
+\[
+\vect E(M, t) = -\frac{\mu_0\,\omega^2p_0}{4\pi}\,\frac{\sin\theta}r\,\cos\bigl(\omega(t - r/c)\bigr)\,\vect e_\theta ,
+\qquad
+\vect B = \frac{\vect e_r\wedge\vect E}c :
+\]
+uma \omterm{prop:b2:sound-waves:spherical}{onda esférica}, localmente plana --- $(\vect E, \vect B, \vect e_r)$ um
+triedro direto com $B = E/c$ ---, \emph{retardada} do tempo de percurso
+$r/c$, de amplitude que cai como $1/r$, proporcional à aceleração
+$\ddot p = -\omega^2p$ do dipolo e a $\sin\theta$: máxima no
+plano equatorial, nula ao longo do eixo; polarizada no plano
+que contém o eixo.
+\end{theorem}
+\admitted
+
+\begin{remark}[Como ler a fórmula]\label{rem:b2:dipole-radiation:reading}
+A solução exata das \omterm{thm:b2:maxwell-equations:maxwell}{equações de Maxwell} (a partir dos potenciais
+retardados, além deste volume) contém também termos em $1/r^2$ e
+$1/r^3$; o último é o campo quase estático de dipolo do volume do Ano 1,
+$\vect E \propto p/4\pi\varepsilon_0r^3$, que domina na \emph{zona
+próxima} $r \ll \lambda$; em $r \sim \lambda/2\pi$ os dois se equivalem, e além disso
+só o termo em $1/r$ sobrevive. Cada fator tem sua razão. O $1/r$: a
+potência através de uma esfera, $\propto E^2r^2$, não pode depender de $r$. O $\omega^2p_0$:
+o campo de uma carga em repouso ou em movimento uniforme não é radiativo; é
+a \emph{aceleração} que irradia. O $\sin\theta$: um observador no
+eixo vê a carga ir e vir ao longo da linha de visada, sem
+aceleração transversal; no plano equatorial toda a
+aceleração é transversal. O retardo: o campo em $M$ no instante $t$
+reflete o que o dipolo fez em $t - r/c$.
+\end{remark}
+
+\begin{omfigure}
+\begin{tikzpicture}[font=\small, x=1cm, y=1cm, >=Stealth]
+  \begin{scope}
+    \draw[->, thick] (0,-2.2) -- (0,2.4) node[right, font=\footnotesize] {$z$};
+    \draw[omThm, very thick, <->] (0,-0.5) -- (0,0.5); \node[omThm, font=\footnotesize] at (0.35,0.0) {$\vect p$};
+    \coordinate (M) at (2.6,1.6);
+    \draw[dashed] (0,0) -- (M); \fill (M) circle (1.5pt); \node[font=\footnotesize] at (2.45,1.25) {$M$};
+    \draw (0,0.7) arc[start angle=90, end angle=31.6, radius=0.7]; \node[font=\footnotesize] at (0.35,0.9) {$\theta$};
+    \draw[omDef, very thick, ->] (M) -- ($(M)+(0.55,-0.9)$) node[right, font=\footnotesize] {$\vect E$ ($\vect e_\theta$)};
+    \node[omProp, font=\footnotesize] at ($(M)+(-0.65,0.25)$) {$\vect B$ $\otimes$};
+    \draw[omExo, thick, ->] (M) -- ($(M)+(0.7,0.43)$) node[right, font=\footnotesize] {$\vect e_r$};
+    \node[font=\footnotesize] at (0,-2.7) {$E \propto \dfrac{\omega^2p_0\sin\theta}{r}\cos\omega(t - r/c)$};
+  \end{scope}
+  \begin{scope}[xshift=8.6cm]
+    \draw[->, thick] (0,-2.2) -- (0,2.4) node[right, font=\footnotesize] {$z$};
+    \draw[omThm, thick, domain=0:360, samples=120, smooth] plot ({2.0*sin(\x)*sin(\x)*sin(\x)},{2.0*sin(\x)*sin(\x)*cos(\x)});
+    \draw[omThm, very thick, <->] (0,-0.35) -- (0,0.35);
+    \node[omThm, font=\footnotesize] at (2.3,0.35) {$\sin^2\theta$};
+    \node[font=\footnotesize] at (0,-2.7) {potência irradiada por ângulo sólido};
+  \end{scope}
+\end{tikzpicture}
+
+{\small À esquerda: o campo de radiação de um dipolo num ponto distante $M$ ---
+transversal, segundo $\vect e_\theta$, com $\vect B$ azimutal; nada é
+irradiado ao longo do eixo. À direita: o \omterm{prop:b2:dipole-radiation:power}{diagrama de radiação}, uma rosca
+$\propto\sin^2\theta$ cuja seção está desenhada.}
+\end{omfigure}
+
+\section{Potência irradiada}
+
+\begin{proposition}[Potência de um dipolo; fórmula de Larmor]\label{prop:b2:dipole-radiation:power}
+\index{potência irradiada (dipolo)}\index{fórmula de Larmor}\index{diagrama de radiação}
+O \omterm{thm:b2:poynting-vector:poynting}{vetor de Poynting} médio do campo do dipolo é radial,
+\[
+\langle\vect\Pi\rangle = \frac{\mu_0\,\omega^4p_0^2}{32\pi^2c}\,\frac{\sin^2\theta}{r^2}\,\vect e_r ,
+\]
+e a potência média total irradiada vale
+\[
+\mathcal P = \frac{\mu_0\,\omega^4p_0^2}{12\pi c} = \frac{p_0^2\omega^4}{12\pi\varepsilon_0c^3} .
+\]
+Para uma única carga $q$ com aceleração $a$ (não relativística), a
+potência instantânea vale $\mathcal P = q^2a^2/6\pi\varepsilon_0c^3$ (Larmor).
+\end{proposition}
+
+\begin{proof}
+$\langle\Pi\rangle = \langle E^2\rangle/\mu_0c$ com $\langle\cos^2\rangle = \tfrac12$;
+integre sobre a esfera:
+\[
+\int\sin^2\theta\,r^2\dd\Omega = 2\pi r^2\int_0^\pi\sin^3\theta\,\dd\theta = \tfrac83\pi r^2 ,
+\qquad
+\mathcal P = \frac{\mu_0\omega^4p_0^2}{32\pi^2c}\cdot\frac{8\pi}3 = \frac{\mu_0\omega^4p_0^2}{12\pi c} .
+\]
+Larmor: $p = qz$, logo $\ddot p = qa$;
+substituir a média $\tfrac12\omega^4p_0^2 = \langle\ddot p^2\rangle$ pelo
+valor instantâneo $q^2a^2$ dá $\mathcal P = \mu_0q^2a^2/6\pi c$.
+\end{proof}
+
+\begin{example}[Uma antena e um fio]\label{ex:b2:dipole-radiation:antenna}
+\index{antena}\index{resistência de radiação}\index{dipolo de meia onda}
+Um fio curto de comprimento $\ell \ll \lambda$ percorrido pela corrente $I_0\cos\omega t$ é um
+dipolo com $\dot p = I_0\ell\cos\omega t$, ou seja, $p_0 = I_0\ell/\omega$: ele irradia
+$\mathcal P = \mu_0\omega^2I_0^2\ell^2/12\pi c = \tfrac12R_{\text{rad}}I_0^2$ com a
+\emph{\omterm{ex:b2:dipole-radiation:antenna}{resistência de radiação}} $R_{\text{rad}} = \dfrac{2\pi}3\sqrt{\dfrac{\mu_0}{\varepsilon_0}}
+\Bigl(\dfrac\ell\lambda\Bigr)^2 \approx 790\,(\ell/\lambda)^2\ \Omega$ --- a potência deixa o
+circuito como se por um resistor, sem aquecer nada. Um fio de \qty{1}{m}
+a \qty{1}{MHz} ($\lambda = \qty{300}{m}$): $R_{\text{rad}} = \qty{9}{m\ohm}$, menos que
+sua resistência de cobre, uma antena ruim; a \qty{100}{MHz}: \qty{88}{\ohm} (a
+fórmula do dipolo curto já está sendo esticada aqui), uma boa antena. O \emph{\omterm{ex:b2:dipole-radiation:antenna}{dipolo
+de meia onda}}, $\ell = \lambda/2$ com distribuição senoidal de corrente, tem
+$R_{\text{rad}} = \qty{73}{\ohm}$ (admitido) e um diagrama próximo do
+dipolo elementar --- a antena padrão, das torres de rádio às
+"orelhas de coelho" dos televisores antigos. Um fio de rede de \qty{1}{m} a \qty{50}{Hz}:
+$R_{\text{rad}} \approx \qty{2e-11}{\ohm}$ --- os circuitos quase estacionários do
+\cref{ch:b2:maxwell-equations} nada irradiam.
+\end{example}
+
+\begin{omfigure}
+\begin{tikzpicture}[font=\small, x=1cm, y=1cm, >=Stealth]
+  \begin{scope}
+    \draw[thick] (-2.4,0) -- (-0.15,0); \draw[thick] (0.15,0) -- (2.4,0);
+    \draw[omExo, thick] (-0.15,0) -- (-0.15,-0.6) (0.15,0) -- (0.15,-0.6);
+    \node[omExo, font=\footnotesize] at (0,-0.9) {alimentação};
+    \draw[omThm, thick, domain=-2.4:2.4, samples=60] plot (\x,{1.0*cos(deg(pi*\x/4.8))});
+    \foreach \x in {-2.0,-1.2,-0.4,0.4,1.2,2.0} \draw[omThm, ->] (\x,0) -- (\x,{1.0*cos(deg(pi*\x/4.8))});
+    \node[omThm, font=\footnotesize] at (1.5,1.25) {$I(z)$};
+    \draw[<->] (-2.4,-1.3) -- (2.4,-1.3) node[midway, below, font=\footnotesize] {$\lambda/2$};
+    \node[font=\footnotesize] at (0,-2.2) {dipolo de meia onda: $R_{\text{rad}} = \qty{73}{\ohm}$};
+  \end{scope}
+  \begin{scope}[xshift=8.0cm]
+    \begin{axis}[omaxis, axis x line=bottom, axis y line=left, width=5.6cm, height=4.2cm, at={(0,-1.9cm)},
+        xmode=log, ymode=log, xmin=1e-3, xmax=0.5, ymin=1e-3, ymax=300,
+        xlabel={$\ell/\lambda$}, ylabel={$R_{\text{rad}}$ ($\Omega$)}, xtick={1e-3,1e-2,1e-1}, ytick={1e-3,1e-1,10},
+        xlabel style={at={(axis description cs:0.5,-0.12)}, anchor=north},
+        ylabel style={at={(axis description cs:-0.2,0.5)}, rotate=90, anchor=south}, samples=40]
+      \addplot[omDef, thick, domain=1e-3:0.3] {790*x*x};
+      \addplot[only marks, mark=*, mark size=1.8pt, omThm] coordinates {(0.5,73)};
+    \end{axis}
+  \end{scope}
+\end{tikzpicture}
+
+{\small À esquerda: a distribuição de corrente num \omterm{ex:b2:dipole-radiation:antenna}{dipolo de meia onda}, máxima
+na alimentação e nula nas pontas. À direita: a \omterm{ex:b2:dipole-radiation:antenna}{resistência de radiação} de um
+dipolo curto, $790(\ell/\lambda)^2$ ohms, e os \qty{73}{\ohm} do \omterm{ex:b2:dipole-radiation:antenna}{dipolo de meia
+onda}.}
+\end{omfigure}
+
+\begin{example}[Um elétron que irradia]\label{ex:b2:dipole-radiation:electron}
+Num tubo de raios X um elétron de \qty{50}{keV} ($v = \qty{1.2e8}{m/s}$) para
+em \qty{1}{\micro m} de tungstênio: $a \sim v^2/2d = \qty{7e21}{m/s^2}$, potência de Larmor
+$\qty{1.2e-4}{W}$ durante $\qty{1.6e-14}{s}$: \qty{2e-18}{J}, cerca de $0.02\%$ de sua
+energia irradiada como a "radiação de freamento" (bremsstrahlung) do
+tubo --- o resto é calor, e o anodo é refrigerado. O elétron clássico
+de um átomo de hidrogênio, acelerado a $v^2/r = \qty{9e22}{m/s^2}$,
+irradiaria \qty{5e-8}{W} e espiralaria até o núcleo em \qty{1e-11}{s}:
+a física clássica proíbe os átomos, e o \cref{ch:b2:schrodinger-wave-functions}
+os resgata.
+\end{example}
+
+\section{Espalhamento Rayleigh: o céu azul}
+
+\begin{proposition}[Espalhamento por um elétron ligado]\label{prop:b2:dipole-radiation:rayleigh}
+\index{espalhamento Rayleigh}\index{seção de choque de espalhamento}\index{espalhamento Thomson}
+Uma onda de amplitude $E_0$ e frequência $\omega$ incide num átomo modelado
+como um elétron ligado elasticamente de ressonância $\omega_0 \gg \omega$
+(\cref{ch:b2:waves-in-media}): o elétron oscila com amplitude
+$eE_0/m\omega_0^2$, o átomo vira um dipolo $p_0 = e^2E_0/m\omega_0^2$ em fase
+com o campo, e reirradia a potência $\mathcal P = p_0^2\omega^4/12\pi
+\varepsilon_0c^3$. A razão entre essa potência e a intensidade incidente é a
+\emph{\omterm{prop:b2:dipole-radiation:rayleigh}{seção de choque de espalhamento}}
+\[
+\sigma = \frac{\mathcal P}{\varepsilon_0cE_0^2/2} = \frac{8\pi}3\,r_e^2\Bigl(\frac\omega{\omega_0}\Bigr)^4 ,
+\qquad r_e = \frac{e^2}{4\pi\varepsilon_0mc^2} = \qty{2.8e-15}{m} :
+\]
+a lei de Rayleigh, $\sigma \propto \omega^4 \propto 1/\lambda^4$. Para um elétron
+\emph{livre} ($\omega_0 = 0$) a seção de choque vale $\sigma_T = 8\pi r_e^2/3 =
+\qty{6.65e-29}{m^2}$, independente da frequência (\omterm{prop:b2:dipole-radiation:rayleigh}{espalhamento Thomson}).
+\end{proposition}
+
+\begin{proof}
+Do \omterm{prop:b2:waves-in-media:lorentz}{modelo de Lorentz} com $\omega \ll \omega_0$ e amortecimento desprezível,
+$\underline{\vect r} = -e\underline{\vect E}/m\omega_0^2$; insira $p_0$ na potência e
+divida por $I = \varepsilon_0cE_0^2/2$; o $r_e$ reúne as constantes. Para o elétron
+livre, $\vect r = e\vect E/m\omega^2$ (em oposição de fase), $p_0 = e^2E_0/m\omega^2$, e
+os $\omega^4$ se cancelam.
+\end{proof}
+
+\begin{example}[Céu azul, pôr do sol vermelho, nuvens brancas]\label{ex:b2:dipole-radiation:sky}
+A luz violeta ($\qty{400}{nm}$) é espalhada $(700/400)^4 = 9.4$ vezes mais
+que a vermelha: o céu, iluminado pela luz solar espalhada, é azul (e não violeta: o
+Sol emite menos violeta e o olho o enxerga mal). No poente a luz
+direta atravessa quarenta vezes mais ar que ao meio-dia e perde seu azul para o
+céu de outros lugares: ela avermelha. Cada molécula do ar espalha com
+$\sigma \approx \qty{5e-31}{m^2}$ a \qty{550}{nm}; com $n = \qty{2.5e25}{m^{-3}}$ o
+livre caminho médio $1/n\sigma$ vale \qty{80}{km}: um décimo da luz verde é
+espalhado no caminho de descida pela atmosfera, e um terço do
+violeta. As gotículas das nuvens, muito maiores que $\lambda$, não são espalhadores
+de Rayleigh: elas espalham todas as cores igualmente --- branco.
+\end{example}
+
+\begin{proposition}[Polarização por espalhamento]\label{prop:b2:dipole-radiation:polarization}
+\index{polarização por espalhamento}
+A \omterm{def:b2:plane-waves-polarization:states}{luz natural} que viaja segundo $x$ induz dipolos no plano $yz$.
+Um observador que olha segundo $y$ (a \qty{90}{\degree} do feixe) não recebe
+radiação alguma das componentes do dipolo segundo $y$ (sua linha de visada)
+e recebe toda a radiação das componentes segundo $z$: a luz espalhada é
+\emph{polarizada retilineamente} segundo $z$, perpendicularmente ao plano
+que contém o feixe e a linha de visada. Em outros ângulos ela fica
+parcialmente polarizada, com grau $(1 - \cos^2\chi)/(1 + \cos^2\chi)$ para
+o ângulo de espalhamento $\chi$.
+\end{proposition}
+
+\begin{proof}
+A \omterm{def:b2:plane-waves-polarization:states}{luz natural} incidente tem um $\vect E$ com componentes médias iguais
+segundo $y$ e $z$; o dipolo segundo $y$ não irradia rumo a $y$ ($\sin
+\theta = 0$), e o segundo $z$ irradia $\propto\sin\theta = 1$. No ângulo $\chi$
+a contribuição da componente $y$ fica reduzida de $\cos^2\chi$ em intensidade.
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}[font=\small, x=1cm, y=1cm, >=Stealth]
+  \draw[omDef, very thick, ->] (-4.4,0) -- (-0.4,0) node[above, pos=0.3, font=\footnotesize] {luz do Sol (natural)};
+  \draw[omDef, thick, <->] (-1.3,-0.45) -- (-1.3,0.45); \node[omDef, font=\footnotesize] at (-0.95,-0.45) {$\vect E_z$};
+  \node[omDef, font=\footnotesize] at (-2.6,-0.4) {$\vect E_y$ $\odot$};
+  \fill[omExo] (0,0) circle (3pt); \node[font=\footnotesize] at (0.1,-0.45) {molécula};
+  \draw[omThm, very thick, ->] (0.3,0.3) -- (2.6,2.6) node[right, font=\footnotesize] {para a frente: não polarizada};
+  \draw[omThm, very thick, ->] (0,0.45) -- (0,3.0) node[above, font=\footnotesize] {\qty{90}{\degree}: polarizada $\perp$ ao plano};
+  \node[omThm, font=\footnotesize] at (0.75,2.3) {só $\odot$};
+  \draw[omThm, very thick, ->] (0.45,0) -- (3.6,0) node[right, font=\footnotesize] {não polarizada};
+\end{tikzpicture}
+
+{\small Luz do Sol espalhada por uma molécula do ar: o dipolo induzido tem
+componentes perpendiculares ao feixe; um observador a \qty{90}{\degree}
+recebe apenas a componente perpendicular à sua linha de visada ---
+luz polarizada retilineamente. É ali que o céu é mais azul e mais polarizado.}
+\end{omfigure}
+
+\begin{remark}[Por que a luz azul chega até nós]\label{rem:b2:dipole-radiation:why}
+Num meio perfeitamente uniforme as ondas espalhadas por moléculas
+vizinhas interfeririam destrutivamente em todas as direções, menos para a frente
+(o índice de refração é essa onda espalhada para a frente). São as
+\emph{flutuações} da densidade do ar --- as moléculas não estão numa
+rede --- que deixam uma intensidade espalhada resultante, proporcional ao
+número de moléculas, como se calculou acima para uma só (Einstein, 1910). A
+mesma aleatoriedade torna a luz do céu incoerente de ponto a ponto.
+\end{remark}
+
+\begin{method}[Estimativas de radiação]\label{met:b2:dipole-radiation:method}
+(1) Identifique o dipolo: $p_0 = q\,\times$ amplitude, ou $I_0\ell/\omega$ para um
+fio. (2) Campo à distância $r$: $E \approx \mu_0\omega^2p_0\sin\theta/4\pi r$; potência:
+$\mu_0\omega^4p_0^2/12\pi c$. (3) Para uma carga acelerada use Larmor; para
+uma antena, a \omterm{ex:b2:dipole-radiation:antenna}{resistência de radiação}. (4) Para o espalhamento, calcule o
+dipolo induzido pela resposta do meio (\omterm{prop:b2:waves-in-media:lorentz}{modelo de Lorentz}) e divida
+a potência irradiada pela intensidade incidente. (5) Lembre-se dos zeros:
+nada ao longo do eixo de oscilação, donde a polarização a
+\qty{90}{\degree} e o \omterm{prop:b2:wave-interfaces:brewster}{ângulo de Brewster} do \cref{ch:b2:wave-interfaces}.
+\end{method}
+
+\section{Exercícios}
+
+\begin{exercise}[$\star$]\label{exo:b2:dipole-radiation:1}
+Uma antena curta de \qty{1.0}{m} conduz \qty{2.0}{A} (amplitude) a
+\qty{100}{MHz}. Amplitude do dipolo $p_0$; amplitude do campo a \qty{1}{km} no
+plano equatorial e a \qty{30}{\degree} do eixo; potência irradiada;
+\omterm{ex:b2:dipole-radiation:antenna}{resistência de radiação}.
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b2:dipole-radiation:2}
+\omterm{ex:b2:dipole-radiation:antenna}{Resistência de radiação} de um fio de \qty{1}{m} a \qty{100}{kHz}, \qty{1}{MHz},
+\qty{10}{MHz} e \qty{100}{MHz}; compare com sua resistência de cobre
+(\qty{1}{mm} de diâmetro, com o \omterm{thm:b2:waves-in-media:skin}{efeito pelicular} nas frequências mais altas,
+$\delta = \qty{0.2}{mm}$ a \qty{100}{kHz}); rendimento (irradiado sobre total)
+em cada caso. Por que os transmissores de ondas longas têm torres de centenas de
+metros?
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b2:dipole-radiation:3}
+Razão entre o \omterm{prop:b2:dipole-radiation:rayleigh}{espalhamento Rayleigh} da luz de \qty{400}{nm}, \qty{550}{nm} e
+\qty{700}{nm}; e o dos comprimentos de onda de radar de \qty{3}{cm} e \qty{10}{cm} por
+gotas de chuva (se elas fossem pequenas o bastante --- não são bem); por que
+o radar meteorológico usa comprimentos de onda curtos para ver a chuva e longos para ver
+através dela?
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b2:dipole-radiation:4}
+Grau de polarização da luz do céu a \qty{30}{\degree}, \qty{60}{\degree},
+\qty{90}{\degree} e \qty{120}{\degree} do Sol; para onde no céu um
+fotógrafo deve apontar um polarizador para o azul mais escuro, e o que
+acontece quando o Sol está a pino? Por que o máximo real é de apenas cerca de
+$75\%$ (pense no espalhamento múltiplo e no que o solo reflete)?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b2:dipole-radiation:5}
+(a) Integre o \omterm{thm:b2:poynting-vector:poynting}{vetor de Poynting} do dipolo sobre uma esfera e
+confira $\mathcal P = \mu_0\omega^4p_0^2/12\pi c$. (b) Fração da potência
+irradiada dentro de \qty{30}{\degree} do plano equatorial. (c) Ângulo de
+meia potência: em que $\theta$ a intensidade é metade do máximo? (d) O
+"ganho" do dipolo, intensidade máxima sobre a média isotrópica:
+mostre que vale $1.5$.
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b2:dipole-radiation:6}
+\emph{Perto e longe.} (a) Escreva o campo quase estático de um dipolo em
+$\theta = 90^\circ$, $E_{\text{qs}} = p/4\pi\varepsilon_0r^3$, e o campo radiativo; a
+que distância $r_0$ suas amplitudes se igualam? Exprima $r_0$ em função de
+$\lambda$. (b) Para uma antena de \qty{1}{MHz}, quanto vale $r_0$; que campo sente um receptor
+a \qty{10}{m} e a \qty{10}{km}? (c) Um celular de \qty{1}{GHz} segurado
+a \qty{2}{cm} da cabeça: zona próxima ou distante? (d) Por que o campo próximo
+não leva potência resultante embora?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b2:dipole-radiation:7}
+\emph{Thomson e a coroa.} (a) Calcule $\sigma_T$. (b) A coroa solar
+tem $n_e \approx \qty{1e14}{m^{-3}}$ ao longo de $10^9$ m: fração da luz
+da fotosfera espalhada em nossa direção; por que a coroa é branca e só visível
+durante eclipses? (c) Raios X de \qty{10}{keV} num átomo de carbono ($6$
+elétrons, energias de ligação abaixo de \qty{300}{eV}): por que os elétrons
+espalham como se fossem livres, e qual é a seção de choque do átomo? (d) Por que
+uma radiografia médica distingue osso de carne sobretudo pela
+absorção, e não pelo \omterm{prop:b2:dipole-radiation:rayleigh}{espalhamento Thomson}?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b2:dipole-radiation:8}
+\emph{Pôr do sol.} A profundidade óptica da atmosfera para o \omterm{prop:b2:dipole-radiation:rayleigh}{espalhamento
+Rayleigh} no zênite vale $\tau(\lambda) = 0.1\,(550\,\text{nm}/\lambda)^4$ (a
+luz direta é atenuada de $\eu^{-\tau}$). (a) Transmissão no
+zênite para \qty{400}{nm}, \qty{550}{nm} e \qty{700}{nm}. (b) No poente o caminho
+é $38$ vezes mais longo: transmissões; razão vermelho/azul. (c) Por que a
+Lua fica vermelha durante um eclipse lunar? (d) Por que o céu perto do
+horizonte é esbranquiçado em vez de azul profundo?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b2:dipole-radiation:9}
+\emph{Duas antenas.} Dois dipolos verticais separados de uma distância $d$ segundo
+$x$ são alimentados com a mesma amplitude. (a) Em fase, com $d = \lambda/2$: em que
+direções horizontais seus campos distantes se somam e em quais se cancelam?
+(arranjo transversal). (b) Em oposição de fase, com $d = \lambda/2$: o mesmo (arranjo longitudinal).
+(c) Em quadratura, com $d = \lambda/4$: mostre que o arranjo irradia só para um
+lado. (d) Por que as emissoras AM usam várias torres, e
+como um radar de arranjo em fase orienta seu feixe sem se mover?
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b2:dipole-radiation:10}
+\emph{Amortecimento por radiação.} O elétron de Lorentz (\cref{ch:b2:waves-in-media})
+que oscila em $\omega_0$ com amplitude $x_0$ irradia pela fórmula de Larmor.
+(a) Potência média irradiada; energia do oscilador $\tfrac12m\omega_0^2x_0^2$;
+mostre que a energia decai com a taxa $\Gamma = e^2\omega_0^2/6\pi\varepsilon_0mc^3$.
+(b) Valor de $\Gamma$ para a linha do sódio (\qty{589}{nm}): compare com o
+$\Gamma$ usado no \cref{exo:b2:waves-in-media:9}. (c) Tempo de vida $1/\Gamma$ e a
+largura natural da linha, $\Delta\lambda = \lambda^2\Gamma/2\pi c$. (d) Fator de qualidade
+$\omega_0/\Gamma$ do oscilador atômico.
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b2:dipole-radiation:11}
+\emph{A torre.} Uma emissora AM irradia \qty{50}{kW} a \qty{1}{MHz} de uma
+torre vertical de altura $\lambda/4$ sobre solo condutor (que age como
+espelho, tornando a torre a metade de um \omterm{ex:b2:dipole-radiation:antenna}{dipolo de meia onda}: $R_{\text{rad}} \approx
+\qty{36}{\ohm}$, e a potência vai só para o semiespaço superior). (a)
+Altura; corrente na base. (b) Amplitude do campo a \qty{10}{km} no
+plano horizontal (use o diagrama do dipolo, $\mathcal P$ no semiespaço
+superior $= \int\langle\Pi\rangle\dd S$; tome $\langle\Pi\rangle = 1.5\,
+\mathcal P/2\pi r^2$ no horizonte como estimativa razoável). (c) Fem numa
+antena chicote receptora de \qty{1}{m} ali. (d) Por que a condutividade do solo
+importa, e por que se enterram fios de cobre radiais sob a torre?
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b2:dipole-radiation:12}
+\emph{Espalhamento e índice.} Num gás rarefeito as ondas espalhadas para a frente
+por todas as moléculas se somam coerentemente e constroem o índice de refração,
+$n - 1 = N\alpha/2\varepsilon_0$ com $\alpha = e^2/m\omega_0^2$ a polarizabilidade; a
+seção de choque de Rayleigh vale $\sigma = (8\pi/3)r_e^2(\omega/\omega_0)^4$. (a) Exprima
+$\sigma$ em função de $n$, $N$ e $\lambda$: $\sigma = 8\pi^3(n^2 - 1)^2/3N^2\lambda^4$. (b)
+Para o ar ($n - 1 = 2.9 \times 10^{-4}$, $N = \qty{2.5e25}{m^{-3}}$) a \qty{550}{nm}:
+$\sigma$ e o livre caminho médio $1/N\sigma$. (c) Profundidade óptica vertical da
+atmosfera (altura equivalente \qty{8}{km}); compare com o $0.1$ do
+\cref{exo:b2:dipole-radiation:8}. (d) Por que essa relação (Rayleigh,
+1899) forneceu um valor do número de Avogadro?
+\end{exercise}
+
+\section{Problema: A torre, o céu e o elétron}
+
+\begin{problem}[{Problema de fim de semana --- três antenas: uma torre de
+transmissão, uma molécula do ar ao sol e um elétron livre}]
+\label{pb:b2:dipole-radiation:1}
+
+\medskip
+\noindent\textbf{Parte I --- A torre.}
+Uma emissora de ondas médias em $f = \qty{1.0}{MHz}$ irradia $\mathcal P = \qty{100}{kW}$
+de uma torre de um quarto de onda sobre solo condutor ($R_{\text{rad}} = \qty{36}{\ohm}$,
+diagrama de um dipolo vertical sobre o semiespaço superior, como no
+\cref{exo:b2:dipole-radiation:11}).
+\begin{enumerate}
+  \item Comprimento de onda e altura da torre; amplitude da corrente em sua
+        base; tensão sobre $R_{\text{rad}}$.
+  \item Amplitude do momento dipolar equivalente, tratando a torre como um
+        dipolo curto com $p_0 = I_0\ell_{\text{ef}}/\omega$, $\ell_{\text{ef}} \approx
+        \lambda/2\pi$ para a torre de um quarto de onda (admitido).
+  \item Intensidade média a \qty{10}{km} e a \qty{100}{km} no plano
+        horizontal (tome o diagrama do semiespaço superior, máximo no
+        horizonte, $\langle\Pi\rangle = 1.5\mathcal P/2\pi r^2$); amplitudes do campo.
+  \item Fem num chicote vertical de \qty{1}{m} a \qty{100}{km}; e numa antena
+        de bastão de ferrite (uma bobina de $N = 100$ espiras, \qty{1}{cm^2},
+        permeabilidade efetiva $100$) voltada para o $\vect B$ da onda: compare.
+  \item Potência recebida por um receptor casado com uma antena de
+        área efetiva $A = 1.5\lambda^2/4\pi$ (a do dipolo) a \qty{100}{km}.
+  \item Os condutores da torre têm uma resistência total de perdas de
+        \qty{2}{\ohm}: rendimento; potência perdida em calor.
+  \item Um receptor a \qty{10}{km} está na \omterm{thm:b2:dipole-radiation:field}{zona de radiação}? E um a
+        \qty{100}{m} da torre?
+  \item Por que os sinais de ondas médias vão mais longe à noite? (Lembre a
+        camada D do \cref{ch:b2:waves-in-media}.)
+\end{enumerate}
+
+\medskip
+\noindent\textbf{Parte II --- O céu.}
+Ar ao nível do mar: $N = \qty{2.5e25}{m^{-3}}$, seção de choque de Rayleigh $\sigma =
+\qty{4.6e-31}{m^2}\,(550\,\text{nm}/\lambda)^4$; luz do Sol de \qty{1.0}{kW/m^2} no
+solo; a espessura equivalente da atmosfera na densidade do nível do mar é de
+\qty{8}{km}.
+\begin{enumerate}[resume]
+  \item Seção de choque a \qty{450}{nm} e a \qty{650}{nm}; razão.
+  \item Livre caminho médio das três cores; profundidade óptica vertical
+        $\tau = N\sigma H$; fração de cada cor espalhada para fora do
+        feixe direto no zênite.
+  \item Potência espalhada por metro cúbico de ar no solo pela
+        luz verde (tome \qty{300}{W/m^2} de luz solar em torno de
+        \qty{550}{nm}); em que ângulo sólido, e com que diagrama?
+  \item Uma coluna de ar de \qty{1}{m^2} de seção vista a \qty{90}{\degree} do
+        Sol: estime a intensidade da luz do céu que chega ao
+        observador vinda dessa coluna (potência espalhada em sua direção por
+        unidade de ângulo sólido, ao longo dos \qty{8}{km}) e compare com o
+        Sol direto; o brilho do céu está na ordem certa
+        (cerca de \qty{1e-5}{} do Sol)?
+  \item Grau de polarização da luz dessa coluna; por que ele é
+        menor na realidade, e como alguns insetos o usam?
+  \item No poente o caminho vale $38$ atmosferas: frações transmitidas
+        de azul e de vermelho; cor do Sol; por que o céu no alto continua
+        azul.
+  \item Por que o céu é preto na Lua mesmo em pleno dia?
+  \item Em Marte o ar é cem vezes mais rarefeito, mas cheio de poeira
+        fina (grãos de um micrômetro): por que o céu marciano é
+        cor de caramelo e seu pôr do sol é azul?
+\end{enumerate}
+
+\medskip
+\noindent\textbf{Parte III --- O elétron.}
+\begin{enumerate}[resume]
+  \item Seção de choque de Thomson a partir de $r_e$.
+  \item Num tubo de raios X um elétron de \qty{100}{keV} ($v = \qty{1.6e8}{m/s}$,
+        trate-o de forma não relativística) é freado ao longo de \qty{2}{\micro m} de
+        tungstênio: aceleração, potência de Larmor, duração, energia
+        irradiada e sua fração da energia cinética.
+  \item Menor comprimento de onda que o tubo pode emitir (um fóton levando
+        toda a energia do elétron).
+  \item O tubo opera com \qty{20}{mA}: potência irradiada; calor no anodo;
+        por que o anodo gira.
+  \item Um elétron clássico que circula um próton no raio de Bohr
+        (\qty{5.3e-11}{m}, celeridade \qty{2.2e6}{m/s}): aceleração, potência de
+        Larmor e o tempo para irradiar seus \qty{13.6}{eV} --- o
+        tempo de vida do átomo clássico.
+  \item Os átomos reais duram para sempre: diga o que falta à física clássica
+        aqui, e o que o \cref{ch:b2:schrodinger-wave-functions} dirá
+        sobre um estado estacionário.
+  \item Um elétron num síncrotron de raio \qty{100}{m} com $v \approx c$:
+        que potência dá a fórmula de Larmor não relativística? (A
+        potência verdadeira é $\gamma^4$ vezes maior, com $\gamma \sim 10^4$: a
+        fonte de luz síncrotron.)
+  \item O mesmo elétron em repouso sob \qty{1}{kW/m^2} de luz solar:
+        potência que ele reirradia (Thomson); número desses elétrons
+        necessários para espalhar um watt.
+  \item Resuma as três antenas numa tabela: momento dipolar,
+        frequência, potência, diagrama.
+\end{enumerate}
+\end{problem}

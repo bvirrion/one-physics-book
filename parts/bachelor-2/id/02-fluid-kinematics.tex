@@ -1,0 +1,637 @@
+\chapter{Kinematika Fluida}\label{ch:b2:fluid-kinematics}
+
+Berdirilah di atas jembatan dan amatilah sungainya. Sehelai daun hanyut
+melewatinya, mempercepat di antara pilar-pilarnya, melambat di lubuk di
+bawahnya, berputar sekali dalam sebuah olakan, lalu berlalu. Sungainya
+dapat kita lukiskan dengan mengikuti daun itu --- kedudukan dan
+kecepatannya pada setiap saat --- atau dengan berdiri diam dan mencatat,
+di setiap titik sungainya, secepat apa airnya lewat. Lukisan yang kedua
+itulah milik seorang fisikawan fluida: sebuah \emph{medan kecepatan}.
+Bab ini menyiapkan kedua lukisan itu, belajar menghitung percepatan
+sebuah partikel dari medannya, menuliskan kekekalan massa sebagai hukum
+lokal, dan menggolongkan aliran menurut berpusar atau tidaknya --- kosakata
+yang akan diperlukan persamaan \omterm{def:b2:fluid-kinematics:euler}{Euler} dan Navier.
+
+\begin{omfigure}
+\includegraphics[width=0.58\linewidth]{images/book4/ai/b4-02-river-bridge-eddies.png}
+
+{\small Sebuah sungai yang melewati jembatan: air yang cepat dan mulus di antara pilarnya, olakan di belakangnya --- sebuah medan kecepatan yang harus dibaca di titik-titik tetap, bukan satu lintasan yang harus diikuti.}
+\end{omfigure}
+
+
+\section{Lukisan kontinum}
+
+\begin{definition}[Partikel fluida; hipotesis kontinum]\label{def:b2:fluid-kinematics:particle}
+\index{partikel fluida}\index{hipotesis kontinum}\index{skala mesoskopik}
+Yang disebut \emph{partikel fluida} adalah volume fluida yang cukup kecil
+untuk diperlakukan sebagai titik pada skala alirannya, namun cukup besar
+untuk memuat molekul dalam jumlah amat besar, sehingga massa jenisnya
+$\rho$, tekanannya $P$, suhunya $T$ dan kecepatan rata-ratanya $\vect v$
+merupakan rerata yang terdefinisi baik (skala \emph{mesoskopik}, lazimnya
+satu mikrometer). \emph{Hipotesis kontinum} mengandaikan skala semacam
+itu ada: jalan bebas rata-rata $\ell$ molekulnya harus jauh lebih kecil
+daripada skala $L$ alirannya, $\ell/L \ll 1$. Di udara pada tekanan
+atmosfer $\ell \approx \qty{70}{nm}$; dalam zat cair $\ell$ seukuran
+molekulnya. Fluidanya lalu dilukiskan oleh \emph{medan} $\rho(M, t)$,
+$P(M, t)$, $\vect v(M, t)$ yang terdefinisi di setiap titik.
+\end{definition}
+
+\begin{definition}[Lukisan Lagrange dan lukisan Euler]\label{def:b2:fluid-kinematics:euler}
+\index{lukisan Lagrange}\index{lukisan Euler}\index{garis arus}\index{garis lintasan}\index{aliran tunak}
+Lukisan \emph{Lagrange} mengikuti setiap \omterm{def:b2:fluid-kinematics:particle}{partikel fluida}: kedudukannya
+$\vect r(t)$ dan kecepatannya $\dd\vect r/\dd t$ sebagai fungsi waktu dan
+kedudukan awalnya. Lukisan \emph{Euler} memberikan, di setiap titik tetap
+$M$ dan saat $t$, kecepatan $\vect v(M, t)$ partikel yang sedang lewat di
+$M$ pada saat itu. Yang disebut \emph{garis lintasan} adalah lintasan
+sebuah partikel; \emph{garis arus} pada saat $t$ adalah kurva yang
+menyinggung $\vect v(M, t)$ di setiap titiknya; \emph{tabung arus} adalah
+permukaan yang tersusun dari garis-garis arus yang melalui sebuah kurva
+tertutup. Sebuah aliran bersifat \emph{tunak} apabila medan Eulernya tak
+bergantung pada waktu, $\partial\vect v/\partial t = \vect 0$; garis arus
+dan garis lintasannya lalu berimpit dan tetap.
+\end{definition}
+
+\begin{example}[Dua lukisan bagi satu aliran]\label{ex:b2:fluid-kinematics:hose}
+Air dalam selang taman berpenampang $S$ dengan debit $Q$ bergerak dengan
+$v = Q/S$ di mana-mana: medan \omterm{def:b2:fluid-kinematics:euler}{Eulernya} seragam dan gerak Lagrange setiap
+partikelnya beraturan. Di dalam corong yang menyempit medan \omterm{def:b2:fluid-kinematics:euler}{Eulernya}
+tetap tunak tetapi $v$ bertambah sepanjang sumbunya: setiap partikel
+\emph{dipercepat} ketika melewatinya, walaupun tak ada apa pun di titik
+tetap mana pun yang berubah menurut waktu. Itulah hal pertama yang harus
+dipelajari \omterm{def:b2:fluid-kinematics:euler}{lukisan Euler} untuk dinyatakan.
+\end{example}
+
+\begin{omfigure}
+\begin{tikzpicture}[font=\small, x=1cm, y=1cm, >=Stealth]
+  \begin{scope}
+    % streamlines of a converging channel
+    \foreach \y in {-1.2,-0.6,0,0.6} {
+      \draw[omDef, thick, postaction={decorate, decoration={markings, mark=at position 0.55 with {\arrow{>}}}}]
+        (-2.8,\y) .. controls (-0.8,\y) and (0.2,{0.45*\y}) .. (2.8,{0.45*\y});
+    }
+    \draw[omDef, thick, postaction={decorate, decoration={markings, mark=at position 0.55 with {\arrow{>}}}}]
+        (-2.8,1.2) .. controls (-0.8,1.2) and (0.2,0.54) .. (2.8,0.54)
+        coordinate[pos=0.15] (P1) coordinate[pos=0.6] (P2) coordinate[pos=0.9] (P3);
+    \draw[thick] (-2.8,1.6) .. controls (-0.8,1.6) and (0.2,0.75) .. (2.8,0.75);
+    \draw[thick] (-2.8,-1.6) .. controls (-0.8,-1.6) and (0.2,-0.75) .. (2.8,-0.75);
+    \fill[omThm] (P1) circle (2pt) node[above, font=\footnotesize, yshift=1pt] {$t_1$};
+    \fill[omThm] (P2) circle (2pt) node[above, font=\footnotesize, yshift=1pt] {$t_2$};
+    \fill[omThm] (P3) circle (2pt) node[above, font=\footnotesize, yshift=1pt] {$t_3$};
+    \node[font=\footnotesize, align=center] at (0,-2.15) {aliran tunak: garis arus $=$ garis lintasan,\\partikel mempercepat di tempat tabungnya menyempit};
+  \end{scope}
+  \begin{scope}[xshift=7.4cm]
+    \draw[thick,->] (-2.8,-1.2) -- (2.8,-1.2) node[right, font=\footnotesize] {$x$};
+    \draw[thick,->] (-2.8,-1.2) -- (-2.8,1.6);
+    % velocity vectors at fixed points (Eulerian)
+    \foreach \x in {-2.2,-1.2,-0.2,0.8,1.8} \foreach \y in {-0.6,0.2,1.0} {
+      \draw[omDef, ->] (\x,\y) -- ({\x+0.5+0.12*\x},{\y+0.15*\y});
+    }
+    \node[omDef, font=\footnotesize] at (0,1.75) {Euler: $\vect v(M,t)$ di titik tetap};
+    \draw[omThm, thick, ->] (-2.5,-0.9) .. controls (-1,-0.3) and (0.5,0.9) .. (2.4,1.3);
+    \node[omThm, font=\footnotesize] at (2.2,0.7) {garis lintasan};
+    \node[font=\footnotesize, align=center] at (0,-1.95) {Lagrange: ikuti satu partikel};
+  \end{scope}
+\end{tikzpicture}
+
+{\small Kiri: \omterm{def:b2:fluid-kinematics:euler}{aliran tunak} yang menyempit --- garis arusnya tetap,
+sebuah partikel bertanda mengikuti salah satunya dan dipercepat ketika
+tabungnya menyempit. Kanan: \omterm{def:b2:fluid-kinematics:euler}{lukisan Euler} mencatat vektor kecepatan di
+titik-titik tetap; \omterm{def:b2:fluid-kinematics:euler}{lukisan Lagrange} mengikuti satu partikel sepanjang
+\omterm{def:b2:fluid-kinematics:euler}{garis lintasannya}.}
+\end{omfigure}
+
+\section{Turunan partikel}
+
+\begin{theorem}[Turunan partikel (turunan material)]\label{thm:b2:fluid-kinematics:material}
+\index{turunan partikel}\index{percepatan konvektif}
+Laju perubahan besaran $G(M, t)$ (skalar atau vektor) \emph{bagi
+\omterm{def:b2:fluid-kinematics:particle}{partikel fluida}} yang lewat di $M$ pada saat $t$ adalah
+\[
+\frac{\mathrm DG}{\mathrm Dt} = \frac{\partial G}{\partial t} + (\vect v\cdot
+\operatorname{\vect{grad}})\,G ,
+\qquad\text{khususnya}\qquad
+\vect a = \frac{\mathrm D\vect v}{\mathrm Dt} = \frac{\partial\vect v}{\partial t} +
+(\vect v\cdot\operatorname{\vect{grad}})\,\vect v ,
+\]
+dengan $(\vect v\cdot\operatorname{\vect{grad}}) = v_x\partial_x + v_y\partial_y +
+v_z\partial_z$. Suku pertama adalah laju perubahan \emph{lokal} (di titik
+tetap), dan suku kedua adalah laju perubahan \emph{konvektif} (sebab
+partikelnya berpindah ke tempat yang nilai $G$-nya berbeda). Untuk
+kecepatannya,
+$(\vect v\cdot
+\operatorname{\vect{grad}})\vect v = \operatorname{\vect{grad}}(v^2/2) +
+(\operatorname{\vect{curl}}\vect v)\wedge\vect v$.
+\end{theorem}
+
+\begin{proof}
+Dalam $\dd t$ partikelnya berpindah dari $M$ ke $M + \vect v\,\dd t$, jadi $\dd G =
+G(M + \vect v\dd t, t + \dd t) - G(M, t) = \partial_tG\,\dd t + \dd t\,(v_x\partial_x
++ v_y\partial_y + v_z\partial_z)G$ sampai orde pertama (aturan rantai bagi fungsi
+empat variabel). Kesamaan vektornya diperiksa pada komponen $x$:
+$[\operatorname{\vect{grad}}(v^2/2)]_x = v_x\partial_xv_x + v_y\partial_x
+v_y + v_z\partial_xv_z$ dan $[(\operatorname{\vect{curl}}\vect v)\wedge\vect v]_x =
+v_y(\partial_yv_x - \partial_xv_y) + v_z(\partial_zv_x - \partial_xv_z)$ (dengan
+komponen $\operatorname{\vect{curl}}\vect v$ yang diberikan di bawah dalam
+\cref{def:b2:fluid-kinematics:vorticity}); jumlahnya adalah $v_x\partial_xv_x +
+v_y\partial_yv_x + v_z\partial_zv_x$.
+\end{proof}
+
+\begin{example}[Percepatan dalam corong tunak]\label{ex:b2:fluid-kinematics:nozzle}
+Aliran satu dimensi tunak $v(x) = v_0(1 + x/L)$ sepanjang sebuah corong:
+suku lokalnya lenyap, dan $a = v\,\dd v/\dd x = v_0^2(1 + x/L)/L$. Sebuah
+partikel yang masuk dengan $v_0 = \qty{2}{m/s}$ dan keluar dengan $2v_0$ sepanjang $L
+= \qty{5}{cm}$ merasakan $a = 80$ sampai \qty{160}{m/s^2}: delapan sampai enam belas $g$,
+dalam aliran yang tak satu pun besarannya bergantung pada waktu.
+\end{example}
+
+\begin{example}[Lokal lawan konvektif]\label{ex:b2:fluid-kinematics:weather}
+Suhu di sebuah stasiun cuaca turun sepanjang malam ($\partial T/
+\partial t < 0$: lokal), dan turun bagi sebongkah udara yang terbawa
+angin ke utara ($\vect v\cdot\operatorname{\vect{grad}}T < 0$: konvektif,
+atau \emph{adveksi}). Sebuah termometer pada balon yang hanyut bersama
+angin mencatat jumlah keduanya, $\mathrm DT/\mathrm Dt$; stasiun cuacanya
+hanya mencatat suku pertama.
+\end{example}
+
+\section{Kekekalan massa}
+
+\begin{definition}[Debit massa dan debit volume]\label{def:b2:fluid-kinematics:flowrate}
+\index{debit massa}\index{debit volume}\index{fluks massa}
+Yang disebut \emph{debit massa} lewat permukaan terorientasi $S$ adalah
+massa yang menyeberanginya tiap satuan waktu, $D_m = \sum\rho\,\vect v\cdot\vect n\,\dd S$ ---
+fluks \emph{rapat arus massa} $\vect j = \rho\vect v$ (satuan
+\unit{kg.m^{-2}.s^{-1}}); \emph{debit volume}nya adalah $D_V = \sum\vect v
+\cdot\vect n\,\dd S$ (\unit{m^3/s}). Untuk kecepatan seragam yang tegak lurus
+penampang datar seluas $S$, $D_m = \rho vS$ dan $D_V = vS$.
+\end{definition}
+
+\begin{proof}
+Dalam $\dd t$ fluida yang menyeberangi unsur $\dd S$ adalah yang termuat
+dalam tabung serong beralas $\dd S$ dan bergaris pelukis $\vect v\,\dd t$,
+bervolume $\vect v\cdot\vect n\,\dd S\,\dd t$ dan bermassa $\rho$ kali itu.
+\end{proof}
+
+\begin{theorem}[Kekekalan massa lokal]\label{thm:b2:fluid-kinematics:continuity}
+\index{persamaan kontinuitas}\index{divergensi}
+Di setiap titik sebuah fluida,
+\[
+\frac{\partial\rho}{\partial t} + \operatorname{div}(\rho\vect v) = 0 ,
+\qquad\text{dengan}\qquad
+\operatorname{div}\vect A = \frac{\partial A_x}{\partial x} + \frac{\partial A_y}{\partial y} +
+\frac{\partial A_z}{\partial z}
+\]
+adalah \emph{divergensi} sebuah medan vektor: fluks total
+$\vect A$ yang keluar lewat permukaan sebuah volume kecil, tiap satuan
+volume. Setara dengan itu, $\mathrm D\rho/\mathrm Dt + \rho\operatorname{div}\vect v = 0$.
+\end{theorem}
+
+\begin{proof}
+Ambillah kotak tetap $[x, x + \dd x]\times[y, y + \dd y]\times[z, z + \dd z]$.
+Massanya $\rho\,\dd x\dd y\dd z$ berubah dengan laju $\partial_t\rho\,\dd x\dd y
+\dd z$. Massa masuk lewat sisi di $x$ dengan laju $j_x(x)\dd y\dd z$
+dan keluar lewat sisi di $x + \dd x$ dengan $j_x(x + \dd x)\dd y\dd z$:
+keluaran total $\partial_xj_x\,\dd x\dd y\dd z$, dan begitu pula bagi $y$ dan $z$.
+Kekekalan massa --- tak ada massa yang diciptakan --- memberi $\partial_t\rho = -
+(\partial_xj_x + \partial_yj_y + \partial_zj_z)$. Bentuk keduanya menyusul dari
+$\operatorname{div}(\rho\vect v) = \vect v\cdot\operatorname{\vect{grad}}\rho +
+\rho\operatorname{div}\vect v$.
+\end{proof}
+
+\begin{remark}[Divergensi, perjumpaan pertama]\label{rem:b2:fluid-kinematics:divergence}
+Penurunannya memperlihatkan apa yang diukur $\operatorname{div}$: fluks
+yang meninggalkan sebuah kotak kecil tiap satuan volume. Dijumlahkan
+atas kotak-kotak yang mengubin volume berhingga $V$, sisi-sisi dalamnya
+saling meniadakan berpasangan dan hanya permukaan luarnya yang tersisa:
+$\iint_{\partial V}\vect A\cdot\vect n\,\dd S = \iiint_V
+\operatorname{div}\vect A\,\dd\tau$ --- teorema divergensi
+(Ostrogradski), yang akan kita nyatakan selayaknya dalam
+\cref{ch:b2:maxwell-equations} dan kita pakai di sepanjang
+elektromagnetisme; teorema itu dibuktikan dalam jilid matematika Tahun
+ke-3. Diintegralkan atas volume tetap, hukum lokalnya berbunyi
+$\dd m_V/\dd t = -D_m^{\text{luar}}$: massa di dalamnya berubah sebanyak
+yang menyeberangi batasnya.
+\end{remark}
+
+\begin{omfigure}
+\begin{tikzpicture}[font=\small, x=1cm, y=1cm, >=Stealth]
+  \begin{scope}
+    \draw[thick, fill=omDef!10] (0,0) rectangle (2.2,1.6);
+    \draw[thick] (0,1.6) -- (0.6,2.1) -- (2.8,2.1) -- (2.2,1.6);
+    \draw[thick] (2.2,0) -- (2.8,0.5) -- (2.8,2.1);
+    \draw[omThm, very thick, ->] (-1.2,0.8) -- (-0.1,0.8) node[pos=0.3, above, font=\footnotesize] {$j_x(x)$};
+    \draw[omThm, very thick, ->] (2.3,0.8) -- (3.6,0.8) node[pos=0.75, above, font=\footnotesize] {$j_x(x+\dd x)$};
+    \node[font=\footnotesize] at (1.1,-0.35) {$\dd x$};
+    \node[font=\footnotesize] at (-0.35,0.3) {$\dd y$};
+    \node[font=\footnotesize] at (2.75,-0.05) {$\dd z$};
+    \node[font=\footnotesize, align=left] at (1.3,-1.1) {$\partial_t\rho\,\dd\tau = -(\partial_x j_x + \partial_y j_y + \partial_z j_z)\,\dd\tau$};
+  \end{scope}
+  \begin{scope}[xshift=8.2cm]
+    \draw[thick] (-2.4,1.1) .. controls (-1,1.1) and (0,0.5) .. (2.4,0.5);
+    \draw[thick] (-2.4,-1.1) .. controls (-1,-1.1) and (0,-0.5) .. (2.4,-0.5);
+    \draw[omDef, thick] (-2.4,0) ellipse (0.25 and 1.1);
+    \draw[omDef, thick] (2.4,0) ellipse (0.12 and 0.5);
+    \draw[omThm, very thick, ->] (-2.4,0) -- (-1.4,0) node[above, font=\footnotesize] {$v_1$};
+    \draw[omThm, very thick, ->] (2.4,0) -- (3.6,0) node[above, font=\footnotesize] {$v_2$};
+    \node[omDef, font=\footnotesize] at (-2.4,1.45) {$S_1$};
+    \node[omDef, font=\footnotesize] at (2.4,0.85) {$S_2$};
+    \node[font=\footnotesize] at (0,-1.6) {tunak: $\rho_1v_1S_1 = \rho_2v_2S_2$};
+  \end{scope}
+\end{tikzpicture}
+
+{\small Kiri: neraca massa sebuah kotak tetap --- keluaran total lewat
+keenam sisinya, tiap satuan volume, adalah divergensi $\rho\vect v$.
+Kanan: dalam \omterm{def:b2:fluid-kinematics:euler}{aliran tunak} \omterm{def:b2:fluid-kinematics:flowrate}{debit massanya} sama lewat setiap penampang
+sebuah tabung arus.}
+\end{omfigure}
+
+\begin{corollary}[Aliran tak termampatkan; tabung arus]\label{cor:b2:fluid-kinematics:incompressible}
+\index{aliran tak termampatkan}
+Sebuah aliran bersifat \emph{tak termampatkan} apabila massa jenis setiap
+partikelnya tetap, $\mathrm D\rho/\mathrm Dt = 0$, yang setara dengan
+\[
+\operatorname{div}\vect v = 0 .
+\]
+Zat cair homogen mengalir secara tak termampatkan; demikian pula gas pada
+kelajuan yang jauh di bawah kelajuan bunyi (lihat
+\cref{ch:b2:sound-waves}). Dalam \omterm{def:b2:fluid-kinematics:euler}{aliran tunak} \omterm{def:b2:fluid-kinematics:flowrate}{debit massa} $\rho vS$ sama
+lewat setiap penampang sebuah tabung arus; jika alirannya tak
+termampatkan dan $\rho$ seragam pula, $vS$ tetap: fluidanya mempercepat
+di tempat tabungnya menyempit.
+\end{corollary}
+
+\begin{proof}
+$\mathrm D\rho/\mathrm Dt = -\rho\operatorname{div}\vect v$. Untuk
+tabungnya, terapkanlah neraca terintegralkan pada volume antara dua
+penampang: tak ada fluks lewat permukaan sisinya (kecepatannya
+menyinggung), keadaannya tunak, jadi masukan sama dengan keluaran.
+\end{proof}
+
+\begin{example}[Darah]\label{ex:b2:fluid-kinematics:blood}
+Aorta (berpenampang \qty{2.5}{cm^2}) mengalirkan \qty{5}{L/min} $= \qty{83}{cm^3/s}$:
+$v = \qty{33}{cm/s}$. Aliran yang sama lewat sekitar $10^{10}$
+pembuluh kapiler yang penampang totalnya sekitar \qty{2500}{cm^2}: $v = \qty{0.3}{mm/s}$ ---
+cukup lambat bagi pertukaran lewat dindingnya, dan itulah gunanya percabangan itu.
+\end{example}
+
+\section{Vortisitas dan aliran irotasional}
+
+\begin{definition}[Vortisitas]\label{def:b2:fluid-kinematics:vorticity}
+\index{vortisitas}\index{curl}\index{aliran irotasional}
+Yang disebut \emph{vortisitas} sebuah aliran adalah medan vektor
+\[
+\vect\omega = \operatorname{\vect{curl}}\vect v , \qquad
+\operatorname{\vect{curl}}\vect A = \Bigl(\frac{\partial A_z}{\partial y} -
+\frac{\partial A_y}{\partial z},\; \frac{\partial A_x}{\partial z} - \frac{\partial A_z}
+{\partial x},\; \frac{\partial A_y}{\partial x} - \frac{\partial A_x}{\partial y}\Bigr) .
+\]
+Sebuah aliran bersifat \emph{irotasional} di tempat $\vect\omega = \vect 0$.
+\end{definition}
+
+\begin{proposition}[Vortisitas mengukur rotasi lokal]\label{prop:b2:fluid-kinematics:rotation}
+Sebuah unsur fluida kecil yang berpusat di $M$ berputar, sebagai
+keseluruhan, dengan kecepatan sudut $\vect\Omega = \tfrac12\vect\omega(M)$. Dalam
+rotasi \omterm{def:b2:rigid-body-mechanics:solid}{benda tegar} $\vect v = \vect\Omega\wedge\vect{OM}$ vortisitasnya seragam,
+$\vect\omega = 2\vect\Omega$; dalam aliran geser bidang $\vect v = ky\,\vect e_x$
+nilainya $\vect\omega = -k\vect e_z$: kincir kecil yang dijatuhkan dalam aliran geser
+berputar walaupun garis arusnya lurus.
+\end{proposition}
+
+\begin{proof}
+Di dekat $M$, $\vect v(M + \vect\epsilon) = \vect v(M) + \mathbf G\vect\epsilon$ dengan
+$\mathbf G$ matriks $\partial_jv_i$; belahlah ia menjadi bagian simetriknya
+(regangan murni, yang meregangkan unsurnya tanpa memutarnya sebagai
+keseluruhan) dan bagian antisimetriknya, yang matriksnya $\tfrac12(\partial_jv_i -
+\partial_iv_j)$ adalah matriks $\vect\epsilon \mapsto \tfrac12\vect\omega\wedge\vect\epsilon$
+(\cref{thm:b2:rigid-body-mechanics:field}). Rotasi tegar terhadap $\vect e_z$:
+$\vect v = \Omega(-y, x, 0)$, $\omega_z = \partial_xv_y - \partial_yv_x = 2\Omega$.
+Geser: $\omega_z = -\partial_y(ky) = -k$.
+\end{proof}
+
+\begin{definition}[Potensial kecepatan; sirkulasi]\label{def:b2:fluid-kinematics:potential}
+\index{potensial kecepatan}\index{sirkulasi (kecepatan)}\index{aliran potensial}
+Dalam \omterm{def:b2:fluid-kinematics:vorticity}{aliran irotasional} kecepatannya diturunkan dari sebuah \emph{potensial
+kecepatan}: $\vect v = \operatorname{\vect{grad}}\varphi$ (sirkulasi
+$\vect v$ sepanjang sebuah lintasan lalu hanya bergantung pada ujungnya, $\int_A^B\vect v
+\cdot\dd\vect l = \varphi(B) - \varphi(A)$). Jika alirannya juga tak
+termampatkan, $\Delta\varphi = \operatorname{div}\operatorname{\vect{grad}}
+\varphi = 0$: potensialnya menuruti persamaan Laplace, persis seperti
+potensial elektrostatik di daerah tanpa muatan --- sebuah \emph{aliran
+potensial}. \emph{Sirkulasi} kecepatan sepanjang kurva tertutup $C$
+adalah $\Gamma = \oint_C\vect v\cdot\dd\vect l$.
+\end{definition}
+
+\begin{proof}
+Bahwa medan tanpa \omterm{def:b2:fluid-kinematics:vorticity}{curl} pada daerah terhubung sederhana adalah sebuah
+gradien, dan bahwa gradien tak \omterm{def:b2:fluid-kinematics:vorticity}{ber-curl} ($\partial_y\partial_z\varphi = \partial_z\partial_y\varphi$),
+adalah milik jilid matematika Tahun ke-2; persamaan Laplacenya menyusul dari
+$\operatorname{div}\vect v = 0$.
+\end{proof}
+
+\begin{example}[Tiga aliran bidang]\label{ex:b2:fluid-kinematics:planeflows}
+\index{aliran stagnasi}\index{vorteks titik}\index{vorteks Rankine}
+(i) \emph{\omterm{ex:b2:fluid-kinematics:planeflows}{Aliran stagnasi}} $\vect v = k(x, -y)$: $\operatorname{div}\vect v =
+0$, $\vect\omega = \vect 0$, $\varphi = \tfrac12k(x^2 - y^2)$; garis arusnya
+$xy =$ tetap, hiperbola --- pancaran yang menumbuk dinding, di dekat sumbunya. (ii)
+\emph{\omterm{ex:b2:fluid-kinematics:planeflows}{Vorteks titik}} $\vect v = \dfrac{\Gamma}{2\pi r}\vect e_\theta$ (koordinat
+kutub bidang): tak termampatkan dan \emph{irotasional di mana-mana
+kecuali di $r = 0$}, $\varphi = \Gamma\theta/2\pi$ (bernilai banyak), dan
+sirkulasinya pada lingkaran mana pun mengelilingi pusatnya adalah $\Gamma$ --- 
+vortisitasnya terpusat pada sumbunya. (iii) \emph{\omterm{ex:b2:fluid-kinematics:planeflows}{Vorteks Rankine}}: sebuah
+inti $r < a$ dalam rotasi tegar $v_\theta = \Omega r$ (\omterm{def:b2:fluid-kinematics:vorticity}{vortisitas} $2\Omega$)
+yang disambung dengan \omterm{ex:b2:fluid-kinematics:planeflows}{vorteks titik} $v_\theta = \Omega a^2/r$ di luarnya: model
+sebuah puting beliung, pusaran air di bak mandi atau olakan di belakang pilar jembatan ---
+kecepatannya memuncak di tepi intinya.
+\end{example}
+
+\begin{omfigure}
+\begin{tikzpicture}[font=\small, x=1cm, y=1cm, >=Stealth]
+  \begin{scope}
+    \foreach \c in {0.3,0.8,1.6,2.8} {
+      \draw[omDef, thick, domain={\c/2.4}:2.4, samples=40, postaction={decorate, decoration={markings, mark=at position 0.5 with {\arrow{>}}}}] plot (\x,{\c/\x});
+      \draw[omDef, thick, domain=-2.4:{-\c/2.4}, samples=40, postaction={decorate, decoration={markings, mark=at position 0.5 with {\arrow{<}}}}] plot (\x,{-\c/\x});
+    }
+    \draw[thick] (-2.5,0) -- (2.5,0);
+    \draw[->] (0,0) -- (0,2.6) node[right, font=\footnotesize] {$y$};
+    \node[font=\footnotesize] at (0,-0.4) {aliran stagnasi $\vect v = k(x,-y)$};
+  \end{scope}
+  \begin{scope}[xshift=6.6cm]
+    \foreach \r in {0.5,0.9,1.3,1.7} \draw[omDef, thick, postaction={decorate, decoration={markings, mark=at position 0.25 with {\arrow{>}}}}] (0,0) circle (\r);
+    \fill (0,0) circle (1.5pt);
+    \node[font=\footnotesize] at (0,-2.2) {vorteks titik $v_\theta = \Gamma/2\pi r$};
+  \end{scope}
+  \begin{scope}[xshift=10.6cm]
+    \begin{axis}[omaxis, axis x line=bottom, axis y line=left, width=4.4cm, height=3.9cm, at={(0,-1.9cm)},
+        xlabel={$r/a$}, ylabel={$v_\theta$}, xmin=0, xmax=4, ymin=0, ymax=1.2, xtick={1,2,3}, ytick=\empty,
+        xlabel style={at={(axis description cs:0.5,-0.12)}, anchor=north},
+        ylabel style={at={(axis description cs:-0.08,0.5)}, rotate=90, anchor=south}, samples=60]
+      \addplot[omThm, thick, domain=0:1] {x};
+      \addplot[omThm, thick, domain=1:4] {1/x};
+      \node[font=\scriptsize] at (axis cs:0.55,0.85) {$\Omega r$};
+      \node[font=\scriptsize] at (axis cs:2.6,0.62) {$\Omega a^2/r$};
+    \end{axis}
+  \end{scope}
+\end{tikzpicture}
+
+{\small Tiga aliran bidang. Kiri: \omterm{ex:b2:fluid-kinematics:planeflows}{aliran stagnasi}, irotasional,
+dengan \omterm{def:b2:fluid-kinematics:euler}{garis arus} hiperbolik. Tengah: \omterm{ex:b2:fluid-kinematics:planeflows}{vorteks titik} --- \omterm{def:b2:fluid-kinematics:euler}{garis arus}
+melingkar, namun vortisitasnya nol jauh dari pusatnya. Kanan: profil
+\omterm{ex:b2:fluid-kinematics:planeflows}{vorteks Rankine}, rotasi tegar di intinya dan \omterm{ex:b2:fluid-kinematics:planeflows}{vorteks titik} di
+luarnya.}
+\end{omfigure}
+
+\begin{remark}[Mengapa sirkulasinya penting]\label{rem:b2:fluid-kinematics:stokes}
+Untuk simpal bidang kecil seluas $\dd S$ dengan normal $\vect n$,
+sirkulasinya adalah $\oint\vect v\cdot\dd\vect l = \vect\omega\cdot\vect n\,\dd S$ ---
+vortisitasnya adalah sirkulasi tiap satuan luas, persis seperti
+divergensi adalah fluks tiap satuan volume. (Periksalah pada rotasi
+tegar: $2\pi r\cdot\Omega r = 2\Omega\cdot\pi r^2$.) Dijumlahkan atas sebuah permukaan,
+ini memberi teorema Stokes, $\oint_C\vect v\cdot\dd\vect l = \iint_S
+\operatorname{\vect{curl}}\vect v\cdot\vect n\,\dd S$, yang dinyatakan dalam
+\cref{ch:b2:maxwell-equations}. Sebuah sayap membangkitkan gaya angkat
+dengan mengemban sirkulasi di sekelilingnya; garis vorteks bertahan dalam
+fluida sempurna (teorema Kelvin) --- itulah sebabnya olakan di belakang
+pilarnya bertahan begitu lama.
+\end{remark}
+
+\begin{method}[Membaca sebuah medan kecepatan]\label{met:b2:fluid-kinematics:reading}
+Diberikan $\vect v(M, t)$: (1) tunakkah ia? ($\partial_t\vect v = \vect 0$); (2)
+tak termampatkankah ia? ($\operatorname{div}\vect v = 0$); (3)
+irotasionalkah ia? ($\operatorname{\vect{curl}}\vect v = \vect 0$; jika ya carilah
+$\varphi$); (4) carilah garis arusnya dari $\dd x/v_x = \dd y/v_y = \dd z/
+v_z$ pada $t$ tetap, dan \omterm{def:b2:fluid-kinematics:euler}{garis lintasannya} dari $\dd\vect r/\dd t = \vect v(\vect r,
+t)$; (5) hitunglah percepatannya $\partial_t\vect v + (\vect v\cdot
+\operatorname{\vect{grad}})\vect v$. Dalam koordinat kutub bidang $(r, \theta)$,
+$\operatorname{div}\vect v = \dfrac1r\dfrac{\partial(rv_r)}{\partial r} + \dfrac1r
+\dfrac{\partial v_\theta}{\partial\theta}$ dan $\omega_z = \dfrac1r\dfrac{\partial(rv_\theta)}
+{\partial r} - \dfrac1r\dfrac{\partial v_r}{\partial\theta}$ (diterima di sini; diturunkan
+dalam \cref{ch:b2:maxwell-equations}).
+\end{method}
+
+\section{Latihan}
+
+\begin{exercise}[$\star$]\label{exo:b2:fluid-kinematics:1}
+Jalan bebas rata-rata udara adalah \qty{70}{nm} pada \qty{1}{bar} dan
+berubah sebagai $1/P$. Sahihkah lukisan kontinum bagi (a) udara di
+sekeliling mobil, (b) udara dalam mikrosaluran \qty{1}{\micro m} pada
+\qty{1}{bar}, (c) udara pada ketinggian \qty{100}{km}
+($P \approx \qty{3e-7}{bar}$) di sekeliling satelit \qty{1}{m}? Berikanlah
+$\ell/L$ dalam tiap hal.
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b2:fluid-kinematics:2}
+Aliran satu dimensi tunak $v(x) = v_0(1 + x/L)$ untuk $0 \le x \le L$.
+Percepatan sebuah partikel di $x$; waktu yang diperlukannya untuk
+menyeberang dari $0$ ke $L$; bandingkanlah dengan $L/v_0$ dan $L/2v_0$.
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b2:fluid-kinematics:3}
+Dalam pipa berjari-jari $R$ profil kecepatannya adalah $v(r) = v_{\max}(1 -
+r^2/R^2)$ sepanjang sumbunya. Tentukanlah \omterm{def:b2:fluid-kinematics:flowrate}{debit volume}; kelajuan rata-rata $\langle v\rangle
+= D_V/\pi R^2$; angkanya untuk $R = \qty{5}{mm}$, $v_{\max} = \qty{0.4}{m/s}$.
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b2:fluid-kinematics:4}
+Untuk tiap medan, katakanlah apakah alirannya tak termampatkan dan
+apakah ia irotasional; berikanlah vortisitasnya: (a) $\vect v = (ax, -ay, 0)$; (b)
+$\vect v = (-\Omega y, \Omega x, 0)$; (c) $\vect v = (ax, ay, 0)$; (d) $\vect v =
+(ky, 0, 0)$; (e) $\vect v = (ax, -ay, bz)$ --- untuk $b$ berapakah ia tak
+termampatkan?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b2:fluid-kinematics:5}
+Sebuah selang taman berdiameter dalam \qty{12}{mm} mengisi ember
+\qty{10}{L} dalam \qty{50}{s}. Kelajuan dalam selangnya; kelajuan dalam
+corong \qty{3}{mm}; jika corongnya menyempit sepanjang \qty{4}{cm},
+perkirakanlah percepatan rata-rata partikel yang menyeberanginya (dalam
+$g$); waktu yang dihabiskan dalam corongnya.
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b2:fluid-kinematics:6}
+Aliran bidang tak tunak $\vect v = (U, V\cos\omega t)$ dengan $U$, $V$, $\omega$
+tetap. (a) Garis arusnya pada saat $t$. (b) \omterm{def:b2:fluid-kinematics:euler}{Garis lintasan} partikel yang berada di
+titik asal pada $t = 0$. (c) Sketsalah keduanya untuk $V = U$ pada $t = 0$ dan pada
+$t = \pi/2\omega$; mengapa keduanya berbeda? (d) Percepatan sebuah partikel.
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b2:fluid-kinematics:7}
+Sebuah sungai selebar \qty{50}{m} dan sedalam \qty{2.0}{m} mengalir dengan \qty{1.2}{m/s}. (a)
+Debitnya. (b) Ia memasuki ngarai selebar \qty{15}{m} dan sedalam \qty{4.0}{m}:
+kelajuannya. (c) Anak sungai menambahkan \qty{30}{m^3/s}; di hilirnya sungai itu
+selebar \qty{60}{m} dan sedalam \qty{2.5}{m}: kelajuannya. (d) Gas panas mengalir tunak
+dalam pipa berpenampang tetap; di antara dua titik suhunya
+menjadi dua kali lipat pada tekanan tetap: apa yang terjadi pada kelajuannya?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b2:fluid-kinematics:8}
+\emph{\omterm{ex:b2:fluid-kinematics:planeflows}{Vorteks Rankine}.} $v_\theta = \Omega r$ untuk $r < a$, $v_\theta = \Omega a^2/r$
+untuk $r > a$. (a) \omterm{def:b2:fluid-kinematics:vorticity}{Vortisitas} di tiap daerah (pakailah rumus kutubnya). (b)
+Sirkulasi pada lingkaran berjari-jari $r$ yang berpusat pada sumbunya, di kedua
+daerahnya; kaitkanlah dengan fluks vortisitasnya. (c) Sebuah puting beliung: $a = \qty{50}{m}$,
+$v_{\max} = \qty{70}{m/s}$: $\Omega$, $\Gamma$, dan kelajuannya di \qty{500}{m}.
+(d) Irotasionalkah aliran intinya? Bagian luarnya? Di manakah
+``rotasinya'' secara fisis?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b2:fluid-kinematics:9}
+\emph{\omterm{ex:b2:fluid-kinematics:planeflows}{Aliran stagnasi}} $\vect v = k(x, -y)$. (a) Potensial $\varphi$ dan
+periksalah $\Delta\varphi = 0$. (b) Garis arusnya; fungsi $\psi = kxy$
+tetap padanya --- tunjukkanlah bahwa $v_x = \partial\psi/\partial y$, $v_y = -\partial\psi/
+\partial x$ (\emph{fungsi arus}). (c) Medan percepatannya; tunjukkanlah bahwa ia
+adalah $\operatorname{\vect{grad}}(v^2/2)$ lalu tafsirkanlah. (d) \omterm{def:b2:fluid-kinematics:euler}{Garis lintasan}
+partikel yang berangkat di $(x_0, y_0)$: $x = x_0\eu^{kt}$, $y = y_0\eu^{-kt}$.
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b2:fluid-kinematics:10}
+\emph{Sebuah aliran memuai.} Aliran satu dimensi $v(x, t) = x/(t + \tau)$
+untuk $t > 0$, $\tau > 0$ tetap. (a) \omterm{def:b2:fluid-kinematics:euler}{Garis lintasan}: tunjukkanlah $x(t) = x_0(1 +
+t/\tau)$; percepatan sebuah partikel, baik dari \omterm{def:b2:fluid-kinematics:euler}{garis lintasannya} maupun dari
+\omterm{thm:b2:fluid-kinematics:material}{turunan partikelnya}. (b) Massa jenisnya seragam pada tiap saat,
+$\rho(t)$: pakailah kekekalan massa untuk mencari $\rho(t)$. (c) Periksalah dengan
+mengikuti massa di antara dua partikel. (d) Mengapa medan ini merupakan
+model satu dimensi bagi jagat raya yang memuai seragam?
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b2:fluid-kinematics:11}
+\emph{Sumber dalam arus.} Tumpangkanlah aliran seragam $\vect v = U\vect e_x$
+dan sumber bidang $\vect v = \dfrac{q}{2\pi r}\vect e_r$ ($q$ adalah \omterm{def:b2:fluid-kinematics:flowrate}{debit
+volume} tiap satuan panjang sepanjang $z$). (a) Potensial $\varphi = Ux +
+(q/2\pi)\ln r$; periksalah bahwa kedua alirannya tak termampatkan dan irotasional
+(kecuali di titik asalnya). (b) Titik stagnasinya. (c) Fungsi arus $\psi
+= Uy + q\theta/2\pi$; \omterm{def:b2:fluid-kinematics:euler}{garis arus} yang melalui titik stagnasinya adalah
+$r\sin\theta = (q/2\pi U)(\pi - \theta)$: sketsalah. (d) Tunjukkanlah bahwa jauh
+di hilirnya \omterm{def:b2:fluid-kinematics:euler}{garis arus} ini berada di $y = \pm q/2U$: aliran di luarnya adalah
+aliran mengelilingi setengah benda tumpul selebar $q/U$.
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b2:fluid-kinematics:12}
+\emph{Vorteks dan cerat.} Aliran bidang $\vect v = -\dfrac{q}{2\pi r}\vect e_r +
+\dfrac{\Gamma}{2\pi r}\vect e_\theta$ untuk $r > a$. (a) Tunjukkanlah bahwa ia
+tak termampatkan dan irotasional. (b) Garis arusnya: spiral logaritmik
+$r = r_0\eu^{-q\theta/\Gamma}$. (c) Percepatan sebuah partikel: tunjukkanlah bahwa ia
+murni radial, $-v^2/r\,\vect e_r$. (d) Waktu bagi partikel untuk menyusur spiral
+dari $r_0$ ke $a$; jumlah putaran yang dibuatnya. (e) Angka: $q =
+\qty{1.5e-3}{m^2/s}$, $\Gamma = \qty{3e-2}{m^2/s}$, $r_0 = \qty{0.5}{m}$,
+$a = \qty{2}{cm}$.
+\end{exercise}
+
+\section{Soal: Dari lubang pembuangan sampai badai}
+
+\begin{problem}[{Soal akhir pekan --- kinematika yang sama pada tiga skala:
+pusaran di atas lubang buangan, sebuah puting beliung, dan sebuah siklon dilihat dari satelit}]
+\label{pb:b2:fluid-kinematics:1}
+
+\medskip
+\noindent\textbf{Bagian I --- Bak mandi.}
+Sebuah bak dikuras lewat lubang berjari-jari $a = \qty{2}{cm}$; airnya,
+yang sedalam $h = \qty{20}{cm}$, keluar dengan \omterm{def:b2:fluid-kinematics:flowrate}{debit volume} $D_V =
+\qty{0.30}{L/s}$. Jauh dari lubangnya alirannya dimodelkan sebagai aliran
+bidang (tak bergantung pada kedalaman): $\vect v = v_r(r)\vect e_r + v_\theta(r)\vect e_\theta$.
+\begin{enumerate}
+  \item Dengan memakai kekekalan massa lewat tabung berjari-jari $r$ dan
+        setinggi $h$, tunjukkanlah bahwa $v_r = -q/2\pi r$ dengan $q = D_V/h$;
+        nilai $q$.
+  \item Sebelum sumbatnya dicabut airnya telah diaduk dan berputar
+        dengan \qty{1.0}{cm/s} di $r = \qty{50}{cm}$. Dengan menerima
+        bahwa tiap cincin air menjaga momentum sudutnya ketika bergerak
+        ke dalam ($rv_\theta$ tetap), carilah $v_\theta(r)$ dan
+        sirkulasinya $\Gamma$.
+  \item Periksalah bahwa alirannya tak termampatkan dan irotasional untuk
+        $r > a$.
+  \item \omterm{def:b2:fluid-kinematics:euler}{Garis arus}: tunjukkanlah bahwa garis-garisnya spiral logaritmik
+        lalu carilah berapa putaran yang dibuat sebuah partikel antara
+        $r = \qty{50}{cm}$ dan $r = a$.
+  \item Waktu bagi sebuah partikel untuk beranjak dari \qty{50}{cm} ke
+        lubangnya, dan kelajuan azimutnya saat tiba.
+  \item Percepatan sebuah partikel di $r$; bandingkanlah dengan $g$ di $r = a$.
+        (Permukaan bebasnya melekuk di tempat tekanannya harus
+        mengimbanginya --- corongnya; bab berikutnya.)
+  \item Rotasi Bumi memberi fluida mana pun yang diam di baknya sebuah
+        rotasi ``latar'' dengan laju tegak setempat
+        $\Omega_\oplus\sin\lambda \approx \qty{5e-5}{rad/s}$. Bandingkanlah
+        kelajuan azimut yang akan diberikannya di \qty{50}{cm} dengan
+        \qty{1}{cm/s} dari adukannya, lalu katakanlah apakah arah
+        putaran bak yang terkuras ditentukan oleh belahan buminya.
+\end{enumerate}
+
+\medskip
+\noindent\textbf{Bagian II --- Puting beliung sebagai \omterm{ex:b2:fluid-kinematics:planeflows}{vorteks Rankine}.}
+Jari-jari intinya $a = \qty{60}{m}$, angin maksimum $v_{\max} = \qty{80}{m/s}$, massa jenis
+udara $\rho = \qty{1.2}{kg/m^3}$.
+\begin{enumerate}[resume]
+  \item Tuliskanlah $v_\theta(r)$ di kedua daerahnya lalu berikanlah $\Omega$ dan $\Gamma$.
+  \item \omterm{def:b2:fluid-kinematics:vorticity}{Vortisitas} di intinya dan di luarnya; sketsalah $v_\theta$ dan $\omega_z$
+        terhadap $r$.
+  \item Percepatan sebuah partikel udara di tepi intinya;
+        bandingkanlah dengan $g$.
+  \item Tunjukkanlah bahwa kincir kecil yang ditaruh di luar intinya
+        hanyut mengelilingi puting beliungnya tanpa berputar terhadap
+        sumbunya sendiri, sementara yang ditaruh di dalam intinya
+        berputar sekali tiap satu kelilingan terhadap sumbunya.
+  \item Energi kinetik intinya, tiap meter ketinggian.
+  \item Energi kinetik aliran luarnya tiap meter ketinggian, antara
+        $a$ dan $R = \qty{5}{km}$; mengapa ia bergantung pada $R$ hanya
+        secara logaritmik?
+  \item Dengan ketinggian \qty{1}{km}, energi kinetik totalnya;
+        bandingkanlah dengan energi yang dilepaskan \qty{1}{t} TNT
+        (\qty{4.2}{GJ}).
+  \item Udara juga mengalir ke dalam dan ke atas dalam puting beliung.
+        Jika intinya disuapi aliran masuk radial \qty{5}{m/s} lewat
+        permukaan sisinya sepanjang \qty{300}{m} pertama ketinggiannya,
+        kelajuan tegak berapa yang harus dicapai udaranya di puncak
+        lapisan itu (seragam atas penampang intinya)?
+\end{enumerate}
+
+\medskip
+\noindent\textbf{Bagian III --- Siklon.}
+Sebuah siklon tropis dimodelkan sebagai \omterm{ex:b2:fluid-kinematics:planeflows}{vorteks Rankine} berjari-jari inti
+$a = \qty{40}{km}$ dan $v_{\max} = \qty{50}{m/s}$. Rotasi Bumi terasa
+lewat \emph{\omterm{def:b2:fluid-kinematics:vorticity}{vortisitas} planet} $f = 2\Omega_\oplus\sin\lambda
+\approx \qty{5e-5}{s^{-1}}$ pada lintang \qty{20}{\degree}: sebuah cincin udara yang
+diam relatif terhadap tanah sudah mengemban, dalam kerangka inersial,
+kelajuan azimut $fr/2$ terhadap sumbu tegak mana pun.
+\begin{enumerate}[resume]
+  \item \omterm{def:b2:fluid-kinematics:vorticity}{Vortisitas} intinya dan sirkulasi $\Gamma$ siklonnya;
+        bandingkanlah \omterm{def:b2:fluid-kinematics:vorticity}{vortisitas} intinya dengan $f$.
+  \item Sebuah cincin udara berjari-jari $r_0 = \qty{500}{km}$, mula-mula diam
+        relatif terhadap tanah, ditarik ke arah pusatnya oleh
+        tekanan rendahnya. Dengan menerima bahwa momentum sudut tiap
+        satuan massanya terhadap sumbunya, $r(v_\theta + fr/2)$, kekal, carilah
+        kecepatannya $v_\theta$ relatif terhadap tanah di $r = \qty{100}{km}$
+        dan di $r = \qty{40}{km}$.
+  \item Ke arah mana siklonnya berputar di belahan bumi utara, dan
+        mengapa? Mengapa arahnya tetap bagi siklon dan tidak bagi bak
+        mandi?
+  \item Mengapa udaranya tidak dapat ditarik sampai ke sumbunya dengan
+        cara ini --- apa yang membatasi anginnya dan menyisakan sebuah mata?
+  \item Udara memusat ke dalam siklonnya dengan \qty{5}{m/s} lewat
+        tabung berjari-jari \qty{500}{km} dan setinggi \qty{1}{km}: \omterm{def:b2:fluid-kinematics:flowrate}{debit
+        massa} yang tertarik masuk ($\rho = \qty{1.2}{kg/m^3}$).
+  \item Siklonnya berpindah seluruhnya ke barat dengan \qty{6}{m/s}. Tuliskanlah
+        medan kecepatan \omterm{def:b2:fluid-kinematics:euler}{Euler} yang terlihat dari tanah dalam
+        medan $\vect v_0$ vorteksnya dalam kerangkanya sendiri; tunakkah
+        alirannya dalam kerangka tanah? Sisi badai mana yang anginnya
+        lebih kuat?
+\end{enumerate}
+
+\medskip
+\noindent\textbf{Bagian IV --- Debit dan sebuah rangkuman.}
+\begin{enumerate}[resume]
+  \item Hujan turun dengan \qty{50}{mm/h} atas daerah tangkapan
+        \qty{10}{km^2} dan seluruhnya mencapai sungai berpenampang
+        \qty{40}{m^2}: kelajuan rata-rata sungainya saat banjir.
+  \item Darah: aorta (\qty{2.5}{cm^2}) mengalirkan \qty{5.0}{L/min};
+        pembuluh kapilernya berpenampang total \qty{0.25}{m^2}:
+        kelajuan di masing-masingnya; waktu bagi darah untuk
+        menyeberangi kapiler \qty{1}{mm}.
+  \item Sebuah tangki berpenampang $S$ terkuras lewat lubang
+        berpenampang $s$ di dasarnya; kelajuan keluarnya adalah
+        $\sqrt{2gh}$ ($h$ tinggi muka airnya --- diterima, diturunkan
+        dalam bab berikutnya). Tuliskanlah kekekalan massanya lalu
+        carilah $h(t)$ dan waktu pengurasannya untuk
+        $S = \qty{1}{m^2}$, $s = \qty{1}{cm^2}$, $h_0 = \qty{1}{m}$.
+  \item Berikanlah ketiga aliran Bagian I--III dalam satu tabel:
+        jari-jari, kelajuan, \omterm{def:b2:fluid-kinematics:vorticity}{vortisitas} intinya, sirkulasi --- dan
+        besaran yang kekal selama aliran masuknya, yang membuat
+        ketiganya berpusar makin cepat.
+\end{enumerate}
+\end{problem}

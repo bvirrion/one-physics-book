@@ -1,0 +1,708 @@
+\chapter{De vergelijkingen van Maxwell}\label{ch:b2:maxwell-equations}
+
+In 1865 schreef James Clerk Maxwell de wetten op die Coulomb, Ampère en
+Faraday één voor één hadden gevonden, voegde aan die van Ampère een term toe
+die geen enkel experiment nog had geëist, en ontdekte dat zijn
+vergelijkingen golven toelieten die reisden met een snelheid die hij uit de
+constanten van elektriciteit en magnetisme kon berekenen --- de
+lichtsnelheid. Elektriciteit, magnetisme en optica waren één vak geworden.
+Het volume van jaar 1 formuleerde de wetten als integralen over oppervlakken
+en lussen; dit hoofdstuk schrijft ze als vier \emph{lokale} vergelijkingen
+die in elk punt en op elk ogenblik gelden, met de vectoroperatoren die zo'n
+schrijfwijze mogelijk maken, en trekt de eerste gevolgen: de
+\omterm{thm:b2:maxwell-equations:maxwell}{verplaatsingsstroom}, de potentialen, het gedrag van de velden aan een
+grensvlak, en de benaderingen waaronder de schakelingen van het volume van
+jaar 1 exact zijn.
+
+\begin{omfigure}
+\includegraphics[width=0.3\linewidth]{images/book4/maxwell-profile.jpg}
+
+{\small James Clerk Maxwell (1831--1879), die de vier vergelijkingen van dit
+hoofdstuk opschreef en daarin het bestaan las van elektromagnetische golven
+die met de lichtsnelheid reizen.}
+\end{omfigure}
+
+\section{Vectoroperatoren}
+
+\begin{definition}[Gradiënt, divergentie, rotatie, laplaciaan]\label{def:b2:maxwell-equations:operators}
+\index{gradiënt}\index{divergentie}\index{rotatie (operator)}\index{laplaciaan}\index{nabla}
+Voor een scalair veld $f$ en een vectorveld $\vect A$ geldt, in cartesische
+coördinaten met de symbolische vector
+$\vect\nabla = (\partial_x, \partial_y,
+\partial_z)$:
+\begin{align*}
+\operatorname{\vect{grad}}f &= \vect\nabla f = (\partial_xf,\ \partial_yf,\ \partial_zf) ,\\
+\operatorname{div}\vect A &= \vect\nabla\cdot\vect A = \partial_xA_x + \partial_yA_y + \partial_zA_z ,\\
+\operatorname{\vect{curl}}\vect A &= \vect\nabla\wedge\vect A = (\partial_yA_z - \partial_zA_y,\ \partial_zA_x - \partial_xA_z,\ \partial_xA_y - \partial_yA_x) ,\\
+\Delta f &= \operatorname{div}\operatorname{\vect{grad}}f = \partial_x^2f + \partial_y^2f + \partial_z^2f ,
+\end{align*}
+en $\Delta\vect A$ is de laplaciaan, op elke cartesische component genomen.
+Hun betekenis hangt niet van de coördinaten af:
+$\operatorname{\vect{grad}}f
+\cdot\dd\vect l = \dd f$ is de verandering van
+$f$ langs $\dd\vect l$; $\operatorname{div}
+\vect A$ is de uitgaande flux
+van $\vect A$ door het oppervlak van een klein volume, per volume-eenheid;
+$\operatorname{\vect{curl}}\vect A\cdot\vect n$ is de circulatie van
+$\vect A$ langs een kleine lus met normaal $\vect n$, per
+oppervlakte-eenheid.
+\end{definition}
+
+\begin{theorem}[Divergentiestelling en stelling van Stokes]\label{thm:b2:maxwell-equations:theorems}
+\index{divergentiestelling}\index{stelling van Ostrogradski}\index{stelling van Stokes}
+Voor een gesloten oppervlak $\Sigma$ dat het volume $V$ begrenst, en een
+georiënteerde gesloten kromme $C$ die het oppervlak $S$ begrenst (met de
+normaal $\vect n$ volgens de rechterhandregel), geldt
+\[
+\iint_\Sigma\vect A\cdot\vect n\,\dd S = \iiint_V\operatorname{div}\vect A\,\dd\tau ,
+\qquad
+\oint_C\vect A\cdot\dd\vect l = \iint_S\operatorname{\vect{curl}}\vect A\cdot\vect n\,\dd S .
+\]
+\end{theorem}
+\admitted
+
+\begin{remark}[Wat wordt aangenomen en waarom het geloofwaardig is]\label{rem:b2:maxwell-equations:whyadmitted}
+Beide stellingen worden in het wiskundevolume van jaar 3 bewezen; het
+wiskundevolume van dit jaar houdt op bij hun vlakke versie (Green--Riemann)
+en bij meervoudige integralen. Hun inhoud is echter die welke wij in
+\cref{ch:b2:fluid-kinematics} hebben gebruikt: betegel het volume met kleine
+blokjes (het oppervlak van de lus met kleine lusjes) --- de fluxen door de
+inwendige zijvlakken (de circulaties langs de inwendige ribben) heffen
+elkaar paarsgewijs op, en alleen de rand blijft over. Twee identiteiten
+volgen uit de definities en worden voortdurend gebruikt:
+$\operatorname{\vect{curl}}\operatorname{\vect{grad}}f = \vect 0$,
+$\operatorname{div}\operatorname{\vect{curl}}\vect A = 0$, en
+$\operatorname{\vect{curl}}\operatorname{\vect{curl}}\vect A = \operatorname{\vect{grad}}
+\operatorname{div}\vect A - \Delta\vect A$.
+Voor velden met een symmetrie zijn de bruikbare formules: voor een radiaal
+veld $A_r(r)\vect e_r$ is
+$\operatorname{div}
+= \frac1{r^2}\partial_r(r^2A_r)$ (bolcoördinaten) of
+$\frac1r\partial_r(rA_r)$ (cilindercoördinaten); voor een azimutaal veld
+$A_\theta(r)\vect e_\theta$ om een as is
+$(\operatorname{\vect{curl}})_z = \frac1r\partial_r(rA_\theta)$; en voor
+$f(r)$ is
+$\Delta f = \frac1{r^2}\partial_r(r^2\partial_rf) = \frac1r\partial_r^2(rf)$
+(bolcoördinaten), $\frac1r\partial_r(r\partial_rf)$ (cilindercoördinaten).
+\end{remark}
+
+\begin{omfigure}
+\begin{tikzpicture}[font=\small, x=1cm, y=1cm, >=Stealth]
+  \begin{scope}
+    \draw[thick, fill=omDef!10] (0,0) rectangle (1.8,1.4);
+    \draw[thick] (0,1.4) -- (0.5,1.85) -- (2.3,1.85) -- (1.8,1.4);
+    \draw[thick] (1.8,0) -- (2.3,0.45) -- (2.3,1.85);
+    \draw[omThm, thick, ->] (-0.9,0.7) -- (-0.1,0.7);
+    \draw[omThm, thick, ->] (1.9,0.7) -- (3.0,0.7);
+    \draw[omThm, thick, ->] (0.9,-0.8) -- (0.9,-0.1);
+    \draw[omThm, thick, ->] (1.1,1.9) -- (1.1,2.7);
+    \node[font=\footnotesize] at (1.0,-1.35) {$\operatorname{div}\vect A = \dfrac{\text{uitgaande flux}}{\text{volume}}$};
+  \end{scope}
+  \begin{scope}[xshift=7.6cm]
+    \draw[thick, omDef, postaction={decorate, decoration={markings, mark=at position 0.15 with {\arrow{>}}, mark=at position 0.65 with {\arrow{>}}}}] (-1.2,0) rectangle (1.2,1.4);
+    \draw[omExo, thick, ->] (0,0.7) -- (0,2.3) node[right, font=\footnotesize] {$\vect n$};
+    \foreach \x in {-0.8,0,0.8} \draw[omThm, ->] ({\x-0.3},1.05) -- ({\x+0.3},1.05);
+    \foreach \x in {-0.8,0,0.8} \draw[omThm, ->] ({\x+0.15},0.35) -- ({\x-0.15},0.35);
+    \node[font=\footnotesize] at (0,-0.8) {$\operatorname{\vect{curl}}\vect A\cdot\vect n = \dfrac{\text{circulatie}}{\text{oppervlakte}}$};
+  \end{scope}
+\end{tikzpicture}
+
+{\small De twee operatoren van de \omterm{thm:b2:maxwell-equations:maxwell}{vergelijkingen van Maxwell}, meetkundig
+gelezen: de \omterm{def:b2:maxwell-equations:operators}{divergentie} meet hoeveel een veld uit een klein volume
+wegstroomt, de rotatie hoeveel het langs een kleine lus circuleert.}
+\end{omfigure}
+
+\section{De vier vergelijkingen}
+
+\begin{theorem}[Vergelijkingen van Maxwell]\label{thm:b2:maxwell-equations:maxwell}
+\index{vergelijkingen van Maxwell}\index{vergelijking van Maxwell--Gauss}\index{vergelijking van Maxwell--Faraday}\index{vergelijking van Maxwell--Ampère}\index{verplaatsingsstroom}
+In vacuüm (en in materie beschreven door haar totale ladings- en
+stroomdichtheden $\rho$ en $\vect j$) voldoen het elektrische en het
+magnetische veld in elk punt en op elk tijdstip aan
+\begin{align*}
+\operatorname{div}\vect E &= \frac\rho{\varepsilon_0} &&\text{(Maxwell--Gauss)} , &
+\operatorname{\vect{curl}}\vect E &= -\frac{\partial\vect B}{\partial t} &&\text{(Maxwell--Faraday)} ,\\
+\operatorname{div}\vect B &= 0 &&\text{(Maxwell--flux)} , &
+\operatorname{\vect{curl}}\vect B &= \mu_0\vect j + \mu_0\varepsilon_0\frac{\partial\vect E}{\partial t} &&\text{(Maxwell--Ampère)} ,
+\end{align*}
+met $\varepsilon_0 = \qty{8.85e-12}{F/m}$ en
+$\mu_0 = 4\pi \times \qty{1e-7}{H/m}$ (en $\varepsilon_0\mu_0 = 1/c^2$). De
+velden werken op ladingen via de lorentzkracht
+$\vect F = q(\vect E + \vect v\wedge\vect B)$. De term
+$\varepsilon_0\partial_t\vect E$ is de dichtheid van de
+\emph{\omterm{thm:b2:maxwell-equations:maxwell}{verplaatsingsstroom}} van Maxwell.
+\end{theorem}
+
+\begin{proof}[Gelijkwaardigheid met de integraalwetten van het volume van jaar 1]
+Pas de divergentiestelling toe op de eerste twee:
+$\iint_\Sigma\vect E\cdot
+\vect n\,\dd S = Q_{\text{int}}/\varepsilon_0$
+(Gauss), en de flux van $\vect B$ door elk gesloten oppervlak is nul. Pas
+Stokes toe op de laatste twee:
+$\oint_C\vect E\cdot\dd\vect l = -\dd\Phi_B/\dd t$ (Faraday, voor een vaste
+lus) en
+$\oint_C\vect B\cdot\dd\vect l = \mu_0I_{\text{oms}} + \mu_0\varepsilon_0\,\dd\Phi_E/\dd t$
+(Ampère, aangevuld). Omgekeerd houden de integraalwetten, die voor elk
+volume en elke lus gelden, de lokale wetten in. De lokale vergelijkingen
+zijn dus de wetten van jaar 1 plus één nieuwe term, die hieronder wordt
+verantwoord; zij worden als de postulaten van de elektromagnetica genomen.
+\end{proof}
+
+\begin{proposition}[Waarom de verplaatsingsstroom nodig is]\label{prop:b2:maxwell-equations:displacement}
+De \omterm{def:b2:maxwell-equations:operators}{divergentie} van de \omterm{thm:b2:maxwell-equations:maxwell}{vergelijking van Maxwell--Ampère} nemen en
+$\operatorname{div}\operatorname{\vect{curl}} = 0$ en Maxwell--Gauss
+gebruiken geeft
+\[
+0 = \mu_0\operatorname{div}\vect j + \mu_0\varepsilon_0\,\partial_t\operatorname{div}\vect E
+= \mu_0\Bigl(\operatorname{div}\vect j + \frac{\partial\rho}{\partial t}\Bigr) :
+\]
+de vergelijkingen bevatten dus het behoud van lading. Zonder de
+verplaatsingsterm zouden zij altijd $\operatorname{div}\vect j = 0$ eisen
+--- onwaar in een ladende condensator, waar de geleidingsstroom bij de plaat
+ophoudt. Daar draagt $\varepsilon_0\partial_t\vect E$ tussen de platen
+precies de stroom die in de draad aankomt, en circuleert het magnetische
+veld om de spleet als om een draad.
+\end{proposition}
+
+\begin{proof}
+De \omterm{def:b2:maxwell-equations:operators}{divergentie} van beide leden, zoals gezegd; voor de condensator is de flux
+van $\varepsilon_0\partial_t\vect E$ door een oppervlak tussen de platen
+gelijk aan $\varepsilon_0S\,\dd E/\dd t = \dd Q/\dd t = I$.
+\end{proof}
+
+\begin{example}[Het veld in een ladende condensator]\label{ex:b2:maxwell-equations:capacitor}
+Ronde platen met straal $R$ en afstand $d \ll R$, geladen door een stroom
+$I$: ertussen is $E = Q/\varepsilon_0\pi R^2$ uniform en groeit het met
+$\dd E/
+\dd t = I/\varepsilon_0\pi R^2$. Uit symmetrie is
+$\vect B = B(r)\vect e_\theta$; Ampère--Maxwell op een cirkel met straal
+$r < R$ (waar geen geleidingsstroom doorheen gaat) geeft
+$2\pi rB
+= \mu_0\varepsilon_0\pi r^2\,\dd E/\dd t$, dus
+$B = \mu_0Ir/2\pi R^2$ --- het veld van een uniforme stroom $I$ die over de
+schijf is uitgespreid, continu in $r = R$ met de $\mu_0I/2\pi r$ van de
+draad daarbuiten. Voor $I = \qty{1}{A}$ en $R = \qty{5}{cm}$ is
+$B(R) =
+\qty{4}{\micro T}$, meetbaar; de term van Maxwell is echt.
+\end{example}
+
+\begin{omfigure}
+\begin{tikzpicture}[font=\small, x=1cm, y=1cm, >=Stealth]
+  \draw[thick, omThm] (-4.0,0) -- (-1.3,0); \draw[thick, omThm] (1.3,0) -- (4.0,0);
+  \draw[omThm, very thick, ->] (-3.4,0.25) -- (-2.4,0.25) node[above, font=\footnotesize, pos=0.5] {$I$};
+  \draw[omThm, very thick, ->] (2.4,0.25) -- (3.4,0.25) node[above, font=\footnotesize, pos=0.5] {$I$};
+  \draw[thick, fill=omExo!40] (-1.3,-1.4) rectangle (-1.1,1.4);
+  \draw[thick, fill=omExo!40] (1.1,-1.4) rectangle (1.3,1.4);
+  \foreach \y in {-1.0,-0.5,0,0.5,1.0} \draw[omDef, ->] (-1.05,\y) -- (1.05,\y);
+  \node[omDef, font=\footnotesize] at (0,1.25) {$\vect E(t)$};
+  \draw[omProp, thick] (0,0) ellipse (0.5 and 1.7);
+  \draw[omProp, thick, ->] (0.5,0.05) -- (0.5,-0.05);
+  \node[omProp, font=\footnotesize] at (0.95,-1.75) {$\vect B$};
+  \node[font=\footnotesize] at (0,-2.3) {$\oint\vect B\cdot\dd\vect l = \mu_0\varepsilon_0\,\dfrac{\dd\Phi_E}{\dd t} = \mu_0 I$};
+\end{tikzpicture}
+
+{\small Een condensator die wordt geladen: er steekt geen lading de spleet
+over, maar de elektrische flux door een lus eromheen groeit; de term van
+Maxwell geeft de lus dezelfde circulatie van $\vect B$ als wanneer de draad
+doorliep --- de \omterm{thm:b2:maxwell-equations:maxwell}{verplaatsingsstroom}.}
+\end{omfigure}
+
+\begin{remark}[Lineariteit; wat de vergelijkingen zeggen]\label{rem:b2:maxwell-equations:linearity}
+De vergelijkingen zijn lineair in de velden en hun bronnen: velden
+superponeren. Twee ervan (Gauss, Faraday--flux) dragen geen bronnen en
+drukken structuur uit --- elektrische veldlijnen beginnen en eindigen op
+ladingen, magnetische veldlijnen eindigen nooit; de andere twee zeggen hoe
+ladingen en stromen, en de verandering van elk veld, de velden opwekken.
+Samen gelezen: een veranderende $\vect B$ maakt een circulerende $\vect E$
+en een veranderende $\vect E$ maakt een circulerende $\vect B$: de twee
+kunnen elkaar onderhouden zonder enige lading --- dat is de golf van
+\cref{ch:b2:plane-waves-polarization}, en de \omterm{thm:b2:maxwell-equations:maxwell}{verplaatsingsstroom} maakt haar
+mogelijk.
+\end{remark}
+
+\section{Potentialen}
+
+\begin{proposition}[Scalaire en vectorpotentiaal]\label{prop:b2:maxwell-equations:potentials}
+\index{vectorpotentiaal}\index{scalaire potentiaal}\index{ijk}\index{ijk van Coulomb}\index{vergelijking van Poisson}
+Omdat $\operatorname{div}\vect B = 0$ en
+$\operatorname{\vect{curl}}\vect E = -\partial_t
+\vect B$, zijn de velden
+afgeleid van een \emph{vectorpotentiaal} $\vect A$ en een \emph{\omterm{prop:b2:maxwell-equations:potentials}{scalaire
+potentiaal}} $V$:
+\[
+\vect B = \operatorname{\vect{curl}}\vect A , \qquad
+\vect E = -\operatorname{\vect{grad}}V - \frac{\partial\vect A}{\partial t} ,
+\]
+bepaald op een \emph{ijktransformatie}
+$\vect A \to \vect A +
+\operatorname{\vect{grad}}\chi$,
+$V \to V - \partial_t\chi$ na, die de velden onveranderd laat. In de
+\emph{\omterm{prop:b2:maxwell-equations:potentials}{ijk van Coulomb}}, $\operatorname{div}\vect A = 0$, wordt de wet van
+Gauss de \emph{\omterm{prop:b2:maxwell-equations:potentials}{vergelijking van Poisson}}
+\[
+\Delta V = -\frac\rho{\varepsilon_0} ,
+\]
+en in een stationair regime wordt de wet van Ampère
+$\Delta\vect A = -\mu_0\vect j$. In de statica is $V$ de elektrostatische
+potentiaal van het volume van jaar 1.
+\end{proposition}
+
+\begin{proof}
+Een divergentievrij veld is een rotatie (aangenomen, net als de omgekeerde
+uitspraak dat een rotatievrij veld een \omterm{def:b2:maxwell-equations:operators}{gradiënt} is, beide uit het
+wiskundevolume van jaar 2 voor enkelvoudig samenhangende gebieden); dan is
+$\operatorname{\vect{curl}}
+(\vect E + \partial_t\vect A) = \vect 0$, zodat
+$\vect E + \partial_t\vect A$ een \omterm{def:b2:maxwell-equations:operators}{gradiënt} is. IJk:
+$\operatorname{\vect{curl}}\operatorname{\vect{grad}}\chi = \vect 0$ en de
+termen $\partial_t\operatorname{\vect{grad}}\chi$ vallen in $\vect E$ tegen
+elkaar weg. Poisson:
+$\operatorname{div}
+\vect E = -\Delta V - \partial_t\operatorname{div}\vect A$.
+Statica:
+$\operatorname{\vect{curl}}
+\operatorname{\vect{curl}}\vect A = \operatorname{\vect{grad}}\operatorname{div}\vect A - \Delta\vect A
+= \mu_0\vect j$.
+\end{proof}
+
+\begin{example}[Twee vectorpotentialen]\label{ex:b2:maxwell-equations:vectorpot}
+Een uniform veld $\vect B_0$ is afgeleid van
+$\vect A = \tfrac12\vect B_0\wedge\vect r$ (ga na:
+$\operatorname{\vect{curl}}(\tfrac12\vect B_0\wedge\vect r) = \vect B_0$, en
+$\operatorname{div}\vect A = 0$); binnen een oneindige solenoïde is dat
+$A_\theta =
+Br/2$, erbuiten $A_\theta = BR^2/2r$ --- een potentiaal die niet
+verdwijnt waar het veld dat wel doet, en waarvan de circulatie langs een lus
+de flux van $\vect B$ erdoorheen is: $\oint\vect A\cdot\dd\vect l = \Phi_B$
+(Stokes). De wet van Faraday luidt dan $\vect E = -\partial_t\vect A$ voor
+het geïnduceerde veld.
+\end{example}
+
+\section{De velden aan een grensvlak}
+
+\begin{proposition}[Overgangsrelaties]\label{prop:b2:maxwell-equations:boundary}
+\index{overgangsrelaties (velden)}\index{oppervlaktestroom}
+Over een oppervlak dat de oppervlakteladingsdichtheid $\sigma$ en de
+oppervlaktestroomdichtheid $\vect j_s$ (\unit{A/m}) draagt, geldt met
+$\vect n_{12}$ de eenheidsnormaal van medium 1 naar medium 2
+\[
+\vect E_2 - \vect E_1 = \frac\sigma{\varepsilon_0}\,\vect n_{12} , \qquad
+\vect B_2 - \vect B_1 = \mu_0\,\vect j_s\wedge\vect n_{12} :
+\]
+de tangentiële component van $\vect E$ en de normale component van $\vect B$
+zijn continu; de normale component van $\vect E$ springt met
+$\sigma/\varepsilon_0$, de tangentiële component van $\vect B$ met
+$\mu_0j_s$. Aan het oppervlak van een volmaakte geleider
+($\vect E = \vect B = \vect 0$ binnenin, in de gevallen van
+\cref{ch:b2:wave-interfaces}) staat $\vect E$ normaal en is zij gelijk aan
+$\sigma\vect n/
+\varepsilon_0$, terwijl $\vect B$ tangentieel is en gelijk
+aan $\mu_0\vect j_s\wedge\vect n$.
+\end{proposition}
+
+\begin{proof}
+Normale componenten: de wetten van Gauss en van de flux op een plat
+pillendoosje dat het oppervlak omvat, met oppervlakte $\dd S$ en
+verdwijnende hoogte: $(E_{2n}
+- E_{1n})\dd S = \sigma\dd S/\varepsilon_0$,
+$(B_{2n} - B_{1n})\dd S = 0$. Tangentiële componenten: de wetten van Faraday
+en Ampère op een kleine rechthoek die het oppervlak omvat, met lengte
+$\dd l$ en verdwijnende hoogte: de fluxen van $\partial_t\vect B$ en
+$\partial_t\vect E$ door de rechthoek verdwijnen met haar oppervlakte, maar
+een \omterm{prop:b2:maxwell-equations:boundary}{oppervlaktestroom} $j_s\,\dd l$ steekt haar over:
+$(E_{2t} - E_{1t})\dd l = 0$, $(B_{2t} - B_{1t})\dd l = \mu_0j_s\dd l$ voor
+de tangentiële richting loodrecht op $\vect j_s$.
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}[font=\small, x=1cm, y=1cm, >=Stealth]
+  \begin{scope}
+    \fill[omExo!15] (-2.6,-1.3) rectangle (2.6,0); \draw[thick] (-2.6,0) -- (2.6,0);
+    \node[font=\footnotesize] at (-2.2,0.4) {midden 2}; \node[font=\footnotesize] at (-2.2,-0.4) {midden 1};
+    \node[omThm, font=\footnotesize] at (1.8,0.25) {$\sigma$, $\vect j_s$};
+    \draw[omDef, thick] (0,0.35) ellipse (0.7 and 0.18); \draw[omDef, thick] (0,-0.35) ellipse (0.7 and 0.18);
+    \draw[omDef, thick] (-0.7,0.35) -- (-0.7,-0.35) (0.7,0.35) -- (0.7,-0.35);
+    \draw[omDef, thick, ->] (0,0.35) -- (0,1.1) node[right, font=\footnotesize] {$\vect n_{12}$};
+    \node[font=\footnotesize] at (0,-1.7) {pillendoosje: $E_{2n} - E_{1n} = \sigma/\varepsilon_0$, $B_{2n} = B_{1n}$};
+  \end{scope}
+  \begin{scope}[xshift=7.4cm]
+    \fill[omExo!15] (-2.6,-1.3) rectangle (2.6,0); \draw[thick] (-2.6,0) -- (2.6,0);
+    \draw[omProp, thick, postaction={decorate, decoration={markings, mark=at position 0.3 with {\arrow{>}}, mark=at position 0.8 with {\arrow{>}}}}] (-1.0,-0.3) rectangle (1.0,0.3);
+    \node[omProp, font=\footnotesize] at (0,0.6) {$\dd l$};
+    \node[omThm, font=\footnotesize] at (1.9,-0.25) {$\vect j_s$ (het blad in)};
+    \foreach \x in {-1.6,-0.8,0,0.8,1.6} \node[omThm, font=\scriptsize] at (\x,-0.02) {$\otimes$};
+    \node[font=\footnotesize] at (0,-1.7) {lus: $E_{2t} = E_{1t}$, $B_{2t} - B_{1t} = \mu_0j_s$};
+  \end{scope}
+\end{tikzpicture}
+
+{\small De overgangsrelaties volgen uit de integraalwetten, toegepast op een
+plat pillendoosje en een dunne lus die het grensvlak omvatten:
+oppervlaktelading laat de normale $\vect E$ springen, \omterm{prop:b2:maxwell-equations:boundary}{oppervlaktestroom} de
+tangentiële $\vect B$; de overige componenten zijn continu.}
+\end{omfigure}
+
+\begin{example}[Geladen vlak, stroomvlak, solenoïde]\label{ex:b2:maxwell-equations:sheets}
+Een vlak met alleen $\sigma$ in de ruimte: uit symmetrie is
+$\vect E = \pm E\vect n$ aan de twee zijden, en de sprong
+$2E = \sigma/\varepsilon_0$ geeft $E = \sigma/2\varepsilon_0$ --- het
+resultaat van jaar 1 in één regel. Een vlakke stroomlaag $j_s$:
+$B =
+\mu_0j_s/2$ aan elke zijde, antiparallel. Een lange solenoïde met $n$
+windingen per meter die $I$ voert, is een cilindrische stroomlaag
+$j_s = nI$: de sprong $\mu_0nI$ erover, met $B = 0$ erbuiten, geeft
+$B = \mu_0nI$ erbinnen.
+\end{example}
+
+\section{Quasistationaire regimes}
+
+\begin{definition}[De quasistationaire benaderingen]\label{def:b2:maxwell-equations:arqs}
+\index{quasistationaire benadering}\index{quasistationair regime}
+Een systeem met afmeting $L$ dat op frequentie $f$ wordt aangedreven, is
+\emph{quasistationair} wanneer $L \ll \lambda = c/f$: de tijd $L/c$ die de
+velden nodig hebben om het over te steken, is verwaarloosbaar ten opzichte
+van de periode, en al zijn punten ``zien'' de bronnen op hetzelfde ogenblik.
+Er worden twee grensgevallen gebruikt:
+\begin{itemize}
+  \item het \emph{magnetische} quasistationaire regime (schakelingen met
+        stromen, spoelen, transformatoren, inductie): de \omterm{thm:b2:maxwell-equations:maxwell}{verplaatsingsstroom}
+        wordt uit de wet van Ampère weggelaten,
+        $\operatorname{\vect{curl}}\vect B
+        = \mu_0\vect j$ (zodat
+        $\operatorname{div}\vect j = 0$ en de stromen in gesloten kringen
+        lopen), terwijl de wet van Faraday volledig behouden blijft;
+  \item het \emph{elektrische} quasistationaire regime (een ladende
+        condensator): de term van Faraday wordt weggelaten, $\vect E$ is het
+        elektrostatische veld van de ogenblikkelijke ladingen, terwijl de
+        \omterm{thm:b2:maxwell-equations:maxwell}{verplaatsingsstroom} behouden blijft om $\vect B$ te vinden.
+\end{itemize}
+\end{definition}
+
+\begin{proof}[Verantwoording]
+Vergelijk in het magnetische regime de twee termen van de wet van Ampère in
+een geleider:
+$\mu_0\varepsilon_0\partial_t E \sim \mu_0\varepsilon_0\omega E$ tegen
+$\mu_0\gamma E$, een verhouding
+$\varepsilon_0\omega/\gamma = \omega\tau_r \sim 10^{-17}$ bij \qty{50}{Hz}
+in koper; buiten de geleider is de \omterm{thm:b2:maxwell-equations:maxwell}{verplaatsingsstroom} van de orde
+$\varepsilon_0\omega E$ met $E \sim \omega AB$, dat wil zeggen kleiner dan
+het effect van de geleidingsstroom met een factor
+$(\omega L/c)^2 = (L/\lambda)^2 \times 4\pi^2$. In het elektrische regime is
+het geïnduceerde veld $\omega BL \sim \omega^2\varepsilon_0\mu_0L^2E$
+kleiner dan $E$ met diezelfde $(L/\lambda)^2$.
+\end{proof}
+
+\begin{example}[Schakelingen en antennes]\label{ex:b2:maxwell-equations:sizes}
+Een netschakeling bij \qty{50}{Hz} ($\lambda = \qty{6000}{km}$) is
+quasistationair tot op de schaal van een land --- en daarom werken de wetten
+van Kirchhoff en de transformator. Een schakeling van \qty{10}{cm} is
+quasistationair tot zo'n \qty{100}{MHz}; bij \qty{1}{GHz}
+($\lambda = \qty{30}{cm}$) zijn haar draden antennes, verschillen de stromen
+langs een draad en straalt de schakeling: het domein van
+\cref{ch:b2:dipole-radiation} en van het microgolfontwerp, waar een baan op
+een print een \omterm{prop:b2:dispersion-wave-packets:coax}{transmissielijn} is.
+\end{example}
+
+\begin{omfigure}
+\begin{tikzpicture}
+\begin{axis}[omaxis, axis x line=bottom, axis y line=left, width=8.6cm, height=5.0cm,
+    xmode=log, ymode=log, xmin=1, xmax=1e10, ymin=3e-4, ymax=1e4,
+    xlabel={$f$ (Hz)}, ylabel={$L$ (m)}, xtick={1,1e2,1e4,1e6,1e8,1e10}, ytick={1e-3,1,1e3},
+    xlabel style={at={(axis description cs:0.5,-0.12)}, anchor=north},
+    ylabel style={at={(axis description cs:-0.1,0.5)}, rotate=90, anchor=south}, samples=50]
+  \addplot[omThm, thick, domain=1:1e10] {3e8/x};
+  \addplot[omThm, dashed, domain=1:1e10] {3e7/x};
+  \node[font=\scriptsize, anchor=west] at (axis cs:1e6,4e3) {$L \gtrsim \lambda$: golven, straling};
+  \node[font=\scriptsize, anchor=west] at (axis cs:10,3e-2) {$L \ll \lambda$: quasistationair, schakelingen};
+  \node[font=\scriptsize, omDef] at (axis cs:50,1) {lichtnet};
+  \node[font=\scriptsize, omDef, anchor=east] at (axis cs:3e7,0.1) {mobiele telefoon};
+  \node[font=\scriptsize, omDef, anchor=east] at (axis cs:3e9,1e-3) {chip};
+\end{axis}
+\end{tikzpicture}
+
+{\small Afmeting tegen frequentie: onder de lijn $L = \lambda/10$
+(streepjes) is een toestel quasistationair en gelden de wetten van de
+schakeling; nabij en boven $L = \lambda$ planten de velden zich voort en
+straalt het toestel.}
+\end{omfigure}
+
+\begin{method}[De lokale vergelijkingen gebruiken]\label{met:b2:maxwell-equations:method}
+(1) Gebruik de symmetrieën en invarianties van de bronnen om de richting en
+de veranderlijken van de velden vast te leggen (zoals in het volume van jaar
+1). (2) Kies de vorm: integraal (Gauss, Ampère op een goed gekozen oppervlak
+of lus) wanneer er genoeg symmetrie is; lokaal wanneer u een
+differentiaalvergelijking nodig hebt (Poisson voor $V$, de diffusie- of
+\omterm{thm:b2:waves-on-strings:equation}{golfvergelijking} voor de velden). (3) Beslis in een tijdafhankelijk
+vraagstuk het regime: statisch, magnetisch of elektrisch quasistationair, of
+volledig Maxwell. (4) Gebruik aan grensvlakken de overgangsrelaties --- dat
+is de enige plaats waar oppervlakteladingen en -stromen binnenkomen. (5)
+Controleer $\operatorname{div}\vect B = 0$ en de dimensies.
+\end{method}
+
+\section{Oefeningen}
+
+\begin{exercise}[$\star$]\label{exo:b2:maxwell-equations:1}
+Bereken de \omterm{def:b2:maxwell-equations:operators}{divergentie} en de rotatie van (a) $\vect A = (x, y, z)$; (b)
+$\vect A = (-y, x, 0)$; (c) $\vect A = (yz, zx, xy)$; (d)
+$\vect A = \vect r/r^3$ (gebruik de radiale formule, $r \ne 0$); (e)
+$\vect A = (0, 0, x^2)$. Welke zijn \omterm{def:b2:maxwell-equations:operators}{gradiënten}, welke rotaties, welke geen
+van beide?
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b2:maxwell-equations:2}
+(a) Ga de dimensies van elke term van de vier \omterm{thm:b2:maxwell-equations:maxwell}{vergelijkingen van Maxwell} na.
+(b) Bereken $1/\sqrt{\varepsilon_0\mu_0}$. (c) Verhouding van de dichtheid
+van de \omterm{thm:b2:maxwell-equations:maxwell}{verplaatsingsstroom} tot die van de geleidingsstroom in koper bij
+\qty{50}{Hz}, in zeewater ($\gamma = \qty{5}{S/m}$) bij \qty{1}{GHz}, en in
+glas ($\gamma =
+\qty{1e-12}{S/m}$, met $\varepsilon_0$ voor de eenvoud) bij
+\qty{50}{Hz}: wat is telkens ``een geleider''?
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b2:maxwell-equations:3}
+Een condensator met ronde platen ($R = \qty{10}{cm}$, $d = \qty{2}{mm}$)
+wordt geladen door $I = \qty{0.5}{A}$. Tempo waarmee $E$ verandert;
+dichtheid van de \omterm{thm:b2:maxwell-equations:maxwell}{verplaatsingsstroom}; $B$ op $r = \qty{5}{cm}$ en op
+$r = \qty{20}{cm}$ (in het vlak halverwege de platen); vergelijk het laatste
+met het veld van de toevoerdraad op dezelfde afstand.
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b2:maxwell-equations:4}
+(a) $\vect E = kx\,\vect e_x$ vult een gebied: \omterm{def:b2:charges-currents-conduction:densities}{ladingsdichtheid} daar. (b)
+Binnen een bol met straal $R$ is
+$\vect E = (\rho_0r/3\varepsilon_0)\vect e_r$: ga met de radiale \omterm{def:b2:maxwell-equations:operators}{divergentie}
+na dat $\rho = \rho_0$, en vind het veld erbuiten terug met de integraalwet
+van Gauss. (c) $\vect B = B_0(y/a)\vect e_x$: is dat een mogelijk magnetisch
+veld? Welke \omterm{def:b2:charges-currents-conduction:densities}{stroomdichtheid} onderhoudt het?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b2:maxwell-equations:5}
+\emph{Vectorpotentialen.} (a) Toon aan dat
+$\vect A = \tfrac12\vect B_0\wedge\vect r$ geeft dat
+$\operatorname{\vect{curl}}\vect A = \vect B_0$ en
+$\operatorname{div}\vect A = 0$. (b) Dat doet $\vect A' = B_0x\,\vect e_y$
+ook: bepaal de ijkfunctie $\chi$ waarvoor
+$\vect A' = \vect A + \operatorname{\vect{grad}}\chi$. (c) Solenoïde met
+straal $R$ en veld $B$ binnenin: ga $A_\theta = Br/2$ ($r < R$) en $BR^2/2r$
+($r > R$) na met
+$(\operatorname{\vect{curl}}\vect A)_z = \frac1r\partial_r(rA_\theta)$;
+continuïteit in $R$. (d) Circulatie van $\vect A$ op een cirkel met straal
+$r > R$ en de flux van $\vect B$: wat zegt dat over de geïnduceerde emk in
+een lus buiten een solenoïde waarvan de stroom verandert?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b2:maxwell-equations:6}
+\emph{Overgangsrelaties.} (a) Een geleider in elektrostatisch evenwicht
+draagt $\sigma$ op zijn oppervlak: veld vlak erbuiten (uit de sprong, met
+$\vect E = \vect 0$ binnenin); voor $\sigma = \qty{1}{\micro C/m^2}$. (b)
+Twee evenwijdige vlakken met $+\sigma$ en $-\sigma$: veld overal, uit de
+sprongen. (c) Een lange solenoïde ($n = \qty{2000}{m^{-1}}$,
+$I = \qty{5}{A}$) als stroomlaag: $j_s$, de sprong van $B$, en $B$ binnenin.
+(d) Een toroïdale spoel: waarom is $B$ nul erbuiten en $\mu_0NI/2\pi r$
+erbinnen, uit dezelfde sprong?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b2:maxwell-equations:7}
+\emph{Poisson in één dimensie.} Tussen twee vlakke elektroden in $x = 0$
+($V = 0$) en $x = d$ ($V = U$) vult een uniforme \omterm{def:b2:charges-currents-conduction:densities}{ladingsdichtheid} $\rho_0$
+de tussenruimte (een ruimtelading). (a) Los de \omterm{prop:b2:maxwell-equations:potentials}{vergelijking van Poisson} op
+voor $V(x)$. (b) Veld $E(x)$; waar is het nul als $\rho_0 > 0$ en groot is?
+(c) Oppervlakteladingen op de twee elektroden, uit de overgangsrelatie. (d)
+Vind met $\rho_0 = 0$ de condensator terug; en schets voor $U = 0$ de $V$.
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b2:maxwell-equations:8}
+\emph{Quasistationair of niet.} (a) $\lambda$ bij \qty{50}{Hz},
+\qty{1}{MHz}, \qty{100}{MHz} en \qty{2.4}{GHz}. (b) Tot welke frequentie is
+een schakeling van \qty{10}{cm} quasistationair (criterium
+$L < \lambda/10$)? Een chip van \qty{1}{cm}? Een elektriciteitsnet van
+\qty{1000}{km}? (c) Schat in een condensator met straal $R = \qty{5}{cm}$
+bij \qty{1}{MHz} de verhouding van het geïnduceerde elektrische veld (uit de
+veranderende $\vect B$ van de vorige oefeningen) tot het hoofdveld:
+$(\omega R/c)^2
+/4$. (d) Waarom is de netfrequentie van een net dat een heel
+werelddeel bestrijkt een quasistationair vraagstuk, hoewel het net
+\qty{1000}{km} groot is?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b2:maxwell-equations:9}
+Toon aan dat de wet van Ampère zonder de \omterm{thm:b2:maxwell-equations:maxwell}{verplaatsingsstroom},
+$\operatorname{\vect{curl}}
+\vect B = \mu_0\vect j$, in strijd is met het
+behoud van lading zodra $\partial_t\rho
+\ne 0$. Schat in de condensator van
+\cref{exo:b2:maxwell-equations:3} de $\operatorname{div}\vect j$, gemiddeld
+over een plaat met dikte $e = \qty{0.1}{mm}$ (waar de stroom $I$ ophoudt),
+en de bijbehorende $\partial_t\rho$.
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b2:maxwell-equations:10}
+\emph{Het betatron.} Een uniform magnetisch veld $B(t)\vect e_z$ vult een
+cilinder met straal $R$ en groeit met $\dd B/\dd t = \dot B$. (a) Uit
+symmetrie is $\vect E = E_\theta(r)\vect e_\theta$: gebruik de integraalwet
+van Faraday om $E_\theta$ te vinden voor $r < R$ en $r > R$. (b) Er is
+nergens lading: geef commentaar op een elektrisch veld met gesloten lijnen.
+(c) Hoeveel energie wint een elektron op een cirkel met straal $r_0 < R$ per
+omloop? Voor $\dot B = \qty{10}{T/s}$ en $r_0 = \qty{0.5}{m}$: energie per
+omloop in eV; aantal omlopen voor \qty{20}{MeV}. (d) Opdat de baanstraal
+constant blijft, moet de impuls $p = eBr_0$ (uit de magnetische kracht)
+groeien zoals de energiewinst uit het geïnduceerde veld voorschrijft: toon
+de voorwaarde $B(r_0) = \tfrac12\langle B\rangle_{\text{schijf}}$ aan --- de
+betatronvoorwaarde.
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b2:maxwell-equations:11}
+\emph{De golven van Maxwell.} In vacuüm ($\rho = 0$, $\vect j = \vect 0$):
+(a) neem de rotatie van de \omterm{thm:b2:maxwell-equations:maxwell}{vergelijking van Maxwell--Faraday}, gebruik
+$\operatorname{\vect{curl}}
+\operatorname{\vect{curl}} = \operatorname{\vect{grad}}\operatorname{div} - \Delta$
+en de overige vergelijkingen om
+$\Delta\vect E = \mu_0\varepsilon_0\,\partial_t^2\vect E$ te verkrijgen. (b)
+Hetzelfde voor $\vect B$. (c) Dit is de \omterm{thm:b2:waves-on-strings:equation}{vergelijking van d'Alembert} in drie
+dimensies: snelheid? Bereken haar uit $\varepsilon_0$ en $\mu_0$. (d) Waarom
+overtuigde dit getal Maxwell ervan dat licht elektromagnetisch is, en welke
+meting van Weber en Kohlrausch gebruikte hij?
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b2:maxwell-equations:12}
+\emph{Velden in een geleider bij lage frequentie.} In een ohmse geleider
+($\vect j = \gamma\vect E$) in het magnetische quasistationaire regime: (a)
+neem de rotatie van de wet van Ampère en gebruik die van Faraday om
+$\Delta\vect B = \mu_0\gamma\,
+\partial_t\vect B$ aan te tonen; waarom is
+dat een diffusievergelijking? (b) Karakteristieke tijd waarin $\vect B$ tot
+een diepte $d$ doordringt: $\tau \sim \mu_0\gamma d^2$; getallen voor een
+koperplaat van \qty{1}{cm} en voor de kern van de aarde
+($\gamma \approx \qty{5e5}{S/m}$, $d \approx \qty{3000}{km}$). (c) Toon aan
+dat de diepte die in één periode bij frequentie $f$ wordt bereikt, van de
+orde $\delta = \sqrt{2/\mu_0\gamma\omega}$ is; waarde voor koper bij
+\qty{50}{Hz} en \qty{1}{MHz} (de \omterm{def:b2:dispersion-wave-packets:complex}{indringdiepte} van
+\cref{ch:b2:waves-in-media}). (d) Wat betekent (b) voor de tijdsvariaties
+van het magnetische veld van de aarde?
+\end{exercise}
+
+\section{Vraagstuk: De condensator, het betatron en de potentialen}
+
+\begin{problem}[{Weekendvraagstuk --- de vergelijkingen van Maxwell aan het werk
+in één ladende condensator, in de versneller die op de wet van Faraday
+alleen draait, en in de potentialen die hen oplossen}]
+\label{pb:b2:maxwell-equations:1}
+
+\medskip
+\noindent\textbf{Deel I --- De ladende condensator.}
+Ronde platen met straal $R = \qty{10}{cm}$ en afstand $d = \qty{1.0}{mm}$,
+in lucht; door de toevoerdraad langs de as loopt een stroom
+$I(t) = I_0\cos\omega t$ met $I_0 = \qty{1.0}{A}$ en $f = \qty{1.0}{MHz}$.
+Randeffecten worden verwaarloosd.
+\begin{enumerate}
+  \item Lading $Q(t)$ en veld $E(t)$ tussen de platen; amplitude van $E$.
+  \item Dichtheid van de \omterm{thm:b2:maxwell-equations:maxwell}{verplaatsingsstroom} tussen de platen; ga na dat
+        haar flux door een plaat gelijk is aan $I(t)$.
+  \item Magnetisch veld $B(r, t)$ tussen de platen voor $r < R$, uit de
+        integraalwet van Ampère--Maxwell; amplitude in $r = R$.
+  \item Veld voor $r > R$ (nog steeds tussen de vlakken van de platen):
+        vergelijk met het veld van de draad op dezelfde $r$; is er een
+        sprong in $r = R$?
+  \item De veranderende $\vect B$ induceert via de wet van Faraday een
+        correctie $\vect E_1$ op het elektrische veld: toon met
+        $\operatorname{\vect{curl}}\vect E_1
+        = -\partial_t\vect B$ en
+        $\vect E_1 = E_1(r)\vect e_z$ (axiaal) aan dat
+        $E_1(r) - E_1(0) = \dfrac{\mu_0\varepsilon_0r^2}4\,\dfrac{\dd^2E}{\dd t^2}$,
+        en schat $|E_1(R) - E_1(0)|/|E|$.
+  \item Besluit over de geldigheid van de elektrische quasistationaire
+        behandeling bij \qty{1}{MHz}; bij welke frequentie zou de correctie
+        $10\%$ bereiken? (De exacte oplossing is een besselfunctie: de
+        condensator is een trilholte geworden.)
+  \item Energie: de elektrische energie $\tfrac12\varepsilon_0E^2$ die
+        tussen de platen is opgeslagen, maximale waarde; de magnetische
+        energie $\int B^2/2\mu_0\,\dd\tau$ op het ogenblik dat $E = 0$; hun
+        verhouding, en het verband met de schatting van vraag 5.
+\end{enumerate}
+
+\medskip
+\noindent\textbf{Deel II --- Het betatron.}
+Een elektromagneet wekt een veld $\vect B = B(r, t)\vect e_z$ op dat
+symmetrisch is om de $z$-as; elektronen lopen rond in een vacuümring met
+straal $r_0$.
+\begin{enumerate}[resume]
+  \item Toon uit Maxwell--Faraday in integraalvorm aan dat het elektrische
+        veld op de baan
+        $E_\theta(r_0) = -\dfrac1{2\pi r_0}
+        \dfrac{\dd\Phi}{\dd t}$ is, met
+        $\Phi$ de flux door de baan.
+  \item Tangentiële bewegingsvergelijking van een elektron (lading $-e$):
+        $\dd p/\dd t = eE_\theta$ in grootte; de energiewinst per omloop is
+        $e\,|\dd\Phi/\dd t|$.
+  \item Radiaal evenwicht op de cirkel: $p = eB(r_0)r_0$. Toon aan dat,
+        opdat $r_0$ constant blijft, $B(r_0, t) = \Phi(t)/2\pi r_0^2$ moet
+        gelden, dat wil zeggen dat het veld op de baan de helft van het
+        gemiddelde veld erbinnen moet zijn.
+  \item Waarom kunnen de elektronen niet door een uniform veld worden
+        versneld? Hoe wordt de voorwaarde in de praktijk gerealiseerd (vorm
+        van de poolschoenen)?
+  \item $r_0 = \qty{0.50}{m}$, $B(r_0)$ in \qty{5}{ms} van $0$ tot
+        \qty{0.40}{T} opgevoerd: eindimpuls; eindenergie (gebruik $E = pc$
+        voor deze ultrarelativistische elektronen,
+        $\qty{1}{MeV} = \qty{1.6e-13}{J}$); energie per omloop en aantal
+        omlopen; afgelegde afstand.
+  \item De elektronen stralen wanneer zij op een cirkel worden versneld
+        (\cref{ch:b2:dipole-radiation}): dat begrenst betatrons tot enkele
+        honderden MeV. Waar komt de energie van de elektronen uiteindelijk
+        vandaan, en via welke term van de \omterm{thm:b2:maxwell-equations:maxwell}{vergelijkingen van Maxwell}?
+  \item Na de versnelling worden de elektronen op een trefplaat geworpen en
+        maken zij röntgenstraling: waarom was het betatron in de jaren
+        vijftig het bestralingstoestel bij uitstek, en wat heeft het
+        vervangen?
+\end{enumerate}
+
+\medskip
+\noindent\textbf{Deel III --- Potentialen en Poisson.}
+\begin{enumerate}[resume]
+  \item Schrijf $\vect E$ en $\vect B$ in termen van $V$ en $\vect A$, en ga
+        na dat Maxwell--Faraday en Maxwell--flux dan vanzelf voldaan zijn.
+  \item Een bol met straal $a$ draagt de uniforme dichtheid $\rho_0$:
+        schrijf de \omterm{prop:b2:maxwell-equations:potentials}{vergelijking van Poisson} in bolsymmetrie op, los haar
+        binnen en buiten op ($V \to 0$ op oneindig, $V$ en $V'$ continu in
+        $a$), en vind de velden van het volume van jaar 1 terug.
+  \item Potentiële energie van de bol, $\tfrac12\int\rho V\,\dd\tau$: waarde
+        $3Q^2/20\pi\varepsilon_0a$; voor een uraniumkern ($Q = 92e$,
+        $a =
+        \qty{7.4}{fm}$), in MeV --- de energie die vrijkomt wanneer zij
+        splijt.
+  \item Geef voor de condensator van deel I in het elektrische
+        quasistationaire regime de $V$ tussen de platen. Toon aan dat een
+        \emph{axiale} vectorpotentiaal $A_z(r, t)\,\vect e_z$, waarvoor
+        $(\operatorname{\vect{curl}}
+        \vect A)_\theta = -\partial_rA_z$, het
+        veld $B_\theta$ van vraag 3 weergeeft, en bepaal $A_z$ voor $r < R$
+        (neem $A_z(0) = 0$).
+  \item Toon aan dat de correctie $\vect E_1$ van vraag 5 precies
+        $-\partial_t\vect A$ is voor die $A_z$, op een constante na.
+  \item IJk: de voorwaarde van Coulomb $\operatorname{div}\vect A = 0$ geldt
+        voor uw $A_z(r)$ --- waarom? Welke andere $\vect A$ zou dezelfde
+        $\vect B$ geven?
+\end{enumerate}
+
+\medskip
+\noindent\textbf{Deel IV --- Grensvlakken en regimes.}
+\begin{enumerate}[resume]
+  \item Oppervlaktelading op de platen van deel I op het ogenblik dat $E$
+        maximaal is; ga de overgangsrelatie op het binnenvlak van de plaat
+        na (veld nul in het metaal).
+  \item De stroom spreidt zich in de plaat radiaal uit van de as naar de
+        rand: oppervlaktestroomdichtheid $j_s(r)$ in de plaat; het
+        magnetische veld vlak buiten het buitenvlak van de plaat, uit de
+        overgangsrelatie, vergeleken met het veld dat in vraag 3 aan de
+        binnenzijde is gevonden.
+  \item Deel in: de platen bij \qty{1}{MHz} (elektrisch quasistationair?),
+        de toevoerlus van \qty{20}{cm} (magnetisch quasistationair?),
+        dezelfde condensator bij \qty{1}{GHz}; verantwoord met $L/\lambda$.
+  \item Waarom is de magnetische \omterm{def:b2:maxwell-equations:arqs}{quasistationaire benadering} in de
+        betatronring uitstekend (afmetingen, opvoertijd van \qty{100}{Hz}),
+        hoewel het elektrische veld daar juist essentieel is?
+  \item Vat in een tabel samen welke vergelijking van Maxwell (lokaal of
+        integraal) elk deel heeft beantwoord, en welke term ---
+        \omterm{thm:b2:maxwell-equations:maxwell}{verplaatsingsstroom}, Faraday, Gauss, sprong aan het grensvlak ---
+        doorslaggevend was.
+\end{enumerate}
+\end{problem}

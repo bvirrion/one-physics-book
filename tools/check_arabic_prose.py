@@ -144,6 +144,15 @@ MATH_ENVS = {"equation", "equation*", "align", "align*", "gather", "gather*",
 
 MATH_PLACEHOLDER = "\x00"
 
+# A chemical formula's letters: two or more element symbols run together, each
+# a capital optionally followed by one lower-case letter (MgF, NaCl, GaAs, AsH).
+# Mixed case means the acronym rule above cannot catch them, and they are not
+# English in any script -- without this the Book 4 Hindi agent had to write
+# "Mg{}F" with an empty group to silence the gate, which is a source wart of
+# exactly the kind this project refuses elsewhere.
+CHEM_FORMULA = re.compile(r"(?:[A-Z][a-z]?){2,}")
+
+
 # Environments taking a column specification ({c|ccc}) before their body.
 COLSPEC_ENVS = {"tabular", "tabular*", "tabularx", "array", "longtable"}
 
@@ -158,6 +167,17 @@ TIKZ_TEXT_KEYS = re.compile(
 # by "every", or with a "/." key path before its group.
 TIKZ_NODE = re.compile(
     r"(?<!every\s)\bnode\b(?![^{;]*/\.)[^{;]*?(\{(?:[^{}]|\{[^{}]*\})*\})"
+)
+
+# pgfplots' \legend{...} and \addlegendentry{...} MACROS. The key form, "legend entries={...}", is
+# matched by TIKZ_TEXT_KEYS above; the macro form has no "=" and was therefore
+# invisible to every prose gate in the project. Book 4 carries 18 of them and
+# the SHIPPED Hindi and Arabic Book 2 editions each ship six untranslated
+# English legends ("without friction, with friction", "undamped, damped", ...)
+# behind a green gate run. Two levels of nesting are allowed: a legend entry
+# may hold $\operatorname{Re}(...)$.
+TIKZ_LEGEND = re.compile(
+    r"\\(?:legend|addlegendentry)\s*(\{(?:[^{}]|\{(?:[^{}]|\{[^{}]*\})*\})*\})"
 )
 
 
@@ -324,6 +344,7 @@ def extract_drawing_text(body: str, depth: int = 0) -> str:
     """Pull the visible strings out of tikz/pgfplots/circuitikz drawing code."""
     pieces = [m.group(1) for m in TIKZ_NODE.finditer(body)]
     pieces += [m.group(1) for m in TIKZ_TEXT_KEYS.finditer(body)]
+    pieces += [m.group(1) for m in TIKZ_LEGEND.finditer(body)]
     return " \n ".join(nested_text(_unwrap_braces(p), depth) for p in pieces)
 
 
@@ -513,6 +534,9 @@ def check_file(path: pathlib.Path, findings: list) -> None:
             continue
         if word.isupper() and len(word) <= 4:
             continue        # acronyms printed in Latin (SI, ATP)
+        if CHEM_FORMULA.fullmatch(word):
+            continue        # MgF(2), NaCl, GaAs, AsH(3): element symbols, not
+                            # English, and they stay Latin in every script
         if len(word) < 3:
             continue        # stray single symbols
         findings.append((rel, _locate(body, word, _occ),

@@ -47,7 +47,8 @@ WHAT IT REFUSES TO WRITE (each of these cost a real edition real time):
                 numerals into words (keenamnya, keempat sisinya), which
                 silently deletes a math span and changes the mathematics
   draw          tikz/pgfplots/circuitikz bodies, after blanking node text,
-                axis labels and titles, must be identical. Opt out per range
+                axis labels, titles and \\legend{} entries, must be identical.
+                Opt out per range
                 with "@@ 12-18 !draw" when the range deliberately translates
                 symbolic x coords / a \\foreach label list
   delims        per replaced range, the \\[ \\] \\( \\) count must match the
@@ -58,8 +59,14 @@ WHAT IT REFUSES TO WRITE (each of these cost a real edition real time):
                 MISSES this -- it must be per range
   braces        { } balance must match English
   omterm        no \\omterm may survive (links are regenerated afterwards)
-  prose         tools/check_indonesian_prose.py must be clean on the result,
-                minus the `title` class, which needs the written tree
+  prose         the script-specific prose gate for the TARGET language must be
+                clean on the result, minus the `title` class, which needs the
+                written tree. Dispatched on the target path: parts/*/id/ ->
+                check_indonesian_prose, /hi/ -> check_hindi_prose, /ar/ ->
+                check_arabic_prose. A language with no prose gate (fr, nl, es,
+                pt) skips this class; run tools/check_latin_prose.py over the
+                written tree instead -- it needs the English twin BY PATH and
+                so cannot run against a scratch probe
 
 Usage:
     python3 id_apply.py PATCHFILE [--repo DIR] [--dry-run] [--force-classes c,c]
@@ -265,6 +272,14 @@ def emph_signature(text):
 
 DRAW_ENVS = ("tikzpicture", "axis", "circuitikz")
 NODE_TEXT = re.compile(r"node\s*(\[[^\]]*\])?\s*(\([^)]*\))?\s*(at\s*\([^)]*\))?\s*\{")
+# pgfplots' \legend{...} and \addlegendentry{...} MACROS. AXIS_STR below only knows the KEY form,
+# "legend entries=", so a legend used to be compared BYTE-FOR-BYTE as drawing
+# code: translating one -- which you must, it is visible text -- forced
+# "@@ N !draw" and opted the whole file out of the drawing census. That is the
+# exact inverse of the prose gates, which could not see a \legend at all.
+# Blank it here so a translated legend is legal and the byte-identity
+# guarantee is kept for every other line of the picture.
+LEGEND_MACRO = re.compile(r"\\(?:legend|addlegendentry)\s*\{")
 AXIS_STR = re.compile(
     r"(xlabel|ylabel|zlabel|title|legend entries|symbolic x coords|"
     r"symbolic y coords|xticklabels|yticklabels|nodes near coords)\s*=\s*")
@@ -280,6 +295,7 @@ def draw_bodies(text):
                              % (env, env), t, re.S):
             body = m.group(1)
             body = _blank_braced(body, NODE_TEXT)
+            body = _blank_braced(body, LEGEND_MACRO)
             body = _blank_axis_strings(body)
             body = _blank_text_macros(body)
             bodies.append(re.sub(r"\s+", " ", body).strip())
@@ -434,7 +450,8 @@ def first_diff(a, b):
     return None
 
 
-def verify(en_text, id_text, ranges, en_lines, id_lines, gate, force):
+def verify(en_text, id_text, ranges, en_lines, id_lines, gate, force,
+           target=""):
     problems = []
 
     def cmp(cls, name, fa, brief=lambda v: repr(v)[:120]):
@@ -483,19 +500,38 @@ def verify(en_text, id_text, ranges, en_lines, id_lines, gate, force):
             problems.append("delims   every range has an empty body")
 
     if gate and "prose" not in force:
-        problems.extend(run_prose_gate(id_text))
+        problems.extend(run_prose_gate(id_text, target))
     return problems
 
 
-def run_prose_gate(id_text):
-    """The Indonesian prose gate, minus the `title` class.
+# The script-specific prose gate to run, by the language directory the file is
+# being written into. Only a target whose script differs from English has one:
+# gates 5-8 all ask "is this the wrong script / an English word?", and for fr,
+# nl, es and pt the answer needs the English TWIN, which a scratch probe file
+# has not got. Those editions are covered after the write by
+# tools/check_latin_prose.py (gate 9) over the real tree.
+PROSE_GATES = {
+    "id": "check_indonesian_prose",
+    "hi": "check_hindi_prose",
+    "ar": "check_arabic_prose",
+}
+
+
+def run_prose_gate(id_text, target=""):
+    """The target language's prose gate, minus the `title` class.
 
     `title` compares against the English twin found BY PATH, so against a temp
     file it finds no twin (or reports every title as identical). It is run over
-    the written tree by check_indonesian_prose.py proper.
+    the written tree by the gate script proper.
+
+    Returns nothing for a language that has no script-specific gate.
     """
     import importlib
-    mod = importlib.import_module("check_indonesian_prose")
+    lang = next((l for l in PROSE_GATES
+                 if "/%s/" % l in target.replace(os.sep, "/")), None)
+    if lang is None:
+        return []
+    mod = importlib.import_module(PROSE_GATES[lang])
     with tempfile.TemporaryDirectory() as d:
         p = pathlib.Path(d) / "probe.tex"
         p.write_text(id_text, encoding="utf-8")
@@ -566,7 +602,7 @@ def main():
             failed += 1
             continue
         problems = verify(en_text, id_text, st["ranges"], en_lines, id_lines,
-                          not args.no_gate, local)
+                          not args.no_gate, local, st["target"])
         if problems:
             print("REJECT %s  (%d range(s))" % (st["target"], len(st["ranges"])))
             for p in problems[:12]:

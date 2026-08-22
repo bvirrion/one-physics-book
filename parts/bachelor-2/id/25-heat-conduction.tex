@@ -1,0 +1,600 @@
+\chapter{Hantaran Kalor}\label{ch:b2:heat-conduction}
+
+Sentuhlah sebuah rel logam dan sebuah bangku kayu pada pagi yang dingin yang sama:
+relnya terasa lebih dingin, meskipun sebuah termometer memberi keduanya suhu
+yang sama. Taruhlah sebuah panci di atas tungku dan gagangnya menghangat hanya sesudah
+beberapa saat; galilah dua meter ke bawah pada musim panas dan tanahnya masih dingin dari
+musim dinginnya; sebuah prosesor yang melesapkan seratus watt pada satu sentimeter
+persegi tak melebur karena sebongkah aluminium bersirip duduk di
+atasnya. Semua ini adalah \emph{hantaran kalor}, yaitu pengangkutan energi
+dalam menembus materi lewat keriuhan molekulnya, tanpa
+aliran materi --- dan semuanya menuruti satu hukum, hukum Fourier, dan satu
+persamaan, yaitu persamaan kalor, yang merupakan \omterm{thm:b2:particle-diffusion:equation}{persamaan difusi} bab
+terdahulu dengan suhu menggantikan kerapatan. Bab ini menyiapkan
+hukum dan persamaannya dari sebuah imbangan energi, menyelesaikannya dalam
+hal yang berarti (dinding tegar dan \omterm{prop:b2:heat-conduction:resistance}{hambatan termalnya},
+pemanasan berkala dan gelombang termal, sirip pendingin), memperkenalkan
+pertukaran dengan sebuah fluida (hukum Newton dan \omterm{def:b2:heat-conduction:biot}{bilangan Biot}), lalu menghitung
+entropi yang diciptakan hantarannya --- sebab kalor hanya mengalir menurun.
+
+\begin{omfigure}
+\includegraphics[width=0.58\linewidth]{images/book4/ai/b4-25-cpu-heat-sink.png}
+
+{\small Sebuah pelesap kalor bersirip pada sebuah prosesor: seratus watt yang dihantarkan
+keluar dari satu sentimeter persegi silikon, disebar menembus sebuah alas logam,
+lalu diserahkan kepada udaranya oleh sirip yang melipatgandakan permukaannya tiga puluh kali.}
+\end{omfigure}
+
+\section{Hukum Fourier}
+
+\begin{definition}[Rapat arus kalor]\label{def:b2:heat-conduction:flux}
+\emph{Rapat arus kalor}\index{rapat arus kalor}
+$\vect{j}_Q$ (dalam \unit{W/m^2}) adalah vektor yang energi
+yang teralihkan lewat hantaran menembus sebuah elemen permukaan berarah
+$\dd\vect S$ selama $\dd t$ adalah $\vect{j}_Q\cdot\dd\vect S\,\dd t$;
+\emph{fluks termal}\index{fluks termal} (sebuah daya, dalam watt) menembus sebuah
+permukaan $S$ adalah $\Phi = \iint_S\vect{j}_Q\cdot\dd\vect S$.
+\end{definition}
+
+\begin{theorem}[Hukum Fourier]\label{thm:b2:heat-conduction:fourier}
+Dalam medium yang diam yang suhunya tak seragam,
+\[
+\vect{j}_Q = -\lambda\,\vect{\operatorname{grad}}\,T ,
+\]
+dengan \emph{konduktivitas termal}\index{konduktivitas termal}
+$\lambda > 0$ (dalam \unit{W/m/K}) bergantung pada bahannya dan, lemah, pada
+suhunya. Kalor mengalir menuruni \omterm{def:b2:maxwell-equations:operators}{gradien} suhunya, dari panas ke
+dingin --- yaitu hukum kedua yang terbangun ke dalam sebuah hukum linear.
+\end{theorem}
+
+\begin{proof}
+Fenomenologis, seperti hukum Fick, dan dengan pembenaran mikroskopis
+yang sama: molekulnya (atau elektron bebas sebuah logam, atau
+getaran kisinya) mengemban energinya pada sebuah jalan acak, dan lebih banyak
+darinya datang dari sisi yang panas.
+\end{proof}
+
+\begin{example}[Konduktivitas]\label{ex:b2:heat-conduction:values}
+Logam (elektronnya mengemban kalornya sekaligus arusnya ---
+konduktivitasnya saling mengikuti): tembaga \qty{400}{W/m/K}, aluminium
+\qty{240}{W/m/K}, baja \qty{50}{W/m/K}. Zat padat penyekat: beton
+\qty{1.5}{W/m/K}, kaca \qty{1}{W/m/K}, bata \qty{0.8}{W/m/K}, kayu
+\qty{0.15}{W/m/K}. Cairan: air \qty{0.6}{W/m/K}. Gas: udara
+\qty{0.026}{W/m/K} --- dan penyekat terbaiknya, wol kaca atau busa pada
+\qty{0.04}{W/m/K}, sebagian besarnya udara diam, yang terperangkap sehingga ia tak dapat
+berkonveksi. Empat orde besaran dari tembaga ke udara.
+\end{example}
+
+\section{Imbangan energi dan persamaan kalor}
+
+\begin{theorem}[Imbangan energi setempat]\label{thm:b2:heat-conduction:balance}
+Dalam sebuah zat padat (atau fluida yang diam) berkerapatan $\rho$ dan berkalor jenis
+$c$, dengan daya $p$ yang dilepaskan tiap satuan volume (pemanasan Joule, sebuah
+reaksi kimia atau nuklir, radiasi yang terserap),
+\[
+\rho c\,\frac{\partial T}{\partial t} = -\operatorname{div}\vect{j}_Q + p ,
+\qquad\text{dalam satu dimensi}\quad
+\rho c\,\frac{\partial T}{\partial t} = -\frac{\partial j_Q}{\partial x} + p .
+\]
+\end{theorem}
+
+\begin{proof}
+Hukum pertama bagi lempeng antara $x$ dan $x + \dd x$ (berpenampang $S$,
+bervolume tetap, jadi tanpa kerja): energi dalamnya $\rho c\,T\,S\,\dd x$
+berubah dalam $\dd t$ sebesar kalor yang diterimanya, $[j_Q(x) - j_Q(x+\dd x)]S\,\dd t
+= -\partial_x j_Q\,\dd x\,S\,\dd t$, ditambah $p\,S\,\dd x\,\dd t$. Dalam tiga
+dimensi kalor yang memasuki sebuah volume tetap menembus permukaan tertutupnya
+adalah $-\iint\vect{j}_Q\cdot\dd\vect S = -\iiint\operatorname{div}\vect{j}_Q\,\dd\tau$.
+\end{proof}
+
+\begin{theorem}[Persamaan kalor]\label{thm:b2:heat-conduction:equation}
+Bagi $\lambda$, $\rho$, $c$ yang seragam,
+\[
+\frac{\partial T}{\partial t} = a\,\Delta T + \frac{p}{\rho c},
+\qquad a = \frac{\lambda}{\rho c} \quad\text{(yaitu \emph{difusivitas termal}\index{difusivitas termal}, dalam \unit{m^2/s})} .
+\]
+Segala yang dikatakan tentang \omterm{thm:b2:particle-diffusion:equation}{persamaan difusinya} berlaku: kelinearan,
+ketakterbalikan, pemulusan, dan skala $L \sim \sqrt{at}$, $t \sim
+L^2/a$.
+\end{theorem}
+
+\begin{proof}
+Sisipkanlah hukum Fourier ke dalam imbangannya: $\rho c\,\partial_t T =
+\lambda\Delta T + p$.
+\end{proof}
+
+\begin{example}[Difusivitas dan waktu]\label{ex:b2:heat-conduction:times}
+Tembaga $a = \qty{1.1e-4}{m^2/s}$, udara \qty{2e-5}{m^2/s}, beton dan
+bata $\approx \qty{5e-7}{m^2/s}$, air \qty{1.4e-7}{m^2/s}, kayu
+\qty{1e-7}{m^2/s}. Kalor menyeberangi sesentimeter tembaga dalam sesekon, sesentimeter
+bata dalam tiga menit, sebuah dinding \qty{20}{cm} dalam sehari
+(itulah sebabnya dinding tebal memuluskan daur siang--malam),
+setengah tebal \qty{1.5}{cm} sebuah bistik dalam seperempat jam (waktu
+memasak berskala sebagai kuadrat tebalnya), dan sekilometer batuan
+dalam $10^{12}\,\unit{s}$, tiga puluh ribu tahun --- Bumi masih
+mendingin sejak pembentukannya.
+\end{example}
+
+\section{Rezim tegar: hambatan termal}
+
+\begin{proposition}[Hambatan termal sebuah lempeng]\label{prop:b2:heat-conduction:resistance}
+Dalam rezim tegar tanpa sumber, sebuah lempeng setebal $e$,
+berluas $S$, berkonduktivitas $\lambda$, antara suhu $T_1$ dan
+$T_2$, mempunyai profil linear lalu mengemban fluks
+\[
+\Phi = \frac{T_1 - T_2}{R_{\text{th}}}, \qquad
+R_{\text{th}} = \frac{e}{\lambda S}\quad\text{(dalam \unit{K/W})} :
+\]
+yaitu \emph{hambatan termal}\index{hambatan termal}-nya. Suhu
+berperan sebagai potensial, fluksnya sebagai arus: hambatan yang
+terseri (lapisan sebuah dinding) bertambah, hambatan yang terparalel (dinding dan
+jendela) menjumlahkan kebalikannya. Bagi sebuah selubung silinder (penyekat
+sebuah pipa) antara jari-jari $r_1 < r_2$ dan sepanjang $\ell$,
+$R_{\text{th}} = \ln(r_2/r_1)/2\pi\lambda\ell$; bagi sebuah selubung bola,
+$(1/r_1 - 1/r_2)/4\pi\lambda$.
+\end{proposition}
+
+\begin{proof}
+$\dd^2T/\dd x^2 = 0$: profilnya afin, $j_Q = \lambda(T_1 - T_2)/e$
+seragam, $\Phi = j_QS$. Dalam geometri silinder $\Phi = -\lambda\,2\pi
+r\ell\,\dd T/\dd r$ sama pada setiap $r$ (tanpa penimbunan), jadi
+$T = A - (\Phi/2\pi\lambda\ell)\ln r$; dalam geometri bola, $\Phi =
+-4\pi r^2\lambda\,\dd T/\dd r$ memberi $T = A + \Phi/4\pi\lambda r$.
+\end{proof}
+
+\begin{proposition}[Pertukaran dengan sebuah fluida: hukum Newton]\label{prop:b2:heat-conduction:newton}
+Sebuah permukaan padat pada $T_{\text{s}}$ yang bersentuhan dengan sebuah fluida pada $T_{\text{f}}$
+(jauh dari permukaannya) kehilangan rapat fluks
+\[
+j_Q = h\,(T_{\text{s}} - T_{\text{f}}) ,
+\]
+dengan \emph{koefisien alih kalor}\index{koefisien alih
+kalor} $h$ (dalam \unit{W/m^2/K}) merangkum hantaran menembus
+lapisan fluida tipis yang melekat pada dindingnya dan konveksi yang
+memperbaruinya: $h \approx 5$--\qty{25}{W/m^2/K} bagi udara dalam konveksi alami atau
+ringan, $50$--\qty{500}{W/m^2/K} bagi udara paksa, $10^3$--$10^4$
+bagi air. Permukaannya lalu menambahkan sebuah \emph{hambatan selaput} $1/hS$
+terseri dengan dindingnya.
+\end{proposition}
+
+\begin{proof}
+Fenomenologis: gerak fluidanya tak dihitung, ia dirangkum
+dalam $h$ (yang diukur, atau diberikan korelasi mekanika fluida).
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}[scale=0.9, >=stealth]
+  % wall layers
+  \fill[omExo!15] (0,0) rectangle (1.6,2.6);
+  \fill[omDef!12] (1.6,0) rectangle (2.6,2.6);
+  \fill[gray!15] (2.6,0) rectangle (2.8,2.6);
+  \draw (0,0) rectangle (2.8,2.6);
+  \draw (1.6,0) -- (1.6,2.6); \draw (2.6,0) -- (2.6,2.6);
+  \node[font=\scriptsize] at (0.8,2.85) {bata};
+  \node[font=\scriptsize] at (2.1,2.85) {wol};
+  \node[font=\scriptsize, right] at (2.9,1.3) {dalam $T_{\text{i}}$};
+  \node[font=\scriptsize, left] at (-0.1,1.3) {luar $T_{\text{o}}$};
+  \draw[->, omThm, thick] (3.6,0.7) -- (-0.8,0.7) node[midway, below, font=\scriptsize] {$\Phi$};
+  % resistor chain
+  \begin{scope}[yshift=-1.6cm]
+    \draw (-0.8,0) -- (0.2,0);
+    \draw (0.2,-0.18) rectangle (1.0,0.18); \node[font=\tiny] at (0.6,0) {$1/h_{\text{o}}S$};
+    \draw (1.0,0) -- (1.4,0);
+    \draw (1.4,-0.18) rectangle (2.4,0.18); \node[font=\tiny] at (1.9,0) {$e_1/\lambda_1 S$};
+    \draw (2.4,0) -- (2.8,0);
+    \draw (2.8,-0.18) rectangle (3.8,0.18); \node[font=\tiny] at (3.3,0) {$e_2/\lambda_2 S$};
+    \draw (3.8,0) -- (4.2,0);
+    \draw (4.2,-0.18) rectangle (5.0,0.18); \node[font=\tiny] at (4.6,0) {$1/h_{\text{i}}S$};
+    \draw (5.0,0) -- (5.6,0);
+    \fill (-0.8,0) circle (1.5pt) node[above, font=\scriptsize] {$T_{\text{o}}$};
+    \fill (5.6,0) circle (1.5pt) node[above, font=\scriptsize] {$T_{\text{i}}$};
+  \end{scope}
+  % profile
+  \begin{scope}[xshift=7.2cm]
+    \draw[->] (0,0) -- (3.4,0) node[right, font=\scriptsize] {$x$};
+    \draw[->] (0,0) -- (0,2.8) node[above, font=\scriptsize] {$T$};
+    \draw[omDef, thick] (0,0.4) -- (0.3,0.6) -- (1.6,0.9) -- (2.6,2.4) -- (2.8,2.45) -- (3.2,2.6);
+    \draw[dashed] (0.3,0) -- (0.3,0.6); \draw[dashed] (1.6,0) -- (1.6,0.9); \draw[dashed] (2.6,0) -- (2.6,2.4); \draw[dashed] (2.8,0) -- (2.8,2.45);
+    \node[font=\scriptsize, below] at (0.95,0) {bata};
+    \node[font=\scriptsize, below] at (2.1,0) {wol};
+    \node[font=\scriptsize, left] at (0,0.4) {$T_{\text{o}}$};
+    \node[font=\scriptsize, right] at (3.2,2.6) {$T_{\text{i}}$};
+  \end{scope}
+\end{tikzpicture}
+
+{\small Sebuah dinding majemuk dan rangkaian termalnya: selaput, bata, wol,
+selaput yang terseri. Kanan: profil suhunya --- hampir seluruh penurunannya
+jatuh pada lapisan berhambatan terbesar, yaitu wolnya, meskipun ia
+yang paling tipis.}
+\end{omfigure}
+
+\begin{example}[Sebuah dinding dan sebuah jendela]\label{ex:b2:heat-conduction:wall}
+Tiap meter persegi: bata \qty{20}{cm} pada \qty{0.8}{W/m/K}, $R =
+\qty{0.25}{m^2.K/W}$; kedua selaputnya, $1/8 + 1/25 = \qty{0.165}{m^2.K/W}$:
+totalnya $0.415$, yakni $U = 1/R = \qty{2.4}{W/m^2/K}$ dan, bagi beda \qty{20}{K},
+\qty{48}{W/m^2}. Tambahkanlah \qty{10}{cm} wol kaca, $R =
+\qty{2.5}{m^2.K/W}$: totalnya menjadi $2.9$, $U = \qty{0.34}{W/m^2/K}$ ---
+tujuh kali lebih kecil. Sebuah kaca tunggal, \qty{4}{mm} pada \qty{1}{W/m/K},
+seluruhnya selaput: $R = 0.004 + 0.165$, $U \approx \qty{6}{W/m^2/K}$; sebuah
+lapisan udara diam \qty{12}{mm} di antara dua kaca menambahkan $0.012/0.026 =
+\qty{0.46}{m^2.K/W}$ lalu membagi ruginya dengan lebih dari tiga.
+\end{example}
+
+\begin{definition}[Bilangan Biot]\label{def:b2:heat-conduction:biot}
+Bagi sebuah zat padat berukuran $L$ yang bertukar dengan sebuah fluida, \emph{bilangan
+Biot}\index{bilangan Biot}
+\[
+\mathrm{Bi} = \frac{hL}{\lambda} = \frac{\text{hambatan dalam } L/\lambda S}{\text{hambatan selaput } 1/hS}
+\]
+membandingkan keduanya. Jika $\mathrm{Bi} \ll 1$ zat padatnya seragam dalam
+suhu pada setiap saat lalu mendingin sebagai satu kesatuan, secara eksponensial dengan
+tetapan waktu $\tau = \rho c V/hS$; jika $\mathrm{Bi} \gg 1$
+permukaannya berada pada suhu fluidanya dan bagian dalamnya menghantar dengan
+laju $L^2/a$-nya sendiri.
+\end{definition}
+
+\section{Pemanasan berkala: gelombang termal}
+
+\begin{proposition}[Gelombang termal dalam sebuah setengah ruang]\label{prop:b2:heat-conduction:wave}
+Jika permukaan $x = 0$ sebuah setengah ruang ditahan pada $T(0,t) = T_0 +
+\theta_0\cos\omega t$, suhu di dalamnya adalah, dalam rezim
+mapan,
+\[
+T(x,t) = T_0 + \theta_0\,\eu^{-x/\delta}\cos\Big(\omega t - \frac{x}{\delta}\Big),
+\qquad \delta = \sqrt{\frac{2a}{\omega}} :
+\]
+sebuah gelombang yang merambat ke dalam dengan kelajuan $\omega\delta =
+\sqrt{2a\omega}$ dan teredam sepanjang satu \emph{kedalaman tembus} $\delta$
+tiap radian fase --- sebesar $\eu^{-2\pi} = 2 \times 10^{-3}$ tiap
+panjang gelombang. Ayunan cepat menembus lebih sedikit daripada yang lambat.
+\end{proposition}
+
+\begin{proof}
+Carilah $\underline T = \theta_0\eu^{\iu(\omega t - \underline k x)}$:
+$\iu\omega = -a\underline k^2$, jadi $\underline k^2 = -\iu\omega/a$,
+$\underline k = (1 - \iu)\sqrt{\omega/2a} = (1 - \iu)/\delta$ (yaitu akar
+yang meluruh bagi $x > 0$). Ambillah bagian nyatanya.
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}
+  \begin{axis}[omaxis, width=9cm, height=4.8cm, xmin=0, xmax=4.6, ymin=-1.1, ymax=1.1,
+    xlabel={$x/\delta$}, ylabel={$(T - T_0)/\theta_0$}, xtick={1,2,3,4}, ytick={-1,1}, clip=false,
+    axis x line=middle, axis y line=left,
+    legend style={font=\scriptsize, at={(0.98,0.04)}, anchor=south east, draw=none, fill=none}]
+    \addplot[omDef, thick, domain=0:4.6, samples=120] {exp(-x)*cos(deg(-x))};
+    \addlegendentry{$\omega t = 0$}
+    \addplot[omThm, thick, domain=0:4.6, samples=120] {exp(-x)*cos(deg(pi/2-x))};
+    \addlegendentry{$\omega t = \pi/2$}
+    \addplot[omExo, thick, domain=0:4.6, samples=120] {exp(-x)*cos(deg(pi-x))};
+    \addlegendentry{$\omega t = \pi$}
+    \addplot[gray, dashed, domain=0:4.6, samples=60] {exp(-x)};
+    \addplot[gray, dashed, domain=0:4.6, samples=60] {-exp(-x)};
+  \end{axis}
+\end{tikzpicture}
+
+{\small Gelombang termalnya pada tiga saat: ayunan permukaannya
+menembus sebagai gelombang teredam, amplitudonya turun sebagai $\eu^{-x/\delta}$
+(garis putus) dan fasenya tertinggal sebesar $x/\delta$ --- pada $x = \pi\delta$
+suhunya berlawanan dengan suhu permukaannya.}
+\end{omfigure}
+
+\begin{example}[Tanah, ruang bawah tanah dan anggur]\label{ex:b2:heat-conduction:soil}
+Tanah, $a \approx \qty{5e-7}{m^2/s}$. Daur harian, $\omega = 2\pi/\qty{86400}{s}$:
+$\delta = \qty{12}{cm}$ --- setengah meter ke bawah hari itu lenyap. Daur tahunan:
+$\delta = \qty{2.2}{m}$; pada kedalaman itu ayunan \qty{10}{K} musim panas--dingin
+turun menjadi \qty{3.7}{K} dan tertinggal satu radian, dua bulan: ruang bawah tanahnya
+paling dingin pada bulan Maret dan paling hangat pada bulan September, dan pada \qty{5}{m} ia
+\qty{1}{K} dari tetap --- yaitu ruang bawah tanah yang menyimpan anggur. Matematika
+yang sama memberi \omterm{def:b2:dispersion-wave-packets:complex}{kedalaman kulit} elektromagnetisme
+(\cref{ch:b2:waves-in-media}): persamaan yang sama, $\sqrt{2/(\text{difusivitas}
+\times\omega)}$ yang sama.
+\end{example}
+
+\section{Sirip}
+
+\begin{proposition}[Sirip pendingin]\label{prop:b2:heat-conduction:fin}
+Sebuah batang atau keping tipis (berpenampang $S$, berkeliling $p$, berkonduktivitas $\lambda$)
+yang terpasang di $x = 0$ pada sebuah dinding bersuhu $T_0$, dalam sebuah fluida bersuhu $T_{\text{f}}$ dengan
+koefisien $h$, mempunyai suhu lebihnya $\theta = T - T_{\text{f}}$
+yang menuruti
+\[
+\frac{\dd^2\theta}{\dd x^2} = m^2\theta, \qquad m = \sqrt{\frac{hp}{\lambda S}} ;
+\]
+bagi sebuah sirip panjang, $\theta = \theta_0\eu^{-mx}$ dan siripnya melesapkan $\Phi =
+\sqrt{hp\lambda S}\,\theta_0$ --- sebanyak sebuah permukaan telanjang sepanjang $\sqrt{\lambda
+S/hp} = 1/m$, dengan suhu yang telah turun menjadi $\theta_0/\eu$ di
+$x = 1/m$. Bagi sebuah sirip sepanjang berhingga $L$ (ujungnya adiabatik), $\theta =
+\theta_0\cosh m(L-x)/\cosh mL$ dan \emph{efisiensi}\index{efisiensi
+sirip}-nya --- yaitu fluksnya dibagi fluks sebuah sirip isotermal pada $\theta_0$ ---
+adalah $\eta = \tanh(mL)/mL$.
+\end{proposition}
+
+\begin{proof}
+Imbangan tegar irisan $[x, x + \dd x]$: yang terhantarkan masuk,
+$-\lambda S\theta'(x)$; keluar, $-\lambda S\theta'(x + \dd x)$; yang hilang ke
+fluidanya, $hp\,\theta\,\dd x$: $\lambda S\theta'' = hp\theta$. Fluks di
+alasnya adalah $-\lambda S\theta'(0)$: $\lambda Sm\theta_0$ bagi sirip panjangnya,
+$\lambda Sm\theta_0\tanh mL$ bagi yang berhingga, untuk dibandingkan dengan
+$hpL\theta_0$. \omterm{def:b2:heat-conduction:biot}{Bilangan Biot} menyeberangi tebal siripnya, $ht/\lambda$, harus
+kecil bagi garapan satu dimensinya.
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}
+  \begin{axis}[omaxis, width=6.4cm, height=4.4cm, xmin=0, xmax=3.2, ymin=0, ymax=1.12,
+    xlabel={$mx$}, ylabel={$\theta/\theta_0$}, xtick={1,2,3}, ytick={1}, clip=false,
+    legend style={font=\scriptsize, at={(0.98,0.98)}, anchor=north east, draw=none, fill=none}]
+    \addplot[omDef, thick, domain=0:3.2, samples=60] {exp(-x)};
+    \addlegendentry{sirip panjang}
+    \addplot[omExo, thick, domain=0:1.2, samples=60] {cosh(1.2-x)/cosh(1.2)};
+    \addlegendentry{$mL = 1.2$}
+    \addplot[omThm, thick, domain=0:0.5, samples=30] {cosh(0.5-x)/cosh(0.5)};
+    \addlegendentry{$mL = 0.5$}
+  \end{axis}
+  \begin{scope}[xshift=7.2cm, yshift=0.3cm, scale=0.8, >=stealth]
+    \fill[gray!25] (0,0) rectangle (0.5,3.2);
+    \fill[omDef!20] (0.5,1.4) rectangle (4.2,1.8);
+    \draw (0.5,1.4) rectangle (4.2,1.8);
+    \node[font=\scriptsize, rotate=90] at (0.25,1.6) {dinding $T_0$};
+    \draw[->, omThm, thick] (0.6,1.6) -- (1.6,1.6) node[right, font=\scriptsize] {$-\lambda S\theta'$};
+    \foreach \x in {1.2,2.0,2.8,3.6}{
+      \draw[->, omExo] (\x,1.85) -- (\x,2.4);
+      \draw[->, omExo] (\x,1.35) -- (\x,0.8);
+    }
+    \node[font=\scriptsize, omExo] at (2.4,2.7) {$hp\,\theta\,\dd x$};
+    \node[font=\scriptsize] at (2.4,0.45) {fluida $T_{\text{f}}$};
+  \end{scope}
+\end{tikzpicture}
+
+{\small Kiri: suhu sepanjang sebuah sirip, bagi sirip panjang dan dua yang
+berhingga (ujung adiabatik) --- di luar $mx \approx 2$ sebuah sirip menambahkan sedikit. Kanan:
+imbangan sebuah irisan: hantaran sepanjangnya, konveksi keluar menembus
+kelilingnya.}
+\end{omfigure}
+
+\begin{example}[Sebuah pelesap kalor]\label{ex:b2:heat-conduction:sink}
+Sirip aluminium setebal \qty{1}{mm} ($p/S \approx 2/t = \qty{2000}{m^{-1}}$),
+setinggi \qty{30}{mm}, dalam udara paksa $h = \qty{50}{W/m^2/K}$: $m =
+\sqrt{2h/\lambda t} = \qty{20}{m^{-1}}$, $mL = 0.6$, $\eta = 0.89$ --- siripnya
+bekerja pada $89\%$ luasnya. Tiga puluh siripnya, selebar \qty{60}{mm},
+menawarkan \qty{0.11}{m^2} yang bujur sangkar telanjang \qty{60}{mm}-nya menawarkan
+\qty{0.0036}{m^2}: sebuah hambatan $1/\eta hA = \qty{0.2}{K/W}$ alih-alih
+\qty{5.6}{K/W}; \qty{100}{W} menaikkan alasnya sebesar \qty{20}{K} alih-alih
+\qty{560}{K}. Sirip yang lebih panjang memperoleh sedikit ($\tanh$ menjenuh), yang lebih tipis
+kehilangan efisiensi: $mL \approx 1$ adalah kompromi sang insinyur.
+\end{example}
+
+\section{Entropi yang diciptakan hantaran}
+
+\begin{proposition}[Produksi entropi]\label{prop:b2:heat-conduction:entropy}
+Sebuah fluks $\Phi$ yang dihantarkan dari sebuah benda bersuhu $T_{\text{h}}$ ke sebuah benda bersuhu
+$T_{\text{c}} < T_{\text{h}}$ menembus sebuah dinding tegar menciptakan entropi dengan
+laju
+\[
+\dot S_{\text{c}} = \Phi\Big(\frac{1}{T_{\text{c}}} - \frac{1}{T_{\text{h}}}\Big) > 0 ;
+\]
+secara setempat, hantarannya menciptakan $\sigma_s = \lambda\,(\vect{\operatorname{grad}}\,T)^2/T^2
+\ge 0$ tiap satuan volume dan waktu --- nol hanya di tempat suhunya
+seragam. Hantaran kalor bersifat takterbalikkan: energi yang sama, yang diserahkan pada
+suhu yang lebih rendah, dapat melakukan kerja yang lebih sedikit.
+\end{proposition}
+
+\begin{proof}
+Keadaan dindingnya tak berubah, jadi entropinya tetap: benda yang
+panas kehilangan $\Phi/T_{\text{h}}$ tiap satuan waktu, yang dingin memperoleh
+$\Phi/T_{\text{c}}$; selisihnya diciptakan. Secara setempat, imbangan
+entropinya $\partial_t(\rho s) + \operatorname{div}(\vect{j}_Q/T) = \sigma_s$
+dengan $\rho T\partial_t s = -\operatorname{div}\vect{j}_Q$ memberi $\sigma_s =
+\vect{j}_Q\cdot\vect{\operatorname{grad}}(1/T) = -\vect{j}_Q\cdot
+\vect{\operatorname{grad}}\,T/T^2 = \lambda(\vect{\operatorname{grad}}\,T)^2/T^2$.
+\end{proof}
+
+\begin{method}[Taksiran hantaran]\label{meth:b2:heat-conduction:method}
+(1) Tegar: bangunlah rangkaian termalnya --- lempeng $e/\lambda S$, selaput
+$1/hS$, selubung $\ln(r_2/r_1)/2\pi\lambda\ell$; terseri dan terparalel.
+(2) Peralihan: $\mathrm{Bi} = hL/\lambda$; jika kecil, $\tau = \rho cV/hS$; jika
+besar, $t \sim L^2/a$. (3) Berkala: $\delta = \sqrt{2a/\omega}$, peredamannya
+$\eu^{-x/\delta}$, tundanya $x/\delta$. (4) Sumber: $p$ tiap satuan volume, profil
+parabolik. (5) Sirip: $m = \sqrt{hp/\lambda S}$, $\eta = \tanh(mL)/mL$. (6)
+Entropi: $\Phi(1/T_{\text{c}} - 1/T_{\text{h}})$.
+\end{method}
+
+\section{Latihan}
+
+\begin{exercise}[$\star$]\label{exo:b2:heat-conduction:1}
+Sebuah dinding bata setebal \qty{20}{cm} ($\lambda = \qty{0.8}{W/m/K}$), \qty{100}{m^2},
+antara \qty{20}{\celsius} di dalam dan \qty{0}{\celsius} di luar
+(permukaannya pada suhu ini): tentukanlah rapat fluksnya, fluks totalnya; dan dengan
+\qty{10}{cm} wol kaca (\qty{0.04}{W/m/K}) ditambahkan.
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b2:heat-conduction:2}
+Difusivitas: tembaga ($\lambda = 400$, $\rho = 8900$, $c = \qty{385}{J/kg/K}$),
+beton ($1.5$, $2300$, $900$), kayu ($0.15$, $600$, $2500$). Tentukanlah waktu bagi kalornya
+untuk menyeberangi \qty{1}{cm} dan \qty{20}{cm} masing-masingnya; dan kerak \qty{30}{km}
+Bumi.
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b2:heat-conduction:3}
+Kaca tunggal (\qty{4}{mm}, $\lambda = \qty{1}{W/m/K}$) dengan selaput $h_{\text{i}}
+= 8$, $h_{\text{o}} = \qty{25}{W/m^2/K}$; kaca ganda dengan sebuah lapisan
+udara diam \qty{12}{mm} (\qty{0.026}{W/m/K}): tentukanlah nilai $U$ dan fluksnya bagi
+\qty{20}{K}. Mengapa kaca ganda yang sungguhan sekitar dua kali lebih buruk daripada taksiran
+ini, dan apa yang dilakukan argon serta lapisan beremisivitas rendah?
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b2:heat-conduction:4}
+Memasak: $a = \qty{1.4e-7}{m^2/s}$ bagi daging. Tentukanlah waktu bagi pusat sebuah
+bistik \qty{3}{cm} untuk merasakan pancinya; bagi sepotong panggang \qty{12}{cm}. Seekor kalkun
+yang dua kali lebih berat: berapa lama lagi (dimensinya berskala sebagai akar pangkat tiga
+massanya)?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b2:heat-conduction:5}
+\emph{Sumber dalam.} Sebuah silinder berjari-jari $R$ melepaskan $p$ tiap satuan
+volume; permukaannya pada $T_{\text{s}}$. (a) Tunjukkanlah bahwa $T(r) = T_{\text{s}} +
+p(R^2 - r^2)/4\lambda$. (b) Kawat tembaga, $R = \qty{1}{mm}$, $j =
+\qty{1e7}{A/m^2}$, $\gamma = \qty{6e7}{S/m}$: tentukanlah $p$ dan beda pusat--permukaannya.
+(c) Batang bahan bakar nuklir, $R = \qty{5}{mm}$, $p = \qty{3e8}{W/m^3}$,
+$\lambda = \qty{3}{W/m/K}$: pertanyaan yang sama. (d) Ulaslah.
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b2:heat-conduction:6}
+\emph{Tanahnya.} (a) Turunkanlah $\delta = \sqrt{2a/\omega}$. (b) Tanah,
+$a = \qty{5e-7}{m^2/s}$: tentukanlah kedalaman tembus harian dan tahunannya. (c) Kedalaman
+yang padanya amplitudo tahunannya sepersepuluh amplitudo permukaannya; tunda fasenya
+di sana. (d) Sebuah pipa air tak boleh membeku di tempat suhu permukaan
+musim dinginnya turun sampai \qty{-10}{\celsius} di sekitar rerata
+\qty{10}{\celsius}: berapa kedalaman minimumnya (gelombang tahunan).
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b2:heat-conduction:7}
+\emph{Biot.} (a) Bola tembaga, berjari-jari \qty{1}{cm}, dalam udara ($h =
+\qty{10}{W/m^2/K}$): tentukanlah \omterm{def:b2:heat-conduction:biot}{bilangan Biotnya}, tetapan waktu pendinginannya. (b) Sebuah
+kentang ($\lambda = \qty{0.5}{W/m/K}$, $a = \qty{1.4e-7}{m^2/s}$, berjari-jari
+\qty{3}{cm}) dalam sebuah oven dengan $h = \qty{20}{W/m^2/K}$: berapa \omterm{def:b2:heat-conduction:biot}{bilangan Biotnya}; waktu
+mana yang mengatur pemasakannya? (c) Mengapa manik sebuah termokopel dibuat kecil?
+(d) Mengapa secangkir kopi mendingin lebih cepat ketika diaduk atau ditiup ---
+hambatan mana yang berubah?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b2:heat-conduction:8}
+\emph{Sebuah sirip.} (a) Turunkanlah $\theta'' = m^2\theta$ dan penyelesaian sirip panjangnya.
+(b) Sirip aluminium, setebal \qty{1}{mm}, setinggi \qty{30}{mm}, konveksi
+alami $h = \qty{20}{W/m^2/K}$: tentukanlah $m$, $mL$, efisiensinya. (c) Sebesar faktor
+berapa siripnya melipatgandakan luas pertukaran tapaknya, dan
+fluksnya? (d) Mengapa sirip yang sangat panjang atau sangat tipis merupakan pemborosan logam?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b2:heat-conduction:9}
+\emph{Pipa.} (a) Turunkanlah hambatan sebuah selubung silinder. (b) Sebuah
+pipa uap, berjari-jari luar \qty{5}{cm} pada \qty{150}{\celsius}, yang dibungkus
+\qty{5}{cm} wol kaca, udara pada \qty{20}{\celsius} dengan $h =
+\qty{10}{W/m^2/K}$ di luarnya: tentukanlah ruginya tiap meter, dibandingkan dengan pipa telanjangnya.
+(c) Tunjukkanlah bahwa hambatan total penyekat ditambah selaputnya mempunyai sebuah
+minimum pada \emph{jari-jari kritis} $r_{\text{c}} = \lambda/h$. (d) Bagi sebuah
+kawat listrik berjari-jari \qty{1}{mm} berselubung plastik ($\lambda =
+\qty{0.2}{W/m/K}$), mendinginkan atau menghangatkan tembaganyakah selubungnya?
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b2:heat-conduction:10}
+\emph{Entropi.} Dinding \cref{exo:b2:heat-conduction:1} (yang telanjang)
+antara \qty{293}{K} dan \qty{273}{K}. (a) Tentukanlah entropi yang tercipta tiap sekon.
+(b) Hitunglah $\int\sigma_s\,\dd V$ dengan profil linearnya lalu periksalah bahwa ia
+selaras. (c) Entropi yang tercipta setelah disekat. (d) Kerja yang dapat
+diambil sebuah mesin terbalikkan dari \qty{8}{kW} antara
+suhu ini, dan apa yang tersisa darinya sesudah dindingnya.
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b2:heat-conduction:11}
+\emph{Mengapa logam terasa dingin.} (a) Bagi gelombang termalnya, hitunglah
+fluks permukaannya $j_Q(0,t)$ lalu tunjukkanlah bahwa ia mendahului suhu permukaannya sebesar
+$\pi/4$, dengan amplitudo $\sqrt{\lambda\rho c\,\omega}\,\theta_0$. Besaran
+$b = \sqrt{\lambda\rho c}$ adalah \emph{efusivitas}-nya. (b) Dua
+setengah ruang bersuhu $T_1$ dan $T_2$ disentuhkan: dengan menerima bahwa
+masing-masingnya lalu menuruti sebuah profil erfc dengan suhu permukaan bersamanya
+$T_{\text{c}}$, dan dengan menuliskan kesinambungan fluksnya di sentuhannya,
+tunjukkanlah bahwa $T_{\text{c}} = (b_1T_1 + b_2T_2)/(b_1 + b_2)$. (c) Kulit
+($b \approx \qty{1000}{J/m^2/K/s^{1/2}}$, \qty{33}{\celsius}) yang menyentuh
+tembaga ($b = 37000$) atau kayu ($b = 400$) pada \qty{20}{\celsius}: berapa suhu
+sentuhnya. (d) Mengapa sebuah lantai ubin terasa lebih dingin daripada sebuah karpet pada
+suhu yang sama, dan mengapa rasanya hanya sementara?
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b2:heat-conduction:12}
+\emph{Mendinginkan sebuah lempeng.} Sebuah lempeng $-L < x < L$ pada $T_0$ dicelupkan pada $t =
+0$ ke dalam sebuah rendaman bersuhu $T_{\text{f}}$ dengan $h \to \infty$. (a) Tunjukkanlah bahwa $\theta =
+T - T_{\text{f}}$ menerima penyelesaian $\cos(k_nx)\,\eu^{-ak_n^2t}$ dengan $k_n
+= (2n+1)\pi/2L$. (b) Uraikanlah syarat awalnya dalam sebuah deret Fourier
+pada ragam ini lalu tuliskanlah penyelesaian penuhnya. (c) Sesudah saat-saat
+pertamanya, ragam mana yang bertahan, dan berapa tetapan waktunya? (d) Berapa waktu
+bagi pusat sebuah bistik \qty{3}{cm} ($a = \qty{1.4e-7}{m^2/s}$) untuk berada
+dalam $1\%$ dari rendamannya.
+\end{exercise}
+
+\section{Soal: Menyekat sebuah rumah, mendinginkan sebuah prosesor}
+
+\begin{problem}[{Soal akhir pekan --- hantaran pada skala sebuah
+bangunan dan sebuah cip}]\label{pb:b2:heat-conduction:1}
+Data: bata $\lambda = \qty{0.8}{W/m/K}$, $\rho = \qty{1800}{kg/m^3}$, $c =
+\qty{840}{J/kg/K}$; wol kaca \qty{0.04}{W/m/K}; kaca \qty{1}{W/m/K}; udara
+diam \qty{0.026}{W/m/K}; aluminium \qty{240}{W/m/K}, $\rho = \qty{2700}{kg/m^3}$,
+$c = \qty{900}{J/kg/K}$; silikon \qty{150}{W/m/K}; pasta termal
+\qty{5}{W/m/K}; tanah $a = \qty{5e-7}{m^2/s}$, $\lambda = \qty{1}{W/m/K}$;
+selaput $h_{\text{i}} = 8$, $h_{\text{o}} = \qty{25}{W/m^2/K}$.
+
+\textbf{Bagian I --- Rumahnya.}
+Sebuah rumah mempunyai \qty{100}{m^2} dinding (bata \qty{20}{cm}) dan \qty{20}{m^2}
+jendela berkaca tunggal (\qty{4}{mm}); di dalam \qty{20}{\celsius},
+di luar \qty{0}{\celsius}.
+\begin{enumerate}
+  \item Hambatan tiap meter persegi batanya sendiri; rapat fluksnya
+        jika mukanya berada pada kedua suhunya.
+  \item Dengan kedua selaputnya: berapa $R$ dan $U = 1/R$ tiap meter persegi; hal yang sama
+        dengan \qty{10}{cm} wol kaca ditambahkan.
+  \item Berapa $U$ kaca tunggalnya; dan kaca ganda dengan \qty{12}{mm}
+        udara diam.
+  \item Rugi total rumahnya sebelum dan sesudah menyekat dindingnya
+        dan menggandakan jendelanya.
+  \item Sepanjang sebuah musim pemanasan $2500$ derajat-hari (yaitu integral
+        beda suhunya sepanjang musimnya, dalam \unit{K.hari}),
+        berapa energi yang hilang sebelum dan sesudahnya, dalam kilowatt-jam.
+  \item Suhu permukaan dalam dindingnya, telanjang dan tersekat;
+        mengapa dinding yang dingin terasa tak nyaman dan menumbuhkan jamur?
+  \item Waktu difusi menyeberangi batanya; apa yang dilakukannya pada
+        daur siang--malam?
+\end{enumerate}
+
+\textbf{Bagian II --- Tanah di bawah rumahnya.}
+\begin{enumerate}[resume]
+  \item Turunkanlah kedalaman tembus $\delta = \sqrt{2a/\omega}$ sebuah
+        gelombang termal.
+  \item Berapa $\delta$ harian dan tahunannya dalam tanahnya.
+  \item Kedalaman yang padanya ayunan hariannya turun menjadi $1\%$; amplitudo
+        tahunannya pada \qty{2.2}{m} dan pada \qty{5}{m} bagi ayunan permukaan
+        \qty{10}{K}.
+  \item Tunda fasenya pada \qty{2.2}{m}, dalam hari: kapan ruang bawah tanahnya paling dingin?
+  \item Fluks kalor permukaan gelombang tahunannya (amplitudo dan fase);
+        bandingkanlah amplitudonya dengan fluks geotermal \qty{0.06}{W/m^2}.
+  \item \omterm{def:b2:maxwell-equations:operators}{Gradien} geotermalnya \qty{30}{K/km}: periksalah ia terhadap
+        fluksnya dan $\lambda$, lalu jelaskanlah mengapa ia tak tampak dalam
+        musim ruang bawah tanahnya.
+\end{enumerate}
+
+\textbf{Bagian III --- Prosesornya.}
+Sebuah cip melesapkan \qty{100}{W} dalam sebuah keping \qty{1}{cm^2}, setebal \qty{0.5}{mm};
+sebuah lapisan pasta \qty{50}{\micro m} pada \qty{10}{cm^2} mengikatnya
+pada sebuah pelesap kalor aluminium: alasnya \qty{60}{mm} $\times$ \qty{60}{mm} $\times$
+\qty{5}{mm}, tiga puluh sirip selebar \qty{60}{mm}, setinggi \qty{30}{mm}, setebal \qty{1}{mm};
+sebuah kipas memberi $h = \qty{50}{W/m^2/K}$; lingkungannya \qty{25}{\celsius}.
+\begin{enumerate}[resume]
+  \item Rapat fluks menembus kepingnya; hambatan kepingnya.
+  \item Hambatan pastanya; dan jika sebuah celah udara \qty{50}{\micro m}
+        menggantikannya.
+  \item Parameter sirip $m$, $mL$, efisiensinya; periksalah \omterm{def:b2:heat-conduction:biot}{bilangan Biot}
+        menyeberangi tebal siripnya.
+  \item Luas sirip total dan hambatan siripnya; hambatan
+        alasnya (hantaran menembus \qty{5}{mm}); suhu sambungannya.
+  \item Hal yang sama tanpa sirip (bujur sangkar telanjang \qty{60}{mm}): simpulkanlah.
+  \item Kipasnya berhenti ($h = \qty{10}{W/m^2/K}$): berapa suhu sambungannya;
+        apa yang dilakukan prosesornya pada \qty{100}{\celsius}?
+  \item Massa dan kapasitas kalor pelesapnya; tetapan waktunya $RC$;
+        dan tetapan waktu kepingnya sendiri (\qty{0.1}{g}, \qty{700}{J/kg/K}).
+  \item Mengapa pelesap yang baik mempunyai alas tembaga atau pipa kalor?
+\end{enumerate}
+
+\textbf{Bagian IV --- Entropi.}
+\begin{enumerate}[resume]
+  \item Entropi yang tercipta tiap sekon oleh selubung rumah telanjangnya
+        (pertanyaan 4) antara \qty{293}{K} dan \qty{273}{K}; sesudah
+        disekat.
+  \item Entropi yang tercipta oleh \qty{100}{W} cipnya yang beranjak dari
+        sambungannya ke lingkungannya; dan oleh perubahan kerja listrik
+        menjadi kalor dalam kepingnya.
+  \item Tunjukkanlah bahwa bagi sebuah lempeng $\int\sigma_s\,\dd V = \Phi(1/T_{\text{c}} -
+        1/T_{\text{h}})$.
+  \item Ringkaslah dalam lima baris apa yang mengatur sebuah dinding, sebuah sirip, sebuah ruang bawah tanah
+        dan sebuah cip.
+\end{enumerate}
+\end{problem}

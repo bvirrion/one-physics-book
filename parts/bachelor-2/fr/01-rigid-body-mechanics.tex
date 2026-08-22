@@ -1,0 +1,749 @@
+\chapter{Mécanique du solide}\label{ch:b2:rigid-body-mechanics}
+
+Regardez une roue de bicyclette depuis le trottoir~: les rayons proches
+du sol sont presque immobiles et nets, ceux du haut ne sont qu'un flou
+filant à deux fois la vitesse du cycliste. Chaque point de la roue a une
+vitesse différente, et pourtant la roue est un seul objet --- ses points
+gardent leurs distances mutuelles, et cette seule contrainte organise
+tous leurs mouvements en deux vecteurs, une translation et une rotation.
+Le volume de première année traitait le cas particulier d'un solide
+tournant autour d'un axe fixe~; ce chapitre donne la cinématique
+générale d'un solide, son énergie cinétique et son moment cinétique, les
+lois de son mouvement, et la loi qui gouverne toute roue, tout pneu,
+tout frein et toute échelle~: la loi de Coulomb du frottement sec.
+
+\section{Cinématique du solide}
+
+\begin{definition}[Solide]\label{def:b2:rigid-body-mechanics:solid}
+\index{solide}
+Un \emph{solide} (ou corps rigide) est un système de points dont les
+distances mutuelles restent constantes~: $\|\vect{AB}\|$ est indépendant
+du temps pour tout couple $A$, $B$ de ses points. Un référentiel dans
+lequel tout point du solide est au repos est un \emph{référentiel lié au
+solide}.
+\end{definition}
+
+\begin{theorem}[Champ des vitesses d'un solide]\label{thm:b2:rigid-body-mechanics:field}
+\index{vecteur rotation}\index{champ des vitesses (solide)}
+À chaque instant il existe un vecteur $\vect\Omega$, le \emph{\omterm{thm:b2:rigid-body-mechanics:field}{vecteur
+rotation}} du solide (unité \unit{rad/s}), tel que les vitesses de deux
+quelconques de ses points $A$ et $M$ dans un référentiel $\mathcal R$ vérifient
+\[
+\vect v_M = \vect v_A + \vect\Omega\wedge\vect{AM} .
+\]
+$\vect\Omega$ ne dépend pas du choix de $A$~; un vecteur $\vect u$ lié
+au solide évolue selon $\dd\vect u/\dd t = \vect\Omega\wedge\vect u$.
+\end{theorem}
+
+\begin{proof}
+Soit $(\vect e_1, \vect e_2, \vect e_3)$ une base orthonormée liée au
+solide. De $\vect e_i\cdot\vect e_j = \delta_{ij}$, les coefficients
+$a_{ij} = \dot{\vect e}_i\cdot\vect e_j$ vérifient $a_{ij} + a_{ji} = 0$~: la
+matrice de l'application $\vect u \mapsto \dot{\vect u}$ (pour $\vect u$ lié au
+solide, $\vect u = \sum u_i\vect e_i$ avec des $u_i$ constants) est
+antisymétrique, et une matrice antisymétrique $3\times3$ est la matrice de
+$\vect u \mapsto \vect\Omega\wedge\vect u$ avec $\Omega_1 = a_{23}$,
+$\Omega_2 = a_{31}$, $\Omega_3 = a_{12}$. Appliquons-la à $\vect u =
+\vect{AM}$~: $\vect v_M - \vect v_A = \vect\Omega\wedge\vect{AM}$. Si
+$\vect\Omega'$ convenait aussi, $(\vect\Omega - \vect\Omega')\wedge
+\vect{AM} = \vect 0$ pour tout $M$, donc $\vect\Omega' = \vect\Omega$.
+\end{proof}
+
+\begin{remark}[Trois mouvements]\label{rem:b2:rigid-body-mechanics:motions}
+\index{translation}\index{rotation autour d'un axe fixe}
+\emph{Translation}~: $\vect\Omega = \vect 0$, tous les points ont la même
+vitesse (le mouvement n'est pas nécessairement rectiligne~: une nacelle
+de grande roue est en translation sur un cercle). \emph{\omterm{rem:b2:rigid-body-mechanics:motions}{Rotation autour
+d'un axe fixe}} $\Delta$~: les points de $\Delta$ sont au repos,
+$\vect\Omega = \omega\,\vect e_\Delta$, et un point situé à la distance
+$r$ de l'axe décrit un cercle à la vitesse
+$r|\omega|$ --- le cas du volume de première année. Le mouvement général
+combine les deux~: $\vect v_M = \vect v_G + \vect\Omega\wedge\vect{GM}$, une
+translation à la vitesse du centre de masse plus une rotation autour de
+$G$.
+\end{remark}
+
+\begin{definition}[Roulement sans glissement]\label{def:b2:rigid-body-mechanics:rolling}
+\index{roulement sans glissement}\index{vitesse de glissement}
+Deux solides $S_1$ et $S_2$ sont en contact en un point $I$. La
+\emph{vitesse de glissement} de $S_1$ sur $S_2$ est $\vect v_{\text{gl}} = \vect v_{I \in S_1}
+- \vect v_{I \in S_2}$, différence des vitesses des deux
+points matériels qui coïncident en $I$ à cet instant. $S_1$ \emph{roule
+sans glisser} sur $S_2$ lorsque $\vect v_{\text{gl}} = \vect 0$. Pour une
+roue de rayon $R$ qui roule sans glisser sur un sol fixe, de
+vitesse du centre $v_G$ et de vitesse angulaire $\omega$, la condition s'écrit
+$v_G = R\omega$ (avec des signes tels qu'une roue qui roule vers la droite
+tourne dans le sens horaire).
+\end{definition}
+
+\begin{proof}
+Appliquons le \cref{thm:b2:rigid-body-mechanics:field} à la roue entre $G$
+et le point de contact $I$~: $\vect v_{I\in S_1} = \vect v_G + \vect\Omega
+\wedge\vect{GI}$~; avec $\vect v_G = v_G\vect e_x$, $\vect\Omega = -\omega
+\vect e_z$ et $\vect{GI} = -R\vect e_y$, cela vaut $(v_G - R\omega)\vect e_x$,
+qui doit s'annuler.
+\end{proof}
+
+\begin{example}[Champ des vitesses d'une roue qui roule]\label{ex:b2:rigid-body-mechanics:wheel}
+Pour la roue qui roule, $\vect v_M = \vect\Omega\wedge\vect{IM}$~: à chaque
+instant la roue \emph{tourne autour de son point de contact}. Le point de
+contact est au repos, le centre avance à $v = R\omega$, le sommet à $2v$, et
+un point de la jante à la hauteur $h$ va à $\omega\sqrt{2Rh}$,
+perpendiculairement à $\vect{IM}$. Une valve décrit une cycloïde~; un caillou
+projeté par la bande de roulement part à la vitesse du point de la jante, jusqu'à $2v$
+--- d'où l'utilité des bavettes d'un camion.
+\end{example}
+
+\begin{omfigure}
+\includegraphics[width=0.58\linewidth]{images/book4/ai/b4-01-bicycle-wheel-blur.png}
+
+{\small Une roue saisie à obturateur lent~: les rayons proches du sol, presque au repos, restent nets~; ceux du haut, qui vont à deux fois la vitesse de la bicyclette, sont flous.}
+\end{omfigure}
+
+
+\begin{omfigure}
+\begin{tikzpicture}[font=\small, x=1cm, y=1cm, >=Stealth]
+  \begin{scope}
+    \draw[thick] (-2.6,0) -- (2.6,0);
+    \draw[omDef, thick] (0,1.5) circle (1.5);
+    \fill (0,1.5) circle (1.5pt) node[below left, font=\footnotesize] {$G$};
+    \fill (0,0) circle (1.5pt) node[below, font=\footnotesize] {$I$};
+    \draw[omThm, very thick, ->] (0,1.5) -- (1.2,1.5) node[above, font=\footnotesize] {$\vect v_G$};
+    \draw[omThm, very thick, ->] (0,3.0) -- (2.4,3.0) node[pos=0.35, above, font=\footnotesize] {$2\vect v_G$};
+    \draw[omThm, very thick, ->] (1.5,1.5) -- (2.7,0.3) node[right, font=\footnotesize] {$\sqrt2\,v_G$};
+    \draw[omThm, very thick, ->] (-1.5,1.5) -- (-0.3,2.7) node[above left, font=\footnotesize] {$\sqrt2\,v_G$};
+    \draw[omThm, thick, ->] (1.06,0.44) -- (1.41,-0.41);
+    \draw[omThm, thick, ->] (-1.06,0.44) -- (-0.71,1.29);
+    \node[omThm, font=\footnotesize] at (0.3,0.35) {$\vect v_I = \vect 0$};
+    \draw[omProp, ->] (-0.5,2.1) arc[start angle=130, end angle=50, radius=0.75] node[midway, above, font=\footnotesize] {$\omega$};
+  \end{scope}
+  \begin{scope}[xshift=7.6cm]
+    \draw[thick] (-2.6,0) -- (2.6,0);
+    \draw[omDef, thick] (0,1.5) circle (1.5);
+    \fill (0,0) circle (1.5pt) node[below, font=\footnotesize] {$I$};
+    \fill (0,1.5) circle (1.5pt);
+    \draw[omThm, ->] (0,1.5) -- ($(0,1.5)!0.45!90:(0,0)$);
+    \foreach \a in {30,60,...,330} {
+      \coordinate (M) at ({1.5*cos(\a)},{1.5+1.5*sin(\a)});
+      \draw[omThm, ->] (M) -- ($(M)!0.45!90:(0,0)$);
+    }
+    \draw[dashed, omExo] (0,0) -- (1.3,2.25);
+    \fill (1.3,2.25) circle (1.2pt) node[right, font=\footnotesize] {$M$};
+    \node[font=\footnotesize] at (0,-0.8) {$\vect v_M = \vect\Omega\wedge\vect{IM}$};
+    \node[font=\footnotesize, align=center] at (0,3.6) {rotation instantanée\\autour du point de contact};
+  \end{scope}
+\end{tikzpicture}
+
+{\small Une roue qui roule sans glisser. À gauche~: les vitesses de
+quelques points --- nulle au point de contact $I$, $v_G = R\omega$ au centre,
+$2v_G$ au sommet. À droite~: chaque vitesse est perpendiculaire au segment
+joignant le point à $I$ et proportionnelle à sa longueur~: à chaque
+instant la roue tourne autour de son point de contact.}
+\end{omfigure}
+
+\section{Grandeurs cinétiques d'un solide}
+
+\begin{proposition}[Quantité de mouvement, moment cinétique, énergie cinétique]\label{prop:b2:rigid-body-mechanics:kinetic}
+\index{moment d'inertie}\index{moment cinétique (solide)}\index{énergie cinétique (solide)}
+Pour un solide de masse $M$, de centre de masse $G$, dans un référentiel $\mathcal R$~:
+\begin{itemize}
+  \item sa quantité de mouvement vaut $\vect p = M\vect v_G$~;
+  \item s'il tourne autour d'un axe $\Delta$ (fixe dans $\mathcal R$, ou
+        passant par $G$ et de direction fixe) à la vitesse angulaire
+        $\omega$, son moment cinétique \emph{selon} cet axe vaut
+        $L_\Delta = J_\Delta\,\omega$, où
+        \[
+        J_\Delta = \sum_i m_i r_i^2 = \int r^2\,\dd m
+        \]
+        est son \emph{\omterm{prop:b2:rigid-body-mechanics:kinetic}{moment d'inertie}} par rapport à $\Delta$ ($r$ étant la distance à
+        l'axe~; unité \unit{kg.m^2})~;
+  \item son énergie cinétique vaut (König) $E_k = \tfrac12Mv_G^2 +
+        E_k^*$, où l'énergie cinétique dans le référentiel barycentrique est
+        $E_k^* = \tfrac12J_{G}\omega^2$ pour une rotation à $\omega$ autour
+        d'un axe passant par $G$ --- et $E_k = \tfrac12J_\Delta\omega^2$ pour une
+        \omterm{rem:b2:rigid-body-mechanics:motions}{rotation autour d'un axe fixe} $\Delta$.
+\end{itemize}
+\end{proposition}
+
+\begin{proof}
+Les théorèmes de la quantité de mouvement et de König ont été démontrés
+dans le volume de première année pour un système quelconque. Pour la
+rotation autour de $\Delta$ passant par $O$, un point situé à la
+distance $r_i$ de l'axe a la vitesse $r_i\omega$ sur un cercle autour de
+l'axe~; son moment cinétique en $O$ projeté sur $\vect e_\Delta$ vaut
+$m_ir_i^2\omega$ (les autres composantes, qui se compensent pour un solide
+symétrique, ne servent pas ici)~; on somme. Énergie cinétique~: $\sum\tfrac12m_ir_i^2
+\omega^2$.
+\end{proof}
+
+\begin{remark}[Ce qui est admis]\label{rem:b2:rigid-body-mechanics:tensor}
+Pour une rotation $\vect\Omega$ quelconque, le vecteur complet $\vect L_G$ n'est
+pas parallèle à $\vect\Omega$ en général~: $\vect L_G = \mathbf J\,\vect\Omega$
+où $\mathbf J$ est le \emph{tenseur d'inertie}, matrice symétrique dont les
+vecteurs propres sont les axes principaux. Tous les solides de ce chapitre
+tournent autour d'un axe fixe ou d'un axe de symétrie passant par $G$, pour
+lesquels $\vect L = J\vect\Omega$ exactement~; le cas général relève du
+volume de troisième année.
+\end{remark}
+
+\begin{proposition}[Moments d'inertie]\label{prop:b2:rigid-body-mechanics:inertia}
+\index{théorème de Huygens}\index{théorème des axes parallèles}
+Pour des solides homogènes de masse $M$, par rapport à un axe passant par $G$~: tige
+mince de longueur $\ell$ (axe perpendiculaire), $J = \tfrac1{12}M\ell^2$~; cerceau
+mince ou cylindre creux de rayon $R$ (son axe), $J = MR^2$~; disque ou cylindre
+plein, $J = \tfrac12MR^2$~; boule pleine, $J = \tfrac25MR^2$~; sphère
+creuse, $J = \tfrac23MR^2$. \emph{Théorème de Huygens} (axes parallèles)~: par rapport à
+un axe $\Delta$ parallèle à un axe $\Delta_G$ passant par $G$ à la distance
+$d$,
+\[
+J_\Delta = J_{\Delta_G} + Md^2 .
+\]
+\end{proposition}
+
+\begin{proof}
+Tige~: $\int_{-\ell/2}^{\ell/2}x^2\,(M/\ell)\dd x = M\ell^2/12$. Disque~: anneaux de
+masse $(2M/R^2)r\,\dd r$, $\int_0^R r^2(2M/R^2)r\,\dd r = MR^2/2$. Boule~: par
+symétrie $J = \tfrac23\int r^2\dd m$ ($r$ étant la distance au centre,
+puisque $x^2 + y^2 = \tfrac23(x^2 + y^2 + z^2)$ en moyenne sur les trois
+axes) et $\int r^2\dd m = \int_0^R r^2(3M/R^3)r^2\dd r = \tfrac35MR^2$.
+Huygens~: avec $\vect r_i$ le vecteur allant de $\Delta$ à $m_i$ perpendiculairement
+à l'axe et $\vect r_i = \vect d + \vect r_i^*$, $\sum m_ir_i^2 = Md^2
++ 2\vect d\cdot\sum m_i\vect r_i^* + \sum m_ir_i^{*2}$, et la somme du milieu
+s'annule par définition de $G$.
+\end{proof}
+
+\begin{example}[Un volant d'inertie]\label{ex:b2:rigid-body-mechanics:flywheel}
+Un disque d'acier de \qty{50}{kg} et de rayon \qty{30}{cm}~: $J = \tfrac12 \times
+50 \times 0.09 = \qty{2.25}{kg.m^2}$~; à \qty{3000}{rpm} ($\omega =
+\qty{314}{rad/s}$) il emmagasine $\tfrac12J\omega^2 = \qty{111}{kJ}$, l'énergie
+cinétique d'une petite voiture à \qty{50}{km/h}. Les volants de stockage
+font tourner des rotors en fibre de carbone à \qty{50000}{rpm} sous vide sur des
+\omterm{def:b2:rigid-body-mechanics:pivot}{paliers} magnétiques~: l'énergie croît comme $\omega^2$, la limite est la
+résistance à la traction de la jante.
+\end{example}
+
+\section{Dynamique du solide}
+
+\begin{theorem}[Lois du mouvement d'un solide]\label{thm:b2:rigid-body-mechanics:laws}
+\index{théorème du moment cinétique (solide)}\index{puissance des forces sur un solide}
+Dans un référentiel galiléen, pour un solide soumis à des forces extérieures $\vect F_i$
+appliquées aux points $A_i$~:
+\begin{enumerate}
+  \item (quantité de mouvement) $M\,\dd\vect v_G/\dd t = \sum\vect F_i$~;
+  \item (moment cinétique en $G$, ou en un point fixe $O$)
+        $\dd\vect L_G/\dd t = \sum\vect{GA_i}\wedge\vect F_i$~; projeté sur
+        un axe fixe $\Delta$, ou sur un axe passant par $G$ et de direction
+        fixe autour duquel le solide tourne à $\omega$~:
+        $J_\Delta\,\dd\omega/\dd t = \mathcal M_\Delta$, somme des
+        moments des forces extérieures par rapport à l'axe~;
+  \item (puissance) la puissance d'un ensemble de forces sur un solide vaut
+        $\mathcal P = \vect R\cdot\vect v_A + \vect{\mathcal M}_A\cdot
+        \vect\Omega$ pour tout point $A$ du solide, où $\vect R$ est la
+        somme des forces et $\vect{\mathcal M}_A$ leur moment total
+        en $A$~; \emph{les forces intérieures d'un solide ont une puissance
+        nulle}, et $\dd E_k/\dd t = \mathcal P_{\text{ext}}$.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+(1) et (2) sont les théorèmes du volume de première année pour les systèmes de points
+(le théorème du moment cinétique en $G$ vaut même lorsque $G$
+accélère, car les forces d'inertie du référentiel barycentrique ont un moment
+nul en $G$). (3) Avec $\vect v_{A_i} = \vect v_A + \vect\Omega
+\wedge\vect{AA_i}$~: $\sum\vect F_i\cdot\vect v_{A_i} = \vect R\cdot\vect v_A
++ \sum\vect F_i\cdot(\vect\Omega\wedge\vect{AA_i}) = \vect R\cdot\vect v_A +
+\vect\Omega\cdot\sum\vect{AA_i}\wedge\vect F_i$ (produit mixte). Forces
+intérieures~: leur somme et leur moment total sont nuls (action--réaction, même
+droite d'action), d'où une puissance nulle sur un solide --- \emph{pas} sur un
+système déformable. Le théorème de l'énergie cinétique ne garde alors que la puissance extérieure.
+\end{proof}
+
+\begin{definition}[Liaison pivot parfaite]\label{def:b2:rigid-body-mechanics:pivot}
+\index{liaison pivot (parfaite)}\index{palier}
+Un solide tourne autour d'un axe fixe $\Delta$ dans une \emph{liaison pivot
+parfaite} (un palier idéal) lorsque les forces de contact du palier ont un
+moment nul par rapport à $\Delta$~; elles ne développent alors aucune puissance ($\vect v_A = \vect 0$
+sur l'axe, $\mathcal M_\Delta = 0$). Un palier réel ajoute un couple de
+frottement $-\Gamma_f\operatorname{sgn}\omega$, ou un couple visqueux $-h\omega$.
+\end{definition}
+
+\begin{proposition}[Le pendule pesant]\label{prop:b2:rigid-body-mechanics:pendulum}
+\index{pendule pesant}\index{pendule composé}
+Un solide de masse $M$ oscille autour d'un axe fixe horizontal $\Delta$ dans une
+liaison pivot parfaite, son centre de masse étant à la distance $d$ de l'axe. Avec
+$\theta$ l'angle de $\vect{OG}$ avec la verticale descendante,
+\[
+J_\Delta\ddot\theta = -Mgd\sin\theta ,
+\]
+si bien que les petites oscillations ont pour période $T = 2\pi\sqrt{J_\Delta/Mgd}$
+--- celle d'un pendule simple de longueur $\ell_{\text{eq}} = J_\Delta/Md$.
+\end{proposition}
+
+\begin{proof}
+Théorème du moment cinétique par rapport à $\Delta$~: le moment du poids vaut
+$-Mgd\sin\theta$, celui du pivot est nul. On linéarise.
+\end{proof}
+
+\begin{example}[La règle d'un mètre]\label{ex:b2:rigid-body-mechanics:rule}
+Une règle d'un mètre pivotant à une extrémité~: $J = \tfrac13M\ell^2$ (Huygens à partir de
+$\tfrac1{12}M\ell^2$), $d = \ell/2$, $\ell_{\text{eq}} = \tfrac23\ell =
+\qty{0.667}{m}$ et $T = \qty{1.64}{s}$ --- un pendule formé de toute la règle bat
+plus lentement qu'une masse ponctuelle suspendue en son centre (\qty{1.42}{s}) et plus vite
+qu'une masse à son extrémité (\qty{2.0}{s}).
+\end{example}
+
+\begin{omfigure}
+\begin{tikzpicture}[font=\small, x=1cm, y=1cm, >=Stealth]
+  \begin{scope}
+    \fill[pattern=north east lines] (-0.6,3.2) rectangle (0.6,3.45); \draw[thick] (-0.6,3.2) -- (0.6,3.2);
+    \fill (0,3.1) circle (2pt) node[left, font=\footnotesize] {$O$};
+    \draw[dashed] (0,3.1) -- (0,0.2);
+    \draw[omDef, very thick, rotate around={25:(0,3.1)}] (-0.12,3.1) rectangle (0.12,0.3);
+    \draw[dashed, omExo] (0,3.1) -- ($(0,3.1)+({2.0*sin(25)},{-2.0*cos(25)})$);
+    \coordinate (G) at ({0+1.4*sin(25)},{3.1-1.4*cos(25)});
+    \fill[omThm] (G) circle (2pt) node[right, font=\footnotesize] {$G$};
+    \draw[omThm, very thick, ->] (G) -- ($(G)+(0,-1.0)$) node[below, font=\footnotesize] {$M\vect g$};
+    \draw[<->, omExo] (0,1.5) arc[start angle=-90, end angle=-65, radius=1.6] node[midway, below, font=\footnotesize] {$\theta$};
+    \node[font=\footnotesize] at (2.1,2.3) {$J_\Delta\ddot\theta = -Mgd\sin\theta$};
+    \draw[<->, omExo] (-0.5,3.1) -- ($(-0.5,3.1)+(0,-1.28)$) node[midway, left, font=\footnotesize] {$d$};
+  \end{scope}
+  \begin{scope}[xshift=7cm]
+    \draw[thick] (-2.5,0) -- (2.5,0);
+    \draw[omDef, thick] (0,1.2) circle (1.2);
+    \fill (0,1.2) circle (1.5pt);
+    \draw[omThm, very thick, ->] (0,1.2) -- (0,-0.3) node[right, font=\footnotesize] {$M\vect g$};
+    \draw[omProp, very thick, ->] (0,0) -- (0,1.0) node[left, font=\footnotesize, pos=0.7] {$\vect N$};
+    \draw[omExo, very thick, ->] (0,0) -- (-1.0,0) node[below, font=\footnotesize] {$\vect T$};
+    \draw[very thick, ->] (0.3,2.6) -- (1.5,2.6) node[right, font=\footnotesize] {$\vect F$};
+    \draw[omDef, ->] (-0.5,1.7) arc[start angle=130, end angle=50, radius=0.75] node[midway, above, font=\footnotesize] {$\omega$};
+    \node[font=\footnotesize, align=left] at (0,-0.9) {roulement sans glissement~: $|T| \le fN$};
+  \end{scope}
+\end{tikzpicture}
+
+{\small À gauche~: le \omterm{prop:b2:rigid-body-mechanics:pendulum}{pendule pesant} --- le moment du poids par rapport au
+pivot entraîne la rotation, la force du pivot n'a pas de moment. À droite~: les
+forces sur une roue qui roule sur un sol horizontal~: poids, \omterm{def:b2:rigid-body-mechanics:contact}{réaction
+normale} $\vect N$ et frottement tangentiel $\vect T$ au point de
+contact, dont la norme est bornée par la loi de Coulomb.}
+\end{omfigure}
+
+\section{Forces de contact et frottement de Coulomb}
+
+\begin{definition}[Force de contact, composantes normale et tangentielle]\label{def:b2:rigid-body-mechanics:contact}
+\index{réaction normale}\index{force de frottement}
+La force exercée par un support sur un solide en un point de contact $I$ se décompose
+en une \emph{réaction normale} $\vect N$, perpendiculaire au plan
+tangent commun et dirigée vers le solide ($N \ge 0$~: un support ne peut que
+pousser), et une \emph{composante tangentielle} $\vect T$ dans le plan
+tangent, la \emph{force de frottement}.
+\end{definition}
+
+\begin{theorem}[Lois de Coulomb du frottement sec]\label{thm:b2:rigid-body-mechanics:coulomb}
+\index{lois de Coulomb du frottement}\index{coefficient de frottement}\index{frottement statique}\index{frottement dynamique}
+Pour deux solides secs en contact, avec un \emph{\omterm{thm:b2:rigid-body-mechanics:coulomb}{coefficient de frottement}} $f$
+qui dépend des matériaux et de leur état de surface, mais ni de
+l'aire de contact ni (en bonne approximation) de la vitesse~:
+\begin{itemize}
+  \item si les solides glissent l'un sur l'autre ($\vect v_{\text{gl}} \ne
+        \vect 0$), la \omterm{def:b2:rigid-body-mechanics:contact}{force de frottement} est opposée à la \omterm{def:b2:rigid-body-mechanics:rolling}{vitesse de glissement}
+        et de norme $\|\vect T\| = f\|\vect N\|$ (\omterm{thm:b2:rigid-body-mechanics:coulomb}{frottement dynamique})~;
+  \item s'ils ne glissent pas, $\|\vect T\| \le f\|\vect N\|$ (\omterm{thm:b2:rigid-body-mechanics:coulomb}{frottement
+        statique})~: la \omterm{def:b2:rigid-body-mechanics:contact}{force de frottement} vaut alors ce qu'exigent les autres lois du
+        mouvement, dans cette limite, et sa direction n'est pas
+        connue d'avance.
+\end{itemize}
+Un \emph{contact parfait} est l'idéalisation $f = 0$~: $\vect T = \vect 0$.
+\end{theorem}
+\admitted
+
+\begin{remark}[Comment lire les lois de Coulomb]\label{rem:b2:rigid-body-mechanics:reading}
+\index{cône de frottement}
+La première loi est une égalité, la seconde une inégalité --- et c'est là
+toute la difficulté des problèmes de frottement. La \emph{méthode} consiste à
+\emph{supposer} le non-glissement, à résoudre en $\vect T$ et $\vect N$, puis à
+\emph{vérifier} $\|\vect T\| \le f\|\vect N\|$~; si la vérification échoue, le
+solide glisse, $\|\vect T\| = f\|\vect N\|$ en sens opposé au glissement, et le
+problème est résolu de nouveau. Géométriquement, la force de contact doit rester
+à l'intérieur du \emph{\omterm{rem:b2:rigid-body-mechanics:reading}{cône de frottement}} de demi-angle $\varphi$ avec $\tan\varphi
+= f$. Valeurs typiques~: caoutchouc sur asphalte sec $f \approx 0.8$--$1$, sur asphalte
+mouillé $0.4$--$0.6$, sur glace $0.1$~; acier sur acier $0.15$ à sec, $0.05$
+graissé~; le coefficient statique est en réalité un peu plus grand que le
+coefficient dynamique, ce qui explique qu'un dérapage soit difficile à arrêter une fois amorcé.
+\end{remark}
+
+\begin{proposition}[Puissance des forces de contact~; roulement sans glissement]\label{prop:b2:rigid-body-mechanics:power}
+\index{résistance au roulement}
+La puissance des forces de contact sur un solide en mouvement sur un support fixe vaut
+$\mathcal P = \vect T\cdot\vect v_{I\in S}$ (la force normale est
+perpendiculaire à la vitesse du point de contact, qui est dans le
+plan tangent). Dans le \emph{\omterm{def:b2:rigid-body-mechanics:rolling}{roulement sans glissement}} cette puissance est nulle~:
+le frottement ne travaille alors pas, même s'il peut être essentiel au mouvement.
+En glissement elle vaut $-f N v_{\text{gl}} < 0$~: de la chaleur.
+\end{proposition}
+
+\begin{proof}
+$\mathcal P = (\vect N + \vect T)\cdot\vect v_{I\in S}$ et $\vect
+v_{I\in S} = \vect v_{\text{gl}}$ est dans le plan tangent, de sorte que seul
+$\vect T$ contribue~; elle est nulle quand la \omterm{def:b2:rigid-body-mechanics:rolling}{vitesse de glissement} est nulle, et vaut
+$-fNv_{\text{gl}}$ quand les solides glissent ($\vect T$ opposée à $\vect
+v_{\text{gl}}$). Le roulement réel dissipe un peu par la
+déformation du pneu et du sol (\emph{\omterm{prop:b2:rigid-body-mechanics:power}{résistance au roulement}}, modélisée par un
+petit couple $\Gamma_r = \mu_rNR$ ou une force équivalente $\mu_rN$, avec
+$\mu_r \approx 0.01$ pour un pneu sur une route)~: un effet différent, bien plus petit.
+\end{proof}
+
+\begin{method}[Un solide qui dévale un plan incliné]\label{met:b2:rigid-body-mechanics:incline}
+\index{roulement sur un plan incliné}
+Un solide homogène de rayon $R$, de masse $M$ et de \omterm{prop:b2:rigid-body-mechanics:kinetic}{moment d'inertie} $J =
+kMR^2$ par rapport à son axe ($k = 1$ cerceau, $\tfrac12$ disque, $\tfrac25$ boule)
+est lâché sur un plan incliné d'angle $\alpha$, de \omterm{thm:b2:rigid-body-mechanics:coulomb}{coefficient de frottement}
+$f$. Supposons le \omterm{def:b2:rigid-body-mechanics:rolling}{roulement sans glissement}~:
+\begin{enumerate}
+  \item quantité de mouvement le long de la pente~: $M\dot v = Mg\sin\alpha - T$~; normale~:
+        $N = Mg\cos\alpha$~;
+  \item moment cinétique en $G$~: $kMR^2\dot\omega = TR$~;
+  \item non-glissement~: $v = R\omega$, d'où $T = kM\dot v$ et
+        \[
+        \dot v = \frac{g\sin\alpha}{1 + k} , \qquad T = \frac{k}{1 + k}\,
+        Mg\sin\alpha ;
+        \]
+  \item vérification~: $T \le fN \iff \tan\alpha \le f\,\dfrac{1 + k}{k}$.
+        Au-delà de cette pente le solide glisse, $T = fMg\cos\alpha$, $\dot v =
+        g(\sin\alpha - f\cos\alpha)$ et $\dot\omega = fg\cos\alpha/kR$.
+\end{enumerate}
+Vérification énergétique (sans glissement, le frottement ne travaille pas)~: $\tfrac12(1 + k)Mv^2 =
+Mgh$ donne $v = \sqrt{2gh/(1 + k)}$ --- une boule bat un disque, qui
+bat un cerceau, indépendamment de la masse et du rayon.
+\end{method}
+
+\begin{omfigure}
+\begin{tikzpicture}[font=\small, x=1cm, y=1cm, >=Stealth]
+  \begin{scope}
+    \draw[thick] (0,0) -- (5.5,0) -- (0,2.6) -- cycle;
+    \draw (0.9,0) arc[start angle=180, end angle=155, radius=0.9] node[left, font=\footnotesize, xshift=-2pt] {};
+    \node[font=\footnotesize] at (4.6,0.25) {$\alpha$};
+    \draw (5.5,0) -- (4.7,0) arc[start angle=180, end angle=155, radius=0.8];
+    \coordinate (I) at (2.2,1.56);
+    \coordinate (G) at ($(I)+(155:-0.0)+(65:0.8)$);
+    \draw[omDef, thick] (G) circle (0.8);
+    \fill (G) circle (1.5pt);
+    \draw[omThm, very thick, ->] (G) -- ($(G)+(0,-1.3)$) node[below, font=\footnotesize] {$M\vect g$};
+    \draw[omProp, very thick, ->] (I) -- ($(I)+(65:1.0)$) node[above left, font=\footnotesize, pos=0.9] {$\vect N$};
+    \draw[omExo, very thick, ->] (I) -- ($(I)+(155:0.9)$) node[above, font=\footnotesize] {$\vect T$};
+    \draw[->, thick] ($(G)+(65:1.1)$) -- ($(G)+(65:1.1)+(-25:1.2)$) node[right, font=\footnotesize] {$\vect v$};
+    \node[font=\footnotesize, align=left] at (4.6,1.7) {$\dot v = \dfrac{g\sin\alpha}{1+k}$};
+  \end{scope}
+  \begin{scope}[xshift=7.6cm]
+    \begin{axis}[omaxis, axis x line=bottom, axis y line=left, width=5.6cm, height=4.2cm,
+        xlabel={$\alpha$ (deg)}, ylabel={$\dot v/g$}, xmin=0, xmax=90, ymin=0, ymax=1.05,
+        xlabel style={at={(axis description cs:0.5,-0.12)}, anchor=north},
+        ylabel style={at={(axis description cs:-0.2,0.5)}, rotate=90, anchor=south},
+        xtick={0,30,60,90}, ytick={0,0.5,1}, samples=200, legend style={font=\scriptsize, at={(0.03,0.97)}, anchor=north west, draw=none, fill=none}]
+      \addplot[omThm, thick, domain=0:56.3] {sin(x)/1.5};
+      \addplot[omThm, thick, domain=56.3:90] {sin(x)-0.5*cos(x)};
+      \addplot[omDef, thick, dashed, domain=0:90] {sin(x)};
+      \legend{disque, , sans frottement}
+      \draw[dotted] (axis cs:56.3,0) -- (axis cs:56.3,0.83);
+      \node[font=\scriptsize, anchor=west] at (axis cs:57,0.3) {glisse};
+    \end{axis}
+  \end{scope}
+\end{tikzpicture}
+
+{\small À gauche~: les forces sur un solide qui dévale un plan incliné --- poids en
+$G$, \omterm{def:b2:rigid-body-mechanics:contact}{réaction normale} et frottement au point de contact. À droite~: l'accélération
+d'un disque ($k = \tfrac12$) en fonction de la pente pour
+$f = 0.5$~: il roule sans glisser tant que $\tan\alpha \le 3f$, puis
+glisse et son accélération suit $g(\sin\alpha - f\cos\alpha)$, toujours
+inférieure au $g\sin\alpha$ sans frottement.}
+\end{omfigure}
+
+\begin{example}[Pourquoi une voiture a besoin du frottement pour accélérer]\label{ex:b2:rigid-body-mechanics:car}
+Une voiture à traction avant~: le moteur applique un couple aux roues
+avant~; la seule force horizontale extérieure sur la voiture est le frottement
+de la route sur les pneus, et c'est cette force qui accélère la
+voiture. Tout le poids reposant sur les roues motrices, l'accélération maximale
+vaut $fg \approx \qty{8}{m/s^2}$ sur asphalte sec --- et la moitié si seule
+la moitié du poids porte sur l'essieu moteur~; sur la glace, $\qty{1}{m/s^2}$. Le
+travail du moteur n'est pas fourni par la route (dont le point de contact est au repos)~:
+c'est un travail intérieur, converti par la transmission en énergie cinétique
+--- de la même façon que les forces intérieures des muscles d'un marcheur, et non le
+sol, fournissent l'énergie du marcheur.
+\end{example}
+
+\begin{example}[La transition glissement--roulement]\label{ex:b2:rigid-body-mechanics:bowling}
+Une boule de bowling est lâchée en glissant à $v_0$ sans rotation. Le \omterm{thm:b2:rigid-body-mechanics:coulomb}{frottement
+dynamique} $fMg$ freine le centre ($\dot v = -fg$) et met la boule en rotation
+($\tfrac25MR^2\dot\omega = fMgR$, $\dot\omega = 5fg/2R$) jusqu'à $v = R\omega$~:
+à $t_1 = 2v_0/7fg$, avec $v_1 = \tfrac57v_0$. Ensuite elle roule
+sans glisser à vitesse constante. Deux septièmes de la vitesse, et
+$1 - (\tfrac57)^2\tfrac75 = \tfrac27$ de l'énergie cinétique, sont perdus en chaleur
+pendant le glissement --- quel que soit $f$~; $f$ ne fixe que la rapidité.
+\end{example}
+
+\begin{omfigure}
+\begin{tikzpicture}
+\begin{axis}[omaxis, axis x line=bottom, axis y line=left, width=7.6cm, height=4.4cm,
+    xlabel={$t/t_1$}, ylabel={}, xmin=0, xmax=2, ymin=0, ymax=1.15,
+    xlabel style={at={(axis description cs:0.5,-0.12)}, anchor=north},
+    xtick={0,1,2}, ytick={0.714,1}, yticklabels={$\tfrac57v_0$, $v_0$}, samples=100,
+    legend style={font=\scriptsize, at={(0.97,0.35)}, anchor=east, draw=none, fill=none}]
+  \addplot[omThm, thick, domain=0:1] {1-0.2857*x};
+  \addplot[omThm, thick, domain=1:2] {0.714};
+  \addplot[omDef, thick, domain=0:1] {0.714*x};
+  \addplot[omDef, thick, domain=1:2] {0.714};
+  \legend{$v_G$, , $R\omega$}
+  \draw[dotted] (axis cs:1,0) -- (axis cs:1,0.714);
+\end{axis}
+\end{tikzpicture}
+
+{\small Une boule lâchée en glissant sans rotation~: le \omterm{thm:b2:rigid-body-mechanics:coulomb}{frottement dynamique} freine
+le centre et met la boule en rotation, linéairement en temps, jusqu'à ce que $R\omega$
+rattrape $v_G$ à $\tfrac57v_0$~; ensuite la boule roule sans
+glisser et le frottement cesse d'agir.}
+\end{omfigure}
+
+\section{Exercices}
+
+\begin{exercise}[$\star$]\label{exo:b2:rigid-body-mechanics:1}
+\omterm{prop:b2:rigid-body-mechanics:kinetic}{Moments d'inertie}~: (a) une tige de \qty{1.0}{m} et \qty{0.50}{kg} par rapport à un
+axe perpendiculaire passant par son centre, puis par une extrémité~; (b) un
+disque de \qty{2.0}{kg} et de rayon \qty{20}{cm} par rapport à son axe, puis à un
+axe parallèle passant par sa jante~; (c) une bille de billard de \qty{0.16}{kg} et de
+diamètre \qty{57}{mm}. (d) Un cerceau mince et un disque plein de même masse
+et même rayon~: lequel résiste le plus à la mise en rotation, et dans quel rapport~?
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b2:rigid-body-mechanics:2}
+Une bicyclette roule à \qty{18}{km/h} sur des roues de diamètre \qty{70}{cm}.
+Vitesse angulaire des roues~; vitesse, dans le référentiel du sol, de
+la valve lorsqu'elle est en haut, en bas, à l'avant de la roue
+(hauteur du moyeu)~; vitesse de la bande de roulement par rapport au cadre de la
+bicyclette. Un caillou coincé dans la bande de roulement se détache au sommet~: à quelle
+vitesse part-il~?
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b2:rigid-body-mechanics:3}
+Un volant d'inertie est un disque d'acier de \qty{40}{kg} et de rayon \qty{25}{cm}. (a) Énergie
+emmagasinée à \qty{6000}{rpm}. (b) Couple constant nécessaire pour le lancer
+depuis le repos en \qty{2.0}{min}~; puissance à la fin du lancement. (c) Dans un
+autobus, il doit fournir \qty{20}{kW} pendant \qty{10}{s}~: jusqu'à quelle vitesse
+ralentit-il~? (d) Pourquoi fait-on tourner sous vide les volants rapides~?
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b2:rigid-body-mechanics:4}
+Un disque homogène de rayon $R$ oscille dans un plan vertical autour d'un
+axe horizontal passant par un point de sa jante. \omterm{prop:b2:rigid-body-mechanics:kinetic}{Moment d'inertie} par rapport à
+l'axe~; période des petites oscillations pour $R = \qty{20}{cm}$~; longueur du
+pendule simple équivalent. Mêmes questions pour l'axe situé à une
+distance $R/2$ du centre. Où faut-il placer l'axe pour que la période soit la plus
+courte~?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b2:rigid-body-mechanics:5}
+Un cerceau, un disque et une boule de même rayon sont lâchés ensemble
+au sommet d'un plan incliné de \qty{2.0}{m} de haut et de pente \qty{20}{\degree}, $f =
+0.30$. (a) Vérifier que tous trois roulent sans glisser. (b) Vitesse en
+bas pour chacun~; ordre d'arrivée. (c) Durée du trajet pour chacun. (d) Montrer que
+la \omterm{def:b2:rigid-body-mechanics:contact}{force de frottement} sur la boule vaut $\tfrac27Mg\sin\alpha$ et qu'elle ne
+travaille pas. (e) À partir de quelle pente le cerceau se mettrait-il à glisser~? Et la boule~?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b2:rigid-body-mechanics:6}
+\emph{Frein à disque.} Une roue et son disque de frein ont $J = \qty{1.2}{kg.m^2}$
+et tournent à \qty{900}{rpm}~; deux plaquettes serrent le disque à un rayon moyen
+de \qty{12}{cm}, chacune avec une force normale de \qty{800}{N}, $f = 0.40$.
+Couple de freinage~; décélération angulaire~; temps et nombre de tours jusqu'à l'arrêt~;
+chaleur dégagée, et élévation de température du disque d'acier de \qty{1.5}{kg}
+($c = \qty{470}{J/(kg.K)}$) s'il la garde entièrement.
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b2:rigid-body-mechanics:7}
+\emph{Machine d'Atwood à poulie réelle.} Des masses $m_1 = \qty{2.0}{kg}$
+et $m_2 = \qty{1.5}{kg}$ pendent à une corde passant sur une poulie de rayon $R =
+\qty{10}{cm}$ et de \omterm{prop:b2:rigid-body-mechanics:kinetic}{moment d'inertie} $J = \qty{5.0e-3}{kg.m^2}$ sur une
+liaison pivot parfaite~; la corde ne glisse pas sur la poulie. (a) Pourquoi les deux
+tensions de la corde diffèrent-elles~? (b) Équations pour les deux masses et la
+poulie~; accélération. (c) Les deux tensions. (d) Comparer avec la
+poulie sans masse~; par l'énergie, retrouver l'accélération.
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b2:rigid-body-mechanics:8}
+\emph{L'échelle.} Une échelle homogène de longueur $\ell$ et de masse $m$ s'appuie
+à l'angle $\theta$ avec l'horizontale contre un mur vertical lisse~;
+le sol a un \omterm{thm:b2:rigid-body-mechanics:coulomb}{coefficient de frottement} $f$. (a) Forces et leurs moments
+par rapport au pied~; équations d'équilibre. (b) Montrer que l'équilibre exige
+$\tan\theta \ge 1/2f$. (c) Angle minimal pour $f = 0.40$. (d) Une personne de
+masse $3m$ monte à l'échelle placée à \qty{60}{\degree}~: jusqu'à quelle hauteur (fraction
+de $\ell$) peut-elle aller~?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b2:rigid-body-mechanics:9}
+\emph{Effet rétro.} Une bille de billard est frappée de sorte qu'elle parte avec une
+vitesse du centre $v_0$ et une rotation rétrograde $\omega_0$ (rotation opposée au
+roulement). \omterm{thm:b2:rigid-body-mechanics:coulomb}{Coefficient de frottement} $f$. (a) Équations pour $v$ et $\omega$
+pendant le glissement. (b) Instant où elle se met à rouler sans glisser et
+sa vitesse alors, en fonction de $v_0$, $R\omega_0$. (c) Condition sur
+$R\omega_0$ pour que la bille revienne vers le joueur. (d) Applications numériques~:
+$v_0 = \qty{2.0}{m/s}$, $R\omega_0 = \qty{6.0}{m/s}$, $f = 0.2$,
+$R = \qty{2.9}{cm}$.
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b2:rigid-body-mechanics:10}
+\emph{Le touret.} Un touret (masse $M$, \omterm{prop:b2:rigid-body-mechanics:kinetic}{moment d'inertie} $J = kMR^2$ par rapport à
+son axe, rayon extérieur $R$) repose sur une table horizontale~; un fil enroulé
+sur son moyeu intérieur de rayon $r < R$ est tiré horizontalement avec une force
+$F$, le fil sortant par le \emph{bas} du moyeu. (a) En supposant le
+\omterm{def:b2:rigid-body-mechanics:rolling}{roulement sans glissement}, écrire les équations de la quantité de mouvement et du moment
+cinétique et trouver l'accélération du centre~; dans quel sens le
+touret roule-t-il~? (b) \omterm{def:b2:rigid-body-mechanics:contact}{Force de frottement} nécessaire, et condition sur $F$ pour qu'il n'y
+ait pas glissement. (c) Mêmes questions si le fil est tiré sous un angle
+$\beta$ au-dessus de l'horizontale~; montrer que le touret reste immobile quand
+$\cos\beta = r/R$, et l'expliquer géométriquement (axe instantané passant par
+le point de contact). (d) Que se passe-t-il pour $\cos\beta < r/R$~?
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b2:rigid-body-mechanics:11}
+\emph{Où frapper une bille de billard.} Une queue communique une impulsion
+horizontale $P$ (force très brève) à une bille de rayon $R$ au repos, à la
+hauteur $h$ au-dessus du tapis. (a) Quantité de mouvement et moment cinétique juste après
+le choc (frottement négligeable pendant le choc). (b) Montrer que la bille
+roule sans glisser aussitôt si $h = \tfrac75R$, a un effet avant au-dessus,
+un effet rétro en dessous. (c) Pour $h = R$ (frappe au centre), sur quelle distance la bille
+glisse-t-elle avant de rouler, avec $f = 0.2$ et $v_0 = \qty{3}{m/s}$~? (d) Pourquoi
+la bande d'un billard est-elle placée à la hauteur $\tfrac75R$~?
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b2:rigid-body-mechanics:12}
+\emph{Cylindre dans une gouttière.} Un cylindre plein de rayon $r$ roule sans
+glisser à l'intérieur d'une surface cylindrique fixe de rayon $R > r$, les axes
+horizontaux et parallèles. Soit $\theta$ l'angle de la ligne des
+centres avec la verticale. (a) Exprimer la vitesse angulaire du
+cylindre autour de son propre axe en fonction de $\dot\theta$ (indication~: le point de contact
+est au repos). (b) Énergie cinétique et énergie potentielle~; montrer que la
+période des petites oscillations vaut $T = 2\pi\sqrt{3(R - r)/2g}$. (c) Comparer
+avec un point qui glisse sans frottement dans la gouttière. (d) \omterm{thm:b2:rigid-body-mechanics:coulomb}{Coefficient de frottement}
+minimal pour rouler sans glisser à l'amplitude $\theta_0$
+(petits angles).
+\end{exercise}
+
+\section{Problème~: un véhicule sur roues}
+
+\begin{problem}[{Problème du week-end --- ce qu'une voiture demande à ses pneus~:
+rouler, accélérer, freiner, et l'unique force qui fait tout}]
+\label{pb:b2:rigid-body-mechanics:1}
+
+Une voiture de masse $M = \qty{1200}{kg}$ a un empattement $L = \qty{2.6}{m}$~; son
+centre de masse est à la hauteur $h = \qty{0.55}{m}$ et aux distances horizontales
+$a = \qty{1.1}{m}$ de l'essieu avant et $b = \qty{1.5}{m}$ de l'essieu
+arrière. Chacune des quatre roues a un rayon $R = \qty{0.31}{m}$, une masse $m =
+\qty{15}{kg}$ et un \omterm{prop:b2:rigid-body-mechanics:kinetic}{moment d'inertie} $J = \qty{1.0}{kg.m^2}$ par rapport à son axe.
+\omterm{thm:b2:rigid-body-mechanics:coulomb}{Coefficient de frottement} pneu--route $f = 0.80$ (sec)~; coefficient de
+\omterm{prop:b2:rigid-body-mechanics:power}{résistance au roulement} $\mu_r = 0.012$. $g = \qty{9.81}{m/s^2}$.
+
+\medskip
+\noindent\textbf{Partie I --- Rouler.}
+\begin{enumerate}
+  \item La voiture roule à $v = \qty{90}{km/h}$. Vitesse angulaire des
+        roues~; vitesse, dans le référentiel de la route, des points supérieur, inférieur et
+        avant d'un pneu.
+  \item Énergie cinétique totale de la voiture, en séparant la translation de
+        l'ensemble et la rotation des quatre roues~; quelle fraction
+        les rotations des roues représentent-elles~?
+  \item Au repos sur sol horizontal, forces normales $N_f$ (les deux roues avant
+        ensemble) et $N_r$ (les deux arrière) par les équations de la quantité de mouvement et du
+        moment cinétique --- quel essieu porte le plus~?
+  \item Le couple de \omterm{prop:b2:rigid-body-mechanics:power}{résistance au roulement} sur chaque roue vaut $\mu_rNR$. Puissance
+        dissipée par la \omterm{prop:b2:rigid-body-mechanics:power}{résistance au roulement} à \qty{90}{km/h}~; comparer avec
+        la traînée aérodynamique $\tfrac12\rho C_xSv^2$ avec $C_xS =
+        \qty{0.70}{m^2}$, $\rho = \qty{1.2}{kg/m^3}$.
+  \item Le moteur est coupé et la voiture roule en roue libre sur sol horizontal~: écrire
+        l'équation de $v(t)$ (en incluant l'inertie des roues comme une masse
+        effective) et estimer la distance pour ralentir de \qty{90}{km/h} à
+        \qty{45}{km/h}, en négligeant la traînée~; puis avec la traînée seule.
+\end{enumerate}
+
+\medskip
+\noindent\textbf{Partie II --- Accélérer.}
+La voiture est à traction avant~; le moteur applique un couple $\Gamma$ aux
+deux roues avant ensemble. On néglige ici la traînée et la \omterm{prop:b2:rigid-body-mechanics:power}{résistance au roulement}.
+\begin{enumerate}[resume]
+  \item Représenter les forces extérieures sur l'ensemble de la voiture. Quelle force
+        l'accélère~? Quelle est la puissance de la route sur la voiture, et
+        d'où vient l'énergie cinétique~?
+  \item Écrire l'équation de la quantité de mouvement de la voiture, l'équation du moment
+        cinétique des roues avant par rapport à leur axe, et la
+        condition de non-glissement~; montrer que l'accélération vaut $\dot v =
+        \Gamma/R\,/\,(M + 4J/R^2)$ et calculer la masse effective.
+  \item Moment cinétique au centre de masse pour l'ensemble de la voiture
+        (les moments cinétiques des roues sont négligés)~: montrer que
+        le transfert de charge sous l'accélération $\dot v$ vaut $N_r - N_r^0 =
+        Mh\dot v/L$ --- l'essieu avant se déleste, l'arrière se charge.
+  \item Accélération maximale sans que les roues motrices (avant)
+        patinent~: montrer que $\dot v_{\max} = fgb/(L + fh)$ et la
+        calculer~; de même pour une voiture à propulsion arrière, $\dot v_{\max} =
+        fga/(L - fh)$. Quelle architecture accélère le mieux, et pourquoi les
+        dragsters placent-ils la masse à l'arrière~?
+  \item Couple moteur aux roues nécessaire pour $\dot v_{\max}$~; la
+        puissance correspondante à \qty{50}{km/h}.
+  \item La même voiture sur la glace ($f = 0.10$)~: accélération maximale et
+        temps pour atteindre \qty{50}{km/h}.
+  \item Que fait la \omterm{def:b2:rigid-body-mechanics:contact}{force de frottement} sur les pneus avant au pneu
+        --- glissement ou non --- et pourquoi une roue qui patine sur la glace
+        accélère-t-elle la voiture \emph{moins} qu'une roue qui adhère~?
+\end{enumerate}
+
+\medskip
+\noindent\textbf{Partie III --- Freiner.}
+\begin{enumerate}[resume]
+  \item Les freins appliquent un couple à chaque roue. Montrer que, pour une roue
+        qui continue de rouler, la force de freinage sur la voiture est le
+        frottement de la route sur le pneu, et que le couple de freinage est
+        limité par $fN_iR$ par roue.
+  \item Transfert de charge sous la décélération $\gamma$~: charge de l'essieu avant
+        $N_f = Mg\,b/L + Mh\gamma/L$~; valeurs à $\gamma = fg$.
+  \item Décélération maximale avec les quatre roues à la limite du
+        glissement~; distance d'arrêt depuis \qty{90}{km/h} sur route sèche, et
+        sur route mouillée ($f = 0.45$).
+  \item Si les freins sont réglés pour que les couples avant et arrière soient égaux,
+        quel essieu se bloque le premier lors d'un freinage appuyé~? Pourquoi un essieu
+        arrière bloqué est-il dangereux (penser à la direction de la \omterm{def:b2:rigid-body-mechanics:contact}{force de frottement}
+        sur un pneu qui glisse)~?
+  \item Une roue se bloque et glisse~: décélération due à la route, et quelle
+        fraction du freinage maximal est perdue avec $f_{\text{cin}} =
+        0.7$ contre $f_{\text{stat}} = 0.8$. Expliquer ce que fait un système
+        antiblocage et pourquoi il module le freinage.
+  \item Chaleur dégagée dans les freins depuis \qty{90}{km/h}~; élévation de
+        température des quatre disques d'acier de \qty{6}{kg} ($c = \qty{470}{J/(kg.K)}$)~;
+        pourquoi les routes de montagne ont-elles des lits d'arrêt~?
+  \item Une voiture électrique récupère l'énergie de freinage par son moteur avec un
+        rendement de \qty{70}{\%}~: énergie récupérée par arrêt depuis
+        \qty{90}{km/h}~; nombre de tels arrêts que vaut une batterie de \qty{50}{kWh}.
+\end{enumerate}
+
+\medskip
+\noindent\textbf{Partie IV --- Virer, et une roue en l'air.}
+\begin{enumerate}[resume]
+  \item La voiture tourne sur route plane sur un cercle de rayon
+        $\rho = \qty{50}{m}$ à la vitesse $v$~: les \omterm{def:b2:rigid-body-mechanics:contact}{forces de frottement} doivent fournir
+        $Mv^2/\rho$. Vitesse maximale en virage sur route sèche et mouillée.
+  \item Moment cinétique au centre de masse selon la direction du
+        mouvement~: montrer que les roues extérieures sont chargées de $\Delta N =
+        Mv^2h/\rho w$ où $w = \qty{1.5}{m}$ est la voie~; vitesse à
+        laquelle les roues intérieures décollent ($\Delta N = Mg/2$), et comparer
+        avec la vitesse de dérapage~: cette voiture se retourne-t-elle ou dérape-t-elle d'abord~?
+  \item Le virage est relevé d'un angle $\beta$. Montrer qu'à la vitesse
+        $v = \sqrt{g\rho\tan\beta}$ aucun frottement n'est nécessaire~; valeur
+        pour $\beta = \qty{10}{\degree}$.
+  \item Une roue est soulevée par un cric et lancée à la main à
+        \qty{60}{rpm}~; son \omterm{def:b2:rigid-body-mechanics:pivot}{palier} exerce un couple de frottement de
+        \qty{0.05}{N.m}. Combien de temps tourne-t-elle~? Énergie cinétique perdue.
+  \item La roue en rotation est posée sur la route (voiture à l'arrêt, roue
+        à \qty{60}{rpm}, $N = \qty{3}{kN}$)~: durée du glissement avant l'arrêt,
+        et distance dont la voiture serait poussée si elle était libre de
+        rouler (traiter la voiture comme une masse $M$ sur roues libres, en négligeant
+        l'inertie des autres roues).
+  \item Résumer en un tableau~: les quatre régimes (rouler, accélérer,
+        freiner, virer), la force qui agit dans chacun et la
+        borne de Coulomb qu'elle doit respecter.
+\end{enumerate}
+\end{problem}

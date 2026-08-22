@@ -91,8 +91,10 @@ defined-term links — about 320 pages, in all eight languages
 (English, French, Dutch, Spanish, Portuguese, Hindi, Arabic,
 Indonesian).
 
-🚧 Books 4–5 build with every chapter present as a titled placeholder;
-their content is being written.
+🚧 Book 5 builds with every chapter present as a titled placeholder; its
+content is being written. Book 4 is fully written and, since 2026-08-22,
+translated into all seven other languages; its PDFs appear in the download
+table at the next tagged release.
 
 ## Building the books
 
@@ -109,8 +111,8 @@ The PDFs are produced at
 build/one_physics_book_<N>_<slug>[_<lang>].pdf
 ```
 
-with `N` = 1–5 and, for Books 1–3, `lang` ∈ {`fr`, `nl`, `es`, `pt`,
-`hi`, `ar`, `id`} (no suffix for English) — 26 PDFs in total. The Hindi
+with `N` = 1–5 and, for Books 1–4, `lang` ∈ {`fr`, `nl`, `es`, `pt`,
+`hi`, `ar`, `id`} (no suffix for English) — 33 PDFs in total. The Hindi
 edition compiles with XeLaTeX (Devanagari) and the Arabic edition with
 LuaLaTeX (right-to-left, via babel `bidi=basic`); both have their fonts
 bundled under `assets/fonts/`, and everything else is pdflatex.

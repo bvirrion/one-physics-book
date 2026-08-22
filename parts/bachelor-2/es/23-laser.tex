@@ -1,0 +1,664 @@
+\chapter{El láser: emisión estimulada y haces gaussianos}\label{ch:b2:laser}
+
+Un punto rojo en la pantalla de un aula, el lector de códigos de barras de
+la caja, el haz que lee un disco, suelda la carrocería de un coche,
+transporta internet bajo los océanos, corrige una córnea y mide la
+distancia a la Luna con precisión de milímetro: cada uno de ellos es un
+\emph{\omterm{def:b2:laser:cavity}{láser}}, una fuente de luz distinta de toda llama o lámpara. Su luz
+es de un solo color hasta una parte entre mil millones, se mantiene en un
+haz de milímetros a lo largo de una habitación y puede enfocarse en una
+mancha de unas pocas longitudes de onda, donde su irradiancia supera un
+millón de veces la de la superficie del Sol. Nada de esto viene de una
+clase nueva de átomo: viene de un proceso que Einstein identificó en 1917
+--- la \emph{\omterm{def:b2:laser:processes}{emisión estimulada}}, la emisión de un fotón idéntico a
+uno ya presente --- y de disponer la materia de modo que ese proceso
+gane a la \omterm{def:b2:laser:processes}{absorción}, y de colocar después el amplificador entre dos espejos
+para que se alimente a sí mismo. Este capítulo construye el \omterm{def:b2:laser:cavity}{láser} en tres pasos:
+cómo intercambian energía la luz y una población de átomos (los \omterm{def:b2:laser:processes}{coeficientes
+de Einstein}), cuándo amplifica el intercambio (\omterm{prop:b2:laser:gain}{inversión de población} y
+ganancia) y cuándo el amplificador se vuelve oscilador (la cavidad, su
+umbral y sus modos). Termina con la forma del haz que sale,
+el \omterm{prop:b2:laser:gaussian}{haz gaussiano}, cuya \omterm{prop:b2:laser:gaussian}{cintura} y \omterm{def:b2:maxwell-equations:operators}{divergencia} deciden lo que un \omterm{def:b2:laser:cavity}{láser}
+puede hacer a distancia y en un foco.
+
+\begin{omfigure}
+\includegraphics[width=0.58\linewidth]{images/book4/ai/b4-23-laser-optical-table.png}
+
+{\small Una mesa óptica: \omterm{def:b2:laser:cavity}{láser}, espejos, lentes y un haz que sigue siendo
+una línea fina a lo ancho de toda la sala --- la directividad que ninguna lámpara puede
+dar.}
+\end{omfigure}
+
+\section{Luz y materia: los tres procesos}
+
+\begin{definition}[Absorción, emisión espontánea y emisión estimulada]\label{def:b2:laser:processes}
+Considérense átomos con dos niveles de energía $E_1 < E_2$, poblaciones (densidades
+de número) $N_1$, $N_2$, y luz de frecuencia $\nu$ con
+$h\nu = E_2 - E_1$ y densidad espectral de energía $u(\nu)$ (energía por unidad de
+volumen y por unidad de frecuencia). Tres procesos intercambian energía:
+\begin{itemize}
+\item \emph{absorción}\index{absorción (de la luz)}: un átomo en
+      $E_1$ absorbe un fotón y sube a $E_2$, con el ritmo
+      $B_{12}\,u(\nu)\,N_1$ por unidad de volumen y tiempo;
+\item \emph{emisión espontánea}\index{emisión espontánea}: un átomo
+      en $E_2$ cae a $E_1$ por sí solo, emitiendo un fotón en una dirección
+      al azar y con una fase al azar, con el ritmo $A_{21}N_2$ ---
+      $1/A_{21} = \tau$ es la vida media del nivel;
+\item \emph{emisión estimulada}\index{emisión estimulada}: un fotón
+      de frecuencia $\nu$ que pasa junto a un átomo en $E_2$ lo induce a caer,
+      emitiendo un segundo fotón \emph{idéntico} al primero (misma
+      frecuencia, dirección, fase y polarización), con el ritmo
+      $B_{21}\,u(\nu)\,N_2$.
+\end{itemize}
+$A_{21}$, $B_{12}$, $B_{21}$ son los \emph{coeficientes de
+Einstein}\index{coeficientes de Einstein} de la transición.
+\end{definition}
+
+\begin{proposition}[Relaciones de Einstein]\label{prop:b2:laser:einstein}
+Para niveles no degenerados,
+\[
+B_{12} = B_{21} \equiv B, \qquad
+\frac{A_{21}}{B_{21}} = \frac{8\pi h\nu^3}{c^3}.
+\]
+La \omterm{def:b2:laser:processes}{emisión estimulada} y la \omterm{def:b2:laser:processes}{absorción} tienen el mismo coeficiente; el
+ritmo espontáneo crece como $\nu^3$ respecto del estimulado.
+\end{proposition}
+
+\begin{proof}
+Póngase a los átomos en equilibrio con la radiación a la temperatura $T$. Se toman
+prestados dos hechos de capítulos posteriores: las poblaciones de dos niveles
+en el equilibrio están en la razón $N_2/N_1 = \eu^{-h\nu/k_BT}$ (el
+factor de Boltzmann, \cref{ch:b2:boltzmann-factor}) y la radiación
+de equilibrio tiene la densidad espectral de Planck
+$u(\nu) = (8\pi h\nu^3/c^3)/(\eu^{h\nu/k_BT} - 1)$
+(\cref{ch:b2:thermal-radiation}). En el equilibrio, las poblaciones de los niveles
+son estacionarias: $B_{12}uN_1 = A_{21}N_2 + B_{21}uN_2$, de donde
+\[
+u = \frac{A_{21}}{B_{12}\,N_1/N_2 - B_{21}}
+  = \frac{A_{21}}{B_{12}\eu^{h\nu/k_BT} - B_{21}}.
+\]
+Esto debe coincidir con la expresión de Planck a cualquier $T$: el límite
+$T \to \infty$ (donde $u \to \infty$) obliga a $B_{12} = B_{21}$, y la
+comparación da entonces $A_{21}/B_{21} = 8\pi h\nu^3/c^3$. Los
+coeficientes son propiedades del átomo, así que las relaciones valen también fuera del
+equilibrio.
+\end{proof}
+
+\begin{remark}[Por qué no amplifican las lámparas]\label{rem:b2:laser:lamps}
+En un gas a \qty{300}{K}, para una transición visible ($h\nu \approx
+\qty{2}{eV}$, $k_BT \approx \qty{0.025}{eV}$), $N_2/N_1 = \eu^{-80} \approx
+10^{-35}$: prácticamente ningún átomo está excitado y la luz solo se absorbe. Una
+descarga o una llama pueblan $E_2$, pero aun así con $N_2 < N_1$, y
+las absorciones superan en número a cada fotón emitido; además, la razón
+entre la \omterm{def:b2:laser:processes}{emisión espontánea} y la estimulada en el equilibrio,
+$A_{21}/(B_{21}u) = \eu^{h\nu/k_BT} - 1$, es astronómicamente grande en el
+visible --- la luz de una lámpara es espontánea: fases al azar, todas
+las direcciones, toda la anchura de la raya. Solo en radiofrecuencias y microondas
+($h\nu \ll k_BT$) compite la \omterm{def:b2:laser:processes}{emisión estimulada} de forma
+natural; el primer dispositivo de esta clase fue, en efecto, el máser, a
+\qty{24}{GHz} (1954), antes que el \omterm{def:b2:laser:cavity}{láser} óptico (1960).
+\end{remark}
+
+\begin{omfigure}
+\begin{tikzpicture}[scale=0.9, >=stealth]
+  \foreach \x/\t in {0/absorción, 3.6/emisión espontánea, 7.2/emisión estimulada}{
+    \draw[thick] (\x,0) -- ++(2,0) node[right, font=\scriptsize] {$E_1$};
+    \draw[thick] (\x,1.6) -- ++(2,0) node[right, font=\scriptsize] {$E_2$};
+    \node[font=\scriptsize, align=center] at (\x+1,-0.5) {\t};
+  }
+  % absorption
+  \fill (1,0) circle (2pt);
+  \draw[->, omDef, thick] (1,0.15) -- (1,1.45);
+  \draw[->, omExo, thick, decorate, decoration={snake, amplitude=0.6mm, segment length=2mm}] (-0.6,0.8) -- (0.7,0.8);
+  \node[font=\scriptsize, omExo] at (-0.5,1.15) {$h\nu$};
+  % spontaneous
+  \fill (4.6,1.6) circle (2pt);
+  \draw[->, omDef, thick] (4.6,1.45) -- (4.6,0.15);
+  \draw[->, omExo, thick, decorate, decoration={snake, amplitude=0.6mm, segment length=2mm}] (4.8,0.8) -- (6.2,1.3);
+  % stimulated
+  \fill (8.2,1.6) circle (2pt);
+  \draw[->, omDef, thick] (8.2,1.45) -- (8.2,0.15);
+  \draw[->, omExo, thick, decorate, decoration={snake, amplitude=0.6mm, segment length=2mm}] (6.6,0.8) -- (7.9,0.8);
+  \draw[->, omExo, thick, decorate, decoration={snake, amplitude=0.6mm, segment length=2mm}] (8.5,0.95) -- (9.9,0.95);
+  \draw[->, omExo, thick, decorate, decoration={snake, amplitude=0.6mm, segment length=2mm}] (8.5,0.65) -- (9.9,0.65);
+  \node[font=\scriptsize, omExo] at (10.6,0.8) {$2h\nu$};
+\end{tikzpicture}
+
+{\small Los tres procesos entre dos niveles: la \omterm{def:b2:laser:processes}{absorción} se lleva un
+fotón; la \omterm{def:b2:laser:processes}{emisión espontánea} añade un fotón de fase y dirección al azar;
+la \omterm{def:b2:laser:processes}{emisión estimulada} añade un fotón idéntico al incidente
+--- una copia.}
+\end{omfigure}
+
+\section{Amplificación: inversión de población y ganancia}
+
+\begin{proposition}[Ganancia de un medio]\label{prop:b2:laser:gain}
+Un haz de intensidad $I$ a la frecuencia $\nu$ que cruza el medio
+gana energía por \omterm{def:b2:laser:processes}{emisión estimulada} y la pierde por \omterm{def:b2:laser:processes}{absorción}
+(la \omterm{def:b2:laser:processes}{emisión espontánea} va en todas las direcciones y apenas contribuye al
+haz). En una longitud $\dd z$,
+\[
+\dd I = \sigma\,(N_2 - N_1)\,I\,\dd z, \qquad
+I(z) = I(0)\,\eu^{g z}, \qquad g = \sigma(N_2 - N_1),
+\]
+donde $\sigma$ (un área, la \emph{sección eficaz}\index{sección eficaz
+(de una transición)} de la transición, $\sigma \propto B\,h\nu/c$) mide
+la fuerza de la transición. El medio \emph{amplifica} ($g > 0$)
+solo si
+\[
+N_2 > N_1 :
+\]
+una \emph{inversión de población}\index{inversión de población}. Sin ella
+($N_2 < N_1$, el caso de todo medio en equilibrio) el haz queda
+absorbido.
+\end{proposition}
+
+\begin{proof}
+Por unidad de volumen y tiempo, $B u (N_2 - N_1)$ transiciones añaden (o quitan)
+un fotón $h\nu$ al haz; con $u = I/c$ (por unidad de frecuencia, en
+la anchura de la raya), la potencia ganada por unidad de volumen vale
+$B h\nu (N_2 - N_1) I/c$, y esto es $\dd I/\dd z$; defínase $\sigma =
+Bh\nu/c$ (por el factor de forma de la raya).
+\end{proof}
+
+\begin{remark}[Por qué no puede invertirse un sistema de dos niveles]\label{rem:b2:laser:twolevel}
+Bombéese un sistema de dos niveles con luz de frecuencia $\nu$ todo lo fuerte que se quiera: el
+bombeo absorbe cuando $N_1 > N_2$ y estimula la emisión cuando $N_2 > N_1$,
+y las poblaciones tienden como mucho a la igualdad, $N_2 = N_1$, donde el
+medio es transparente pero no gana nada. Una inversión exige al menos
+tres niveles: bombear desde el nivel fundamental a un nivel de vida corta que
+decae deprisa al nivel \omterm{def:b2:laser:cavity}{láser} superior, que es de \emph{vida larga}
+(metastable) y por tanto almacena población. En un esquema de
+\emph{tres niveles}\index{láser de tres niveles} (rubí, el primer
+\omterm{def:b2:laser:cavity}{láser}) el nivel \omterm{def:b2:laser:cavity}{láser} inferior es el estado fundamental, así que hay que elevar más de la mitad
+de los átomos antes de la inversión: el bombeo es brutal. En un esquema de
+\emph{cuatro niveles}\index{láser de cuatro niveles} (He--Ne, Nd:YAG, la mayoría
+de los \omterm{def:b2:laser:cavity}{láseres}) el nivel \omterm{def:b2:laser:cavity}{láser} inferior es un nivel excitado que se vacía deprisa
+al fundamental; está casi vacío en todo momento, y una pequeña
+población en el nivel superior ya es una inversión --- el umbral
+es bajo.
+\end{remark}
+
+\begin{omfigure}
+\begin{tikzpicture}[scale=0.85, >=stealth]
+  % three-level
+  \draw[thick] (0,0) -- (2,0) node[right, font=\scriptsize] {$0$: fundamental};
+  \draw[thick] (0,2.4) -- (2,2.4) node[right, font=\scriptsize] {$2$ (vida corta)};
+  \draw[thick] (0,1.8) -- (2,1.8) node[right, font=\scriptsize] {$1$ (metastable)};
+  \draw[->, omExo, thick] (0.5,0.05) -- (0.5,2.35) node[midway, left, font=\scriptsize] {bombeo};
+  \draw[->, dashed] (1.0,2.35) -- (1.0,1.85);
+  \draw[->, omDef, very thick] (1.5,1.75) -- (1.5,0.05) node[midway, right, font=\scriptsize] {láser};
+  \node[font=\scriptsize] at (1.8,-0.6) {tres niveles (rubí)};
+  % four-level
+  \begin{scope}[xshift=7cm]
+  \draw[thick] (0,0) -- (2,0) node[right, font=\scriptsize] {$0$: fundamental};
+  \draw[thick] (0,2.4) -- (2,2.4) node[right, font=\scriptsize] {$3$ (vida corta)};
+  \draw[thick] (0,1.9) -- (2,1.9) node[right, font=\scriptsize] {$2$ (metastable)};
+  \draw[thick] (0,0.6) -- (2,0.6) node[right, font=\scriptsize] {$1$ (se vacía deprisa)};
+  \draw[->, omExo, thick] (0.5,0.05) -- (0.5,2.35) node[midway, left, font=\scriptsize] {bombeo};
+  \draw[->, dashed] (1.0,2.35) -- (1.0,1.95);
+  \draw[->, omDef, very thick] (1.5,1.85) -- (1.5,0.65) node[midway, right, font=\scriptsize] {láser};
+  \draw[->, dashed] (1.0,0.55) -- (1.0,0.05);
+  \node[font=\scriptsize] at (1.8,-0.6) {cuatro niveles (He--Ne, Nd:YAG)};
+  \end{scope}
+\end{tikzpicture}
+
+{\small Esquemas de bombeo. A la izquierda, tres niveles --- la transición \omterm{def:b2:laser:cavity}{láser}
+acaba en el nivel fundamental, que debe vaciarse más de la mitad. A la derecha,
+cuatro niveles --- el nivel \omterm{def:b2:laser:cavity}{láser} inferior se vacía enseguida al estado
+fundamental, así que una pequeña población superior ya es una inversión.}
+\end{omfigure}
+
+\begin{proposition}[Saturación de la ganancia]\label{prop:b2:laser:saturation}
+La inversión la mantiene un bombeo que suministra átomos al nivel
+superior con el ritmo $R$ por unidad de volumen, frente al decaimiento $1/\tau$ y
+a la \omterm{def:b2:laser:processes}{emisión estimulada} $\sigma I (N_2 - N_1)/h\nu$. En un medio de
+cuatro niveles ($N_1 \approx 0$) el estado estacionario es
+\[
+N_2 = \frac{R\tau}{1 + I/I_{\text{s}}}, \qquad
+g = \frac{g_0}{1 + I/I_{\text{s}}}, \qquad
+I_{\text{s}} = \frac{h\nu}{\sigma\tau} :
+\]
+la \emph{ganancia en pequeña señal} $g_0 = \sigma R\tau$ queda reducida por el propio haz
+en cuanto $I$ se acerca a la \emph{intensidad de
+saturación}\index{intensidad de saturación} $I_{\text{s}}$ --- el amplificador
+es no lineal, y esa no linealidad es la que fijará la potencia del
+\omterm{def:b2:laser:cavity}{láser}.
+\end{proposition}
+
+\begin{proof}
+$\dd N_2/\dd t = R - N_2/\tau - \sigma I N_2/h\nu = 0$.
+\end{proof}
+
+\section{El oscilador: cavidad, umbral y modos}
+
+\begin{definition}[Cavidad láser]\label{def:b2:laser:cavity}
+Un \emph{láser}\index{láser} es un medio amplificador de longitud $\ell$
+colocado entre dos espejos (reflectancias $R_1$, $R_2$) separados una distancia $L$:
+una cavidad de Fabry--Pérot (\cref{ch:b2:gratings}). Uno de los espejos, el
+\emph{espejo de salida}, transmite en parte ($T_2 = 1 - R_2$, de un pequeño
+porcentaje) y deja salir el haz. La luz que da la vuelta a la cavidad queda
+amplificada dos veces por el medio y atenuada por los espejos y por las
+demás pérdidas (dispersión, \omterm{def:b2:laser:processes}{absorción}, \omterm{def:b2:diffraction:huygens}{difracción}).
+\end{definition}
+
+\begin{theorem}[Condición de oscilación]\label{thm:b2:laser:threshold}
+Una onda de amplitud compleja $\underline s$ se reproduce tras una
+ida y vuelta si
+\[
+\underline s\,\cdot\, \eu^{g\ell}\sqrt{R_1}\,\eu^{g\ell}\sqrt{R_2}\,
+\eu^{-\alpha\cdot 2L}\,\eu^{2\iu kL} = \underline s
+\]
+($\alpha$: las demás pérdidas por unidad de longitud). De ahí dos condiciones.
+\begin{itemize}
+\item \emph{Amplitud}: $R_1R_2\,\eu^{2(g\ell - \alpha L)} \ge 1$, es decir, la
+      ganancia debe alcanzar el \emph{umbral}\index{umbral (láser)}
+      \[
+      g_{\text{umb}} = \frac{1}{\ell}\Big(\alpha L - \tfrac12\ln(R_1R_2)\Big)
+      \approx \frac{1}{2\ell}\,(T_2 + \text{pérdidas por ida y vuelta}) ;
+      \]
+\item \emph{Fase}: $2kL = 2\pi p$, es decir, $\nu_p = p\,c/2L$ --- el \omterm{def:b2:laser:cavity}{láser}
+      oscila solo en los \emph{modos longitudinales}\index{modos
+      longitudinales} de la cavidad, separados $c/2L$, y de entre ellos solo en
+      los que caen bajo la curva de ganancia donde $g(\nu) \ge g_{\text{umb}}$.
+\end{itemize}
+\end{theorem}
+
+\begin{proof}
+La amplitud y la fase del factor de ida y vuelta deben ser ambas triviales; la
+aproximación usa $-\ln R \approx 1 - R = T$ para $T \ll 1$.
+\end{proof}
+
+\begin{proposition}[Estado estacionario por encima del umbral]\label{prop:b2:laser:steady}
+Partiendo de la \omterm{def:b2:laser:processes}{emisión espontánea} de un solo átomo, todo modo para el
+que $g_0 > g_{\text{umb}}$ crece exponencialmente, ida y vuelta tras ida y
+vuelta; al crecer su intensidad, la ganancia se satura
+(\cref{prop:b2:laser:saturation}) hasta igualar exactamente las pérdidas:
+\[
+g(I) = g_{\text{umb}} \quad\Longrightarrow\quad
+I_{\text{cav}} = I_{\text{s}}\Big(\frac{g_0}{g_{\text{umb}}} - 1\Big),
+\qquad P_{\text{sal}} = T_2\,I_{\text{cav}}\,A .
+\]
+La ganancia queda \emph{anclada} al valor de umbral; cada átomo adicional
+bombeado por encima del umbral se convierte en un fotón de salida, así que la potencia de salida
+crece linealmente con el bombeo por encima del bombeo umbral.
+\end{proposition}
+
+\begin{remark}[El láser es un oscilador realimentado]\label{rem:b2:laser:feedback}
+Compárese con el \omterm{prop:b2:feedback-oscillators:wien}{oscilador de puente de Wien} de
+\cref{ch:b2:feedback-oscillators}: un amplificador (el medio invertido),
+una \omterm{def:b2:feedback-oscillators:loop}{realimentación} selectiva en frecuencia (la cavidad, que solo deja pasar sus modos),
+una condición de arranque (\omterm{def:b2:feedback-oscillators:loop}{ganancia de lazo} $> 1$, es decir, $g_0 > g_{\text{umb}}$),
+un arranque desde el ruido (aquí, la \omterm{def:b2:laser:processes}{emisión espontánea}) y una amplitud fijada
+por la no linealidad del amplificador (la saturación de la ganancia). El \omterm{def:b2:laser:cavity}{láser} es
+el miembro óptico de la familia.
+\end{remark}
+
+\begin{omfigure}
+\begin{tikzpicture}
+  \begin{axis}[omaxis, width=8.2cm, height=4.6cm, xmin=-2.4, xmax=2.4, ymin=0, ymax=1.25,
+    xlabel={$(\nu - \nu_0)/\Delta\nu$}, ylabel={$g(\nu)$}, ytick=\empty,
+    xtick={-2,-1,0,1,2}, clip=false]
+    \addplot[omDef, thick, domain=-2.4:2.4, samples=120] {exp(-2.77*x*x)};
+    \addplot[omExo, thick, dashed, domain=-2.4:2.4] {0.45};
+    \node[font=\scriptsize, omExo, anchor=west] at (axis cs:1.6,0.55) {$g_{\text{umb}}$};
+    \draw[gray!70] (axis cs:-1.75,0) -- (axis cs:-1.75,0.12);
+    \draw[gray!70] (axis cs:-1.4,0) -- (axis cs:-1.4,0.12);
+    \draw[gray!70] (axis cs:-1.05,0) -- (axis cs:-1.05,0.12);
+    \draw[gray!70] (axis cs:-0.7,0) -- (axis cs:-0.7,0.12);
+    \draw[gray!70] (axis cs:0.7,0) -- (axis cs:0.7,0.12);
+    \draw[gray!70] (axis cs:1.05,0) -- (axis cs:1.05,0.12);
+    \draw[gray!70] (axis cs:1.4,0) -- (axis cs:1.4,0.12);
+    \draw[gray!70] (axis cs:1.75,0) -- (axis cs:1.75,0.12);
+    \draw[omThm, very thick] (axis cs:-0.35,0) -- (axis cs:-0.35,0.712);
+    \draw[omThm, very thick] (axis cs:0,0) -- (axis cs:0,1.000);
+    \draw[omThm, very thick] (axis cs:0.35,0) -- (axis cs:0.35,0.712);
+    \node[font=\scriptsize, anchor=south] at (axis cs:-1.4,0.14) {$c/2L$};
+    \draw[<->, thin] (axis cs:-1.75,0.12) -- (axis cs:-1.05,0.12);
+  \end{axis}
+\end{tikzpicture}
+
+{\small La curva de ganancia del medio (de anchura $\Delta\nu$), el umbral
+que fijan las pérdidas y el peine de modos de la cavidad separados $c/2L$: solo
+oscilan los modos que quedan bajo la curva y por encima del umbral (en trazo grueso).}
+\end{omfigure}
+
+\begin{example}[El láser de helio--neón]\label{ex:b2:laser:hene}
+Un tubo de vidrio de \qty{30}{cm} de largo, con un diámetro interior de \qty{1}{mm}, que contiene helio y
+neón a cerca de una milésima de atmósfera, atravesado por una descarga de
+unos pocos miliamperios. Los electrones excitan el helio a un nivel metastable a
+\qty{20.6}{eV}, que cede su energía por colisión a un nivel del neón a
+casi exactamente la misma altura; desde ahí el neón decae a un nivel inferior
+(que se vacía deprisa al fundamental --- cuatro niveles) emitiendo a
+\qty{632.8}{nm}. La ganancia en pequeña señal es minúscula, de un pequeño porcentaje por
+pasada, así que los espejos han de ser excelentes ($R_1 = 0.999$, $R_2 = 0.99$)
+y el tubo, limpio; la raya de ganancia está ensanchada por Doppler hasta
+$\Delta\nu \approx \qty{1.5}{GHz}$, los modos están separados $c/2L = \qty{500}{MHz}$,
+así que oscilan dos o tres modos a la vez. Salida de \qty{1}{mW} para
+varios vatios de descarga: rendimiento $10^{-4}$; pero con una longitud de onda
+definida hasta $10^{-6}$ y un haz que sigue midiendo \qty{1}{mm} de ancho a lo ancho del
+laboratorio.
+\end{example}
+
+\section{El haz gaussiano}
+
+\begin{proposition}[Haz gaussiano]\label{prop:b2:laser:gaussian}
+El haz que emite una cavidad estable con espejos curvos es (en el
+modo transversal fundamental) un \emph{haz gaussiano}\index{haz
+gaussiano}: a la distancia $z$ de su sección más estrecha (la
+\emph{cintura}\index{cintura (de un haz)}, de radio $w_0$), el perfil de
+intensidad vale
+\[
+I(r,z) = \frac{2P}{\pi w(z)^2}\,\exp\Big(-\frac{2r^2}{w(z)^2}\Big),
+\qquad
+w(z) = w_0\sqrt{1 + \Big(\frac{z}{z_{\text{R}}}\Big)^2},
+\qquad
+z_{\text{R}} = \frac{\pi w_0^2}{\lambda},
+\]
+donde $P$ es la potencia total y $z_{\text{R}}$ la \emph{longitud de
+Rayleigh}\index{longitud de Rayleigh}: en $\pm z_{\text{R}}$ el haz se mantiene
+dentro de $\sqrt2$ de su \omterm{prop:b2:laser:gaussian}{cintura}, y mucho más allá se abre con el
+semiángulo
+\[
+\theta = \frac{\lambda}{\pi w_0} .
+\]
+El haz es solución de la \omterm{thm:b2:waves-on-strings:equation}{ecuación de ondas} en la aproximación
+paraxial; admitimos su forma y la usamos. Sus \omterm{def:b2:scalar-light-model:path}{frentes de onda} son planos en
+la \omterm{prop:b2:laser:gaussian}{cintura} y esféricos muy lejos.
+\end{proposition}
+
+\begin{proof}
+Admitido en este nivel (el cálculo es la propagación en óptica de Fourier
+de una distribución gaussiana en una abertura); su propiedad clave es
+la que ya dio la \omterm{def:b2:diffraction:huygens}{difracción} en \cref{ch:b2:diffraction}: una
+abertura de tamaño $w_0$ abre en $\lambda/w_0$, aquí con el factor exacto
+$1/\pi$.
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}
+  \begin{axis}[omaxis, width=9cm, height=4.6cm, xmin=-3.2, xmax=3.2, ymin=-3.4, ymax=3.4,
+    xlabel={$z/z_{\text{R}}$}, ylabel={$r/w_0$}, clip=false, xtick={-3,-2,-1,0,1,2,3}, ytick={-2,-1,1,2}]
+    \addplot[omDef, thick, domain=-3.2:3.2, samples=100] {sqrt(1+x*x)};
+    \addplot[omDef, thick, domain=-3.2:3.2, samples=100] {-sqrt(1+x*x)};
+    \addplot[omExo, dashed, domain=-3.2:3.2] {x};
+    \addplot[omExo, dashed, domain=-3.2:3.2] {-x};
+    \draw[<->, thin] (axis cs:0.3,-1.04) -- (axis cs:0.3,1.04) node[pos=0.25, right, font=\scriptsize] {$2w_0$};
+    \node[font=\scriptsize, omExo, anchor=north west] at (axis cs:0.8,3.5) {$\theta = \lambda/\pi w_0$};
+  \end{axis}
+\end{tikzpicture}
+
+{\small Un \omterm{prop:b2:laser:gaussian}{haz gaussiano}: el radio $w(z)$ es una hipérbola --- casi
+constante dentro de la \omterm{prop:b2:laser:gaussian}{longitud de Rayleigh} y luego un cono de semiángulo
+$\lambda/\pi w_0$. Una \omterm{prop:b2:laser:gaussian}{cintura} menor significa una \omterm{prop:b2:laser:gaussian}{longitud de Rayleigh} más corta y un
+cono más ancho.}
+\end{omfigure}
+
+\begin{proposition}[Enfocar y expandir un haz]\label{prop:b2:laser:focus}
+Un \omterm{prop:b2:laser:gaussian}{haz gaussiano} de radio $w$ (mucho mayor que el que tendría su campo lejano
+en la lente, es decir, casi colimado) que incide en una lente de distancia
+focal $f$ se enfoca en una \omterm{prop:b2:laser:gaussian}{cintura}
+\[
+w_0' = \frac{\lambda f}{\pi w}
+\]
+en el foco, con \omterm{prop:b2:laser:gaussian}{longitud de Rayleigh} $\pi w_0'^2/\lambda$. La irradiancia
+de pico allí vale $2P/\pi w_0'^2$. A la inversa, un telescopio afocal de
+aumento $M$ convierte un haz de radio $w$ en otro de radio $Mw$
+cuya \omterm{def:b2:maxwell-equations:operators}{divergencia} es $M$ veces menor: para enviar un haz lejos, hágase
+primero ancho.
+\end{proposition}
+
+\begin{proof}
+La lente convierte el \omterm{def:b2:scalar-light-model:path}{frente de onda} plano en una esfera que converge en $f$;
+la \omterm{def:b2:diffraction:huygens}{difracción} de una abertura de radio $w$ da la apertura angular
+$\lambda/\pi w$, de donde la mancha focal $f\lambda/\pi w$ --- coherente con
+$\theta = \lambda/\pi w_0'$ leído al revés.
+\end{proof}
+
+\begin{example}[Cortar, leer, apuntar]\label{ex:b2:laser:focus}
+Un \omterm{def:b2:laser:cavity}{láser} de dióxido de carbono de \qty{1}{kW} a \qty{10.6}{\micro m}, con un radio de haz de
+\qty{10}{mm}, enfocado con $f = \qty{100}{mm}$: $w_0' = \qty{34}{\micro m}$,
+irradiancia de pico $2P/\pi w_0'^2 = \qty{5e11}{W/m^2}$ --- el acero hierve.
+Un puntero de \qty{1}{mW}, con $w_0 = \qty{0.5}{mm}$ a \qty{633}{nm}: $\theta =
+\qty{0.4}{mrad}$, una mancha de \qty{4}{cm} a \qty{50}{m} y una irradiancia de
+\qty{2.5}{kW/m^2} a la salida --- por encima de la luz solar, razón por la que ni
+un milivatio debe entrar nunca en un ojo: el cristalino lo enfocaría en una
+mancha de \qty{10}{\micro m} en la retina a millones de vatios por metro
+cuadrado. Un lector de discos a \qty{650}{nm} con una lente de \omterm{prop:b2:guided-waves:fibre}{apertura numérica}
+$0.6$ enfoca en unos $\lambda/2\mathrm{AN} \approx \qty{0.5}{\micro m}$,
+el tamaño de un hoyo.
+\end{example}
+
+\begin{remark}[Qué tiene de especial la luz láser]\label{rem:b2:laser:special}
+\emph{Directividad}: un solo modo transversal, con \omterm{def:b2:maxwell-equations:operators}{divergencia} en el límite
+de \omterm{def:b2:diffraction:huygens}{difracción}. \emph{Monocromaticidad}: uno o unos pocos modos de la cavidad, cada
+uno más estrecho que un megahercio --- \omterm{prop:b2:scalar-light-model:coherence}{longitudes de coherencia} de metros a kilómetros
+(\cref{ch:b2:scalar-light-model}). \emph{\omterm{prop:b2:two-wave-interference:spatial}{Coherencia espacial}}: todo el
+haz es una sola onda, así que interfiere consigo mismo en cualquier parte (holografía,
+interferometría). \emph{Brillo}: un milivatio en un haz limitado por \omterm{def:b2:diffraction:huygens}{difracción}
+supera al Sol por unidad de ángulo sólido y de ancho de banda. \emph{Potencia}
+en pulsos: un julio en un nanosegundo es un gigavatio, y en un femtosegundo, un
+petavatio. Y, como el haz es la salida de un oscilador, puede
+modularse en gigahercios --- la portadora de la \omterm{prop:b2:guided-waves:fibre}{fibra óptica}
+(\cref{ch:b2:guided-waves}).
+\end{remark}
+
+\begin{method}[Estimaciones sobre láseres]\label{meth:b2:laser:method}
+(1) Energía del fotón $h\nu = hc/\lambda$ y ritmo de fotones $P/h\nu$.
+(2) Umbral: $g_{\text{umb}}\ell \approx \tfrac12(T_2 + \text{pérdidas})$;
+compárese con la ganancia en pequeña señal $g_0\ell$ del medio.
+(3) Modos: $c/2L$ frente a la anchura de la ganancia; cuéntense los modos que oscilan.
+(4) Potencia: la ganancia se ancla en el umbral; salida $\propto$ (bombeo $-$
+bombeo umbral). (5) Haz: $z_{\text{R}} = \pi w_0^2/\lambda$, $\theta =
+\lambda/\pi w_0$, mancha focal $\lambda f/\pi w$, irradiancia de pico
+$2P/\pi w_0^2$. (6) Seguridad: compárese la irradiancia retiniana con la
+del Sol.
+\end{method}
+
+\section{Ejercicios}
+
+\begin{exercise}[$\star$]\label{exo:b2:laser:1}
+Un \omterm{def:b2:laser:cavity}{láser} de He--Ne emite \qty{1}{mW} a \qty{632.8}{nm}. Frecuencia, energía
+del fotón en julios y en electronvoltios, fotones por segundo. Con una cavidad de
+\qty{30}{cm}: separación de modos; ¿cuántos modos caben bajo una curva de ganancia
+de \qty{1.5}{GHz} de anchura?
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b2:laser:2}
+Dos niveles separados \qty{2}{eV} a \qty{300}{K}: razón $N_2/N_1$ (úsese
+$k_BT = \qty{0.025}{eV}$). ¿A qué temperatura serían iguales las poblaciones?
+Muéstrese que una inversión corresponde a una temperatura formalmente \emph{negativa}
+en la razón de Boltzmann. La misma razón para una transición de microondas
+a \qty{24}{GHz}.
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b2:laser:3}
+\omterm{prop:b2:laser:gaussian}{Haz gaussiano}, $w_0 = \qty{0.5}{mm}$, $\lambda = \qty{633}{nm}$: \omterm{prop:b2:laser:gaussian}{longitud de
+Rayleigh}, \omterm{def:b2:maxwell-equations:operators}{divergencia}, radio tras \qty{100}{m} y en la Luna
+(\qty{3.8e8}{m}). El mismo haz tras un expansor $\times 20$.
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b2:laser:4}
+Cavidad con $R_1 = 1$, $R_2 = 0.98$, medio de \qty{20}{cm} de largo y otras
+pérdidas del $0.5\%$ por pasada. Coeficiente de ganancia umbral. La ganancia en
+pequeña señal del medio vale \qty{0.2}{m^{-1}}: ¿emite \omterm{def:b2:laser:cavity}{láser}? ¿Y con
+$R_2 = 0.90$?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b2:laser:5}
+\emph{Relaciones de Einstein.} (a) Escríbase el balance de una población de dos
+niveles en equilibrio con la radiación $u(\nu)$ y dedúzcanse las dos
+relaciones a partir de la ley de Planck (dada). (b) Calcúlese
+$A_{21}/B_{21}u = \eu^{h\nu/k_BT} - 1$ a \qty{300}{K} para
+$\lambda = \qty{600}{nm}$ y para $\lambda = \qty{1}{cm}$. (c) ¿Por qué se
+inventaron los máseres antes que los \omterm{def:b2:laser:cavity}{láseres}? (d) La vida media de un nivel es
+$\tau = 1/A_{21}$; si $\tau = \qty{10}{ns}$ a \qty{600}{nm}, ¿cuánto vale
+$\tau$ para una transición del mismo $B$ a \qty{6}{\micro m}?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b2:laser:6}
+\emph{Saturación y potencia de salida.} Medio de cuatro niveles, $\sigma =
+\qty{3e-17}{m^2}$, $\tau = \qty{100}{ns}$, $\lambda = \qty{633}{nm}$.
+(a) \omterm{prop:b2:laser:saturation}{Intensidad de saturación}. (b) Ritmo de bombeo $R$ para una ganancia en pequeña señal
+$g_0 = \qty{0.1}{m^{-1}}$. (c) El umbral de la cavidad es
+$g_{\text{umb}} = \qty{0.02}{m^{-1}}$: intensidad intracavidad en estado
+estacionario; salida a través de $T_2 = 1\%$ desde un haz de área \qty{1}{mm^2}.
+(d) Muéstrese que la potencia de salida es lineal en $R$ por encima del umbral.
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b2:laser:7}
+\emph{Modos y estabilidad.} (a) Longitud de cavidad para funcionamiento monomodo
+bajo una curva de ganancia de \qty{1.5}{GHz}. (b) Una cavidad de \qty{30}{cm} se dilata
+\qty{1}{\micro m}: corrimiento de la frecuencia de un modo, comparado con la
+separación de modos y con la anchura de la ganancia. (c) ¿Por qué fijan los He--Ne
+comerciales estabilizados la longitud del tubo calentándolo? (d) La anchura propia del modo es
+de unos pocos kilohercios: ¿\omterm{prop:b2:scalar-light-model:coherence}{longitud de coherencia}?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b2:laser:8}
+\emph{Enfoque.} (a) Haz de $w = \qty{1}{mm}$, $\lambda = \qty{633}{nm}$,
+$f = \qty{50}{mm}$: \omterm{prop:b2:laser:gaussian}{cintura}, \omterm{prop:b2:laser:gaussian}{longitud de Rayleigh} e irradiancia de pico para
+\qty{1}{mW}. (b) El mismo haz en un ojo (distancia focal \qty{17}{mm}):
+mancha retiniana e irradiancia; compárese con la imagen del Sol
+(\qty{1}{kW/m^2} a través de una pupila de \qty{3}{mm} en una imagen de \qty{0.15}{mm}).
+(c) ¿Por qué es más peligroso un puntero verde de \qty{5}{mW} que una
+bombilla de \qty{100}{W}? (d) Profundidad de foco de la lente de \qty{50}{mm}.
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b2:laser:9}
+\emph{Tres niveles frente a cuatro.} Rubí: $N = \qty{1.6e25}{m^{-3}}$
+iones de cromo, vida media del nivel superior \qty{3}{ms}, $\lambda =
+\qty{694}{nm}$. (a) Potencia de bombeo mínima por unidad de volumen para mantener la mitad de los
+iones en el nivel superior. (b) Para una varilla de \qty{1}{cm^3}. (c) Un medio de cuatro
+niveles solo necesita $\Delta N = \qty{1e22}{m^{-3}}$ con $\tau =
+\qty{230}{\micro s}$ a \qty{1064}{nm}: potencia de bombeo por unidad de volumen. (d) Coméntese
+la lámpara de destello del \omterm{def:b2:laser:cavity}{láser} de rubí frente al bombeo por diodo de un Nd:YAG.
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b2:laser:10}
+\emph{El diodo \omterm{def:b2:laser:cavity}{láser}.} La región emisora de un \omterm{def:b2:laser:cavity}{láser} de diodo mide unos
+\qty{3}{\micro m} por \qty{1}{\micro m}, $\lambda = \qty{780}{nm}$. (a)
+Semiángulos de \omterm{def:b2:maxwell-equations:operators}{divergencia} en las dos direcciones. (b) ¿Qué dirección
+diverge más, y por qué es elíptico el haz? (c) Una lente de $f =
+\qty{5}{mm}$ lo colima: tamaños del haz en las dos direcciones. (d) ¿Cómo
+puede volverse redonda la elipse (dos ideas)?
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b2:laser:11}
+\emph{Arranque.} (a) Escríbase la condición de amplitud de ida y vuelta con una
+ganancia neta $G = \eu^{2(g_0 - g_{\text{umb}})\ell} = 1.04$ por ida y vuelta
+y un tiempo de ida y vuelta $2L/c$ con $L = \qty{30}{cm}$. (b) Desde un
+fotón espontáneo hasta el estado estacionario de \qty{100}{mW} intracavidad
+(¿número de fotones en la cavidad?), ¿cuántas idas y vueltas y cuánto tiempo?
+(c) ¿Qué limita el crecimiento, y qué le ocurre a un modo cuyo
+$g_0 < g_{\text{umb}}$? (d) En un \omterm{def:b2:laser:cavity}{láser} multimodo los modos compiten por
+los mismos átomos: explíquese el salto de modo.
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b2:laser:12}
+\emph{Telemetría lunar.} Pulsos de \qty{100}{mJ} a \qty{532}{nm},
+de \qty{100}{ps} de duración, enviados por un telescopio de \qty{1}{m} ($w_0 =
+\qty{0.5}{m}$). (a) Fotones por pulso y potencia de pico. (b) \omterm{def:b2:maxwell-equations:operators}{Divergencia}
+por \omterm{def:b2:diffraction:huygens}{difracción} y radio de la mancha en la Luna (\qty{3.8e8}{m}); la atmósfera
+abre en cambio el haz hasta \qty{1}{''}: radio de la mancha. (c) Una batería
+de reflectores de \qty{0.1}{m^2} en la Luna devuelve la luz con su propia
+\omterm{def:b2:diffraction:huygens}{difracción} ($\lambda/d$ con cubos de esquina de $d = \qty{4}{cm}$): mancha en la
+Tierra, fracción recogida por el telescopio, fotones detectados por pulso.
+(d) Con una medida de tiempos de \qty{100}{ps}: precisión en distancia por pulso, y tras
+$10^4$ pulsos.
+\end{exercise}
+
+\begin{omfigure}
+\includegraphics[width=0.58\linewidth]{images/book4/hene-laser-594nm.jpg}
+
+{\small Un tubo de \omterm{def:b2:laser:cavity}{láser} de helio--neón que emite en su raya amarilla a \qty{594}{nm}: el resplandor de la descarga dentro del tubo y el haz que sale por el espejo de salida. Foto: Telementor, CC~BY~4.0.}
+\end{omfigure}
+
+\section{Problema: un láser de helio--neón, del tubo a la Luna}
+
+\begin{problem}[{Problema de fin de semana --- un láser construido, caracterizado y
+usado}]\label{pb:b2:laser:1}
+El \omterm{def:b2:laser:cavity}{láser} del banco: tubo de vidrio $L = \qty{30}{cm}$, diámetro interior
+\qty{1}{mm}, mezcla de helio y neón, descarga de \qty{5}{mA} bajo
+\qty{1.5}{kV}; espejos $R_1 = 0.999$, $R_2 = 0.99$; longitud de onda
+\qty{632.8}{nm}; salida \qty{1}{mW}. Datos: el nivel metastable del He está
+a \qty{20.61}{eV}, el nivel \omterm{def:b2:laser:cavity}{láser} superior del Ne a \qty{20.66}{eV} con
+vida media \qty{100}{ns}, el nivel \omterm{def:b2:laser:cavity}{láser} inferior a \qty{18.70}{eV} con
+vida media \qty{10}{ns}; temperatura del gas \qty{400}{K}; masa molar del neón
+\qty{20}{g/mol}; \omterm{prop:b2:laser:gain}{sección eficaz} $\sigma = \qty{3e-17}{m^2}$; $h =
+\qty{6.63e-34}{J.s}$, $k_B = \qty{1.38e-23}{J/K}$, $k_BT$ a \qty{400}{K}
+$= \qty{0.0345}{eV}$.
+
+\textbf{Parte I --- El medio.}
+\begin{enumerate}
+  \item Energía del fotón y frecuencia de la raya \omterm{def:b2:laser:cavity}{láser}.
+  \item Los niveles del He y del Ne difieren en \qty{0.05}{eV}: compárese con
+        $k_BT$ y explíquese por qué la transferencia por colisión He $\to$ Ne es
+        eficiente.
+  \item Razón de Boltzmann del nivel superior del Ne al fundamental a
+        \qty{400}{K} sin descarga: coméntese.
+  \item Explíquese, a partir de las dos vidas medias, por qué es fácil mantener una inversión
+        entre los niveles del Ne una vez alimentado el nivel superior.
+  \item Anchura Doppler de la raya: celeridad más probable del neón a
+        \qty{400}{K} y $\Delta\nu \approx \nu\,v/c$ en orden de
+        magnitud (con precisión, $\Delta\nu = 2\nu\sqrt{2k_BT\ln2/Mc^2}$).
+  \item Con $\Delta N = N_2 - N_1 = \qty{3e15}{m^{-3}}$: coeficiente de ganancia
+        en pequeña señal y ganancia por pasada en \qty{30}{cm}.
+\end{enumerate}
+
+\textbf{Parte II --- La cavidad.}
+\begin{enumerate}[resume]
+  \item Coeficiente de ganancia umbral; margen respecto de la pregunta 6.
+  \item Separación de modos; número de modos que pueden oscilar.
+  \item Potencia intracavidad e irradiancia intracavidad en el tubo.
+  \item ¿Qué fija la ganancia en estado estacionario, y a dónde va la energía
+        de bombeo sobrante?
+  \item Potencia eléctrica de entrada y potencia óptica de salida: rendimiento; dos
+        razones de que sea tan bajo.
+  \item Arranque: ganancia neta por ida y vuelta $2(g_0 - g_{\text{umb}})L$,
+        número de fotones en la cavidad en estado estacionario, número de
+        idas y vueltas desde un fotón y tiempo de arranque.
+  \item El tubo se calienta y se alarga \qty{1}{\micro m}: corrimiento en frecuencia
+        de un modo; consecuencia para un \omterm{def:b2:laser:cavity}{láser} monomodo.
+  \item El tubo se cierra con ventanas en el \omterm{prop:b2:wave-interfaces:brewster}{ángulo de Brewster}: ¿qué hace
+        esto con la polarización de la salida, y por qué no añade
+        pérdidas?
+\end{enumerate}
+
+\textbf{Parte III --- El haz.}
+\begin{enumerate}[resume]
+  \item La cavidad produce una \omterm{prop:b2:laser:gaussian}{cintura} $w_0 = \qty{0.3}{mm}$: \omterm{prop:b2:laser:gaussian}{longitud de
+        Rayleigh}, \omterm{def:b2:maxwell-equations:operators}{divergencia} y diámetro del haz a \qty{10}{m}.
+  \item Irradiancia de pico a la salida; compárese con la luz solar
+        (\qty{1}{kW/m^2}).
+  \item Una lente de $f = \qty{50}{mm}$: \omterm{prop:b2:laser:gaussian}{cintura} e irradiancia de pico en el
+        foco.
+  \item El haz entra en un ojo (distancia focal \qty{17}{mm}): mancha retiniana
+        e irradiancia; por qué un parpadeo no es demasiado lento para \qty{1}{mW},
+        y qué significa ``clase 2''.
+  \item Un expansor de haz $\times 10$: nueva \omterm{def:b2:maxwell-equations:operators}{divergencia} y diámetro de la mancha
+        a \qty{1}{km}.
+  \item \omterm{prop:b2:scalar-light-model:coherence}{Longitud de coherencia} si el \omterm{def:b2:laser:cavity}{láser} funciona en un solo modo de anchura
+        \qty{1}{MHz}; y si funciona con tres modos que abarcan \qty{1}{GHz}.
+\end{enumerate}
+
+\textbf{Parte IV --- Hasta la Luna.}
+Una estación de telemetría dispara pulsos de \qty{100}{mJ} de \qty{100}{ps} a
+\qty{532}{nm} por un telescopio de \qty{1}{m}; la atmósfera abre
+el haz saliente hasta \qty{1}{''} ($\qty{4.8e-6}{rad}$).
+\begin{enumerate}[resume]
+  \item Fotones por pulso y potencia de pico.
+  \item Radio de la mancha en la Luna (\qty{3.8e8}{m}); compárese con la
+        mancha limitada por \omterm{def:b2:diffraction:huygens}{difracción}.
+  \item Una batería de reflectores de \qty{0.1}{m^2} intercepta ¿qué fracción
+        del pulso, cuántos fotones?
+  \item Los cubos de esquina de \qty{4}{cm} de la batería devuelven la luz con la
+        apertura $\lambda/d$: radio de la mancha en la Tierra, fracción recogida por el
+        telescopio, fotones detectados por pulso (tómese un rendimiento
+        óptico global de $0.1$).
+  \item El tiempo de ida y vuelta es de unos \qty{2.56}{s}, medido con
+        \qty{100}{ps}: precisión en distancia por pulso; tras $10^4$
+        retornos; compárese con los \qty{3.8}{cm} por año a los que
+        se aleja la Luna.
+\end{enumerate}
+\end{problem}

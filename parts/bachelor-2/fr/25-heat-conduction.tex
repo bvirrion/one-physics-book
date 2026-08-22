@@ -1,0 +1,598 @@
+\chapter{Conduction thermique}\label{ch:b2:heat-conduction}
+
+Touchez un rail métallique et un banc de bois le même matin froid~: le
+rail semble plus froid, alors qu'un thermomètre donne aux deux la même
+température. Posez une casserole sur la cuisinière et son manche ne chauffe qu'au bout d'un
+moment~; creusez deux mètres en été et la terre est encore froide de
+l'hiver~; un processeur qui dissipe cent watts sur un centimètre
+carré ne fond pas parce qu'un bloc d'aluminium à ailettes est posé sur
+lui. Tout cela est de la \emph{conduction thermique}, le transport de l'énergie
+interne à travers la matière par l'agitation de ses molécules, sans aucun
+écoulement de matière --- et tout cela obéit à une loi, celle de Fourier, et à une
+équation, l'équation de la chaleur, qui est l'\omterm{thm:b2:particle-diffusion:equation}{équation de diffusion} du
+chapitre précédent avec la température à la place de la densité. Ce chapitre pose
+la loi et l'équation à partir d'un bilan d'énergie, les résout dans les
+cas qui comptent (parois stationnaires et leurs \omterm{prop:b2:heat-conduction:resistance}{résistances thermiques},
+chauffage périodique et onde thermique, ailettes de refroidissement), introduit
+l'échange avec un fluide (loi de Newton et \omterm{def:b2:heat-conduction:biot}{nombre de Biot}), et calcule
+l'entropie que la conduction crée --- car la chaleur ne descend jamais que la pente.
+
+\begin{omfigure}
+\includegraphics[width=0.58\linewidth]{images/book4/ai/b4-25-cpu-heat-sink.png}
+
+{\small Un dissipateur à ailettes sur un processeur~: cent watts conduits
+hors d'un centimètre carré de silicium, étalés dans une embase métallique,
+et remis à l'air par des ailettes qui multiplient la surface par trente.}
+\end{omfigure}
+
+\section{La loi de Fourier}
+
+\begin{definition}[Densité de courant thermique]\label{def:b2:heat-conduction:flux}
+La \emph{densité de courant thermique}\index{densité de courant thermique}
+$\vect{j}_Q$ (en \unit{W/m^2}) est le vecteur tel que l'énergie
+transférée par conduction à travers un élément de surface orienté
+$\dd\vect S$ pendant $\dd t$ vaut $\vect{j}_Q\cdot\dd\vect S\,\dd t$~; le
+\emph{flux thermique}\index{flux thermique} (une puissance, en watts) à travers une
+surface $S$ vaut $\Phi = \iint_S\vect{j}_Q\cdot\dd\vect S$.
+\end{definition}
+
+\begin{theorem}[Loi de Fourier]\label{thm:b2:heat-conduction:fourier}
+Dans un milieu au repos dont la température n'est pas uniforme,
+\[
+\vect{j}_Q = -\lambda\,\vect{\operatorname{grad}}\,T ,
+\]
+où la \emph{conductivité thermique}\index{conductivité thermique}
+$\lambda > 0$ (en \unit{W/m/K}) dépend du matériau et, faiblement, de
+la température. La chaleur descend le \omterm{def:b2:maxwell-equations:operators}{gradient} de température, du chaud vers le
+froid --- le second principe inscrit dans une loi linéaire.
+\end{theorem}
+
+\begin{proof}
+Phénoménologique, comme la loi de Fick, et avec la même justification
+microscopique~: les molécules (ou les électrons libres d'un métal, ou les
+vibrations du réseau) portent leur énergie sur une marche au hasard, et il en
+vient davantage du côté chaud.
+\end{proof}
+
+\begin{example}[Conductivités]\label{ex:b2:heat-conduction:values}
+Métaux (les électrons portent la chaleur comme le courant ---
+les conductivités se suivent)~: cuivre \qty{400}{W/m/K}, aluminium
+\qty{240}{W/m/K}, acier \qty{50}{W/m/K}. Solides isolants~: béton
+\qty{1.5}{W/m/K}, verre \qty{1}{W/m/K}, brique \qty{0.8}{W/m/K}, bois
+\qty{0.15}{W/m/K}. Liquides~: eau \qty{0.6}{W/m/K}. Gaz~: air
+\qty{0.026}{W/m/K} --- et les meilleurs isolants, laine de verre ou mousse à
+\qty{0.04}{W/m/K}, sont surtout de l'air immobile, piégé pour qu'il ne puisse
+convecter. Quatre ordres de grandeur du cuivre à l'air.
+\end{example}
+
+\section{Le bilan d'énergie et l'équation de la chaleur}
+
+\begin{theorem}[Bilan local d'énergie]\label{thm:b2:heat-conduction:balance}
+Dans un solide (ou un fluide au repos) de masse volumique $\rho$ et de capacité thermique
+massique $c$, avec une puissance $p$ libérée par unité de volume (effet Joule, une
+réaction chimique ou nucléaire, un rayonnement absorbé),
+\[
+\rho c\,\frac{\partial T}{\partial t} = -\operatorname{div}\vect{j}_Q + p ,
+\qquad\text{à une dimension}\quad
+\rho c\,\frac{\partial T}{\partial t} = -\frac{\partial j_Q}{\partial x} + p .
+\]
+\end{theorem}
+
+\begin{proof}
+Premier principe pour la tranche entre $x$ et $x + \dd x$ (section $S$,
+volume fixe, donc sans travail)~: son énergie interne $\rho c\,T\,S\,\dd x$
+varie pendant $\dd t$ de la chaleur reçue, $[j_Q(x) - j_Q(x+\dd x)]S\,\dd t
+= -\partial_x j_Q\,\dd x\,S\,\dd t$, plus $p\,S\,\dd x\,\dd t$. À trois
+dimensions la chaleur entrant dans un volume fixe par sa surface fermée
+vaut $-\iint\vect{j}_Q\cdot\dd\vect S = -\iiint\operatorname{div}\vect{j}_Q\,\dd\tau$.
+\end{proof}
+
+\begin{theorem}[Équation de la chaleur]\label{thm:b2:heat-conduction:equation}
+Pour $\lambda$, $\rho$, $c$ uniformes,
+\[
+\frac{\partial T}{\partial t} = a\,\Delta T + \frac{p}{\rho c},
+\qquad a = \frac{\lambda}{\rho c} \quad\text{(la \emph{diffusivité thermique}\index{diffusivité thermique}, en \unit{m^2/s})} .
+\]
+Tout ce qui a été dit de l'\omterm{thm:b2:particle-diffusion:equation}{équation de diffusion} vaut ici~: linéarité,
+irréversibilité, lissage, et les échelles $L \sim \sqrt{at}$, $t \sim
+L^2/a$.
+\end{theorem}
+
+\begin{proof}
+Reportons la loi de Fourier dans le bilan~: $\rho c\,\partial_t T =
+\lambda\Delta T + p$.
+\end{proof}
+
+\begin{example}[Diffusivités et temps]\label{ex:b2:heat-conduction:times}
+Cuivre $a = \qty{1.1e-4}{m^2/s}$, air \qty{2e-5}{m^2/s}, béton et
+brique $\approx \qty{5e-7}{m^2/s}$, eau \qty{1.4e-7}{m^2/s}, bois
+\qty{1e-7}{m^2/s}. La chaleur traverse un centimètre de cuivre en une seconde, un
+centimètre de brique en trois minutes, un mur de \qty{20}{cm} en un jour
+(d'où le fait que les murs épais lissent le cycle jour--nuit), la
+demi-épaisseur de \qty{1.5}{cm} d'un steak en un quart d'heure (les temps de cuisson
+varient comme le carré de l'épaisseur), et un kilomètre de roche
+en $10^{12}\,\unit{s}$, trente mille ans --- la Terre refroidit
+encore depuis sa formation.
+\end{example}
+
+\section{Régime stationnaire~: les résistances thermiques}
+
+\begin{proposition}[Résistance thermique d'une lame]\label{prop:b2:heat-conduction:resistance}
+En régime stationnaire sans sources, une lame d'épaisseur $e$,
+d'aire $S$, de conductivité $\lambda$, entre les températures $T_1$ et
+$T_2$, a un profil linéaire et porte le flux
+\[
+\Phi = \frac{T_1 - T_2}{R_{\text{th}}}, \qquad
+R_{\text{th}} = \frac{e}{\lambda S}\quad\text{(en \unit{K/W})} :
+\]
+sa \emph{résistance thermique}\index{résistance thermique}. La température
+joue le rôle du potentiel, le flux celui du courant~: les résistances en
+série (couches d'un mur) s'ajoutent, celles en parallèle (mur et
+fenêtre) ajoutent leurs inverses. Pour une coque cylindrique (l'isolant d'un
+tuyau) entre les rayons $r_1 < r_2$ et de longueur $\ell$,
+$R_{\text{th}} = \ln(r_2/r_1)/2\pi\lambda\ell$~; pour une coque sphérique,
+$(1/r_1 - 1/r_2)/4\pi\lambda$.
+\end{proposition}
+
+\begin{proof}
+$\dd^2T/\dd x^2 = 0$~: profil affine, $j_Q = \lambda(T_1 - T_2)/e$
+uniforme, $\Phi = j_QS$. En géométrie cylindrique $\Phi = -\lambda\,2\pi
+r\ell\,\dd T/\dd r$ est le même pour tout $r$ (pas d'accumulation), donc
+$T = A - (\Phi/2\pi\lambda\ell)\ln r$~; en géométrie sphérique, $\Phi =
+-4\pi r^2\lambda\,\dd T/\dd r$ donne $T = A + \Phi/4\pi\lambda r$.
+\end{proof}
+
+\begin{proposition}[Échange avec un fluide~: la loi de Newton]\label{prop:b2:heat-conduction:newton}
+Une surface solide à $T_{\text{s}}$ au contact d'un fluide à $T_{\text{f}}$
+(loin de la surface) perd la densité de flux
+\[
+j_Q = h\,(T_{\text{s}} - T_{\text{f}}) ,
+\]
+où le \emph{coefficient d'échange}\index{coefficient d'échange} $h$ (en \unit{W/m^2/K}) résume la conduction à travers
+la mince couche de fluide qui adhère à la paroi et la convection qui la
+renouvelle~: $h \approx 5$--\qty{25}{W/m^2/K} pour l'air en convection naturelle ou
+légère, $50$--\qty{500}{W/m^2/K} pour l'air soufflé, $10^3$--$10^4$
+pour l'eau. La surface ajoute alors une \emph{résistance de film} $1/hS$ en
+série avec la paroi.
+\end{proposition}
+
+\begin{proof}
+Phénoménologique~: le mouvement du fluide n'est pas calculé, il est résumé
+dans $h$ (mesuré, ou donné par les corrélations de la mécanique des fluides).
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}[scale=0.9, >=stealth]
+  % wall layers
+  \fill[omExo!15] (0,0) rectangle (1.6,2.6);
+  \fill[omDef!12] (1.6,0) rectangle (2.6,2.6);
+  \fill[gray!15] (2.6,0) rectangle (2.8,2.6);
+  \draw (0,0) rectangle (2.8,2.6);
+  \draw (1.6,0) -- (1.6,2.6); \draw (2.6,0) -- (2.6,2.6);
+  \node[font=\scriptsize] at (0.8,2.85) {brique};
+  \node[font=\scriptsize] at (2.1,2.85) {laine};
+  \node[font=\scriptsize, right] at (2.9,1.3) {intérieur $T_{\text{i}}$};
+  \node[font=\scriptsize, left] at (-0.1,1.3) {extérieur $T_{\text{o}}$};
+  \draw[->, omThm, thick] (3.6,0.7) -- (-0.8,0.7) node[midway, below, font=\scriptsize] {$\Phi$};
+  % resistor chain
+  \begin{scope}[yshift=-1.6cm]
+    \draw (-0.8,0) -- (0.2,0);
+    \draw (0.2,-0.18) rectangle (1.0,0.18); \node[font=\tiny] at (0.6,0) {$1/h_{\text{o}}S$};
+    \draw (1.0,0) -- (1.4,0);
+    \draw (1.4,-0.18) rectangle (2.4,0.18); \node[font=\tiny] at (1.9,0) {$e_1/\lambda_1 S$};
+    \draw (2.4,0) -- (2.8,0);
+    \draw (2.8,-0.18) rectangle (3.8,0.18); \node[font=\tiny] at (3.3,0) {$e_2/\lambda_2 S$};
+    \draw (3.8,0) -- (4.2,0);
+    \draw (4.2,-0.18) rectangle (5.0,0.18); \node[font=\tiny] at (4.6,0) {$1/h_{\text{i}}S$};
+    \draw (5.0,0) -- (5.6,0);
+    \fill (-0.8,0) circle (1.5pt) node[above, font=\scriptsize] {$T_{\text{o}}$};
+    \fill (5.6,0) circle (1.5pt) node[above, font=\scriptsize] {$T_{\text{i}}$};
+  \end{scope}
+  % profile
+  \begin{scope}[xshift=7.2cm]
+    \draw[->] (0,0) -- (3.4,0) node[right, font=\scriptsize] {$x$};
+    \draw[->] (0,0) -- (0,2.8) node[above, font=\scriptsize] {$T$};
+    \draw[omDef, thick] (0,0.4) -- (0.3,0.6) -- (1.6,0.9) -- (2.6,2.4) -- (2.8,2.45) -- (3.2,2.6);
+    \draw[dashed] (0.3,0) -- (0.3,0.6); \draw[dashed] (1.6,0) -- (1.6,0.9); \draw[dashed] (2.6,0) -- (2.6,2.4); \draw[dashed] (2.8,0) -- (2.8,2.45);
+    \node[font=\scriptsize, below] at (0.95,0) {brique};
+    \node[font=\scriptsize, below] at (2.1,0) {laine};
+    \node[font=\scriptsize, left] at (0,0.4) {$T_{\text{o}}$};
+    \node[font=\scriptsize, right] at (3.2,2.6) {$T_{\text{i}}$};
+  \end{scope}
+\end{tikzpicture}
+
+{\small Un mur composite et son circuit thermique~: film, brique, laine,
+film en série. À droite~: le profil de température --- presque toute la chute
+se fait dans la couche de plus grande résistance, la laine, bien qu'elle soit
+la plus mince.}
+\end{omfigure}
+
+\begin{example}[Un mur et une fenêtre]\label{ex:b2:heat-conduction:wall}
+Par mètre carré~: brique de \qty{20}{cm} à \qty{0.8}{W/m/K}, $R =
+\qty{0.25}{m^2.K/W}$~; les deux films, $1/8 + 1/25 = \qty{0.165}{m^2.K/W}$~:
+total $0.415$, soit $U = 1/R = \qty{2.4}{W/m^2/K}$ et, pour un écart de \qty{20}{K},
+\qty{48}{W/m^2}. Ajoutons \qty{10}{cm} de laine de verre, $R =
+\qty{2.5}{m^2.K/W}$~: le total vaut $2.9$, $U = \qty{0.34}{W/m^2/K}$ ---
+sept fois moins. Un simple vitrage, \qty{4}{mm} à \qty{1}{W/m/K},
+n'est que du film~: $R = 0.004 + 0.165$, $U \approx \qty{6}{W/m^2/K}$~; une
+couche d'air immobile de \qty{12}{mm} entre deux vitres ajoute $0.012/0.026 =
+\qty{0.46}{m^2.K/W}$ et divise la perte par plus de trois.
+\end{example}
+
+\begin{definition}[Nombre de Biot]\label{def:b2:heat-conduction:biot}
+Pour un solide de taille $L$ échangeant avec un fluide, le \emph{nombre de
+Biot}\index{nombre de Biot}
+\[
+\mathrm{Bi} = \frac{hL}{\lambda} = \frac{\text{résistance interne } L/\lambda S}{\text{résistance de film } 1/hS}
+\]
+compare les deux. Si $\mathrm{Bi} \ll 1$ le solide est uniforme en
+température à chaque instant et refroidit d'un bloc, exponentiellement avec
+la constante de temps $\tau = \rho c V/hS$~; si $\mathrm{Bi} \gg 1$ la
+surface est à la température du fluide et l'intérieur conduit à son
+propre rythme $L^2/a$.
+\end{definition}
+
+\section{Chauffage périodique~: l'onde thermique}
+
+\begin{proposition}[Onde thermique dans un demi-espace]\label{prop:b2:heat-conduction:wave}
+Si la surface $x = 0$ d'un demi-espace est maintenue à $T(0,t) = T_0 +
+\theta_0\cos\omega t$, la température à l'intérieur vaut, en régime
+établi,
+\[
+T(x,t) = T_0 + \theta_0\,\eu^{-x/\delta}\cos\Big(\omega t - \frac{x}{\delta}\Big),
+\qquad \delta = \sqrt{\frac{2a}{\omega}} :
+\]
+une onde qui progresse vers l'intérieur à la vitesse $\omega\delta =
+\sqrt{2a\omega}$ et s'amortit sur une \emph{profondeur de pénétration} $\delta$
+par radian de phase --- d'un facteur $\eu^{-2\pi} = 2 \times 10^{-3}$ par
+longueur d'onde. Les oscillations rapides pénètrent moins que les lentes.
+\end{proposition}
+
+\begin{proof}
+Cherchons $\underline T = \theta_0\eu^{\iu(\omega t - \underline k x)}$~:
+$\iu\omega = -a\underline k^2$, donc $\underline k^2 = -\iu\omega/a$,
+$\underline k = (1 - \iu)\sqrt{\omega/2a} = (1 - \iu)/\delta$ (la racine
+qui décroît pour $x > 0$). Prendre la partie réelle.
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}
+  \begin{axis}[omaxis, width=9cm, height=4.8cm, xmin=0, xmax=4.6, ymin=-1.1, ymax=1.1,
+    xlabel={$x/\delta$}, ylabel={$(T - T_0)/\theta_0$}, xtick={1,2,3,4}, ytick={-1,1}, clip=false,
+    axis x line=middle, axis y line=left,
+    legend style={font=\scriptsize, at={(0.98,0.04)}, anchor=south east, draw=none, fill=none}]
+    \addplot[omDef, thick, domain=0:4.6, samples=120] {exp(-x)*cos(deg(-x))};
+    \addlegendentry{$\omega t = 0$}
+    \addplot[omThm, thick, domain=0:4.6, samples=120] {exp(-x)*cos(deg(pi/2-x))};
+    \addlegendentry{$\omega t = \pi/2$}
+    \addplot[omExo, thick, domain=0:4.6, samples=120] {exp(-x)*cos(deg(pi-x))};
+    \addlegendentry{$\omega t = \pi$}
+    \addplot[gray, dashed, domain=0:4.6, samples=60] {exp(-x)};
+    \addplot[gray, dashed, domain=0:4.6, samples=60] {-exp(-x)};
+  \end{axis}
+\end{tikzpicture}
+
+{\small L'onde thermique à trois instants~: l'oscillation de surface
+pénètre comme une onde amortie, son amplitude décroissant en $\eu^{-x/\delta}$
+(tiretés) et sa phase retardant de $x/\delta$ --- en $x = \pi\delta$ la
+température est opposée à celle de la surface.}
+\end{omfigure}
+
+\begin{example}[Le sol, la cave et le vin]\label{ex:b2:heat-conduction:soil}
+Sol, $a \approx \qty{5e-7}{m^2/s}$. Cycle journalier, $\omega = 2\pi/\qty{86400}{s}$~:
+$\delta = \qty{12}{cm}$ --- à un demi-mètre la journée a disparu. Cycle annuel~:
+$\delta = \qty{2.2}{m}$~; à cette profondeur l'écart été--hiver de \qty{10}{K} est
+tombé à \qty{3.7}{K} et retarde d'un radian, deux mois~: la cave est
+la plus froide en mars et la plus chaude en septembre, et à \qty{5}{m} elle est
+à \qty{1}{K} près constante --- la cave qui garde le vin. La même
+mathématique donne l'\omterm{def:b2:dispersion-wave-packets:complex}{épaisseur de peau} de l'électromagnétisme
+(\cref{ch:b2:waves-in-media})~: même équation, même $\sqrt{2/(\text{diffusivité}
+\times\omega)}$.
+\end{example}
+
+\section{Ailettes}
+
+\begin{proposition}[L'ailette de refroidissement]\label{prop:b2:heat-conduction:fin}
+Une tige ou une plaque mince (section $S$, périmètre $p$, conductivité $\lambda$)
+fixée en $x = 0$ à une paroi à $T_0$, dans un fluide à $T_{\text{f}}$ avec
+le coefficient $h$, a un excès de température $\theta = T - T_{\text{f}}$
+qui obéit à
+\[
+\frac{\dd^2\theta}{\dd x^2} = m^2\theta, \qquad m = \sqrt{\frac{hp}{\lambda S}} ;
+\]
+pour une ailette longue, $\theta = \theta_0\eu^{-mx}$ et l'ailette évacue $\Phi =
+\sqrt{hp\lambda S}\,\theta_0$ --- autant qu'une surface nue longue de $\sqrt{\lambda
+S/hp} = 1/m$, avec une température tombée à $\theta_0/\eu$ en
+$x = 1/m$. Pour une ailette de longueur finie $L$ (extrémité adiabatique), $\theta =
+\theta_0\cosh m(L-x)/\cosh mL$ et son \emph{efficacité}\index{efficacité d'ailette} --- le flux rapporté à celui d'une ailette isotherme à $\theta_0$ ---
+vaut $\eta = \tanh(mL)/mL$.
+\end{proposition}
+
+\begin{proof}
+Bilan stationnaire de la tranche $[x, x + \dd x]$~: conduit vers l'intérieur,
+$-\lambda S\theta'(x)$~; sortant, $-\lambda S\theta'(x + \dd x)$~; perdu vers le
+fluide, $hp\,\theta\,\dd x$~: $\lambda S\theta'' = hp\theta$. Le flux à la
+base vaut $-\lambda S\theta'(0)$~: $\lambda Sm\theta_0$ pour l'ailette longue,
+$\lambda Sm\theta_0\tanh mL$ pour l'ailette finie, à comparer à
+$hpL\theta_0$. Le \omterm{def:b2:heat-conduction:biot}{nombre de Biot} sur l'épaisseur de l'ailette, $ht/\lambda$, doit
+être petit pour que le traitement à une dimension vaille.
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}
+  \begin{axis}[omaxis, width=6.4cm, height=4.4cm, xmin=0, xmax=3.2, ymin=0, ymax=1.12,
+    xlabel={$mx$}, ylabel={$\theta/\theta_0$}, xtick={1,2,3}, ytick={1}, clip=false,
+    legend style={font=\scriptsize, at={(0.98,0.98)}, anchor=north east, draw=none, fill=none}]
+    \addplot[omDef, thick, domain=0:3.2, samples=60] {exp(-x)};
+    \addlegendentry{ailette longue}
+    \addplot[omExo, thick, domain=0:1.2, samples=60] {cosh(1.2-x)/cosh(1.2)};
+    \addlegendentry{$mL = 1.2$}
+    \addplot[omThm, thick, domain=0:0.5, samples=30] {cosh(0.5-x)/cosh(0.5)};
+    \addlegendentry{$mL = 0.5$}
+  \end{axis}
+  \begin{scope}[xshift=7.2cm, yshift=0.3cm, scale=0.8, >=stealth]
+    \fill[gray!25] (0,0) rectangle (0.5,3.2);
+    \fill[omDef!20] (0.5,1.4) rectangle (4.2,1.8);
+    \draw (0.5,1.4) rectangle (4.2,1.8);
+    \node[font=\scriptsize, rotate=90] at (0.25,1.6) {paroi $T_0$};
+    \draw[->, omThm, thick] (0.6,1.6) -- (1.6,1.6) node[right, font=\scriptsize] {$-\lambda S\theta'$};
+    \foreach \x in {1.2,2.0,2.8,3.6}{
+      \draw[->, omExo] (\x,1.85) -- (\x,2.4);
+      \draw[->, omExo] (\x,1.35) -- (\x,0.8);
+    }
+    \node[font=\scriptsize, omExo] at (2.4,2.7) {$hp\,\theta\,\dd x$};
+    \node[font=\scriptsize] at (2.4,0.45) {fluide $T_{\text{f}}$};
+  \end{scope}
+\end{tikzpicture}
+
+{\small À gauche~: la température le long d'une ailette, pour une ailette longue et deux
+ailettes finies (extrémité adiabatique) --- au-delà de $mx \approx 2$ une ailette n'apporte plus grand-chose. À droite~:
+le bilan d'une tranche~: conduction dans la longueur, convection vers l'extérieur par le
+périmètre.}
+\end{omfigure}
+
+\begin{example}[Un dissipateur]\label{ex:b2:heat-conduction:sink}
+Ailettes d'aluminium de \qty{1}{mm} d'épaisseur ($p/S \approx 2/t = \qty{2000}{m^{-1}}$),
+hautes de \qty{30}{mm}, dans de l'air soufflé $h = \qty{50}{W/m^2/K}$~: $m =
+\sqrt{2h/\lambda t} = \qty{20}{m^{-1}}$, $mL = 0.6$, $\eta = 0.89$ --- les
+ailettes travaillent à $89\%$ de leur aire. Trente d'entre elles, larges de \qty{60}{mm},
+offrent \qty{0.11}{m^2} là où le carré nu de \qty{60}{mm} offrait
+\qty{0.0036}{m^2}~: une résistance $1/\eta hA = \qty{0.2}{K/W}$ au lieu de
+\qty{5.6}{K/W}~; \qty{100}{W} élèvent l'embase de \qty{20}{K} au lieu de
+\qty{560}{K}. Des ailettes plus longues gagnent peu ($\tanh$ sature), plus minces elles
+perdent en efficacité~: $mL \approx 1$ est le compromis de l'ingénieur.
+\end{example}
+
+\section{Entropie créée par la conduction}
+
+\begin{proposition}[Production d'entropie]\label{prop:b2:heat-conduction:entropy}
+Un flux $\Phi$ conduit d'un corps à $T_{\text{h}}$ vers un corps à
+$T_{\text{c}} < T_{\text{h}}$ à travers une paroi stationnaire crée de l'entropie au
+taux
+\[
+\dot S_{\text{c}} = \Phi\Big(\frac{1}{T_{\text{c}}} - \frac{1}{T_{\text{h}}}\Big) > 0 ;
+\]
+localement, la conduction crée $\sigma_s = \lambda\,(\vect{\operatorname{grad}}\,T)^2/T^2
+\ge 0$ par unité de volume et de temps --- nulle seulement là où la température est
+uniforme. La conduction thermique est irréversible~: la même énergie, délivrée à
+plus basse température, peut fournir moins de travail.
+\end{proposition}
+
+\begin{proof}
+L'état de la paroi ne change pas, donc son entropie est constante~: le corps
+chaud perd $\Phi/T_{\text{h}}$ par unité de temps, le froid gagne
+$\Phi/T_{\text{c}}$~; la différence est créée. Localement, le bilan d'entropie
+$\partial_t(\rho s) + \operatorname{div}(\vect{j}_Q/T) = \sigma_s$
+avec $\rho T\partial_t s = -\operatorname{div}\vect{j}_Q$ donne $\sigma_s =
+\vect{j}_Q\cdot\vect{\operatorname{grad}}(1/T) = -\vect{j}_Q\cdot
+\vect{\operatorname{grad}}\,T/T^2 = \lambda(\vect{\operatorname{grad}}\,T)^2/T^2$.
+\end{proof}
+
+\begin{method}[Estimations de conduction]\label{meth:b2:heat-conduction:method}
+(1) Stationnaire~: bâtir le circuit thermique --- lames $e/\lambda S$, films
+$1/hS$, coques $\ln(r_2/r_1)/2\pi\lambda\ell$~; série et parallèle.
+(2) Transitoire~: $\mathrm{Bi} = hL/\lambda$~; s'il est petit, $\tau = \rho cV/hS$~; s'il est
+grand, $t \sim L^2/a$. (3) Périodique~: $\delta = \sqrt{2a/\omega}$, amortissement
+$\eu^{-x/\delta}$, retard $x/\delta$. (4) Sources~: $p$ par unité de volume, profils
+paraboliques. (5) Ailettes~: $m = \sqrt{hp/\lambda S}$, $\eta = \tanh(mL)/mL$. (6)
+Entropie~: $\Phi(1/T_{\text{c}} - 1/T_{\text{h}})$.
+\end{method}
+
+\section{Exercices}
+
+\begin{exercise}[$\star$]\label{exo:b2:heat-conduction:1}
+Un mur de brique de \qty{20}{cm} d'épaisseur ($\lambda = \qty{0.8}{W/m/K}$), \qty{100}{m^2},
+entre \qty{20}{\celsius} à l'intérieur et \qty{0}{\celsius} à l'extérieur
+(surfaces à ces températures)~: densité de flux, flux total~; avec
+\qty{10}{cm} de laine de verre (\qty{0.04}{W/m/K}) en plus.
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b2:heat-conduction:2}
+Diffusivités~: cuivre ($\lambda = 400$, $\rho = 8900$, $c = \qty{385}{J/kg/K}$),
+béton ($1.5$, $2300$, $900$), bois ($0.15$, $600$, $2500$). Temps que met la chaleur
+à traverser \qty{1}{cm} et \qty{20}{cm} de chacun~; les \qty{30}{km} de croûte de
+la Terre.
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b2:heat-conduction:3}
+Simple vitrage (\qty{4}{mm}, $\lambda = \qty{1}{W/m/K}$) avec des films $h_{\text{i}}
+= 8$, $h_{\text{o}} = \qty{25}{W/m^2/K}$~; double vitrage avec une couche de \qty{12}{mm}
+d'air immobile (\qty{0.026}{W/m/K})~: valeurs de $U$ et flux pour
+\qty{20}{K}. Pourquoi le vrai double vitrage est-il environ deux fois pire que cette
+estimation, et que font l'argon et les couches à basse émissivité~?
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b2:heat-conduction:4}
+Cuisson~: $a = \qty{1.4e-7}{m^2/s}$ pour la viande. Temps pour que le centre d'un
+steak de \qty{3}{cm} sente la poêle~; d'un rôti de \qty{12}{cm}. Une dinde
+deux fois plus lourde~: combien de temps en plus (la dimension varie comme la racine cubique
+de la masse)~?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b2:heat-conduction:5}
+\emph{Source interne.} Un cylindre de rayon $R$ libère $p$ par unité de
+volume~; surface à $T_{\text{s}}$. (a) Montrer que $T(r) = T_{\text{s}} +
+p(R^2 - r^2)/4\lambda$. (b) Fil de cuivre, $R = \qty{1}{mm}$, $j =
+\qty{1e7}{A/m^2}$, $\gamma = \qty{6e7}{S/m}$~: $p$ et l'écart centre--surface.
+(c) Crayon de combustible nucléaire, $R = \qty{5}{mm}$, $p = \qty{3e8}{W/m^3}$,
+$\lambda = \qty{3}{W/m/K}$~: même question. (d) Commenter.
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b2:heat-conduction:6}
+\emph{Le sol.} (a) Établir $\delta = \sqrt{2a/\omega}$. (b) Sol,
+$a = \qty{5e-7}{m^2/s}$~: profondeurs de pénétration journalière et annuelle. (c) Profondeur
+à laquelle l'amplitude annuelle vaut le dixième de celle de la surface~; retard de phase
+là. (d) Une conduite d'eau ne doit pas geler là où la température de surface hivernale
+descend à \qty{-10}{\celsius} autour d'une moyenne de
+\qty{10}{\celsius}~: profondeur minimale (onde annuelle).
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b2:heat-conduction:7}
+\emph{Biot.} (a) Sphère de cuivre, de rayon \qty{1}{cm}, dans l'air ($h =
+\qty{10}{W/m^2/K}$)~: \omterm{def:b2:heat-conduction:biot}{nombre de Biot}, constante de temps de son refroidissement. (b) Une
+pomme de terre ($\lambda = \qty{0.5}{W/m/K}$, $a = \qty{1.4e-7}{m^2/s}$, de rayon
+\qty{3}{cm}) dans un four avec $h = \qty{20}{W/m^2/K}$~: \omterm{def:b2:heat-conduction:biot}{nombre de Biot}~; quel
+temps gouverne sa cuisson~? (c) Pourquoi fait-on petite la soudure d'un thermocouple~?
+(d) Pourquoi une tasse de café refroidit-elle plus vite quand on la remue ou qu'on souffle dessus ---
+quelle résistance change~?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b2:heat-conduction:8}
+\emph{Une ailette.} (a) Établir $\theta'' = m^2\theta$ et la solution de l'ailette longue.
+(b) Ailette d'aluminium, \qty{1}{mm} d'épaisseur, \qty{30}{mm} de haut, convection
+naturelle $h = \qty{20}{W/m^2/K}$~: $m$, $mL$, efficacité. (c) De quel
+facteur l'ailette multiplie-t-elle l'aire d'échange de son empreinte, et le
+flux~? (d) Pourquoi une ailette très longue ou très mince est-elle un gaspillage de métal~?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b2:heat-conduction:9}
+\emph{Tuyaux.} (a) Établir la résistance d'une coque cylindrique. (b) Un
+tuyau de vapeur, de rayon extérieur \qty{5}{cm} à \qty{150}{\celsius}, enveloppé de
+\qty{5}{cm} de laine de verre, air à \qty{20}{\celsius} avec $h =
+\qty{10}{W/m^2/K}$ à l'extérieur~: perte par mètre, comparée au tuyau nu.
+(c) Montrer que la résistance totale de l'isolant et du film a un
+minimum au \emph{rayon critique} $r_{\text{c}} = \lambda/h$. (d) Pour un
+fil électrique de rayon \qty{1}{mm} sous une gaine plastique ($\lambda =
+\qty{0.2}{W/m/K}$), la gaine refroidit-elle ou réchauffe-t-elle le cuivre~?
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b2:heat-conduction:10}
+\emph{Entropie.} Le mur de l'\cref{exo:b2:heat-conduction:1} (nu)
+entre \qty{293}{K} et \qty{273}{K}. (a) Entropie créée par seconde.
+(b) Calculer $\int\sigma_s\,\dd V$ avec le profil linéaire et vérifier
+l'accord. (c) Entropie créée une fois isolé. (d) Le travail qu'un
+moteur réversible aurait pu extraire des \qty{8}{kW} entre
+ces températures, et ce qu'il en reste après le mur.
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b2:heat-conduction:11}
+\emph{Pourquoi le métal semble froid.} (a) Pour l'onde thermique, calculer le
+flux de surface $j_Q(0,t)$ et montrer qu'il est en avance de $\pi/4$ sur la température
+de surface, avec l'amplitude $\sqrt{\lambda\rho c\,\omega}\,\theta_0$. La
+grandeur $b = \sqrt{\lambda\rho c}$ est l'\emph{effusivité}. (b) Deux
+demi-espaces à $T_1$ et $T_2$ sont mis en contact~: en admettant que
+chacun suit alors un profil en erfc avec la température de surface commune
+$T_{\text{c}}$, et en écrivant la continuité du flux au contact,
+montrer que $T_{\text{c}} = (b_1T_1 + b_2T_2)/(b_1 + b_2)$. (c) La peau
+($b \approx \qty{1000}{J/m^2/K/s^{1/2}}$, \qty{33}{\celsius}) touchant du
+cuivre ($b = 37000$) ou du bois ($b = 400$) à \qty{20}{\celsius}~: températures
+de contact. (d) Pourquoi un carrelage semble-t-il plus froid qu'un tapis à
+la même température, et pourquoi la sensation n'est-elle que passagère~?
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b2:heat-conduction:12}
+\emph{Refroidir une lame.} Une lame $-L < x < L$ à $T_0$ est plongée en $t =
+0$ dans un bain à $T_{\text{f}}$ avec $h \to \infty$. (a) Montrer que $\theta =
+T - T_{\text{f}}$ admet les solutions $\cos(k_nx)\,\eu^{-ak_n^2t}$ avec $k_n
+= (2n+1)\pi/2L$. (b) Développer la condition initiale en série de Fourier
+sur ces modes et écrire la solution complète. (c) Passé les premiers
+instants, quel mode survit, et quelle est la constante de temps~? (d) Temps
+pour que le centre d'un steak de \qty{3}{cm} ($a = \qty{1.4e-7}{m^2/s}$) arrive
+à $1\%$ du bain.
+\end{exercise}
+
+\section{Problème~: isoler une maison, refroidir un processeur}
+
+\begin{problem}[{Problème du week-end --- la conduction à l'échelle d'un
+bâtiment et d'une puce}]\label{pb:b2:heat-conduction:1}
+Données~: brique $\lambda = \qty{0.8}{W/m/K}$, $\rho = \qty{1800}{kg/m^3}$, $c =
+\qty{840}{J/kg/K}$~; laine de verre \qty{0.04}{W/m/K}~; verre \qty{1}{W/m/K}~; air
+immobile \qty{0.026}{W/m/K}~; aluminium \qty{240}{W/m/K}, $\rho = \qty{2700}{kg/m^3}$,
+$c = \qty{900}{J/kg/K}$~; silicium \qty{150}{W/m/K}~; pâte thermique
+\qty{5}{W/m/K}~; sol $a = \qty{5e-7}{m^2/s}$, $\lambda = \qty{1}{W/m/K}$~;
+films $h_{\text{i}} = 8$, $h_{\text{o}} = \qty{25}{W/m^2/K}$.
+
+\textbf{Partie I --- La maison.}
+Une maison a \qty{100}{m^2} de murs (brique de \qty{20}{cm}) et \qty{20}{m^2}
+de fenêtres en simple vitrage (\qty{4}{mm})~; intérieur \qty{20}{\celsius},
+extérieur \qty{0}{\celsius}.
+\begin{enumerate}
+  \item Résistance par mètre carré de la brique seule~; densité de flux
+        si ses faces étaient aux deux températures.
+  \item Avec les deux films~: $R$ et $U = 1/R$ par mètre carré~; de même
+        avec \qty{10}{cm} de laine de verre en plus.
+  \item $U$ du simple vitrage~; d'un double vitrage avec \qty{12}{mm}
+        d'air immobile.
+  \item Perte totale de la maison avant et après avoir isolé les murs
+        et doublé les fenêtres.
+  \item Sur une saison de chauffe de $2500$ degrés-jours (l'intégrale de
+        l'écart de température sur la saison, en \unit{K.jour}),
+        énergie perdue avant et après, en kilowattheures.
+  \item Température de la face intérieure du mur, nu et isolé~;
+        pourquoi un mur froid est-il inconfortable et fait-il des moisissures~?
+  \item Temps de diffusion à travers la brique~; qu'est-ce que cela fait au
+        cycle jour--nuit~?
+\end{enumerate}
+
+\textbf{Partie II --- Le sol sous la maison.}
+\begin{enumerate}[resume]
+  \item Établir la profondeur de pénétration $\delta = \sqrt{2a/\omega}$ d'une
+        onde thermique.
+  \item $\delta$ journalier et annuel dans le sol.
+  \item Profondeur à laquelle l'écart journalier est tombé à $1\%$~; amplitude
+        annuelle à \qty{2.2}{m} et à \qty{5}{m} pour un écart de surface de
+        \qty{10}{K}.
+  \item Retard de phase à \qty{2.2}{m}, en jours~: quand la cave est-elle la plus froide~?
+  \item \omterm{def:b2:heat-conduction:flux}{Flux thermique} de surface de l'onde annuelle (amplitude et phase)~;
+        comparer son amplitude au flux géothermique \qty{0.06}{W/m^2}.
+  \item Le \omterm{def:b2:maxwell-equations:operators}{gradient} géothermique vaut \qty{30}{K/km}~: le vérifier avec le
+        flux et $\lambda$, et expliquer pourquoi il est invisible dans les
+        saisons de la cave.
+\end{enumerate}
+
+\textbf{Partie III --- Le processeur.}
+Une puce dissipe \qty{100}{W} dans une pastille de \qty{1}{cm^2}, épaisse de \qty{0.5}{mm}~;
+une couche de pâte de \qty{50}{\micro m} sur \qty{10}{cm^2} la lie
+à un dissipateur d'aluminium~: embase \qty{60}{mm} $\times$ \qty{60}{mm} $\times$
+\qty{5}{mm}, trente ailettes larges de \qty{60}{mm}, hautes de \qty{30}{mm}, épaisses de \qty{1}{mm}~;
+un ventilateur donne $h = \qty{50}{W/m^2/K}$~; ambiante \qty{25}{\celsius}.
+\begin{enumerate}[resume]
+  \item Densité de flux à travers la pastille~; résistance de la pastille.
+  \item Résistance de la pâte~; et si un jeu d'air de \qty{50}{\micro m}
+        la remplaçait.
+  \item Paramètre d'ailette $m$, $mL$, efficacité~; vérifier le \omterm{def:b2:heat-conduction:biot}{nombre de Biot}
+        sur l'épaisseur de l'ailette.
+  \item Aire totale des ailettes et résistance des ailettes~; résistance de
+        l'embase (conduction sur \qty{5}{mm})~; température de jonction.
+  \item De même sans ailettes (carré nu de \qty{60}{mm})~: conclusion.
+  \item Le ventilateur s'arrête ($h = \qty{10}{W/m^2/K}$)~: température de jonction~;
+        que fait le processeur à \qty{100}{\celsius}~?
+  \item Masse et capacité thermique du dissipateur~; sa constante de temps $RC$~;
+        et celle de la pastille seule (\qty{0.1}{g}, \qty{700}{J/kg/K}).
+  \item Pourquoi les bons dissipateurs ont-ils une embase en cuivre ou des caloducs~?
+\end{enumerate}
+
+\textbf{Partie IV --- Entropie.}
+\begin{enumerate}[resume]
+  \item Entropie créée par seconde par l'enveloppe nue de la maison
+        (question 4) entre \qty{293}{K} et \qty{273}{K}~; après
+        isolation.
+  \item Entropie créée par les \qty{100}{W} de la puce passant de la
+        jonction à l'ambiante~; et par la conversion du travail électrique
+        en chaleur dans la pastille.
+  \item Montrer que pour une lame $\int\sigma_s\,\dd V = \Phi(1/T_{\text{c}} -
+        1/T_{\text{h}})$.
+  \item Résumer en cinq lignes ce qui gouverne un mur, une ailette, une cave
+        et une puce.
+\end{enumerate}
+\end{problem}

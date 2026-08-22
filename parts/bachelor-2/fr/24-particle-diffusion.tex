@@ -1,0 +1,581 @@
+\chapter{Diffusion de particules}\label{ch:b2:particle-diffusion}
+
+Laissez tomber un cristal de colorant dans de l'eau immobile et regardez~: un nuage coloré
+se forme autour de lui, grandit, s'adoucit sur ses bords et s'étale --- en une
+minute sur un millimètre, en une heure sur un centimètre, en une semaine sur tout
+le verre. Rien ne pousse le colorant~; il est emporté par la bousculade incessante
+des molécules, qui envoie chaque particule sur une marche au hasard
+et, en moyenne, de là où elles sont nombreuses vers là où elles sont rares.
+C'est la \emph{diffusion}, le plus lent et le plus universel des transports~:
+elle nourrit chaque cellule en oxygène, dope chaque transistor au bore,
+durcit l'acier au carbone, et laisse un parfum traverser une pièce --- quoique,
+comme nous le verrons, pas dans le temps qu'on croirait. Ce chapitre donne à la
+diffusion sa loi (Fick), son équation (à partir d'un bilan de particules), ses
+solutions et échelles de temps caractéristiques ($L \sim \sqrt{Dt}$), et son
+origine microscopique dans la marche au hasard --- qui explique aussi pourquoi
+l'\omterm{thm:b2:particle-diffusion:equation}{équation de diffusion}, à la différence de toute équation de la mécanique, connaît le
+sens du temps. Le chapitre suivant réutilisera tout cela pour la chaleur.
+
+\begin{omfigure}
+\includegraphics[width=0.58\linewidth]{images/book4/ai/b4-24-ink-drop-water.png}
+
+{\small De l'encre libérée dans de l'eau immobile~: le nuage net se brouille et s'étale
+à mesure que ses molécules diffusent --- sur des millimètres en une minute, des centimètres
+en une heure.}
+\end{omfigure}
+
+\section{Densité particulaire, flux et loi de Fick}
+
+\begin{definition}[Densité et courant de particules]\label{def:b2:particle-diffusion:flux}
+Pour une espèce de particules (molécules, ions, atomes dans un solide) la
+\emph{densité en nombre}\index{densité en nombre} $n(M,t)$ est le nombre de
+particules par unité de volume autour de $M$ (en \unit{m^{-3}}~; la
+concentration molaire vaut $c = n/N_A$). La \emph{densité de courant de
+particules}\index{densité de courant de particules} $\vect{j}_N$ est le vecteur
+tel que le nombre de particules traversant un élément de surface orienté
+$\dd\vect S$ pendant $\dd t$ vaut $\vect{j}_N\cdot\dd\vect S\,\dd t$ (en
+\unit{m^{-2}.s^{-1}})~: le \emph{flux de particules} à travers une surface $S$ est
+$\Phi_N = \iint_S \vect{j}_N\cdot\dd\vect S$, le nombre de particules par
+seconde à travers $S$. Pour des particules emportées par un fluide se déplaçant à $\vect v$,
+$\vect{j}_N = n\vect v$ (convection)~; la diffusion est le transport qui
+subsiste dans un fluide au repos.
+\end{definition}
+
+\begin{theorem}[Loi de Fick]\label{thm:b2:particle-diffusion:fick}
+Dans un milieu au repos, où la densité n'est pas uniforme, un courant de
+particules apparaît, proportionnel et opposé au \omterm{def:b2:maxwell-equations:operators}{gradient} de la
+densité~:
+\[
+\vect{j}_N = -D\,\vect{\operatorname{grad}}\,n ,
+\]
+où le \emph{coefficient de diffusion}\index{coefficient de diffusion}
+$D > 0$ (en \unit{m^2/s}) dépend de l'espèce qui diffuse, du
+milieu et de la température. Les particules \emph{descendent} le \omterm{def:b2:maxwell-equations:operators}{gradient} de
+densité, des régions denses vers les régions rares, à un rythme fixé par $D$.
+\end{theorem}
+
+\begin{proof}
+Phénoménologique (une loi d'expérience, comme celle d'Ohm)~: linéaire en le
+\omterm{def:b2:maxwell-equations:operators}{gradient} pour de faibles \omterm{def:b2:maxwell-equations:operators}{gradients}, isotrope dans un milieu isotrope, et
+avec le signe que l'expérience impose. Le modèle de marche au hasard de la
+\cref{sec:b2:particle-diffusion:microscopic} l'établit, et $D$ avec elle,
+à partir du mouvement moléculaire.
+\end{proof}
+
+\begin{example}[Ordres de grandeur de $D$]\label{ex:b2:particle-diffusion:orders}
+Gaz~: $D \sim \qty{1e-5}{m^2/s}$ (vapeur d'eau dans l'air
+\qty{2.5e-5}{m^2/s}, une molécule de parfum \qty{5e-6}{m^2/s}). Liquides~:
+$D \sim \qty{1e-9}{m^2/s}$ (oxygène dans l'eau \qty{2e-9}{m^2/s}, sucre
+\qty{5e-10}{m^2/s}, une protéine \qty{1e-10}{m^2/s}). Solides~: minuscule et
+croissant fortement avec la température, $D = D_0\,\eu^{-E_{\text{a}}/k_BT}$
+(bore dans le silicium~: \qty{1.5e-17}{m^2/s} à \qty{1100}{\celsius},
+immesurablement petit à température ambiante --- d'où le fait qu'un transistor,
+une fois fabriqué, garde son profil de dopage des décennies durant). Quatre ordres de
+grandeur du gaz au liquide, huit ou plus du liquide au solide.
+\end{example}
+
+\section{Le bilan de particules et l'équation de diffusion}
+
+\begin{theorem}[Bilan local de particules]\label{thm:b2:particle-diffusion:balance}
+Si les particules ne sont ni créées ni détruites,
+\[
+\frac{\partial n}{\partial t} + \operatorname{div}\vect{j}_N = 0 ;
+\]
+avec une source créant $\sigma$ particules par unité de volume et de temps
+(une réaction chimique, une absorption), $\partial_t n +
+\operatorname{div}\vect{j}_N = \sigma$. À une dimension (densité et
+courant ne dépendant que de $x$)~: $\partial_t n + \partial_x j_N = 0$.
+\end{theorem}
+
+\begin{proof}
+Prenons la tranche entre $x$ et $x + \dd x$, de section $S$~: elle contient
+$n\,S\,\dd x$ particules~; pendant $\dd t$, $j_N(x)S\,\dd t$ entrent par la
+face de gauche et $j_N(x + \dd x)S\,\dd t$ sortent par celle de droite, de sorte que
+$\partial_t n\,S\,\dd x\,\dd t = -(j_N(x+\dd x) - j_N(x))S\,\dd t =
+-\partial_x j_N\,\dd x\,S\,\dd t$. À trois dimensions le même décompte sur
+une petite boîte donne la \omterm{def:b2:maxwell-equations:operators}{divergence} (le flux sortant d'une surface fermée par
+unité de volume, \cref{ch:b2:maxwell-equations}), ou directement~: pour tout
+volume fixe $V$, $\dd/\dd t \iiint_V n\,\dd\tau = -\iint_{\partial V}
+\vect{j}_N\cdot\dd\vect S = -\iiint_V \operatorname{div}\vect{j}_N\,\dd\tau$
+par le théorème d'Ostrogradski.
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}[scale=1.0, >=stealth]
+  \draw[thick] (0,0) rectangle (5,2);
+  \fill[omDef!12] (2.2,0) rectangle (2.9,2);
+  \draw[omDef, thick] (2.2,0) -- (2.2,2);
+  \draw[omDef, thick] (2.9,0) -- (2.9,2);
+  \node[font=\scriptsize, below left] at (2.25,0) {$x$};
+  \node[font=\scriptsize, below right] at (2.85,0) {$x + \dd x$};
+  \draw[->, omExo, very thick] (1.0,1) -- (2.1,1) node[midway, above, font=\scriptsize] {$j_N(x)$};
+  \draw[->, omExo, very thick] (3.0,1) -- (4.1,1) node[midway, above, font=\scriptsize] {$j_N(x + \dd x)$};
+  \node[font=\scriptsize] at (2.55,1.6) {$n$};
+  \node[font=\scriptsize, right] at (5.1,1) {section $S$};
+  \draw[->] (0,-0.7) -- (5.5,-0.7) node[right, font=\scriptsize] {$x$};
+\end{tikzpicture}
+
+{\small Le bilan à une dimension~: la tranche entre $x$ et $x + \dd
+x$ gagne ce qui entre à gauche et perd ce qui sort à droite~;
+la différence est la variation de $n$ à l'intérieur.}
+\end{omfigure}
+
+\begin{theorem}[Équation de diffusion]\label{thm:b2:particle-diffusion:equation}
+En combinant la loi de Fick et le bilan, pour $D$ uniforme,
+\[
+\frac{\partial n}{\partial t} = D\,\Delta n + \sigma ,
+\qquad\text{à une dimension}\quad
+\frac{\partial n}{\partial t} = D\,\frac{\partial^2 n}{\partial x^2} + \sigma .
+\]
+Cette \emph{équation de diffusion}\index{équation de diffusion} est linéaire
+(les solutions se superposent), du premier ordre en temps et du second en espace
+--- ce n'est pas une \omterm{thm:b2:waves-on-strings:equation}{équation d'onde}~: elle n'a pas de vitesse de propagation, mais une
+relation caractéristique entre longueur et temps,
+\[
+L \sim \sqrt{D t}, \qquad t \sim \frac{L^2}{D} :
+\]
+diffuser sur deux fois la distance prend quatre fois plus longtemps.
+\end{theorem}
+
+\begin{proof}
+$\partial_t n = -\operatorname{div}(-D\,\vect{\operatorname{grad}}\,n) +
+\sigma = D\operatorname{div}\vect{\operatorname{grad}}\,n + \sigma = D\Delta
+n + \sigma$. Pour les échelles, comparer $n/t$ à $Dn/L^2$.
+\end{proof}
+
+\begin{remark}[La diffusion est irréversible]\label{rem:b2:particle-diffusion:irreversible}
+Changez $t$ en $-t$ dans l'\omterm{thm:b2:waves-on-strings:equation}{équation d'onde}, $\partial_t^2 u = c^2
+\partial_x^2 u$, et elle est inchangée~: le film d'une onde passé à l'envers est
+une onde possible. Faites de même dans l'\omterm{thm:b2:particle-diffusion:equation}{équation de diffusion} et le signe du
+membre de gauche s'inverse~: $n(x,-t)$ n'est \emph{pas} une solution. Un nuage qui
+s'étale est naturel~; un nuage qui se rassemble spontanément en un cristal
+ne l'est pas --- la diffusion a une flèche du temps, celle du second principe
+(le \cref{ch:b2:heat-conduction} calcule l'entropie qu'elle crée).
+L'équation montre aussi que la diffusion lisse~: là où $n$ est localement
+maximal ($\partial_x^2 n < 0$) il décroît, là où il est minimal il
+croît.
+\end{remark}
+
+\begin{example}[Combien de temps cela prend-il~?]\label{ex:b2:particle-diffusion:times}
+$t \sim L^2/D$. L'oxygène à travers une cellule, $L = \qty{10}{\micro m}$ dans l'eau~:
+$10^{-10}/2 \times 10^{-9} = \qty{0.05}{s}$ --- la diffusion nourrit une cellule avec
+aisance~; à travers \qty{1}{mm} de tissu~: \qty{500}{s} --- trop lent, d'où le fait que
+rien de vivant n'est plus épais qu'une fraction de millimètre sans
+vaisseaux sanguins. Le sucre à travers une tasse de thé non remuée, $L = \qty{5}{cm}$~:
+$2.5 \times 10^{-3}/5 \times 10^{-10} = 5 \times 10^6\,\unit{s}$, deux mois
+--- remuez. Un parfum à travers une pièce par diffusion seule, \qty{5}{m} dans
+l'air~: $25/10^{-5} = \qty{3e6}{s}$, un mois~; vous le sentez en moins d'une minute
+parce que l'air bouge~: la \emph{convection} transporte, la diffusion ne
+fait qu'achever les derniers millimètres.
+\end{example}
+
+\section{Solutions caractéristiques}
+
+\begin{proposition}[Régime stationnaire~: la membrane]\label{prop:b2:particle-diffusion:membrane}
+Entre deux réservoirs maintenus à $n_1$ et $n_2$, à travers une membrane
+d'épaisseur $e$ et d'aire $S$, la densité stationnaire est linéaire,
+\[
+n(x) = n_1 + (n_2 - n_1)\frac{x}{e}, \qquad
+j_N = D\,\frac{n_1 - n_2}{e}, \qquad
+\Phi_N = \frac{n_1 - n_2}{R_{\text{d}}}, \quad R_{\text{d}} = \frac{e}{DS}:
+\]
+la membrane a une \emph{résistance diffusive} $e/DS$, exactement comme un fil
+a $\ell/\gamma S$ --- les résistances en série s'ajoutent, et une membrane mince
+de petit $D$ peut néanmoins dominer.
+\end{proposition}
+
+\begin{proof}
+Stationnaire, à une dimension, sans source~: $\partial_x^2 n = 0$, donc $n$ est
+affine~; $j_N = -D\,\dd n/\dd x$ est uniforme.
+\end{proof}
+
+\begin{proposition}[Régime stationnaire~: géométrie sphérique]\label{prop:b2:particle-diffusion:sphere}
+Autour d'une sphère de rayon $a$ dont la surface est maintenue à $n_0$, dans un
+milieu où $n \to 0$ au loin, la densité stationnaire vaut
+\[
+n(r) = n_0\,\frac{a}{r}, \qquad
+\Phi_N = 4\pi D a\,n_0 :
+\]
+le courant total libéré (ou absorbé, avec les signes inversés) croît
+avec le \emph{rayon}, non avec la surface, de la sphère --- la
+géométrie d'un puits diffusif est celle d'une capacité électrostatique.
+\end{proposition}
+
+\begin{proof}
+$\Delta n = \frac{1}{r^2}\frac{\dd}{\dd r}(r^2\,\dd n/\dd r) = 0$ donne
+$n = A + B/r$~; les conditions aux limites fixent $A = 0$, $B = n_0 a$~; alors
+$\Phi_N = -4\pi r^2 D\,\dd n/\dd r = 4\pi D n_0 a$ pour tout $r$ (pas
+d'accumulation en régime stationnaire).
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}
+  \begin{axis}[omaxis, width=5.6cm, height=4.2cm, xmin=-0.3, xmax=1.4, ymin=0, ymax=1.3,
+    xlabel={$x/e$}, ylabel={$n/n_1$}, xtick={0,1}, ytick={1}, clip=false]
+    \addplot[omDef, thick, domain=0:1] {1-0.7*x};
+    \draw[dashed] (axis cs:1,0) -- (axis cs:1,0.3);
+    \node[font=\scriptsize, anchor=west] at (axis cs:1.03,0.3) {$n_2$};
+    \node[font=\scriptsize, omExo, anchor=west] at (axis cs:0.3,1.0) {$j_N = D(n_1 - n_2)/e$};
+    \draw[->, omExo, thick] (axis cs:0.3,0.45) -- (axis cs:0.7,0.45);
+  \end{axis}
+  \begin{axis}[omaxis, width=5.6cm, height=4.2cm, xmin=0, xmax=5, ymin=0, ymax=1.3, xshift=5.9cm,
+    xlabel={$r/a$}, ylabel={$n/n_0$}, xtick={1,2,3,4}, ytick={1}, clip=false]
+    \addplot[omDef, thick, domain=1:5, samples=60] {1/x};
+    \draw[dashed] (axis cs:1,0) -- (axis cs:1,1);
+    \node[font=\scriptsize, omExo] at (axis cs:3,0.6) {$n = n_0 a/r$};
+  \end{axis}
+\end{tikzpicture}
+
+{\small Profils stationnaires. À gauche~: à travers une membrane la densité est
+linéaire et le courant uniforme. À droite~: autour d'une sphère la densité
+décroît en $1/r$~; le courant total $4\pi D a n_0$ est proportionnel au
+rayon.}
+\end{omfigure}
+
+\begin{proposition}[La gaussienne qui s'étale]\label{prop:b2:particle-diffusion:gaussian}
+$N$ particules par unité d'aire libérées en $t = 0$ sur le plan $x = 0$
+d'un milieu infini s'étalent selon
+\[
+n(x,t) = \frac{N}{\sqrt{4\pi D t}}\,\exp\Big(-\frac{x^2}{4Dt}\Big) :
+\]
+une gaussienne d'écart-type $\sigma(t) = \sqrt{2Dt}$, d'aire constante
+$N$ (les particules se conservent) et de sommet décroissant en $\propto
+1/\sqrt t$. À trois dimensions, $N$ particules libérées en un point
+s'étalent selon $n = N\,(4\pi Dt)^{-3/2}\exp(-r^2/4Dt)$, avec $\langle r^2
+\rangle = 6Dt$. Une bouffée de particules libérées à la \emph{surface}
+d'un demi-espace (qu'elles ne peuvent quitter) donne le double de l'expression ci-dessus
+pour $x > 0$.
+\end{proposition}
+
+\begin{proof}
+Substituons~: avec $u = x^2/4Dt$, $\partial_t n = n\,(-1/2t + u/t)$ et
+$D\,\partial_x^2 n = D\,n\,(-1/2Dt + x^2/4D^2t^2) = n\,(-1/2t + u/t)$~;
+c'est égal. La normalisation $\int n\,\dd x = N$ découle de $\int
+\eu^{-x^2/4Dt}\dd x = \sqrt{4\pi Dt}$, et $\int x^2 n\,\dd x/N = 2Dt$.
+L'unicité (l'impulsion initiale étant donnée) est admise.
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}
+  \begin{axis}[omaxis, width=9cm, height=4.8cm, xmin=-4.2, xmax=4.2, ymin=0, ymax=1.05,
+    xlabel={$x/\sqrt{2Dt_1}$}, ylabel={$n$}, ytick=\empty, xtick={-4,-2,2,4}, clip=false,
+    legend style={font=\scriptsize, at={(0.97,0.95)}, anchor=north east, draw=none, fill=none}]
+    \addplot[omDef, thick, domain=-4.2:4.2, samples=100] {exp(-x*x/2)};
+    \addlegendentry{$t_1$}
+    \addplot[omThm, thick, domain=-4.2:4.2, samples=100] {0.5*exp(-x*x/8)};
+    \addlegendentry{$4t_1$}
+    \addplot[omExo, thick, domain=-4.2:4.2, samples=100] {0.25*exp(-x*x/32)};
+    \addlegendentry{$16t_1$}
+  \end{axis}
+\end{tikzpicture}
+
+{\small La solution gaussienne à trois instants~: la largeur croît en
+$\sqrt t$, le sommet décroît en $1/\sqrt t$, l'aire (le nombre de
+particules) reste la même.}
+\end{omfigure}
+
+\begin{proposition}[Concentration de surface constante]\label{prop:b2:particle-diffusion:erfc}
+Un demi-espace $x > 0$ initialement vide, dont la surface est maintenue à la
+densité $n_0$ depuis $t = 0$ (un gaz au contact d'un solide qui le
+dissout), se remplit selon
+\[
+n(x,t) = n_0\,\operatorname{erfc}\Big(\frac{x}{2\sqrt{Dt}}\Big),
+\qquad
+\operatorname{erfc}(u) = \frac{2}{\sqrt\pi}\int_u^{\infty}\eu^{-s^2}\dd s,
+\]
+la \emph{fonction d'erreur complémentaire}, qui décroît de $1$ en $u =
+0$ à $0.16$ en $u = 1$ et $0.005$ en $u = 2$~: la profondeur de pénétration est
+de nouveau $\sim 2\sqrt{Dt}$, et le nombre total de particules absorbées par
+unité d'aire vaut $2n_0\sqrt{Dt/\pi}$.
+\end{proposition}
+
+\begin{proof}
+Cherchons $n = f(u)$ avec $u = x/2\sqrt{Dt}$~: l'équation devient
+$f'' + 2uf' = 0$, donc $f' \propto \eu^{-u^2}$ et $f$ est une fonction
+d'erreur~; les conditions $f(0) = n_0$, $f(\infty) = 0$ sélectionnent
+$\operatorname{erfc}$. Le nombre absorbé vaut $\int_0^\infty n\,\dd x =
+n_0\,2\sqrt{Dt}\int_0^\infty\operatorname{erfc}(u)\dd u = 2n_0\sqrt{Dt/\pi}$.
+\end{proof}
+
+\begin{example}[Durcir l'acier]\label{ex:b2:particle-diffusion:carburising}
+Une pièce d'acier maintenue à \qty{900}{\celsius} dans un gaz riche en carbone absorbe
+du carbone par sa surface~; avec $D = \qty{5e-12}{m^2/s}$ pour le carbone dans le fer
+chaud, quatre heures donnent $2\sqrt{Dt} = \qty{0.5}{mm}$~: une peau dure d'un
+demi-millimètre sur un cœur tenace --- la \emph{cémentation} des engrenages et des
+roulements, minutée avec le profil en erfc.
+\end{example}
+
+\section{L'image microscopique~: la marche au hasard}\label{sec:b2:particle-diffusion:microscopic}
+
+\begin{proposition}[Marche au hasard et coefficient de diffusion]\label{prop:b2:particle-diffusion:walk}
+Une particule qui fait un pas de longueur $\ell$ dans une direction aléatoire
+toutes les $\tau$ (une molécule entre deux collisions) a, après $N =
+t/\tau$ pas, un déplacement quadratique moyen
+\[
+\langle x^2\rangle = N\ell^2 = \frac{\ell^2}{\tau}\,t
+\quad\text{(à une dimension)}, \qquad
+\langle r^2\rangle = 3\langle x^2\rangle \quad\text{(à trois dimensions)}.
+\]
+En comparant à la solution gaussienne, $\langle x^2\rangle = 2Dt$~:
+\[
+D = \frac{\ell^2}{2\tau} \quad\text{(1D)}, \qquad
+D = \frac{\ell^2}{6\tau} = \frac{\ell\,v^*}{6}\ \sim\ \frac{\ell\,v^*}{3}
+\quad\text{(3D, } v^* = \ell/\tau\text{; la cinétique donne } \tfrac13) .
+\]
+La distance du marcheur croît en $\sqrt t$, non en $t$~: pour aller deux fois plus loin
+il lui faut quatre fois plus de pas.
+\end{proposition}
+
+\begin{proof}
+$x = \sum_i \epsilon_i\ell$ avec des $\epsilon_i = \pm1$ indépendants (1D)~:
+$\langle x^2\rangle = \sum_{i,j}\langle\epsilon_i\epsilon_j\rangle\ell^2 =
+N\ell^2$, les termes croisés s'annulant en moyenne. La distribution de $x$
+pour $N$ grand tend vers une gaussienne (le théorème central limite, dont la
+démonstration appartient au cours de probabilités) --- d'où le fait que la
+loi macroscopique est l'\omterm{thm:b2:particle-diffusion:equation}{équation de diffusion}~; la loi de Fick elle-même découle
+du décompte des marcheurs traversant un plan des deux côtés~: $j_N \approx
+-\tfrac12\ell v^*\,\partial_x n$ (une moyenne plus soigneuse donne $1/3$ à
+trois dimensions).
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}[scale=0.85]
+  \draw[omDef, thin] plot coordinates {(0,0) (-0.1,-0.15) (-0.16,0.02) (-0.24,-0.14) (-0.1,-0.03) (-0.28,-0.05) (-0.46,-0.04) (-0.61,-0.14) (-0.73,-0.01) (-0.74,0.17) (-0.86,0.3) (-0.78,0.14) (-0.7,0.3) (-0.75,0.47) (-0.86,0.33) (-0.82,0.15) (-0.64,0.14) (-0.58,-0.03) (-0.76,0.01) (-0.93,-0.04) (-1.06,-0.16) (-1.06,0.02) (-1.11,-0.16) (-1.15,-0.33) (-0.97,-0.36) (-1.05,-0.2) (-1.22,-0.14) (-1.27,-0.31) (-1.28,-0.49) (-1.2,-0.33) (-1.02,-0.31) (-0.98,-0.49) (-0.81,-0.44) (-0.96,-0.55) (-0.95,-0.37) (-1.12,-0.43) (-1.3,-0.45) (-1.44,-0.34) (-1.37,-0.18) (-1.48,-0.32) (-1.52,-0.49) (-1.58,-0.32) (-1.4,-0.36) (-1.31,-0.51) (-1.45,-0.4) (-1.5,-0.57) (-1.37,-0.44) (-1.51,-0.56) (-1.68,-0.61) (-1.74,-0.78) (-1.59,-0.88) (-1.73,-0.77) (-1.64,-0.93) (-1.78,-1.05) (-1.6,-1.03) (-1.72,-0.91) (-1.59,-0.79) (-1.75,-0.86) (-1.88,-0.73) (-1.77,-0.58) (-1.71,-0.75) (-1.55,-0.67) (-1.39,-0.58) (-1.34,-0.41) (-1.19,-0.52) (-1.36,-0.57) (-1.54,-0.56) (-1.67,-0.43) (-1.53,-0.33) (-1.7,-0.28) (-1.76,-0.11) (-1.89,0.02) (-1.76,0.14) (-1.59,0.08) (-1.55,-0.09) (-1.71,-0.02) (-1.88,-0.09) (-1.7,-0.07) (-1.52,-0.11) (-1.43,0.04) (-1.53,0.19) (-1.53,0.01) (-1.57,-0.17) (-1.48,-0.33) (-1.4,-0.16) (-1.46,-0.33) (-1.29,-0.28) (-1.11,-0.29) (-0.93,-0.25) (-0.84,-0.1) (-0.66,-0.11) (-0.74,-0.27) (-0.56,-0.22) (-0.55,-0.04) (-0.67,-0.18) (-0.57,-0.03) (-0.42,-0.13) (-0.59,-0.06) (-0.47,-0.2) (-0.65,-0.2) (-0.56,-0.04) (-0.52,-0.22) (-0.34,-0.21) (-0.29,-0.39) (-0.34,-0.21) (-0.21,-0.08) (-0.18,0.09) (-0.35,0.15) (-0.34,0.33) (-0.35,0.15) (-0.39,-0.03) (-0.43,0.15) (-0.38,0.33) (-0.47,0.17) (-0.61,0.06) (-0.48,-0.06) (-0.44,0.11) (-0.32,0.25) (-0.49,0.18) (-0.31,0.17) (-0.47,0.24) (-0.6,0.37) (-0.44,0.44) (-0.48,0.61) (-0.5,0.43) (-0.47,0.61) (-0.58,0.75) (-0.74,0.84) (-0.87,0.96) (-0.83,0.79) (-0.67,0.69) (-0.8,0.56) (-0.98,0.59) (-1.14,0.51) (-1.27,0.38) (-1.27,0.2) (-1.12,0.1) (-1.27,0.2) (-1.38,0.35) (-1.21,0.4) (-1.37,0.47) (-1.54,0.52) (-1.46,0.68) (-1.56,0.53) (-1.4,0.45) (-1.36,0.27) (-1.19,0.22) (-1.03,0.13) (-0.86,0.06) (-0.96,-0.1) (-1.14,-0.09) (-1.26,-0.22) (-1.08,-0.26) (-0.92,-0.2) (-0.74,-0.16) (-0.81,0) (-0.95,-0.11) (-1.06,-0.26) (-0.92,-0.14) (-1.07,-0.24) (-1.23,-0.33) (-1.27,-0.51) (-1.12,-0.61) (-1.04,-0.77) (-1.07,-0.6) (-0.93,-0.49) (-0.94,-0.67) (-0.78,-0.75) (-0.93,-0.85) (-0.78,-0.94) (-0.6,-0.93) (-0.6,-1.11) (-0.73,-1.24) (-0.63,-1.39) (-0.72,-1.24) (-0.66,-1.41) (-0.66,-1.23) (-0.48,-1.21) (-0.34,-1.33) (-0.41,-1.49) (-0.35,-1.65) (-0.21,-1.54) (-0.04,-1.48) (0.14,-1.44) (0.11,-1.27) (-0.01,-1.4) (0.15,-1.31) (-0.03,-1.26) (0.13,-1.36) (0.12,-1.18) (0.29,-1.13) (0.42,-1) (0.44,-1.18) (0.6,-1.26) (0.68,-1.42) (0.51,-1.39) (0.47,-1.21) (0.49,-1.39) (0.59,-1.25) (0.69,-1.39) (0.87,-1.43) (0.75,-1.3) (0.73,-1.48) (0.59,-1.37) (0.61,-1.55) (0.54,-1.71) (0.37,-1.63) (0.52,-1.53) (0.67,-1.63) (0.78,-1.78) (0.75,-1.6) (0.79,-1.42) (0.83,-1.6) (0.68,-1.5) (0.56,-1.63) (0.68,-1.49) (0.84,-1.56) (0.97,-1.43) (1.11,-1.31) (1.08,-1.49) (1.02,-1.33) (1.13,-1.47) (0.95,-1.44) (0.9,-1.27) (1.01,-1.13) (0.98,-1.3) (0.86,-1.18) (0.78,-1.01) (0.69,-1.17) (0.87,-1.15) (0.98,-1.28) (1.13,-1.38) (1,-1.51) (1.13,-1.38) (1.17,-1.55) (1.23,-1.38) (1.19,-1.21) (1.29,-1.36) (1.43,-1.47) (1.42,-1.65) (1.28,-1.76) (1.13,-1.65) (1.03,-1.8) (1.2,-1.85) (1.16,-1.68) (0.99,-1.76) (1.1,-1.9) (1.11,-2.08) (0.93,-2.11) (1.01,-1.95) (0.99,-2.13) (0.81,-2.14) (0.98,-2.18) (0.85,-2.05) (1.03,-2.1) (1.04,-1.92) (1.18,-2.03) (1.36,-2.01) (1.54,-2.04) (1.37,-1.98) (1.53,-1.92) (1.37,-1.84) (1.51,-1.72) (1.45,-1.55) (1.6,-1.46) (1.75,-1.36) (1.86,-1.22) (1.81,-1.39) (1.98,-1.34) (1.94,-1.16) (1.8,-1.05) (1.85,-1.22) (2.03,-1.22) (1.91,-1.08) (1.83,-0.92) (1.72,-1.05) (1.79,-0.89) (1.74,-1.06) (1.57,-1.12) (1.39,-1.15) (1.23,-1.22) (1.41,-1.22) (1.36,-1.05) (1.18,-1.06) (1,-1.06) (1.09,-1.22) (1.08,-1.04) (1.25,-1.1) (1.33,-0.95) (1.3,-0.77) (1.31,-0.95) (1.28,-0.77) (1.14,-0.88) (1.04,-1.03) (0.95,-0.88) (1.08,-0.75) (1.22,-0.86) (1.26,-1.03) (1.08,-1.01) (1.12,-1.19) (0.95,-1.11) (1.12,-1.03) (1.17,-1.2) (1.27,-1.05) (1.26,-1.23) (1.44,-1.21) (1.42,-1.03) (1.3,-0.9) (1.38,-1.06) (1.56,-1.02) (1.6,-1.2) (1.76,-1.28) (1.6,-1.36) (1.46,-1.26) (1.55,-1.41) (1.61,-1.58) (1.79,-1.58) (1.73,-1.41) (1.61,-1.27) (1.65,-1.1) (1.8,-1.01) (1.66,-1.12) (1.52,-1.23) (1.36,-1.31) (1.48,-1.45) (1.3,-1.41) (1.34,-1.24) (1.33,-1.06) (1.16,-1.09) (1.1,-0.92) (1.12,-0.74) (1.04,-0.91) (1.04,-0.73) (0.93,-0.58) (0.97,-0.41) (0.81,-0.49) (0.65,-0.41) (0.65,-0.23) (0.7,-0.05) (0.55,-0.15) (0.73,-0.11) (0.82,-0.27) (0.92,-0.42) (0.87,-0.25) (1.05,-0.23) (1.08,-0.41) (1.19,-0.27) (1.22,-0.45) (1.39,-0.42) (1.57,-0.41) (1.39,-0.38) (1.38,-0.56) (1.36,-0.74) (1.27,-0.9) (1.44,-0.82) (1.26,-0.79) (1.4,-0.91) (1.33,-1.07) (1.2,-1.2) (1.03,-1.16) (0.86,-1.09) (0.75,-0.95) (0.57,-0.98) (0.75,-1.02) (0.81,-1.18) (0.69,-1.05) (0.86,-1.11) (0.74,-1.24) (0.6,-1.35) (0.43,-1.39) (0.27,-1.49) (0.43,-1.39) (0.58,-1.3) (0.4,-1.33) (0.46,-1.15) (0.51,-1.33) (0.44,-1.16) (0.54,-1.02) (0.49,-1.19) (0.58,-1.03) (0.44,-1.15) (0.46,-0.97) (0.64,-0.94) (0.82,-0.94) (0.91,-0.79) (0.92,-0.97) (0.75,-0.93) (0.59,-0.84) (0.62,-0.66) (0.6,-0.48) (0.53,-0.65) (0.45,-0.49) (0.62,-0.43) (0.62,-0.25) (0.66,-0.07) (0.5,-0.15) (0.62,-0.28) (0.44,-0.24) (0.27,-0.3) (0.28,-0.48) (0.39,-0.62)};
+  \fill[omExo] (0,0) circle (2.5pt);
+  \fill[omThm] (0.39,-0.62) circle (2.5pt);
+  \draw[thin, gray] (0,0) -- (-2.4,1.2);
+  \node[font=\scriptsize, omExo, anchor=east] at (-2.4,1.2) {départ};
+  \draw[thin, gray] (0.39,-0.62) -- (2.5,-1.3);
+  \node[font=\scriptsize, omThm, anchor=west] at (2.5,-1.3) {après $400$ pas};
+  \draw[<->, thin] (-2.3,-2.5) -- (2.3,-2.5) node[midway, below, font=\scriptsize] {$\sim \ell\sqrt N$};
+\end{tikzpicture}
+
+{\small Une marche au hasard de $400$ pas de longueur $\ell$~: le marcheur ne s'est
+éloigné que de quelque $20\ell$ de son départ --- la loi en $\sqrt N$ qui
+rend la diffusion si lente sur les longues distances et si rapide sur les courtes.}
+\end{omfigure}
+
+\begin{example}[Des molécules à $D$]\label{ex:b2:particle-diffusion:kinetic}
+L'air à température ambiante~: libre parcours moyen $\ell \approx \qty{70}{nm}$,
+vitesse moyenne $v^* \approx \qty{500}{m/s}$~: $D \approx \ell v^*/3 =
+\qty{1.2e-5}{m^2/s}$, comme mesuré. Pour diffuser sur \qty{1}{m} une molécule
+a besoin de $N = (L/\ell)^2 = 2 \times 10^{14}$ collisions, soit $N\ell/v^*
+\approx \qty{3e4}{s}$ --- huit heures pour un trajet qu'elle ferait en
+\qty{2}{ms} si elle volait droit. Dans un liquide, une sphère de rayon $a$
+bousculée par les molécules obéit à la relation de Stokes--Einstein $D =
+k_BT/6\pi\eta a$ (Einstein 1905)~: pour le sucre, $a \approx \qty{0.4}{nm}$
+dans l'eau, $D = \qty{5e-10}{m^2/s}$~; pour un grain de \qty{1}{\micro m},
+$\qty{4e-13}{m^2/s}$, un déplacement d'un micromètre par seconde ---
+le mouvement brownien que Perrin a mesuré pour compter le nombre d'Avogadro. Dans
+un solide un atome ne saute vers un site voisin que lorsqu'une fluctuation
+thermique fournit l'énergie d'activation~: $D = D_0\,\eu^{-E_{\text{a}}/k_BT}$,
+doublant tous les quelques dizaines de kelvins près de \qty{1000}{\celsius}.
+\end{example}
+
+\begin{method}[Estimations de diffusion]\label{meth:b2:particle-diffusion:method}
+(1) Identifier $D$ (gaz $10^{-5}$, liquide $10^{-9}$, solide en Arrhenius).
+(2) Temps ou distance~: $t \sim L^2/D$, $L \sim \sqrt{Dt}$ (avec l'exact
+$\sqrt{2Dt}$ pour la largeur gaussienne, $2\sqrt{Dt}$ pour la profondeur en erfc).
+(3) Stationnaire~: linéaire dans une lame ($R_{\text{d}} = e/DS$), en $1/r$ autour d'une
+sphère ($\Phi = 4\pi D a\,\Delta n$), en $\ln r$ autour d'un cylindre. (4)
+Transitoire~: gaussienne pour une bouffée, erfc pour une surface maintenue~; superposer.
+(5) Se demander si la convection ne domine pas. (6) Vérification microscopique~:
+$D \sim \ell v^*/3$.
+\end{method}
+
+\section{Exercices}
+
+\begin{exercise}[$\star$]\label{exo:b2:particle-diffusion:1}
+Temps de diffusion $L^2/D$~: un morceau de sucre au fond d'une tasse de \qty{5}{cm}
+($D = \qty{5e-10}{m^2/s}$)~; un parfum à travers une pièce de \qty{5}{m} ($D =
+\qty{5e-6}{m^2/s}$)~; l'oxygène à travers \qty{1}{mm} de tissu et à travers une
+cellule de \qty{10}{\micro m} ($D = \qty{2e-9}{m^2/s}$). Lesquels la
+diffusion fait-elle réellement~?
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b2:particle-diffusion:2}
+Une membrane épaisse de \qty{1}{\micro m} et d'aire \qty{1}{cm^2}, $D =
+\qty{1e-11}{m^2/s}$ en son sein, sépare une solution à \qty{1}{mol/m^3}
+de l'eau pure. \omterm{def:b2:charges-currents-conduction:densities}{Densité de courant}, flux molaire et nombre de molécules
+par seconde~; résistance diffusive~; avec deux telles membranes en série.
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b2:particle-diffusion:3}
+Une couche mince de colorant ($N = \qty{1e20}{m^{-2}}$) est libérée dans l'eau,
+$D = \qty{1e-9}{m^2/s}$. Largeur $\sqrt{2Dt}$ et densité au sommet après
+\qty{1}{s}, \qty{1}{h}, \qty{1}{jour}. Quand le sommet est-il tombé à
+$1\%$ de sa valeur à \qty{1}{s}~?
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b2:particle-diffusion:4}
+Molécules de l'air~: $\ell = \qty{70}{nm}$, $v^* = \qty{500}{m/s}$. Estimer
+$D$~; nombre de collisions et temps pour diffuser sur \qty{1}{m}~; comparer au
+vol rectiligne. Idem pour une molécule dans l'eau ($\ell \approx
+\qty{0.1}{nm}$, $v^* \approx \qty{500}{m/s}$)~: l'estimation est-elle bonne, et
+pourquoi pas exactement~?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b2:particle-diffusion:5}
+\emph{L'oxygène dans un tissu.} Une lame de tissu d'épaisseur $2a$ consomme
+de l'oxygène au taux uniforme $q$ (par unité de volume)~; ses deux faces sont
+maintenues à $n_0$. (a) Écrire l'équation stationnaire avec le puits et la résoudre.
+(b) Condition pour que l'oxygène atteigne le centre. (c) $D = \qty{2e-9}{m^2/s}$,
+$n_0 = \qty{0.2}{mol/m^3}$, $q = \qty{0.01}{mol/m^3/s}$~: $a$ maximal. (d)
+Conclure sur l'espacement des capillaires.
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b2:particle-diffusion:6}
+\emph{Un grain qui se dissout.} Une sphère de sucre de rayon $a = \qty{1}{mm}$
+dans de l'eau immobile garde sa surface à la densité de saturation $n_{\text{s}}
+= \qty{5800}{mol/m^3}$~; au loin l'eau est pure~; $D =
+\qty{5e-10}{m^2/s}$. (a) Profil stationnaire et courant total. (b)
+Nombre de moles dans le grain (masse volumique \qty{1590}{kg/m^3}, masse molaire
+\qty{342}{g/mol}) et temps de dissolution (prendre le courant constant).
+(c) Pourquoi le temps réel est-il plus long, et pourquoi remuer aide-t-il tant~?
+(d) Montrer que pour un cylindre très long le profil stationnaire est
+logarithmique et que le problème n'a pas de solution en milieu infini.
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b2:particle-diffusion:7}
+\emph{Conservation et irréversibilité.} (a) À partir de l'équation, montrer
+que $\int n\,\dd x$ est constant et que $\dd\langle x^2\rangle/\dd t =
+2D$ (intégrer par parties, $n \to 0$ à l'infini). (b) Montrer que
+$n(x,-t)$ ne satisfait pas l'équation. (c) Que devient la
+solution gaussienne pour $t < 0$~? (d) Montrer que $\int n^2\,\dd x$ ne peut que
+décroître~: la diffusion aplatit.
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b2:particle-diffusion:8}
+\emph{Cémentation.} Le carbone dans le fer chaud, $D = \qty{5e-12}{m^2/s}$ à
+\qty{900}{\celsius}~; surface maintenue à $n_0$. (a) Vérifier que $n_0
+\operatorname{erfc}(x/2\sqrt{Dt})$ est solution de l'équation. (b) Profondeur à
+laquelle $n = 0.1\,n_0$ après \qty{4}{h} ($\operatorname{erfc}(1.16) = 0.1$).
+(c) Temps pour le double de la profondeur. (d) À \qty{950}{\celsius}, $D$ est $2.5$
+fois plus grand~: temps gagné.
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b2:particle-diffusion:9}
+\emph{Stokes--Einstein.} $D = k_BT/6\pi\eta a$, eau $\eta =
+\qty{1e-3}{Pa.s}$, \qty{300}{K}. (a) $D$ pour $a = \qty{1}{\micro m}$ et le
+déplacement quadratique moyen en \qty{1}{s}, \qty{1}{min}. (b) $D$
+pour une protéine, $a = \qty{3}{nm}$. (c) Le sucre a $D = \qty{5e-10}{m^2/s}$~:
+rayon effectif. (d) Comment la mesure de $\langle x^2\rangle$ d'un grain
+au microscope donne-t-elle le nombre d'Avogadro~?
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b2:particle-diffusion:10}
+\emph{Temps de retard d'une membrane.} Une membrane d'épaisseur $e$, initialement
+vide, est exposée sur une face à $n_1$ en $t = 0$, l'autre face maintenue
+à $0$. (a) Quel est le flux stationnaire final~? (b) Argumenter que le flux
+sur la face lointaine s'établit en un temps $\sim e^2/D$ (le retard exact est
+$e^2/6D$). (c) Un patch médicamenteux avec $e = \qty{20}{\micro m}$, $D =
+\qty{1e-13}{m^2/s}$ à travers la couche externe de la peau~: temps de retard. (d) Pourquoi
+le retard est-il utile pour mesurer $D$ et le flux stationnaire pour mesurer
+$D \times$ solubilité~?
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b2:particle-diffusion:11}
+\emph{L'absorbeur parfait.} Une sphère de rayon $a$ absorbe toute
+particule qui la touche, dans un milieu à $n_\infty$ au loin. (a)
+Profil stationnaire et courant total capté. (b) Une bactérie, $a =
+\qty{1}{\micro m}$, dans une solution sucrée à $n_\infty = \qty{6e20}{m^{-3}}$,
+$D = \qty{5e-10}{m^2/s}$~: molécules captées par seconde. (c) Sa
+surface est couverte de $N_{\text{r}}$ petits récepteurs absorbants de
+rayon $s$, le reste réfléchissant~: chaque récepteur seul capte $\approx
+4Ds n_\infty$ (un disque)~; montrer que la cellule entière capte presque le
+maximum dès que $N_{\text{r}} s \gg a$, c'est-à-dire avec une infime fraction de sa
+surface couverte. (d) Commenter~: pourquoi les cellules peuvent s'offrir des milliers de
+récepteurs différents.
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b2:particle-diffusion:12}
+\emph{Résolution sur une grille.} Découpons l'espace en cellules de taille $\Delta x$
+et le temps en pas $\Delta t$~; écrivons $n_i^{k+1} = n_i^k + \alpha\,(n_{i+1}^k
+- 2n_i^k + n_{i-1}^k)$ avec $\alpha = D\Delta t/\Delta x^2$. (a) Le justifier
+à partir de l'équation. (b) L'interpréter comme une marche au hasard quand $\alpha =
+1/2$. (c) Montrer que pour $\alpha > 1/2$ une densité alternant $+,-,+,-$
+de cellule en cellule croît~: instabilité. (d) Pour le profil de bore du
+problème ci-dessous ($D = \qty{1.5e-17}{m^2/s}$, $\Delta x = \qty{10}{nm}$),
+le plus grand $\Delta t$ stable et le nombre de pas pour une heure.
+\end{exercise}
+
+\section{Problème~: une plaquette dopée et une pièce parfumée}
+
+\begin{problem}[{Problème du week-end --- la diffusion dans un solide et dans un gaz}]\label{pb:b2:particle-diffusion:1}
+\textbf{Partie I --- Redistribution du bore dans le silicium.}
+Le bore diffuse dans le silicium avec $D = D_0\,\eu^{-E_{\text{a}}/k_BT}$, $D_0 =
+\qty{7.6e-5}{m^2/s}$, $E_{\text{a}} = \qty{3.46}{eV}$~; $k_B =
+\qty{8.62e-5}{eV/K}$. Une dose $Q = \qty{1e18}{m^{-2}}$ de bore a été
+déposée en une couche très mince à la surface d'une plaquette dont le
+dopage de fond vaut $n_B = \qty{1e21}{m^{-3}}$~; on la chauffe ensuite
+(«~redistribution~») à \qty{1100}{\celsius} pendant une heure. La surface
+réfléchit le bore (aucune fuite).
+\begin{enumerate}
+  \item Calculer $D$ à \qty{1100}{\celsius} et à \qty{1000}{\celsius}.
+        De quel facteur change-t-il sur ces \qty{100}{K}~?
+  \item Pourquoi le profil après la redistribution vaut-il $n(x,t) = (Q/\sqrt{\pi
+        Dt})\exp(-x^2/4Dt)$ et non la gaussienne de la
+        \cref{prop:b2:particle-diffusion:gaussian}~? Vérifier que son
+        intégrale sur $x > 0$ vaut $Q$.
+  \item Concentration en surface après une heure.
+  \item La \emph{profondeur de jonction} $x_j$ est là où $n = n_B$~: la calculer.
+  \item Comment $x_j$ change-t-elle si la redistribution dure quatre heures~?
+        (Attention~: la concentration de surface change aussi.)
+  \item Variation relative de $D$ pour une erreur de \qty{10}{K} en température~;
+        contrôle de température nécessaire pour $x_j$ à \qty{1}{\%} près.
+  \item À température ambiante, $D$~: estimer le temps pour que le profil se
+        déplace d'une distance interatomique, et conclure.
+\end{enumerate}
+
+\textbf{Partie II --- Prédépôt.}
+La dose elle-même a été introduite à \qty{950}{\celsius} depuis un gaz qui maintient
+la surface à la limite de solubilité $n_0 = \qty{2e26}{m^{-3}}$ pendant
+\qty{30}{min}.
+\begin{enumerate}[resume]
+  \item $D$ à \qty{950}{\celsius} et $\sqrt{Dt}$ pour \qty{30}{min}.
+  \item Profil à la fin du prédépôt~; profondeur à laquelle $n =
+        n_B$ ($\operatorname{erfc}(3.2) \approx 6 \times 10^{-6}$).
+  \item Dose introduite~; comparer au $Q$ de la partie I.
+  \item Pourquoi prédépose-t-on à plus basse température et redistribue-t-on à
+        plus haute~?
+  \item Justifier que, pendant la redistribution, la couche prédéposée peut être
+        traitée comme infiniment mince.
+\end{enumerate}
+
+\textbf{Partie III --- Un parfum dans une pièce.}
+Une goutte de parfum (\qty{1}{mg}, masse molaire \qty{150}{g/mol}) s'évapore
+d'un coup dans le coin d'une pièce immobile à \qty{300}{K}, \qty{1}{bar}.
+Prendre le diamètre de collision de la molécule de parfum avec l'air égal à $d =
+\qty{0.5}{nm}$ et la \omterm{def:b2:particle-diffusion:flux}{densité en nombre} de l'air $n_{\text{a}} = P/k_BT$.
+\begin{enumerate}[resume]
+  \item Nombre de molécules libérées~; \omterm{def:b2:particle-diffusion:flux}{densité en nombre} de l'air.
+  \item Libre parcours moyen $\ell = 1/(\sqrt2\,\pi d^2 n_{\text{a}})$ de la
+        molécule de parfum, et sa vitesse moyenne $v^* = \sqrt{8RT/\pi M}$.
+  \item Estimer $D = \ell v^*/3$.
+  \item Temps pour diffuser sur \qty{5}{m}~; et si l'air dérive à
+        \qty{0.1}{m/s}~?
+  \item Écrire la gaussienne à trois dimensions du nuage (un coin~:
+        les murs réfléchissent, multiplier par $8$). En un point à \qty{1}{m},
+        à quel instant la concentration est-elle maximale~?
+  \item \omterm{def:b2:particle-diffusion:flux}{Densité en nombre} maximale en ce point~; comparer à un seuil de
+        perception de \qty{1e13}{m^{-3}}.
+  \item Le bord du nuage~: à quelle distance la densité vaut-elle $10^{-6}$ de
+        sa valeur centrale après un jour~?
+  \item Nombre de collisions que subit une molécule de parfum en un jour.
+\end{enumerate}
+
+\textbf{Partie IV --- Le marcheur et la flèche du temps.}
+\begin{enumerate}[resume]
+  \item Un marcheur fait $N$ pas $\pm\ell$ sur une droite~: déplacement moyen et
+        quadratique moyen~; montrer que $\langle x^2\rangle = 2Dt$
+        identifie $D = \ell^2/2\tau$.
+  \item Probabilité que le marcheur revienne exactement à son départ après
+        $N = 2$, $4$, $6$ pas~; commenter la tendance.
+  \item Filmez un nuage qui diffuse et passez le film à l'envers~: que voyez-vous,
+        et quelle équation est violée~?
+  \item Expliquer en un paragraphe comment le mouvement réversible des molécules
+        produit l'\omterm{thm:b2:particle-diffusion:equation}{équation de diffusion} irréversible.
+  \item Résumer~: l'échelle de longueur, l'échelle de temps, et la seule
+        grandeur qui distingue un gaz, un liquide et un solide chaud.
+\end{enumerate}
+\end{problem}

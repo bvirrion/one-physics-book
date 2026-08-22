@@ -1,0 +1,751 @@
+\chapter{Mecânica do corpo rígido}\label{ch:b2:rigid-body-mechanics}
+
+Observe da calçada a roda de uma bicicleta: os raios próximos ao chão
+estão quase parados e nítidos, os do alto são um borrão que avança ao
+dobro da velocidade do ciclista. Cada ponto da roda tem uma velocidade
+diferente, e no entanto a roda é um só objeto --- seus pontos guardam
+as distâncias mútuas, e essa única restrição organiza todos os
+movimentos em dois vetores, uma translação e uma rotação. O volume do
+Ano 1 tratou o caso particular de um sólido girando em torno de um eixo
+fixo; este capítulo dá a cinemática geral de um \omterm{def:b2:rigid-body-mechanics:solid}{corpo rígido}, sua
+energia cinética e seu momento angular, as leis de seu movimento e a
+lei que governa toda roda, pneu, freio e escada: a lei de Coulomb do
+atrito seco.
+
+\section{Cinemática de um corpo rígido}
+
+\begin{definition}[Corpo rígido]\label{def:b2:rigid-body-mechanics:solid}
+\index{corpo rígido}
+Um \emph{corpo rígido} (ou sólido) é um sistema de pontos cujas
+distâncias mútuas permanecem constantes: $\|\vect{AB}\|$ não depende do
+tempo, para todo par $A$, $B$ de seus pontos. Um referencial no qual
+todo ponto do sólido está em repouso é um \emph{referencial ligado ao sólido}.
+\end{definition}
+
+\begin{theorem}[Campo de velocidades de um corpo rígido]\label{thm:b2:rigid-body-mechanics:field}
+\index{vetor de rotação}\index{campo de velocidades (corpo rígido)}
+Em cada instante existe um vetor $\vect\Omega$, o \emph{\omterm{thm:b2:rigid-body-mechanics:field}{vetor de
+rotação}} do sólido (unidade \unit{rad/s}), tal que as velocidades de
+dois quaisquer de seus pontos $A$ e $M$ num referencial $\mathcal R$ satisfazem
+\[
+\vect v_M = \vect v_A + \vect\Omega\wedge\vect{AM} .
+\]
+$\vect\Omega$ não depende da escolha de $A$; um vetor $\vect u$ fixo no
+sólido evolui segundo $\dd\vect u/\dd t = \vect\Omega\wedge\vect u$.
+\end{theorem}
+
+\begin{proof}
+Seja $(\vect e_1, \vect e_2, \vect e_3)$ uma base ortonormal ligada ao
+sólido. De $\vect e_i\cdot\vect e_j = \delta_{ij}$, os coeficientes
+$a_{ij} = \dot{\vect e}_i\cdot\vect e_j$ satisfazem $a_{ij} + a_{ji} = 0$: a
+matriz da aplicação $\vect u \mapsto \dot{\vect u}$ (para $\vect u$ fixo no
+sólido, $\vect u = \sum u_i\vect e_i$ com $u_i$ constantes) é
+antissimétrica, e uma matriz antissimétrica $3\times3$ é a matriz de
+$\vect u \mapsto \vect\Omega\wedge\vect u$ com $\Omega_1 = a_{23}$,
+$\Omega_2 = a_{31}$, $\Omega_3 = a_{12}$. Aplique-a a $\vect u =
+\vect{AM}$: $\vect v_M - \vect v_A = \vect\Omega\wedge\vect{AM}$. Se
+$\vect\Omega'$ fizesse o mesmo, $(\vect\Omega - \vect\Omega')\wedge
+\vect{AM} = \vect 0$ para todo $M$, logo $\vect\Omega' = \vect\Omega$.
+\end{proof}
+
+\begin{remark}[Três movimentos]\label{rem:b2:rigid-body-mechanics:motions}
+\index{translação}\index{rotação em torno de um eixo fixo}
+\emph{Translação}: $\vect\Omega = \vect 0$, todos os pontos têm a mesma
+velocidade (não necessariamente um movimento retilíneo: a cabine de uma
+roda-gigante translada sobre um círculo). \emph{\omterm{rem:b2:rigid-body-mechanics:motions}{Rotação em torno de um eixo fixo}} $\Delta$:
+os pontos de $\Delta$ estão em repouso, $\vect\Omega = \omega\,\vect e_\Delta$,
+e um ponto a distância $r$ do eixo percorre um círculo com celeridade
+$r|\omega|$ --- o caso do volume do Ano 1. O movimento geral combina os
+dois: $\vect v_M = \vect v_G + \vect\Omega\wedge\vect{GM}$, uma
+translação com a velocidade do centro de massa mais uma rotação em
+torno de $G$.
+\end{remark}
+
+\begin{definition}[Rolamento sem deslizamento]\label{def:b2:rigid-body-mechanics:rolling}
+\index{rolamento sem deslizamento}\index{velocidade de deslizamento}
+Dois sólidos $S_1$ e $S_2$ tocam-se num ponto $I$. A \emph{velocidade
+de deslizamento} de $S_1$ sobre $S_2$ é $\vect v_{\text{desl}} = \vect v_{I \in S_1}
+- \vect v_{I \in S_2}$, a diferença das velocidades dos dois pontos
+materiais que coincidem em $I$ nesse instante. $S_1$ \emph{rola sem
+deslizar} sobre $S_2$ quando $\vect v_{\text{desl}} = \vect 0$. Para uma
+roda de raio $R$ que rola sem deslizar sobre um solo fixo, com
+velocidade do centro $v_G$ e velocidade angular $\omega$, a condição é
+$v_G = R\omega$ (sinais escolhidos de modo que uma roda que rola para a
+direita gire no sentido horário).
+\end{definition}
+
+\begin{proof}
+Aplique \cref{thm:b2:rigid-body-mechanics:field} à roda, entre $G$
+e o ponto de contato $I$: $\vect v_{I\in S_1} = \vect v_G + \vect\Omega
+\wedge\vect{GI}$; com $\vect v_G = v_G\vect e_x$, $\vect\Omega = -\omega
+\vect e_z$ e $\vect{GI} = -R\vect e_y$, isso dá $(v_G - R\omega)\vect e_x$,
+que deve se anular.
+\end{proof}
+
+\begin{example}[Campo de velocidades de uma roda que rola]\label{ex:b2:rigid-body-mechanics:wheel}
+Para a roda que rola, $\vect v_M = \vect\Omega\wedge\vect{IM}$: a cada
+instante a roda \emph{gira em torno de seu ponto de contato}. O ponto de
+contato está parado, o centro anda a $v = R\omega$, o topo a $2v$, e um
+ponto do aro à altura $h$ anda a $\omega\sqrt{2Rh}$, perpendicularmente
+a $\vect{IM}$. A válvula descreve uma ciclóide; uma pedra lançada pela
+banda de rodagem parte com a velocidade do ponto do aro, até $2v$
+--- por isso os para-lamas de um caminhão importam.
+\end{example}
+
+\begin{omfigure}
+\includegraphics[width=0.58\linewidth]{images/book4/ai/b4-01-bicycle-wheel-blur.png}
+
+{\small Uma roda captada com obturador lento: os raios próximos ao chão, quase em repouso, ficam nítidos; os do alto, a duas vezes a velocidade da bicicleta, borram.}
+\end{omfigure}
+
+
+\begin{omfigure}
+\begin{tikzpicture}[font=\small, x=1cm, y=1cm, >=Stealth]
+  \begin{scope}
+    \draw[thick] (-2.6,0) -- (2.6,0);
+    \draw[omDef, thick] (0,1.5) circle (1.5);
+    \fill (0,1.5) circle (1.5pt) node[below left, font=\footnotesize] {$G$};
+    \fill (0,0) circle (1.5pt) node[below, font=\footnotesize] {$I$};
+    \draw[omThm, very thick, ->] (0,1.5) -- (1.2,1.5) node[above, font=\footnotesize] {$\vect v_G$};
+    \draw[omThm, very thick, ->] (0,3.0) -- (2.4,3.0) node[pos=0.35, above, font=\footnotesize] {$2\vect v_G$};
+    \draw[omThm, very thick, ->] (1.5,1.5) -- (2.7,0.3) node[right, font=\footnotesize] {$\sqrt2\,v_G$};
+    \draw[omThm, very thick, ->] (-1.5,1.5) -- (-0.3,2.7) node[above left, font=\footnotesize] {$\sqrt2\,v_G$};
+    \draw[omThm, thick, ->] (1.06,0.44) -- (1.41,-0.41);
+    \draw[omThm, thick, ->] (-1.06,0.44) -- (-0.71,1.29);
+    \node[omThm, font=\footnotesize] at (0.3,0.35) {$\vect v_I = \vect 0$};
+    \draw[omProp, ->] (-0.5,2.1) arc[start angle=130, end angle=50, radius=0.75] node[midway, above, font=\footnotesize] {$\omega$};
+  \end{scope}
+  \begin{scope}[xshift=7.6cm]
+    \draw[thick] (-2.6,0) -- (2.6,0);
+    \draw[omDef, thick] (0,1.5) circle (1.5);
+    \fill (0,0) circle (1.5pt) node[below, font=\footnotesize] {$I$};
+    \fill (0,1.5) circle (1.5pt);
+    \draw[omThm, ->] (0,1.5) -- ($(0,1.5)!0.45!90:(0,0)$);
+    \foreach \a in {30,60,...,330} {
+      \coordinate (M) at ({1.5*cos(\a)},{1.5+1.5*sin(\a)});
+      \draw[omThm, ->] (M) -- ($(M)!0.45!90:(0,0)$);
+    }
+    \draw[dashed, omExo] (0,0) -- (1.3,2.25);
+    \fill (1.3,2.25) circle (1.2pt) node[right, font=\footnotesize] {$M$};
+    \node[font=\footnotesize] at (0,-0.8) {$\vect v_M = \vect\Omega\wedge\vect{IM}$};
+    \node[font=\footnotesize, align=center] at (0,3.6) {rotação instantânea\\em torno do ponto de contato};
+  \end{scope}
+\end{tikzpicture}
+
+{\small Uma roda que rola sem deslizar. À esquerda: as velocidades de alguns
+pontos --- nula no ponto de contato $I$, $v_G = R\omega$ no centro,
+$2v_G$ no topo. À direita: toda velocidade é perpendicular ao segmento
+que liga o ponto a $I$ e proporcional ao seu comprimento: a cada
+instante a roda gira em torno de seu ponto de contato.}
+\end{omfigure}
+
+\section{Grandezas cinéticas de um sólido}
+
+\begin{proposition}[Quantidade de movimento, momento angular, energia cinética]\label{prop:b2:rigid-body-mechanics:kinetic}
+\index{momento de inércia}\index{momento angular (sólido)}\index{energia cinética (sólido)}
+Para um sólido de massa $M$, centro de massa $G$, num referencial $\mathcal R$:
+\begin{itemize}
+  \item sua quantidade de movimento é $\vect p = M\vect v_G$;
+  \item se ele gira em torno de um eixo $\Delta$ (fixo em $\mathcal R$, ou
+        que passa por $G$ e tem direção fixa) com velocidade angular
+        $\omega$, seu momento angular \emph{ao longo} desse eixo é
+        $L_\Delta = J_\Delta\,\omega$, onde
+        \[
+        J_\Delta = \sum_i m_i r_i^2 = \int r^2\,\dd m
+        \]
+        é seu \emph{\omterm{prop:b2:rigid-body-mechanics:kinetic}{momento de inércia}} em relação a $\Delta$ ($r$ a distância ao
+        eixo; unidade \unit{kg.m^2});
+  \item sua energia cinética é (Koenig) $E_k = \tfrac12Mv_G^2 +
+        E_k^*$, onde a energia cinética no referencial baricêntrico vale
+        $E_k^* = \tfrac12J_{G}\omega^2$ para uma rotação a $\omega$ em torno de
+        um eixo por $G$ --- e $E_k = \tfrac12J_\Delta\omega^2$ para uma
+        \omterm{rem:b2:rigid-body-mechanics:motions}{rotação em torno de um eixo fixo} $\Delta$.
+\end{itemize}
+\end{proposition}
+
+\begin{proof}
+Os teoremas da quantidade de movimento e de Koenig foram demonstrados
+no volume do Ano 1 para um sistema qualquer. Para a rotação em torno de
+$\Delta$ por $O$, um ponto a distância $r_i$ do eixo tem celeridade
+$r_i\omega$ sobre um círculo em torno do eixo; seu momento angular em
+relação a $O$ projetado em $\vect e_\Delta$ vale $m_ir_i^2\omega$ (as
+outras componentes, que se cancelam num sólido simétrico, não são
+necessárias aqui); some. Energia cinética: $\sum\tfrac12m_ir_i^2
+\omega^2$.
+\end{proof}
+
+\begin{remark}[O que é admitido]\label{rem:b2:rigid-body-mechanics:tensor}
+Para uma rotação $\vect\Omega$ arbitrária o vetor completo $\vect L_G$
+não é, em geral, paralelo a $\vect\Omega$: $\vect L_G = \mathbf J\,\vect\Omega$
+com $\mathbf J$ o \emph{tensor de inércia}, matriz simétrica cujos
+autovetores são os eixos principais. Todo sólido deste capítulo gira em
+torno de um eixo fixo ou de um eixo de simetria por $G$, para o qual
+$\vect L = J\vect\Omega$ exatamente; o caso geral fica para o volume do
+Ano 3.
+\end{remark}
+
+\begin{proposition}[Momentos de inércia]\label{prop:b2:rigid-body-mechanics:inertia}
+\index{teorema de Huygens}\index{teorema dos eixos paralelos}
+Para sólidos homogêneos de massa $M$, em torno de um eixo por $G$: barra
+delgada de comprimento $\ell$ (eixo perpendicular), $J = \tfrac1{12}M\ell^2$; aro
+fino ou casca cilíndrica de raio $R$ (eixo próprio), $J = MR^2$; disco ou
+cilindro maciço, $J = \tfrac12MR^2$; esfera maciça, $J = \tfrac25MR^2$; casca
+esférica, $J = \tfrac23MR^2$. \emph{Teorema de Huygens} (eixos paralelos): em
+torno de um eixo $\Delta$ paralelo a um eixo $\Delta_G$ por $G$, a distância
+$d$,
+\[
+J_\Delta = J_{\Delta_G} + Md^2 .
+\]
+\end{proposition}
+
+\begin{proof}
+Barra: $\int_{-\ell/2}^{\ell/2}x^2\,(M/\ell)\dd x = M\ell^2/12$. Disco: some os anéis
+de massa $(2M/R^2)r\,\dd r$ e obtenha $\int_0^R r^2(2M/R^2)r\,\dd r = MR^2/2$. Esfera: por
+simetria $J = \tfrac23\int r^2\dd m$ ($r$ a distância ao centro,
+pois $x^2 + y^2 = \tfrac23(x^2 + y^2 + z^2)$ em média sobre os três
+eixos) e $\int r^2\dd m = \int_0^R r^2(3M/R^3)r^2\dd r = \tfrac35MR^2$.
+Huygens: com $\vect r_i$ o vetor de $\Delta$ até $m_i$, perpendicular
+ao eixo, e $\vect r_i = \vect d + \vect r_i^*$, $\sum m_ir_i^2 = Md^2
++ 2\vect d\cdot\sum m_i\vect r_i^* + \sum m_ir_i^{*2}$, e a soma do meio
+se anula pela definição de $G$.
+\end{proof}
+
+\begin{example}[Um volante de inércia]\label{ex:b2:rigid-body-mechanics:flywheel}
+Um disco de aço de \qty{50}{kg} e raio \qty{30}{cm}: $J = \tfrac12 \times
+50 \times 0.09 = \qty{2.25}{kg.m^2}$; a \qty{3000}{rpm} ($\omega =
+\qty{314}{rad/s}$) ele armazena $\tfrac12J\omega^2 = \qty{111}{kJ}$, a
+energia cinética de um carro pequeno a \qty{50}{km/h}. Volantes de
+armazenamento giram rotores de fibra de carbono a \qty{50000}{rpm} no
+vácuo, sobre \omterm{def:b2:rigid-body-mechanics:pivot}{mancais} magnéticos: a energia cresce como $\omega^2$, e o
+limite é a resistência à tração do aro.
+\end{example}
+
+\section{Dinâmica de um sólido}
+
+\begin{theorem}[Leis do movimento de um sólido]\label{thm:b2:rigid-body-mechanics:laws}
+\index{teorema do momento angular (sólido)}\index{potência das forças sobre um sólido}
+Num referencial galileano, para um sólido submetido a forças externas
+$\vect F_i$ aplicadas nos pontos $A_i$:
+\begin{enumerate}
+  \item (quantidade de movimento) $M\,\dd\vect v_G/\dd t = \sum\vect F_i$;
+  \item (momento angular em relação a $G$, ou a um ponto fixo $O$)
+        $\dd\vect L_G/\dd t = \sum\vect{GA_i}\wedge\vect F_i$; projetado
+        sobre um eixo fixo $\Delta$ ou sobre um eixo por $G$ de direção
+        fixa em torno do qual o sólido gira a $\omega$:
+        $J_\Delta\,\dd\omega/\dd t = \mathcal M_\Delta$, a soma dos
+        momentos das forças externas em relação ao eixo;
+  \item (potência) a potência de um conjunto de forças sobre um sólido é
+        $\mathcal P = \vect R\cdot\vect v_A + \vect{\mathcal M}_A\cdot
+        \vect\Omega$ para qualquer ponto $A$ do sólido, com $\vect R$ a
+        soma das forças e $\vect{\mathcal M}_A$ seu momento total em
+        relação a $A$; \emph{as forças internas de um sólido têm
+        potência nula}, e $\dd E_k/\dd t = \mathcal P_{\text{ext}}$.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+(1) e (2) são os teoremas do volume do Ano 1 para sistemas de pontos
+(o teorema do momento angular em relação a $G$ vale mesmo quando $G$
+acelera, pois as forças de inércia do referencial baricêntrico têm
+momento nulo em relação a $G$). (3) Com $\vect v_{A_i} = \vect v_A + \vect\Omega
+\wedge\vect{AA_i}$: $\sum\vect F_i\cdot\vect v_{A_i} = \vect R\cdot\vect v_A
++ \sum\vect F_i\cdot(\vect\Omega\wedge\vect{AA_i}) = \vect R\cdot\vect v_A +
+\vect\Omega\cdot\sum\vect{AA_i}\wedge\vect F_i$ (produto misto). Forças
+internas: sua soma e seu momento total se anulam (ação--reação, mesma
+reta de ação), donde potência nula sobre um sólido --- \emph{não} sobre um
+sistema deformável. O teorema da energia cinética guarda então apenas a potência externa.
+\end{proof}
+
+\begin{definition}[Pivô perfeito]\label{def:b2:rigid-body-mechanics:pivot}
+\index{pivô (perfeito)}\index{mancal}
+Um sólido gira em torno de um eixo fixo $\Delta$ num \emph{pivô perfeito}
+(um mancal ideal) quando as forças de contato do mancal têm momento
+nulo em relação a $\Delta$; elas não desenvolvem então potência alguma
+($\vect v_A = \vect 0$ sobre o eixo, $\mathcal M_\Delta = 0$). Um mancal
+real acrescenta um torque de atrito $-\Gamma_f\operatorname{sgn}\omega$,
+ou um torque viscoso $-h\omega$.
+\end{definition}
+
+\begin{proposition}[O pêndulo físico]\label{prop:b2:rigid-body-mechanics:pendulum}
+\index{pêndulo físico}\index{pêndulo composto}
+Um sólido de massa $M$ oscila em torno de um eixo fixo horizontal
+$\Delta$ num pivô perfeito, com o centro de massa a distância $d$ do
+eixo. Com $\theta$ o ângulo de $\vect{OG}$ a partir da vertical
+descendente,
+\[
+J_\Delta\ddot\theta = -Mgd\sin\theta ,
+\]
+de modo que as pequenas oscilações têm período $T = 2\pi\sqrt{J_\Delta/Mgd}$
+--- o de um pêndulo simples de comprimento $\ell_{\text{eq}} = J_\Delta/Md$.
+\end{proposition}
+
+\begin{proof}
+Teorema do momento angular em relação a $\Delta$: o momento do peso é
+$-Mgd\sin\theta$, o do pivô é nulo. Linearize.
+\end{proof}
+
+\begin{example}[A régua de um metro]\label{ex:b2:rigid-body-mechanics:rule}
+Uma régua de um metro articulada numa extremidade: $J = \tfrac13M\ell^2$ (Huygens a
+partir de $\tfrac1{12}M\ell^2$), $d = \ell/2$, $\ell_{\text{eq}} = \tfrac23\ell =
+\qty{0.667}{m}$ e $T = \qty{1.64}{s}$ --- um pêndulo feito da régua inteira
+bate mais devagar que uma massa pontual pendurada em seu centro (\qty{1.42}{s}) e mais
+rápido que uma na sua ponta (\qty{2.0}{s}).
+\end{example}
+
+\begin{omfigure}
+\begin{tikzpicture}[font=\small, x=1cm, y=1cm, >=Stealth]
+  \begin{scope}
+    \fill[pattern=north east lines] (-0.6,3.2) rectangle (0.6,3.45); \draw[thick] (-0.6,3.2) -- (0.6,3.2);
+    \fill (0,3.1) circle (2pt) node[left, font=\footnotesize] {$O$};
+    \draw[dashed] (0,3.1) -- (0,0.2);
+    \draw[omDef, very thick, rotate around={25:(0,3.1)}] (-0.12,3.1) rectangle (0.12,0.3);
+    \draw[dashed, omExo] (0,3.1) -- ($(0,3.1)+({2.0*sin(25)},{-2.0*cos(25)})$);
+    \coordinate (G) at ({0+1.4*sin(25)},{3.1-1.4*cos(25)});
+    \fill[omThm] (G) circle (2pt) node[right, font=\footnotesize] {$G$};
+    \draw[omThm, very thick, ->] (G) -- ($(G)+(0,-1.0)$) node[below, font=\footnotesize] {$M\vect g$};
+    \draw[<->, omExo] (0,1.5) arc[start angle=-90, end angle=-65, radius=1.6] node[midway, below, font=\footnotesize] {$\theta$};
+    \node[font=\footnotesize] at (2.1,2.3) {$J_\Delta\ddot\theta = -Mgd\sin\theta$};
+    \draw[<->, omExo] (-0.5,3.1) -- ($(-0.5,3.1)+(0,-1.28)$) node[midway, left, font=\footnotesize] {$d$};
+  \end{scope}
+  \begin{scope}[xshift=7cm]
+    \draw[thick] (-2.5,0) -- (2.5,0);
+    \draw[omDef, thick] (0,1.2) circle (1.2);
+    \fill (0,1.2) circle (1.5pt);
+    \draw[omThm, very thick, ->] (0,1.2) -- (0,-0.3) node[right, font=\footnotesize] {$M\vect g$};
+    \draw[omProp, very thick, ->] (0,0) -- (0,1.0) node[left, font=\footnotesize, pos=0.7] {$\vect N$};
+    \draw[omExo, very thick, ->] (0,0) -- (-1.0,0) node[below, font=\footnotesize] {$\vect T$};
+    \draw[very thick, ->] (0.3,2.6) -- (1.5,2.6) node[right, font=\footnotesize] {$\vect F$};
+    \draw[omDef, ->] (-0.5,1.7) arc[start angle=130, end angle=50, radius=0.75] node[midway, above, font=\footnotesize] {$\omega$};
+    \node[font=\footnotesize, align=left] at (0,-0.9) {rolamento sem deslizamento: $|T| \le fN$};
+  \end{scope}
+\end{tikzpicture}
+
+{\small À esquerda: o \omterm{prop:b2:rigid-body-mechanics:pendulum}{pêndulo físico} --- o momento do peso em relação ao
+pivô comanda a rotação, e a força do pivô não tem momento. À direita: as
+forças sobre uma roda que rola em solo horizontal: peso, \omterm{def:b2:rigid-body-mechanics:contact}{reação
+normal} $\vect N$ e atrito tangencial $\vect T$ no ponto de
+contato, cuja intensidade é limitada pela lei de Coulomb.}
+\end{omfigure}
+
+\section{Forças de contato e atrito de Coulomb}
+
+\begin{definition}[Força de contato, normal e tangencial]\label{def:b2:rigid-body-mechanics:contact}
+\index{reação normal}\index{força de atrito}
+A força exercida por um apoio sobre um sólido num ponto de contato $I$
+decompõe-se numa \emph{reação normal} $\vect N$, perpendicular ao plano
+tangente comum e dirigida para o sólido ($N \ge 0$: um apoio só pode
+empurrar), e numa \emph{componente tangencial} $\vect T$ no plano
+tangente, a \emph{força de atrito}.
+\end{definition}
+
+\begin{theorem}[Leis de Coulomb do atrito seco]\label{thm:b2:rigid-body-mechanics:coulomb}
+\index{leis de Coulomb do atrito}\index{coeficiente de atrito}\index{atrito estático}\index{atrito cinético}
+Para dois sólidos secos em contato, com um \emph{\omterm{thm:b2:rigid-body-mechanics:coulomb}{coeficiente de atrito}} $f$
+que depende dos materiais e do estado das superfícies, mas não da
+área de contato nem (em boa aproximação) da celeridade:
+\begin{itemize}
+  \item se os sólidos deslizam um sobre o outro ($\vect v_{\text{desl}} \ne
+        \vect 0$), a \omterm{def:b2:rigid-body-mechanics:contact}{força de atrito} é oposta à \omterm{def:b2:rigid-body-mechanics:rolling}{velocidade de deslizamento}
+        e tem intensidade $\|\vect T\| = f\|\vect N\|$ (\omterm{thm:b2:rigid-body-mechanics:coulomb}{atrito cinético});
+  \item se não deslizam, $\|\vect T\| \le f\|\vect N\|$ (\omterm{thm:b2:rigid-body-mechanics:coulomb}{atrito
+        estático}): a \omterm{def:b2:rigid-body-mechanics:contact}{força de atrito} vale então o que as demais leis do
+        movimento exigirem, dentro desse limite, e sua direção não é
+        conhecida de antemão.
+\end{itemize}
+Um \emph{contato perfeito} é a idealização $f = 0$: $\vect T = \vect 0$.
+\end{theorem}
+\admitted
+
+\begin{remark}[Como ler as leis de Coulomb]\label{rem:b2:rigid-body-mechanics:reading}
+\index{cone de atrito}
+A primeira lei é uma igualdade, a segunda uma desigualdade --- e nisso
+está toda a dificuldade dos problemas de atrito. O \emph{método} é
+\emph{supor} que não há deslizamento, resolver para $\vect T$ e $\vect N$ e
+\emph{verificar} $\|\vect T\| \le f\|\vect N\|$; se a verificação falha, o
+sólido desliza, $\|\vect T\| = f\|\vect N\|$ oposta ao deslizamento, e o
+problema é resolvido de novo. Geometricamente, a força de contato deve
+permanecer dentro do \emph{\omterm{rem:b2:rigid-body-mechanics:reading}{cone de atrito}} de semiângulo $\varphi$ com $\tan\varphi
+= f$. Valores típicos: borracha sobre asfalto seco $f \approx 0.8$--$1$, sobre
+asfalto molhado $0.4$--$0.6$, sobre gelo $0.1$; aço sobre aço $0.15$ a seco, $0.05$
+lubrificado; o coeficiente estático é na realidade um pouco maior que o
+cinético, e é por isso que uma derrapagem, uma vez iniciada, é difícil de conter.
+\end{remark}
+
+\begin{proposition}[Potência das forças de contato; rolamento sem deslizamento]\label{prop:b2:rigid-body-mechanics:power}
+\index{atrito de rolamento}
+A potência das forças de contato sobre um sólido que se move num apoio
+fixo é $\mathcal P = \vect T\cdot\vect v_{I\in S}$ (a força normal é
+perpendicular à velocidade do ponto de contato, que está no plano
+tangente). No \emph{\omterm{def:b2:rigid-body-mechanics:rolling}{rolamento sem deslizamento}} essa potência é nula:
+o atrito não realiza então trabalho algum, embora possa ser essencial ao movimento.
+No deslizamento ela vale $-f N v_{\text{desl}} < 0$: calor.
+\end{proposition}
+
+\begin{proof}
+$\mathcal P = (\vect N + \vect T)\cdot\vect v_{I\in S}$ e $\vect
+v_{I\in S} = \vect v_{\text{desl}}$ está no plano tangente, de modo que só
+$\vect T$ contribui; ela é nula quando a \omterm{def:b2:rigid-body-mechanics:rolling}{velocidade de deslizamento} é nula, e vale
+$-fNv_{\text{desl}}$ quando os sólidos deslizam ($\vect T$ oposta a $\vect
+v_{\text{desl}}$). O rolamento real dissipa um pouco pela deformação do
+pneu e do solo (\emph{\omterm{prop:b2:rigid-body-mechanics:power}{atrito de rolamento}}, modelado por um
+torque pequeno $\Gamma_r = \mu_rNR$ ou por uma força equivalente $\mu_rN$, com
+$\mu_r \approx 0.01$ para um pneu na estrada): um efeito distinto e muito menor.
+\end{proof}
+
+\begin{method}[Um sólido que desce um plano inclinado]\label{met:b2:rigid-body-mechanics:incline}
+\index{descida de um plano inclinado}
+Um sólido homogêneo de raio $R$, massa $M$ e \omterm{prop:b2:rigid-body-mechanics:kinetic}{momento de inércia} $J =
+kMR^2$ em torno de seu eixo ($k = 1$ aro, $\tfrac12$ disco, $\tfrac25$ esfera)
+é solto num plano inclinado de ângulo $\alpha$ com \omterm{thm:b2:rigid-body-mechanics:coulomb}{coeficiente de atrito}
+$f$. Suponha \omterm{def:b2:rigid-body-mechanics:rolling}{rolamento sem deslizamento}:
+\begin{enumerate}
+  \item quantidade de movimento ao longo da rampa: $M\dot v = Mg\sin\alpha - T$; normal:
+        $N = Mg\cos\alpha$;
+  \item momento angular em relação a $G$: $kMR^2\dot\omega = TR$;
+  \item sem deslizamento: $v = R\omega$, donde $T = kM\dot v$ e
+        \[
+        \dot v = \frac{g\sin\alpha}{1 + k} , \qquad T = \frac{k}{1 + k}\,
+        Mg\sin\alpha ;
+        \]
+  \item verificação: $T \le fN \iff \tan\alpha \le f\,\dfrac{1 + k}{k}$.
+        Além dessa inclinação o sólido desliza, $T = fMg\cos\alpha$, $\dot v =
+        g(\sin\alpha - f\cos\alpha)$ e $\dot\omega = fg\cos\alpha/kR$.
+\end{enumerate}
+Verificação por energia (sem deslizamento, atrito sem potência): $\tfrac12(1 + k)Mv^2 =
+Mgh$ dá $v = \sqrt{2gh/(1 + k)}$ --- uma esfera vence um disco, que
+vence um aro, seja qual for a massa ou o raio.
+\end{method}
+
+\begin{omfigure}
+\begin{tikzpicture}[font=\small, x=1cm, y=1cm, >=Stealth]
+  \begin{scope}
+    \draw[thick] (0,0) -- (5.5,0) -- (0,2.6) -- cycle;
+    \draw (0.9,0) arc[start angle=180, end angle=155, radius=0.9] node[left, font=\footnotesize, xshift=-2pt] {};
+    \node[font=\footnotesize] at (4.6,0.25) {$\alpha$};
+    \draw (5.5,0) -- (4.7,0) arc[start angle=180, end angle=155, radius=0.8];
+    \coordinate (I) at (2.2,1.56);
+    \coordinate (G) at ($(I)+(155:-0.0)+(65:0.8)$);
+    \draw[omDef, thick] (G) circle (0.8);
+    \fill (G) circle (1.5pt);
+    \draw[omThm, very thick, ->] (G) -- ($(G)+(0,-1.3)$) node[below, font=\footnotesize] {$M\vect g$};
+    \draw[omProp, very thick, ->] (I) -- ($(I)+(65:1.0)$) node[above left, font=\footnotesize, pos=0.9] {$\vect N$};
+    \draw[omExo, very thick, ->] (I) -- ($(I)+(155:0.9)$) node[above, font=\footnotesize] {$\vect T$};
+    \draw[->, thick] ($(G)+(65:1.1)$) -- ($(G)+(65:1.1)+(-25:1.2)$) node[right, font=\footnotesize] {$\vect v$};
+    \node[font=\footnotesize, align=left] at (4.6,1.7) {$\dot v = \dfrac{g\sin\alpha}{1+k}$};
+  \end{scope}
+  \begin{scope}[xshift=7.6cm]
+    \begin{axis}[omaxis, axis x line=bottom, axis y line=left, width=5.6cm, height=4.2cm,
+        xlabel={$\alpha$ (graus)}, ylabel={$\dot v/g$}, xmin=0, xmax=90, ymin=0, ymax=1.05,
+        xlabel style={at={(axis description cs:0.5,-0.12)}, anchor=north},
+        ylabel style={at={(axis description cs:-0.2,0.5)}, rotate=90, anchor=south},
+        xtick={0,30,60,90}, ytick={0,0.5,1}, samples=200, legend style={font=\scriptsize, at={(0.03,0.97)}, anchor=north west, draw=none, fill=none}]
+      \addplot[omThm, thick, domain=0:56.3] {sin(x)/1.5};
+      \addplot[omThm, thick, domain=56.3:90] {sin(x)-0.5*cos(x)};
+      \addplot[omDef, thick, dashed, domain=0:90] {sin(x)};
+      \legend{disco, , sem atrito}
+      \draw[dotted] (axis cs:56.3,0) -- (axis cs:56.3,0.83);
+      \node[font=\scriptsize, anchor=west] at (axis cs:57,0.3) {desliza};
+    \end{axis}
+  \end{scope}
+\end{tikzpicture}
+
+{\small À esquerda: forças sobre um sólido na \omterm{met:b2:rigid-body-mechanics:incline}{descida de um plano inclinado} --- peso em
+$G$, \omterm{def:b2:rigid-body-mechanics:contact}{reação normal} e atrito no ponto de contato. À direita: a
+aceleração de um disco ($k = \tfrac12$) em função da inclinação para
+$f = 0.5$: ele rola sem deslizar enquanto $\tan\alpha \le 3f$, depois
+desliza e sua aceleração segue $g(\sin\alpha - f\cos\alpha)$, sempre
+abaixo do valor sem atrito $g\sin\alpha$.}
+\end{omfigure}
+
+\begin{example}[Por que um carro precisa de atrito para acelerar]\label{ex:b2:rigid-body-mechanics:car}
+Um carro de tração dianteira: o motor aplica um torque às rodas da
+frente; a única força horizontal externa sobre o carro é o atrito da
+estrada nos pneus, e é essa força que acelera o carro. Com todo o peso
+sobre as rodas motrizes, a aceleração máxima vale
+$fg \approx \qty{8}{m/s^2}$ em asfalto seco --- e a metade disso se apenas
+metade do peso repousa sobre o eixo motriz; no gelo, $\qty{1}{m/s^2}$. O
+trabalho do motor não é realizado pela estrada (cujo ponto de contato
+está parado): é trabalho interno, convertido pela transmissão em
+energia cinética --- do mesmo modo que as forças internas dos músculos
+de quem caminha, e não o chão, fornecem a energia da caminhada.
+\end{example}
+
+\begin{example}[A transição do deslizamento ao rolamento]\label{ex:b2:rigid-body-mechanics:bowling}
+Uma bola de boliche é lançada deslizando a $v_0$, sem rotação. O \omterm{thm:b2:rigid-body-mechanics:coulomb}{atrito
+cinético} $fMg$ freia o centro ($\dot v = -fg$) e põe a bola a girar
+($\tfrac25MR^2\dot\omega = fMgR$, $\dot\omega = 5fg/2R$) até que $v = R\omega$:
+em $t_1 = 2v_0/7fg$, com $v_1 = \tfrac57v_0$. Daí em diante ela rola
+sem deslizar, com celeridade constante. Dois sétimos da celeridade, e
+$1 - (\tfrac57)^2\tfrac75 = \tfrac27$ da energia cinética, perdem-se em calor
+no deslizamento --- qualquer que seja $f$; $f$ só determina em quanto tempo.
+\end{example}
+
+\begin{omfigure}
+\begin{tikzpicture}
+\begin{axis}[omaxis, axis x line=bottom, axis y line=left, width=7.6cm, height=4.4cm,
+    xlabel={$t/t_1$}, ylabel={}, xmin=0, xmax=2, ymin=0, ymax=1.15,
+    xlabel style={at={(axis description cs:0.5,-0.12)}, anchor=north},
+    xtick={0,1,2}, ytick={0.714,1}, yticklabels={$\tfrac57v_0$, $v_0$}, samples=100,
+    legend style={font=\scriptsize, at={(0.97,0.35)}, anchor=east, draw=none, fill=none}]
+  \addplot[omThm, thick, domain=0:1] {1-0.2857*x};
+  \addplot[omThm, thick, domain=1:2] {0.714};
+  \addplot[omDef, thick, domain=0:1] {0.714*x};
+  \addplot[omDef, thick, domain=1:2] {0.714};
+  \legend{$v_G$, , $R\omega$}
+  \draw[dotted] (axis cs:1,0) -- (axis cs:1,0.714);
+\end{axis}
+\end{tikzpicture}
+
+{\small Uma bola lançada deslizando sem rotação: o \omterm{thm:b2:rigid-body-mechanics:coulomb}{atrito cinético} freia
+o centro e põe a bola a girar, linearmente no tempo, até que $R\omega$
+alcança $v_G$ em $\tfrac57v_0$; daí em diante a bola rola sem
+deslizar e o atrito deixa de agir.}
+\end{omfigure}
+
+\section{Exercícios}
+
+\begin{exercise}[$\star$]\label{exo:b2:rigid-body-mechanics:1}
+\omterm{prop:b2:rigid-body-mechanics:kinetic}{Momentos de inércia}: (a) uma barra de \qty{1.0}{m} e \qty{0.50}{kg} em torno de um
+eixo perpendicular por seu centro, depois por uma extremidade; (b) um disco de
+\qty{2.0}{kg} de raio \qty{20}{cm} em torno de seu eixo, depois de um
+eixo paralelo pela borda; (c) uma bola de bilhar de \qty{0.16}{kg} e
+diâmetro \qty{57}{mm}. (d) Um aro fino e um disco maciço de mesma massa
+e mesmo raio: qual resiste mais a ser posto a girar, e por que fator?
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b2:rigid-body-mechanics:2}
+Uma bicicleta anda a \qty{18}{km/h} com rodas de diâmetro \qty{70}{cm}.
+Velocidade angular das rodas; celeridade, no referencial do solo, da
+válvula quando ela está no topo, embaixo e na frente da roda (altura do
+eixo); celeridade da banda de rodagem em relação ao quadro da
+bicicleta. Uma pedra presa na banda de rodagem se solta no topo: com
+que celeridade ela parte?
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b2:rigid-body-mechanics:3}
+Um volante de inércia é um disco de aço de \qty{40}{kg} e raio \qty{25}{cm}. (a) Energia
+armazenada a \qty{6000}{rpm}. (b) Torque constante necessário para acelerá-lo
+do repouso em \qty{2.0}{min}; potência ao fim da aceleração. (c) Num
+ônibus, ele deve fornecer \qty{20}{kW} durante \qty{10}{s}: até que rotação ele
+desacelera? (d) Por que os volantes de alta rotação funcionam no vácuo?
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b2:rigid-body-mechanics:4}
+Um disco uniforme de raio $R$ oscila num plano vertical em torno de um
+eixo horizontal por um ponto de sua borda. \omterm{prop:b2:rigid-body-mechanics:kinetic}{Momento de inércia} em torno
+do eixo; período das pequenas oscilações para $R = \qty{20}{cm}$; comprimento do
+pêndulo simples equivalente. As mesmas perguntas para o eixo a uma
+distância $R/2$ do centro. Onde deve ficar o eixo para que o período
+seja mínimo?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b2:rigid-body-mechanics:5}
+Um aro, um disco e uma esfera de mesmo raio são soltos juntos no alto
+de um plano inclinado de \qty{2.0}{m} de altura e inclinação \qty{20}{\degree}, $f =
+0.30$. (a) Verifique que os três rolam sem deslizar. (b) Celeridade
+embaixo para cada um; ordem de chegada. (c) Tempo gasto por cada um. (d) Mostre que
+a \omterm{def:b2:rigid-body-mechanics:contact}{força de atrito} sobre a esfera vale $\tfrac27Mg\sin\alpha$ e que ela não realiza
+trabalho. (e) A partir de que inclinação o aro começaria a deslizar? E a esfera?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b2:rigid-body-mechanics:6}
+\emph{Freio a disco.} Uma roda e seu disco de freio têm $J = \qty{1.2}{kg.m^2}$
+e giram a \qty{900}{rpm}; duas pastilhas pressionam o disco a um raio médio
+de \qty{12}{cm}, cada uma com força normal de \qty{800}{N}, $f = 0.40$.
+Torque de frenagem; desaceleração angular; tempo e número de voltas até parar;
+calor liberado, e elevação de temperatura do disco de aço de \qty{1.5}{kg}
+($c = \qty{470}{J/(kg.K)}$) caso ele retenha todo esse calor.
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b2:rigid-body-mechanics:7}
+\emph{Máquina de Atwood com polia real.} As massas $m_1 = \qty{2.0}{kg}$
+e $m_2 = \qty{1.5}{kg}$ pendem de um fio que passa por uma polia de raio $R =
+\qty{10}{cm}$ e \omterm{prop:b2:rigid-body-mechanics:kinetic}{momento de inércia} $J = \qty{5.0e-3}{kg.m^2}$ num
+pivô perfeito; o fio não desliza na polia. (a) Por que as duas
+trações do fio são diferentes? (b) Equações para as duas massas e para a
+polia; aceleração. (c) As duas trações. (d) Compare com a polia sem
+massa; recupere a aceleração por energia.
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b2:rigid-body-mechanics:8}
+\emph{A escada.} Uma escada uniforme de comprimento $\ell$ e massa $m$ apoia-se,
+a um ângulo $\theta$ com a horizontal, numa parede vertical lisa;
+o chão tem \omterm{thm:b2:rigid-body-mechanics:coulomb}{coeficiente de atrito} $f$. (a) Forças e seus momentos
+em relação ao pé; equações de equilíbrio. (b) Mostre que o equilíbrio exige
+$\tan\theta \ge 1/2f$. (c) Ângulo mínimo para $f = 0.40$. (d) Uma pessoa de
+massa $3m$ sobe a escada posta a \qty{60}{\degree}: até que altura (fração
+de $\ell$) ela pode ir?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b2:rigid-body-mechanics:9}
+\emph{Efeito retro.} Uma bola de bilhar é golpeada de modo a partir com
+celeridade do centro $v_0$ e rotação retrógrada $\omega_0$ (rotação oposta ao
+rolamento). \omterm{thm:b2:rigid-body-mechanics:coulomb}{Coeficiente de atrito} $f$. (a) Equações para $v$ e $\omega$
+durante o deslizamento. (b) Instante em que ela começa a rolar sem deslizar e
+sua celeridade nesse instante, em função de $v_0$, $R\omega_0$. (c) Condição sobre
+$R\omega_0$ para que a bola volte em direção ao jogador. (d) Números:
+$v_0 = \qty{2.0}{m/s}$, $R\omega_0 = \qty{6.0}{m/s}$, $f = 0.2$,
+$R = \qty{2.9}{cm}$.
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b2:rigid-body-mechanics:10}
+\emph{O carretel.} Um carretel (massa $M$, \omterm{prop:b2:rigid-body-mechanics:kinetic}{momento de inércia} $J = kMR^2$ em torno de
+seu eixo, raio externo $R$) repousa sobre uma mesa horizontal; um fio enrolado
+no seu cubo interno de raio $r < R$ é puxado horizontalmente com força
+$F$, saindo o fio pela parte de \emph{baixo} do cubo. (a) Supondo
+\omterm{def:b2:rigid-body-mechanics:rolling}{rolamento sem deslizamento}, escreva as equações da quantidade de movimento e do
+momento angular e ache a aceleração do centro; para que lado o
+carretel rola? (b) \omterm{def:b2:rigid-body-mechanics:contact}{Força de atrito} necessária, e condição sobre $F$ para
+que não haja deslizamento. (c) As mesmas perguntas se o fio é puxado a um ângulo
+$\beta$ acima da horizontal; mostre que o carretel fica parado quando
+$\cos\beta = r/R$, e explique geometricamente (eixo instantâneo pelo
+ponto de contato). (d) O que acontece para $\cos\beta < r/R$?
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b2:rigid-body-mechanics:11}
+\emph{Onde golpear uma bola de bilhar.} Um taco entrega um impulso
+horizontal $P$ (força muito breve) a uma bola de raio $R$ em repouso, a
+uma altura $h$ acima da mesa. (a) Quantidade de movimento e momento angular logo após
+o golpe (atrito desprezível durante o golpe). (b) Mostre que a bola
+rola sem deslizar de imediato se $h = \tfrac75R$, tem efeito à frente acima,
+efeito retro abaixo. (c) Para $h = R$ (golpe no centro), que distância a bola
+desliza antes de rolar, com $f = 0.2$ e $v_0 = \qty{3}{m/s}$? (d) Por que
+a tabela de uma mesa de bilhar é construída à altura $\tfrac75R$?
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b2:rigid-body-mechanics:12}
+\emph{Cilindro numa calha.} Um cilindro maciço de raio $r$ rola sem
+deslizar dentro de uma superfície cilíndrica fixa de raio $R > r$, eixos
+horizontais e paralelos. Seja $\theta$ o ângulo da linha dos
+centros com a vertical. (a) Exprima a velocidade angular do
+cilindro em torno de seu próprio eixo em função de $\dot\theta$ (dica: o ponto de
+contato está parado). (b) Energia cinética e energia potencial; mostre que o
+período das pequenas oscilações é $T = 2\pi\sqrt{3(R - r)/2g}$. (c) Compare
+com um ponto que desliza sem atrito na calha. (d) \omterm{thm:b2:rigid-body-mechanics:coulomb}{Coeficiente de atrito}
+mínimo para \omterm{def:b2:rigid-body-mechanics:rolling}{rolamento sem deslizamento} na amplitude $\theta_0$
+(ângulos pequenos).
+\end{exercise}
+
+\section{Problema: Um veículo sobre rodas}
+
+\begin{problem}[{Problema de fim de semana --- o que um carro pede a seus pneus:
+rolar, acelerar, frear e a única força que faz tudo isso}]
+\label{pb:b2:rigid-body-mechanics:1}
+
+Um carro de massa $M = \qty{1200}{kg}$ tem entre-eixos $L = \qty{2.6}{m}$; seu
+centro de massa está à altura $h = \qty{0.55}{m}$ e às distâncias horizontais
+$a = \qty{1.1}{m}$ do eixo dianteiro e $b = \qty{1.5}{m}$ do eixo
+traseiro. Cada uma das quatro rodas tem raio $R = \qty{0.31}{m}$, massa $m =
+\qty{15}{kg}$ e \omterm{prop:b2:rigid-body-mechanics:kinetic}{momento de inércia} $J = \qty{1.0}{kg.m^2}$ em torno de seu eixo.
+\omterm{thm:b2:rigid-body-mechanics:coulomb}{Coeficiente de atrito} pneu--estrada $f = 0.80$ (seco); \omterm{thm:b2:rigid-body-mechanics:coulomb}{coeficiente de
+atrito} de rolamento $\mu_r = 0.012$. $g = \qty{9.81}{m/s^2}$.
+
+\medskip
+\noindent\textbf{Parte I --- Rolar.}
+\begin{enumerate}
+  \item O carro anda a $v = \qty{90}{km/h}$. Velocidade angular das
+        rodas; velocidade, no referencial da estrada, dos pontos do
+        topo, de baixo e da frente de um pneu.
+  \item Energia cinética total do carro, separando a translação do
+        conjunto e a rotação das quatro rodas; que fração representam
+        as rotações das rodas?
+  \item Parado em solo plano, forças normais $N_f$ (as duas rodas
+        dianteiras juntas) e $N_r$ (as duas traseiras) pelas equações da
+        quantidade de movimento e do momento angular --- qual eixo
+        carrega mais?
+  \item O torque de \omterm{prop:b2:rigid-body-mechanics:power}{atrito de rolamento} em cada roda vale $\mu_rNR$. Potência
+        dissipada pelo \omterm{prop:b2:rigid-body-mechanics:power}{atrito de rolamento} a \qty{90}{km/h}; compare com
+        o arrasto aerodinâmico $\tfrac12\rho C_xSv^2$ com $C_xS =
+        \qty{0.70}{m^2}$, $\rho = \qty{1.2}{kg/m^3}$.
+  \item O motor é desligado e o carro segue por inércia em solo plano: escreva a
+        equação para $v(t)$ (inclua a inércia das rodas como uma massa
+        efetiva) e estime a distância para desacelerar de \qty{90}{km/h} a
+        \qty{45}{km/h}, desprezando o arrasto; depois considerando apenas o arrasto.
+\end{enumerate}
+
+\medskip
+\noindent\textbf{Parte II --- Acelerar.}
+O carro tem tração dianteira; o motor aplica um torque $\Gamma$ às
+duas rodas da frente. Despreze aqui o arrasto e o \omterm{prop:b2:rigid-body-mechanics:power}{atrito de rolamento}.
+\begin{enumerate}[resume]
+  \item Desenhe as forças externas sobre o carro inteiro. Que força o
+        acelera? Qual é a potência da estrada sobre o carro, e de onde
+        vem a energia cinética?
+  \item Escreva a equação da quantidade de movimento do carro, a equação do
+        momento angular das rodas dianteiras em torno de seu eixo e a
+        condição de não deslizamento; mostre que a aceleração vale $\dot v =
+        \Gamma/R\,/\,(M + 4J/R^2)$ e calcule a massa efetiva.
+  \item Momento angular em relação ao centro de massa para o carro inteiro
+        (trate os momentos angulares das rodas como desprezíveis): mostre que
+        a transferência de carga sob aceleração $\dot v$ vale $N_r - N_r^0 =
+        Mh\dot v/L$ --- o eixo dianteiro é aliviado, o traseiro carregado.
+  \item Aceleração máxima sem que as rodas motrizes (dianteiras)
+        patinem: mostre que $\dot v_{\max} = fgb/(L + fh)$ e calcule
+        seu valor; o mesmo para um carro de tração traseira, $\dot v_{\max} =
+        fga/(L - fh)$. Que arquitetura acelera mais, e por que os
+        dragsters põem o peso atrás?
+  \item Torque do motor nas rodas necessário para $\dot v_{\max}$; a
+        potência correspondente a \qty{50}{km/h}.
+  \item O mesmo carro no gelo ($f = 0.10$): aceleração máxima e o
+        tempo para chegar a \qty{50}{km/h}.
+  \item O que a \omterm{def:b2:rigid-body-mechanics:contact}{força de atrito} nos pneus dianteiros faz ao pneu
+        --- deslizando ou não --- e por que uma roda que patina no gelo
+        acelera o carro \emph{menos} que uma roda que agarra?
+\end{enumerate}
+
+\medskip
+\noindent\textbf{Parte III --- Frear.}
+\begin{enumerate}[resume]
+  \item Os freios aplicam um torque a cada roda. Mostre que, para uma roda
+        que continua a rolar, a força de frenagem sobre o carro é o
+        atrito da estrada no pneu, e que o torque do freio é
+        limitado por $fN_iR$ por roda.
+  \item Transferência de carga sob desaceleração $\gamma$: carga do eixo dianteiro
+        $N_f = Mg\,b/L + Mh\gamma/L$; números em $\gamma = fg$.
+  \item Desaceleração máxima com as quatro rodas no limite do
+        deslizamento; distância de parada a partir de \qty{90}{km/h} em estrada seca e
+        em estrada molhada ($f = 0.45$).
+  \item Se os freios são regulados de modo que os torques dianteiro e traseiro sejam iguais,
+        que eixo trava primeiro numa frenagem forte? Por que um eixo traseiro
+        travado é perigoso (pense na direção da \omterm{def:b2:rigid-body-mechanics:contact}{força de atrito}
+        num pneu que desliza)?
+  \item Uma roda trava e desliza: desaceleração devida à estrada, e que
+        fração da frenagem máxima se perde com $f_{\text{cinético}} =
+        0.7$ contra $f_{\text{estático}} = 0.8$. Explique o que faz um sistema
+        antitravamento e por que ele pulsa os freios.
+  \item Calor liberado nos freios a partir de \qty{90}{km/h}; elevação de
+        temperatura de quatro discos de aço de \qty{6}{kg} ($c = \qty{470}{J/(kg.K)}$);
+        por que as estradas de montanha têm rampas de escape?
+  \item Um carro elétrico recupera a energia de frenagem pelo motor com
+        \qty{70}{\%} de rendimento: energia recuperada por parada a partir de
+        \qty{90}{km/h}; número de paradas desse tipo que uma bateria de \qty{50}{kWh}
+        vale.
+\end{enumerate}
+
+\medskip
+\noindent\textbf{Parte IV --- Fazer curva e uma roda no ar.}
+\begin{enumerate}[resume]
+  \item O carro faz uma curva em estrada plana, num círculo de raio
+        $\rho = \qty{50}{m}$, a $v$: as \omterm{def:b2:rigid-body-mechanics:contact}{forças de atrito} devem fornecer
+        $Mv^2/\rho$. Celeridade máxima em curva em estrada seca e molhada.
+  \item Momento angular em relação ao centro de massa ao longo da direção do
+        movimento: mostre que as rodas externas são carregadas de $\Delta N =
+        Mv^2h/\rho w$, onde $w = \qty{1.5}{m}$ é a bitola; celeridade na
+        qual as rodas internas se levantam ($\Delta N = Mg/2$), e compare
+        com a celeridade de derrapagem: este carro capota ou derrapa primeiro?
+  \item A curva tem sobrelevação de ângulo $\beta$. Mostre que na celeridade
+        $v = \sqrt{g\rho\tan\beta}$ nenhum atrito é necessário; valor
+        para $\beta = \qty{10}{\degree}$.
+  \item Uma roda é suspensa do solo por um macaco e posta a girar à mão a
+        \qty{60}{rpm}; seu \omterm{def:b2:rigid-body-mechanics:pivot}{mancal} exerce um torque de atrito de
+        \qty{0.05}{N.m}. Quanto tempo ela gira? Energia cinética perdida.
+  \item A roda girando é baixada sobre a estrada (carro parado, roda
+        a \qty{60}{rpm}, $N = \qty{3}{kN}$): tempo de deslizamento até parar,
+        e distância que o carro percorreria se estivesse livre para
+        rolar (trate o carro como uma massa $M$ sobre rodas livres, desprezando
+        a inércia das outras rodas).
+  \item Resuma numa tabela: os quatro regimes (rolar, acelerar,
+        frear, fazer curva), a força que atua em cada um e o
+        limite de Coulomb que ela deve respeitar.
+\end{enumerate}
+\end{problem}

@@ -29,6 +29,13 @@ $out_dir = 'build';
     'one_physics_book_3_university_year_1_ar.tex',
     'one_physics_book_3_university_year_1_id.tex',
     'one_physics_book_4_university_year_2.tex',
+    'one_physics_book_4_university_year_2_fr.tex',
+    'one_physics_book_4_university_year_2_nl.tex',
+    'one_physics_book_4_university_year_2_es.tex',
+    'one_physics_book_4_university_year_2_pt.tex',
+    'one_physics_book_4_university_year_2_hi.tex',
+    'one_physics_book_4_university_year_2_ar.tex',
+    'one_physics_book_4_university_year_2_id.tex',
     'one_physics_book_5_university_year_3.tex',
 );
 # Hindi editions (*_hi.tex) need XeLaTeX for OpenType Devanagari, and Arabic

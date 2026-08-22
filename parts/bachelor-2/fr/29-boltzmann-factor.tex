@@ -1,0 +1,557 @@
+\chapter{Le facteur de Boltzmann}\label{ch:b2:boltzmann-factor}
+
+Grimpez une montagne et l'air se raréfie~: à trois mille mètres la
+pression est tombée à \qty{0.7}{bar}, au sommet de l'Everest au tiers
+de sa valeur au niveau de la mer. Rien ne retient l'atmosphère par le haut~; elle
+est tenue par la pesanteur et étalée par l'agitation thermique, et le
+compromis entre les deux est une exponentielle, $n \propto
+\eu^{-mgz/k_BT}$ --- le rapport de l'énergie potentielle d'une molécule à
+$k_BT$ décide de sa rareté là-haut. La même exponentielle gouverne
+la fraction d'atomes dans un niveau excité, le nombre de molécules assez rapides
+pour quitter une planète, l'aimantation d'un paramagnétique, les
+populations qu'un laser doit inverser, et les quanta que compte la loi de
+Planck~: c'est le \emph{facteur de Boltzmann}, la formule la plus utile à elle
+seule de la physique statistique. Ce chapitre le motive par
+l'atmosphère, l'énonce en général, et en tire, avec rien de plus que des
+sommes et des intégrales gaussiennes, le système à deux niveaux et sa capacité
+thermique, l'équipartition de l'énergie, la distribution des vitesses moléculaires,
+et la \omterm{prop:b2:boltzmann-factor:curie}{loi de Curie} du paramagnétisme --- avec, en chemin, l'énergie
+moyenne d'un oscillateur quantique, qui est la formule de Planck.
+
+\begin{omfigure}
+\includegraphics[width=0.58\linewidth]{images/book4/ai/b4-29-sky-gradient-summit.png}
+
+{\small Depuis un sommet, la brume de la basse atmosphère et le bleu
+profond au-dessus~: la densité de l'air baisse d'un facteur $\eu$ tous les
+\qty{8}{km} --- le facteur de Boltzmann de l'énergie potentielle d'une molécule dans
+la pesanteur terrestre.}
+\end{omfigure}
+
+\section{L'atmosphère isotherme}
+
+\begin{proposition}[Loi barométrique]\label{prop:b2:boltzmann-factor:barometric}
+Dans une atmosphère de gaz parfait (masse moléculaire $m$) à
+température uniforme $T$ dans la pesanteur uniforme $g$, la pression et la \omterm{def:b2:particle-diffusion:flux}{densité
+en nombre} décroissent exponentiellement avec l'altitude~:
+\[
+P(z) = P_0\,\eu^{-z/H}, \qquad n(z) = n_0\,\eu^{-mgz/k_BT}, \qquad
+H = \frac{k_BT}{mg} ,
+\]
+avec la \emph{hauteur d'échelle}\index{hauteur d'échelle} $H \approx \qty{8.4}{km}$
+pour l'air à \qty{288}{K}. L'exposant est le rapport de l'énergie
+potentielle $mgz$ d'une molécule à l'énergie thermique $k_BT$.
+\end{proposition}
+
+\begin{proof}
+Hydrostatique, $\dd P/\dd z = -\rho g = -nmg$, et loi des gaz parfaits $P
+= nk_BT$~: $\dd P/\dd z = -(mg/k_BT)P$, une exponentielle. L'atmosphère
+réelle se refroidit avec l'altitude (environ \qty{6.5}{K/km} dans les dix premiers
+kilomètres), ce qui rend la décroissance un peu plus rapide~; le modèle
+isotherme est bon à $20\%$ près.
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}
+  \begin{axis}[omaxis, width=8.2cm, height=4.8cm, xmin=0, xmax=32, ymin=0, ymax=1.1,
+    xlabel={$z$ (\unit{km})}, ylabel={$P/P_0$}, xtick={8.4,16.8,25.2}, xticklabels={$H$,$2H$,$3H$}, ytick={0.37,1}, yticklabels={$1/\eu$,$1$}, clip=false,
+    legend style={font=\scriptsize, at={(0.97,0.45)}, anchor=north east, draw=none, fill=none}]
+    \addplot[omDef, thick, domain=0:32, samples=80] {exp(-x/8.4)};
+    \addlegendentry{air, \qty{288}{K}}
+    \addplot[omExo, thick, dashed, domain=0:32, samples=80] {exp(-x/60)};
+    \addlegendentry{hélium seul, $H = \qty{60}{km}$}
+    \draw[dashed, gray] (axis cs:8.4,0) -- (axis cs:8.4,0.37) -- (axis cs:0,0.37);
+  \end{axis}
+\end{tikzpicture}
+
+{\small L'atmosphère isotherme~: pression et densité baissent d'un facteur $1/\eu$
+à chaque \omterm{prop:b2:boltzmann-factor:barometric}{hauteur d'échelle} $H = k_BT/mg$~; un gaz plus léger aurait un $H$ plus grand
+--- mais sous \qty{100}{km} la turbulence garde l'air mélangé, et tous les
+gaz partagent le $H$ moyen.}
+\end{omfigure}
+
+\section{Le facteur de Boltzmann}
+
+\begin{theorem}[Facteur de Boltzmann]\label{thm:b2:boltzmann-factor:factor}
+Un système en équilibre thermique avec un thermostat à la température
+$T$ se trouve dans un état microscopique donné d'énergie $E$ avec une
+probabilité proportionnelle à
+\[
+\eu^{-E/k_BT} .
+\]
+D'où, pour un ensemble d'états discrets d'énergies $E_i$,
+\[
+p_i = \frac{\eu^{-E_i/k_BT}}{Z}, \qquad Z = \sum_i\eu^{-E_i/k_BT} ,
+\]
+la somme $Z$ (la \emph{fonction de partition}\index{fonction de partition})
+normalisant les probabilités~; deux états (ou deux niveaux de même
+dégénérescence) sont peuplés dans le rapport $N_2/N_1 = \eu^{-(E_2 - E_1)/k_BT}$~;
+et pour une variable continue (une position, une vitesse) la densité de
+probabilité est proportionnelle à $\eu^{-E/k_BT}$ en cette variable. À
+\qty{300}{K}, $k_BT = \qty{4.1e-21}{J} = \qty{0.026}{eV}$~: tout ce qui
+coûte bien davantage est rare, tout ce qui coûte bien moins est
+librement excité.
+\end{theorem}
+
+\begin{proof}
+La loi barométrique est le facteur pour l'énergie potentielle $mgz$~; nous
+en admettons la généralité, mais voici l'argument (rendu rigoureux dans le
+volume de troisième année). Le thermostat $R$ est grand~; quand notre petit système est dans
+un état d'énergie $E$, le thermostat a l'énergie $E_{\text{tot}} -
+E$, et peut être dans $\Omega_R(E_{\text{tot}} - E)$ états microscopiques, tous
+également probables (le postulat fondamental pour un tout isolé). Donc
+$p(E) \propto \Omega_R(E_{\text{tot}} - E)$. Avec la définition de Boltzmann
+de l'entropie, $S_R = k_B\ln\Omega_R$, et $1/T = \dd S_R/\dd E_R$ pour le
+thermostat, $\ln\Omega_R(E_{\text{tot}} - E) \approx \ln\Omega_R(E_{\text{tot}})
+- E/k_BT$ puisque $E \ll E_{\text{tot}}$~; il reste à exponentier.
+\end{proof}
+
+\begin{example}[Populations des niveaux atomiques]\label{ex:b2:boltzmann-factor:levels}
+Le premier niveau excité de l'hydrogène est à \qty{10.2}{eV} au-dessus du
+fondamental~: à \qty{300}{K}, $\eu^{-395}$ --- pas un atome dans l'univers~; à
+\qty{6000}{K}, la surface du Soleil, $\eu^{-19.7} \approx 3 \times 10^{-9}$ (fois
+une dégénérescence de $4$)~: assez, dans l'énorme colonne de gaz du Soleil, pour les
+raies d'absorption de Balmer, les plus fortes dans les étoiles voisines de \qty{10000}{K}.
+La raie D du sodium (\qty{2.1}{eV}) dans une flamme à \qty{2500}{K}~: $\eu^{-9.8} = 6
+\times 10^{-5}$ des atomes sont excités, ce qui donne la flamme jaune d'une
+pincée de sel. Et le milieu laser du \cref{ch:b2:laser}~: le facteur
+dit que son niveau supérieur est vide à l'équilibre, et que le pompage doit lutter
+contre lui.
+\end{example}
+
+\section{Niveaux discrets~: le système à deux niveaux et l'oscillateur}
+
+\begin{proposition}[Énergie moyenne à partir de la fonction de partition]\label{prop:b2:boltzmann-factor:meanE}
+Avec $\beta = 1/k_BT$,
+\[
+\langle E\rangle = \sum_ip_iE_i = -\frac{\partial\ln Z}{\partial\beta}, \qquad
+C = \frac{\dd\langle E\rangle}{\dd T} .
+\]
+\end{proposition}
+
+\begin{proof}
+$\partial_\beta Z = -\sum E_i\eu^{-\beta E_i}$, on divise par $Z$.
+\end{proof}
+
+\begin{proposition}[Système à deux niveaux]\label{prop:b2:boltzmann-factor:twolevel}
+$N$ systèmes indépendants à deux niveaux $0$ et $\varepsilon$ (spins dans un
+champ, atomes à un seul niveau excité, défauts à deux positions)~:
+\[
+\frac{N_2}{N} = \frac{1}{\eu^{\varepsilon/k_BT} + 1}, \qquad
+\langle E\rangle = \frac{N\varepsilon}{\eu^{\varepsilon/k_BT} + 1}, \qquad
+C = Nk_B\,\frac{x^2\eu^x}{(\eu^x + 1)^2}, \quad x = \frac{\varepsilon}{k_BT} .
+\]
+Le niveau supérieur est vide à basse température et au plus à moitié rempli à
+haute température (jamais inversé à l'équilibre)~; la capacité thermique
+s'annule aux deux bouts et culmine à $0.44\,Nk_B$ vers $k_BT = 0.42
+\varepsilon$ --- l'\emph{anomalie de Schottky}\index{anomalie de Schottky}, la
+signature d'un écart dans le spectre.
+\end{proposition}
+
+\begin{proof}
+$Z = 1 + \eu^{-x}$~; $p_2 = \eu^{-x}/(1 + \eu^{-x})$~; dériver $\langle
+E\rangle$ par rapport à $T$.
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}
+  \begin{axis}[omaxis, width=6.4cm, height=4.4cm, xmin=0, xmax=3.2, ymin=0, ymax=1.1,
+    xlabel={$k_BT/\varepsilon$}, ylabel={populations}, xtick={1,2,3}, ytick={0.5,1}, clip=false]
+    \addplot[omDef, thick, domain=0.02:3.2, samples=100] {1/(exp(1/x)+1)};
+    \addplot[omExo, thick, domain=0.02:3.2, samples=100] {exp(1/x)/(exp(1/x)+1)};
+    \node[font=\scriptsize, omExo] at (axis cs:1.4,0.85) {$N_1/N$};
+    \node[font=\scriptsize, omDef] at (axis cs:1.4,0.2) {$N_2/N$};
+  \end{axis}
+  \begin{axis}[omaxis, width=6.4cm, height=4.4cm, xmin=0, xmax=3.2, ymin=0, ymax=0.55, xshift=6.6cm,
+    xlabel={$k_BT/\varepsilon$}, ylabel={$C/Nk_B$}, xtick={1,2,3}, ytick={0.44}, clip=false]
+    \addplot[omThm, thick, domain=0.08:3.2, samples=120] {(1/x)^2*exp(1/x)/(exp(1/x)+1)^2};
+    \draw[dashed, gray] (axis cs:0.42,0) -- (axis cs:0.42,0.44);
+    \node[font=\scriptsize, below] at (axis cs:0.42,0) {$0.42$};
+  \end{axis}
+\end{tikzpicture}
+
+{\small Le système à deux niveaux~: populations en fonction de la température (le
+niveau supérieur se remplit jusqu'à la moitié, jamais au-delà) et la capacité
+thermique de Schottky, une bosse là où $k_BT$ vaut l'écart.}
+\end{omfigure}
+
+\begin{proposition}[L'oscillateur quantique et la formule de Planck]\label{prop:b2:boltzmann-factor:oscillator}
+Un oscillateur harmonique de fréquence $\nu$ a les niveaux $E_n = nh\nu$ (à
+une constante près)~; à la température $T$,
+\[
+Z = \frac{1}{1 - \eu^{-h\nu/k_BT}}, \qquad
+\langle E\rangle = \frac{h\nu}{\eu^{h\nu/k_BT} - 1}
+\ \longrightarrow\
+\begin{cases} k_BT & (h\nu \ll k_BT), \\ h\nu\,\eu^{-h\nu/k_BT} & (h\nu \gg k_BT). \end{cases}
+\]
+C'est l'énergie moyenne d'un mode du champ de rayonnement que la loi de
+Planck (\cref{ch:b2:thermal-radiation}) multiplie par le nombre de modes,
+et l'énergie moyenne d'une vibration dans un solide~: à haute température le
+$k_BT$ classique, à basse température un mode gelé.
+\end{proposition}
+
+\begin{proof}
+Série géométrique, puis $-\partial_\beta\ln Z$.
+\end{proof}
+
+\begin{example}[Capacité thermique des solides]\label{ex:b2:boltzmann-factor:einstein}
+Traitons chaque atome d'un solide comme trois oscillateurs de même fréquence
+$\nu$ (Einstein, 1907)~: $C = 3Nk_B\,x^2\eu^x/(\eu^x - 1)^2$ avec $x =
+h\nu/k_BT$. Au-dessus de $\theta_{\text{E}} = h\nu/k_B$, $C \to 3Nk_B = 3R$ par mole
+--- la loi de Dulong et Petit (\qty{25}{J/mol/K}), suivie par le plomb, le
+cuivre, le fer à température ambiante~; bien au-dessous, $C$ s'effondre. Le diamant
+($\theta_{\text{E}} \approx \qty{1300}{K}$) n'a que \qty{6}{J/mol/K} à
+\qty{300}{K}, ce que la physique classique ne pouvait expliquer, et la capacité thermique de
+tout solide s'annule à basse température --- le premier succès du
+quantum hors du rayonnement.
+\end{example}
+
+\section{Équipartition et distribution de Maxwell}
+
+\begin{theorem}[Équipartition de l'énergie]\label{thm:b2:boltzmann-factor:equipartition}
+Toute variable $q$ qui entre quadratiquement dans l'énergie, $E = aq^2 +
+\dots$, et parcourt toutes les valeurs réelles, contribue pour $\tfrac12k_BT$ à
+l'énergie moyenne à l'équilibre~:
+\[
+\langle aq^2\rangle = \tfrac12k_BT .
+\]
+Un gaz monoatomique (trois translations) a $U = \tfrac32Nk_BT$ et $C_V =
+\tfrac32R$ par mole~; un gaz diatomique ajoute deux rotations, $C_V = \tfrac52R$,
+et sa vibration (deux termes quadratiques, mais quantifiée avec $h\nu \gg
+k_BT$ à température ambiante) reste gelée jusqu'à quelques milliers de kelvins.
+\end{theorem}
+
+\begin{proof}
+La densité de probabilité en $q$ vaut $\propto\eu^{-aq^2/k_BT}$, une gaussienne~:
+\[
+\langle aq^2\rangle = \frac{\int aq^2\,\eu^{-aq^2/k_BT}\,\dd q}{\int\eu^{-aq^2/k_BT}\,\dd q} = \tfrac12k_BT
+\]
+(dériver $\int\eu^{-\lambda q^2}\dd q = \sqrt{\pi/\lambda}$ par rapport à
+$\lambda$). Le résultat exige le continuum~: quand les
+niveaux sont espacés de plus de $k_BT$ le facteur gèle la variable,
+comme pour l'oscillateur ci-dessus.
+\end{proof}
+
+\begin{theorem}[Distribution des vitesses de Maxwell]\label{thm:b2:boltzmann-factor:maxwell}
+Dans un gaz à $T$, les composantes de la vitesse sont des gaussiennes indépendantes de
+variance $k_BT/m$, et la norme $v = |\vect v|$ a la densité de
+probabilité
+\[
+f(v) = 4\pi\Big(\frac{m}{2\pi k_BT}\Big)^{3/2}v^2\,\eu^{-mv^2/2k_BT} ,
+\]
+avec les vitesses la plus probable, moyenne et quadratique moyenne
+\[
+v_{\text{p}} = \sqrt{\frac{2k_BT}{m}}, \qquad
+\langle v\rangle = \sqrt{\frac{8k_BT}{\pi m}}, \qquad
+v_{\text{rms}} = \sqrt{\frac{3k_BT}{m}} ,
+\]
+dans les rapports $1 : 1.13 : 1.22$. Pour l'azote à \qty{300}{K}~: \qty{422}{},
+\qty{476}{}, \qty{517}{m/s}~; pour l'hydrogène, $3.7$ fois plus~; la
+queue de la distribution, $\propto\eu^{-mv^2/2k_BT}$, est ce qui permet aux
+molécules les plus rapides de s'évaporer, de réagir ou de quitter une planète.
+\end{theorem}
+
+\begin{proof}
+L'énergie cinétique $\tfrac12m(v_x^2 + v_y^2 + v_z^2)$ donne le facteur
+\[
+\eu^{-mv_x^2/2k_BT}\,\eu^{-mv_y^2/2k_BT}\,\eu^{-mv_z^2/2k_BT} :
+\]
+trois gaussiennes indépendantes, chacune normalisée par $\sqrt{m/2\pi k_BT}$. La distribution
+des normes rassemble toutes les vitesses dans la coquille de rayon $v$ et de
+volume $4\pi v^2\dd v$. Puis $v_{\text{p}}$ vient de $\dd f/\dd v = 0$, et les
+moments de $\int_0^\infty v^3\eu^{-av^2}\dd v = 1/2a^2$, $\int_0^\infty
+v^4\eu^{-av^2}\dd v = \tfrac38\sqrt{\pi/a^5}$~; $v_{\text{rms}}$ découle aussi
+de l'équipartition, $\tfrac12m\langle v^2\rangle = \tfrac32k_BT$.
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}
+  \begin{axis}[omaxis, width=9cm, height=5cm, xmin=0, xmax=1750, ymin=0, ymax=0.0028,
+    xlabel={$v$ (\unit{m/s})}, ylabel={$f(v)$}, xtick={400,800,1200}, ytick=\empty, clip=false,
+    legend style={font=\scriptsize, at={(0.97,0.95)}, anchor=north east, draw=none, fill=none}]
+    \addplot[omDef, thick, domain=0:1600, samples=160] {4*pi*(28*1.66e-27/(2*pi*1.38e-23*100))^1.5*x^2*exp(-28*1.66e-27*x^2/(2*1.38e-23*100))};
+    \addlegendentry{N$_2$, \qty{100}{K}}
+    \addplot[omThm, thick, domain=0:1600, samples=160] {4*pi*(28*1.66e-27/(2*pi*1.38e-23*300))^1.5*x^2*exp(-28*1.66e-27*x^2/(2*1.38e-23*300))};
+    \addlegendentry{N$_2$, \qty{300}{K}}
+    \addplot[omExo, thick, domain=0:1600, samples=160] {4*pi*(28*1.66e-27/(2*pi*1.38e-23*1000))^1.5*x^2*exp(-28*1.66e-27*x^2/(2*1.38e-23*1000))};
+    \addlegendentry{N$_2$, \qty{1000}{K}}
+  \end{axis}
+\end{tikzpicture}
+
+{\small La distribution des vitesses de Maxwell pour l'azote à trois
+températures~: le maximum se déplace en $\sqrt T$, la courbe s'élargit, et la
+queue des grandes vitesses croît le plus vite de toutes --- la queue qui décide de l'échappement
+et des vitesses de réaction.}
+\end{omfigure}
+
+\begin{example}[Qui quitte la planète]\label{ex:b2:boltzmann-factor:escape}
+La vitesse de libération terrestre vaut \qty{11.2}{km/s}. Dans l'exosphère, vers
+\qty{1000}{K}, l'hélium a $v_{\text{p}} = \qty{2.0}{km/s}$~: la fraction
+d'atomes au-dessus de la vitesse de libération est de l'ordre de $\eu^{-(11.2/2.0)^2} = \eu^{-31}
+\approx 10^{-13}$ --- petite, mais renouvelée à chaque collision pendant des milliards
+d'années~: l'hélium fuit, et son abondance dans l'air n'est que de
+\qty{5}{ppm} malgré sa production constante par désintégration radioactive. Pour
+l'azote l'exposant est sept fois plus grand, $\eu^{-220}$~: l'azote reste.
+Sur la Lune ($v_{\text{lib}} = \qty{2.4}{km/s}$) même l'azote à
+\qty{400}{K} ($v_{\text{p}} = \qty{490}{m/s}$) a $\eu^{-24}$ par temps de collision~:
+sur l'âge du système solaire, aucune atmosphère ne survit.
+\end{example}
+
+\section{Paramagnétisme et loi de Curie}
+
+\begin{proposition}[Paramagnétique de spin 1/2]\label{prop:b2:boltzmann-factor:curie}
+$N$ moments magnétiques indépendants qui ne peuvent pointer que dans le sens du champ $B$
+ou à son opposé, avec les énergies $\mp\mu B$, ont à la température $T$ le moment
+moyen et l'aimantation
+\[
+\langle\mu_z\rangle = \mu\tanh\frac{\mu B}{k_BT}, \qquad
+M = n\mu\tanh\frac{\mu B}{k_BT}
+\ \longrightarrow\
+\begin{cases} n\mu^2B/k_BT & (\mu B \ll k_BT):\ \text{loi de Curie}, \\ n\mu & (\mu B \gg k_BT):\ \text{saturation}. \end{cases}
+\]
+La susceptibilité $\chi = \mu_0M/B = \mu_0n\mu^2/k_BT$ varie en $1/T$
+(\emph{loi de Curie}\index{loi de Curie})~; avec $\mu = \mu_B = \qty{9.27e-24}{J/T}$,
+$\mu B/k_BT = 2.2 \times 10^{-3}$ à \qty{1}{T} et \qty{300}{K}, de sorte que les
+paramagnétiques ordinaires sont à peine aimantés~; à \qty{1}{K} le même champ donne
+$0.67$ et la saturation commence.
+\end{proposition}
+
+\begin{proof}
+$p_\pm \propto\eu^{\pm\mu B/k_BT}$~: $\langle\mu_z\rangle = \mu(\eu^x - \eu^{-x})/(\eu^x +
+\eu^{-x})$ avec $x = \mu B/k_BT$~; $\tanh x \approx x$ pour $x$ petit.
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}
+  \begin{axis}[omaxis, width=8.2cm, height=4.6cm, xmin=0, xmax=3.2, ymin=0, ymax=1.15,
+    xlabel={$x = \mu B/k_BT$}, ylabel={$M/n\mu$}, xtick={1,2,3}, ytick={1}, clip=false]
+    \addplot[omDef, thick, domain=0:3.2, samples=100] {tanh(x)};
+    \addplot[omExo, dashed, domain=0:1.1] {x};
+    \node[font=\scriptsize, omExo, anchor=west] at (axis cs:1.1,1.08) {Curie~: $M \propto B/T$};
+    \node[font=\scriptsize, omDef, anchor=west] at (axis cs:2.0,0.88) {saturation};
+  \end{axis}
+\end{tikzpicture}
+
+{\small Aimantation d'un paramagnétique de spin 1/2~: linéaire en $B/T$ à
+faible champ (Curie), saturant quand $\mu B$ dépasse $k_BT$ --- ce qui n'arrive
+sous un tesla qu'au-dessous du kelvin, ce qui fait de la courbe un thermomètre
+pour les expériences les plus froides.}
+\end{omfigure}
+
+\begin{remark}[Ce que le facteur ne fait pas]\label{rem:b2:boltzmann-factor:limits}
+Le facteur de Boltzmann décrit l'\emph{équilibre} à une température~; il
+ne dit rien des vitesses (à quelle allure l'équilibre est atteint ---
+quoiqu'une énergie d'activation $E_{\text{a}}$ donne des vitesses $\propto\eu^{-E_{\text{a}}/k_BT}$,
+la loi d'Arrhenius rencontrée pour la diffusion dans les solides). Il s'applique à des
+sous-systèmes indépendants ou au tout~; pour des particules quantiques
+identiques à forte densité (électrons d'un métal, photons, hélium près du
+zéro absolu) il est remplacé par les distributions de Fermi--Dirac et de Bose--Einstein
+du volume de troisième année, dont il est la limite diluée.
+\end{remark}
+
+\begin{method}[Estimations de Boltzmann]\label{meth:b2:boltzmann-factor:method}
+(1) Calculer $E/k_BT$~; $k_BT = \qty{0.026}{eV}$ à \qty{300}{K}, \qty{1}{eV}
+à \qty{11600}{K}. (2) Rapports de populations~: $\eu^{-\Delta E/k_BT}$ (fois les
+dégénérescences). (3) Niveaux discrets~: $Z$, puis $\langle E\rangle =
+-\partial_\beta\ln Z$, puis $C$. (4) Variables continues quadratiques~:
+$\tfrac12k_BT$ chacune, si elles ne sont pas gelées. (5) Vitesses~: $v_{\text{p}} = \sqrt{2k_BT/m}$
+et la queue gaussienne. (6) Spins~: $\tanh(\mu B/k_BT)$, le $1/T$ de Curie.
+\end{method}
+
+\section{Exercices}
+
+\begin{exercise}[$\star$]\label{exo:b2:boltzmann-factor:1}
+\omterm{prop:b2:boltzmann-factor:barometric}{Hauteur d'échelle} de l'air à \qty{288}{K} ($M = \qty{29}{g/mol}$)~; pression à
+\qty{3000}{m}, à \qty{8849}{m}, à \qty{10}{km} (comparer aux \qty{0.26}{bar}
+mesurés)~; \omterm{prop:b2:boltzmann-factor:barometric}{hauteur d'échelle} de l'hélium seul~; de l'atmosphère martienne
+(CO$_2$, \qty{210}{K}, $g = \qty{3.7}{m/s^2}$).
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b2:boltzmann-factor:2}
+Populations~: le niveau $n = 2$ de l'hydrogène (\qty{10.2}{eV}, dégénérescence $4$
+contre $1$) à \qty{300}{K}, \qty{6000}{K}, \qty{10000}{K}~; le niveau à
+\qty{2.1}{eV} du sodium dans une flamme à \qty{2500}{K}~; un niveau de rotation moléculaire à
+\qty{1e-3}{eV} à \qty{300}{K}~; un niveau de spin nucléaire écarté de \qty{1e-7}{eV} dans
+un aimant à \qty{300}{K}.
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b2:boltzmann-factor:3}
+Vitesses de Maxwell ($v_{\text{p}}$, $\langle v\rangle$, $v_{\text{rms}}$) pour N$_2$
+à \qty{300}{K} et \qty{77}{K}, H$_2$ à \qty{300}{K}, et pour une particule de fumée
+de \qty{1e-18}{kg}. Fraction de molécules plus rapides que $2v_{\text{p}}$
+(environ $4.6\%$) et que $3v_{\text{p}}$ (environ $4 \times 10^{-4}$)~: commenter
+la queue.
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b2:boltzmann-factor:4}
+Moments de spin 1/2, $\mu = \mu_B$, $n = \qty{1e28}{m^{-3}}$, $B = \qty{1}{T}$~:
+$x = \mu B/k_BT$ à \qty{300}{K} et \qty{1}{K}~; $M/M_{\text{sat}}$~; $M_{\text{sat}}$~;
+la susceptibilité à \qty{300}{K}. Comparer à l'aimantation à saturation du
+fer (\qty{1.7e6}{A/m}).
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b2:boltzmann-factor:5}
+\emph{Deux niveaux.} (a) Tirer $p_1$, $p_2$, $\langle E\rangle$ de $Z$. (b)
+Montrer que $N_2 < N_1$ à toute température positive~; que signifierait $N_2 >
+N_1$ pour $T$~? (c) Entropie $S = -Nk_B\sum p_i\ln p_i$ du système quand
+$T \to 0$ et $T \to \infty$. (d) Un défaut dans un cristal peut occuper deux
+positions distantes de \qty{0.05}{eV}~: occupation de la plus haute à
+\qty{300}{K} et à \qty{77}{K}.
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b2:boltzmann-factor:6}
+\emph{Schottky.} (a) Établir $C(T)$ du système à deux niveaux. (b) Localiser
+son maximum numériquement ($x = 2.40$) et sa valeur. (c) Limites à basse
+et à haute $T$, avec leur sens physique. (d) Les spins nucléaires du cuivre
+sous \qty{1}{T} ont $\varepsilon \approx \qty{1e-7}{eV}$~: à quelle température se situe
+leur pic de Schottky, et pourquoi cela importe-t-il pour les cryostats les plus
+froids~?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b2:boltzmann-factor:7}
+\emph{Équipartition et son échec.} (a) Établir $\langle aq^2\rangle =
+k_BT/2$ avec l'intégrale gaussienne. (b) $C_V$ d'un gaz monoatomique et d'un
+gaz diatomique rigide. (c) La vibration de l'azote a $h\nu/k_B = \qty{3400}{K}$~:
+en utilisant l'énergie moyenne de l'oscillateur, $C_V$ à \qty{300}{K}, \qty{1000}{K},
+\qty{3000}{K}. (d) Solide d'Einstein~: $C$ en $T = \theta_{\text{E}}$, $\theta_{\text{E}}/4$,
+$4\theta_{\text{E}}$ en unités de $3R$~; le diamant à température ambiante.
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b2:boltzmann-factor:8}
+\emph{Maxwell en détail.} (a) Montrer que les composantes de la vitesse sont des
+gaussiennes indépendantes et en tirer $f(v)$. (b) Calculer $v_{\text{p}}$,
+$\langle v\rangle$, $v_{\text{rms}}$. (c) Énergie cinétique moyenne~: vérifier avec
+l'équipartition. (d) Le flux de molécules frappant une paroi vaut
+$\tfrac14n\langle v\rangle$ par unité d'aire et de temps (admis)~: nombre de
+molécules de N$_2$ frappant \qty{1}{cm^2} par seconde à \qty{1}{bar},
+\qty{300}{K}~; et le débit auquel un trou de \qty{1}{\micro m} laisse entrer l'air
+dans une enceinte à vide (effusion).
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b2:boltzmann-factor:9}
+\emph{Échappement.} (a) Fraction d'un gaz de Maxwell plus rapide que $v$~: montrer qu'elle
+vaut environ $(2/\sqrt\pi)\,x\,\eu^{-x^2}$ pour $x = v/v_{\text{p}} \gg 1$.
+(b) L'hélium à \qty{1000}{K} au-dessus de \qty{11.2}{km/s}~; l'azote. (c) La Lune,
+$v_{\text{lib}} = \qty{2.4}{km/s}$, \qty{400}{K}~: l'azote, et quelle
+température le retiendrait sur l'âge du système solaire (prendre $10^{17}$
+temps de collision~: fraction d'échappement sous $10^{-17}$). (d) Pourquoi Titan
+(\qty{2.6}{km/s}, \qty{94}{K}) garde-t-il une épaisse atmosphère d'azote~?
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b2:boltzmann-factor:10}
+\emph{D'autres potentiels.} (a) Dans une centrifugeuse tournant à $\omega$,
+l'énergie potentielle effective vaut $-\tfrac12m\omega^2r^2$~: profil de densité
+$n(r)$. (b) Hexafluorure d'uranium, deux isotopes $\Delta m = \qty{3}{u}$, $\omega
+= 2\pi \times \qty{1000}{Hz}$, $r = \qty{10}{cm}$, \qty{300}{K}~: facteur
+d'enrichissement d'un étage. (c) Sphères colloïdales (masse apparente $m' =
+\qty{2.6e-17}{kg}$) dans l'eau à \qty{293}{K}~: \omterm{prop:b2:boltzmann-factor:barometric}{hauteur d'échelle} de leur
+équilibre de sédimentation~; comment cela a-t-il donné le nombre d'Avogadro~? (d) Un
+gaz d'électrons dans un champ $E$~: pourquoi le profil de Boltzmann
+$\eu^{eEx/k_BT}$ est-il à la base de la longueur d'écran de Debye
+$\lambda_{\text{D}} = \sqrt{\varepsilon_0k_BT/ne^2}$ d'un \omterm{def:b2:waves-in-media:plasma}{plasma} (esquisser
+l'argument)~?
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b2:boltzmann-factor:11}
+\emph{Planck à partir de Boltzmann.} (a) Calculer $Z$ et $\langle E\rangle$ pour des
+niveaux $nh\nu$. (b) Les deux limites et leur sens. (c) Multiplier par
+la densité de modes $8\pi\nu^2/c^3$ (donnée) et retrouver la loi de Planck~;
+montrer que la loi de Rayleigh--Jeans est l'équipartition appliquée à chaque mode.
+(d) Pourquoi le décompte classique échoue-t-il, en une phrase~?
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b2:boltzmann-factor:12}
+\emph{Désaimantation adiabatique.} L'entropie de $N$ spins 1/2 vaut $S =
+Nk_B[\ln(2\cosh x) - x\tanh x]$, $x = \mu B/k_BT$. (a) Montrer qu'elle ne dépend que
+de $B/T$, avec $S \to Nk_B\ln 2$ quand $B/T \to 0$ et $S \to 0$ quand $B/T
+\to \infty$. (b) Un sel à \qty{1}{K} est aimanté isothermiquement de $0$ à
+\qty{1}{T}~: entropie retirée (par spin, avec $\mu = \mu_B$). (c) Le champ
+est ensuite ramené adiabatiquement à \qty{0.01}{T}~: température finale. (d)
+Qu'est-ce qui limite la méthode, et comment la même courbe en $\tanh$ sert-elle de
+thermomètre~?
+\end{exercise}
+
+\begin{omfigure}
+\includegraphics[width=0.3\linewidth]{images/book4/boltzmann-portrait.jpg}
+
+{\small Ludwig Boltzmann (1844--1906), dont le facteur $\eu^{-E/k_BT}$ est le sujet de ce chapitre, et dont la formule $S = k_B\ln\Omega$ est gravée sur sa tombe à Vienne.}
+\end{omfigure}
+
+\section{Problème~: l'atmosphère isotherme, la fuite de l'hélium et un thermomètre à spins}
+
+\begin{problem}[{Problème du week-end --- trois usages d'une seule exponentielle}]\label{pb:b2:boltzmann-factor:1}
+Données~: $k_B = \qty{1.38e-23}{J/K}$, $N_A = \qty{6.02e23}{mol^{-1}}$, $g =
+\qty{9.8}{m/s^2}$, $R_{\oplus} = \qty{6.37e6}{m}$, $\mu_B = \qty{9.27e-24}{J/T}$~;
+air $M = \qty{29}{g/mol}$, hélium \qty{4}{g/mol}, azote \qty{28}{g/mol}.
+
+\textbf{Partie I --- L'atmosphère isotherme.}
+\begin{enumerate}
+  \item À partir de l'hydrostatique et de la loi des gaz parfaits, établir $P(z) =
+        P_0\eu^{-z/H}$ et donner $H$ pour l'air à \qty{288}{K}.
+  \item Repérer le facteur de Boltzmann dans le résultat~; quelle énergie,
+        quelle température~?
+  \item Pression à \qty{3000}{m}, \qty{5500}{m} et \qty{8849}{m}~;
+        l'altitude où la pression est divisée par deux.
+  \item Masse de l'atmosphère par mètre carré (à partir de $P_0 =
+        \qty{1.013e5}{Pa}$), et masse totale~; vérifier que $\int_0^\infty
+        \rho\,\dd z = \rho_0H$.
+  \item Nombre de molécules dans l'atmosphère.
+  \item Si chaque gaz suivait son propre $H$, quel serait le rapport
+        O$_2$/N$_2$ à \qty{50}{km} comparé au sol~? Pourquoi la
+        composition est-elle en fait uniforme jusqu'à \qty{100}{km}~?
+  \item La troposphère réelle se refroidit de \qty{6.5}{K/km}~: la pression
+        à \qty{10}{km} est-elle plus haute ou plus basse que l'estimation isotherme~?
+        Expliquer.
+  \item \omterm{def:b2:particle-diffusion:flux}{Densité en nombre} au niveau de la mer et à \qty{100}{km} (modèle
+        isotherme, \qty{288}{K})~: commenter «~la frontière de l'espace~».
+\end{enumerate}
+
+\textbf{Partie II --- La fuite de l'hélium.}
+L'exosphère, au-dessus de \qty{500}{km}, est vers \qty{1000}{K} et
+sans collisions~: une molécule montant plus vite que la vitesse de libération
+s'en va.
+\begin{enumerate}[resume]
+  \item Vitesse de libération depuis la Terre à cette altitude.
+  \item Vitesses la plus probable et moyenne de l'hélium et de l'azote à
+        \qty{1000}{K}.
+  \item Fraction d'atomes d'hélium avec $v > v_{\text{lib}}$ (utiliser
+        $(2/\sqrt\pi)x\eu^{-x^2}$)~; de même pour l'azote.
+  \item Le flux d'hélium qui s'échappe vaut à peu près $\tfrac14n_{\text{He}}\langle
+        v\rangle \times$ (cette fraction) $\times\tfrac12$~; avec $n_{\text{He}}
+        = \qty{1e12}{m^{-3}}$ à l'exobase, estimer la perte par mètre
+        carré et par seconde, puis par an pour toute la Terre.
+  \item L'hélium de l'air vaut \qty{5}{ppm} en volume~: hélium total de
+        l'atmosphère~; son temps de séjour face à la perte calculée.
+  \item La radioactivité de la croûte produit environ \qty{3e6}{kg} d'hélium
+        par an~: l'hélium de l'atmosphère est-il en régime permanent, et
+        qu'enseigne la comparaison avec la question 11~?
+  \item Au maximum solaire l'exosphère atteint \qty{2000}{K}~: de quel
+        facteur la fraction d'échappement de l'hélium croît-elle~?
+  \item Pourquoi la Lune n'a-t-elle pas d'atmosphère, et Titan (libération
+        \qty{2.6}{km/s}, \qty{94}{K}) une épaisse~?
+\end{enumerate}
+
+\textbf{Partie III --- Un thermomètre à spins.}
+Un sel paramagnétique contient $n = \qty{2e27}{m^{-3}}$ spins 1/2 avec $\mu
+= \mu_B$, dans un champ $B$.
+\begin{enumerate}[resume]
+  \item Populations des deux niveaux et aimantation
+        $M(B,T)$.
+  \item À $B = \qty{0.1}{T}$~: $M$ à \qty{300}{K}, \qty{4}{K}, \qty{0.05}{K}~;
+        où la \omterm{prop:b2:boltzmann-factor:curie}{loi de Curie} est-elle valable~?
+  \item Pourquoi $M$ est-elle un thermomètre, et dans quel domaine est-elle la plus
+        sensible~? Que mesure-t-on en pratique~?
+  \item Énergie moyenne et capacité thermique des spins (Schottky)~;
+        température du pic à \qty{0.1}{T}.
+  \item Entropie des spins à haute température et à température nulle~; quelle
+        «~mise en ordre~» a lieu quand $T \to 0$~?
+  \item Désaimantation adiabatique de \qty{1}{K}, \qty{1}{T} à \qty{0.01}{T}~:
+        température finale~; pourquoi $B \to 0$ ne peut-il donner $T \to 0$~?
+  \item Un thermomètre à spins nucléaires utilise $\mu_{\text{N}} = \mu_B/1836$~: à
+        \qty{1}{T}, jusqu'à quelle température la \omterm{prop:b2:boltzmann-factor:curie}{loi de Curie} tient-elle, et
+        pourquoi un tel thermomètre sert-il dans le domaine du microkelvin~?
+  \item Comparer la largeur Doppler d'une raie spectrale (issue de la
+        distribution de Maxwell) comme thermomètre pour les gaz~: quelle grandeur, et
+        comment varie-t-elle avec $T$~?
+  \item Résumer~: les trois systèmes et la formule unique.
+\end{enumerate}
+\end{problem}

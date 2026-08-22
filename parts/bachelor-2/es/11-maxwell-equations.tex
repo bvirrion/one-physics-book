@@ -1,0 +1,632 @@
+\chapter{Las ecuaciones de Maxwell}\label{ch:b2:maxwell-equations}
+
+En 1865 James Clerk Maxwell escribió las leyes que Coulomb, Ampère y
+Faraday habían hallado una a una, añadió a la de Ampère un término que
+ningún experimento exigía todavía y descubrió que sus ecuaciones admitían
+ondas que viajaban a una celeridad calculable a partir de las constantes
+de la electricidad y del magnetismo --- la velocidad de la luz. La
+electricidad, el magnetismo y la óptica eran una sola materia. El volumen
+del Año 1 enunció las leyes como integrales sobre superficies y sobre
+lazos; este capítulo las escribe como cuatro ecuaciones \emph{locales},
+válidas en todo punto y en todo instante, con los operadores vectoriales
+que hacen posible esa escritura, y extrae las primeras consecuencias: la
+\omterm{thm:b2:maxwell-equations:maxwell}{corriente de desplazamiento}, los potenciales, el comportamiento de los
+campos en una interfaz y las aproximaciones bajo las cuales los circuitos
+del volumen del Año 1 son exactos.
+
+\begin{omfigure}
+\includegraphics[width=0.3\linewidth]{images/book4/maxwell-profile.jpg}
+
+{\small James Clerk Maxwell (1831--1879), que escribió las cuatro ecuaciones de este capítulo y leyó en ellas la existencia de ondas electromagnéticas que viajan a la velocidad de la luz.}
+\end{omfigure}
+
+\section{Los operadores vectoriales}
+
+\begin{definition}[Gradiente, divergencia, rotacional, laplaciano]\label{def:b2:maxwell-equations:operators}
+\index{gradiente}\index{divergencia}\index{rotacional}\index{laplaciano}\index{nabla}
+Para un campo escalar $f$ y un campo vectorial $\vect A$, en coordenadas
+cartesianas con el vector simbólico $\vect\nabla = (\partial_x, \partial_y,
+\partial_z)$:
+\begin{align*}
+\operatorname{\vect{grad}}f &= \vect\nabla f = (\partial_xf,\ \partial_yf,\ \partial_zf) ,\\
+\operatorname{div}\vect A &= \vect\nabla\cdot\vect A = \partial_xA_x + \partial_yA_y + \partial_zA_z ,\\
+\operatorname{\vect{curl}}\vect A &= \vect\nabla\wedge\vect A = (\partial_yA_z - \partial_zA_y,\ \partial_zA_x - \partial_xA_z,\ \partial_xA_y - \partial_yA_x) ,\\
+\Delta f &= \operatorname{div}\operatorname{\vect{grad}}f = \partial_x^2f + \partial_y^2f + \partial_z^2f ,
+\end{align*}
+y $\Delta\vect A$ es el laplaciano tomado sobre cada componente cartesiana.
+Su significado no depende de las coordenadas: $\operatorname{\vect{grad}}f
+\cdot\dd\vect l = \dd f$ es la variación de $f$ a lo largo de $\dd\vect l$; $\operatorname{div}
+\vect A$ es el flujo saliente de $\vect A$ por la superficie de un volumen
+pequeño, por unidad de volumen; $\operatorname{\vect{curl}}\vect A\cdot\vect n$ es la
+circulación de $\vect A$ en torno a un lazo pequeño de normal $\vect n$, por
+unidad de área.
+\end{definition}
+
+\begin{theorem}[Teoremas de la divergencia y de Stokes]\label{thm:b2:maxwell-equations:theorems}
+\index{teorema de la divergencia}\index{teorema de Ostrogradski}\index{teorema de Stokes}
+Para una superficie cerrada $\Sigma$ que limita el volumen $V$, y una curva
+cerrada orientada $C$ que limita la superficie $S$ (con la normal $\vect n$
+dada por la regla de la mano derecha),
+\[
+\iint_\Sigma\vect A\cdot\vect n\,\dd S = \iiint_V\operatorname{div}\vect A\,\dd\tau ,
+\qquad
+\oint_C\vect A\cdot\dd\vect l = \iint_S\operatorname{\vect{curl}}\vect A\cdot\vect n\,\dd S .
+\]
+\end{theorem}
+\admitted
+
+\begin{remark}[Qué se admite y por qué es creíble]\label{rem:b2:maxwell-equations:whyadmitted}
+Ambos teoremas se demuestran en el volumen de matemáticas del Año 3; el
+volumen de matemáticas de este año se detiene en su versión plana
+(Green--Riemann) y en las integrales múltiples. Su contenido, en cambio,
+es el que ya usamos en \cref{ch:b2:fluid-kinematics}: tesélese el volumen
+con cajas pequeñas (la superficie del lazo con lazos pequeños) --- los
+flujos por las caras interiores (las circulaciones por las aristas
+interiores) se cancelan dos a dos y solo queda la frontera. De las
+definiciones se siguen dos identidades que se usan constantemente:
+$\operatorname{\vect{curl}}\operatorname{\vect{grad}}f = \vect 0$,
+$\operatorname{div}\operatorname{\vect{curl}}\vect A = 0$, y
+$\operatorname{\vect{curl}}\operatorname{\vect{curl}}\vect A = \operatorname{\vect{grad}}
+\operatorname{div}\vect A - \Delta\vect A$. Para campos con una simetría, las
+fórmulas útiles son: para un campo radial $A_r(r)\vect e_r$, $\operatorname{div}
+= \frac1{r^2}\partial_r(r^2A_r)$ (esféricas) o $\frac1r\partial_r(rA_r)$
+(cilíndricas); para un campo azimutal $A_\theta(r)\vect e_\theta$ en torno a un
+eje, $(\operatorname{\vect{curl}})_z = \frac1r\partial_r(rA_\theta)$; y para $f(r)$,
+$\Delta f = \frac1{r^2}\partial_r(r^2\partial_rf) = \frac1r\partial_r^2(rf)$ (esféricas),
+$\frac1r\partial_r(r\partial_rf)$ (cilíndricas).
+\end{remark}
+
+\begin{omfigure}
+\begin{tikzpicture}[font=\small, x=1cm, y=1cm, >=Stealth]
+  \begin{scope}
+    \draw[thick, fill=omDef!10] (0,0) rectangle (1.8,1.4);
+    \draw[thick] (0,1.4) -- (0.5,1.85) -- (2.3,1.85) -- (1.8,1.4);
+    \draw[thick] (1.8,0) -- (2.3,0.45) -- (2.3,1.85);
+    \draw[omThm, thick, ->] (-0.9,0.7) -- (-0.1,0.7);
+    \draw[omThm, thick, ->] (1.9,0.7) -- (3.0,0.7);
+    \draw[omThm, thick, ->] (0.9,-0.8) -- (0.9,-0.1);
+    \draw[omThm, thick, ->] (1.1,1.9) -- (1.1,2.7);
+    \node[font=\footnotesize] at (1.0,-1.35) {$\operatorname{div}\vect A = \dfrac{\text{flujo saliente}}{\text{volumen}}$};
+  \end{scope}
+  \begin{scope}[xshift=7.6cm]
+    \draw[thick, omDef, postaction={decorate, decoration={markings, mark=at position 0.15 with {\arrow{>}}, mark=at position 0.65 with {\arrow{>}}}}] (-1.2,0) rectangle (1.2,1.4);
+    \draw[omExo, thick, ->] (0,0.7) -- (0,2.3) node[right, font=\footnotesize] {$\vect n$};
+    \foreach \x in {-0.8,0,0.8} \draw[omThm, ->] ({\x-0.3},1.05) -- ({\x+0.3},1.05);
+    \foreach \x in {-0.8,0,0.8} \draw[omThm, ->] ({\x+0.15},0.35) -- ({\x-0.15},0.35);
+    \node[font=\footnotesize] at (0,-0.8) {$\operatorname{\vect{curl}}\vect A\cdot\vect n = \dfrac{\text{circulación}}{\text{área}}$};
+  \end{scope}
+\end{tikzpicture}
+
+{\small Los dos operadores de las \omterm{thm:b2:maxwell-equations:maxwell}{ecuaciones de Maxwell}, leídos
+geométricamente: la \omterm{def:b2:maxwell-equations:operators}{divergencia} mide cuánto sale un campo de un volumen
+pequeño, y el \omterm{def:b2:maxwell-equations:operators}{rotacional} cuánto circula en torno a un lazo pequeño.}
+\end{omfigure}
+
+\section{Las cuatro ecuaciones}
+
+\begin{theorem}[Las ecuaciones de Maxwell]\label{thm:b2:maxwell-equations:maxwell}
+\index{ecuaciones de Maxwell}\index{ecuación de Maxwell--Gauss}\index{ecuación de Maxwell--Faraday}\index{ecuación de Maxwell--Ampère}\index{corriente de desplazamiento}
+En el vacío (y en la materia descrita por sus densidades totales de carga
+y de corriente $\rho$ y $\vect j$), los campos eléctrico y magnético
+obedecen, en todo punto y en todo instante,
+\begin{align*}
+\operatorname{div}\vect E &= \frac\rho{\varepsilon_0} &&\text{(Maxwell--Gauss)} , &
+\operatorname{\vect{curl}}\vect E &= -\frac{\partial\vect B}{\partial t} &&\text{(Maxwell--Faraday)} ,\\
+\operatorname{div}\vect B &= 0 &&\text{(Maxwell--flujo)} , &
+\operatorname{\vect{curl}}\vect B &= \mu_0\vect j + \mu_0\varepsilon_0\frac{\partial\vect E}{\partial t} &&\text{(Maxwell--Ampère)} ,
+\end{align*}
+con $\varepsilon_0 = \qty{8.85e-12}{F/m}$, $\mu_0 = 4\pi \times \qty{1e-7}{H/m}$ (y
+$\varepsilon_0\mu_0 = 1/c^2$). Los campos actúan sobre las cargas mediante la
+fuerza de Lorentz $\vect F = q(\vect E + \vect v\wedge\vect B)$. El término $\varepsilon_0\partial_t\vect E$
+es la densidad de \emph{\omterm{thm:b2:maxwell-equations:maxwell}{corriente de desplazamiento}} de Maxwell.
+\end{theorem}
+
+\begin{proof}[Equivalencia con las leyes integrales del volumen del Año 1]
+Aplíquese el \omterm{thm:b2:maxwell-equations:theorems}{teorema de la divergencia} a las dos primeras: $\iint_\Sigma\vect E\cdot
+\vect n\,\dd S = Q_{\text{int}}/\varepsilon_0$ (Gauss), y el flujo de $\vect B$ por
+cualquier superficie cerrada es nulo. Aplíquese Stokes a las dos últimas:
+$\oint_C\vect E\cdot\dd\vect l = -\dd\Phi_B/\dd t$ (Faraday, para un lazo fijo)
+y $\oint_C\vect B\cdot\dd\vect l = \mu_0I_{\text{enl}} + \mu_0\varepsilon_0\,\dd\Phi_E/\dd t$
+(Ampère, completada). Recíprocamente, las leyes integrales, válidas para
+todo volumen y todo lazo, implican las locales. Las ecuaciones locales son
+así las leyes del Año 1 más un término nuevo, justificado más abajo; se
+toman como postulados del electromagnetismo.
+\end{proof}
+
+\begin{proposition}[Por qué es necesaria la corriente de desplazamiento]\label{prop:b2:maxwell-equations:displacement}
+Tomando la \omterm{def:b2:maxwell-equations:operators}{divergencia} de la \omterm{thm:b2:maxwell-equations:maxwell}{ecuación de Maxwell--Ampère} y usando
+$\operatorname{div}\operatorname{\vect{curl}} = 0$ y Maxwell--Gauss se obtiene
+\[
+0 = \mu_0\operatorname{div}\vect j + \mu_0\varepsilon_0\,\partial_t\operatorname{div}\vect E
+= \mu_0\Bigl(\operatorname{div}\vect j + \frac{\partial\rho}{\partial t}\Bigr) :
+\]
+las ecuaciones contienen la conservación de la carga. Sin el término de
+desplazamiento exigirían $\operatorname{div}\vect j = 0$ siempre --- falso en
+un condensador que se carga, donde la corriente de conducción se detiene
+en la armadura. Allí, entre las armaduras, $\varepsilon_0\partial_t\vect E$ lleva
+exactamente la corriente que llega por el hilo, y el campo magnético
+circula en torno al hueco como en torno a un hilo.
+\end{proposition}
+
+\begin{proof}
+\omterm{def:b2:maxwell-equations:operators}{Divergencia} de ambos miembros, como se ha dicho; para el condensador, el
+flujo de $\varepsilon_0\partial_t\vect E$ por una superficie situada entre las armaduras vale
+$\varepsilon_0S\,\dd E/\dd t = \dd Q/\dd t = I$.
+\end{proof}
+
+\begin{example}[El campo dentro de un condensador que se carga]\label{ex:b2:maxwell-equations:capacitor}
+Armaduras circulares de radio $R$, separación $d \ll R$, cargadas por una
+corriente $I$: entre ellas $E = Q/\varepsilon_0\pi R^2$ es uniforme y crece a $\dd E/
+\dd t = I/\varepsilon_0\pi R^2$. Por simetría $\vect B = B(r)\vect e_\theta$; Ampère--Maxwell
+sobre un círculo de radio $r < R$ (que no atraviesa ninguna corriente de conducción): $2\pi rB
+= \mu_0\varepsilon_0\pi r^2\,\dd E/\dd t$, luego $B = \mu_0Ir/2\pi R^2$ --- el campo de una
+corriente uniforme $I$ repartida por el disco, continuo en $r = R$ con el
+$\mu_0I/2\pi r$ del hilo por fuera. Para $I = \qty{1}{A}$, $R = \qty{5}{cm}$: $B(R) =
+\qty{4}{\micro T}$, medible; el término de Maxwell es real.
+\end{example}
+
+\begin{omfigure}
+\begin{tikzpicture}[font=\small, x=1cm, y=1cm, >=Stealth]
+  \draw[thick, omThm] (-4.0,0) -- (-1.3,0); \draw[thick, omThm] (1.3,0) -- (4.0,0);
+  \draw[omThm, very thick, ->] (-3.4,0.25) -- (-2.4,0.25) node[above, font=\footnotesize, pos=0.5] {$I$};
+  \draw[omThm, very thick, ->] (2.4,0.25) -- (3.4,0.25) node[above, font=\footnotesize, pos=0.5] {$I$};
+  \draw[thick, fill=omExo!40] (-1.3,-1.4) rectangle (-1.1,1.4);
+  \draw[thick, fill=omExo!40] (1.1,-1.4) rectangle (1.3,1.4);
+  \foreach \y in {-1.0,-0.5,0,0.5,1.0} \draw[omDef, ->] (-1.05,\y) -- (1.05,\y);
+  \node[omDef, font=\footnotesize] at (0,1.25) {$\vect E(t)$};
+  \draw[omProp, thick] (0,0) ellipse (0.5 and 1.7);
+  \draw[omProp, thick, ->] (0.5,0.05) -- (0.5,-0.05);
+  \node[omProp, font=\footnotesize] at (0.95,-1.75) {$\vect B$};
+  \node[font=\footnotesize] at (0,-2.3) {$\oint\vect B\cdot\dd\vect l = \mu_0\varepsilon_0\,\dfrac{\dd\Phi_E}{\dd t} = \mu_0 I$};
+\end{tikzpicture}
+
+{\small Un condensador que se carga: ninguna carga atraviesa el hueco,
+pero el flujo eléctrico por un lazo que lo rodea crece; el término de
+Maxwell da al lazo la misma circulación de $\vect B$ que si el hilo
+continuara --- la \omterm{thm:b2:maxwell-equations:maxwell}{corriente de desplazamiento}.}
+\end{omfigure}
+
+\begin{remark}[Linealidad; qué dicen las ecuaciones]\label{rem:b2:maxwell-equations:linearity}
+Las ecuaciones son lineales en los campos y en sus fuentes: los campos se
+superponen. Dos de ellas (Gauss del flujo magnético y Faraday) no llevan
+fuentes y expresan una estructura --- las líneas de campo eléctrico
+empiezan y terminan en las cargas, las de campo magnético nunca terminan
+---; las otras dos dicen cómo las cargas y las corrientes, y la variación
+de cada campo, crean los campos. Leídas juntas: un $\vect B$ variable crea
+un $\vect E$ que circula, y un $\vect E$ variable crea un $\vect B$ que circula;
+los dos pueden sostenerse mutuamente sin carga alguna --- esa es la onda de
+\cref{ch:b2:plane-waves-polarization}, y la \omterm{thm:b2:maxwell-equations:maxwell}{corriente de desplazamiento} es
+lo que la hace posible.
+\end{remark}
+
+\section{Los potenciales}
+
+\begin{proposition}[Potenciales escalar y vector]\label{prop:b2:maxwell-equations:potentials}
+\index{potencial vector}\index{potencial escalar}\index{gauge}\index{gauge de Coulomb}\index{ecuación de Poisson}
+Como $\operatorname{div}\vect B = 0$ y $\operatorname{\vect{curl}}\vect E = -\partial_t
+\vect B$, los campos derivan de un \emph{\omterm{prop:b2:maxwell-equations:potentials}{potencial vector}} $\vect A$ y de un
+\emph{\omterm{prop:b2:maxwell-equations:potentials}{potencial escalar}} $V$:
+\[
+\vect B = \operatorname{\vect{curl}}\vect A , \qquad
+\vect E = -\operatorname{\vect{grad}}V - \frac{\partial\vect A}{\partial t} ,
+\]
+determinados salvo una \emph{transformación gauge} $\vect A \to \vect A +
+\operatorname{\vect{grad}}\chi$, $V \to V - \partial_t\chi$, que deja los campos
+inalterados. En el \emph{\omterm{prop:b2:maxwell-equations:potentials}{gauge de Coulomb}} $\operatorname{div}\vect A = 0$, la
+ley de Gauss se convierte en la \emph{\omterm{prop:b2:maxwell-equations:potentials}{ecuación de Poisson}}
+\[
+\Delta V = -\frac\rho{\varepsilon_0} ,
+\]
+y en régimen estacionario la ley de Ampère se convierte en $\Delta\vect A = -\mu_0\vect j$.
+En estática, $V$ es el potencial electrostático del volumen del Año 1.
+\end{proposition}
+
+\begin{proof}
+Un campo de \omterm{def:b2:maxwell-equations:operators}{divergencia} nula es un \omterm{def:b2:maxwell-equations:operators}{rotacional} (admitido, como el enunciado
+recíproco de que un campo de \omterm{def:b2:maxwell-equations:operators}{rotacional} nulo es un \omterm{def:b2:maxwell-equations:operators}{gradiente}, ambos del
+volumen de matemáticas del Año 2 para regiones simplemente conexas);
+entonces $\operatorname{\vect{curl}}
+(\vect E + \partial_t\vect A) = \vect 0$, de modo que $\vect E + \partial_t\vect A$ es un \omterm{def:b2:maxwell-equations:operators}{gradiente}.
+Gauge: $\operatorname{\vect{curl}}\operatorname{\vect{grad}}\chi = \vect 0$ y los
+términos $\partial_t\operatorname{\vect{grad}}\chi$ se cancelan en $\vect E$. Poisson: $\operatorname{div}
+\vect E = -\Delta V - \partial_t\operatorname{div}\vect A$. Estática: $\operatorname{\vect{curl}}
+\operatorname{\vect{curl}}\vect A = \operatorname{\vect{grad}}\operatorname{div}\vect A - \Delta\vect A
+= \mu_0\vect j$.
+\end{proof}
+
+\begin{example}[Dos potenciales vector]\label{ex:b2:maxwell-equations:vectorpot}
+Un campo uniforme $\vect B_0$ deriva de $\vect A = \tfrac12\vect B_0\wedge\vect r$
+(compruébese: $\operatorname{\vect{curl}}(\tfrac12\vect B_0\wedge\vect r) = \vect B_0$, y
+$\operatorname{div}\vect A = 0$); dentro de un solenoide infinito esto da $A_\theta =
+Br/2$, y fuera $A_\theta = BR^2/2r$ --- un potencial que no se anula donde sí
+se anula el campo, y cuya circulación por un lazo es el flujo de $\vect B$ a
+través de él: $\oint\vect A\cdot\dd\vect l = \Phi_B$ (Stokes). La ley de Faraday
+se lee entonces $\vect E = -\partial_t\vect A$ para el campo inducido.
+\end{example}
+
+\section{Los campos en una interfaz}
+
+\begin{proposition}[Relaciones de paso]\label{prop:b2:maxwell-equations:boundary}
+\index{relaciones de paso (campos)}\index{corriente superficial}
+A través de una superficie que lleva la densidad superficial de carga $\sigma$ y la
+densidad superficial de corriente $\vect j_s$ (\unit{A/m}), siendo $\vect n_{12}$ la normal
+unitaria del medio 1 al medio 2,
+\[
+\vect E_2 - \vect E_1 = \frac\sigma{\varepsilon_0}\,\vect n_{12} , \qquad
+\vect B_2 - \vect B_1 = \mu_0\,\vect j_s\wedge\vect n_{12} :
+\]
+la componente tangencial de $\vect E$ y la componente normal de $\vect B$ son
+continuas; la componente normal de $\vect E$ salta en $\sigma/\varepsilon_0$ y la
+componente tangencial de $\vect B$, en $\mu_0j_s$. En la superficie de un
+conductor perfecto ($\vect E = \vect B = \vect 0$ dentro, en los casos de
+\cref{ch:b2:wave-interfaces}), $\vect E$ es normal e igual a $\sigma\vect n/
+\varepsilon_0$, y $\vect B$ es tangencial e igual a $\mu_0\vect j_s\wedge\vect n$.
+\end{proposition}
+
+\begin{proof}
+Componentes normales: las leyes de Gauss y del flujo sobre un cilindro
+achatado que cabalga la superficie, de área $\dd S$ y altura tendiendo a cero: $(E_{2n}
+- E_{1n})\dd S = \sigma\dd S/\varepsilon_0$, $(B_{2n} - B_{1n})\dd S = 0$. Componentes
+tangenciales: las leyes de Faraday y de Ampère sobre un rectángulo pequeño
+que cabalga la superficie, de longitud $\dd l$ y altura tendiendo a cero: los
+flujos de $\partial_t\vect B$ y de $\partial_t\vect E$ por el rectángulo se anulan con
+su área, pero lo atraviesa una \omterm{prop:b2:maxwell-equations:boundary}{corriente superficial} $j_s\,\dd l$:
+$(E_{2t} - E_{1t})\dd l = 0$, $(B_{2t} - B_{1t})\dd l = \mu_0j_s\dd l$ para la
+dirección tangencial perpendicular a $\vect j_s$.
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}[font=\small, x=1cm, y=1cm, >=Stealth]
+  \begin{scope}
+    \fill[omExo!15] (-2.6,-1.3) rectangle (2.6,0); \draw[thick] (-2.6,0) -- (2.6,0);
+    \node[font=\footnotesize] at (-2.2,0.4) {medio 2}; \node[font=\footnotesize] at (-2.2,-0.4) {medio 1};
+    \node[omThm, font=\footnotesize] at (1.8,0.25) {$\sigma$, $\vect j_s$};
+    \draw[omDef, thick] (0,0.35) ellipse (0.7 and 0.18); \draw[omDef, thick] (0,-0.35) ellipse (0.7 and 0.18);
+    \draw[omDef, thick] (-0.7,0.35) -- (-0.7,-0.35) (0.7,0.35) -- (0.7,-0.35);
+    \draw[omDef, thick, ->] (0,0.35) -- (0,1.1) node[right, font=\footnotesize] {$\vect n_{12}$};
+    \node[font=\footnotesize] at (0,-1.7) {cilindro achatado: $E_{2n} - E_{1n} = \sigma/\varepsilon_0$, $B_{2n} = B_{1n}$};
+  \end{scope}
+  \begin{scope}[xshift=7.4cm]
+    \fill[omExo!15] (-2.6,-1.3) rectangle (2.6,0); \draw[thick] (-2.6,0) -- (2.6,0);
+    \draw[omProp, thick, postaction={decorate, decoration={markings, mark=at position 0.3 with {\arrow{>}}, mark=at position 0.8 with {\arrow{>}}}}] (-1.0,-0.3) rectangle (1.0,0.3);
+    \node[omProp, font=\footnotesize] at (0,0.6) {$\dd l$};
+    \node[omThm, font=\footnotesize] at (1.9,-0.25) {$\vect j_s$ (entrante)};
+    \foreach \x in {-1.6,-0.8,0,0.8,1.6} \node[omThm, font=\scriptsize] at (\x,-0.02) {$\otimes$};
+    \node[font=\footnotesize] at (0,-1.7) {lazo: $E_{2t} = E_{1t}$, $B_{2t} - B_{1t} = \mu_0j_s$};
+  \end{scope}
+\end{tikzpicture}
+
+{\small Las relaciones de paso salen de las leyes integrales aplicadas a
+un cilindro achatado y a un lazo delgado que cabalgan la interfaz: la
+carga superficial hace saltar la componente normal de $\vect E$ y la
+\omterm{prop:b2:maxwell-equations:boundary}{corriente superficial} hace saltar la tangencial de $\vect B$; las demás
+componentes son continuas.}
+\end{omfigure}
+
+\begin{example}[Plano cargado, lámina de corriente, solenoide]\label{ex:b2:maxwell-equations:sheets}
+Un plano con solo $\sigma$ en el espacio: por simetría $\vect E = \pm E\vect n$ a
+sus dos lados, y el salto $2E = \sigma/\varepsilon_0$ da $E = \sigma/2\varepsilon_0$ --- el
+resultado del Año 1 en una línea. Una lámina plana de corriente $j_s$: $B =
+\mu_0j_s/2$ a cada lado, antiparalelos. Un solenoide largo de $n$ espiras por
+metro que lleva $I$ es una lámina cilíndrica de corriente $j_s = nI$: el salto
+$\mu_0nI$ a su través, con $B = 0$ fuera, da $B = \mu_0nI$ dentro.
+\end{example}
+
+\section{Los regímenes cuasiestacionarios}
+
+\begin{definition}[Las aproximaciones cuasiestacionarias]\label{def:b2:maxwell-equations:arqs}
+\index{aproximación cuasiestacionaria}\index{régimen cuasiestacionario}
+Un sistema de tamaño $L$ excitado a la frecuencia $f$ es
+\emph{cuasiestacionario} cuando $L \ll \lambda = c/f$: el tiempo $L/c$ que
+tardan los campos en atravesarlo es despreciable frente al periodo, y
+todos sus puntos ``ven'' las fuentes en el mismo instante. Se usan dos límites:
+\begin{itemize}
+  \item el régimen cuasiestacionario \emph{magnético} (circuitos con
+        corrientes, bobinas, transformadores, inducción): se suprime la
+        \omterm{thm:b2:maxwell-equations:maxwell}{corriente de desplazamiento} de la ley de Ampère, $\operatorname{\vect{curl}}\vect B
+        = \mu_0\vect j$ (de modo que $\operatorname{div}\vect j = 0$ y las
+        corrientes circulan por circuitos cerrados), mientras que la ley de
+        Faraday se conserva entera;
+  \item el régimen cuasiestacionario \emph{eléctrico} (un condensador que
+        se carga): se suprime el término de Faraday, $\vect E$ es el campo
+        electrostático de las cargas instantáneas y se conserva la
+        \omterm{thm:b2:maxwell-equations:maxwell}{corriente de desplazamiento} para hallar $\vect B$.
+\end{itemize}
+\end{definition}
+
+\begin{proof}[Justificación]
+En el régimen magnético, compárense los dos términos de la ley de Ampère
+en un conductor: $\mu_0\varepsilon_0\partial_t E \sim \mu_0\varepsilon_0\omega E$ frente a $\mu_0\gamma E$,
+un cociente $\varepsilon_0\omega/\gamma = \omega\tau_r \sim 10^{-17}$ a \qty{50}{Hz} en el cobre;
+fuera del conductor la \omterm{thm:b2:maxwell-equations:maxwell}{corriente de desplazamiento} es del orden de
+$\varepsilon_0\omega E$ con $E \sim \omega AB$, es decir, menor que el efecto de la
+corriente de conducción en $(\omega L/c)^2 = (L/\lambda)^2 \times 4\pi^2$. En el
+régimen eléctrico el campo inducido $\omega BL \sim \omega^2\varepsilon_0\mu_0L^2E$ es menor que $E$
+en ese mismo $(L/\lambda)^2$.
+\end{proof}
+
+\begin{example}[Circuitos y antenas]\label{ex:b2:maxwell-equations:sizes}
+Un circuito de red a \qty{50}{Hz} ($\lambda = \qty{6000}{km}$) es
+cuasiestacionario hasta el tamaño de un país --- por eso funcionan las
+leyes de Kirchhoff y el transformador. Un circuito de \qty{10}{cm} es
+cuasiestacionario hasta unos \qty{100}{MHz}; a \qty{1}{GHz} ($\lambda = \qty{30}{cm}$) sus hilos son antenas,
+las corrientes difieren a lo largo de un hilo y el circuito radia: el
+dominio de \cref{ch:b2:dipole-radiation} y del diseño de microondas, donde
+una pista de un circuito impreso es una \omterm{prop:b2:dispersion-wave-packets:coax}{línea de transmisión}.
+\end{example}
+
+\begin{omfigure}
+\begin{tikzpicture}
+\begin{axis}[omaxis, axis x line=bottom, axis y line=left, width=8.6cm, height=5.0cm,
+    xmode=log, ymode=log, xmin=1, xmax=1e10, ymin=3e-4, ymax=1e4,
+    xlabel={$f$ (Hz)}, ylabel={$L$ (m)}, xtick={1,1e2,1e4,1e6,1e8,1e10}, ytick={1e-3,1,1e3},
+    xlabel style={at={(axis description cs:0.5,-0.12)}, anchor=north},
+    ylabel style={at={(axis description cs:-0.1,0.5)}, rotate=90, anchor=south}, samples=50]
+  \addplot[omThm, thick, domain=1:1e10] {3e8/x};
+  \addplot[omThm, dashed, domain=1:1e10] {3e7/x};
+  \node[font=\scriptsize, anchor=west] at (axis cs:1e6,4e3) {$L \gtrsim \lambda$: ondas, radiación};
+  \node[font=\scriptsize, anchor=west] at (axis cs:10,3e-2) {$L \ll \lambda$: cuasiestacionario, circuitos};
+  \node[font=\scriptsize, omDef] at (axis cs:50,1) {red eléctrica};
+  \node[font=\scriptsize, omDef, anchor=east] at (axis cs:3e7,0.1) {teléfono móvil};
+  \node[font=\scriptsize, omDef, anchor=east] at (axis cs:3e9,1e-3) {chip};
+\end{axis}
+\end{tikzpicture}
+
+{\small Tamaño frente a frecuencia: por debajo de la línea $L = \lambda/10$
+(a trazos) un dispositivo es cuasiestacionario y valen las leyes de
+circuito; cerca y por encima de $L = \lambda$ los campos se propagan y el
+dispositivo radia.}
+\end{omfigure}
+
+\begin{method}[Cómo usar las ecuaciones locales]\label{met:b2:maxwell-equations:method}
+(1) Úsense las simetrías y las invariancias de las fuentes para fijar la
+dirección y las variables de los campos (como en el volumen del Año 1).
+(2) Elíjase la forma: integral (Gauss o Ampère sobre una superficie o un
+lazo bien elegidos) cuando hay simetría suficiente; local cuando se
+necesita una ecuación diferencial (Poisson para $V$, la ecuación de
+difusión o la \omterm{thm:b2:waves-on-strings:equation}{ecuación de ondas} para los campos). (3) En un problema
+dependiente del tiempo, decídase el régimen: estático, cuasiestacionario
+magnético o eléctrico, o Maxwell completo. (4) En las interfaces, úsense
+las relaciones de paso --- el único sitio por donde entran las cargas y
+las \omterm{prop:b2:maxwell-equations:boundary}{corrientes superficiales}. (5) Compruébense
+$\operatorname{div}\vect B = 0$ y las dimensiones.
+\end{method}
+
+\section{Ejercicios}
+
+\begin{exercise}[$\star$]\label{exo:b2:maxwell-equations:1}
+Calcúlense la \omterm{def:b2:maxwell-equations:operators}{divergencia} y el \omterm{def:b2:maxwell-equations:operators}{rotacional} de (a) $\vect A = (x, y, z)$; (b)
+$\vect A = (-y, x, 0)$; (c) $\vect A = (yz, zx, xy)$; (d) $\vect A = \vect r/r^3$
+(úsese la fórmula radial, $r \ne 0$); (e) $\vect A = (0, 0, x^2)$. ¿Cuáles son
+\omterm{def:b2:maxwell-equations:operators}{gradientes}, cuáles \omterm{def:b2:maxwell-equations:operators}{rotacionales} y cuáles ninguna de las dos cosas?
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b2:maxwell-equations:2}
+(a) Compruébense las dimensiones de cada término de las cuatro \omterm{thm:b2:maxwell-equations:maxwell}{ecuaciones
+de Maxwell}. (b) Calcúlese $1/\sqrt{\varepsilon_0\mu_0}$. (c) Cociente entre la
+densidad de \omterm{thm:b2:maxwell-equations:maxwell}{corriente de desplazamiento} y la \omterm{def:b2:charges-currents-conduction:densities}{densidad de corriente} de conducción en el cobre a \qty{50}{Hz}, en
+el agua de mar ($\gamma = \qty{5}{S/m}$) a \qty{1}{GHz} y en el vidrio ($\gamma =
+\qty{1e-12}{S/m}$, con $\varepsilon_0$ por simplicidad) a \qty{50}{Hz}: ¿cuál es
+``un conductor'' en cada caso?
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b2:maxwell-equations:3}
+Un condensador de armaduras circulares ($R = \qty{10}{cm}$, $d = \qty{2}{mm}$) se
+carga con $I = \qty{0.5}{A}$. Ritmo de variación de $E$; densidad de \omterm{thm:b2:maxwell-equations:maxwell}{corriente
+de desplazamiento}; $B$ en $r = \qty{5}{cm}$ y en $r = \qty{20}{cm}$ (en el
+plano medio entre las armaduras); compárese este último con el campo del
+hilo de alimentación a la misma distancia.
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b2:maxwell-equations:4}
+(a) $\vect E = kx\,\vect e_x$ llena una región: \omterm{def:b2:charges-currents-conduction:densities}{densidad de carga} allí. (b)
+Dentro de una bola de radio $R$, $\vect E = (\rho_0r/3\varepsilon_0)\vect e_r$: compruébese con
+la \omterm{def:b2:maxwell-equations:operators}{divergencia} radial que $\rho = \rho_0$, y recupérese el campo exterior
+con la ley de Gauss integral. (c) $\vect B = B_0(y/a)\vect e_x$: ¿es un campo
+magnético posible? ¿Qué \omterm{def:b2:charges-currents-conduction:densities}{densidad de corriente} lo sostiene?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b2:maxwell-equations:5}
+\emph{\omterm{prop:b2:maxwell-equations:potentials}{Potenciales vector}.} (a) Muéstrese que $\vect A = \tfrac12\vect B_0\wedge\vect r$
+da $\operatorname{\vect{curl}}\vect A = \vect B_0$ y $\operatorname{div}\vect A = 0$.
+(b) Lo mismo hace $\vect A' = B_0x\,\vect e_y$: hállese la función gauge $\chi$ con
+$\vect A' = \vect A + \operatorname{\vect{grad}}\chi$. (c) Solenoide de radio $R$ y
+campo $B$ dentro: compruébense $A_\theta = Br/2$ ($r < R$) y $BR^2/2r$ ($r > R$)
+con $(\operatorname{\vect{curl}}\vect A)_z = \frac1r\partial_r(rA_\theta)$; continuidad en $R$.
+(d) Circulación de $\vect A$ sobre un círculo de radio $r > R$ y flujo de
+$\vect B$: ¿qué dice esto sobre la fem inducida en un lazo exterior a un
+solenoide cuya corriente varía?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b2:maxwell-equations:6}
+\emph{Relaciones de paso.} (a) Un conductor en equilibrio electrostático
+lleva $\sigma$ en su superficie: campo justo fuera (a partir del salto, con
+$\vect E = \vect 0$ dentro); para $\sigma = \qty{1}{\micro C/m^2}$. (b) Dos planos
+paralelos con $+\sigma$ y $-\sigma$: campo en todas partes, a partir de los saltos.
+(c) Un solenoide largo ($n = \qty{2000}{m^{-1}}$, $I = \qty{5}{A}$) como lámina
+de corriente: $j_s$, el salto de $B$ y $B$ dentro. (d) Una bobina toroidal:
+¿por qué es $B$ nulo fuera y $\mu_0NI/2\pi r$ dentro, a partir del mismo salto?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b2:maxwell-equations:7}
+\emph{Poisson en una dimensión.} Entre dos electrodos planos en $x = 0$
+($V = 0$) y $x = d$ ($V = U$), una \omterm{def:b2:charges-currents-conduction:densities}{densidad de carga} uniforme $\rho_0$ llena el
+hueco (una carga espacial). (a) Resuélvase la \omterm{prop:b2:maxwell-equations:potentials}{ecuación de Poisson} para $V(x)$. (b) Campo
+$E(x)$; ¿dónde se anula si $\rho_0 > 0$ y es grande? (c) Cargas superficiales en
+los dos electrodos, a partir de la relación de paso. (d) Con $\rho_0 = 0$
+recupérese el condensador; con $U = 0$, dibújese $V$.
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b2:maxwell-equations:8}
+\emph{¿Cuasiestacionario o no?} (a) $\lambda$ a \qty{50}{Hz}, \qty{1}{MHz},
+\qty{100}{MHz} y \qty{2.4}{GHz}. (b) ¿Hasta qué frecuencia es cuasiestacionario un
+circuito de \qty{10}{cm} (criterio $L < \lambda/10$)? ¿Y un chip de \qty{1}{cm}? ¿Y una
+red eléctrica de \qty{1000}{km}? (c) En un condensador de radio $R = \qty{5}{cm}$ a
+\qty{1}{MHz}, estímese el cociente entre el campo eléctrico inducido (por
+el $\vect B$ variable de los ejercicios anteriores) y el campo principal: $(\omega R/c)^2
+/4$. (d) ¿Por qué es la frecuencia de red de una red continental un
+problema cuasiestacionario aunque la red mida \qty{1000}{km}?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b2:maxwell-equations:9}
+Muéstrese que la ley de Ampère sin la \omterm{thm:b2:maxwell-equations:maxwell}{corriente de desplazamiento}, $\operatorname{\vect{curl}}
+\vect B = \mu_0\vect j$, contradice la conservación de la carga siempre que $\partial_t\rho
+\ne 0$. En el condensador de \cref{exo:b2:maxwell-equations:3}, evalúese
+$\operatorname{div}\vect j$ promediada sobre una armadura de espesor $e = \qty{0.1}{mm}$
+(donde la corriente $I$ se detiene), y el $\partial_t\rho$ correspondiente.
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b2:maxwell-equations:10}
+\emph{El betatrón.} Un campo magnético uniforme $B(t)\vect e_z$ llena un
+cilindro de radio $R$ y crece a razón de $\dd B/\dd t = \dot B$. (a) Por simetría
+$\vect E = E_\theta(r)\vect e_\theta$: úsese la ley de Faraday integral para hallar $E_\theta$
+para $r < R$ y para $r > R$. (b) No hay carga en ninguna parte: coméntese
+un campo eléctrico de líneas cerradas. (c) ¿Cuánta energía gana por vuelta
+un electrón sobre un círculo de radio $r_0 < R$? Para $\dot B = \qty{10}{T/s}$,
+$r_0 = \qty{0.5}{m}$: energía por vuelta en eV; vueltas necesarias para \qty{20}{MeV}.
+(d) Para que el radio de la órbita se mantenga constante, la cantidad de
+movimiento $p = eBr_0$ (por la fuerza magnética) debe crecer como prescribe
+la energía ganada del campo inducido: muéstrese la condición $B(r_0) = \tfrac12\langle B\rangle_{\text{disco}}$
+--- la condición del betatrón.
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b2:maxwell-equations:11}
+\emph{Las ondas de Maxwell.} En el vacío ($\rho = 0$, $\vect j = \vect 0$): (a) tómese
+el \omterm{def:b2:maxwell-equations:operators}{rotacional} de la \omterm{thm:b2:maxwell-equations:maxwell}{ecuación de Maxwell--Faraday}, úsense $\operatorname{\vect{curl}}
+\operatorname{\vect{curl}} = \operatorname{\vect{grad}}\operatorname{div} - \Delta$ y las demás
+ecuaciones para obtener $\Delta\vect E = \mu_0\varepsilon_0\,\partial_t^2\vect E$. (b) Lo mismo para
+$\vect B$. (c) Esta es la \omterm{thm:b2:waves-on-strings:equation}{ecuación de d'Alembert} en tres dimensiones: ¿celeridad?
+Calcúlese a partir de $\varepsilon_0$ y $\mu_0$. (d) ¿Por qué convenció ese número
+a Maxwell de que la luz es electromagnética, y qué medida de Weber y
+Kohlrausch utilizó?
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b2:maxwell-equations:12}
+\emph{Campos en un conductor a baja frecuencia.} En un conductor óhmico
+($\vect j = \gamma\vect E$) en \omterm{def:b2:maxwell-equations:arqs}{régimen cuasiestacionario} magnético: (a) tómese
+el \omterm{def:b2:maxwell-equations:operators}{rotacional} de la ley de Ampère y úsese la de Faraday para mostrar que $\Delta\vect B = \mu_0\gamma\,
+\partial_t\vect B$; ¿por qué es una ecuación de difusión? (b) Tiempo característico
+para que $\vect B$ penetre una profundidad $d$: $\tau \sim \mu_0\gamma d^2$; valores para una
+placa de cobre de \qty{1}{cm} y para el núcleo terrestre ($\gamma \approx \qty{5e5}{S/m}$,
+$d \approx \qty{3000}{km}$). (c) A la frecuencia $f$, profundidad alcanzada en un
+periodo: muéstrese que es del orden de $\delta = \sqrt{2/\mu_0\gamma\omega}$; valor para el cobre
+a \qty{50}{Hz} y a \qty{1}{MHz} (la \omterm{def:b2:dispersion-wave-packets:complex}{profundidad de penetración} de
+\cref{ch:b2:waves-in-media}). (d) ¿Qué implica (b) para las variaciones
+temporales del campo magnético terrestre?
+\end{exercise}
+
+\section{Problema: el condensador, el betatrón y los potenciales}
+
+\begin{problem}[{Problema de fin de semana --- las ecuaciones de Maxwell en
+acción en un condensador que se carga, en el acelerador que funciona solo
+con la ley de Faraday, y en los potenciales que las resuelven}]
+\label{pb:b2:maxwell-equations:1}
+
+\medskip
+\noindent\textbf{Parte I --- El condensador que se carga.}
+Armaduras circulares de radio $R = \qty{10}{cm}$ y separación $d = \qty{1.0}{mm}$,
+en aire; por el hilo de alimentación, según el eje, circula una corriente $I(t) = I_0\cos\omega t$ con $I_0 = \qty{1.0}{A}$ y $f = \qty{1.0}{MHz}$.
+Se desprecian los efectos de borde.
+\begin{enumerate}
+  \item Carga $Q(t)$ y campo $E(t)$ entre las armaduras; amplitud de $E$.
+  \item Densidad de \omterm{thm:b2:maxwell-equations:maxwell}{corriente de desplazamiento} entre las armaduras;
+        compruébese que su flujo a través de una armadura vale $I(t)$.
+  \item Campo magnético $B(r, t)$ entre las armaduras para $r < R$, por la
+        ley de Ampère--Maxwell integral; amplitud en $r = R$.
+  \item Campo para $r > R$ (todavía entre los planos de las armaduras):
+        compárese con el campo del hilo al mismo $r$; ¿hay discontinuidad
+        en $r = R$?
+  \item El $\vect B$ variable induce, por la ley de Faraday, una corrección
+        $\vect E_1$ al campo eléctrico: usando $\operatorname{\vect{curl}}\vect E_1
+        = -\partial_t\vect B$ con $\vect E_1 = E_1(r)\vect e_z$ (axial), muéstrese que
+        $E_1(r) - E_1(0) = \dfrac{\mu_0\varepsilon_0r^2}4\,\dfrac{\dd^2E}{\dd t^2}$, y
+        estímese $|E_1(R) - E_1(0)|/|E|$.
+  \item Conclúyase sobre la validez del tratamiento cuasiestacionario
+        eléctrico a \qty{1}{MHz}; ¿a qué frecuencia llegaría la corrección
+        al $10\%$? (La solución exacta es una función de Bessel: el
+        condensador se ha convertido en una cavidad.)
+  \item Energía: la energía eléctrica $\tfrac12\varepsilon_0E^2$ almacenada entre
+        las armaduras, valor máximo; la energía magnética $\int B^2/2\mu_0\,\dd\tau$
+        en el instante en que $E = 0$; su cociente y su relación con la
+        estimación de la pregunta 5.
+\end{enumerate}
+
+\medskip
+\noindent\textbf{Parte II --- El betatrón.}
+Un electroimán produce un campo $\vect B = B(r, t)\vect e_z$ simétrico respecto
+del eje $z$; los electrones circulan por un anillo en vacío de radio $r_0$.
+\begin{enumerate}[resume]
+  \item Muéstrese, a partir de Maxwell--Faraday en forma integral, que el
+        campo eléctrico sobre la órbita vale $E_\theta(r_0) = -\dfrac1{2\pi r_0}
+        \dfrac{\dd\Phi}{\dd t}$, siendo $\Phi$ el flujo a través de la órbita.
+  \item Ecuación del movimiento tangencial de un electrón (de carga $-e$):
+        $\dd p/\dd t = eE_\theta$ en módulo; la energía ganada por vuelta vale
+        $e\,|\dd\Phi/\dd t|$.
+  \item Equilibrio radial sobre el círculo: $p = eB(r_0)r_0$. Para que $r_0$
+        se mantenga constante, muéstrese que $B(r_0, t) = \Phi(t)/2\pi r_0^2$, es decir, que el
+        campo sobre la órbita debe ser la mitad del campo medio interior.
+  \item ¿Por qué no pueden acelerarse los electrones con un campo
+        uniforme? ¿Cómo se consigue la condición en la práctica (forma de
+        las piezas polares)?
+  \item $r_0 = \qty{0.50}{m}$, con $B(r_0)$ subiendo de $0$ a \qty{0.40}{T} en
+        \qty{5}{ms}: cantidad de movimiento final; energía final (úsese
+        $E = pc$ para estos electrones ultrarrelativistas,
+        $\qty{1}{MeV} = \qty{1.6e-13}{J}$); energía por vuelta y número de
+        vueltas; distancia recorrida.
+  \item Los electrones radian al ser acelerados sobre un círculo
+        (\cref{ch:b2:dipole-radiation}): eso limita los betatrones a unos
+        cientos de MeV. ¿De dónde procede en última instancia la energía de
+        los electrones y a través de qué término de las \omterm{thm:b2:maxwell-equations:maxwell}{ecuaciones de Maxwell}?
+  \item Tras la aceleración los electrones se lanzan sobre un blanco y
+        producen rayos X: ¿por qué fue el betatrón la máquina de
+        radioterapia de los años cincuenta y qué lo sustituyó?
+\end{enumerate}
+
+\medskip
+\noindent\textbf{Parte III --- Potenciales y Poisson.}
+\begin{enumerate}[resume]
+  \item Escríbanse $\vect E$ y $\vect B$ en función de $V$ y de $\vect A$, y
+        compruébese que Maxwell--Faraday y Maxwell del flujo quedan
+        entonces satisfechas automáticamente.
+  \item Una bola de radio $a$ lleva la densidad uniforme $\rho_0$: escríbase
+        la \omterm{prop:b2:maxwell-equations:potentials}{ecuación de Poisson} con simetría esférica, resuélvase dentro y
+        fuera ($V \to 0$ en el infinito, con $V$ y $V'$ continuos en $a$) y
+        recupérense los campos del volumen del Año 1.
+  \item Energía potencial de la bola, $\tfrac12\int\rho V\,\dd\tau$: valor
+        $3Q^2/20\pi\varepsilon_0a$; para un núcleo de uranio ($Q = 92e$, $a =
+        \qty{7.4}{fm}$), en MeV --- la energía que se libera cuando se parte.
+  \item Para el condensador de la parte I en \omterm{def:b2:maxwell-equations:arqs}{régimen cuasiestacionario}
+        eléctrico, dese $V$ entre las armaduras. Muéstrese que un \omterm{prop:b2:maxwell-equations:potentials}{potencial
+        vector} \emph{axial} $A_z(r, t)\,\vect e_z$, para el que $(\operatorname{\vect{curl}}
+        \vect A)_\theta = -\partial_rA_z$, reproduce el campo $B_\theta$ de la
+        pregunta 3, y hállese $A_z$ para $r < R$ (tómese $A_z(0) = 0$).
+  \item Muéstrese que la corrección $\vect E_1$ de la pregunta 5 es
+        exactamente $-\partial_t\vect A$ para ese $A_z$, salvo una constante.
+  \item Gauge: la condición de Coulomb $\operatorname{div}\vect A = 0$ se
+        cumple para ese $A_z(r)$ --- ¿por qué? ¿Qué otro $\vect A$ daría el
+        mismo $\vect B$?
+\end{enumerate}
+
+\medskip
+\noindent\textbf{Parte IV --- Interfaces y regímenes.}
+\begin{enumerate}[resume]
+  \item Carga superficial en las armaduras de la parte I en el instante de
+        $E$ máximo; compruébese la relación de paso en la cara interior de
+        la armadura (campo nulo dentro del metal).
+  \item La corriente se reparte radialmente por la armadura, del eje al
+        borde: densidad superficial de corriente $j_s(r)$ en la armadura; campo
+        magnético justo fuera de la cara exterior de la armadura, a partir
+        de la relación de paso, comparado con el campo hallado en la
+        pregunta 3 del lado interior.
+  \item Clasifíquense: las armaduras a \qty{1}{MHz} (¿cuasiestacionario
+        eléctrico?), el lazo del hilo de alimentación de \qty{20}{cm}
+        (¿cuasiestacionario magnético?) y el mismo condensador a
+        \qty{1}{GHz}; justifíquese con $L/\lambda$.
+  \item En el anillo del betatrón, ¿por qué es excelente la \omterm{def:b2:maxwell-equations:arqs}{aproximación
+        cuasiestacionaria} magnética (tamaños, rampa de \qty{100}{Hz}) aunque
+        el campo eléctrico sea allí esencial?
+  \item Resúmase, en una tabla, qué ecuación de Maxwell (local o integral)
+        respondió a cada parte y qué término --- \omterm{thm:b2:maxwell-equations:maxwell}{corriente de
+        desplazamiento}, Faraday, Gauss, salto de paso --- fue decisivo.
+\end{enumerate}
+\end{problem}

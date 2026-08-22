@@ -1,0 +1,584 @@
+\chapter{Aliran Kental}\label{ch:b2:viscous-flows}
+
+Miringkanlah sebuah stoples madu dan isinya menuang sebagai pita kental
+yang lambat; miringkanlah sebuah stoples air dan isinya lenyap. Tariklah
+sebuah sendok menembus keduanya: madunya melawan, dan terus melawan pada
+kelajuan berapa pun; airnya hampir tak menghiraukan sampai Anda bergerak
+cepat, lalu ia berpusar. Bedanya adalah \emph{\omterm{def:b2:viscous-flows:viscosity}{kekentalan}} --- gesekan
+dalam sebuah fluida --- dan pergulatan antara \omterm{def:b2:viscous-flows:viscosity}{kekentalan} dan kelembaman,
+yang dirangkum dalam satu bilangan, \omterm{def:b2:viscous-flows:reynolds}{bilangan Reynolds}, memutuskan apakah
+sebuah aliran merayap dalam lapisan yang tertib atau bergolak menjadi
+turbulensi. Bab ini menambahkan gaya kental pada \omterm{thm:b2:euler-bernoulli:euler}{persamaan Euler},
+menyelesaikan dua \omterm{def:b2:viscous-flows:reynolds}{aliran laminar} yang dipakai setiap insinyur, dan
+menjelaskan mengapa, pada \omterm{def:b2:viscous-flows:reynolds}{bilangan Reynolds} tinggi, \omterm{def:b2:viscous-flows:viscosity}{kekentalan}
+bersembunyi dalam lapisan tipis di dinding namun tetap merenggut sebagian
+besar bahan bakar setiap mobil, kapal dan pesawat terbang.
+
+\begin{omfigure}
+\includegraphics[width=0.34\linewidth]{images/book4/ai/b4-04-honey-spoon-viscous.png}
+
+{\small Madu menuang sebagai pita tipis dan mantap yang menggelung ketika mendarat: \omterm{def:b2:viscous-flows:viscosity}{kekentalan} sepuluh ribu kali \omterm{def:b2:viscous-flows:viscosity}{kekentalan} air membuat kelembaman tak berarti --- sebuah aliran merayap.}
+\end{omfigure}
+
+
+\section{Kekentalan dan persamaan Navier--Stokes}
+
+\begin{definition}[Kekentalan Newton]\label{def:b2:viscous-flows:viscosity}
+\index{kekentalan}\index{kekentalan dinamik}\index{kekentalan kinematik}\index{tegangan geser}\index{fluida Newton}
+Dalam aliran geser bidang $\vect v = v_x(y)\,\vect e_x$, fluida di atas
+permukaan $y =$ tetap mengerahkan pada fluida di bawahnya (lewat unsur
+permukaan $\dd S$) gaya tangensial
+\[
+\dd\vect F = \eta\,\frac{\dd v_x}{\dd y}\,\dd S\;\vect e_x ,
+\]
+yang menyeret lapisan yang lebih lambat ke depan dan sebaliknya terseret
+ke belakang. Yang disebut \emph{tegangan geser} adalah $\tau = \eta\,\dd v_x/\dd y$; koefisien
+$\eta$ (satuan \unit{Pa.s}) adalah \emph{kekentalan dinamik} fluidanya,
+dan $\nu = \eta/\rho$ (\unit{m^2/s}) \emph{kekentalan kinematik}nya. Fluida
+yang $\eta$-nya tidak bergantung pada laju gesernya bersifat \emph{Newton}:
+air, udara, minyak, alkohol; darah, cat, saus tomat dan lelehan polimer
+tidak. Orde besarnya pada \qty{20}{\degreeCelsius}: udara $\eta =
+\qty{1.8e-5}{Pa.s}$ ($\nu = \qty{1.5e-5}{m^2/s}$), air $\qty{1.0e-3}{Pa.s}$
+($\nu = \qty{1.0e-6}{m^2/s}$), minyak zaitun $\qty{0.08}{Pa.s}$, gliserol
+$\qty{1.5}{Pa.s}$, madu $\sim\qty{10}{Pa.s}$. Zat cair menjadi lebih encer
+ketika dipanaskan, gas menjadi lebih kental.
+\end{definition}
+
+\begin{proposition}[Rapat gaya kental; syarat tanpa selip]\label{prop:b2:viscous-flows:density}
+\index{syarat tanpa selip}\index{rapat gaya kental}
+Dalam aliran geser bidang, gaya kental total pada sebuah lempeng fluida
+antara $y$ dan $y + \dd y$ adalah, tiap satuan volume, $\eta\,\dd^2v_x/\dd y^2$:
+\omterm{def:b2:viscous-flows:viscosity}{kekentalan} bekerja sebagai rapat gaya volume $\eta\,\Delta\vect v$ (dengan
+Laplacian diambil komponen demi komponen), sebuah hasil yang berlaku bagi
+sembarang \omterm{cor:b2:fluid-kinematics:incompressible}{aliran tak termampatkan}. Di dinding padat fluidanya
+\emph{melekat}: kecepatannya sama dengan kecepatan dindingnya (\emph{\omterm{prop:b2:viscous-flows:density}{syarat
+tanpa selip}}), itulah sebabnya debu tinggal pada bilah kipas dan sebuah
+dinding merasakan seretan kental.
+\end{proposition}
+
+\begin{proof}
+Lempengnya ditarik oleh $\eta\,v_x'(y + \dd y)\dd S$ dari atas dan oleh
+$-\eta\,v_x'(y)\dd S$ dari bawah: totalnya $\eta v_x''\,\dd y\,\dd S$. Bentuk
+umumnya diterima tanpa bukti (ia menyusul dari menuliskan tegangannya
+sebagai fungsi linear simetrik gradien kecepatannya). \omterm{prop:b2:viscous-flows:density}{Syarat tanpa
+selipnya} bersifat eksperimental.
+\end{proof}
+
+\begin{theorem}[Persamaan Navier--Stokes]\label{thm:b2:viscous-flows:ns}
+\index{persamaan Navier--Stokes}
+\omterm{def:b2:viscous-flows:viscosity}{Fluida Newton} tak termampatkan menuruti
+\[
+\rho\Bigl(\frac{\partial\vect v}{\partial t} + (\vect v\cdot\operatorname{\vect{grad}})
+\vect v\Bigr) = -\operatorname{\vect{grad}}P + \rho\vect g + \eta\,\Delta\vect v ,
+\qquad \operatorname{div}\vect v = 0 ,
+\]
+dengan \omterm{prop:b2:viscous-flows:density}{syarat tanpa selip} pada setiap dinding. \omterm{thm:b2:euler-bernoulli:euler}{Persamaan Euler} adalah hal
+khusus $\eta = 0$.
+\end{theorem}
+\admitted
+
+\begin{omfigure}
+\begin{tikzpicture}[font=\small, x=1cm, y=1cm, >=Stealth]
+  \begin{scope}
+    \draw[thick] (-0.2,0) -- (3.6,0); \fill[pattern=north east lines] (-0.2,-0.18) rectangle (3.6,0);
+    \draw[thick, omExo] (-0.2,2.2) -- (3.6,2.2); \fill[pattern=north east lines, pattern color=omExo] (-0.2,2.2) rectangle (3.6,2.38);
+    \draw[omExo, very thick, ->] (1.4,2.6) -- (2.6,2.6) node[right, font=\footnotesize] {$U$};
+    \foreach \y in {0.4,0.8,...,2.0} \draw[omDef, thick, ->] (0.4,\y) -- ({0.4+1.1*\y/2.2*1.8},\y);
+    \draw[omDef, thick] (0.4,0) -- (2.2,2.2);
+    \node[font=\footnotesize] at (1.8,-0.5) {Couette: $v_x = Uy/h$, $\tau = \eta U/h$};
+    \draw[<->] (3.3,0) -- (3.3,2.2) node[midway, right, font=\footnotesize] {$h$};
+  \end{scope}
+  \begin{scope}[xshift=7.2cm]
+    \draw[thick, fill=omDef!10] (0,0.6) rectangle (3.0,1.6);
+    \draw[omThm, very thick, ->] (1.5,1.6) -- (2.6,1.6) node[above, font=\footnotesize] {$\eta v_x'(y+\dd y)\,\dd S$};
+    \draw[omThm, very thick, ->] (1.5,0.6) -- (0.4,0.6) node[below, font=\footnotesize] {$\eta v_x'(y)\,\dd S$};
+    \node[font=\footnotesize] at (-0.5,1.6) {$y + \dd y$};
+    \node[font=\footnotesize] at (-0.4,0.6) {$y$};
+    \node[font=\footnotesize] at (1.5,-0.5) {totalnya: $\eta\,v_x''\,\dd y\,\dd S$};
+  \end{scope}
+\end{tikzpicture}
+
+{\small Kiri: aliran Couette bidang antara pelat tetap dan pelat yang
+bergerak dengan $U$ --- profil linear, \omterm{def:b2:viscous-flows:viscosity}{tegangan geser} yang sama pada
+setiap lapisan. Kanan: gaya kental pada sebuah lempeng fluida; keduanya
+saling meniadakan kecuali jika profil kecepatannya melengkung.}
+\end{omfigure}
+
+\begin{example}[Tegangan geser di atas meja]\label{ex:b2:viscous-flows:table}
+Selaput minyak \qty{0.1}{mm} ($\eta = \qty{0.1}{Pa.s}$) antara sebuah pelat dan
+sebuah meja, dengan pelatnya meluncur pada \qty{1}{m/s}: $\tau = \eta U/h = \qty{1}{kPa}$, yaitu
+gaya \qty{100}{N} pada sepersepuluh meter persegi --- asas \omterm{def:b2:rigid-body-mechanics:pivot}{bantalan}
+berpelumas, tempat seretan kental menggantikan gesekan kering yang
+seratus kali lebih besar. Madu pada sendok, \qty{10}{Pa.s}, setebal \qty{1}{mm},
+yang meniris pada \qty{1}{mm/s}: $\tau = \qty{10}{Pa}$, tepat berat
+madu setebal satu milimeter tiap satuan luas --- itulah sebabnya ia meniris pada kelajuan itu.
+\end{example}
+
+\section{Bilangan Reynolds}
+
+\begin{definition}[Bilangan Reynolds]\label{def:b2:viscous-flows:reynolds}
+\index{bilangan Reynolds}\index{aliran laminar}\index{aliran turbulen}
+Untuk aliran berkelajuan ciri $U$ dan berpanjang ciri $L$, yang disebut
+\emph{bilangan Reynolds} adalah
+\[
+\mathrm{Re} = \frac{\rho UL}{\eta} = \frac{UL}{\nu}
+\]
+yaitu nisbah orde besar suku kelembaman
+$\rho(\vect v\cdot\operatorname{\vect{grad}})\vect v \sim \rho U^2/L$ dan suku
+kental $\eta\Delta\vect v \sim \eta U/L^2$ dalam \omterm{thm:b2:viscous-flows:ns}{persamaan
+Navier--Stokes}. Pada $\mathrm{Re} \ll 1$ kelembamannya dapat diabaikan dan alirannya
+\emph{merayap} (kental, terbalikkan, mulus); pada $\mathrm{Re} \gg 1$
+\omterm{def:b2:viscous-flows:viscosity}{kekentalannya} dapat diabaikan kecuali dekat dinding dan alirannya adalah aliran
+\omterm{def:b2:euler-bernoulli:perfect}{fluida sempurna} --- sampai, di atas ambang berorde $10^3$ (sekitar $2000$
+sampai $3000$ dalam pipa, berdasarkan diameternya), ia menjadi \emph{turbulen}:
+tak tunak, kalut, penuh olakan pada setiap skala. Di antara keduanya, sebuah
+aliran bersifat \emph{laminar}: tunak dan berlapis.
+\end{definition}
+
+\begin{example}[Bilangan Reynolds aliran sehari-hari]\label{ex:b2:viscous-flows:revalues}
+Sebuah bakteri (\qty{1}{\micro m}, \qty{30}{\micro m/s}, dalam air): $\mathrm{Re} =
+3 \times 10^{-5}$ --- ia hidup dalam dunia tanpa kelembaman, tempat menghentikan
+flagelanya menghentikannya dalam jarak sebutir atom. Darah dalam kapiler:
+$10^{-3}$; sebutir debu yang jatuh: $10^{-2}$; ikan mas: $10^3$; perenang:
+$10^6$; mobil pada \qty{30}{m/s} (\qty{4}{m}): $8 \times 10^6$; pesawat penumpang: $10^8$;
+Arus Teluk: $10^{11}$. Dua aliran dengan geometri yang sama dan
+\omterm{def:b2:viscous-flows:reynolds}{bilangan Reynolds} yang sama bersifat \emph{serupa}: itulah yang memungkinkan model kapal \qty{1}{m}
+diuji dalam kolam tarik, atau sebuah pesawat dalam terowongan angin.
+\end{example}
+
+\section{Aliran laminar: Couette, Poiseuille, Stokes}
+
+\begin{proposition}[Aliran Poiseuille dalam pipa]\label{prop:b2:viscous-flows:poiseuille}
+\index{aliran Poiseuille}\index{hambatan hidraulik}
+Dalam pipa tabung mendatar berjari-jari $R$ dan sepanjang $L$, yang
+digerakkan beda tekanan $\Delta P = P_1 - P_2$ antara kedua ujungnya, \omterm{def:b2:viscous-flows:reynolds}{aliran
+laminar} tunaknya adalah
+\[
+v(r) = \frac{\Delta P}{4\eta L}\,(R^2 - r^2) , \qquad
+D_V = \frac{\pi R^4}{8\eta L}\,\Delta P :
+\]
+yaitu profil parabolik yang maksimum pada sumbunya, dengan kelajuan rata-rata
+$\langle v\rangle = v_{\max}/2$. Debitnya sebanding dengan
+penurunan tekanannya (hukum Poiseuille) dengan \emph{\omterm{prop:b2:viscous-flows:poiseuille}{hambatan hidraulik}}
+$R_h = \Delta P/D_V = 8\eta L/\pi R^4$ --- dan dengan \emph{pangkat empat} dari
+jari-jarinya. \omterm{def:b2:viscous-flows:viscosity}{Tegangan geser} dindingnya adalah $\tau_w = \Delta P\,R/2L = 4\eta\langle v
+\rangle/R$. Sahih selama $\mathrm{Re} = 2R\langle v\rangle/\nu \lesssim 2000$.
+\end{proposition}
+
+\begin{proof}
+Tunak, $\vect v = v(r)\vect e_z$ (jadi suku konvektifnya lenyap: $\vect v
+\cdot\operatorname{\vect{grad}}$ bekerja sepanjang $z$, dan sepanjang itu tak ada yang
+berubah). Navier--Stokes sepanjang $z$: $0 = -\partial_zP + \eta\Delta v$, dan
+secara radial $\partial_rP = 0$: $P$ hanya bergantung pada $z$, $\Delta v$ hanya pada $r$, jadi
+kedua ruasnya sama dengan sebuah tetapan, $\partial_zP = -\Delta P/L$. Dalam koordinat
+tabung $\Delta v = \frac1r\frac{\dd}{\dd r}\bigl(r\frac{\dd v}{\dd r}\bigr)$
+(dinyatakan tanpa bukti; ia adalah neraca gaya kental pada cangkang tabung,
+$2\pi rL\,\eta v'$ di $r$ dan di $r + \dd r$). Mengintegralkan dua kali dengan $v$
+berhingga pada sumbunya dan $v(R) = 0$ memberi parabolanya; $D_V = \int_0^Rv\,2\pi
+r\,\dd r$. Tegangan dindingnya adalah $-\eta v'(R)$; setara dengan itu, gaya
+tekanan $\pi R^2\Delta P$ mengimbangi gesekan dindingnya $2\pi RL\tau_w$.
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}[font=\small, x=1cm, y=1cm, >=Stealth]
+  \begin{scope}
+    \draw[thick] (-2.8,1.0) -- (2.8,1.0) (-2.8,-1.0) -- (2.8,-1.0);
+    \fill[pattern=north east lines] (-2.8,1.0) rectangle (2.8,1.15); \fill[pattern=north east lines] (-2.8,-1.0) rectangle (2.8,-1.15);
+    \draw[omDef, thick, domain=-1:1, samples=40] plot ({-0.9+1.8*(1-\x*\x)},\x);
+    \foreach \y in {-0.8,-0.6,...,0.8} \draw[omDef, ->] (-0.9,\y) -- ({-0.9+1.8*(1-\y*\y)-0.05},\y);
+    \draw[dashed] (-0.9,-1) -- (-0.9,1);
+    \node[omDef, font=\footnotesize] at (1.6,0.3) {$v_{\max}$};
+    \node[font=\footnotesize] at (-2.3,0.0) {$P_1$}; \node[font=\footnotesize] at (2.4,0.0) {$P_2$};
+    \node[font=\footnotesize] at (0,-1.5) {$v(r) = \dfrac{\Delta P}{4\eta L}(R^2 - r^2)$};
+  \end{scope}
+  \begin{scope}[xshift=7.6cm]
+    \draw[thick] (-2.2,0) -- (2.2,0) (-2.2,0.5) -- (2.2,0.5) (-2.2,-0.5) -- (2.2,-0.5);
+    \draw[thick] (-2.2,-0.5) -- (-2.2,0.5) (2.2,-0.5) -- (2.2,0.5);
+    \fill[omDef!15] (-2.2,0) rectangle (2.2,0.5);
+    \draw[omThm, very thick, ->] (-3.2,0.25) -- (-2.25,0.25) node[pos=0.2, above, font=\footnotesize] {$P_1$};
+    \draw[omThm, very thick, ->] (3.2,0.25) -- (2.25,0.25) node[pos=0.2, above, font=\footnotesize] {$P_2$};
+    \draw[omProp, very thick, ->] (0.8,0.5) -- (-0.4,0.5) node[above, font=\footnotesize, pos=0.9] {$\tau(r+\dd r)$};
+    \draw[omProp, very thick, ->] (-0.4,0.0) -- (0.8,0.0) node[below, font=\footnotesize, pos=0.9] {$\tau(r)$};
+    \node[font=\footnotesize] at (0,-1.3) {cangkang $[r, r + \dd r]$: tekanan $=$ seretan kental};
+  \end{scope}
+\end{tikzpicture}
+
+{\small Kiri: \omterm{prop:b2:viscous-flows:poiseuille}{aliran Poiseuille} --- profil parabolik dalam sebuah pipa,
+yang digerakkan penurunan tekanan $P_1 - P_2$. Kanan: neraca gaya pada
+cangkang tabung fluida: beda tekanan pada kedua ujungnya diimbangi
+tegangan kental pada permukaan dalam dan luarnya.}
+\end{omfigure}
+
+\begin{example}[Pangkat empat]\label{ex:b2:viscous-flows:fourth}
+Jarum suntik berdiameter dalam \qty{0.4}{mm} dan sepanjang \qty{3}{cm},
+berisi air, dengan tekanan ibu jari \qty{20}{kPa}: $D_V = \pi(2 \times 10^{-4})^4 \times 2 \times
+10^4/(8 \times 10^{-3} \times 0.03) = \qty{0.42}{mL/s}$; jarum dua kali lebih lebar
+memberi enam belas kali lipat. Arteri yang menyempit oleh plak menjadi $70\%$
+jari-jarinya menawarkan hambatan $(1/0.7)^4 = 4.2$ kali lipat: tubuhnya mengimbangi
+dengan menaikkan tekanan di hulunya, dan itu sebagian dari sebab
+aterosklerosis dan hipertensi berjalan bersama.
+\end{example}
+
+\begin{proposition}[Seretan Stokes]\label{prop:b2:viscous-flows:stokes}
+\index{hukum Stokes}\index{laju terminal}\index{pengendapan}
+Sebuah bola berjari-jari $R$ yang bergerak dengan kelajuan $v$ menembus fluida pada
+$\mathrm{Re} = 2\rho vR/\eta \ll 1$ merasakan seretan
+\[
+F = 6\pi\eta Rv ,
+\]
+yang berlawanan arah dengan kecepatannya. Bola bermassa jenis $\rho_s$ yang jatuh dalam fluida
+bermassa jenis $\rho$ mencapai \emph{\omterm{prop:b2:viscous-flows:stokes}{laju terminal}} $v_\infty =
+\dfrac{2R^2(\rho_s - \rho)g}{9\eta}$ --- hukum pengendapan,
+mesin pemusing, dan tetesan minyak Millikan.
+\end{proposition}
+
+\begin{proof}
+Seretannya diterima tanpa bukti (ia penyelesaian eksak persamaan aliran
+merayap di sekeliling sebuah bola, dua pertiganya gesekan kental, sepertiganya
+tekanan). \omterm{prop:b2:viscous-flows:stokes}{Laju terminalnya}: berat dikurangi gaya apung, $\tfrac43\pi R^3(\rho_s -
+\rho)g$, sama dengan seretannya; periksalah selalu $\mathrm{Re} \ll 1$ sesudahnya.
+\end{proof}
+
+\begin{example}[Kabut, hujan dan debu]\label{ex:b2:viscous-flows:fog}
+Sebutir kabut berdiameter \qty{10}{\micro m} di udara jatuh dengan $2 \times (5 \times
+10^{-6})^2 \times 10^4/(9 \times 1.8 \times 10^{-5}) = \qty{3}{mm/s}$ ($\mathrm{Re} = 2 \times
+10^{-3}$): embusan naik yang paling lemah pun menahannya tetap melayang, itulah sebabnya awan
+mengapung. Butir hujan \qty{1}{mm} akan memberi \qty{30}{m/s} dan $\mathrm{Re} \approx 2000$:
+Stokes tak lagi berlaku, dan seretan kuadratik bagian berikutnya
+memberi \qty{4}{m/s} yang teramati. Sebutir debu \qty{10}{\micro m} ($\rho_s =
+\qty{2500}{kg/m^3}$) mengendap dengan \qty{8}{mm/s}, satu meter dalam dua menit ---
+debu yang lebih halus melayang berjam-jam.
+\end{example}
+
+\section{Bilangan Reynolds tinggi: lapisan batas dan seretan}
+
+\begin{proposition}[Lapisan batas]\label{prop:b2:viscous-flows:bl}
+\index{lapisan batas}
+Pada \omterm{def:b2:viscous-flows:reynolds}{bilangan Reynolds} tinggi aliran di sekeliling sebuah benda adalah
+aliran \omterm{def:b2:euler-bernoulli:perfect}{fluida sempurna} di mana-mana kecuali dalam \emph{\omterm{prop:b2:viscous-flows:bl}{lapisan batas}} tipis
+sepanjang dindingnya, yang di dalamnya kecepatannya turun dari nilai luarnya $U$ ke nol (tanpa selip).
+Sepanjang pelat datar tebalnya tumbuh sebagai
+\[
+\delta(x) \sim \sqrt{\frac{\nu x}{U}} = \frac{x}{\sqrt{\mathrm{Re}_x}} ,
+\qquad \mathrm{Re}_x = \frac{Ux}{\nu} ,
+\]
+dengan $x$ jarak dari tepi depannya; lapisannya sendiri menjadi
+turbulen di atas $\mathrm{Re}_x \sim 5 \times 10^5$. Gesekan kental pada
+dindingnya, dan \emph{pemisahan} lapisannya di belakang benda tumpul (yang
+meninggalkan olakan turbulen bertekanan rendah), adalah dua sumber seretan.
+\end{proposition}
+
+\begin{proof}
+Orde besarnya: sebuah \omterm{def:b2:fluid-kinematics:particle}{partikel fluida} menghabiskan waktu $x/U$ untuk menyusuri
+pelatnya, dan selama itu pengaruh dindingnya berdifusi ke dalam
+fluidanya --- suku kental $\nu\,\partial^2v/\partial y^2$ adalah difusi
+momentum berdifusivitas $\nu$, yang mencapai jarak $\sqrt{\nu t}$ dalam
+waktu $t$ (\cref{ch:b2:particle-diffusion}). Jadi $\delta \sim \sqrt{\nu x
+/U}$. Teori lengkapnya (Prandtl) diterima tanpa bukti.
+\end{proof}
+
+\begin{proposition}[Seretan pada bilangan Reynolds tinggi]\label{prop:b2:viscous-flows:drag}
+\index{koefisien hambat}\index{krisis hambatan}
+Seretan pada benda berluas muka $S$ yang bergerak dengan $v$ menembus sebuah fluida
+dituliskan
+\[
+F = \tfrac12\rho v^2\,S\,C_x ,
+\]
+dengan \emph{\omterm{prop:b2:viscous-flows:drag}{koefisien hambat}} $C_x$ yang bergantung pada bentuknya dan pada
+$\mathrm{Re}$. Untuk bola, $C_x = 24/\mathrm{Re}$ pada $\mathrm{Re} \ll 1$ (Stokes,
+dengan $\mathrm{Re}$ berdasarkan diameternya), lalu sekitar $0.4$--$0.5$, hampir
+tetap, dari $\mathrm{Re} \approx 10^3$ sampai $2 \times 10^5$, tempat ia turun
+mendadak menjadi sekitar $0.1$ (\emph{\omterm{prop:b2:viscous-flows:drag}{krisis hambatan}}: lapisan batasnya menjadi
+turbulen, melekat lebih lama pada permukaannya dan olakannya menyusut ---
+lekukan pada bola golf memicunya lebih awal). Benda bergaris ramping mempunyai
+$C_x \approx 0.05$; mobil $0.3$; pengendara sepeda $0.9$; pelat datar yang menghadap alirannya
+$1.2$. Daya yang diperlukan untuk bergerak dengan $v$ adalah $Fv \propto v^3$.
+\end{proposition}
+\admitted
+
+\begin{omfigure}
+\begin{tikzpicture}
+\begin{axis}[omaxis, axis x line=bottom, axis y line=left, width=8.0cm, height=5.0cm,
+    xmode=log, ymode=log, xmin=0.1, xmax=1e7, ymin=0.05, ymax=300,
+    xlabel={$\mathrm{Re} = \rho v\,2R/\eta$}, ylabel={$C_x$},
+    xlabel style={at={(axis description cs:0.5,-0.12)}, anchor=north},
+    ylabel style={at={(axis description cs:-0.12,0.5)}, rotate=90, anchor=south},
+    xtick={0.1,10,1000,1e5,1e7}, ytick={0.1,1,10,100}, samples=100]
+  \addplot[omThm, thick, domain=0.1:2] {24/x};
+  \addplot[omThm, thick, domain=2:1000] {24/x*(1+0.15*x^0.687)};
+  \addplot[omThm, thick, domain=1000:2e5] {0.44};
+  \addplot[omThm, thick] coordinates {(2e5,0.44) (3.5e5,0.1)};
+  \addplot[omThm, thick, domain=3.5e5:1e7] {0.1+0.1*ln(x/3.5e5)/ln(30)};
+  \addplot[omDef, dashed, thick, domain=0.1:100] {24/x};
+  \node[font=\scriptsize, omDef, anchor=west] at (axis cs:6,40) {$24/\mathrm{Re}$ (Stokes)};
+  \node[font=\scriptsize] at (axis cs:1.5e4,0.9) {dataran $\approx 0.45$};
+  \node[font=\scriptsize] at (axis cs:1e6,0.06) {krisis hambatan};
+\end{axis}
+\end{tikzpicture}
+\hfill
+\begin{tikzpicture}[font=\small, x=1cm, y=1cm, >=Stealth]
+  \draw[thick] (0,0) -- (5.0,0); \fill[pattern=north east lines] (0,-0.15) rectangle (5.0,0);
+  \draw[omDef, thick, domain=0.05:5.0, samples=40] plot (\x,{0.55*sqrt(\x)});
+  \foreach \x in {0.8,2.0,3.6} {
+    \foreach \y in {0.1,0.2,...,1.4} {
+      \pgfmathsetmacro{\d}{0.55*sqrt(\x)}
+      \pgfmathsetmacro{\u}{min(1,\y/\d)}
+      \draw[omThm, ->] (\x,\y) -- ({\x+0.9*\u*(2-(\u)*(1))*0.5+0.0},\y);
+    }
+  }
+  \draw[omThm, very thick, ->] (-0.9,1.6) -- (-0.1,1.6) node[above, font=\footnotesize, pos=0.3] {$U$};
+  \node[omDef, font=\footnotesize] at (4.2,1.55) {$\delta(x) \sim \sqrt{\nu x/U}$};
+  \node[font=\footnotesize] at (2.5,-0.5) {lapisan batas pada pelat datar};
+\end{tikzpicture}
+
+{\small Kiri: \omterm{prop:b2:viscous-flows:drag}{koefisien hambat} sebuah bola terhadap \omterm{def:b2:viscous-flows:reynolds}{bilangan
+Reynolds} (skala logaritmik): \omterm{prop:b2:viscous-flows:stokes}{hukum Stokes} pada $\mathrm{Re}$ rendah, dataran dekat
+$0.45$, dan \omterm{prop:b2:viscous-flows:drag}{krisis hambatan} dekat $\mathrm{Re} = 2 \times 10^5$. Kanan:
+\omterm{prop:b2:viscous-flows:bl}{lapisan batas} yang menebal sepanjang pelat datar; di luarnya alirannya
+adalah aliran \omterm{def:b2:euler-bernoulli:perfect}{fluida sempurna}.}
+\end{omfigure}
+
+\begin{example}[Pengendara sepeda, sebuah mobil]\label{ex:b2:viscous-flows:cyclist}
+Seorang pengendara sepeda ($SC_x = \qty{0.35}{m^2}$) pada \qty{10}{m/s}: $F = 0.5 \times 1.2 \times 100
+\times 0.35 = \qty{21}{N}$, $P = \qty{210}{W}$ --- upaya yang berkelanjutan; pada \qty{15}{m/s}
+(\qty{54}{km/h}) ia akan menuntut \qty{710}{W}, itulah sebabnya pelari cepat berlindung di belakang.
+Sebuah mobil ($SC_x = \qty{0.7}{m^2}$) pada \qty{130}{km/h}: \qty{550}{N}, \qty{20}{kW} melawan
+udara saja --- konsumsi bahan bakar pada kelajuan jalan tol sebagian besar berupa seretan.
+\end{example}
+
+\begin{remark}[Tegangan permukaan]\label{rem:b2:viscous-flows:capillarity}
+\index{tegangan permukaan}\index{tekanan Laplace}\index{panjang kapiler}
+Gaya kedua bersemayam di batas sebuah zat cair: permukaan bebasnya
+berperilaku seperti selaput teregang bertegangan $\gamma$ (\unit{N/m}; air
+\qty{0.072}{N/m}), sebab molekul permukaannya kehilangan separuh tetangganya.
+Tekanan di dalam tetesan berjari-jari $R$ melampaui tekanan luarnya sebesar
+\emph{\omterm{rem:b2:viscous-flows:capillarity}{tekanan Laplace}} $2\gamma/R$ (\qty{1.4}{kPa} dalam tetesan \qty{0.1}{mm},
+\qty{14}{bar} dalam tetesan \qty{10}{nm}); \omterm{rem:b2:viscous-flows:capillarity}{tegangan permukaan} mengalahkan gravitasi di bawah
+\emph{\omterm{rem:b2:viscous-flows:capillarity}{panjang kapiler}} $\sqrt{\gamma/\rho g} = \qty{2.7}{mm}$ bagi air ---
+yaitu ukuran tetes embun, meniskus dalam gelas, dan kenaikan dalam
+pipa kapiler ($h = 2\gamma/\rho gr$, Jurin). Itulah sebabnya serangga kecil berjalan
+di atas air, mengapa bulu kuas melekat satu sama lain ketika basah, dan mengapa
+pancaran zat cair pecah menjadi tetesan.
+\end{remark}
+
+\begin{method}[Rezim yang mana?]\label{met:b2:viscous-flows:regime}
+Sebelum perhitungan aliran kental mana pun, hitunglah $\mathrm{Re}$. $\mathrm{Re} \ll 1$:
+Stokes dan aliran merayap, seretan $\propto v$, penurunan tekanan $\propto$
+debit. $\mathrm{Re}$ sampai $\sim\!2000$ dalam pipa: laminar, Poiseuille. Di atasnya:
+turbulen --- Poiseuille meremehkan ruginya secara parah; pakailah
+hukum empiris $\Delta P = \lambda(L/D)\,\tfrac12\rho\langle v\rangle^2$ dengan $\lambda
+\approx 0.3/\mathrm{Re}^{1/4}$ bagi pipa licin, dan $F = \tfrac12\rho v^2SC_x$ bagi
+benda. Dalam setiap hal, periksalah sesudahnya bahwa $\mathrm{Re}$ yang dihitung
+dari jawabannya selaras dengan rezim yang diandaikan.
+\end{method}
+
+\section{Latihan}
+
+\begin{exercise}[$\star$]\label{exo:b2:viscous-flows:1}
+Sebuah pelat \qty{0.50}{m^2} meluncur dengan \qty{2.0}{m/s} di atas selaput minyak \qty{0.20}{mm}
+($\eta = \qty{0.25}{Pa.s}$). Tentukanlah \omterm{def:b2:viscous-flows:viscosity}{tegangan geser}, gaya pada pelatnya, daya
+yang dilesapkan; bandingkanlah dengan gesekan kering ($f = 0.3$) jika pelatnya berbobot
+\qty{10}{kg}.
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b2:viscous-flows:2}
+Tentukanlah \omterm{def:b2:viscous-flows:reynolds}{bilangan Reynolds}: (a) bakteri \qty{2}{\micro m} pada \qty{30}{\micro m/s} dalam
+air; (b) perenang (\qty{1.8}{m}, \qty{1.5}{m/s}); (c) mobil (\qty{4}{m},
+\qty{30}{m/s}) di udara; (d) darah dalam aorta (\qty{2.5}{cm}, \qty{0.33}{m/s},
+$\nu = \qty{3.3e-6}{m^2/s}$); (e) minyak ($\eta = \qty{0.1}{Pa.s}$, $\rho =
+\qty{900}{kg/m^3}$) pada \qty{0.5}{m/s} dalam pipa \qty{1}{cm}. Rezim masing-masingnya.
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b2:viscous-flows:3}
+Air didorong menembus jarum \qty{0.40}{mm} (diameter dalam) sepanjang \qty{3.0}{cm}
+oleh \qty{20}{kPa}. Tentukanlah debitnya; waktu untuk menyuntikkan \qty{5}{mL}; kelajuan maksimum
+dan \omterm{def:b2:viscous-flows:reynolds}{bilangan Reynolds}; \omterm{def:b2:viscous-flows:viscosity}{tegangan geser} dindingnya. Bagaimana dengan jarum \qty{0.80}{mm}?
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b2:viscous-flows:4}
+\omterm{prop:b2:viscous-flows:stokes}{Laju terminal} di udara ($\eta = \qty{1.8e-5}{Pa.s}$) bagi (a) butir serbuk sari \qty{20}{\micro m}
+($\rho_s = \qty{1100}{kg/m^3}$), (b) partikel asap \qty{2}{\micro m}
+($\rho_s = \qty{2000}{kg/m^3}$), (c) tetes gerimis \qty{0.2}{mm}.
+Periksalah $\mathrm{Re}$ dalam tiap hal; waktu untuk jatuh \qty{1}{m}.
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b2:viscous-flows:5}
+Sebuah pipa induk air berdiameter \qty{30}{cm} mengalirkan \qty{0.10}{m^3/s} sepanjang
+\qty{1.0}{km}. (a) Kelajuan rata-rata dan \omterm{def:b2:viscous-flows:reynolds}{bilangan Reynolds}. (b) Penurunan tekanan seandainya
+hukum Poiseuille berlaku. (c) Penurunan sesungguhnya dengan $\lambda = 0.3/\mathrm{Re}^{1/4}$;
+nisbahnya terhadap (b); daya pemompaannya. (d) Aliran yang sama dalam dua pipa induk
+\qty{21}{cm} sejajar (penampang total sama): penurunan dan dayanya.
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b2:viscous-flows:6}
+Sel berdiameter \qty{10}{\micro m} bermassa jenis \qty{1050}{kg/m^3} dalam air.
+(a) Kelajuan pengendapan di bawah gravitasi; waktu untuk mengendap \qty{5}{cm}. (b) Dalam
+mesin pemusing pada $1000\,g$. (c) Laju putar minimum bagi $1000\,g$ pada
+jari-jari \qty{10}{cm}. (d) Mengapa partikel terbesarnya dapat dipisahkan lebih dulu?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b2:viscous-flows:7}
+Seorang pengendara sepeda ($SC_x = \qty{0.35}{m^2}$, hambatan gelinding \qty{4}{N}) melaju
+\qty{12}{m/s}. (a) Seretan dan daya totalnya. (b) Pada \qty{15}{m/s}. (c) Melawan
+angin muka \qty{5}{m/s} pada kelajuan tanah \qty{12}{m/s}. (d) Berlindung di belakang mengurangi
+$C_x$ sebesar $30\%$: daya yang terhemat. (e) Menuruni lereng $5\%$ tanpa mengayuh
+(massa \qty{80}{kg}): \omterm{prop:b2:viscous-flows:stokes}{laju terminalnya}.
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b2:viscous-flows:8}
+Seretan kuadratik. (a) \omterm{prop:b2:viscous-flows:stokes}{Laju terminal} bola golf (\qty{46}{g}, \qty{43}{mm},
+$C_x = 0.25$) dan seorang penerjun payung (\qty{80}{kg}, $SC_x = \qty{0.7}{m^2}$, lalu
+$\qty{25}{m^2}$ dengan payungnya terbuka). (b) Persamaan gerak bagi jatuh
+dari keadaan diam dengan seretan kuadratik; tunjukkanlah $v = v_\infty\tanh(gt/v_\infty)$. (c)
+Waktu dan jarak bagi penerjunnya untuk mencapai $90\%$ dari $v_\infty$.
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b2:viscous-flows:9}
+\emph{Viskometer Couette.} Sebuah tabung berjari-jari \qty{5.0}{cm} dan setinggi
+\qty{10}{cm} berputar dengan \qty{10}{rad/s} di dalam tabung tetap, dengan celah
+\qty{1.0}{mm} yang terisi zat cair yang hendak diuji; momen gaya yang diperlukan
+\qty{2.0e-2}{N.m}. (a) Dengan memperlakukan celahnya sebagai aliran Couette bidang, tentukanlah laju geser
+dan \omterm{def:b2:viscous-flows:viscosity}{tegangan gesernya}. (b) \omterm{def:b2:viscous-flows:viscosity}{Kekentalannya}. (c) \omterm{def:b2:viscous-flows:reynolds}{Bilangan Reynolds} aliran celahnya;
+laminarkah alirannya? (d) Mengapa celahnya dibuat tipis?
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b2:viscous-flows:10}
+\emph{Sebuah jaringan pembuluh.} Darah ($\eta = \qty{3.5}{mPa.s}$) mengalir dengan
+\qty{5.0}{L/min}. (a) \omterm{prop:b2:viscous-flows:poiseuille}{Hambatan hidraulik} aorta (jari-jari \qty{1.25}{cm},
+panjang \qty{40}{cm}) dan penurunan tekanan sepanjangnya. (b) Sebanyak $10^{10}$
+pembuluh kapilernya (jari-jari \qty{4}{\micro m}, panjang \qty{1}{mm}) tersusun sejajar:
+hambatan satu kapiler, hambatan semuanya, dan penurunan tekanan menyeberangi hamparan
+kapilernya. (c) Arteriolnya ($10^8$, jari-jari \qty{10}{\micro m}, panjang
+\qty{2}{mm}): pertanyaan yang sama; di manakah hambatan peredarannya?
+(d) Penurunan totalnya \qty{13}{kPa}: daya bilik kiri jantungnya,
+dan berapa bagian dari \qty{100}{W} tubuhnya. (e) Sebuah obat melebarkan
+arteriolnya sebesar $10\%$: pengaruhnya pada hambatan totalnya.
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b2:viscous-flows:11}
+\emph{\omterm{prop:b2:viscous-flows:bl}{Lapisan batas} dan seretan gesekan.} Sebuah pelat datar sepanjang $L$ dan
+selebar $b$ bergerak menyisi dengan $U$. Dalam rezim laminar \omterm{def:b2:viscous-flows:viscosity}{tegangan geser}
+dindingnya adalah $\tau_w = 0.332\,\rho U^2/\sqrt{\mathrm{Re}_x}$ (Blasius). (a) Tunjukkanlah bahwa
+\omterm{def:b2:rigid-body-mechanics:contact}{gaya gesek} pada satu mukanya adalah $F = 0.664\,\rho U^2bL/\sqrt{\mathrm{Re}_L}$.
+(b) Tebal \omterm{prop:b2:viscous-flows:bl}{lapisan batas} di tepi belakang pelat \qty{1}{m}
+dalam air pada \qty{0.3}{m/s}, dan gaya pada pelat \qty{1}{m^2} (kedua
+mukanya). (c) Pada \qty{10}{m/s}: $\mathrm{Re}_L$, dan mengapa rumusnya tak lagi
+berlaku. (d) Lambung sebuah kapal (\qty{100}{m}, \qty{10}{m/s}): perkiraan tebal
+lapisan batasnya di buritan dengan mengandaikan hukum turbulen $\delta \approx
+0.37x/\mathrm{Re}_x^{1/5}$.
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b2:viscous-flows:12}
+\emph{Sebuah selaput yang meniris.} Selaput zat cair setebal $h$ mengalir menuruni
+dinding tegak di bawah gravitasi, secara tunak, dengan udara yang tak mengerahkan tegangan pada
+permukaan bebasnya. (a) Tuliskanlah Navier--Stokes bagi $\vect v = v(y)\vect e_z$ ($y$
+jarak dari dindingnya, $z$ ke bawah) beserta syarat batasnya.
+(b) Tunjukkanlah $v(y) = \dfrac{\rho g}{2\eta}(2hy - y^2)$ lalu hitunglah debit
+tiap satuan lebar $q = \rho gh^3/3\eta$. (c) Lapisan cat baru ($\eta =
+\qty{0.5}{Pa.s}$, $\rho = \qty{1200}{kg/m^3}$) setebal \qty{0.2}{mm}: kelajuan
+permukaan dan debitnya; sejauh mana permukaannya berpindah dalam \qty{10}{min}? Mengapa
+cat meleleh turun jika disapukan terlalu tebal? (d) Madu ($\eta = \qty{10}{Pa.s}$)
+setebal \qty{2}{mm} pada sendok tegak: kelajuan permukaannya.
+\end{exercise}
+
+\begin{omfigure}
+\includegraphics[width=0.34\linewidth]{images/book4/karman-vortex-street.jpg}
+
+{\small Deretan vorteks von Kármán di awan, di hilir sebuah pulau, terlihat dari antariksa: olakan sebuah tabung pada \omterm{def:b2:viscous-flows:reynolds}{bilangan Reynolds} beberapa ratus, tergambar pada skala seratus kilometer (NASA).}
+\end{omfigure}
+
+\section{Soal: Darah, minyak mentah dan hujan}
+
+\begin{problem}[{Soal akhir pekan --- hukum kental yang sama dalam sebuah arteri,
+dalam pipa saluran seribu kilometer, dan dalam tetesan yang jatuh}]
+\label{pb:b2:viscous-flows:1}
+
+\medskip
+\noindent\textbf{Bagian I --- Darah.}
+Darah: $\rho = \qty{1060}{kg/m^3}$, $\eta = \qty{3.5e-3}{Pa.s}$ (diperlakukan
+sebagai \omterm{def:b2:viscous-flows:viscosity}{fluida Newton}); curah jantung $D_V = \qty{5.0}{L/min}$.
+\begin{enumerate}
+  \item Aorta, jari-jari \qty{1.25}{cm}: kelajuan rata-rata, \omterm{def:b2:viscous-flows:reynolds}{bilangan Reynolds}, rezimnya.
+  \item Seandainya aliran dalam aortanya \omterm{prop:b2:viscous-flows:poiseuille}{aliran Poiseuille}, berapakah
+        kelajuan maksimum dan \omterm{def:b2:viscous-flows:viscosity}{tegangan geser} dindingnya? (Endoteliumnya
+        mengindra tegangan berorde \qty{1}{Pa}.)
+  \item Sebuah kapiler, jari-jari \qty{4.0}{\micro m}, mengalirkan darah dengan
+        \qty{0.30}{mm/s}: \omterm{def:b2:viscous-flows:reynolds}{bilangan Reynolds}; penurunan tekanan sepanjang
+        \qty{1.0}{mm} panjangnya, dalam pascal dan dalam milimeter raksa
+        (\qty{1}{mmHg} = \qty{133}{Pa}).
+  \item Waktu bagi sebutir sel darah merah untuk menyeberangi kapilernya; mengapa ini
+        orde yang tepat bagi pertukaran gas?
+  \item Arteriol (jari-jari \qty{10}{\micro m}, panjang \qty{2.0}{mm}, $10^8$
+        tersusun sejajar): hambatan himpunannya dan penurunan tekanan
+        menyeberanginya pada curah jantung penuh.
+  \item Penurunan total dari arteri ke vena adalah \qty{13}{kPa}: daya
+        mekanik yang diserahkan bilik kirinya. Bandingkanlah dengan
+        tubuh \qty{100}{W}.
+  \item Sebuah stenosis mengurangi jari-jari arteri koroner sebesar $40\%$
+        sepanjang penggal pendek: faktor kenaikan hambatannya; mengapa
+        otot jantung di hilirnya mungkin masih terpasok saat istirahat
+        tetapi tidak saat berupaya keras.
+  \item Selama upaya berat curah jantungnya mencapai \qty{25}{L/min}:
+        \omterm{def:b2:viscous-flows:reynolds}{bilangan Reynolds} dalam aortanya, dan rezimnya.
+  \item Darah bukan \omterm{def:b2:viscous-flows:viscosity}{fluida Newton}: \omterm{def:b2:viscous-flows:viscosity}{kekentalan} semunya turun pada laju
+        geser tinggi dan naik pada laju geser rendah. Pembuluh mana di
+        atas yang paling terpengaruh, dan ke arah mana?
+\end{enumerate}
+
+\medskip
+\noindent\textbf{Bagian II --- Pipa saluran.}
+Sebuah pipa saluran minyak mentah: diameter $D = \qty{1.2}{m}$, panjang $L = \qty{1300}{km}$,
+aliran $D_V = \qty{3.0}{m^3/s}$; minyaknya $\rho = \qty{850}{kg/m^3}$, $\eta =
+\qty{2.0e-2}{Pa.s}$ jika dijaga tetap hangat. Gesekan turbulen: $\Delta P = \lambda
+(L/D)\tfrac12\rho\langle v\rangle^2$, $\lambda = 0.316/\mathrm{Re}^{1/4}$.
+\begin{enumerate}[resume]
+  \item Kelajuan rata-rata dan \omterm{def:b2:viscous-flows:reynolds}{bilangan Reynolds}; rezimnya.
+  \item Penurunan tekanan tiap kilometer dan sepanjang seluruh salurannya.
+  \item Pipanya tahan \qty{80}{bar}: jumlah minimum stasiun pompa
+        sepanjang salurannya.
+  \item Daya pemompaan total; energi tiap meter kubik minyak yang
+        terkirim, dibandingkan dengan kandungan energi minyaknya
+        (\qty{36}{GJ/m^3}).
+  \item Penurunan berapa yang akan diramalkan hukum Poiseuille? Berilah
+        tanggapan atas ongkos turbulensinya (dan atas sebab beberapa
+        pipa saluran disuntik zat tambahan polimer yang menunda
+        turbulensi).
+  \item Pada musim dingin minyak yang tak dipanaskan akan mencapai
+        $\eta = \qty{2.0}{Pa.s}$: \omterm{def:b2:viscous-flows:reynolds}{bilangan Reynolds} dan rezim barunya;
+        penurunan tekanan sepanjang salurannya dengan hukum yang sesuai.
+        Kesimpulannya bagi rancangannya (saluran yang nyata diberi
+        penyekat dan minyaknya dijaga hangat).
+  \item Waktu singgah minyaknya dari satu ujung ke ujung yang lain.
+  \item \omterm{def:b2:viscous-flows:viscosity}{Tegangan geser} dinding dalam hal hangat dan turbulennya, dari
+        penurunan tekanannya; \omterm{def:b2:rigid-body-mechanics:contact}{gaya gesek} total pada dinding pipanya.
+  \item Aliran yang sama dalam pipa \qty{1.0}{m}: dengan faktor berapa
+        penurunan tekanan turbulennya berubah?
+  \item Sebutir pasir \qty{0.10}{mm} ($\rho_s = \qty{2650}{kg/m^3}$) terbawa
+        dalam minyak hangatnya: kelajuan pengendapan Stokes, \omterm{def:b2:viscous-flows:reynolds}{bilangan
+        Reynolds} butirnya, waktu untuk mengendap menyeberangi pipanya.
+        Bandingkanlah dengan fluktuasi kecepatan turbulennya, beberapa
+        persen dari $\langle v
+        \rangle$: mengendapkah pasirnya dalam pipa saluran yang
+        berjalan? Dalam pipa yang berhenti?
+\end{enumerate}
+
+\medskip
+\noindent\textbf{Bagian III --- Tetesan.}
+Udara: $\rho = \qty{1.2}{kg/m^3}$, $\eta = \qty{1.8e-5}{Pa.s}$; air $\rho_w =
+\qty{1000}{kg/m^3}$, $\gamma = \qty{0.072}{N/m}$.
+\begin{enumerate}[resume]
+  \item Butir awan berdiameter \qty{10}{\micro m}: \omterm{prop:b2:viscous-flows:stokes}{laju terminal} Stokes,
+        \omterm{def:b2:viscous-flows:reynolds}{bilangan Reynolds}, waktu untuk jatuh \qty{1}{km}; mengapa awannya tinggal.
+  \item Gerimis, \qty{0.20}{mm}: kelajuan Stokes dan \omterm{def:b2:viscous-flows:reynolds}{bilangan Reynolds};
+        masihkah Stokes dapat diandalkan?
+  \item Butir hujan, \qty{2.0}{mm}: tunjukkanlah bahwa Stokes gagal, lalu carilah \omterm{prop:b2:viscous-flows:stokes}{laju
+        terminalnya} dengan $C_x = 0.5$. Waktu untuk jatuh dari \qty{1}{km}.
+  \item Dalam embusan naik \qty{1}{cm/s}, naikkah butir awannya atau
+        turun? Embusan naik berapa yang akan menahan tetes gerimisnya?
+  \item \omterm{rem:b2:viscous-flows:capillarity}{Tekanan Laplace} di dalam ketiga tetesannya; bandingkanlah dengan
+        \omterm{thm:b2:euler-bernoulli:bernoulli}{tekanan dinamik} $\tfrac12\rho v_\infty^2$ bagi masing-masingnya, lalu jelaskanlah mengapa
+        butir hujan besar memipih dan pecah di atas sekitar \qty{5}{mm}.
+  \item Dalam satu tabel, berikanlah bagi kedelapan aliran soal ini
+        \omterm{def:b2:viscous-flows:reynolds}{bilangan Reynolds} dan hukum yang mengaturnya.
+\end{enumerate}
+\end{problem}

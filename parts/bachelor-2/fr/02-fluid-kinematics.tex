@@ -1,0 +1,625 @@
+\chapter{Cinématique des fluides}\label{ch:b2:fluid-kinematics}
+
+Placez-vous sur un pont et regardez la rivière. Une feuille passe,
+accélère entre les piles, ralentit dans la vasque en aval, fait un tour
+dans un tourbillon et repart. Vous pourriez décrire la rivière en
+suivant cette feuille --- sa position et sa vitesse à chaque instant ---
+ou en restant immobile et en relevant, en chaque point de la rivière, à
+quelle vitesse l'eau passe. La seconde description est celle du
+physicien des fluides~: un \emph{champ des vitesses}. Ce chapitre met en
+place les deux descriptions, apprend à calculer l'accélération d'une
+particule à partir du champ, écrit la conservation de la masse sous
+forme locale et classe les écoulements selon qu'ils tourbillonnent ou
+non --- le vocabulaire dont les équations d'Euler et de Navier auront besoin.
+
+\begin{omfigure}
+\includegraphics[width=0.58\linewidth]{images/book4/ai/b4-02-river-bridge-eddies.png}
+
+{\small Une rivière après un pont~: une eau rapide et lisse entre les piles, des tourbillons dans leur sillage --- un champ des vitesses à lire en des points fixes, et non une \omterm{def:b2:fluid-kinematics:euler}{trajectoire} unique à suivre.}
+\end{omfigure}
+
+
+\section{La description continue}
+
+\begin{definition}[Particule de fluide~; hypothèse du milieu continu]\label{def:b2:fluid-kinematics:particle}
+\index{particule de fluide}\index{hypothèse du milieu continu}\index{échelle mésoscopique}
+Une \emph{particule de fluide} est un volume de fluide assez petit pour être traité
+comme un point à l'échelle de l'écoulement, mais assez grand pour contenir un
+nombre immense de molécules, de sorte que sa masse volumique $\rho$, sa pression $P$,
+sa température $T$ et sa vitesse moyenne $\vect v$ soient des moyennes bien définies
+(l'échelle \emph{mésoscopique}, typiquement le micromètre). L'\emph{hypothèse
+du milieu continu} suppose qu'une telle échelle existe~: le libre parcours moyen $\ell$ des
+molécules doit être très petit devant l'échelle $L$ de l'écoulement,
+$\ell/L \ll 1$. Dans l'air à la pression atmosphérique $\ell \approx \qty{70}{nm}$~; dans
+un liquide $\ell$ est de la taille d'une molécule. Le fluide est alors décrit par des
+\emph{champs} $\rho(M, t)$, $P(M, t)$, $\vect v(M, t)$ définis en tout point.
+\end{definition}
+
+\begin{definition}[Descriptions de Lagrange et d'Euler]\label{def:b2:fluid-kinematics:euler}
+\index{description lagrangienne}\index{description eulérienne}\index{ligne de courant}\index{trajectoire}\index{écoulement stationnaire}
+La description \emph{lagrangienne} suit chaque \omterm{def:b2:fluid-kinematics:particle}{particule de fluide}~: sa
+position $\vect r(t)$ et sa vitesse $\dd\vect r/\dd t$ en fonction du temps
+et de sa position initiale. La description \emph{eulérienne} donne, en
+chaque point fixe $M$ et à chaque instant $t$, la vitesse $\vect v(M, t)$ de la
+particule qui passe en $M$ à cet instant. Une \emph{trajectoire}
+est le chemin suivi par une particule~; une \emph{ligne de courant} à l'instant $t$ est une
+courbe tangente en chacun de ses points à $\vect v(M, t)$~; un \emph{tube de courant} est
+la surface formée des lignes de courant s'appuyant sur une courbe fermée. Un écoulement est
+\emph{stationnaire} (ou permanent) lorsque les champs eulériens ne dépendent pas du
+temps, $\partial\vect v/\partial t = \vect 0$~; lignes de courant et trajectoires
+coïncident alors et sont fixes.
+\end{definition}
+
+\begin{example}[Deux descriptions d'un même écoulement]\label{ex:b2:fluid-kinematics:hose}
+L'eau d'un tuyau d'arrosage de section $S$ au débit $Q$ va à $v = Q/S$
+partout~: le champ eulérien est uniforme et le mouvement lagrangien de
+chaque particule est uniforme. Dans la lance qui se rétrécit le champ eulérien est
+encore stationnaire mais $v$ croît le long de l'axe~: chaque particule
+\emph{accélère} en la traversant, alors que rien ne change au cours du temps en un
+point fixe. C'est la première chose que la \omterm{def:b2:fluid-kinematics:euler}{description
+eulérienne} doit apprendre à exprimer.
+\end{example}
+
+\begin{omfigure}
+\begin{tikzpicture}[font=\small, x=1cm, y=1cm, >=Stealth]
+  \begin{scope}
+    % streamlines of a converging channel
+    \foreach \y in {-1.2,-0.6,0,0.6} {
+      \draw[omDef, thick, postaction={decorate, decoration={markings, mark=at position 0.55 with {\arrow{>}}}}]
+        (-2.8,\y) .. controls (-0.8,\y) and (0.2,{0.45*\y}) .. (2.8,{0.45*\y});
+    }
+    \draw[omDef, thick, postaction={decorate, decoration={markings, mark=at position 0.55 with {\arrow{>}}}}]
+        (-2.8,1.2) .. controls (-0.8,1.2) and (0.2,0.54) .. (2.8,0.54)
+        coordinate[pos=0.15] (P1) coordinate[pos=0.6] (P2) coordinate[pos=0.9] (P3);
+    \draw[thick] (-2.8,1.6) .. controls (-0.8,1.6) and (0.2,0.75) .. (2.8,0.75);
+    \draw[thick] (-2.8,-1.6) .. controls (-0.8,-1.6) and (0.2,-0.75) .. (2.8,-0.75);
+    \fill[omThm] (P1) circle (2pt) node[above, font=\footnotesize, yshift=1pt] {$t_1$};
+    \fill[omThm] (P2) circle (2pt) node[above, font=\footnotesize, yshift=1pt] {$t_2$};
+    \fill[omThm] (P3) circle (2pt) node[above, font=\footnotesize, yshift=1pt] {$t_3$};
+    \node[font=\footnotesize, align=center] at (0,-2.15) {écoulement stationnaire~: lignes de courant $=$ trajectoires,\\une particule accélère là où le tube se resserre};
+  \end{scope}
+  \begin{scope}[xshift=7.4cm]
+    \draw[thick,->] (-2.8,-1.2) -- (2.8,-1.2) node[right, font=\footnotesize] {$x$};
+    \draw[thick,->] (-2.8,-1.2) -- (-2.8,1.6);
+    % velocity vectors at fixed points (Eulerian)
+    \foreach \x in {-2.2,-1.2,-0.2,0.8,1.8} \foreach \y in {-0.6,0.2,1.0} {
+      \draw[omDef, ->] (\x,\y) -- ({\x+0.5+0.12*\x},{\y+0.15*\y});
+    }
+    \node[omDef, font=\footnotesize] at (0,1.75) {eulérienne~: $\vect v(M,t)$ en des points fixes};
+    \draw[omThm, thick, ->] (-2.5,-0.9) .. controls (-1,-0.3) and (0.5,0.9) .. (2.4,1.3);
+    \node[omThm, font=\footnotesize] at (2.2,0.7) {trajectoire};
+    \node[font=\footnotesize, align=center] at (0,-1.95) {lagrangienne~: on suit une particule};
+  \end{scope}
+\end{tikzpicture}
+
+{\small À gauche~: un écoulement convergent stationnaire --- les \omterm{def:b2:fluid-kinematics:euler}{lignes de courant} sont fixes,
+une particule marquée suit l'une d'elles et accélère à mesure que le tube
+se resserre. À droite~: la \omterm{def:b2:fluid-kinematics:euler}{description eulérienne} enregistre le vecteur vitesse
+en des points fixes~; la \omterm{def:b2:fluid-kinematics:euler}{description lagrangienne} suit une particule le long de sa
+\omterm{def:b2:fluid-kinematics:euler}{trajectoire}.}
+\end{omfigure}
+
+\section{La dérivée particulaire}
+
+\begin{theorem}[Dérivée particulaire]\label{thm:b2:fluid-kinematics:material}
+\index{dérivée particulaire}\index{accélération convective}
+Le taux de variation d'une grandeur $G(M, t)$ (scalaire ou vectorielle) \emph{pour
+la \omterm{def:b2:fluid-kinematics:particle}{particule de fluide}} qui passe en $M$ à l'instant $t$ vaut
+\[
+\frac{\mathrm DG}{\mathrm Dt} = \frac{\partial G}{\partial t} + (\vect v\cdot
+\operatorname{\vect{grad}})\,G ,
+\qquad\text{en particulier}\qquad
+\vect a = \frac{\mathrm D\vect v}{\mathrm Dt} = \frac{\partial\vect v}{\partial t} +
+(\vect v\cdot\operatorname{\vect{grad}})\,\vect v ,
+\]
+où $(\vect v\cdot\operatorname{\vect{grad}}) = v_x\partial_x + v_y\partial_y +
+v_z\partial_z$. Le premier terme est le taux de variation \emph{local} (en un
+point fixe), le second le terme \emph{convectif} (parce que la particule
+se déplace là où $G$ est différent). Pour la vitesse, $(\vect v\cdot
+\operatorname{\vect{grad}})\vect v = \operatorname{\vect{grad}}(v^2/2) +
+(\operatorname{\vect{curl}}\vect v)\wedge\vect v$.
+\end{theorem}
+
+\begin{proof}
+Pendant $\dd t$ la particule va de $M$ à $M + \vect v\,\dd t$, donc $\dd G =
+G(M + \vect v\dd t, t + \dd t) - G(M, t) = \partial_tG\,\dd t + \dd t\,(v_x\partial_x
++ v_y\partial_y + v_z\partial_z)G$ au premier ordre (dérivation d'une fonction
+de quatre variables). L'identité vectorielle se vérifie sur la
+composante $x$~: $[\operatorname{\vect{grad}}(v^2/2)]_x = v_x\partial_xv_x + v_y\partial_x
+v_y + v_z\partial_xv_z$ et $[(\operatorname{\vect{curl}}\vect v)\wedge\vect v]_x =
+v_y(\partial_yv_x - \partial_xv_y) + v_z(\partial_zv_x - \partial_xv_z)$ (avec les
+composantes de $\operatorname{\vect{curl}}\vect v$ données plus bas au
+\cref{def:b2:fluid-kinematics:vorticity})~; leur somme vaut $v_x\partial_xv_x +
+v_y\partial_yv_x + v_z\partial_zv_x$.
+\end{proof}
+
+\begin{example}[Accélération dans une tuyère stationnaire]\label{ex:b2:fluid-kinematics:nozzle}
+Un écoulement unidimensionnel stationnaire $v(x) = v_0(1 + x/L)$ le long d'une tuyère~: le
+terme local est nul, et $a = v\,\dd v/\dd x = v_0^2(1 + x/L)/L$. Une
+particule qui entre à $v_0 = \qty{2}{m/s}$ et sort à $2v_0$ sur $L
+= \qty{5}{cm}$ subit $a = 80$ à \qty{160}{m/s^2}~: huit à seize $g$, dans un
+écoulement où rien ne dépend du temps.
+\end{example}
+
+\begin{example}[Local et convectif]\label{ex:b2:fluid-kinematics:weather}
+La température d'une station météorologique baisse pendant la nuit ($\partial T/
+\partial t < 0$~: terme local), et baisse pour une parcelle d'air emportée vers le nord par
+le vent ($\vect v\cdot\operatorname{\vect{grad}}T < 0$~: terme convectif, ou
+\emph{advectif}). Un thermomètre porté par un ballon qui dérive avec le vent
+enregistre la somme, $\mathrm DT/\mathrm Dt$~; la station météorologique n'enregistre que
+le premier terme.
+\end{example}
+
+\section{Conservation de la masse}
+
+\begin{definition}[Débit massique et débit volumique]\label{def:b2:fluid-kinematics:flowrate}
+\index{débit massique}\index{débit volumique}\index{flux de masse}
+Le \emph{débit massique} à travers une surface orientée $S$ est la masse
+qui la traverse par unité de temps, $D_m = \sum\rho\,\vect v\cdot\vect n\,\dd S$ ---
+le flux du \emph{vecteur densité de courant de masse} $\vect j = \rho\vect v$ (unité
+\unit{kg.m^{-2}.s^{-1}})~; le \emph{débit volumique} vaut $D_V = \sum\vect v
+\cdot\vect n\,\dd S$ (\unit{m^3/s}). Pour une vitesse uniforme normale à une section
+plane d'aire $S$, $D_m = \rho vS$ et $D_V = vS$.
+\end{definition}
+
+\begin{proof}
+Pendant $\dd t$ le fluide qui traverse l'élément $\dd S$ est celui que contient
+le cylindre oblique de base $\dd S$ et de génératrice $\vect v\,\dd t$, de
+volume $\vect v\cdot\vect n\,\dd S\,\dd t$ et de masse $\rho$ fois ce volume.
+\end{proof}
+
+\begin{theorem}[Conservation locale de la masse]\label{thm:b2:fluid-kinematics:continuity}
+\index{équation de continuité}\index{divergence}
+En tout point d'un fluide,
+\[
+\frac{\partial\rho}{\partial t} + \operatorname{div}(\rho\vect v) = 0 ,
+\qquad\text{où}\qquad
+\operatorname{div}\vect A = \frac{\partial A_x}{\partial x} + \frac{\partial A_y}{\partial y} +
+\frac{\partial A_z}{\partial z}
+\]
+est la \emph{divergence} d'un champ de vecteurs~: le flux sortant net de
+$\vect A$ à travers la surface d'un petit volume, par unité de volume.
+De façon équivalente $\mathrm D\rho/\mathrm Dt + \rho\operatorname{div}\vect v = 0$.
+\end{theorem}
+
+\begin{proof}
+Prenons la boîte fixe $[x, x + \dd x]\times[y, y + \dd y]\times[z, z + \dd z]$.
+Sa masse $\rho\,\dd x\dd y\dd z$ varie au taux $\partial_t\rho\,\dd x\dd y
+\dd z$. De la masse entre par la face en $x$ au taux $j_x(x)\dd y\dd z$
+et sort par la face en $x + \dd x$ au taux $j_x(x + \dd x)\dd y\dd z$~:
+sortie nette $\partial_xj_x\,\dd x\dd y\dd z$, et de même selon $y$ et $z$.
+La conservation de la masse --- rien n'est créé --- donne $\partial_t\rho = -
+(\partial_xj_x + \partial_yj_y + \partial_zj_z)$. La seconde forme découle de
+$\operatorname{div}(\rho\vect v) = \vect v\cdot\operatorname{\vect{grad}}\rho +
+\rho\operatorname{div}\vect v$.
+\end{proof}
+
+\begin{remark}[La divergence, première rencontre]\label{rem:b2:fluid-kinematics:divergence}
+Le calcul montre ce que mesure $\operatorname{div}$~: le flux qui sort
+d'une petite boîte par unité de volume. En sommant sur les boîtes qui pavent un
+volume fini $V$, les faces intérieures se compensent deux à deux et seule la
+surface extérieure subsiste~: $\iint_{\partial V}\vect A\cdot\vect n\,\dd S = \iiint_V
+\operatorname{div}\vect A\,\dd\tau$ --- le théorème de la divergence (ou
+d'Ostrogradski), que nous énoncerons proprement au \cref{ch:b2:maxwell-equations}
+et utiliserons dans tout l'électromagnétisme~; il est démontré dans le volume de
+mathématiques de troisième année. Intégrée sur un volume fixe, la loi locale s'écrit
+$\dd m_V/\dd t = -D_m^{\text{sort}}$~: la masse intérieure varie de ce qui
+traverse la frontière.
+\end{remark}
+
+\begin{omfigure}
+\begin{tikzpicture}[font=\small, x=1cm, y=1cm, >=Stealth]
+  \begin{scope}
+    \draw[thick, fill=omDef!10] (0,0) rectangle (2.2,1.6);
+    \draw[thick] (0,1.6) -- (0.6,2.1) -- (2.8,2.1) -- (2.2,1.6);
+    \draw[thick] (2.2,0) -- (2.8,0.5) -- (2.8,2.1);
+    \draw[omThm, very thick, ->] (-1.2,0.8) -- (-0.1,0.8) node[pos=0.3, above, font=\footnotesize] {$j_x(x)$};
+    \draw[omThm, very thick, ->] (2.3,0.8) -- (3.6,0.8) node[pos=0.75, above, font=\footnotesize] {$j_x(x+\dd x)$};
+    \node[font=\footnotesize] at (1.1,-0.35) {$\dd x$};
+    \node[font=\footnotesize] at (-0.35,0.3) {$\dd y$};
+    \node[font=\footnotesize] at (2.75,-0.05) {$\dd z$};
+    \node[font=\footnotesize, align=left] at (1.3,-1.1) {$\partial_t\rho\,\dd\tau = -(\partial_x j_x + \partial_y j_y + \partial_z j_z)\,\dd\tau$};
+  \end{scope}
+  \begin{scope}[xshift=8.2cm]
+    \draw[thick] (-2.4,1.1) .. controls (-1,1.1) and (0,0.5) .. (2.4,0.5);
+    \draw[thick] (-2.4,-1.1) .. controls (-1,-1.1) and (0,-0.5) .. (2.4,-0.5);
+    \draw[omDef, thick] (-2.4,0) ellipse (0.25 and 1.1);
+    \draw[omDef, thick] (2.4,0) ellipse (0.12 and 0.5);
+    \draw[omThm, very thick, ->] (-2.4,0) -- (-1.4,0) node[above, font=\footnotesize] {$v_1$};
+    \draw[omThm, very thick, ->] (2.4,0) -- (3.6,0) node[above, font=\footnotesize] {$v_2$};
+    \node[omDef, font=\footnotesize] at (-2.4,1.45) {$S_1$};
+    \node[omDef, font=\footnotesize] at (2.4,0.85) {$S_2$};
+    \node[font=\footnotesize] at (0,-1.6) {stationnaire~: $\rho_1v_1S_1 = \rho_2v_2S_2$};
+  \end{scope}
+\end{tikzpicture}
+
+{\small À gauche~: le bilan de masse d'une boîte fixe --- la sortie nette
+à travers ses six faces, par unité de volume, est la divergence de $\rho\vect v$.
+À droite~: dans un \omterm{def:b2:fluid-kinematics:euler}{écoulement stationnaire} le \omterm{def:b2:fluid-kinematics:flowrate}{débit massique} est le même à travers toute
+section d'un tube de courant.}
+\end{omfigure}
+
+\begin{corollary}[Écoulement incompressible~; tubes de courant]\label{cor:b2:fluid-kinematics:incompressible}
+\index{écoulement incompressible}
+Un écoulement est \emph{incompressible} lorsque la masse volumique de chaque particule reste
+constante, $\mathrm D\rho/\mathrm Dt = 0$, ce qui équivaut à
+\[
+\operatorname{div}\vect v = 0 .
+\]
+Un liquide homogène s'écoule de façon incompressible~; un gaz aussi, à des vitesses très
+inférieures à celle du son (voir \cref{ch:b2:sound-waves}). Dans un \omterm{def:b2:fluid-kinematics:euler}{écoulement
+stationnaire} le \omterm{def:b2:fluid-kinematics:flowrate}{débit massique} $\rho vS$ est le même à travers toute section
+d'un tube de courant~; si de plus l'écoulement est incompressible et $\rho$ uniforme,
+$vS$ est constant~: le fluide accélère là où le tube se resserre.
+\end{corollary}
+
+\begin{proof}
+$\mathrm D\rho/\mathrm Dt = -\rho\operatorname{div}\vect v$. Pour le tube, on
+applique le bilan intégré au volume compris entre deux sections~: pas de
+flux à travers la surface latérale (vitesse tangente), régime stationnaire, donc
+ce qui entre égale ce qui sort.
+\end{proof}
+
+\begin{example}[Le sang]\label{ex:b2:fluid-kinematics:blood}
+L'aorte (section \qty{2.5}{cm^2}) transporte \qty{5}{L/min} $= \qty{83}{cm^3/s}$~:
+$v = \qty{33}{cm/s}$. Le même débit traverse quelque $10^{10}$
+capillaires de section totale voisine de \qty{2500}{cm^2}~: $v = \qty{0.3}{mm/s}$ ---
+assez lent pour les échanges à travers les parois, ce qui est tout l'intérêt de la ramification.
+\end{example}
+
+\section{Vorticité et écoulements irrotationnels}
+
+\begin{definition}[Vorticité]\label{def:b2:fluid-kinematics:vorticity}
+\index{vorticité}\index{rotationnel}\index{écoulement irrotationnel}
+La \emph{vorticité} d'un écoulement est le champ de vecteurs
+\[
+\vect\omega = \operatorname{\vect{curl}}\vect v , \qquad
+\operatorname{\vect{curl}}\vect A = \Bigl(\frac{\partial A_z}{\partial y} -
+\frac{\partial A_y}{\partial z},\; \frac{\partial A_x}{\partial z} - \frac{\partial A_z}
+{\partial x},\; \frac{\partial A_y}{\partial x} - \frac{\partial A_x}{\partial y}\Bigr) .
+\]
+Un écoulement est \emph{irrotationnel} là où $\vect\omega = \vect 0$.
+\end{definition}
+
+\begin{proposition}[La vorticité mesure la rotation locale]\label{prop:b2:fluid-kinematics:rotation}
+Un petit élément de fluide centré en $M$ tourne, en bloc, à la
+vitesse angulaire $\vect\Omega = \tfrac12\vect\omega(M)$. Dans une rotation
+en bloc $\vect v = \vect\Omega\wedge\vect{OM}$ la \omterm{def:b2:fluid-kinematics:vorticity}{vorticité} est uniforme,
+$\vect\omega = 2\vect\Omega$~; dans l'écoulement de cisaillement plan $\vect v = ky\,\vect e_x$
+elle vaut $\vect\omega = -k\vect e_z$~: une petite roue à aubes lâchée dans un écoulement de cisaillement
+tourne bien que les \omterm{def:b2:fluid-kinematics:euler}{lignes de courant} soient droites.
+\end{proposition}
+
+\begin{proof}
+Au voisinage de $M$, $\vect v(M + \vect\epsilon) = \vect v(M) + \mathbf G\vect\epsilon$ avec
+$\mathbf G$ la matrice des $\partial_jv_i$~; séparons-la en sa partie symétrique
+(une déformation pure, qui étire l'élément sans le faire tourner en
+bloc) et sa partie antisymétrique, dont la matrice $\tfrac12(\partial_jv_i -
+\partial_iv_j)$ est celle de $\vect\epsilon \mapsto \tfrac12\vect\omega\wedge\vect\epsilon$
+(\cref{thm:b2:rigid-body-mechanics:field}). Rotation en bloc autour de $\vect e_z$~:
+$\vect v = \Omega(-y, x, 0)$, $\omega_z = \partial_xv_y - \partial_yv_x = 2\Omega$.
+Cisaillement~: $\omega_z = -\partial_y(ky) = -k$.
+\end{proof}
+
+\begin{definition}[Potentiel des vitesses~; circulation]\label{def:b2:fluid-kinematics:potential}
+\index{potentiel des vitesses}\index{circulation (de la vitesse)}\index{écoulement potentiel}
+Dans un \omterm{def:b2:fluid-kinematics:vorticity}{écoulement irrotationnel} la vitesse dérive d'un \emph{potentiel
+des vitesses}~: $\vect v = \operatorname{\vect{grad}}\varphi$ (la circulation
+de $\vect v$ le long d'un chemin ne dépend alors que de ses extrémités, $\int_A^B\vect v
+\cdot\dd\vect l = \varphi(B) - \varphi(A)$). Si l'écoulement est de plus
+incompressible, $\Delta\varphi = \operatorname{div}\operatorname{\vect{grad}}
+\varphi = 0$~: le potentiel obéit à l'équation de Laplace, exactement comme le
+potentiel électrostatique dans une région sans charge --- un \emph{écoulement
+potentiel}. La \emph{circulation} de la vitesse le long d'une courbe fermée $C$
+vaut $\Gamma = \oint_C\vect v\cdot\dd\vect l$.
+\end{definition}
+
+\begin{proof}
+Qu'un champ de \omterm{def:b2:fluid-kinematics:vorticity}{rotationnel} nul sur un domaine simplement connexe soit un gradient, et
+qu'un gradient soit de \omterm{def:b2:fluid-kinematics:vorticity}{rotationnel} nul ($\partial_y\partial_z\varphi = \partial_z\partial_y\varphi$),
+relèvent du volume de mathématiques de deuxième année~; l'équation de Laplace découle de
+$\operatorname{div}\vect v = 0$.
+\end{proof}
+
+\begin{example}[Trois écoulements plans]\label{ex:b2:fluid-kinematics:planeflows}
+\index{écoulement de point d'arrêt}\index{tourbillon ponctuel}\index{tourbillon de Rankine}
+(i) \emph{\omterm{ex:b2:fluid-kinematics:planeflows}{Écoulement de point d'arrêt}} $\vect v = k(x, -y)$~: $\operatorname{div}\vect v =
+0$, $\vect\omega = \vect 0$, $\varphi = \tfrac12k(x^2 - y^2)$~; \omterm{def:b2:fluid-kinematics:euler}{lignes de courant}
+$xy = $ const, des hyperboles --- un jet qui frappe une paroi, au voisinage de l'axe. (ii)
+\emph{\omterm{ex:b2:fluid-kinematics:planeflows}{Tourbillon ponctuel}} $\vect v = \dfrac{\Gamma}{2\pi r}\vect e_\theta$ (coordonnées
+polaires planes)~: incompressible et \emph{irrotationnel partout
+sauf en $r = 0$}, $\varphi = \Gamma\theta/2\pi$ (multiforme), et la
+circulation sur tout cercle entourant le centre vaut $\Gamma$ --- la
+\omterm{def:b2:fluid-kinematics:vorticity}{vorticité} est concentrée sur l'axe. (iii) \emph{\omterm{ex:b2:fluid-kinematics:planeflows}{Tourbillon de Rankine}}~: un
+cœur $r < a$ en rotation en bloc $v_\theta = \Omega r$ (\omterm{def:b2:fluid-kinematics:vorticity}{vorticité} $2\Omega$)
+raccordé au \omterm{ex:b2:fluid-kinematics:planeflows}{tourbillon ponctuel} $v_\theta = \Omega a^2/r$ à l'extérieur~: le modèle
+d'une tornade, du tourbillon d'une baignoire ou du remous derrière la pile du pont --- la
+vitesse est maximale au bord du cœur.
+\end{example}
+
+\begin{omfigure}
+\begin{tikzpicture}[font=\small, x=1cm, y=1cm, >=Stealth]
+  \begin{scope}
+    \foreach \c in {0.3,0.8,1.6,2.8} {
+      \draw[omDef, thick, domain={\c/2.4}:2.4, samples=40, postaction={decorate, decoration={markings, mark=at position 0.5 with {\arrow{>}}}}] plot (\x,{\c/\x});
+      \draw[omDef, thick, domain=-2.4:{-\c/2.4}, samples=40, postaction={decorate, decoration={markings, mark=at position 0.5 with {\arrow{<}}}}] plot (\x,{-\c/\x});
+    }
+    \draw[thick] (-2.5,0) -- (2.5,0);
+    \draw[->] (0,0) -- (0,2.6) node[right, font=\footnotesize] {$y$};
+    \node[font=\footnotesize] at (0,-0.4) {écoulement de point d'arrêt $\vect v = k(x,-y)$};
+  \end{scope}
+  \begin{scope}[xshift=6.6cm]
+    \foreach \r in {0.5,0.9,1.3,1.7} \draw[omDef, thick, postaction={decorate, decoration={markings, mark=at position 0.25 with {\arrow{>}}}}] (0,0) circle (\r);
+    \fill (0,0) circle (1.5pt);
+    \node[font=\footnotesize] at (0,-2.2) {tourbillon ponctuel $v_\theta = \Gamma/2\pi r$};
+  \end{scope}
+  \begin{scope}[xshift=10.6cm]
+    \begin{axis}[omaxis, axis x line=bottom, axis y line=left, width=4.4cm, height=3.9cm, at={(0,-1.9cm)},
+        xlabel={$r/a$}, ylabel={$v_\theta$}, xmin=0, xmax=4, ymin=0, ymax=1.2, xtick={1,2,3}, ytick=\empty,
+        xlabel style={at={(axis description cs:0.5,-0.12)}, anchor=north},
+        ylabel style={at={(axis description cs:-0.08,0.5)}, rotate=90, anchor=south}, samples=60]
+      \addplot[omThm, thick, domain=0:1] {x};
+      \addplot[omThm, thick, domain=1:4] {1/x};
+      \node[font=\scriptsize] at (axis cs:0.55,0.85) {$\Omega r$};
+      \node[font=\scriptsize] at (axis cs:2.6,0.62) {$\Omega a^2/r$};
+    \end{axis}
+  \end{scope}
+\end{tikzpicture}
+
+{\small Trois écoulements plans. À gauche~: l'\omterm{ex:b2:fluid-kinematics:planeflows}{écoulement de point d'arrêt}, irrotationnel,
+aux \omterm{def:b2:fluid-kinematics:euler}{lignes de courant} hyperboliques. Au milieu~: le \omterm{ex:b2:fluid-kinematics:planeflows}{tourbillon ponctuel} --- des \omterm{def:b2:fluid-kinematics:euler}{lignes
+de courant} circulaires, et pourtant une \omterm{def:b2:fluid-kinematics:vorticity}{vorticité} nulle loin du centre. À droite~: le profil du
+\omterm{ex:b2:fluid-kinematics:planeflows}{tourbillon de Rankine}, rotation en bloc dans le cœur et \omterm{ex:b2:fluid-kinematics:planeflows}{tourbillon ponctuel}
+à l'extérieur.}
+\end{omfigure}
+
+\begin{remark}[Pourquoi la circulation compte]\label{rem:b2:fluid-kinematics:stokes}
+Pour une petite boucle plane d'aire $\dd S$ de normale $\vect n$, la
+circulation vaut $\oint\vect v\cdot\dd\vect l = \vect\omega\cdot\vect n\,\dd S$ ---
+la \omterm{def:b2:fluid-kinematics:vorticity}{vorticité} est la circulation par unité d'aire, exactement comme la
+divergence est le flux par unité de volume. (À vérifier sur la rotation en
+bloc~: $2\pi r\cdot\Omega r = 2\Omega\cdot\pi r^2$.) Sommée sur une surface,
+elle donne le théorème de Stokes, $\oint_C\vect v\cdot\dd\vect l = \iint_S
+\operatorname{\vect{curl}}\vect v\cdot\vect n\,\dd S$, énoncé au
+\cref{ch:b2:maxwell-equations}. Une aile porte parce qu'elle entretient une
+circulation autour d'elle-même~; une ligne tourbillon persiste dans un fluide parfait
+(théorème de Kelvin) --- d'où la longue survie du remous derrière la pile.
+\end{remark}
+
+\begin{method}[Lire un champ des vitesses]\label{met:b2:fluid-kinematics:reading}
+Étant donné $\vect v(M, t)$~: (1) est-il stationnaire~? ($\partial_t\vect v = \vect 0$)~; (2)
+est-il incompressible~? ($\operatorname{div}\vect v = 0$)~; (3) est-il
+irrotationnel~? ($\operatorname{\vect{curl}}\vect v = \vect 0$~; si oui, chercher
+$\varphi$)~; (4) trouver les \omterm{def:b2:fluid-kinematics:euler}{lignes de courant} par $\dd x/v_x = \dd y/v_y = \dd z/
+v_z$ à $t$ fixé, et les \omterm{def:b2:fluid-kinematics:euler}{trajectoires} par $\dd\vect r/\dd t = \vect v(\vect r,
+t)$~; (5) calculer l'accélération $\partial_t\vect v + (\vect v\cdot
+\operatorname{\vect{grad}})\vect v$. En coordonnées polaires planes $(r, \theta)$,
+$\operatorname{div}\vect v = \dfrac1r\dfrac{\partial(rv_r)}{\partial r} + \dfrac1r
+\dfrac{\partial v_\theta}{\partial\theta}$ et $\omega_z = \dfrac1r\dfrac{\partial(rv_\theta)}
+{\partial r} - \dfrac1r\dfrac{\partial v_r}{\partial\theta}$ (admis ici~; établi
+au \cref{ch:b2:maxwell-equations}).
+\end{method}
+
+\section{Exercices}
+
+\begin{exercise}[$\star$]\label{exo:b2:fluid-kinematics:1}
+Le libre parcours moyen de l'air vaut \qty{70}{nm} à \qty{1}{bar} et varie en
+$1/P$. La description continue est-elle valable pour (a) l'air autour d'une voiture,
+(b) l'air dans un microcanal de \qty{1}{\micro m} à \qty{1}{bar}, (c) l'air à
+\qty{100}{km} d'altitude ($P \approx \qty{3e-7}{bar}$) autour d'un satellite de
+\qty{1}{m}~? Donner $\ell/L$ dans chaque cas.
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b2:fluid-kinematics:2}
+Écoulement unidimensionnel stationnaire $v(x) = v_0(1 + x/L)$ pour $0 \le x \le L$.
+Accélération d'une particule en $x$~; temps mis pour aller de $0$ à
+$L$~; comparer à $L/v_0$ et à $L/2v_0$.
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b2:fluid-kinematics:3}
+Dans une conduite de rayon $R$ le profil des vitesses est $v(r) = v_{\max}(1 -
+r^2/R^2)$ le long de l'axe. \omterm{def:b2:fluid-kinematics:flowrate}{Débit volumique}~; vitesse moyenne $\langle v\rangle
+= D_V/\pi R^2$~; applications numériques pour $R = \qty{5}{mm}$, $v_{\max} = \qty{0.4}{m/s}$.
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b2:fluid-kinematics:4}
+Pour chaque champ, dire si l'écoulement est incompressible et s'il
+est irrotationnel~; donner la \omterm{def:b2:fluid-kinematics:vorticity}{vorticité}~: (a) $\vect v = (ax, -ay, 0)$~; (b)
+$\vect v = (-\Omega y, \Omega x, 0)$~; (c) $\vect v = (ax, ay, 0)$~; (d) $\vect v =
+(ky, 0, 0)$~; (e) $\vect v = (ax, -ay, bz)$ --- pour quel $b$ est-il
+incompressible~?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b2:fluid-kinematics:5}
+Un tuyau d'arrosage de diamètre intérieur \qty{12}{mm} remplit un seau de \qty{10}{L} en
+\qty{50}{s}. Vitesse dans le tuyau~; vitesse dans une lance de \qty{3}{mm}~; si la
+lance se rétrécit sur \qty{4}{cm}, estimer l'accélération moyenne d'une
+particule qui la traverse (en $g$)~; temps passé dans la lance.
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b2:fluid-kinematics:6}
+Écoulement plan non stationnaire $\vect v = (U, V\cos\omega t)$ avec $U$, $V$, $\omega$
+constants. (a) \omterm{def:b2:fluid-kinematics:euler}{Lignes de courant} à l'instant $t$. (b) \omterm{def:b2:fluid-kinematics:euler}{Trajectoire} de la particule qui est à
+l'origine à $t = 0$. (c) Tracer les deux pour $V = U$ à $t = 0$ et à
+$t = \pi/2\omega$~; pourquoi diffèrent-elles~? (d) Accélération d'une particule.
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b2:fluid-kinematics:7}
+Une rivière large de \qty{50}{m} et profonde de \qty{2.0}{m} coule à \qty{1.2}{m/s}. (a)
+Débit. (b) Elle entre dans une gorge large de \qty{15}{m} et profonde de \qty{4.0}{m}~:
+vitesse. (c) Un affluent apporte \qty{30}{m^3/s}~; en aval la rivière est
+large de \qty{60}{m} et profonde de \qty{2.5}{m}~: vitesse. (d) Un gaz chaud s'écoule en régime stationnaire
+dans une conduite de section constante~; entre deux points sa température
+double à pression constante~: qu'advient-il de sa vitesse~?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b2:fluid-kinematics:8}
+\emph{\omterm{ex:b2:fluid-kinematics:planeflows}{Tourbillon de Rankine}.} $v_\theta = \Omega r$ pour $r < a$, $v_\theta = \Omega a^2/r$
+pour $r > a$. (a) \omterm{def:b2:fluid-kinematics:vorticity}{Vorticité} dans chaque région (utiliser la formule polaire). (b)
+Circulation sur un cercle de rayon $r$ centré sur l'axe, dans les deux
+régions~; relier au flux de \omterm{def:b2:fluid-kinematics:vorticity}{vorticité}. (c) Une tornade~: $a = \qty{50}{m}$,
+$v_{\max} = \qty{70}{m/s}$~: $\Omega$, $\Gamma$, et la vitesse à \qty{500}{m}.
+(d) L'écoulement du cœur est-il irrotationnel~? Et celui de l'extérieur~? Où est
+physiquement la «~rotation~»~?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b2:fluid-kinematics:9}
+\emph{\omterm{ex:b2:fluid-kinematics:planeflows}{Écoulement de point d'arrêt}} $\vect v = k(x, -y)$. (a) Potentiel $\varphi$ et
+vérification de $\Delta\varphi = 0$. (b) \omterm{def:b2:fluid-kinematics:euler}{Lignes de courant}~; la fonction $\psi = kxy$ est
+constante sur celles-ci --- montrer que $v_x = \partial\psi/\partial y$, $v_y = -\partial\psi/
+\partial x$ (la \emph{fonction de courant}). (c) Champ des accélérations~; montrer qu'il
+vaut $\operatorname{\vect{grad}}(v^2/2)$ et interpréter. (d) \omterm{def:b2:fluid-kinematics:euler}{Trajectoire} d'une
+particule partie de $(x_0, y_0)$~: $x = x_0\eu^{kt}$, $y = y_0\eu^{-kt}$.
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b2:fluid-kinematics:10}
+\emph{Un écoulement en expansion.} Écoulement unidimensionnel $v(x, t) = x/(t + \tau)$
+pour $t > 0$, $\tau > 0$ constant. (a) \omterm{def:b2:fluid-kinematics:euler}{Trajectoires}~: montrer que $x(t) = x_0(1 +
+t/\tau)$~; accélération d'une particule, à partir de la \omterm{def:b2:fluid-kinematics:euler}{trajectoire} puis de
+la \omterm{thm:b2:fluid-kinematics:material}{dérivée particulaire}. (b) La masse volumique est uniforme à chaque instant,
+$\rho(t)$~: utiliser la conservation de la masse pour trouver $\rho(t)$. (c) Vérifier en
+suivant la masse comprise entre deux particules. (d) Pourquoi ce champ est-il un
+modèle unidimensionnel d'un univers en expansion uniforme~?
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b2:fluid-kinematics:11}
+\emph{Une source dans un courant.} Superposer un écoulement uniforme $\vect v = U\vect e_x$
+et une source plane $\vect v = \dfrac{q}{2\pi r}\vect e_r$ ($q$ étant le \omterm{def:b2:fluid-kinematics:flowrate}{débit
+volumique} par unité de longueur selon $z$). (a) Potentiel $\varphi = Ux +
+(q/2\pi)\ln r$~; vérifier que les deux écoulements sont incompressibles et irrotationnels
+(sauf à l'origine). (b) Point d'arrêt. (c) Fonction de courant $\psi
+= Uy + q\theta/2\pi$~; la \omterm{def:b2:fluid-kinematics:euler}{ligne de courant} passant par le point d'arrêt est
+$r\sin\theta = (q/2\pi U)(\pi - \theta)$~: la tracer. (d) Montrer que loin en
+aval cette ligne est en $y = \pm q/2U$~: l'écoulement extérieur est
+l'écoulement autour d'un demi-corps émoussé de largeur $q/U$.
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b2:fluid-kinematics:12}
+\emph{Tourbillon et puits.} Écoulement plan $\vect v = -\dfrac{q}{2\pi r}\vect e_r +
+\dfrac{\Gamma}{2\pi r}\vect e_\theta$ pour $r > a$. (a) Montrer qu'il est
+incompressible et irrotationnel. (b) \omterm{def:b2:fluid-kinematics:euler}{Lignes de courant}~: spirales logarithmiques
+$r = r_0\eu^{-q\theta/\Gamma}$. (c) Accélération d'une particule~: montrer qu'elle est
+purement radiale, $-v^2/r\,\vect e_r$. (d) Temps mis par une particule pour spiraler
+de $r_0$ à $a$~; nombre de tours qu'elle fait. (e) Applications numériques~: $q =
+\qty{1.5e-3}{m^2/s}$, $\Gamma = \qty{3e-2}{m^2/s}$, $r_0 = \qty{0.5}{m}$,
+$a = \qty{2}{cm}$.
+\end{exercise}
+
+\section{Problème~: de la bonde à l'ouragan}
+
+\begin{problem}[{Problème du week-end --- la même cinématique à trois échelles~:
+le tourbillon au-dessus d'une bonde, une tornade, et un cyclone vu par satellite}]
+\label{pb:b2:fluid-kinematics:1}
+
+\medskip
+\noindent\textbf{Partie I --- La baignoire.}
+On vide une baignoire par un trou de rayon $a = \qty{2}{cm}$~; l'eau,
+de profondeur $h = \qty{20}{cm}$, s'écoule au \omterm{def:b2:fluid-kinematics:flowrate}{débit volumique} $D_V =
+\qty{0.30}{L/s}$. Loin du trou l'écoulement est modélisé comme plan
+(indépendant de la profondeur)~: $\vect v = v_r(r)\vect e_r + v_\theta(r)\vect e_\theta$.
+\begin{enumerate}
+  \item En utilisant la conservation de la masse à travers un cylindre de rayon $r$ et
+        de hauteur $h$, montrer que $v_r = -q/2\pi r$ avec $q = D_V/h$~;
+        valeur de $q$.
+  \item Avant que la bonde ne soit ôtée, l'eau avait été remuée et
+        tournait à \qty{1.0}{cm/s} en $r = \qty{50}{cm}$. En admettant que
+        chaque anneau d'eau conserve son moment cinétique en se déplaçant
+        vers l'intérieur ($rv_\theta$ constant), trouver $v_\theta(r)$ et la
+        circulation $\Gamma$.
+  \item Vérifier que l'écoulement est incompressible et irrotationnel pour
+        $r > a$.
+  \item \omterm{def:b2:fluid-kinematics:euler}{Lignes de courant}~: montrer que ce sont des spirales logarithmiques et trouver
+        combien de tours fait une particule entre $r = \qty{50}{cm}$ et
+        $r = a$.
+  \item Temps mis par une particule pour aller de \qty{50}{cm} au trou, et
+        sa vitesse azimutale à l'arrivée.
+  \item Accélération d'une particule en $r$~; comparer à $g$ en $r = a$.
+        (La surface libre se creuse là où la pression doit l'équilibrer ---
+        l'entonnoir~; chapitre suivant.)
+  \item La rotation de la Terre donne à tout fluide au repos dans la baignoire une
+        rotation «~de fond~» au taux vertical local
+        $\Omega_\oplus\sin\lambda \approx \qty{5e-5}{rad/s}$. Comparer la
+        vitesse azimutale qu'elle donnerait à \qty{50}{cm} avec le
+        \qty{1}{cm/s} du brassage, et dire si le sens de
+        rotation d'une baignoire qui se vide est décidé par l'hémisphère.
+\end{enumerate}
+
+\medskip
+\noindent\textbf{Partie II --- La tornade, \omterm{ex:b2:fluid-kinematics:planeflows}{tourbillon de Rankine}.}
+Rayon du cœur $a = \qty{60}{m}$, vent maximal $v_{\max} = \qty{80}{m/s}$, masse
+volumique de l'air $\rho = \qty{1.2}{kg/m^3}$.
+\begin{enumerate}[resume]
+  \item Écrire $v_\theta(r)$ dans les deux régions et donner $\Omega$ et $\Gamma$.
+  \item \omterm{def:b2:fluid-kinematics:vorticity}{Vorticité} dans le cœur et à l'extérieur~; tracer $v_\theta$ et $\omega_z$
+        en fonction de $r$.
+  \item Accélération d'une particule d'air au bord du cœur~;
+        comparer à $g$.
+  \item Montrer qu'une petite roue à aubes placée hors du cœur dérive
+        autour de la tornade sans tourner sur elle-même, tandis qu'une roue
+        placée dans le cœur fait un tour par révolution autour de
+        l'axe.
+  \item Énergie cinétique du cœur, par mètre de hauteur.
+  \item Énergie cinétique de l'écoulement extérieur par mètre de hauteur, entre
+        $a$ et $R = \qty{5}{km}$~; pourquoi ne dépend-elle de $R$ que
+        logarithmiquement~?
+  \item Pour une hauteur de \qty{1}{km}, énergie cinétique totale~; comparer à
+        l'énergie libérée par \qty{1}{t} de TNT (\qty{4.2}{GJ}).
+  \item L'air converge aussi vers l'axe et monte dans une tornade. Si le cœur
+        est alimenté par un afflux radial à \qty{5}{m/s} à travers sa surface
+        latérale sur les \qty{300}{m} premiers mètres de hauteur, quelle vitesse verticale
+        l'air doit-il atteindre au sommet de cette couche (uniforme
+        sur la section du cœur)~?
+\end{enumerate}
+
+\medskip
+\noindent\textbf{Partie III --- Le cyclone.}
+Un cyclone tropical est modélisé par un \omterm{ex:b2:fluid-kinematics:planeflows}{tourbillon de Rankine} de rayon de cœur
+$a = \qty{40}{km}$ et de $v_{\max} = \qty{50}{m/s}$. La rotation de la Terre se
+fait sentir par la \emph{\omterm{def:b2:fluid-kinematics:vorticity}{vorticité} planétaire} $f = 2\Omega_\oplus\sin\lambda
+\approx \qty{5e-5}{s^{-1}}$ à la latitude \qty{20}{\degree}~: un anneau d'air au
+repos par rapport au sol porte déjà, dans le référentiel inertiel, la
+vitesse azimutale $fr/2$ autour de tout axe vertical.
+\begin{enumerate}[resume]
+  \item \omterm{def:b2:fluid-kinematics:vorticity}{Vorticité} du cœur et circulation $\Gamma$ du cyclone~;
+        comparer la \omterm{def:b2:fluid-kinematics:vorticity}{vorticité} du cœur à $f$.
+  \item Un anneau d'air de rayon $r_0 = \qty{500}{km}$, initialement au repos
+        par rapport au sol, est attiré vers le centre par la
+        dépression. En admettant que son moment cinétique par unité de masse
+        autour de l'axe, $r(v_\theta + fr/2)$, se conserve, trouver sa
+        vitesse $v_\theta$ par rapport au sol en $r = \qty{100}{km}$
+        et en $r = \qty{40}{km}$.
+  \item Dans quel sens le cyclone tourne-t-il dans l'hémisphère
+        nord, et pourquoi~? Pourquoi ce sens est-il fixé pour un cyclone et
+        non pour une baignoire~?
+  \item Pourquoi l'air ne peut-il pas être attiré ainsi jusqu'à l'axe ---
+        qu'est-ce qui limite le vent et laisse un œil~?
+  \item L'air converge vers le cyclone à \qty{5}{m/s} à travers un
+        cylindre de rayon \qty{500}{km} et de hauteur \qty{1}{km}~: \omterm{def:b2:fluid-kinematics:flowrate}{débit
+        massique} aspiré ($\rho = \qty{1.2}{kg/m^3}$).
+  \item Le cyclone se déplace en bloc vers l'ouest à \qty{6}{m/s}. Écrire le
+        champ eulérien des vitesses vu du sol en fonction du
+        champ $\vect v_0$ du tourbillon dans son propre référentiel~; l'écoulement est-il
+        stationnaire dans le référentiel du sol~? Quel côté de la tempête a les
+        vents les plus forts~?
+\end{enumerate}
+
+\medskip
+\noindent\textbf{Partie IV --- Débits et bilan.}
+\begin{enumerate}[resume]
+  \item La pluie tombe à \qty{50}{mm/h} sur un bassin versant de \qty{10}{km^2}
+        et parvient tout entière à une rivière de section \qty{40}{m^2}~: vitesse
+        moyenne de la rivière en crue.
+  \item Le sang~: l'aorte (\qty{2.5}{cm^2}) transporte \qty{5.0}{L/min}~; les
+        capillaires ont une section totale de \qty{0.25}{m^2}~: vitesses dans
+        chacun~; temps mis par le sang pour traverser un capillaire de \qty{1}{mm}.
+  \item Un réservoir de section $S$ se vide par un trou de section $s$ au
+        fond~; la vitesse de sortie vaut $\sqrt{2gh}$ ($h$ étant le niveau de l'eau
+        --- admis, établi au chapitre suivant). Écrire la conservation de la
+        masse et trouver $h(t)$ ainsi que le temps de vidange pour
+        $S = \qty{1}{m^2}$, $s = \qty{1}{cm^2}$, $h_0 = \qty{1}{m}$.
+  \item Donner les trois écoulements des parties I à III dans un tableau~: rayon,
+        vitesse, \omterm{def:b2:fluid-kinematics:vorticity}{vorticité} du cœur, circulation --- et la
+        grandeur, conservée pendant l'afflux, qui les met en
+        rotation.
+\end{enumerate}
+\end{problem}

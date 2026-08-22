@@ -1,0 +1,492 @@
+\chapter{Interferencias de muchas ondas y redes de difracción}\label{ch:b2:gratings}
+
+Inclínese un disco compacto bajo una lámpara y lanza un arco iris: su
+espiral de hoyos, separados micrómetro y medio, es una red --- miles de
+franjas reflectantes minúsculas, cada una devolviendo una copia de la onda,
+todas interfiriendo. Dos ondas dan las franjas suaves en $\cos^2$ de los
+capítulos anteriores; mil dan franjas mil veces más estrechas, lo bastante
+nítidas para separar dos longitudes de onda que difieren en una parte entre
+cien mil. Ese es el instrumento con el que se leyeron la composición del
+Sol y la velocidad de las galaxias, y que está en todo
+espectrómetro. Este capítulo suma $N$ ondas, deduce la \omterm{prop:b2:gratings:equation}{ecuación de las
+redes}, su dispersión y su poder resolvente, y presenta el otro
+dispositivo de muchas ondas, la cavidad de Fabry--Pérot que será el
+resonador del láser.
+
+\begin{omfigure}
+\includegraphics[width=0.54\linewidth]{images/book4/ai/b4-21-cd-diffraction-colours.png}
+
+{\small Un disco compacto al sol: su espiral de hoyos, separados $\qty{1.6}{\micro m}$, es una red de reflexión, y cada orden despliega la luz blanca en un espectro.}
+\end{omfigure}
+
+\section{Interferencias de $N$ ondas}
+
+\begin{theorem}[$N$ ondas iguales en progresión aritmética de fase]\label{thm:b2:gratings:nwaves}
+\index{interferencias de muchas ondas}\index{máximo principal}\index{máximo secundario}\index{fasor}
+$N$ ondas coherentes de igual amplitud $a$, cada una retrasada respecto de la anterior
+la fase $\varphi$, se superponen en una onda de amplitud $A(\varphi)$ e
+intensidad
+\[
+A = a\,\frac{\sin(N\varphi/2)}{\sin(\varphi/2)} , \qquad
+I(\varphi) = I_0\,\frac{\sin^2(N\varphi/2)}{\sin^2(\varphi/2)} :
+\]
+\emph{\omterm{thm:b2:gratings:nwaves}{máximos principales}} de intensidad $N^2I_0$ donde $\varphi = 2\pi p$ (todas
+las ondas en fase), de semianchura angular $2\pi/N$ en $\varphi$ (los primeros ceros
+están en $\varphi = 2\pi p \pm 2\pi/N$), separados por $N - 2$ \emph{\omterm{thm:b2:gratings:nwaves}{máximos
+secundarios}} que no superan cerca del $4.5\%$ de los principales para $N$
+grande. Cuantas más ondas, más nítidos y brillantes son los picos: la anchura
+disminuye como $1/N$, la altura crece como $N^2$ y la energía (su producto)
+como $N$.
+\end{theorem}
+
+\begin{proof}
+Amplitudes complejas $a\eu^{\iu k\varphi}$, $k = 0, \dots, N - 1$: una serie
+geométrica, $a(1 - \eu^{\iu N\varphi})/(1 - \eu^{\iu\varphi}) = a\eu^{\iu(N - 1)\varphi/2}\sin(N\varphi/2)
+/\sin(\varphi/2)$. Hay ceros donde $\sin(N\varphi/2) = 0$ pero $\sin(\varphi/2) \ne 0$: $\varphi = 2\pi
+m/N$, con $m$ no múltiplo de $N$. En la imagen de los fasores, las $N$ flechas
+se cierran en un polígono regular en los ceros y se alinean en los \omterm{thm:b2:gratings:nwaves}{máximos
+principales}.
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}[font=\small, x=1cm, y=1cm, >=Stealth]
+  \begin{scope}
+    \foreach \k in {0,1,2,3,4} {
+      \draw[omDef, thick, ->] ({0.9*sin(\k*36)},{0.9-0.9*cos(\k*36)}) -- ({0.9*sin((\k+1)*36)},{0.9-0.9*cos((\k+1)*36)});
+    }
+    \draw[omThm, very thick, ->] (0,0) -- ({0.9*sin(180)},{0.9-0.9*cos(180)});
+    \node[font=\footnotesize] at (0.3,-0.4) {$N = 5$, $\varphi = 36^\circ$};
+    \node[omThm, font=\footnotesize] at (0.45,1.0) {$A$};
+  \end{scope}
+  \begin{scope}[xshift=3.2cm]
+    \foreach \k in {0,1,2,3,4} {
+      \draw[omDef, thick, ->] ({0.55*sin(\k*72)},{0.55-0.55*cos(\k*72)}) -- ({0.55*sin((\k+1)*72)},{0.55-0.55*cos((\k+1)*72)});
+    }
+    \node[font=\footnotesize] at (0.0,-0.4) {$\varphi = 72^\circ$: cero};
+  \end{scope}
+  \begin{scope}[xshift=9.0cm]
+    \begin{axis}[omaxis, axis x line=bottom, axis y line=left, width=7.4cm, height=4.2cm, at={(0,-1.6cm)},
+        xlabel={$\varphi/2\pi$}, ylabel={$I/N^2I_0$}, xmin=-0.1, xmax=1.1, ymin=0, ymax=1.08, xtick={0,0.5,1}, ytick={0.5,1}, samples=500,
+        xlabel style={at={(axis description cs:0.5,-0.14)}, anchor=north},
+        ylabel style={at={(axis description cs:-0.1,0.5)}, rotate=90, anchor=south},
+        legend style={font=\scriptsize, at={(0.5,-0.3)}, anchor=north, draw=none, fill=none, legend columns=3}]
+      \addplot[omDef, thick, domain=-0.1:1.1] {cos(deg(pi*x))^2};
+      \addplot[omThm, thick, domain=-0.1:1.1] {(sin(deg(5*pi*x))/(5*sin(deg(pi*x))+1e-9))^2};
+      \addplot[omProp, thick, domain=-0.1:1.1] {(sin(deg(12*pi*x))/(12*sin(deg(pi*x))+1e-9))^2};
+      \legend{$N = 2$, $N = 5$, $N = 12$}
+    \end{axis}
+  \end{scope}
+\end{tikzpicture}
+
+{\small A la izquierda, la suma de fasores de cinco ondas iguales --- un abanico
+regular cuya cuerda es la resultante; se cierra en un pentágono, y se anula,
+en $\varphi = 2\pi/5$. A la derecha, la intensidad para $2$, $5$ y $12$ ondas, normalizada
+a su pico: los \omterm{thm:b2:gratings:nwaves}{máximos principales} se afilan como $1/N$.}
+\end{omfigure}
+
+\section{La red de difracción}
+
+\begin{proposition}[Ecuación de las redes]\label{prop:b2:gratings:equation}
+\index{red de difracción}\index{ecuación de las redes}\index{orden (red)}\index{dispersión angular}
+Una \emph{red} es un conjunto de $N$ rendijas idénticas, equidistantes y paralelas
+(o de surcos) de periodo $a$. Una onda plana que incide con el ángulo $\theta_0$
+respecto de la normal es reemitida por cada rendija; en la dirección $\theta$ las
+ondas de rendijas vecinas tienen la \omterm{thm:b2:two-wave-interference:formula}{diferencia de camino} $\delta = a(\sin\theta
+- \sin\theta_0)$, y se refuerzan en las direcciones
+\[
+a\,(\sin\theta_p - \sin\theta_0) = p\lambda , \qquad p = 0, \pm1, \pm2, \dots
+\]
+--- los \emph{órdenes} de la red. El orden cero es el haz sin desviar
+para toda longitud de onda; cada uno de los demás órdenes despliega las longitudes de onda,
+con la \emph{\omterm{prop:b2:gratings:equation}{dispersión angular}}
+\[
+\frac{\dd\theta}{\dd\lambda} = \frac{p}{a\cos\theta} ,
+\]
+mayor cuanto más fina es la red y más alto el orden; el orden máximo vale
+$|p| \le a(1 + |\sin\theta_0|)/\lambda$. Una \emph{red de reflexión} (surcos tallados
+en un espejo) obedece la misma ecuación con los ángulos reflejados.
+\end{proposition}
+
+\begin{proof}
+La fase entre rendijas sucesivas vale $\varphi = 2\pi\delta/\lambda$; los \omterm{thm:b2:gratings:nwaves}{máximos
+principales} de \cref{thm:b2:gratings:nwaves} están en $\delta = p\lambda$.
+Derívese $a\sin\theta = p\lambda + a\sin\theta_0$ a $p$ y $\theta_0$ fijos.
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}[font=\small, x=1cm, y=1cm, >=Stealth]
+  \begin{scope}
+    \draw[thick] (0,-1.8) -- (0,-1.3) (0,-1.0) -- (0,-0.5) (0,-0.2) -- (0,0.3) (0,0.6) -- (0,1.1) (0,1.4) -- (0,1.9);
+    \foreach \y in {-1.15,-0.35,0.45,1.25} \draw[omDef, thick, ->] (0.1,\y) -- (2.6,{\y+0.9});
+    \draw[omDef, thick, ->] (-2.4,0) -- (-0.1,0) node[above, pos=0.4, font=\footnotesize] {$\theta_0 = 0$};
+    \draw[dashed] (0.1,-0.35) -- (2.6,-0.35); \draw (1.6,-0.35) arc[start angle=0, end angle=19.8, radius=1.6]; \node[font=\footnotesize] at (1.95,-0.1) {$\theta$};
+    \draw[omThm, dashed] (0.1,0.45) -- (0.355,-0.258);
+    \draw[omThm, very thick] (0.1,-0.35) -- (0.355,-0.258);
+    \node[omThm, font=\footnotesize] at (0.85,-0.6) {$a\sin\theta$};
+    \draw[<->] (-0.35,-0.35) -- (-0.35,0.45) node[midway, left, font=\footnotesize] {$a$};
+    \node[font=\footnotesize] at (0.8,-2.3) {$a(\sin\theta - \sin\theta_0) = p\lambda$};
+  \end{scope}
+  \begin{scope}[xshift=8.0cm]
+    \draw[thick] (-2.8,0) -- (2.8,0);
+    \fill[omExo!70] (-0.2,0.1) rectangle (0.2,0.9); \node[font=\footnotesize] at (0,1.15) {$p = 0$};
+    \fill[omDef!70] (0.7,0.1) rectangle (0.95,0.9); \fill[omThm!70] (1.3,0.1) rectangle (1.6,0.9);
+    \fill[omDef!70] (-0.95,0.1) rectangle (-0.7,0.9); \fill[omThm!70] (-1.6,0.1) rectangle (-1.3,0.9);
+    \node[font=\footnotesize] at (1.15,1.15) {$p = 1$}; \node[font=\footnotesize] at (-1.15,1.15) {$p = -1$};
+    \fill[omDef!70] (1.7,0.1) rectangle (2.0,0.9); \fill[omThm!70] (2.5,0.1) rectangle (2.8,0.9); \node[font=\footnotesize] at (2.25,1.15) {$p = 2$};
+    \fill[omDef!70] (-2.0,0.1) rectangle (-1.7,0.9); \fill[omThm!70] (-2.8,0.1) rectangle (-2.5,0.9);
+    \node[font=\footnotesize, omDef] at (0.8,-0.35) {violeta}; \node[font=\footnotesize, omThm] at (1.5,-0.35) {rojo};
+    \node[font=\footnotesize] at (0,-0.9) {espectros de órdenes sucesivos, más abiertos al crecer $p$};
+  \end{scope}
+\end{tikzpicture}
+
+{\small A la izquierda, la red --- las rendijas vecinas reemiten con la \omterm{thm:b2:two-wave-interference:formula}{diferencia
+de camino} $a\sin\theta$ con incidencia normal. A la derecha, en una pantalla, el
+orden cero blanco y los espectros de los órdenes $\pm1$, $\pm2$, con el violeta
+más cerca del centro y más anchos (y al final solapados) al crecer $p$.}
+\end{omfigure}
+
+\begin{example}[Una red de clase y un CD]\label{ex:b2:gratings:examples}
+Una red de $600$ líneas por milímetro ($a = \qty{1.67}{\micro m}$) con incidencia
+normal envía la luz de \qty{500}{nm} a $\sin\theta = 0.3$, $\theta = \qty{17.5}{\degree}$ en
+el primer orden y a $\qty{36.9}{\degree}$ en el segundo, y no tiene tercer orden
+($3 \times 0.3 > 1$); su espectro de primer orden va de \qty{13.9}{\degree}
+(\qty{400}{nm}) a \qty{24.8}{\degree} (\qty{700}{nm}). Un disco compacto, con $a =
+\qty{1.6}{\micro m}$, es una red así en reflexión --- de ahí el arco iris,
+y el hecho de que un DVD ($a = \qty{0.74}{\micro m}$) lo despliegue más. El
+rojo de segundo orden (\qty{700}{nm} en $\sin\theta = 0.84$) se solapa con el violeta de
+tercer orden: los órdenes se solapan más allá del primero, una molestia que se cura con filtros
+o con un prisma.
+\end{example}
+
+\section{Poder resolvente}
+
+\begin{proposition}[Poder resolvente de una red]\label{prop:b2:gratings:resolution}
+\index{poder resolvente (red)}\index{criterio de Rayleigh (espectral)}
+Dos longitudes de onda próximas $\lambda$ y $\lambda + \Delta\lambda$ quedan justo resueltas en el orden $p$
+cuando el \omterm{thm:b2:gratings:nwaves}{máximo principal} de una cae sobre el primer cero de la otra
+(criterio de Rayleigh), lo que ocurre para
+\[
+\frac\lambda{\Delta\lambda} = pN :
+\]
+el \emph{poder resolvente} es el orden por el número de líneas
+iluminadas. También puede escribirse $W(\sin\theta - \sin\theta_0)/\lambda$ con $W = Na$ la
+anchura de la red: la mayor \omterm{thm:b2:two-wave-interference:formula}{diferencia de camino} a lo ancho de la red,
+en longitudes de onda --- razón por la que los grandes espectrógrafos usan redes de decenas de
+centímetros de ancho y trabajan con ángulos rasantes.
+\end{proposition}
+
+\begin{proof}
+El máximo de orden $p$ para $\lambda + \Delta\lambda$ está en $\varphi = 2\pi p$ para esa
+longitud de onda, es decir, en $\delta = p(\lambda + \Delta\lambda)$; el primer cero del máximo
+para $\lambda$ está en $\delta = p\lambda + \lambda/N$. Igualando: $p\Delta\lambda = \lambda/N$. Entonces $pN =
+Na(\sin\theta - \sin\theta_0)/\lambda$.
+\end{proof}
+
+\begin{example}[Separar las rayas del sodio]\label{ex:b2:gratings:sodium}
+El doblete, $\Delta\lambda = \qty{0.6}{nm}$ a \qty{589}{nm}, exige $R = 1000$: mil
+líneas en el primer orden, \qty{2}{mm} de una red de 600 líneas por
+milímetro. Su propia anchura de raya, \qty{0.02}{nm}, exige $R = 30\,000$: una red de \qty{5}{cm}
+en el primer orden, o de \qty{2.5}{cm} en el segundo --- y una red de
+\qty{10}{cm} con 1200 líneas por milímetro en el segundo orden alcanza
+$240\,000$, resolviendo \qty{0.0025}{nm}: la anchura de una raya ensanchada por
+el movimiento térmico de los átomos, y el corrimiento Doppler de una estrella que se mueve
+a \qty{1}{km/s}.
+\end{example}
+
+\begin{omfigure}
+\begin{tikzpicture}
+\begin{axis}[omaxis, axis x line=bottom, axis y line=left, width=8.0cm, height=4.4cm,
+    xlabel={$\delta - p\lambda$ (en unidades de $\lambda/N$)}, ylabel={$I$}, xmin=-2.5, xmax=3.5, ymin=0, ymax=1.5, xtick={-2,-1,0,1,2,3}, ytick=\empty, samples=400,
+    xlabel style={at={(axis description cs:0.5,-0.14)}, anchor=north},
+    ylabel style={at={(axis description cs:-0.06,0.5)}, rotate=90, anchor=south},
+    legend style={font=\scriptsize, at={(0.97,0.95)}, anchor=north east, draw=none, fill=none}]
+  \addplot[omDef, thick, domain=-2.5:3.5] {(sin(deg(pi*x))/(pi*x+1e-9))^2};
+  \addplot[omThm, thick, domain=-2.5:3.5] {(sin(deg(pi*(x-1)))/(pi*(x-1)+1e-9))^2};
+  \addplot[black, dashed, domain=-2.5:3.5] {(sin(deg(pi*x))/(pi*x+1e-9))^2+(sin(deg(pi*(x-1)))/(pi*(x-1)+1e-9))^2};
+  \legend{$\lambda$, $\lambda + \Delta\lambda$, suma}
+\end{axis}
+\end{tikzpicture}
+
+{\small El criterio de Rayleigh: el pico de una longitud de onda sobre el primer
+cero de la otra; la suma (discontinua) muestra una caída de cerca del $20\%$ entre
+dos rayas resueltas.}
+\end{omfigure}
+
+\section{La cavidad de Fabry--Pérot}
+
+\begin{proposition}[Interferencias de muchas ondas por división de amplitud]\label{prop:b2:gratings:fabryperot}
+\index{interferómetro de Fabry--Pérot}\index{función de Airy}\index{fineza}\index{intervalo espectral libre}
+Dos espejos paralelos parcialmente reflectantes (reflectancia en intensidad $R$)
+separados una distancia $L$ transmiten una onda con incidencia normal solo en la medida
+en que las ondas que han rebotado $0, 1, 2, \dots$ veces entre ellos se suman
+en fase: con $\varphi = 4\pi L/\lambda$ la fase de ida y vuelta, la intensidad
+transmitida vale (\omterm{prop:b2:gratings:fabryperot}{función de Airy})
+\[
+\frac{I_t}{I_0} = \frac1{1 + F\sin^2(\varphi/2)} , \qquad F = \frac{4R}{(1 - R)^2} :
+\]
+picos nítidos de transmisión total en $2L = p\lambda$ (las \emph{resonancias}
+de la cavidad, separadas en frecuencia por el \emph{\omterm{prop:b2:gratings:fabryperot}{intervalo espectral libre}}
+$c/2L$), de anchura relativa $1/\mathcal F$ con la \emph{fineza} $\mathcal F = \pi
+\sqrt R/(1 - R)$ --- $30$ para $R = 0.9$ y $300$ para $R = 0.99$. Iguala a la red
+en poder resolvente ($p\mathcal F$ con $p = 2L/\lambda \sim 10^5$, de donde $R \sim
+10^7$) y, cerrada sobre sí misma, es el resonador del láser
+(\cref{ch:b2:laser}).
+\end{proposition}
+
+\begin{proof}
+Cada ida y vuelta multiplica la amplitud por $R\eu^{\iu\varphi}$ (salvo una
+fase constante); la amplitud transmitida vale $t^2a\sum(R\eu^{\iu\varphi})^k =
+t^2a/(1 - R\eu^{\iu\varphi})$ con $t^2 = 1 - R$; su módulo al cuadrado vale $(1 - R)^2/
+(1 - 2R\cos\varphi + R^2) = (1 - R)^2/[(1 - R)^2 + 4R\sin^2(\varphi/2)]$. Picos en
+$\varphi = 2\pi p$; semialtura donde $F\sin^2(\varphi/2) = 1$, es decir, $\Delta\varphi \approx
+4/\sqrt F = 2(1 - R)/\sqrt R$, frente a los $2\pi$ que hay entre picos.
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}
+\begin{axis}[omaxis, axis x line=bottom, axis y line=left, width=9.0cm, height=4.4cm,
+    xlabel={$\varphi/2\pi$}, ylabel={$I_t/I_0$}, xmin=-0.2, xmax=2.2, ymin=0, ymax=1.1, xtick={0,1,2}, ytick={0.5,1}, samples=800,
+    xlabel style={at={(axis description cs:0.5,-0.14)}, anchor=north},
+    ylabel style={at={(axis description cs:-0.08,0.5)}, rotate=90, anchor=south},
+    legend style={font=\scriptsize, at={(0.5,-0.3)}, anchor=north, draw=none, fill=none, legend columns=3}]
+  \addplot[omDef, thick, domain=-0.2:2.2] {1/(1+4*0.3/0.49*sin(deg(pi*x))^2)};
+  \addplot[omThm, thick, domain=-0.2:2.2] {1/(1+4*0.8/0.04*sin(deg(pi*x))^2)};
+  \addplot[omProp, thick, domain=-0.2:2.2] {1/(1+4*0.95/0.0025*sin(deg(pi*x))^2)};
+  \legend{$R = 0.3$, $R = 0.8$, $R = 0.95$}
+\end{axis}
+\end{tikzpicture}
+
+{\small La transmisión de Airy de una cavidad de Fabry--Pérot: transmisión
+total en las resonancias $2L = p\lambda$, con picos que se estrechan al crecer
+la reflectancia de los espejos.}
+\end{omfigure}
+
+\begin{method}[Cálculos con redes]\label{met:b2:gratings:method}
+(1) Periodo $a = 1/(\text{líneas por mm})$; \omterm{prop:b2:gratings:equation}{ecuación de las redes} con los
+signos de los ángulos. (2) Enumérense los órdenes que existen ($|\sin\theta| \le 1$)
+y compruébese su solapamiento ($p\lambda_{\max}$ frente a $(p + 1)\lambda_{\min}$). (3)
+Dispersión $p/a\cos\theta$, convertida en una posición sobre el detector con
+la distancia focal: $\dd x = f\,\dd\theta$. (4) Poder resolvente $pN$ con $N$ el número de
+líneas realmente iluminadas; compárese $\lambda/R$ con la estructura que se quiere
+resolver. (5) Para instrumentos reales, añádase la anchura de la rendija de entrada (que
+difumina las rayas) y los píxeles del detector.
+\end{method}
+
+\section{Ejercicios}
+
+\begin{exercise}[$\star$]\label{exo:b2:gratings:1}
+Una red de $500$ líneas por milímetro con incidencia normal, $\lambda =
+\qty{550}{nm}$: ángulos de los órdenes; orden más alto; anchura angular del
+espectro visible de primer orden ($400$--\qty{700}{nm}); la misma red con
+incidencia de \qty{30}{\degree}: órdenes a cada lado.
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b2:gratings:2}
+El doblete del sodio con una red de $600$ líneas/mm y una lente de $f =
+\qty{50}{cm}$: separación angular y lineal de las dos rayas en el
+detector en el primer y en el segundo orden; tamaño de píxel necesario para verlas
+separadas.
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b2:gratings:3}
+Poder resolvente de una red de \qty{2}{cm} con $600$ líneas/mm en los órdenes $1$, $2$ y
+$3$; menor $\Delta\lambda$ resuelto a \qty{550}{nm}; ¿separa el doblete del sodio?
+¿Y la raya H$\alpha$ del hidrógeno de su gemela del deuterio (separadas \qty{0.18}{nm})?
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b2:gratings:4}
+Un disco compacto ($a = \qty{1.6}{\micro m}$) y un DVD ($a = \qty{0.74}{\micro m}$) iluminados con
+incidencia normal: ángulos del violeta y del rojo de primer orden; qué órdenes
+existen para cada uno; ¿por qué muestra el CD dos arcos iris y el DVD uno?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b2:gratings:5}
+\emph{El patrón de $N$ rendijas.} (a) Muéstrese que entre dos \omterm{thm:b2:gratings:nwaves}{máximos principales}
+hay $N - 1$ ceros y $N - 2$ \omterm{thm:b2:gratings:nwaves}{máximos secundarios}. (b) Para $N$ grande,
+intensidad del primer \omterm{thm:b2:gratings:nwaves}{máximo secundario} respecto del principal
+(en $N\varphi/2 \approx 3\pi/2$): alrededor de $1/22$. (c) Dibújese el patrón para
+$N = 3$ y $N = 6$ y dense las alturas de los \omterm{thm:b2:gratings:nwaves}{máximos secundarios} para
+$N = 3$. (d) Fracción de la energía total en los \omterm{thm:b2:gratings:nwaves}{máximos principales} para
+$N$ grande (compárense las integrales del pico, de anchura $\propto 1/N$ y altura
+$\propto N^2$, con el resto).
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b2:gratings:6}
+\emph{Órdenes solapados.} (a) Muéstrese que el orden $p$ de $\lambda_{\max}$ se solapa con el
+orden $p + 1$ de $\lambda_{\min}$ cuando $p\lambda_{\max} > (p + 1)\lambda_{\min}$; para $400$--\qty{700}{nm},
+¿a partir de qué orden? (b) \omterm{prop:b2:gratings:fabryperot}{Intervalo espectral libre} en el orden $p$: $\Delta\lambda_{\text{IEL}}
+= \lambda/p$. (c) Un espectrógrafo trabaja en el orden $20$ cerca de \qty{500}{nm} (una
+red echelle): \omterm{prop:b2:gratings:fabryperot}{intervalo espectral libre}; ¿cómo se elimina el solapamiento
+(dispersor cruzado)? (d) El \omterm{prop:b2:gratings:fabryperot}{intervalo espectral libre} del Fabry--Pérot es $c/2L$:
+escríbase en longitud de onda y compárese con el de la red.
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b2:gratings:7}
+\emph{Red escalonada.} Una red de reflexión tiene sus surcos inclinados
+el ángulo de blaze $\beta$ de modo que cada faceta refleje especularmente en la
+dirección donde se quiere el orden $p$. (a) Para el montaje de Littrow
+($\theta = \theta_0 = \beta$): muéstrese que $2a\sin\beta = p\lambda$; ángulo de blaze para \qty{500}{nm}
+en primer orden con $1200$ líneas/mm. (b) ¿Por qué envía el blaze casi toda la
+luz a un solo orden (piénsese en la envolvente de la difracción de una
+sola faceta, \cref{ch:b2:diffraction})? (c) La misma red se talla con blaze
+para \qty{1}{\micro m}: ¿en qué orden es eficiente a \qty{500}{nm}? (d)
+Poder resolvente de una red de \qty{10}{cm} en Littrow con $\beta = \qty{64}{\degree}$ y
+$\lambda = \qty{500}{nm}$ (úsese $R = 2W\sin\beta/\lambda$).
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b2:gratings:8}
+\emph{La rendija.} La rendija de entrada de un espectrómetro, de anchura $s$, se imagina
+en el detector con aumento $1$; la red ($600$ líneas/mm,
+\qty{5}{cm}, orden $1$, $f = \qty{50}{cm}$) dispersa. (a) Anchura de una raya en
+el detector debida solo a la rendija para $s = \qty{50}{\micro m}$, en nm. (b)
+Anchura debida al poder resolvente de la red. (c) ¿Cuál domina? Anchura de rendija
+para la que ambas se igualan. (d) ¿Por qué no cerrar más la rendija?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b2:gratings:9}
+\emph{Fabry--Pérot.} Espejos con $R = 0.95$, $L = \qty{5}{mm}$, $\lambda = \qty{600}{nm}$.
+(a) Orden $p$, \omterm{prop:b2:gratings:fabryperot}{intervalo espectral libre} en frecuencia y en longitud de onda. (b)
+Fineza; anchura de un pico de transmisión en frecuencia y en longitud de onda. (c)
+Poder resolvente $p\mathcal F$; compárese con la red de \qty{10}{cm}. (d) ¿Por qué
+se usa siempre un Fabry--Pérot con un prefiltro o una red?
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b2:gratings:10}
+\emph{El límite de una red.} (a) Muéstrese que $R = pN = W(\sin\theta - \sin\theta_0)
+/\lambda \le 2W/\lambda$: el poder resolvente no puede superar la anchura de la
+red en longitudes de onda, multiplicada por dos. (b) Interprétese: la mayor \omterm{thm:b2:two-wave-interference:formula}{diferencia
+de camino} entre los rayos extremos. (c) Una red de \qty{30}{cm} a
+\qty{500}{nm}: $R$ máximo; menor velocidad resoluble por corrimiento Doppler
+($\Delta\lambda/\lambda = v/c$). (d) ¿Por qué alcanzan sin embargo los astrónomos \qty{1}{m/s}
+(piénsese en medir la posición de una raya con una fracción de su anchura,
+y con muchas rayas)?
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b2:gratings:11}
+\emph{Bragg.} Un cristal es una red tridimensional: los rayos X
+reflejados por planos atómicos sucesivos separados una distancia $d$, con el
+ángulo rasante $\theta$, interfieren constructivamente cuando $2d\sin\theta = p\lambda$
+(Bragg). (a) Dedúzcase de la \omterm{thm:b2:two-wave-interference:formula}{diferencia de camino} entre dos planos.
+(b) Radiación K$\alpha$ del cobre (\qty{0.154}{nm}) sobre sal gema ($d = \qty{0.282}{nm}$):
+los ángulos de Bragg. (c) ¿Por qué no dan las longitudes de onda visibles ninguna reflexión
+de Bragg en los cristales, y qué dice lo contrario (que el vidrio no difracta
+los rayos X) sobre el vidrio? (d) ¿Por qué debe ser $\lambda < 2d$?
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b2:gratings:12}
+\emph{Agrupación en fase.} $N$ antenas idénticas en línea, separadas $a$, alimentadas
+con la misma amplitud y un salto de fase $\psi$ entre vecinas. (a)
+Muéstrese que el campo radiado en la dirección $\theta$ es el de la
+suma de $N$ ondas con $\varphi = 2\pi a\sin\theta/\lambda - \psi$: el haz principal apunta
+donde $\sin\theta = \lambda\psi/2\pi a$. (b) Semianchura del haz principal, $\Delta\theta
+\approx \lambda/Na\cos\theta$. (c) ¿Por qué debe ser $a \le \lambda/2$ para evitar un segundo haz principal
+(un lóbulo de red) al orientarlo? (d) Un radar con $64$ elementos separados
+$\lambda/2$, $\lambda = \qty{3}{cm}$: anchura del haz; tiempo para barrer $90^\circ$ en pasos de una
+anchura de haz si las fases conmutan en \qty{1}{\micro s}.
+\end{exercise}
+
+\section{Problema: un espectrógrafo para una estrella}
+
+\begin{problem}[{Problema de fin de semana --- diseñar el espectrógrafo que
+lee la luz de una estrella: la red, el detector, las rayas del
+hidrógeno y el bamboleo de un planeta}]
+\label{pb:b2:gratings:1}
+
+Un espectrógrafo: rendija de entrada, colimador de distancia focal $f_1 =
+\qty{1.0}{m}$, una red de reflexión de $1200$ líneas/mm y anchura $W =
+\qty{12}{cm}$, una cámara de $f_2 = \qty{1.0}{m}$ y un detector con píxeles de \qty{15}{\micro m}.
+Trabaja en el primer orden, en torno a \qty{550}{nm}, con la
+red a \qty{20}{\degree} de incidencia.
+
+\medskip
+\noindent\textbf{Parte I --- La red.}
+\begin{enumerate}
+  \item Periodo de la red; número de líneas iluminadas si el haz cubre
+        toda la anchura.
+  \item Ángulo de difracción de \qty{550}{nm} en el primer orden; el de
+        \qty{400}{nm} y el de \qty{700}{nm}; anchura angular del espectro
+        visible.
+  \item \omterm{prop:b2:gratings:equation}{Dispersión angular} a \qty{550}{nm}; dispersión lineal en el
+        detector, en nm por mm y en nm por píxel.
+  \item Poder resolvente; menor $\Delta\lambda$ resuelto a \qty{550}{nm}; en
+        píxeles.
+  \item ¿Cae el violeta de segundo orden sobre el visible de primer
+        orden? ¿Qué filtro lo elimina?
+  \item Longitud de detector necesaria para todo el espectro visible en
+        el primer orden.
+  \item La red tiene un blaze de \qty{17}{\degree}: ¿para qué longitud de onda es
+        más eficiente en el primer orden con esta incidencia (úsese
+        la estimación de Littrow $2a\sin\beta = \lambda$)?
+  \item La red devuelve el $80\%$ de la luz en la longitud de onda de blaze
+        y el telescopio más la óptica, el $40\%$: fracción de los fotones
+        de la estrella que llegan al detector.
+\end{enumerate}
+
+\medskip
+\noindent\textbf{Parte II --- Las rayas.}
+\begin{enumerate}[resume]
+  \item Las rayas de Balmer del hidrógeno de la estrella: H$\alpha$ \qty{656.3}{nm},
+        H$\beta$ \qty{486.1}{nm} y H$\gamma$ \qty{434.0}{nm}: sus posiciones en el
+        detector respecto de \qty{550}{nm}.
+  \item La H$\alpha$ de un átomo de deuterio es \qty{0.18}{nm} más corta: ¿se separa?
+        ¿En cuántos píxeles?
+  \item El doblete del sodio en el espectro de la estrella: separación en
+        píxeles; y anchura de cada raya si la atmósfera de la estrella
+        las ensancha hasta \qty{0.05}{nm}.
+  \item La rendija de entrada mide \qty{100}{\micro m} de ancho y se imagina con
+        aumento $f_2/f_1$: su anchura en el detector, en píxeles y
+        en nm; ¿está el espectrógrafo limitado por la rendija o por la red?
+  \item La luz del telescopio llega como un disco de \qty{1}{''} en
+        el cielo, que el telescopio ($f = \qty{20}{m}$) convierte en \qty{100}{\micro m}
+        de anchura en la rendija: fracción de luz perdida si la rendija se
+        estrecha a \qty{50}{\micro m} (tómese el disco como uniforme).
+  \item ¿Por qué da una rendija más estrecha rayas más nítidas pero espectros
+        más ruidosos?
+\end{enumerate}
+
+\medskip
+\noindent\textbf{Parte III --- La estrella se mueve.}
+\begin{enumerate}[resume]
+  \item Una estrella se aleja a \qty{30}{km/s}: corrimiento Doppler de H$\alpha$ en nm
+        y en píxeles.
+  \item El movimiento orbital de la Tierra añade $\pm\qty{30}{km/s}$ a lo largo del año:
+        ¿por qué debe restarse, y con qué precisión si se quieren
+        \qty{100}{m/s}?
+  \item Un planeta hace bambolearse a su estrella a \qty{10}{m/s}: corrimiento en nm y
+        en píxeles; ¿queda por debajo de la resolución? Explíquese cómo, midiendo
+        el centro de una raya con una centésima de su anchura, sobre
+        mil rayas, se recupera (ganancia estadística $\sqrt{N}$).
+  \item La temperatura del instrumento cambia \qty{1}{K} y la
+        red (de vidrio, con dilatación \qty{1e-5}{K^{-1}}) se dilata: corrimiento de las
+        rayas en píxeles; ¿qué estabilidad hace falta para \qty{10}{m/s}?
+  \item Una lámpara de calibración (torio-argón) pone cientos de rayas conocidas
+        en el mismo detector: explíquese su papel.
+\end{enumerate}
+
+\medskip
+\noindent\textbf{Parte IV --- Alternativas.}
+\begin{enumerate}[resume]
+  \item La misma anchura de red tallada con $300$ líneas/mm y usada en
+        el cuarto orden (con un dispersor cruzado para ordenar los órdenes):
+        ángulo de difracción, poder resolvente, dispersión e \omterm{prop:b2:gratings:fabryperot}{intervalo
+        espectral libre} a \qty{550}{nm}; ¿qué ha cambiado y qué no?
+  \item Un etalón de Fabry--Pérot ($L = \qty{1}{mm}$, $R = 0.9$) colocado antes
+        de la rendija: \omterm{prop:b2:gratings:fabryperot}{intervalo espectral libre} en nm, fineza, anchura de pico; ¿qué
+        aspecto tiene su peine de picos de transmisión en el detector
+        y para qué se usa?
+  \item Un prisma de \qty{60}{\degree} de vidrio con $\dd n/\dd\lambda = \qty{-1e-4}{nm^{-1}}$
+        tiene la \omterm{prop:b2:gratings:equation}{dispersión angular} $\dd D/\dd\lambda \approx 2\,\dd n/\dd\lambda$ cerca del
+        mínimo de desviación: compárese con la de la red; ¿por qué sustituyeron las redes
+        a los prismas?
+  \item ¿Por qué se construyen los mayores espectrógrafos astronómicos con
+        redes de un metro de ancho y se usan con ángulos grandes (el límite
+        $2W/\lambda$)?
+  \item Una estrella de magnitud 8 entrega \qty{1e4}{} fotones por segundo y
+        por nanómetro en el telescopio: fotones por píxel y por segundo
+        en el detector, y relación señal-ruido de una exposición de \qty{100}{s}
+        (solo ruido de fotones).
+  \item Resúmase: los tres números que describen un espectrógrafo
+        (dispersión, poder resolvente e \omterm{prop:b2:gratings:fabryperot}{intervalo espectral libre}) y qué
+        fija cada uno.
+\end{enumerate}
+\end{problem}

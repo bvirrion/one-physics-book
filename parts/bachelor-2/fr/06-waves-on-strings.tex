@@ -1,0 +1,568 @@
+\chapter{Ondes sur les cordes et les barres~: l'équation de d'Alembert}\label{ch:b2:waves-on-strings}
+
+Pincez une corde de guitare et une forme court sur elle, rebondit sur le
+chevalet, revient, et s'établit en ce motif stationnaire dont la
+fréquence s'entend comme une note. Posez l'oreille sur un rail et vous
+entendez le train bien avant qu'il n'arrive~: une compression descend
+l'acier à cinq kilomètres par seconde. Le volume de première année décrivait de telles
+ondes --- progressives, stationnaires, superposées --- sans dire pourquoi elles
+existent. Ce chapitre établit l'équation qui les gouverne,
+l'\emph{\omterm{thm:b2:waves-on-strings:equation}{équation d'onde} de d'Alembert}, d'abord pour le mouvement transversal d'une
+corde, puis pour le mouvement longitudinal d'une barre construite, atome par atome,
+à partir de masses et de ressorts~; il calcule l'énergie que transporte une onde et
+l'impédance qui décide de ce qui arrive lorsqu'elle rencontre un changement de milieu.
+
+\section{La corde vibrante}
+
+\begin{theorem}[Équation d'onde d'une corde]\label{thm:b2:waves-on-strings:equation}
+\index{équation de d'Alembert}\index{équation d'onde}\index{célérité (corde)}
+Une corde de masse linéique $\mu$, tendue avec la tension $T$, effectue de
+petits déplacements transversaux $y(x, t)$ (pentes $|\partial_xy| \ll 1$). Alors
+\[
+\frac{\partial^2y}{\partial t^2} = c^2\,\frac{\partial^2y}{\partial x^2} ,
+\qquad c = \sqrt{\frac{T}{\mu}} ,
+\]
+l'\emph{\omterm{thm:b2:waves-on-strings:equation}{équation de d'Alembert}}, dont la solution générale est $y = f(x - ct)
++ g(x + ct)$~: la superposition d'une forme qui se propage vers la droite et
+d'une autre vers la gauche à la célérité $c$, sans se déformer.
+\end{theorem}
+
+\begin{proof}
+Isolons l'élément compris entre $x$ et $x + \dd x$, de masse $\mu\,\dd x$. Ses
+voisins le tirent selon la tangente à la corde avec la tension $T$~:
+horizontalement $T\cos\theta \approx T$ aux deux extrémités (aucun mouvement horizontal, donc
+$T$ est la même partout), verticalement $T\sin\theta \approx T\partial_xy$, ce qui
+donne la force résultante $T[\partial_xy(x + \dd x) - \partial_xy(x)] = T\,\partial_x^2y\,\dd x$.
+Newton~: $\mu\,\dd x\,\partial_t^2y = T\partial_x^2y\,\dd x$. Pour la solution, posons
+$u = x - ct$, $v = x + ct$~: l'équation devient $\partial_u\partial_vy = 0$
+(dérivation composée), donc $\partial_vy$ ne dépend que de $v$, et $y = f(u) + g(v)$~;
+réciproquement tout $y$ de cette forme la vérifie. La pesanteur, négligée, l'est
+légitimement lorsque $T \gg \mu gL$.
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}[font=\small, x=1cm, y=1cm, >=Stealth]
+  \begin{scope}
+    \draw[->] (-2.5,0) -- (3.0,0) node[right, font=\footnotesize] {$x$};
+    \draw[omDef, very thick, domain=-2.3:2.8, samples=60] plot (\x,{0.9*exp(-(\x)^2/1.6)});
+    \coordinate (A) at (-0.6,{0.9*exp(-0.36/1.6)}); \coordinate (B) at (0.2,{0.9*exp(-0.04/1.6)});
+    \fill[omThm] (A) circle (1.5pt); \fill[omThm] (B) circle (1.5pt);
+    \draw[omThm, very thick, ->] (A) -- ($(A)+(-0.9,-0.55)$) node[above left, font=\footnotesize, yshift=2pt] {$\vect T(x)$};
+    \draw[omThm, very thick, ->] (B) -- ($(B)+(1.0,-0.12)$) node[right, font=\footnotesize] {$\vect T(x+\dd x)$};
+    \draw[dashed] (-0.6,0) -- (A); \draw[dashed] (0.2,0) -- (B);
+    \node[font=\footnotesize] at (-0.6,-0.3) {$x$}; \node[font=\footnotesize] at (0.35,-0.3) {$x + \dd x$};
+    \node[font=\footnotesize] at (0.2,-0.9) {$\mu\,\dd x\,\partial_t^2y = T\,\partial_x^2y\,\dd x$};
+  \end{scope}
+  \begin{scope}[xshift=7.6cm]
+    \draw[->] (-2.5,0) -- (3.0,0) node[right, font=\footnotesize] {$x$};
+    \draw[omDef, thick, domain=-2.3:2.8, samples=60] plot (\x,{0.8*exp(-(\x+1.3)^2/0.5)});
+    \draw[omDef, thick, dashed, domain=-2.3:2.8, samples=60] plot (\x,{0.8*exp(-(\x-0.5)^2/0.5)});
+    \draw[omDef, thick, ->] (-1.0,1.0) -- (0.2,1.0) node[above, font=\footnotesize, pos=0.5] {$c$};
+    \node[font=\footnotesize] at (-1.3,-0.35) {$t$}; \node[font=\footnotesize] at (0.5,-0.35) {$t + \tau$};
+    \node[font=\footnotesize] at (0.2,-0.9) {$y = f(x - ct)$};
+  \end{scope}
+\end{tikzpicture}
+
+{\small À gauche~: les forces sur un élément de corde --- les deux tensions
+ne sont pas parallèles lorsque la corde est courbée, et leur résultante est
+transversale. À droite~: une forme $f(x - ct)$ se propage vers la droite à $c$
+sans se déformer.}
+\end{omfigure}
+
+\begin{example}[Guitare, piano, câble]\label{ex:b2:waves-on-strings:numbers}
+La corde de mi grave d'une guitare ($\mu = \qty{5.5}{g/m}$, longueur \qty{0.65}{m},
+\qty{82.4}{Hz}) vibre sur son fondamental avec $\lambda = 2L$~: $c = 2Lf =
+\qty{107}{m/s}$ et $T = \mu c^2 = \qty{63}{N}$. La corde de la$_4$ d'un piano (acier,
+\qty{1}{mm}, $\mu = \qty{6.1}{g/m}$, \qty{0.38}{m}, \qty{440}{Hz})~: $c = \qty{334}{m/s}$,
+$T = \qty{680}{N}$ --- et un piano compte quelque $230$ cordes, soit vingt
+tonnes de tension sur un cadre de fonte. Un câble de \qty{1}{kg/m} tendu à \qty{10}{kN}~:
+\qty{100}{m/s}.
+\end{example}
+
+\section{Ondes stationnaires et modes propres}
+
+\begin{proposition}[Modes d'une corde fixée aux deux bouts]\label{prop:b2:waves-on-strings:modes}
+\index{modes propres}\index{harmoniques}\index{onde stationnaire}
+Une corde fixée en $x = 0$ et $x = L$ admet les solutions sinusoïdales
+stationnaires (les \emph{\omterm{prop:b2:waves-on-strings:modes}{modes propres}})
+\[
+y_n(x, t) = A_n\sin\frac{n\pi x}{L}\cos(\omega_nt - \varphi_n) , \qquad
+f_n = \frac{\omega_n}{2\pi} = n\,\frac{c}{2L} = n f_1 , \quad n = 1, 2, 3, \dots
+\]
+--- le fondamental $f_1 = c/2L$ et ses \emph{harmoniques}. Le mode $n$ possède
+$n - 1$ nœuds entre les extrémités. Tout mouvement de la corde est une
+superposition $y = \sum_ny_n$, les amplitudes et les phases étant fixées par
+la forme et la vitesse initiales (une série de Fourier, comme l'établit le
+volume de mathématiques de cette année)~: le mélange des harmoniques est le
+\emph{timbre} de la note.
+\end{proposition}
+
+\begin{proof}
+Cherchons $y = F(x)\cos(\omega t - \varphi)$~: $F'' + (\omega/c)^2F = 0$, $F(0) = 0$ donne
+$F = A\sin(\omega x/c)$, et $F(L) = 0$ impose $\omega L/c = n\pi$. Chaque mode est
+aussi la somme de deux ondes progressives~: $\sin kx\cos\omega t = \tfrac12[\sin(kx -
+\omega t) + \sin(kx + \omega t)]$ --- l'onde et sa réflexion. La
+complétude des sinus est le théorème de Fourier.
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}
+\begin{axis}[omaxis, axis x line=bottom, axis y line=none, width=6.4cm, height=5.2cm,
+    xmin=0, xmax=1, ymin=-5.9, ymax=1.5, xtick={0,1}, xticklabels={$0$, $L$}, samples=80,
+    xlabel={}, ylabel={}]
+  \addplot[omDef, thick, domain=0:1] {sin(deg(pi*x))};
+  \addplot[omDef, thick, dashed, domain=0:1] {-sin(deg(pi*x))};
+  \addplot[omThm, thick, domain=0:1] {0.8*sin(deg(2*pi*x))-2.6};
+  \addplot[omThm, thick, dashed, domain=0:1] {-0.8*sin(deg(2*pi*x))-2.6};
+  \addplot[omProp, thick, domain=0:1] {0.7*sin(deg(3*pi*x))-5.0};
+  \addplot[omProp, thick, dashed, domain=0:1] {-0.7*sin(deg(3*pi*x))-5.0};
+  \addplot[black, thin] coordinates {(0,-2.6) (1,-2.6)};
+  \addplot[black, thin] coordinates {(0,-5.0) (1,-5.0)};
+  \node[font=\scriptsize] at (axis cs:0.5,1.25) {$n = 1$};
+  \node[font=\scriptsize] at (axis cs:0.5,-1.4) {$n = 2$};
+  \node[font=\scriptsize] at (axis cs:0.5,-3.85) {$n = 3$};
+\end{axis}
+\end{tikzpicture}
+\hfill
+\begin{tikzpicture}
+\begin{axis}[omaxis, axis x line=bottom, axis y line=left, width=5.0cm, height=4.2cm,
+    xlabel={$x/L$}, ylabel={$y$}, xmin=0, xmax=1, ymin=-0.05, ymax=1.1, xtick={0,0.5,1}, ytick=\empty, samples=200, clip=false,
+    xlabel style={at={(axis description cs:0.5,-0.12)}, anchor=north},
+    ylabel style={at={(axis description cs:-0.06,0.5)}, rotate=90, anchor=south}]
+  \addplot[black, thick] coordinates {(0,0) (0.5,1) (1,0)};
+  \addplot[omDef, thick, domain=0:1] {0.81*sin(deg(pi*x))};
+  \addplot[omThm, thick, domain=0:1] {0.81*sin(deg(pi*x)) - 0.09*sin(deg(3*pi*x))};
+  \node[font=\scriptsize, anchor=west] at (axis cs:0.03,0.95) {pincée};
+  \node[font=\scriptsize, omDef, anchor=east] at (axis cs:0.97,0.95) {$n = 1$};
+  \node[font=\scriptsize, omThm, anchor=east] at (axis cs:0.97,0.78) {$n = 1, 3$};
+\end{axis}
+\end{tikzpicture}
+
+{\small À gauche~: les trois premiers modes d'une corde fixée aux deux bouts ($f_n = nc/2L$).
+À droite~: une corde pincée en son milieu (triangle) et les premiers termes
+de sa série de Fourier --- seules apparaissent les harmoniques impaires, d'amplitudes
+décroissant en $1/n^2$.}
+\end{omfigure}
+
+\begin{example}[L'expérience de Melde]\label{ex:b2:waves-on-strings:melde}
+\index{expérience de Melde}
+Une corde excitée à une extrémité par un vibreur de fréquence $f$, l'autre extrémité
+passant sur une poulie et supportant une masse $m$ (donc $T = mg$)~: une grande
+\omterm{prop:b2:waves-on-strings:modes}{onde stationnaire} apparaît chaque fois que $f$ égale l'une des $f_n = (n/2L)
+\sqrt{mg/\mu}$ --- résonance du mode $n$. Pour $L = \qty{1.2}{m}$, $\mu =
+\qty{1.0}{g/m}$ et $f = \qty{50}{Hz}$, les masses donnant $n = 1, 2, 3$ fuseaux
+valent $m_n = 4L^2f^2\mu/n^2g = 1.47/n^2$ kg~: \qty{1.47}{kg}, \qty{367}{g}, \qty{163}{g}.
+Appuyer une corde de guitare à la douzième frette divise $L$ par deux et double
+$f_1$~: c'est l'octave~; l'effleurer au milieu sans appuyer
+tue les modes impairs et laisse la deuxième harmonique --- c'est le flageolet.
+\end{example}
+
+\section{Énergie, puissance et impédance}
+
+\begin{proposition}[Énergie d'une onde sur une corde]\label{prop:b2:waves-on-strings:energy}
+\index{densité d'énergie (corde)}\index{flux d'énergie (corde)}\index{impédance (corde)}
+Une corde transporte l'énergie par unité de longueur et la puissance (flux
+d'énergie vers les $+x$)
+\[
+e = \tfrac12\mu\Bigl(\frac{\partial y}{\partial t}\Bigr)^2 + \tfrac12T\Bigl(\frac{\partial y}{\partial x}\Bigr)^2 ,
+\qquad
+\mathcal P = -T\,\frac{\partial y}{\partial x}\,\frac{\partial y}{\partial t} ,
+\]
+qui vérifient le bilan local $\partial_te + \partial_x\mathcal P = 0$. Pour une
+onde progressive $y = f(x - ct)$, les densités cinétique et potentielle sont
+égales et $\mathcal P = Z\,(\partial_ty)^2$ avec
+\[
+Z = \sqrt{T\mu} = \mu c = \frac Tc ,
+\]
+l'\emph{impédance} de la corde (\unit{kg/s})~: le rapport de la
+force transversale $-T\partial_xy$ exercée par la corde sur ce qui se trouve devant
+à la vitesse transversale $\partial_ty$. Une onde sinusoïdale d'amplitude $A$
+transporte la puissance moyenne $\langle\mathcal P\rangle = \tfrac12Z\omega^2A^2$.
+\end{proposition}
+
+\begin{proof}
+Le terme potentiel est le travail de la tension qui étire l'élément~:
+sa longueur vaut
+\[
+\dd x\sqrt{1 + (\partial_xy)^2} \approx \dd x\bigl(1 + \tfrac12(\partial_xy)^2\bigr) ,
+\]
+et l'excès de longueur multiplié par $T$ donne $\tfrac12T(\partial_xy)^2\dd x$. La puissance
+transmise à travers $x$ vers les $+x$ est la force transversale exercée par
+la partie gauche sur la partie droite, $-T\partial_xy$, multipliée par la vitesse
+$\partial_ty$. Bilan~:
+\[
+\partial_te = \mu\,\partial_ty\,\partial_t^2y + T\,\partial_xy\,\partial_x\partial_ty ,
+\qquad
+-\partial_x\mathcal P = T\,\partial_x^2y\,\partial_ty + T\,\partial_xy\,\partial_x\partial_ty ,
+\]
+égaux d'après l'\omterm{thm:b2:waves-on-strings:equation}{équation d'onde}. Pour $f(x - ct)$~: $\partial_xy = -\partial_ty/c$, donc $\mathcal P = (T/c)
+(\partial_ty)^2$ et les deux densités valent $\tfrac12\mu(\partial_ty)^2$.
+\end{proof}
+
+\begin{proposition}[Réflexion et transmission à une jonction]\label{prop:b2:waves-on-strings:junction}
+\index{coefficient de réflexion (corde)}\index{coefficient de transmission (corde)}
+Une onde d'amplitude $A_i$ arrive d'une corde d'impédance $Z_1$ sur
+une corde d'impédance $Z_2$ raccordée en $x = 0$. La continuité du
+déplacement et de la force transversale à la jonction donne les
+coefficients en amplitude
+\[
+r = \frac{A_r}{A_i} = \frac{Z_1 - Z_2}{Z_1 + Z_2} , \qquad
+t = \frac{A_t}{A_i} = \frac{2Z_1}{Z_1 + Z_2} ,
+\]
+et les fractions d'énergie $R = r^2$, $\mathcal T = 4Z_1Z_2/(Z_1 + Z_2)^2$, avec
+$R + \mathcal T = 1$. Une extrémité fixe ($Z_2 \to \infty$) réfléchit avec $r = -1$
+(l'impulsion revient inversée), une extrémité libre ($Z_2 = 0$) avec $r = +1$~;
+des impédances égales transmettent tout.
+\end{proposition}
+
+\begin{proof}
+Ondes sinusoïdales $y_1 = A_i\cos(\omega t - k_1x) + A_r\cos(\omega t + k_1x)$ pour
+$x < 0$, $y_2 = A_t\cos(\omega t - k_2x)$ pour $x > 0$, de même $\omega$ des deux
+côtés. En $x = 0$~: $y_1 = y_2$ donne $A_i + A_r = A_t$~; la force $-T\partial_xy$
+continue (jonction sans masse) donne $Z_1(A_i - A_r) = Z_2A_t$ (en utilisant
+$T_1k_1 = Z_1\omega$). On résout. Énergies~: les puissances moyennes $\tfrac12Z\omega^2A^2$.
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}[font=\small, x=1cm, y=1cm, >=Stealth]
+  \begin{scope}
+    \draw[->] (-3.2,0) -- (3.2,0) node[right, font=\footnotesize] {$x$};
+    \draw[omDef, very thick, domain=-3.0:0, samples=50] plot (\x,{0.8*exp(-(\x+1.6)^2/0.25)});
+    \draw[omDef, very thick, domain=0:3.0, samples=50] plot (\x,{0});
+    \fill (0,0) circle (2pt); \node[font=\footnotesize] at (0,-0.35) {$Z_1 \to Z_2$};
+    \draw[omDef, ->, thick] (-1.6,1.0) -- (-0.8,1.0) node[above, font=\footnotesize, pos=0.5] {$A_i$};
+    \node[font=\footnotesize] at (-1.5,-0.6) {$Z_1$}; \node[font=\footnotesize] at (1.5,-0.6) {$Z_2 > Z_1$};
+    \node[font=\footnotesize] at (0,-1.1) {avant};
+  \end{scope}
+  \begin{scope}[xshift=7.2cm]
+    \draw[->] (-3.2,0) -- (3.2,0) node[right, font=\footnotesize] {$x$};
+    \draw[omThm, very thick, domain=-3.0:0, samples=50] plot (\x,{-0.27*exp(-(\x+1.6)^2/0.25)});
+    \draw[omProp, very thick, domain=0:3.0, samples=50] plot (\x,{0.53*exp(-(\x-1.1)^2/0.12)});
+    \fill (0,0) circle (2pt);
+    \draw[omThm, ->, thick] (-1.0,0.5) -- (-1.8,0.5) node[above, font=\footnotesize, pos=0.5] {$rA_i$};
+    \draw[omProp, ->, thick] (1.0,0.9) -- (1.8,0.9) node[above, font=\footnotesize, pos=0.5] {$tA_i$};
+    \node[font=\footnotesize] at (0,-1.1) {après~: $r = \dfrac{Z_1 - Z_2}{Z_1 + Z_2}$, $t = \dfrac{2Z_1}{Z_1 + Z_2}$};
+  \end{scope}
+\end{tikzpicture}
+
+{\small Une impulsion rencontre une jonction avec une corde plus lourde ($Z_2 = 4Z_1$)~:
+une partie est transmise, plus lente et plus étroite, une partie est réfléchie et inversée.}
+\end{omfigure}
+
+\section{De la chaîne d'atomes à la barre élastique}
+
+\begin{proposition}[La chaîne d'atomes~; le module d'Young]\label{prop:b2:waves-on-strings:chain}
+\index{chaîne d'atomes}\index{module d'Young}\index{loi de Hooke}\index{onde longitudinale}
+Une file de masses identiques $m$ espacées de $a$ et reliées par des ressorts de
+raideur $k$~: si $u_n(t)$ est le déplacement de la masse $n$ selon la
+file,
+\[
+m\ddot u_n = k(u_{n+1} - u_n) - k(u_n - u_{n-1}) = k(u_{n+1} - 2u_n + u_{n-1}) .
+\]
+Lorsque le déplacement varie lentement d'une masse à la suivante (sur des
+longueurs d'onde $\lambda \gg a$), $u_n(t) \to u(x, t)$ avec $u_{n\pm1} - u_n \approx
+\pm a\,\partial_xu + \tfrac12a^2\partial_x^2u$, et la chaîne obéit à l'\omterm{thm:b2:waves-on-strings:equation}{équation
+de d'Alembert}
+\[
+\frac{\partial^2u}{\partial t^2} = c^2\frac{\partial^2u}{\partial x^2} , \qquad
+c = a\sqrt{\frac km} = \sqrt{\frac{E}{\rho}} ,
+\]
+avec $\rho = m/a^3$ la masse volumique d'un solide fait de telles chaînes en
+réseau cubique et $E = k/a$ son \emph{\omterm{prop:b2:waves-on-strings:chain}{module d'Young}}~: la raideur d'une
+barre de section $S$ et de longueur $\ell$ vaut $kS/a^2\cdot a/\ell = ES/\ell$,
+c'est-à-dire la \emph{\omterm{prop:b2:waves-on-strings:chain}{loi de Hooke}} $F/S = E\,\Delta\ell/\ell$ (contrainte $\sigma = E\varepsilon$).
+\end{proposition}
+
+\begin{proof}
+Chaque ressort est allongé de la différence des déplacements de ses
+extrémités. En reportant les développements de Taylor~: $m\partial_t^2u = ka^2\partial_x^2u$. Un cube
+d'arête $a$ par atome donne $\rho = m/a^3$~; une barre de section $S$ contient
+$S/a^2$ chaînes parallèles de $\ell/a$ ressorts en série, de raideur totale
+$(S/a^2)(ka/\ell) = (k/a)S/\ell$.
+\end{proof}
+
+\begin{proposition}[Ondes longitudinales dans une barre]\label{prop:b2:waves-on-strings:rod}
+\index{son dans les solides}
+Directement sur le milieu continu~: un élément de barre compris entre $x$ et $x +
+\dd x$, déplacé de $u(x, t)$, subit la déformation $\varepsilon = \partial_xu$ et est tiré
+par la contrainte $\sigma = E\partial_xu$ sur chaque face~; Newton donne $\rho\,\partial_t^2u =
+E\,\partial_x^2u$~: les \omterm{prop:b2:waves-on-strings:chain}{ondes longitudinales} (de compression) se propagent à $c = \sqrt{E/\rho}$
+--- \qty{5100}{m/s} dans l'acier ($E = \qty{200}{GPa}$), \qty{5000}{m/s} dans l'aluminium,
+\qty{3700}{m/s} dans le granite, \qty{3500}{m/s} dans le bois selon le fil. L'impédance
+vaut $Z = \rho c = \sqrt{E\rho}$ par unité d'aire, et les mêmes formules de
+jonction s'appliquent --- c'est ainsi que les ultrasons repèrent une fissure dans un
+rail.
+\end{proposition}
+
+\begin{proof}
+Force résultante sur l'élément~: $S[\sigma(x + \dd x) - \sigma(x)] = SE\partial_x^2u\,\dd x$~;
+masse $\rho S\dd x$.
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}[font=\small, x=1cm, y=1cm, >=Stealth]
+  \begin{scope}
+    \foreach \i in {0,1,2,3,4} {
+      \fill[omDef] ({1.4*\i},0) circle (5pt);
+    }
+    \foreach \i in {0,1,2,3} {
+      \draw[thick, decorate, decoration={coil, aspect=0.5, segment length=4pt, amplitude=3pt}] ({1.4*\i+0.18},0) -- ({1.4*\i+1.22},0);
+    }
+    \node[font=\footnotesize] at (1.4,-0.5) {$u_{n-1}$}; \node[font=\footnotesize] at (2.8,-0.5) {$u_n$}; \node[font=\footnotesize] at (4.2,-0.5) {$u_{n+1}$};
+    \draw[<->] (1.4,0.45) -- (2.8,0.45) node[midway, above, font=\footnotesize] {$a$};
+    \node[font=\footnotesize] at (2.8,-1.1) {$m\ddot u_n = k(u_{n+1} - 2u_n + u_{n-1})$};
+  \end{scope}
+  \begin{scope}[xshift=8.0cm]
+    \draw[thick] (-2.0,-0.5) rectangle (2.6,0.5);
+    \fill[omDef!25] (-0.3,-0.5) rectangle (0.5,0.5);
+    \draw[omThm, very thick, ->] (-0.3,0) -- (-1.2,0) node[above, font=\footnotesize, pos=0.6] {$\sigma(x)S$};
+    \draw[omThm, very thick, ->] (0.5,0) -- (1.5,0) node[above, font=\footnotesize, pos=0.6] {$\sigma(x + \dd x)S$};
+    \node[font=\footnotesize] at (0.1,-0.8) {$\rho S\dd x\,\partial_t^2u = SE\,\partial_x^2u\,\dd x$};
+    \node[font=\footnotesize] at (0.3,-1.35) {$c = \sqrt{E/\rho}$};
+  \end{scope}
+\end{tikzpicture}
+
+{\small À gauche~: la chaîne de masses et de ressorts --- chaque masse subit les
+deux ressorts qui l'entourent, et la limite continue est l'\omterm{thm:b2:waves-on-strings:equation}{équation d'onde}
+avec $c = a\sqrt{k/m}$. À droite~: un élément de barre élastique tiré par la
+contrainte sur ses deux faces.}
+\end{omfigure}
+
+\begin{remark}[Ce que la chaîne sait et que la barre ignore]\label{rem:b2:waves-on-strings:dispersion}
+En cherchant $u_n = A\cos(\omega t - kna)$ dans l'équation exacte de la chaîne on obtient
+$\omega = 2\sqrt{k/m}\,|\sin(ka/2)|$~: pour $ka \ll 1$ c'est $\omega = ck$, l'\omterm{thm:b2:waves-on-strings:equation}{équation
+d'onde} non dispersive, mais lorsque la longueur d'onde approche $2a$ la
+fréquence sature à $2\sqrt{k/m}$ et les vitesses de phase et de groupe
+diffèrent --- la première \emph{relation de dispersion} de ce volume, sujet du
+\cref{ch:b2:dispersion-wave-packets}. Pour $a = \qty{0.25}{nm}$ et
+$c = \qty{5}{km/s}$ la coupure se situe à $\omega_{\max} = 2c/a = \qty{4e13}{rad/s}$
+(\qty{6}{THz})~: le solide ne peut pas vibrer plus vite que ne le permettent les ressorts
+de ses atomes.
+\end{remark}
+
+\section{Exercices}
+
+\begin{exercise}[$\star$]\label{exo:b2:waves-on-strings:1}
+La corde de la d'une guitare (\qty{110}{Hz}, $L = \qty{65}{cm}$, $\mu = \qty{3.0}{g/m}$)~:
+célérité, tension, longueur d'onde du fondamental sur la corde et
+du son dans l'air~; fréquence lorsque la corde est appuyée à la cinquième
+frette ($L$ réduite d'un facteur $2^{-5/12}$).
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b2:waves-on-strings:2}
+Célérité des \omterm{prop:b2:waves-on-strings:chain}{ondes longitudinales} dans l'acier ($E = \qty{200}{GPa}$, $\rho =
+\qty{7800}{kg/m^3}$), l'aluminium (\qty{70}{GPa}, \qty{2700}{kg/m^3}) et le plomb
+(\qty{16}{GPa}, \qty{11300}{kg/m^3}). Temps mis par un son pour parcourir \qty{1.0}{km}
+le long d'un rail et dans l'air (\qty{340}{m/s})~; ce qu'entend un auditeur qui a
+l'oreille sur le rail.
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b2:waves-on-strings:3}
+Une corde de fondamental \qty{200}{Hz}~: fréquences et nombre de nœuds des
+modes 2, 3, 4~; positions des nœuds du mode 3~; fréquence du
+fondamental si la tension est doublée, si la longueur est divisée par deux, si la
+corde est remplacée par une corde trois fois plus lourde au mètre.
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b2:waves-on-strings:4}
+Une corde de \qty{12}{m} ($\mu = \qty{0.20}{kg/m}$) est tendue à \qty{45}{N}~; une
+extrémité est fixée à un mur. Une impulsion part de l'autre extrémité. Célérité~;
+temps pour atteindre le mur et revenir~; forme de l'impulsion de retour~;
+même question si l'extrémité lointaine est attachée à un anneau léger qui coulisse librement sur une
+tige.
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b2:waves-on-strings:5}
+Une corde de piano pour \qty{440}{Hz}~: acier ($\rho = \qty{7800}{kg/m^3}$),
+diamètre \qty{1.0}{mm}, longueur vibrante \qty{38}{cm}. (a) $\mu$, célérité,
+tension. (b) Contrainte dans le fil~; comparer à la résistance de la corde à
+piano, environ \qty{2}{GPa}. (c) La même note avec un fil de \qty{0.5}{mm}~: tension
+et contrainte. (d) Pourquoi les cordes graves sont-elles filées de cuivre plutôt que rendues
+plus longues ou plus épaisses~?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b2:waves-on-strings:6}
+\emph{Melde.} Une corde de \qty{1.5}{m} ($\mu = \qty{2.0}{g/m}$) est excitée à
+\qty{60}{Hz}~; sa tension est fixée par une masse suspendue. (a) Masses donnant
+$1$, $2$, $3$ et $4$ fuseaux. (b) Avec \qty{0.50}{kg}~: y a-t-il résonance~?
+Le mode le plus proche. (c) L'extrémité excitée est-elle en fait un nœud ou un ventre~?
+(d) Pourquoi les fuseaux deviennent-ils si grands à la résonance, et qu'est-ce qui les limite~?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b2:waves-on-strings:7}
+Une onde $y = A\cos(\omega t - kx)$ avec $A = \qty{2.0}{mm}$, $f = \qty{100}{Hz}$
+se propage sur une corde ($T = \qty{100}{N}$, $\mu = \qty{10}{g/m}$). Célérité, $k$,
+longueur d'onde~; vitesse et accélération transversales maximales d'un point~;
+pente maximale~; impédance~; puissance moyenne transportée~; énergie contenue dans une
+longueur d'onde.
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b2:waves-on-strings:8}
+Une corde de $\mu_1 = \qty{2.0}{g/m}$ est raccordée à une corde de $\mu_2 = \qty{8.0}{g/m}$,
+toutes deux tendues à \qty{20}{N}. (a) Célérités et impédances. (b) Coefficients de
+réflexion et de transmission en amplitude pour une onde venant de la
+corde légère~; puis de la corde lourde. (c) Fractions d'énergie dans les deux
+cas~; vérifier que leur somme vaut un. (d) Une impulsion de \qty{1}{cm} de hauteur et \qty{10}{cm} de largeur
+arrive de la corde légère~: hauteur et largeur des impulsions transmise et
+réfléchie.
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b2:waves-on-strings:9}
+Un fil d'acier de \qty{2.0}{m} et de diamètre \qty{1.0}{mm} s'allonge de \qty{1.0}{mm}
+sous \qty{80}{N}. (a) \omterm{prop:b2:waves-on-strings:chain}{Module d'Young}. (b) Célérité des \omterm{prop:b2:waves-on-strings:chain}{ondes longitudinales}.
+(c) Fréquence fondamentale de la vibration longitudinale du fil lorsqu'il
+est encastré aux deux bouts, et de sa vibration transversale sous cette
+tension~; pourquoi sont-elles si différentes~? (d) Raideur $k$ et masse $m$ d'un
+«~atome~» du modèle de la chaîne, pour $a = \qty{0.25}{nm}$.
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b2:waves-on-strings:10}
+\emph{La corde pincée.} Une corde fixée en $0$ et $L$ est écartée
+en $x = L/2$ jusqu'à la hauteur $h$ (forme triangulaire) puis lâchée sans vitesse.
+(a) Écrire la solution sous la forme $\sum_nb_n\sin(n\pi x/L)\cos(\omega_nt)$ et montrer
+que $b_n = \dfrac{8h}{n^2\pi^2}\sin\dfrac{n\pi}2$. (b) Quelles harmoniques sont
+absentes, et pourquoi~? (c) Énergie du mode $n$ ($E_n = \tfrac14\mu L\omega_n^2b_n^2$)~;
+fraction du total contenue dans le fondamental. (d) La corde est pincée en
+$L/5$ à la place~: quelles harmoniques disparaissent~? Pourquoi un guitariste pince-t-il près
+du chevalet pour un son plus brillant~?
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b2:waves-on-strings:11}
+\emph{Dispersion de la chaîne.} (a) Reporter $u_n = A\cos(\omega t - kna)$ dans
+l'équation de la chaîne et en déduire $\omega(k) = 2\omega_0|\sin(ka/2)|$, $\omega_0 =
+\sqrt{k/m}$. (b) Vitesse de phase $\omega/k$ et vitesse de groupe $\dd\omega/\dd k$~;
+leur limite commune pour $ka \to 0$~; leurs valeurs en $ka = \pi$. (c) À quoi
+ressemble l'onde en $ka = \pi$~? Pourquoi n'existe-t-il pas d'onde de
+longueur d'onde inférieure à $2a$~? (d) Pour l'acier ($c = \qty{5.1}{km/s}$, $a =
+\qty{0.25}{nm}$)~: $\omega_0$, la fréquence maximale, et la longueur d'onde d'un
+ultrason à \qty{1}{MHz} --- est-il dispersif~?
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b2:waves-on-strings:12}
+\emph{Corde pendante, claquement de fouet.} (a) Une corde homogène de longueur $L$
+pend du plafond~: tension à la hauteur $x$ au-dessus de l'extrémité libre~; célérité
+locale $c(x)$. (b) Temps mis par une impulsion pour aller du bas au
+haut~; valeur pour $L = \qty{10}{m}$~; pourquoi la forme de l'impulsion change. (c) Un
+fouet s'effile, $\mu$ décroissant vers la pointe, sous une tension (presque) constante
+pendant le coup~: comment la célérité varie-t-elle le long du fouet~? (d)
+En admettant que l'énergie de l'impulsion se conserve et que sa
+durée reste constante, montrer que l'amplitude de sa vitesse transversale
+croît en $\mu^{-1/4}$, et estimer la vitesse de la pointe d'un fouet dont
+$\mu$ décroît d'un facteur $10^4$ du manche à la pointe si la main communique
+\qty{10}{m/s}. (Le claquement est un bang supersonique.)
+\end{exercise}
+
+\begin{omfigure}
+\includegraphics[width=0.58\linewidth]{images/book4/ai/b4-06-grand-piano-strings.png}
+
+{\small L'intérieur d'un piano à queue~: quelque deux cents cordes d'acier de longueurs et d'épaisseurs graduées, chacune accordée par sa tension sur un fondamental $c/2L$~; les cordes graves sont filées de cuivre pour la masse.}
+\end{omfigure}
+
+\section{Problème~: le piano, du marteau à la table d'harmonie}
+
+\begin{problem}[{Problème du week-end --- une corde de piano démontée~: sa
+tension et sa raideur, le coup du marteau et les harmoniques qu'il crée,
+le chevalet qui fuit son énergie vers la table d'harmonie, et un rail qui
+porte la même équation}]
+\label{pb:b2:waves-on-strings:1}
+
+\medskip
+\noindent\textbf{Partie I --- La corde.}
+La corde de la$_4$ d'un piano (\qty{440}{Hz})~: acier, $E = \qty{200}{GPa}$, $\rho =
+\qty{7800}{kg/m^3}$, diamètre $d = \qty{1.0}{mm}$, longueur vibrante $L =
+\qty{38}{cm}$. Chaque note au-dessus du grave a trois cordes de ce type~; le piano
+compte $230$ cordes.
+\begin{enumerate}
+  \item Masse linéique, célérité et tension de la corde.
+  \item Contrainte de traction dans le fil~; le fil rompt à \qty{2.0}{GPa}~: la
+        marge de sécurité, et pourquoi le dernier tour de l'accordeur est le plus
+        dangereux.
+  \item Estimer la tension totale sur le cadre, en prenant toutes les cordes
+        à la même tension.
+  \item La corde la plus grave (la$_0$, \qty{27.5}{Hz}) mesure \qty{1.9}{m}~; si elle
+        était un simple fil d'acier à la même tension, quels $\mu$ et
+        quel diamètre lui faudrait-il~? Elle est en fait faite d'une âme d'acier filée de
+        cuivre~: expliquer.
+  \item Modes de la corde de la$_4$~: fréquences des huit premières
+        harmoniques~; lesquelles se trouvent à un intervalle consonant du
+        fondamental (octave, quinte, quarte, tierce majeure) et lesquelles
+        non~?
+  \item La corde vibre sur son fondamental avec une amplitude de
+        \qty{0.50}{mm} au ventre~: énergie emmagasinée (l'énergie d'un
+        mode vaut $\tfrac14\mu L\omega^2A^2$).
+  \item Écrire le fondamental comme la somme de deux ondes progressives~; donner
+        leur amplitude et la puissance moyenne que chacune transporte.
+\end{enumerate}
+
+\medskip
+\noindent\textbf{Partie II --- Le marteau.}
+Le marteau frappe la corde en $x_0 = L/8$, lui communiquant, à $t = 0$, une
+vitesse $v_0$ sur un court segment de largeur $w$ autour de $x_0$ et aucun
+déplacement.
+\begin{enumerate}[resume]
+  \item Écrire la solution générale $y = \sum_nB_n\sin(n\pi x/L)\sin(\omega_nt)$
+        et montrer, à l'aide de l'orthogonalité des sinus, que $B_n =
+        \dfrac{2}{L\omega_n}\int_0^L\dot y(x, 0)\sin\dfrac{n\pi x}L\,\dd x$.
+  \item Pour une frappe étroite ($w \ll L/n$), montrer que $B_n \approx \dfrac{2v_0w}
+        {L\omega_n}\sin\dfrac{n\pi x_0}{L}$.
+  \item Quelles harmoniques sont absentes pour $x_0 = L/8$~? Pourquoi les facteurs
+        de piano frappent-ils entre $L/7$ et $L/8$ (voir la question 5)~?
+  \item Décrire le mouvement dans l'image des ondes progressives~: ce qui
+        quitte le point frappé, ce qui arrive aux extrémités, et au bout de
+        quel temps l'état initial se reproduit.
+  \item Une corde réelle est légèrement raide~: ses modes valent $f_n = nf_1
+        \sqrt{1 + Bn^2}$ avec $B = \pi^3Ed^4/(64TL^2)$ (admis). Calculer
+        $B$ et l'élévation de la huitième harmonique, en pour cent et
+        en cents (\qty{1}{cent} = un rapport de fréquences $2^{1/1200}$).
+  \item Pourquoi les accordeurs de piano «~étirent~» les octaves (accordent les notes aiguës
+        un peu haut)~?
+\end{enumerate}
+
+\medskip
+\noindent\textbf{Partie III --- Le chevalet et la table d'harmonie.}
+La corde passe sur un chevalet collé à la table d'harmonie~; la table
+se comporte, au chevalet, comme une corde d'impédance $Z_b = \qty{2000}{kg/s}$.
+\begin{enumerate}[resume]
+  \item Impédance $Z_s$ de la corde~; coefficient de réflexion en amplitude
+        au chevalet.
+  \item Fraction de l'énergie de l'onde transmise à la table d'harmonie à
+        chaque réflexion.
+  \item Nombre de réflexions par seconde au chevalet~; en déduire la constante
+        de temps de la décroissance de l'énergie et le temps que met le son pour baisser
+        de \qty{60}{dB} (un facteur $10^6$ en énergie).
+  \item Puissance qui fuit vers la table juste après la frappe de
+        la question 6~; comparer à la puissance d'une conversation calme,
+        environ \qty{1e-5}{W} acoustiques.
+  \item Pourquoi une corde seule est-elle presque inaudible, et qu'y fait la
+        table d'harmonie~? (Penser à l'impédance de l'air,
+        $\rho c \approx \qty{400}{kg.m^{-2}.s^{-1}}$, vue à travers une petite
+        surface puis une grande.)
+  \item L'étouffoir étant levé, la corde de la$_3$ (\qty{220}{Hz}) se met à
+        sonner quand on joue la$_4$~: pourquoi~?
+  \item Un facteur de piano veut une tenue de son plus longue~: faut-il augmenter ou
+        diminuer $Z_b$, et qu'y perd-on~?
+\end{enumerate}
+
+\medskip
+\noindent\textbf{Partie IV --- Le rail.}
+Un rail d'acier ($E = \qty{200}{GPa}$, $\rho = \qty{7800}{kg/m^3}$, section
+\qty{70}{cm^2}).
+\begin{enumerate}[resume]
+  \item Célérité des ondes de compression~; temps que met le bruit d'un train pour
+        parcourir \qty{5}{km} le long du rail puis dans l'air.
+  \item Un coup de marteau envoie une impulsion de compression le long d'un tronçon de rail de
+        \qty{25}{m} à extrémité libre~: temps de l'écho~; l'écho est-il une
+        compression ou une dilatation~?
+  \item Une sonde à ultrasons de \qty{2}{MHz} cherche des fissures~: longueur d'onde dans
+        l'acier~; coefficient de réflexion en amplitude sur une fissure acier--air
+        (impédance de l'air $\qty{400}{kg.m^{-2}.s^{-1}}$)~; pourquoi une fissure
+        mince se voit-elle si bien~?
+  \item Séismes~: dans la roche, les ondes de compression (P) vont à
+        \qty{6.0}{km/s} et les ondes de cisaillement (S) à \qty{3.5}{km/s}. Une station
+        enregistre l'onde S \qty{20}{s} après l'onde P~: distance à la
+        source.
+  \item Réunir en un tableau les cinq célérités de ce problème
+        (corde, rail, roche P, roche S, air) avec la raideur et
+        l'inertie qui fixent chacune.
+\end{enumerate}
+\end{problem}

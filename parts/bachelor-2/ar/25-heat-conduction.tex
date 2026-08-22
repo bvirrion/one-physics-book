@@ -1,0 +1,597 @@
+\chapter{التوصيل الحراري}\label{ch:b2:heat-conduction}
+
+المس قضيبًا معدنيًّا ومقعدًا خشبيًّا في صباح بارد واحد: فالقضيب
+يبدو أبرد، وإن أعطى مقياس الحرارة كليهما درجة
+الحرارة نفسها. وضع مقلاة على الموقد فلا يسخن مقبضها إلا بعد
+حين؛ واحفر مترين في الصيف فتجد التربة باردة من
+الشتاء؛ ومعالج يبدد مئة واط على سنتيمتر
+مربع لا ينصهر لأن فوقه كتلة ألمنيوم مزعنفة.
+وهذا كله \emph{توصيل حراري}، أي نقل الطاقة
+الداخلية عبر المادة باضطراب جزيئاتها، من دون أي
+جريان مادة --- وهو كله يحقق قانونًا واحدًا، قانون فورييه، ومعادلة
+واحدة، معادلة الحرارة، وهي \omterm{thm:b2:particle-diffusion:equation}{معادلة الانتشار} في
+الفصل السابق مع الحرارة مكان الكثافة. وهذا الفصل يقيم
+القانون والمعادلة من موازنة طاقية، ويحلّهما في
+الحالات المهمة (الجدران المستقرة \omterm{prop:b2:heat-conduction:resistance}{ومقاوماتها الحرارية}، والتسخين
+الدوري والموجة الحرارية، وزعانف التبريد)، ويقدّم
+التبادل مع مائع (قانون نيوتن \omterm{def:b2:heat-conduction:biot}{وعدد بيو})، ويحسب
+الإنتروبيا التي يحدثها التوصيل --- فالحرارة لا تجري إلا نازلة.
+
+\begin{omfigure}
+\includegraphics[width=0.58\linewidth]{images/book4/ai/b4-25-cpu-heat-sink.png}
+
+{\small مبدد حراري مزعنف على معالج: مئة واط تُوصَّل
+خارج سنتيمتر مربع من السيليسيوم، وتُنشَر عبر قاعدة معدنية،
+وتُسلَّم إلى الهواء بزعانف تضاعف السطح ثلاثين مرة.}
+\end{omfigure}
+
+\section{قانون فورييه}
+
+\begin{definition}[كثافة التيار الحراري]\label{def:b2:heat-conduction:flux}
+\emph{كثافة التيار الحراري}\index{كثافة التيار الحراري}
+$\vect{j}_Q$ (بالوحدة \unit{W/m^2}) هي الشعاع الذي يجعل الطاقة
+المنقولة بالتوصيل عبر عنصر سطح موجَّه
+$\dd\vect S$ خلال $\dd t$ مساويةً $\vect{j}_Q\cdot\dd\vect S\,\dd t$؛ و
+\emph{التدفق الحراري}\index{تدفق حراري} (وهو استطاعة، بالواط) عبر
+سطح $S$ هو $\Phi = \iint_S\vect{j}_Q\cdot\dd\vect S$.
+\end{definition}
+
+\begin{theorem}[قانون فورييه]\label{thm:b2:heat-conduction:fourier}
+في وسط ساكن حرارته غير منتظمة،
+\[
+\vect{j}_Q = -\lambda\,\vect{\operatorname{grad}}\,T ,
+\]
+حيث \emph{الناقلية الحرارية}\index{ناقلية حرارية}
+$\lambda > 0$ (بالوحدة \unit{W/m/K}) تتعلق بالمادة، وقليلًا
+بالحرارة. والحرارة تجري مع انحدار متدرج الحرارة، من الساخن إلى
+البارد --- أي المبدأ الثاني مدمجًا في قانون خطي.
+\end{theorem}
+
+\begin{proof}
+ظاهراتي، كقانون فيك، وله التبرير المجهري
+نفسه: فالجزيئات (أو إلكترونات المعدن الحرة، أو
+اهتزازات الشبكة) تحمل طاقتها في مسير عشوائي، ويأتي منها
+من الجهة الساخنة أكثر.
+\end{proof}
+
+\begin{example}[الناقليات]\label{ex:b2:heat-conduction:values}
+المعادن (إذ تحمل الإلكترونات الحرارة كما تحمل التيار ---
+فالناقليتان تتبع إحداهما الأخرى): النحاس \qty{400}{W/m/K}، والألمنيوم
+\qty{240}{W/m/K}، والفولاذ \qty{50}{W/m/K}. والعوازل: البيتون
+\qty{1.5}{W/m/K}، والزجاج \qty{1}{W/m/K}، والآجر \qty{0.8}{W/m/K}، والخشب
+\qty{0.15}{W/m/K}. والسوائل: الماء \qty{0.6}{W/m/K}. والغازات: الهواء
+\qty{0.026}{W/m/K} --- وأحسن العوازل، كصوف الزجاج أو الرغوة عند
+\qty{0.04}{W/m/K}، معظمها هواء ساكن، محبوس بحيث لا
+يحمل. أي أربع رتب مقدار من النحاس إلى الهواء.
+\end{example}
+
+\section{الموازنة الطاقية ومعادلة الحرارة}
+
+\begin{theorem}[الموازنة الطاقية المحلية]\label{thm:b2:heat-conduction:balance}
+في جسم صلب (أو مائع ساكن) كثافته $\rho$ وسعته الحرارية النوعية
+$c$، مع استطاعة $p$ محرَّرة في وحدة الحجم (تسخين جول، أو تفاعل
+كيميائي أو نووي، أو إشعاع ممتصّ)،
+\[
+\rho c\,\frac{\partial T}{\partial t} = -\operatorname{div}\vect{j}_Q + p ,
+\qquad\text{وفي بُعد واحد}\quad
+\rho c\,\frac{\partial T}{\partial t} = -\frac{\partial j_Q}{\partial x} + p .
+\]
+\end{theorem}
+
+\begin{proof}
+المبدأ الأول من أجل الشريحة بين $x$ و $x + \dd x$ (والمقطع $S$،
+والحجم ثابت، فلا عمل): فطاقتها الداخلية $\rho c\,T\,S\,\dd x$
+تتغير في $\dd t$ بالحرارة المتلقّاة، $[j_Q(x) - j_Q(x+\dd x)]S\,\dd t
+= -\partial_x j_Q\,\dd x\,S\,\dd t$، زائدًا $p\,S\,\dd x\,\dd t$. وفي ثلاثة
+أبعاد تكون الحرارة الداخلة إلى حجم ثابت عبر سطحه المغلق
+هي $-\iint\vect{j}_Q\cdot\dd\vect S = -\iiint\operatorname{div}\vect{j}_Q\,\dd\tau$.
+\end{proof}
+
+\begin{theorem}[معادلة الحرارة]\label{thm:b2:heat-conduction:equation}
+من أجل $\lambda$ و $\rho$ و $c$ منتظمة،
+\[
+\frac{\partial T}{\partial t} = a\,\Delta T + \frac{p}{\rho c},
+\qquad a = \frac{\lambda}{\rho c} \quad\text{(أي \emph{الانتشارية الحرارية}\index{انتشارية حرارية}، بالوحدة \unit{m^2/s})} .
+\]
+وكل ما قيل في \omterm{thm:b2:particle-diffusion:equation}{معادلة الانتشار} صحيح هنا: الخطية،
+واللاعكوسية، والتمليس، والسلّمان $L \sim \sqrt{at}$ و $t \sim
+L^2/a$.
+\end{theorem}
+
+\begin{proof}
+عوّض قانون فورييه في الموازنة: $\rho c\,\partial_t T =
+\lambda\Delta T + p$.
+\end{proof}
+
+\begin{example}[الانتشاريات والأزمنة]\label{ex:b2:heat-conduction:times}
+النحاس $a = \qty{1.1e-4}{m^2/s}$، والهواء \qty{2e-5}{m^2/s}، والبيتون
+والآجر $\approx \qty{5e-7}{m^2/s}$، والماء \qty{1.4e-7}{m^2/s}، والخشب
+\qty{1e-7}{m^2/s}. وتعبر الحرارة سنتيمترًا من النحاس في ثانية، و
+سنتيمترًا من الآجر في ثلاث دقائق، وجدارًا \qty{20}{cm} في يوم
+(ولهذا تملّس الجدران السميكة دورة الليل والنهار)، ونصف سماكة
+شريحة لحم \qty{1.5}{cm} في ربع ساعة (فأزمنة الطهو
+تتبع مربع السماكة)، وكيلومترًا من الصخر
+في $10^{12}\,\unit{s}$، أي ثلاثين ألف سنة --- فالأرض لا تزال
+تبرد منذ تكوّنها.
+\end{example}
+
+\section{النظام المستقر: المقاومات الحرارية}
+
+\begin{proposition}[المقاومة الحرارية لشريحة]\label{prop:b2:heat-conduction:resistance}
+في النظام المستقر بلا منابع، تكون لشريحة سماكتها $e$،
+ومساحتها $S$، وناقليتها $\lambda$، بين الحرارتين $T_1$ و
+$T_2$، مقطعٌ خطي وتحمل التدفق
+\[
+\Phi = \frac{T_1 - T_2}{R_{\text{حراري}}}, \qquad
+R_{\text{حراري}} = \frac{e}{\lambda S}\quad\text{(بالوحدة \unit{K/W})} :
+\]
+أي \emph{مقاومتها الحرارية}\index{مقاومة حرارية}. وتؤدي الحرارة
+دور الكمون، ويؤدي التدفق دور التيار: فالمقاومات على
+التسلسل (كطبقات جدار) تتجمع، والمقاومات على التفرّع (كجدار
+ونافذة) تتجمع مقلوباتها. ومن أجل قشرة أسطوانية (كعازل أنبوب)
+بين نصفي القطرين $r_1 < r_2$ وطولها $\ell$، يكون
+$R_{\text{حراري}} = \ln(r_2/r_1)/2\pi\lambda\ell$؛ ومن أجل قشرة كروية،
+$(1/r_1 - 1/r_2)/4\pi\lambda$.
+\end{proposition}
+
+\begin{proof}
+$\dd^2T/\dd x^2 = 0$: أي مقطع تآلفي، و $j_Q = \lambda(T_1 - T_2)/e$
+منتظم، و $\Phi = j_QS$. وفي الهندسة الأسطوانية يكون $\Phi = -\lambda\,2\pi
+r\ell\,\dd T/\dd r$ نفسه عند كل $r$ (فلا تراكم)، ومن ثَمّ
+$T = A - (\Phi/2\pi\lambda\ell)\ln r$؛ وفي الهندسة الكروية، يعطي $\Phi =
+-4\pi r^2\lambda\,\dd T/\dd r$ أن $T = A + \Phi/4\pi\lambda r$.
+\end{proof}
+
+\begin{proposition}[التبادل مع مائع: قانون نيوتن]\label{prop:b2:heat-conduction:newton}
+سطح صلب عند $T_{\text{s}}$ في تماس مع مائع عند $T_{\text{f}}$
+(بعيدًا عن السطح) يفقد كثافة التدفق
+\[
+j_Q = h\,(T_{\text{s}} - T_{\text{f}}) ,
+\]
+حيث \emph{معامل الانتقال الحراري}\index{معامل الانتقال
+الحراري} $h$ (بالوحدة \unit{W/m^2/K}) يجمع التوصيل عبر
+طبقة المائع الرقيقة اللاصقة بالجدار والحمل الذي
+يجدّدها: $h \approx 5$--\qty{25}{W/m^2/K} من أجل الهواء في حمل طبيعي أو
+خفيف، و $50$--\qty{500}{W/m^2/K} من أجل الهواء المدفوع، و $10^3$--$10^4$
+من أجل الماء. ويضيف السطح عندئذ \emph{مقاومة غشاء} $1/hS$ على
+التسلسل مع الجدار.
+\end{proposition}
+
+\begin{proof}
+ظاهراتي: فحركة المائع لا تُحسَب، بل تُلخَّص
+في $h$ (مقيسًا، أو معطًى بعلاقات ميكانيك الموائع).
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}[scale=0.9, >=stealth]
+  % طبقات الجدار
+  \fill[omExo!15] (0,0) rectangle (1.6,2.6);
+  \fill[omDef!12] (1.6,0) rectangle (2.6,2.6);
+  \fill[gray!15] (2.6,0) rectangle (2.8,2.6);
+  \draw (0,0) rectangle (2.8,2.6);
+  \draw (1.6,0) -- (1.6,2.6); \draw (2.6,0) -- (2.6,2.6);
+  \node[font=\scriptsize] at (0.8,2.85) {آجر};
+  \node[font=\scriptsize] at (2.1,2.85) {صوف};
+  \node[font=\scriptsize, right] at (2.9,1.3) {الداخل $T_{\text{i}}$};
+  \node[font=\scriptsize, left] at (-0.1,1.3) {الخارج $T_{\text{o}}$};
+  \draw[->, omThm, thick] (3.6,0.7) -- (-0.8,0.7) node[midway, below, font=\scriptsize] {$\Phi$};
+  % سلسلة المقاومات
+  \begin{scope}[yshift=-1.6cm]
+    \draw (-0.8,0) -- (0.2,0);
+    \draw (0.2,-0.18) rectangle (1.0,0.18); \node[font=\tiny] at (0.6,0) {$1/h_{\text{o}}S$};
+    \draw (1.0,0) -- (1.4,0);
+    \draw (1.4,-0.18) rectangle (2.4,0.18); \node[font=\tiny] at (1.9,0) {$e_1/\lambda_1 S$};
+    \draw (2.4,0) -- (2.8,0);
+    \draw (2.8,-0.18) rectangle (3.8,0.18); \node[font=\tiny] at (3.3,0) {$e_2/\lambda_2 S$};
+    \draw (3.8,0) -- (4.2,0);
+    \draw (4.2,-0.18) rectangle (5.0,0.18); \node[font=\tiny] at (4.6,0) {$1/h_{\text{i}}S$};
+    \draw (5.0,0) -- (5.6,0);
+    \fill (-0.8,0) circle (1.5pt) node[above, font=\scriptsize] {$T_{\text{o}}$};
+    \fill (5.6,0) circle (1.5pt) node[above, font=\scriptsize] {$T_{\text{i}}$};
+  \end{scope}
+  % المقطع
+  \begin{scope}[xshift=7.2cm]
+    \draw[->] (0,0) -- (3.4,0) node[right, font=\scriptsize] {$x$};
+    \draw[->] (0,0) -- (0,2.8) node[above, font=\scriptsize] {$T$};
+    \draw[omDef, thick] (0,0.4) -- (0.3,0.6) -- (1.6,0.9) -- (2.6,2.4) -- (2.8,2.45) -- (3.2,2.6);
+    \draw[dashed] (0.3,0) -- (0.3,0.6); \draw[dashed] (1.6,0) -- (1.6,0.9); \draw[dashed] (2.6,0) -- (2.6,2.4); \draw[dashed] (2.8,0) -- (2.8,2.45);
+    \node[font=\scriptsize, below] at (0.95,0) {آجر};
+    \node[font=\scriptsize, below] at (2.1,0) {صوف};
+    \node[font=\scriptsize, left] at (0,0.4) {$T_{\text{o}}$};
+    \node[font=\scriptsize, right] at (3.2,2.6) {$T_{\text{i}}$};
+  \end{scope}
+\end{tikzpicture}
+
+{\small جدار مركّب ودارته الحرارية: غشاء، وآجر، وصوف،
+وغشاء على التسلسل. وعلى اليمين: مقطع الحرارة --- إذ يقع كل الهبوط
+تقريبًا عبر الطبقة الأكبر مقاومة، وهي الصوف، وإن كانت
+الأرقّ.}
+\end{omfigure}
+
+\begin{example}[جدار ونافذة]\label{ex:b2:heat-conduction:wall}
+في المتر المربع: الآجر \qty{20}{cm} عند \qty{0.8}{W/m/K}، $R =
+\qty{0.25}{m^2.K/W}$؛ والغشاءان، $1/8 + 1/25 = \qty{0.165}{m^2.K/W}$:
+فالمجموع $0.415$، أي $U = 1/R = \qty{2.4}{W/m^2/K}$ و، من أجل فرق \qty{20}{K}،
+\qty{48}{W/m^2}. وأضف \qty{10}{cm} من صوف الزجاج، $R =
+\qty{2.5}{m^2.K/W}$: فيصير المجموع $2.9$، و $U = \qty{0.34}{W/m^2/K}$ ---
+أي أقلّ بسبع مرات. وأما لوح زجاج مفرد، \qty{4}{mm} عند \qty{1}{W/m/K}،
+فكله غشاء: $R = 0.004 + 0.165$، و $U \approx \qty{6}{W/m^2/K}$؛ وطبقة
+\qty{12}{mm} من الهواء الساكن بين لوحين تضيف $0.012/0.026 =
+\qty{0.46}{m^2.K/W}$ وتقسم الضياع على أكثر من ثلاثة.
+\end{example}
+
+\begin{definition}[عدد بيو]\label{def:b2:heat-conduction:biot}
+من أجل جسم صلب حجمه $L$ يتبادل مع مائع، يقارن \emph{عدد
+بيو}\index{عدد بيو}
+\[
+\mathrm{Bi} = \frac{hL}{\lambda} = \frac{\text{المقاومة الداخلية } L/\lambda S}{\text{مقاومة الغشاء } 1/hS}
+\]
+بينهما. فإذا كان $\mathrm{Bi} \ll 1$ كان الجسم منتظم
+الحرارة في كل لحظة وبرد ككلّ، أسّيًّا، بثابت
+الزمن $\tau = \rho c V/hS$؛ وإذا كان $\mathrm{Bi} \gg 1$ كان
+السطح عند حرارة المائع وأوصل الداخل على
+وتيرته $L^2/a$.
+\end{definition}
+
+\section{التسخين الدوري: الموجة الحرارية}
+
+\begin{proposition}[موجة حرارية في نصف فضاء]\label{prop:b2:heat-conduction:wave}
+إذا حُفظ سطح نصف فضاء $x = 0$ عند $T(0,t) = T_0 +
+\theta_0\cos\omega t$، كانت الحرارة في الداخل، في النظام
+المستقر،
+\[
+T(x,t) = T_0 + \theta_0\,\eu^{-x/\delta}\cos\Big(\omega t - \frac{x}{\delta}\Big),
+\qquad \delta = \sqrt{\frac{2a}{\omega}} :
+\]
+أي موجة تنتشر إلى الداخل بالسرعة $\omega\delta =
+\sqrt{2a\omega}$ وتتخامد على \emph{عمق نفوذ} واحد $\delta$
+في كل راديان من الطور --- أي بالعامل $\eu^{-2\pi} = 2 \times 10^{-3}$ في كل
+طول موجة. والتذبذبات السريعة تنفذ أقلّ من البطيئة.
+\end{proposition}
+
+\begin{proof}
+ابحث عن $\underline T = \theta_0\eu^{\iu(\omega t - \underline k x)}$:
+$\iu\omega = -a\underline k^2$، ومن ثَمّ $\underline k^2 = -\iu\omega/a$،
+و $\underline k = (1 - \iu)\sqrt{\omega/2a} = (1 - \iu)/\delta$ (وهو الجذر
+الذي يتخامد من أجل $x > 0$). ثم خذ الجزء الحقيقي.
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}
+  \begin{axis}[omaxis, width=9cm, height=4.8cm, xmin=0, xmax=4.6, ymin=-1.1, ymax=1.1,
+    xlabel={$x/\delta$}, ylabel={$(T - T_0)/\theta_0$}, xtick={1,2,3,4}, ytick={-1,1}, clip=false,
+    axis x line=middle, axis y line=left,
+    legend style={font=\scriptsize, at={(0.98,0.04)}, anchor=south east, draw=none, fill=none}]
+    \addplot[omDef, thick, domain=0:4.6, samples=120] {exp(-x)*cos(deg(-x))};
+    \addlegendentry{$\omega t = 0$}
+    \addplot[omThm, thick, domain=0:4.6, samples=120] {exp(-x)*cos(deg(pi/2-x))};
+    \addlegendentry{$\omega t = \pi/2$}
+    \addplot[omExo, thick, domain=0:4.6, samples=120] {exp(-x)*cos(deg(pi-x))};
+    \addlegendentry{$\omega t = \pi$}
+    \addplot[gray, dashed, domain=0:4.6, samples=60] {exp(-x)};
+    \addplot[gray, dashed, domain=0:4.6, samples=60] {-exp(-x)};
+  \end{axis}
+\end{tikzpicture}
+
+{\small الموجة الحرارية في ثلاث لحظات: تذبذب السطح
+ينفذ موجةً متخامدة، سعتها تهبط وفق $\eu^{-x/\delta}$
+(بالخط المتقطع) وطورها يتأخر بمقدار $x/\delta$ --- وعند $x = \pi\delta$ تكون
+الحرارة معاكسة لحرارة السطح.}
+\end{omfigure}
+
+\begin{example}[التربة والقبو والنبيذ]\label{ex:b2:heat-conduction:soil}
+التربة، $a \approx \qty{5e-7}{m^2/s}$. والدورة اليومية، $\omega = 2\pi/\qty{86400}{s}$:
+$\delta = \qty{12}{cm}$ --- فعلى نصف متر يزول النهار. والدورة السنوية:
+$\delta = \qty{2.2}{m}$؛ وعلى ذلك العمق يهبط تأرجح \qty{10}{K} بين الصيف والشتاء
+إلى \qty{3.7}{K} ويتأخر براديان واحد، أي شهرين: فالقبو
+أبرد ما يكون في آذار وأدفأ ما يكون في أيلول، وعلى \qty{5}{m} يكون على بعد
+\qty{1}{K} من الثبات --- وهو القبو الذي يحفظ النبيذ. والرياضيات
+نفسها تعطي عمق الجلد في الكهرمغناطيسية
+(\cref{ch:b2:waves-in-media}): فالمعادلة نفسها، والمقدار نفسه $\sqrt{2/(\text{الانتشارية}
+\times\omega)}$.
+\end{example}
+
+\section{الزعانف}
+
+\begin{proposition}[زعنفة التبريد]\label{prop:b2:heat-conduction:fin}
+قضيب رفيع أو صفيحة رفيعة (مقطعها $S$، ومحيطها $p$، وناقليتها $\lambda$)
+مثبَّت عند $x = 0$ بجدار عند $T_0$، في مائع عند $T_{\text{f}}$ مع
+المعامل $h$، له فرط الحرارة $\theta = T - T_{\text{f}}$
+المحقِّق
+\[
+\frac{\dd^2\theta}{\dd x^2} = m^2\theta, \qquad m = \sqrt{\frac{hp}{\lambda S}} ;
+\]
+ومن أجل زعنفة طويلة، $\theta = \theta_0\eu^{-mx}$ وتُخرج الزعنفة $\Phi =
+\sqrt{hp\lambda S}\,\theta_0$ --- أي بقدر ما يخرجه سطح عارٍ طوله $\sqrt{\lambda
+S/hp} = 1/m$، بحرارة هبطت إلى $\theta_0/\eu$ عند
+$x = 1/m$. ومن أجل زعنفة طولها منتهٍ $L$ (وطرفها كظوم)، يكون $\theta =
+\theta_0\cosh m(L-x)/\cosh mL$ و\emph{مردودها}\index{مردود
+الزعنفة} --- أي التدفق على تدفق زعنفة متساوية الحرارة عند $\theta_0$ ---
+هو $\eta = \tanh(mL)/mL$.
+\end{proposition}
+
+\begin{proof}
+الموازنة المستقرة للشريحة $[x, x + \dd x]$: الموصَّل داخلًا،
+$-\lambda S\theta'(x)$؛ والخارج، $-\lambda S\theta'(x + \dd x)$؛ والمفقود إلى
+المائع، $hp\,\theta\,\dd x$: $\lambda S\theta'' = hp\theta$. والتدفق عند
+القاعدة هو $-\lambda S\theta'(0)$: أي $\lambda Sm\theta_0$ من أجل الزعنفة الطويلة،
+و $\lambda Sm\theta_0\tanh mL$ من أجل المنتهية، ليُقارن بالمقدار
+$hpL\theta_0$. \omterm{def:b2:heat-conduction:biot}{وعدد بيو} عبر سماكة الزعنفة، $ht/\lambda$، يجب
+أن يكون صغيرًا لتصحّ المعالجة الأحادية البعد.
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}
+  \begin{axis}[omaxis, width=6.4cm, height=4.4cm, xmin=0, xmax=3.2, ymin=0, ymax=1.12,
+    xlabel={$mx$}, ylabel={$\theta/\theta_0$}, xtick={1,2,3}, ytick={1}, clip=false,
+    legend style={font=\scriptsize, at={(0.98,0.98)}, anchor=north east, draw=none, fill=none}]
+    \addplot[omDef, thick, domain=0:3.2, samples=60] {exp(-x)};
+    \addlegendentry{زعنفة طويلة}
+    \addplot[omExo, thick, domain=0:1.2, samples=60] {cosh(1.2-x)/cosh(1.2)};
+    \addlegendentry{$mL = 1.2$}
+    \addplot[omThm, thick, domain=0:0.5, samples=30] {cosh(0.5-x)/cosh(0.5)};
+    \addlegendentry{$mL = 0.5$}
+  \end{axis}
+  \begin{scope}[xshift=7.2cm, yshift=0.3cm, scale=0.8, >=stealth]
+    \fill[gray!25] (0,0) rectangle (0.5,3.2);
+    \fill[omDef!20] (0.5,1.4) rectangle (4.2,1.8);
+    \draw (0.5,1.4) rectangle (4.2,1.8);
+    \node[font=\scriptsize, rotate=90] at (0.25,1.6) {الجدار $T_0$};
+    \draw[->, omThm, thick] (0.6,1.6) -- (1.6,1.6) node[right, font=\scriptsize] {$-\lambda S\theta'$};
+    \foreach \x in {1.2,2.0,2.8,3.6}{
+      \draw[->, omExo] (\x,1.85) -- (\x,2.4);
+      \draw[->, omExo] (\x,1.35) -- (\x,0.8);
+    }
+    \node[font=\scriptsize, omExo] at (2.4,2.7) {$hp\,\theta\,\dd x$};
+    \node[font=\scriptsize] at (2.4,0.45) {المائع $T_{\text{f}}$};
+  \end{scope}
+\end{tikzpicture}
+
+{\small على اليسار: الحرارة على امتداد زعنفة، من أجل زعنفة طويلة واثنتين
+منتهيتين (بطرف كظوم) --- فبعد $mx \approx 2$ لا تضيف الزعنفة كثيرًا. وعلى اليمين:
+موازنة شريحة: توصيل على الامتداد، وحمل خارجًا عبر
+المحيط.}
+\end{omfigure}
+
+\begin{example}[مبدد حراري]\label{ex:b2:heat-conduction:sink}
+زعانف ألمنيوم سماكتها \qty{1}{mm} ($p/S \approx 2/t = \qty{2000}{m^{-1}}$)،
+وارتفاعها \qty{30}{mm}، في هواء مدفوع $h = \qty{50}{W/m^2/K}$: $m =
+\sqrt{2h/\lambda t} = \qty{20}{m^{-1}}$، و $mL = 0.6$، و $\eta = 0.89$ --- أي إن
+الزعانف تعمل عند $89\%$ من مساحتها. وثلاثون منها، بعرض \qty{60}{mm}،
+تقدّم \qty{0.11}{m^2} حيث كان المربع العاري \qty{60}{mm} يقدّم
+\qty{0.0036}{m^2}: أي مقاومة $1/\eta hA = \qty{0.2}{K/W}$ بدل
+\qty{5.6}{K/W}؛ و \qty{100}{W} ترفع القاعدة \qty{20}{K} بدل
+\qty{560}{K}. والزعانف الأطول تربح قليلًا (إذ يشبع $\tanh$)، والأرقّ
+تخسر مردودًا: و $mL \approx 1$ هي مساومة المهندس.
+\end{example}
+
+\section{الإنتروبيا التي يحدثها التوصيل}
+
+\begin{proposition}[إنتاج الإنتروبيا]\label{prop:b2:heat-conduction:entropy}
+تدفق $\Phi$ موصَّل من جسم عند $T_{\text{h}}$ إلى جسم عند
+$T_{\text{c}} < T_{\text{h}}$ عبر جدار مستقر يحدث إنتروبيا
+بالمعدل
+\[
+\dot S_{\text{c}} = \Phi\Big(\frac{1}{T_{\text{c}}} - \frac{1}{T_{\text{h}}}\Big) > 0 ;
+\]
+ومحليًّا، يحدث التوصيل $\sigma_s = \lambda\,(\vect{\operatorname{grad}}\,T)^2/T^2
+\ge 0$ في وحدة الحجم والزمن --- وهو معدوم حيث تكون الحرارة
+منتظمة وحدها. فالتوصيل الحراري غير عكوس: إذ إن الطاقة نفسها، مسلَّمة عند
+حرارة أدنى، تستطيع عملًا أقلّ.
+\end{proposition}
+
+\begin{proof}
+لا تتغير حالة الجدار، فإنتروبياه ثابتة: فالجسم الساخن
+يفقد $\Phi/T_{\text{h}}$ في وحدة الزمن، ويكسب البارد
+$\Phi/T_{\text{c}}$؛ والفرق مُحدَث. ومحليًّا، تعطي موازنة
+الإنتروبيا $\partial_t(\rho s) + \operatorname{div}(\vect{j}_Q/T) = \sigma_s$
+مع $\rho T\partial_t s = -\operatorname{div}\vect{j}_Q$ أن $\sigma_s =
+\vect{j}_Q\cdot\vect{\operatorname{grad}}(1/T) = -\vect{j}_Q\cdot
+\vect{\operatorname{grad}}\,T/T^2 = \lambda(\vect{\operatorname{grad}}\,T)^2/T^2$.
+\end{proof}
+
+\begin{method}[تقديرات التوصيل]\label{meth:b2:heat-conduction:method}
+(1) المستقر: ابنِ الدارة الحرارية --- الشرائح $e/\lambda S$، والأغشية
+$1/hS$، والقشور $\ln(r_2/r_1)/2\pi\lambda\ell$؛ على التسلسل وعلى التفرّع.
+(2) والعابر: $\mathrm{Bi} = hL/\lambda$؛ فإن كان صغيرًا، $\tau = \rho cV/hS$؛ وإن كان
+كبيرًا، $t \sim L^2/a$. (3) والدوري: $\delta = \sqrt{2a/\omega}$، والتخامد
+$\eu^{-x/\delta}$، والتأخر $x/\delta$. (4) والمنابع: $p$ في وحدة الحجم، ومقاطع
+مكافئة. (5) والزعانف: $m = \sqrt{hp/\lambda S}$، و $\eta = \tanh(mL)/mL$. (6)
+والإنتروبيا: $\Phi(1/T_{\text{c}} - 1/T_{\text{h}})$.
+\end{method}
+
+\section{تمارين}
+
+\begin{exercise}[$\star$]\label{exo:b2:heat-conduction:1}
+جدار آجر سماكته \qty{20}{cm} ($\lambda = \qty{0.8}{W/m/K}$)، ومساحته \qty{100}{m^2}،
+بين \qty{20}{\celsius} في الداخل و \qty{0}{\celsius} في الخارج
+(والسطحان عند هاتين الحرارتين): أوجد كثافة التدفق والتدفق الكلي؛ ومع
+\qty{10}{cm} من صوف الزجاج (\qty{0.04}{W/m/K}) مضافةً.
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b2:heat-conduction:2}
+الانتشاريات: النحاس ($\lambda = 400$، و $\rho = 8900$، و $c = \qty{385}{J/kg/K}$)،
+والبيتون ($1.5$، $2300$، $900$)، والخشب ($0.15$، $600$، $2500$). أوجد أزمنة عبور الحرارة
+\qty{1}{cm} و \qty{20}{cm} من كل منها؛ وقشرة الأرض \qty{30}{km}.
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b2:heat-conduction:3}
+زجاج مفرد (\qty{4}{mm}، $\lambda = \qty{1}{W/m/K}$) مع غشاءين $h_{\text{i}}
+= 8$ و $h_{\text{o}} = \qty{25}{W/m^2/K}$؛ وزجاج مزدوج بطبقة \qty{12}{mm}
+من الهواء الساكن (\qty{0.026}{W/m/K}): أوجد قيمتي $U$ والتدفقين من أجل
+\qty{20}{K}. ولمَ يكون الزجاج المزدوج الحقيقي أسوأ بمرتين من هذا
+التقدير، وماذا يفعل الأرغون والطلاءات المنخفضة الإصدارية؟
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b2:heat-conduction:4}
+الطهو: $a = \qty{1.4e-7}{m^2/s}$ للحم. أوجد الزمن اللازم لمركز
+شريحة \qty{3}{cm} كي يحسّ المقلاة؛ ولقطعة مشوية \qty{12}{cm}. وديك رومي
+ثقله ضعف ذلك: بكم يطول الزمن (والبعد يتبع الجذر التكعيبي
+للكتلة)؟
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b2:heat-conduction:5}
+\emph{منبع داخلي.} أسطوانة نصف قطرها $R$ تحرّر $p$ في وحدة
+الحجم؛ وسطحها عند $T_{\text{s}}$. (أ) بيّن أن $T(r) = T_{\text{s}} +
+p(R^2 - r^2)/4\lambda$. (ب) وسلك نحاسي، $R = \qty{1}{mm}$، و $j =
+\qty{1e7}{A/m^2}$، و $\gamma = \qty{6e7}{S/m}$: أوجد $p$ والفرق بين المركز
+والسطح. (ج) وقضيب وقود نووي، $R = \qty{5}{mm}$، و $p = \qty{3e8}{W/m^3}$،
+و $\lambda = \qty{3}{W/m/K}$: السؤال نفسه. (د) وعلّق.
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b2:heat-conduction:6}
+\emph{الأرض.} (أ) استنتج $\delta = \sqrt{2a/\omega}$. (ب) وللتربة،
+$a = \qty{5e-7}{m^2/s}$: أوجد عمقي النفوذ اليومي والسنوي. (ج) والعمق
+الذي تكون عنده السعة السنوية عُشر سعة السطح؛ والتأخر الطوري
+هناك. (د) وأنبوب ماء يجب ألا يتجمد حيث تهبط حرارة السطح شتاءً
+إلى \qty{-10}{\celsius} حول متوسط قدره
+\qty{10}{\celsius}: أوجد أصغر عمق (بالموجة السنوية).
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b2:heat-conduction:7}
+\emph{بيو.} (أ) كرة نحاسية نصف قطرها \qty{1}{cm}، في الهواء ($h =
+\qty{10}{W/m^2/K}$): أوجد \omterm{def:b2:heat-conduction:biot}{عدد بيو}، وثابت زمن تبريدها. (ب) وحبة
+بطاطا ($\lambda = \qty{0.5}{W/m/K}$، و $a = \qty{1.4e-7}{m^2/s}$، ونصف قطرها
+\qty{3}{cm}) في فرن مع $h = \qty{20}{W/m^2/K}$: أوجد \omterm{def:b2:heat-conduction:biot}{عدد بيو}؛ وأي
+زمن يحكم طهوها؟ (ج) ولمَ تُصنَع حبة المزدوجة الحرارية صغيرة؟
+(د) ولمَ يبرد فنجان القهوة أسرع حين يُقلَّب أو يُنفَخ فيه ---
+وأي مقاومة تتغير؟
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b2:heat-conduction:8}
+\emph{زعنفة.} (أ) استنتج $\theta'' = m^2\theta$ وحلّ الزعنفة الطويلة.
+(ب) وزعنفة ألمنيوم، سماكتها \qty{1}{mm}، وارتفاعها \qty{30}{mm}، في حمل
+طبيعي $h = \qty{20}{W/m^2/K}$: أوجد $m$، و $mL$، والمردود. (ج) وبأي
+عامل تضاعف الزعنفة مساحة تبادل موطئها، والتدفق؟ (د) ولمَ تكون زعنفة طويلة جدًّا أو رفيعة جدًّا إهدارًا للمعدن؟
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b2:heat-conduction:9}
+\emph{الأنابيب.} (أ) استنتج مقاومة قشرة أسطوانية. (ب) وأنبوب
+بخار، نصف قطره الخارجي \qty{5}{cm} عند \qty{150}{\celsius}، ملفوف بطبقة
+\qty{5}{cm} من صوف الزجاج، والهواء عند \qty{20}{\celsius} مع $h =
+\qty{10}{W/m^2/K}$ في الخارج: أوجد الضياع في المتر، مقارنًا بالأنبوب العاري.
+(ج) وبيّن أن للمقاومة الكلية للعازل والغشاء
+أصغرًا عند \emph{نصف القطر الحرج} $r_{\text{c}} = \lambda/h$. (د) ومن أجل
+سلك كهربائي نصف قطره \qty{1}{mm} بغلاف بلاستيكي ($\lambda =
+\qty{0.2}{W/m/K}$)، أيبرّد الغلاف النحاس أم يدفّئه؟
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b2:heat-conduction:10}
+\emph{الإنتروبيا.} جدار \cref{exo:b2:heat-conduction:1} (عاريًا)
+بين \qty{293}{K} و \qty{273}{K}. (أ) أوجد الإنتروبيا المحدَثة في الثانية.
+(ب) واحسب $\int\sigma_s\,\dd V$ بالمقطع الخطي وتحقق من أنه
+يوافق. (ج) والإنتروبيا المحدَثة بعد العزل. (د) والعمل الذي كان
+محرّك عكوس يستخرجه من \qty{8}{kW} بين
+هاتين الحرارتين، وما يبقى منه بعد الجدار.
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b2:heat-conduction:11}
+\emph{لمَ يبدو المعدن باردًا.} (أ) من أجل الموجة الحرارية، احسب
+تدفق السطح $j_Q(0,t)$ وبيّن أنه يتقدم حرارة السطح بمقدار
+$\pi/4$، وسعته $\sqrt{\lambda\rho c\,\omega}\,\theta_0$. والمقدار
+$b = \sqrt{\lambda\rho c}$ هو \emph{الانبثاثية}. (ب) ونصفا فضاء
+عند $T_1$ و $T_2$ يوضعان في تماس: بقبول أن
+كلًّا منهما يتبع عندئذ مقطع تابع خطأ متمّم بحرارة سطح مشتركة
+$T_{\text{c}}$، وبكتابة استمرار التدفق عند التماس،
+بيّن أن $T_{\text{c}} = (b_1T_1 + b_2T_2)/(b_1 + b_2)$. (ج) والجلد
+($b \approx \qty{1000}{J/m^2/K/s^{1/2}}$، عند \qty{33}{\celsius}) يلمس
+النحاس ($b = 37000$) أو الخشب ($b = 400$) عند \qty{20}{\celsius}: أوجد حرارتي
+التماس. (د) ولمَ تبدو أرضية البلاط أبرد من السجادة عند
+الحرارة نفسها، ولمَ يكون الإحساس عابرًا لا غير؟
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b2:heat-conduction:12}
+\emph{تبريد شريحة.} شريحة $-L < x < L$ عند $T_0$ تُغمَر عند $t =
+0$ في حوض عند $T_{\text{f}}$ مع $h \to \infty$. (أ) بيّن أن $\theta =
+T - T_{\text{f}}$ يقبل الحلول $\cos(k_nx)\,\eu^{-ak_n^2t}$ مع $k_n
+= (2n+1)\pi/2L$. (ب) وانشر الشرط الابتدائي في سلسلة فورييه
+على هذه الأنماط واكتب الحلّ الكامل. (ج) وبعد
+اللحظات الأولى، أي نمط يبقى، وما ثابت الزمن؟ (د) وأوجد الزمن
+اللازم لمركز شريحة لحم \qty{3}{cm} ($a = \qty{1.4e-7}{m^2/s}$) كي يصير
+في حدود $1\%$ من الحوض.
+\end{exercise}
+
+\section{مسألة: عزل بيت، وتبريد معالج}
+
+\begin{problem}[{مسألة نهاية الأسبوع --- التوصيل على سلّم
+بناء وعلى سلّم رقاقة}]\label{pb:b2:heat-conduction:1}
+المعطيات: الآجر $\lambda = \qty{0.8}{W/m/K}$، و $\rho = \qty{1800}{kg/m^3}$، و $c =
+\qty{840}{J/kg/K}$؛ وصوف الزجاج \qty{0.04}{W/m/K}؛ والزجاج \qty{1}{W/m/K}؛ والهواء
+الساكن \qty{0.026}{W/m/K}؛ والألمنيوم \qty{240}{W/m/K}، و $\rho = \qty{2700}{kg/m^3}$،
+و $c = \qty{900}{J/kg/K}$؛ والسيليسيوم \qty{150}{W/m/K}؛ والمعجون الحراري
+\qty{5}{W/m/K}؛ والتربة $a = \qty{5e-7}{m^2/s}$، و $\lambda = \qty{1}{W/m/K}$؛
+والغشاءان $h_{\text{i}} = 8$ و $h_{\text{o}} = \qty{25}{W/m^2/K}$.
+
+\textbf{الجزء الأول --- البيت.}
+لبيت \qty{100}{m^2} من الجدران (آجر \qty{20}{cm}) و \qty{20}{m^2}
+من النوافذ المفردة الزجاج (\qty{4}{mm})؛ والداخل \qty{20}{\celsius}،
+والخارج \qty{0}{\celsius}.
+\begin{enumerate}
+  \item أوجد المقاومة في المتر المربع للآجر وحده؛ وكثافة التدفق
+        لو كان وجهاه عند الحرارتين.
+  \item ومع الغشاءين: أوجد $R$ و $U = 1/R$ في المتر المربع؛ وأعد ذلك
+        مع \qty{10}{cm} من صوف الزجاج مضافةً.
+  \item و $U$ للزجاج المفرد؛ وللزجاج المزدوج بطبقة \qty{12}{mm}
+        من الهواء الساكن.
+  \item والضياع الكلي للبيت قبل عزل الجدران وتزويج النوافذ
+        وبعدهما.
+  \item وعلى موسم تدفئة قدره $2500$ درجة-يوم (وهو تكامل
+        فرق الحرارة على الموسم، بالوحدة \unit{K.day})،
+        أوجد الطاقة الضائعة قبل وبعد، بالكيلوواط ساعة.
+  \item وحرارة السطح الداخلي للجدار، عاريًا ومعزولًا؛
+        ولمَ يكون الجدار البارد غير مريح ويربّي العفن؟
+  \item وزمن الانتشار عبر الآجر؛ وماذا يفعل ذلك بدورة
+        الليل والنهار؟
+\end{enumerate}
+
+\textbf{الجزء الثاني --- الأرض تحت البيت.}
+\begin{enumerate}[resume]
+  \item استنتج عمق النفوذ $\delta = \sqrt{2a/\omega}$ لموجة
+        حرارية.
+  \item و $\delta$ اليومي والسنوي في التربة.
+  \item والعمق الذي يهبط عنده التأرجح اليومي إلى $1\%$؛ والسعة
+        السنوية عند \qty{2.2}{m} وعند \qty{5}{m} من أجل تأرجح سطحي
+        قدره \qty{10}{K}.
+  \item والتأخر الطوري عند \qty{2.2}{m}، بالأيام: فمتى يكون القبو أبرد ما يكون؟
+  \item وتدفق الحرارة السطحي للموجة السنوية (سعةً وطورًا)؛
+        وقارن سعته بالتدفق الجوفي \qty{0.06}{W/m^2}.
+  \item والمتدرج الجوفي \qty{30}{K/km}: تحقق منه بالتدفق
+        و $\lambda$، وفسّر لمَ لا يُرى في
+        فصول القبو.
+\end{enumerate}
+
+\textbf{الجزء الثالث --- المعالج.}
+رقاقة تبدد \qty{100}{W} في نبيطة \qty{1}{cm^2}، سماكتها \qty{0.5}{mm}؛
+وطبقة معجون \qty{50}{\micro m} على \qty{10}{cm^2} تلصقها
+بمبدد ألمنيوم: قاعدته \qty{60}{mm} $\times$ \qty{60}{mm} $\times$
+\qty{5}{mm}، وثلاثون زعنفة بعرض \qty{60}{mm}، وارتفاع \qty{30}{mm}، وسماكة \qty{1}{mm}؛
+ومروحة تعطي $h = \qty{50}{W/m^2/K}$؛ والمحيط \qty{25}{\celsius}.
+\begin{enumerate}[resume]
+  \item أوجد كثافة التدفق عبر النبيطة؛ ومقاومة النبيطة.
+  \item ومقاومة المعجون؛ ولو حلّت محلّه فجوة هواء \qty{50}{\micro m}.
+  \item ووسيط الزعنفة $m$، و $mL$، والمردود؛ وتحقق من \omterm{def:b2:heat-conduction:biot}{عدد بيو}
+        عبر سماكة الزعنفة.
+  \item ومساحة الزعانف الكلية ومقاومتها؛ ومقاومة
+        القاعدة (بالتوصيل عبر \qty{5}{mm})؛ وحرارة الوصلة.
+  \item وأعد ذلك بلا زعانف (بمربع \qty{60}{mm} عارٍ): واستنتج.
+  \item وتتوقف المروحة ($h = \qty{10}{W/m^2/K}$): أوجد حرارة الوصلة؛
+        وماذا يفعل المعالج عند \qty{100}{\celsius}؟
+  \item وكتلة المبدد وسعته الحرارية؛ وثابت زمنه $RC$؛
+        وثابت زمن النبيطة وحدها (\qty{0.1}{g}، و \qty{700}{J/kg/K}).
+  \item ولمَ يكون للمبددات الجيدة قاعدة نحاسية أو أنابيب حرارية؟
+\end{enumerate}
+
+\textbf{الجزء الرابع --- الإنتروبيا.}
+\begin{enumerate}[resume]
+  \item أوجد الإنتروبيا المحدَثة في الثانية بغلاف البيت العاري
+        (في السؤال 4) بين \qty{293}{K} و \qty{273}{K}؛ وبعد
+        العزل.
+  \item والإنتروبيا التي تحدثها \qty{100}{W} من الرقاقة مارّةً من
+        الوصلة إلى المحيط؛ والتي يحدثها تحويل العمل الكهربائي
+        إلى حرارة في النبيطة.
+  \item وبيّن أن من أجل شريحة يكون $\int\sigma_s\,\dd V = \Phi(1/T_{\text{c}} -
+        1/T_{\text{h}})$.
+  \item ولخّص في خمسة أسطر ما الذي يحكم جدارًا وزعنفةً وقبوًا
+        ورقاقة.
+\end{enumerate}
+\end{problem}

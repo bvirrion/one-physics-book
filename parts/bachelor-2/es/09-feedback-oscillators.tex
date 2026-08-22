@@ -1,0 +1,640 @@
+\chapter{Electrónica: realimentación, osciladores y adquisición de señales}\label{ch:b2:feedback-oscillators}
+
+Acérquese demasiado un micrófono al altavoz que alimenta y la sala se
+llena de un aullido: el amplificador se oye a sí mismo, y un ruido
+minúsculo crece hasta convertirse en un chillido a un tono muy concreto.
+Domado, ese mismo lazo es el corazón de todo reloj, de toda radio y de
+todo sintetizador --- un \emph{oscilador} que fabrica una sinusoide con
+nada más que ganancia y un filtro. El volumen del Año 1 construyó
+amplificadores, filtros y comparadores con el amplificador operacional;
+este capítulo cierra el lazo en torno a ellos, se pregunta cuándo un lazo
+es estable y cuándo oscila, construye dos osciladores --- uno sinusoidal y
+otro cuadrado --- y pasa después a las dos operaciones con las que una
+señal medida llega a un ordenador: \emph{muestrearla} y sacarla del ruido
+mediante la \emph{\omterm{prop:b2:feedback-oscillators:lockin}{detección síncrona}}.
+
+\begin{omfigure}
+\includegraphics[width=0.58\linewidth]{images/book4/ai/b4-09-electronics-bench-oscillator.png}
+
+{\small Una placa de prototipos, un generador de funciones y un osciloscopio: el banco en el que se cierra un lazo de \omterm{def:b2:feedback-oscillators:loop}{realimentación} --- y en el que se descubre, cuando el amplificador se pone a cantar, que se ha convertido en un oscilador.}
+\end{omfigure}
+
+
+\section{Realimentación y estabilidad}
+
+\begin{definition}[Lazo cerrado; ganancia de lazo]\label{def:b2:feedback-oscillators:loop}
+\index{realimentación}\index{ganancia de lazo}\index{función de transferencia en lazo cerrado}
+Un amplificador de función de transferencia $\underline A(\jmath\omega)$ recibe
+la entrada $\underline e$ más una fracción $\underline\beta(\jmath\omega)\,\underline s$ de
+su propia salida $\underline s$ (realimentación positiva; para la negativa,
+cámbiese el signo de $\beta$). La función de transferencia en
+\emph{lazo cerrado} y la \emph{ganancia de lazo} valen
+\[
+\underline H = \frac{\underline s}{\underline e} = \frac{\underline A}{1 - \underline A\,\underline\beta} ,
+\qquad \underline T = \underline A\,\underline\beta .
+\]
+\end{definition}
+
+\begin{theorem}[Estabilidad de un lazo lineal; condición de oscilación]\label{thm:b2:feedback-oscillators:stability}
+\index{estabilidad (sistema lineal)}\index{condición de Barkhausen}\index{ecuación característica}
+Sustituyendo $\jmath\omega$ por la variable compleja $p$, la evolución libre
+del lazo la gobiernan las raíces de su \emph{\omterm{thm:b2:feedback-oscillators:stability}{ecuación característica}}
+$1 - \underline A(p)\underline\beta(p) = 0$ (los polos de $\underline H$): cada raíz
+$p_i$ aporta un modo $\eu^{p_it}$. El lazo es \emph{estable} cuando todas
+las raíces tienen parte real negativa (todo modo se extingue), y
+\emph{oscila}, con amplitud creciente, cuando una raíz tiene parte real
+positiva. La frontera --- un par de raíces imaginarias puras $\pm\jmath
+\omega_0$, es decir, una sinusoide mantenida --- se alcanza cuando
+\[
+\underline A(\jmath\omega_0)\,\underline\beta(\jmath\omega_0) = 1
+\]
+(\emph{\omterm{thm:b2:feedback-oscillators:stability}{condición de Barkhausen}}: \omterm{def:b2:feedback-oscillators:loop}{ganancia de lazo} de módulo uno y fase
+nula en $\omega_0$). Para un denominador de segundo grado $ap^2 + bp + c$ el
+lazo es estable si y solo si $a$, $b$ y $c$ tienen el mismo signo.
+\end{theorem}
+
+\begin{proof}
+La ecuación diferencial del lazo se obtiene de $\underline s(1 -
+\underline A\underline\beta) = \underline A\underline e$ leyendo cada potencia de $\jmath\omega$
+como una derivada temporal; sus soluciones homogéneas son las $\eu^{p_it}$
+con $p_i$ las raíces del polinomio. El crecimiento o la extinción sigue al
+signo de $\operatorname{Re}p_i$; para un polinomio de segundo grado las
+raíces tienen parte real negativa exactamente cuando los coeficientes
+comparten signo (su suma vale $-b/a$ y su producto $c/a$). La \omterm{thm:b2:feedback-oscillators:stability}{condición de
+Barkhausen} es la existencia de una raíz en $p = \jmath\omega_0$.
+\end{proof}
+
+\begin{remark}[Cómo arranca y cómo se detiene un oscilador]\label{rem:b2:feedback-oscillators:start}
+Un oscilador se diseña con una \omterm{def:b2:feedback-oscillators:loop}{ganancia de lazo} algo \emph{mayor} que uno
+en $\omega_0$: el ruido presente al encender contiene esa frecuencia, que
+crece exponencialmente mientras todas las demás se extinguen. La teoría
+lineal predice entonces amplitud infinita; en realidad alguna
+\emph{no linealidad} --- la saturación del amplificador, o un elemento
+deliberadamente no lineal --- baja la ganancia efectiva a medida que crece
+la amplitud, hasta que la \omterm{def:b2:feedback-oscillators:loop}{ganancia de lazo} vale en promedio exactamente
+uno: la amplitud se estabiliza. Todo oscilador real es así un lazo lineal
+para la frecuencia y no lineal para la amplitud; cuanto más suave sea la
+limitación, más pura será la sinusoide.
+\end{remark}
+
+\section{El oscilador de puente de Wien}
+
+\begin{proposition}[Oscilador de puente de Wien]\label{prop:b2:feedback-oscillators:wien}
+\index{oscilador de puente de Wien}\index{red de Wien}
+Un amplificador operacional en configuración no inversora de ganancia
+$K = 1 + R_2/R_1$ devuelve su salida a su entrada $+$ a través de la
+\emph{\omterm{prop:b2:feedback-oscillators:wien}{red de Wien}}: $R$ y $C$ en serie, y luego $R$ y $C$ en paralelo a
+masa. La función de transferencia de la red vale
+\[
+\underline\beta(\jmath\omega) = \frac1{3 + \jmath(RC\omega - 1/RC\omega)} ,
+\]
+real y máxima ($= 1/3$) en $\omega_0 = 1/RC$. La \omterm{def:b2:feedback-oscillators:loop}{ganancia de lazo} $K\underline\beta$
+vale uno en $\omega_0$ cuando $K = 3$: el circuito mantiene entonces una
+sinusoide a
+\[
+f_0 = \frac1{2\pi RC} .
+\]
+La tensión $v$ en la entrada $+$ obedece
+\[
+\frac{\dd^2v}{\dd t^2} + \frac{3 - K}{RC}\,\frac{\dd v}{\dd t} + \frac{v}{R^2C^2} = 0 :
+\]
+para $K < 3$ la oscilación se extingue y para $K > 3$ crece
+(amortiguamiento negativo) con la constante de tiempo $2RC/(K - 3)$, hasta
+que la saturación del operacional la limita.
+\end{proposition}
+
+\begin{proof}
+Divisor de tensión: la rama serie $Z_s = R + 1/\jmath C\omega$ y la rama
+paralelo $Z_p = R/(1 + \jmath RC\omega)$; $\underline\beta = Z_p/(Z_s + Z_p)$, que se
+simplifica hasta la forma dada. Lazo: $\underline v = \underline\beta K\underline v$, es decir,
+$[3 + \jmath(RC\omega - 1/RC\omega)]\underline v = K\underline v$; multiplíquese por $\jmath\omega RC$
+y léase $\jmath\omega \to \dd/\dd t$: $R^2C^2\ddot v + (3 - K)RC\dot v + v = 0$.
+Su coeficiente de amortiguamiento cambia de signo en $K = 3$.
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}[font=\small, x=1cm, y=1cm, >=Stealth, scale=0.9, every node/.style={transform shape}]
+  \begin{scope}
+    \node[draw, thick, minimum width=1.4cm, minimum height=0.8cm] (A) at (0,0) {$\underline A$};
+    \node[draw, thick, minimum width=1.4cm, minimum height=0.8cm] (B) at (0,-1.7) {$\underline\beta$};
+    \draw[thick] (-2.3,0) circle (0.2); \node at (-2.3,0) {$+$};
+    \draw[thick, ->] (-3.2,0) -- (-2.5,0) node[above, pos=0.3, font=\footnotesize] {$\underline e$};
+    \draw[thick, ->] (-2.1,0) -- (A.west);
+    \draw[thick, ->] (A.east) -- (2.0,0) node[above, pos=0.6, font=\footnotesize] {$\underline s$};
+    \draw[thick] (1.4,0) -- (1.4,-1.7) -- (B.east);
+    \draw[thick, ->] (B.west) -- (-2.3,-1.7) -- (-2.3,-0.2);
+    \node[font=\footnotesize] at (-0.3,-2.7) {$\underline H = \dfrac{\underline A}{1 - \underline A\underline\beta}$};
+  \end{scope}
+\end{tikzpicture}
+\hfill
+\begin{tikzpicture}[font=\small, scale=0.78, every node/.style={transform shape}]
+    \draw (0,0) node[op amp, noinv input down] (oa) {};
+    % negative feedback: R2 from output to - input, R1 from - input to ground
+    \coordinate (M) at ($(oa.-)+(-0.7,0)$);
+    \draw (oa.-) -- (M);
+    \draw (M) to[R, l_=$R_1$] ++(-1.6,0) node[ground, rotate=-90]{};
+    \draw (M) -- ++(0,1.4) coordinate (T) to[R, l=$R_2$] (T -| oa.out) -- (oa.out);
+    % Wien network: from output down, series C and R to node P, P to + input; P to ground via R and via C
+    \coordinate (P) at (-3.4,-2.3);
+    \draw (oa.out) -- ++(0.6,0) coordinate (O) -- (O |- P) to[C, l=$C$] ++(-1.6,0) to[R, l=$R$] (P);
+    \draw (P) -- (P |- oa.+) -- (oa.+);
+    \draw (P) to[R, l_=$R$] ++(0,-1.6) node[ground]{};
+    \draw (P) -- ++(-1.1,0) coordinate (Q) to[C, l_=$C$] ++(0,-1.6) node[ground]{};
+    \draw (O) to[short, -o] ++(0.5,0) node[right, font=\footnotesize] {$s$};
+\end{tikzpicture}
+
+{\small A la izquierda, un lazo de \omterm{def:b2:feedback-oscillators:loop}{realimentación}: la salida se devuelve,
+a través de $\underline\beta$, a la entrada del amplificador. A la derecha, el
+\omterm{prop:b2:feedback-oscillators:wien}{oscilador de puente de Wien} --- un amplificador no inversor de ganancia
+$1 + R_2/R_1$ cuya salida vuelve a su entrada $+$ por la red $RC$
+serie--paralelo; oscila a $1/2\pi RC$ cuando la ganancia llega a 3.}
+\end{omfigure}
+
+\begin{example}[Una fuente de 1 kHz]\label{ex:b2:feedback-oscillators:wiennumbers}
+$R = \qty{15.9}{k\ohm}$, $C = \qty{10}{nF}$: $f_0 = \qty{1.00}{kHz}$. Con $R_1 =
+\qty{10}{k\ohm}$ y $R_2 = \qty{21}{k\ohm}$, $K = 3.1$: la amplitud se multiplica por
+$\eu$ cada $2RC/0.1 = \qty{3.2}{ms}$ a partir del ruido del encendido, y
+alcanza la saturación en unas decenas de milisegundos; la sinusoide
+recortada es entonces rica en armónicos. Sustituir $R_1$ por una
+bombillita incandescente, cuya resistencia sube al calentarse, baja $K$
+hasta exactamente $3$ con una amplitud moderada: una sinusoide con menos
+del $0.1\%$ de distorsión, el circuito de los primeros generadores de
+señal de laboratorio.
+\end{example}
+
+\section{Comparadores con histéresis; el multivibrador astable}
+
+\begin{proposition}[Comparador con histéresis]\label{prop:b2:feedback-oscillators:schmitt}
+\index{comparador con histéresis}\index{disparador de Schmitt}
+Un operacional con \omterm{def:b2:feedback-oscillators:loop}{realimentación} \emph{positiva} --- la salida llevada a la entrada $+$
+por un divisor $R_1$, $R_2$ (la entrada $+$ queda entonces a $\beta s$ con
+$\beta = R_1/(R_1 + R_2)$ cuando la señal $e$ se aplica a la entrada $-$)
+--- no tiene régimen lineal estable: su salida se sitúa en $+V_{\text{sat}}$ o en
+$-V_{\text{sat}}$ y conmuta
+\begin{align*}
+&\text{de } +V_{\text{sat}} \text{ a } -V_{\text{sat}} \text{ cuando } e \text{ sube por encima de } +\beta V_{\text{sat}} ,\\
+&\text{de } -V_{\text{sat}} \text{ a } +V_{\text{sat}} \text{ cuando } e \text{ baja por debajo de } -\beta V_{\text{sat}} .
+\end{align*}
+Los dos umbrales difieren: la \emph{histéresis} $2\beta V_{\text{sat}}$ hace al
+comparador inmune al ruido menor que ella, y su ciclo en el plano
+$(e, s)$ es un rectángulo recorrido en el sentido de las agujas del reloj.
+\end{proposition}
+
+\begin{proof}
+Con $s = +V_{\text{sat}}$ la entrada $+$ está a $+\beta V_{\text{sat}}$; la salida
+sigue siendo positiva mientras $e < \beta V_{\text{sat}}$, y bascula cuando $e$ lo
+cruza --- tras lo cual la entrada $+$ está a $-\beta V_{\text{sat}}$, de modo que $e$
+debe bajar por debajo de ese valor para volver a hacerla bascular. (En
+régimen lineal la \omterm{def:b2:feedback-oscillators:loop}{realimentación} positiva haría crecer cualquier desviación: es inestable.)
+\end{proof}
+
+\begin{proposition}[Multivibrador astable]\label{prop:b2:feedback-oscillators:astable}
+\index{multivibrador astable}\index{oscilador de relajación}
+Devuélvase la salida del \omterm{prop:b2:feedback-oscillators:schmitt}{comparador con histéresis} a su propia entrada $-$
+a través de un circuito $RC$ ($R$ de $s$ a la entrada $-$, y $C$ de ahí a
+masa). El condensador se carga hacia $\pm V_{\text{sat}}$ y hace bascular el
+comparador cada vez que alcanza un umbral: una onda cuadrada en $s$ y una
+onda casi triangular en $C$, con el periodo
+\[
+T = 2RC\,\ln\frac{1 + \beta}{1 - \beta} .
+\]
+Para $\beta = 1/2$, $T = 2RC\ln3 \approx 2.2RC$. Estos \emph{\omterm{prop:b2:feedback-oscillators:astable}{osciladores de
+relajación}} marcan el ritmo de los microcontroladores, hacen parpadear
+indicadores y generan las ondas triangular y cuadrada de los generadores
+de funciones.
+\end{proposition}
+
+\begin{proof}
+Con $s = +V_{\text{sat}}$, la tensión del condensador $v_C$ pasa de
+$-\beta V_{\text{sat}}$ hacia $+V_{\text{sat}}$ según $v_C = V_{\text{sat}} - (1 + \beta)
+V_{\text{sat}}\eu^{-t/RC}$, y alcanza $+\beta V_{\text{sat}}$ al cabo de $RC\ln[(1 + \beta)
+/(1 - \beta)]$; el comparador bascula y sigue el semiciclo simétrico.
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}
+\begin{axis}[omaxis, axis x line=middle, axis y line=middle, width=5.6cm, height=4.6cm,
+    xlabel={$e$}, ylabel={$s$}, xmin=-1.6, xmax=1.6, ymin=-1.5, ymax=1.5,
+    xtick=\empty, ytick=\empty, clip=false]
+  \node[font=\scriptsize, anchor=north] at (axis cs:-0.5,-1.55) {$-\beta V_{\text{sat}}$};
+  \node[font=\scriptsize, anchor=north] at (axis cs:0.5,-1.55) {$\beta V_{\text{sat}}$};
+  \node[font=\scriptsize, anchor=east] at (axis cs:-1.55,1) {$V_{\text{sat}}$};
+  \node[font=\scriptsize, anchor=east] at (axis cs:-1.55,-1) {$-V_{\text{sat}}$};
+  \draw[dotted] (axis cs:-0.5,0) -- (axis cs:-0.5,-1.5); \draw[dotted] (axis cs:0.5,0) -- (axis cs:0.5,-1.5);
+  \addplot[omDef, very thick] coordinates {(-1.5,1) (0.5,1)};
+  \addplot[omDef, very thick, ->] coordinates {(0.5,1) (0.5,-1)};
+  \addplot[omDef, very thick] coordinates {(0.5,-1) (-0.5,-1)};
+  \addplot[omDef, very thick, ->] coordinates {(-0.5,-1) (-0.5,1)};
+  \addplot[omDef, very thick] coordinates {(-0.5,-1) (1.5,-1)};
+\end{axis}
+\end{tikzpicture}
+\hfill
+\begin{tikzpicture}
+\begin{axis}[omaxis, axis x line=middle, axis y line=left, width=8.0cm, height=4.6cm,
+    xlabel={$t$}, ylabel={}, xmin=0, xmax=4.4, ymin=-1.4, ymax=1.4, xtick=\empty, ytick={-1,-0.5,0.5,1},
+    yticklabels={$-V_{\text{sat}}$, $-\beta V_{\text{sat}}$, $\beta V_{\text{sat}}$, $V_{\text{sat}}$}, tick label style={font=\scriptsize}, samples=60,
+    xlabel style={at={(axis description cs:1.0,0.5)}, anchor=west},
+    legend style={font=\scriptsize, at={(0.5,1.02)}, anchor=south, legend columns=2, draw=none, fill=none}]
+  \addplot[omThm, thick] coordinates {(0,1) (1.1,1) (1.1,-1) (2.2,-1) (2.2,1) (3.3,1) (3.3,-1) (4.4,-1)};
+  \addplot[omDef, thick, domain=0:1.1] {1-1.5*exp(-x)};
+  \addplot[omDef, thick, domain=1.1:2.2] {-1+1.5*exp(-(x-1.1))};
+  \addplot[omDef, thick, domain=2.2:3.3] {1-1.5*exp(-(x-2.2))};
+  \addplot[omDef, thick, domain=3.3:4.4] {-1+1.5*exp(-(x-3.3))};
+  \legend{$s$ (cuadrada), $v_C$}
+\end{axis}
+\end{tikzpicture}
+
+{\small A la izquierda, el ciclo de un \omterm{prop:b2:feedback-oscillators:schmitt}{comparador con histéresis}: dos
+umbrales y un rectángulo recorrido en el sentido de las agujas del reloj.
+A la derecha, el \omterm{prop:b2:feedback-oscillators:astable}{multivibrador astable}: la tensión del condensador va y
+viene entre los umbrales y la salida es una onda cuadrada.}
+\end{omfigure}
+
+\section{El muestreo de una señal}
+
+\begin{theorem}[Muestreo; el criterio de Nyquist--Shannon]\label{thm:b2:feedback-oscillators:shannon}
+\index{muestreo}\index{criterio de Nyquist--Shannon}\index{solapamiento espectral}\index{filtro antisolapamiento}
+Una señal está \emph{muestreada} cuando solo se conservan sus valores
+$s(nT_s)$ en los instantes $nT_s$, siendo $f_s = 1/T_s$ la
+\emph{frecuencia de muestreo}. El espectro de la señal muestreada es el
+espectro de $s$ repetido en torno a cada múltiplo de $f_s$. Una señal cuyo
+espectro está confinado por debajo de $f_{\max}$ puede reconstruirse
+exactamente a partir de sus muestras si y solo si
+\[
+f_s > 2f_{\max} ;
+\]
+en caso contrario las copias se solapan y una componente a $f > f_s/2$
+reaparece en la frecuencia \emph{alias} $|f - nf_s|$ (para el entero $n$
+que la lleva por debajo de $f_s/2$), indistinguible de una componente de
+baja frecuencia verdadera. De ahí el \emph{\omterm{thm:b2:feedback-oscillators:shannon}{filtro antisolapamiento}} que se
+coloca antes de todo muestreador: un paso bajo que elimina cuanto está por encima de $f_s/2$.
+\end{theorem}
+
+\begin{proof}
+Muestrear es multiplicar $s(t)$ por un tren periódico de pulsos estrechos
+de periodo $T_s$, cuya serie de Fourier contiene todos los armónicos $nf_s$
+(volumen de matemáticas de este año); multiplicar $s$ por $\cos(2\pi nf_st)$
+desplaza su espectro en $\pm nf_s$ --- de ahí las copias. No se solapan si
+y solo si $f_{\max} < f_s - f_{\max}$; un paso bajo de corte $f_s/2$
+recupera entonces exactamente el espectro original (admitido). Solapamiento: las
+muestras de $\cos(2\pi ft)$ y de $\cos(2\pi(f - nf_s)t)$ en $t = mT_s$
+coinciden, pues $2\pi nf_smT_s = 2\pi nm$.
+\end{proof}
+
+\begin{example}[Ruedas de carreta, discos compactos y osciloscopios]\label{ex:b2:feedback-oscillators:alias}
+Una película a $24$ imágenes por segundo muestrea el mundo a \qty{24}{Hz}:
+una rueda de $12$ radios que gira a $2.1$ vueltas por segundo presenta un
+radio $25.2$ veces por segundo, $1.2$ por encima de $f_s$ --- parece girar
+despacio hacia delante, y hacia atrás a $1.9$ vueltas por segundo. Un
+disco compacto muestrea a \qty{44.1}{kHz} para reproducir sonido hasta
+\qty{20}{kHz}, con un \omterm{thm:b2:feedback-oscillators:shannon}{filtro antisolapamiento} abrupto entre $20$ y \qty{22}{kHz}. Un osciloscopio
+digital puesto a \qty{1}{MS/s} muestra una sinusoide de \qty{999}{kHz} como una de \qty{1}{kHz} ---
+la primera trampa de la medida digital.
+\end{example}
+
+\begin{omfigure}
+\begin{tikzpicture}
+\begin{axis}[omaxis, axis x line=middle, axis y line=none, width=13.6cm, height=4.0cm,
+    xmin=0, xmax=10, ymin=-1.4, ymax=1.5, xtick=\empty, samples=400, xlabel={$t$},
+    xlabel style={at={(axis description cs:1.0,0.5)}, anchor=west},
+    legend style={font=\scriptsize, at={(0.5,1.02)}, anchor=south, legend columns=3, draw=none, fill=none}]
+  \addplot[omDef, thick, domain=0:10] {cos(deg(2*pi*0.9*x))};
+  \addplot[omThm, thick, dashed, domain=0:10] {cos(deg(2*pi*0.1*x))};
+  \addplot[only marks, mark=*, mark size=1.6pt, black, samples=11, domain=0:10] {cos(deg(2*pi*0.9*x))};
+  \legend{$f = 0.9f_s$, alias en $0.1f_s$, muestras}
+\end{axis}
+\end{tikzpicture}
+
+{\small Solapamiento: una sinusoide a $0.9f_s$ y otra a $0.1f_s$ pasan por
+las mismas muestras; una vez muestreadas no pueden distinguirse --- de ahí
+el criterio $f_s > 2f_{\max}$.}
+\end{omfigure}
+
+\begin{remark}[La cuantificación]\label{rem:b2:feedback-oscillators:quantization}
+\index{cuantificación}\index{convertidor analógico-digital}
+El \omterm{rem:b2:feedback-oscillators:quantization}{convertidor analógico-digital} redondea además cada muestra a uno de
+$2^N$ niveles ($N$ bits): el error de redondeo, de medio escalón como
+mucho, actúa como un ruido de valor eficaz $\Delta/\sqrt{12}$ para un
+escalón $\Delta$, y el margen dinámico (la mayor sinusoide frente a ese
+ruido) vale unos $6N + 2$ dB --- \qty{98}{dB} para los $16$ bits de un
+disco compacto y \qty{74}{dB} para un osciloscopio de $12$ bits. La
+frecuencia de muestreo y la resolución son las dos cifras de la etiqueta
+de todo digitalizador.
+\end{remark}
+
+\section{La detección síncrona}
+
+\begin{proposition}[Detección síncrona (lock-in)]\label{prop:b2:feedback-oscillators:lockin}
+\index{detección síncrona}\index{amplificador lock-in}\index{demodulación}
+Una señal de frecuencia conocida, $s(t) = A\cos(\omega_0t + \varphi)$, sepultada
+en un ruido $n(t)$ de amplitud mucho mayor repartido sobre una banda
+ancha, se multiplica por una referencia $r(t) = \cos\omega_0t$ de la misma
+frecuencia y se pasa por un filtro paso bajo de corte $f_c \ll f_0$:
+\[
+s(t)r(t) = \tfrac12A\cos\varphi + \tfrac12A\cos(2\omega_0t + \varphi)
+\ \xrightarrow{\ \text{paso bajo}\ }\ \tfrac12A\cos\varphi .
+\]
+La salida es una tensión continua proporcional a la amplitud de la señal
+(y al coseno de su fase respecto de la referencia), mientras que el ruido
+queda reducido a la parte de su espectro comprendida en $\pm f_c$ en torno
+a $f_0$ --- un ancho de banda $2f_c$ que puede hacerse todo lo estrecho que
+se quiera (una fracción de hercio para una constante de tiempo de filtro
+de segundos). Las componentes a otras frecuencias $f$ se desplazan a
+$f \pm f_0$ y el filtro las rechaza.
+\end{proposition}
+
+\begin{proof}
+$\cos a\cos b = \tfrac12[\cos(a - b) + \cos(a + b)]$; el filtro conserva el
+término de la diferencia para la señal, mientras que el término en
+$2\omega_0$ y cada componente de ruido a $f$ van a parar a $|f - f_0|$ y a
+$f + f_0$ --- solo el ruido que estaba a menos de $f_c$ de $f_0$ cae por
+debajo de $f_c$.
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}[font=\small, x=1cm, y=1cm, >=Stealth]
+  \node[draw, thick, minimum width=1.5cm, minimum height=0.8cm] (S) at (0,0) {sensor};
+  \node[draw, thick, circle, minimum size=0.7cm] (M) at (2.6,0) {$\times$};
+  \node[draw, thick, minimum width=1.6cm, minimum height=0.8cm] (F) at (5.0,0) {paso bajo};
+  \node[draw, thick, minimum width=1.7cm, minimum height=0.8cm] (R) at (2.6,-1.9) {referencia $\omega_0$};
+  \draw[thick, ->] (S) -- (M) node[above, pos=0.5, font=\footnotesize] {$s + n$};
+  \draw[thick, ->] (M) -- (F);
+  \draw[thick, ->] (F) -- (7.0,0) node[right, font=\footnotesize] {$\tfrac12A\cos\varphi$};
+  \draw[thick, ->] (R) -- (M);
+  \draw[thick, ->] (R.west) -- (-0.2,-1.9) -- (-0.2,-0.5) node[left, font=\footnotesize, pos=0.5] {modula};
+\end{tikzpicture}
+\hfill
+\begin{tikzpicture}
+\begin{axis}[omaxis, axis x line=bottom, axis y line=left, width=5.6cm, height=4.0cm,
+    xlabel={$f$}, ylabel={}, xmin=0, xmax=3, ymin=0, ymax=1.3, xtick={1,2}, xticklabels={$f_0$, $2f_0$}, ytick=\empty, samples=200,
+    xlabel style={at={(axis description cs:1.0,0.0)}, anchor=west}]
+  \addplot[omExo!60, thick, domain=0:3] {0.35+0.1*sin(deg(11*x))+0.08*cos(deg(23*x))};
+  \addplot[omThm, very thick] coordinates {(1,0) (1,1.1)};
+  \addplot[omDef, thick, fill=omDef!30, domain=0.9:1.1] {1.2} \closedcycle;
+  \node[font=\scriptsize, omDef, anchor=west] at (axis cs:1.15,1.15) {conservado};
+  \node[font=\scriptsize] at (axis cs:2.2,0.6) {ruido};
+\end{axis}
+\end{tikzpicture}
+
+{\small \omterm{prop:b2:feedback-oscillators:lockin}{Detección síncrona}: la salida del sensor, señal más ruido de banda
+ancha, se multiplica por una referencia a la propia frecuencia de la señal
+y se filtra en paso bajo; solo sobrevive el ruido contenido en una banda
+estrecha en torno a $f_0$ (sombreada), y la señal sale como un nivel continuo.}
+\end{omfigure}
+
+\begin{example}[Encontrar un microvoltio]\label{ex:b2:feedback-oscillators:microvolt}
+Un fotodiodo entrega \qty{10}{\micro V} de señal cuando su luz se trocea a
+\qty{1}{kHz}, por encima de \qty{50}{nV/\sqrt{Hz}} de ruido blanco sobre
+\qty{100}{kHz} (\qty{16}{\micro V} eficaces: más que la señal). Tras la
+\omterm{prop:b2:feedback-oscillators:lockin}{detección síncrona} con un filtro de constante de tiempo $\tau = \qty{1}{s}$
+(ancho de banda de ruido $1/4\tau = \qty{0.25}{Hz}$) el ruido vale $50\,\text{nV} \times \sqrt{0.25}
+= \qty{25}{nV}$: una relación señal/ruido de $400$ --- al precio de
+esperar unos segundos por punto. El mismo truco, con el nombre de
+\emph{demodulación}, recupera la música de una portadora de radio de AM y
+los datos de un módem.
+\end{example}
+
+\begin{method}[Cómo diseñar una cadena de medida]\label{met:b2:feedback-oscillators:method}
+(1) Modúlese la magnitud que se quiere medir a una frecuencia $f_0$
+alejada del ruido (troceador, puente de alterna). (2) Amplifíquese con un
+ancho de banda que cubra $f_0$. (3) Detéctese de forma síncrona con un
+filtro cuya constante de tiempo sea la mayor que la medida pueda
+permitirse: el ruido cae como $1/\sqrt\tau$. (4) Muestréese la salida
+lenta a un ritmo superior al doble de su ancho de banda, tras un \omterm{thm:b2:feedback-oscillators:shannon}{filtro
+antisolapamiento} y con bits suficientes para la resolución requerida.
+(5) Compruébese la cadena con una señal conocida, y compruébese que nada
+en ella oscila: todo amplificador con \omterm{def:b2:feedback-oscillators:loop}{realimentación} es un oscilador en potencia.
+\end{method}
+
+\section{Ejercicios}
+
+\begin{exercise}[$\star$]\label{exo:b2:feedback-oscillators:1}
+Un \omterm{prop:b2:feedback-oscillators:wien}{oscilador de puente de Wien} con $R = \qty{10}{k\ohm}$ y $C = \qty{10}{nF}$:
+frecuencia; ganancia necesaria; valores de $R_1$ y $R_2$ para $K = 3.05$ con $R_1 =
+\qty{10}{k\ohm}$; constante de tiempo del crecimiento de la amplitud. ¿Qué
+componentes fijan la frecuencia y cuáles el arranque?
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b2:feedback-oscillators:2}
+\omterm{prop:b2:feedback-oscillators:schmitt}{Comparador con histéresis} con $V_{\text{sat}} = \qty{\pm 13}{V}$, $R_1 = \qty{1.0}{k\ohm}$,
+$R_2 = \qty{4.0}{k\ohm}$: umbrales y anchura de la histéresis. Una señal
+ruidosa que cruza el cero con \qty{2}{V} de ruido: ¿cuántas veces conmuta
+la salida por cada cruce, con histéresis y sin ella?
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b2:feedback-oscillators:3}
+\omterm{prop:b2:feedback-oscillators:astable}{Multivibrador astable} con $R = \qty{10}{k\ohm}$, $C = \qty{100}{nF}$, $\beta = 0.5$:
+periodo y frecuencia; $R$ para \qty{1.0}{kHz}; amplitud de la onda
+triangular en el condensador; ¿qué le ocurre a $T$ si $\beta$ sube a $0.9$?
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b2:feedback-oscillators:4}
+(a) Un disco compacto muestrea a \qty{44.1}{kHz}: frecuencia máxima
+reproducida. (b) Un ultrasonido de \qty{30}{kHz} se cuela en la grabación:
+¿a qué frecuencia aparece? (c) Una rueda de $8$ radios filmada a
+veinticinco imágenes por segundo gira a $3.2$ vueltas/s: movimiento
+aparente. (d) Un osciloscopio a \qty{10}{MS/s} muestra una sinusoide limpia
+de \qty{100}{kHz}; ¿qué otras frecuencias podría tener la señal real?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b2:feedback-oscillators:5}
+Lazos con polinomios característicos (a) $p^2 + 3p + 2$, (b) $p^2 - p +
+4$, (c) $p^2 + 4$, (d) $p^3 + 2p^2 + 2p + 1$, (e) $p^3 + p + 1$: hállense o
+discútanse las raíces; ¿qué lazos son estables, cuáles oscilan y cuáles
+crecen? (Para los de grado tres, razónese sobre el signo de las partes
+reales: por ejemplo, muéstrese que (e) tiene una raíz real negativa y dos
+raíces complejas con parte real positiva, usando el producto y la suma de las raíces.)
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b2:feedback-oscillators:6}
+\emph{\omterm{prop:b2:feedback-oscillators:wien}{Red de Wien}.} (a) Dedúzcase $\underline\beta(\jmath\omega)$ a partir del
+divisor. (b) Dibújense a mano alzada su módulo y su fase; muéstrese que la
+fase se anula solo en $\omega_0$ y que el módulo vale entonces $1/3$.
+(c) Escríbase la ecuación diferencial del lazo para una ganancia $K$ y
+discútanse $K < 3$, $K = 3$ y $K > 3$. (d) Con $K = 3.2$ y partiendo de un
+ruido de \qty{1}{mV}, ¿cuánto tarda la amplitud en llegar a \qty{10}{V}?
+¿Por qué la amplitud final no depende del ruido inicial?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b2:feedback-oscillators:7}
+\emph{Generador de triángulos.} Un integrador (operacional, $R$, $C$) se
+alimenta con la salida cuadrada $\pm V_{\text{sat}}$ de un \omterm{prop:b2:feedback-oscillators:schmitt}{comparador con histéresis} cuya entrada
+es la salida del integrador; los umbrales del comparador valen
+$\pm V_{\text{sat}}R_1/R_2$. (a) Muéstrese que la salida del integrador es un
+triángulo; su pendiente. (b) Periodo $T = 4RCR_1/R_2$. (c) Valores: $R = \qty{10}{k\ohm}$,
+$C = \qty{10}{nF}$, $R_1/R_2 = 0.5$. (d) Ventaja sobre el astable simple
+para un generador de funciones.
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b2:feedback-oscillators:8}
+Cuantificación. (a) Un convertidor de $16$ bits sobre $\pm\qty{1}{V}$:
+escalón, ruido de cuantificación eficaz y margen dinámico en dB.
+(b) $12$ bits a \qty{1}{MS/s}: caudal binario; lo mismo para $8$ bits a
+\qty{1}{GS/s} (un osciloscopio rápido). (c) Una señal de \qty{1}{mV} en el
+convertidor de $16$ bits: ¿cuántos escalones? ¿Qué hay que hacer antes del
+convertidor? (d) ¿Por qué un buen equipo de audio añade un poco de ruido
+de difuminado antes de cuantificar?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b2:feedback-oscillators:9}
+Una señal contiene componentes de \qty{1.0}{kHz} y \qty{9.0}{kHz} y se
+muestrea a \qty{10}{kS/s}. (a) ¿Dónde aparece cada una? (b) Se añade un
+\omterm{thm:b2:feedback-oscillators:shannon}{filtro antisolapamiento} $RC$ de primer orden con $f_c = \qty{2}{kHz}$:
+\omterm{def:b2:dispersion-wave-packets:complex}{atenuación} a \qty{9}{kHz} en dB; ¿basta si se quieren \qty{40}{dB}? (c)
+Orden del filtro necesario (\omterm{def:b2:dispersion-wave-packets:complex}{atenuación} $\approx 20n$ dB por década); o, como
+alternativa, frecuencia de muestreo necesaria con el filtro de primer
+orden. (d) ¿Por qué los convertidores modernos sobremuestrean y filtran de forma digital?
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b2:feedback-oscillators:10}
+\emph{Lock-in.} Entrada $A\cos(\omega_0t + \varphi) + n(t)$ multiplicada por $\cos\omega_0t$
+y filtrada por un paso bajo de primer orden de constante de tiempo $\tau$.
+(a) Salida en continua. (b) Muéstrese que una componente de ruido a
+$f = f_0 + \delta f$ da, tras el filtro, una amplitud reducida en
+$1/\sqrt{1 + (2\pi\delta f\tau)^2}$; dedúzcase el ancho de banda de ruido
+equivalente $B = 1/4\tau$ (admítase $\int_0^\infty
+\dd x/(1 + x^2) = \pi/2$). (c) Una señal de \qty{1}{\micro V} en \qty{1}{mV} eficaces de
+ruido blanco sobre \qty{10}{kHz}: densidad de ruido; $\tau$ para una
+relación señal/ruido de $10$; tiempo de medida. (d) Una captación de red de \qty{50}{Hz} y \qty{1}{mV}
+contamina la entrada, con $f_0 = \qty{1}{kHz}$: ¿adónde va y cuánto se
+atenúa para $\tau = \qty{1}{s}$?
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b2:feedback-oscillators:11}
+\emph{Cuarzo.} Un cristal de cuarzo se comporta, cerca de su resonancia,
+como una rama serie $L$, $C$, $r$ ($L = \qty{8000}{H}$, $C = \qty{3.0}{fF}$, $r =
+\qty{30}{k\ohm}$) en paralelo con $C_0 = \qty{1.5}{pF}$. (a) Frecuencia de
+resonancia serie y factor de calidad $Q = L\omega_0/r$. (b) ¿Por qué un
+oscilador construido en torno a él mantiene su frecuencia con una parte en $10^6$ mientras que el puente
+de Wien deriva un tanto por ciento (piénsese en la pendiente de fase $\dd\varphi/\dd\omega$ de
+la red de \omterm{def:b2:feedback-oscillators:loop}{realimentación} cerca de la resonancia, $\sim 2Q/\omega_0$)? (c) Un cuarzo
+de reloj a \qty{32768}{Hz} se divide entre $2^{15}$: resultado; su frecuencia
+varía como $-0.04\,\text{ppm}\,(T - \qty{25}{\degreeCelsius})^2$: error por
+mes a \qty{5}{\degreeCelsius}. (d) ¿Por qué se eligen \qty{32768}{Hz} y no
+\qty{1}{MHz}?
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b2:feedback-oscillators:12}
+\emph{Resistencia negativa.} Un operacional lleva $R_2$ de la salida a la
+entrada $-$, $R_1$ de la entrada $-$ a masa y $R$ de la salida a la
+entrada $+$; se estudia el dipolo visto entre la entrada $+$ y masa (en
+régimen lineal). (a) Muéstrese que se comporta como una resistencia
+$-RR_1/R_2$. (b) Este dipolo se conecta en paralelo con un circuito $LC$
+paralelo de resistencia de pérdidas $R_p$ (en paralelo): escríbase la
+ecuación de la tensión y hállense la condición de oscilación mantenida y
+la frecuencia. (c) Valores: $L
+= \qty{10}{mH}$, $C = \qty{100}{nF}$, $R_p = \qty{50}{k\ohm}$; elíjanse $R$ y $R_1 =
+R_2$. (d) ¿Qué limita la amplitud y cómo se compara este oscilador con el
+puente de Wien?
+\end{exercise}
+
+\section{Problema: una cadena de medida con detección síncrona}
+
+\begin{problem}[{Problema de fin de semana --- del oscilador de referencia
+al resultado digitalizado: medir diez microvoltios de señal luminosa bajo
+un milivoltio de ruido}]
+\label{pb:b2:feedback-oscillators:1}
+
+Se quiere medir una luz débil con un fotodiodo. La luz se trocea con una
+rueda giratoria a $f_0 = \qty{1.00}{kHz}$, de modo que la salida del
+fotodiodo es una sinusoide de amplitud $A = \qty{10}{\micro V}$ a $f_0$ (tras un
+primer amplificador), sobre la que cabalga un ruido blanco de densidad
+espectral $e_n = \qty{50}{nV/\sqrt{Hz}}$ en un ancho de banda de \qty{100}{kHz}, más una
+captación de red de \qty{50}{Hz} y \qty{1.0}{mV}. La frecuencia del propio
+troceador la fija un \omterm{prop:b2:feedback-oscillators:wien}{oscilador de puente de Wien}.
+
+\medskip
+\noindent\textbf{Parte I --- El oscilador de referencia.}
+Puente de Wien con $C = \qty{10}{nF}$ y operacional que satura a $\pm\qty{12}{V}$.
+\begin{enumerate}
+  \item $R$ para $f_0 = \qty{1.00}{kHz}$.
+  \item Dedúzcase la función de transferencia de la \omterm{prop:b2:feedback-oscillators:wien}{red de Wien} y
+        compruébese que su fase se anula en $f_0$ con módulo $1/3$.
+  \item Escríbase la ecuación diferencial del lazo para una ganancia $K$;
+        para $K = 3.15$, tiempo que tarda la amplitud en crecer en un
+        factor $1000$.
+  \item La amplitud acaba limitada por la saturación: descríbase la forma
+        de onda y por qué importan sus armónicos en una referencia.
+  \item Un termistor en lugar de $R_1$ (cuya resistencia baja al
+        calentarse) o una bombilla (que sube): ¿cuál estabiliza la
+        ganancia en 3, y cómo?
+  \item Los condensadores derivan un $+1\%$ con la temperatura: nueva
+        frecuencia. ¿Por qué sigue sirviendo entonces el troceador para la
+        medida (qué debe hacer la referencia)?
+  \item La \omterm{prop:b2:feedback-oscillators:wien}{red de Wien} tiene un factor de calidad de alrededor de $1/3$:
+        ¿qué implica eso para la pureza de la frecuencia frente a un
+        cuarzo ($Q \sim 10^5$)?
+\end{enumerate}
+
+\medskip
+\noindent\textbf{Parte II --- La señal y el ruido.}
+\begin{enumerate}[resume]
+  \item Valor eficaz del ruido blanco sobre los \qty{100}{kHz} completos;
+        relación señal/ruido a la salida del amplificador.
+  \item Se intercala un filtro paso banda de factor de calidad $Q = 10$
+        centrado en $f_0$ (ancho de banda de ruido $\approx f_0/Q$): ruido
+        eficaz y relación señal/ruido. ¿Por qué no basta esto para una
+        medida precisa (piénsese en las derivas y en los \qty{50}{Hz})?
+  \item ¿Por qué trocear la luz a \qty{1}{kHz} en lugar de medir
+        directamente la fotocorriente continua? (Los amplificadores tienen
+        un ruido en ``$1/f$'' que crece por debajo de unos cientos de
+        hercios.)
+  \item Amplitud de la señal si la rueda troceadora produce una modulación
+        cuadrada en lugar de sinusoidal: ¿qué armónico conserva el lock-in
+        y con qué amplitud (coeficiente de Fourier $4/\pi$ para el
+        fundamental de una onda cuadrada de amplitud unidad)?
+  \item El fotodiodo recibe además la luz de la sala a \qty{100}{Hz}
+        (tubos fluorescentes): ¿qué hace con ella la cadena?
+\end{enumerate}
+
+\medskip
+\noindent\textbf{Parte III --- La \omterm{prop:b2:feedback-oscillators:lockin}{detección síncrona}.}
+La señal amplificada se multiplica por la referencia $\cos(2\pi f_0t)$ y se
+filtra con un paso bajo de primer orden de constante de tiempo $\tau$.
+\begin{enumerate}[resume]
+  \item Salida del multiplicador para la señal sola (con fase $\varphi$
+        entre señal y referencia); el término continuo.
+  \item \omterm{def:b2:dispersion-wave-packets:complex}{Atenuación} del término en $2f_0$ por el filtro para $\tau = \qty{1}{s}$
+        (en dB).
+  \item Ancho de banda de ruido equivalente $1/4\tau$; ruido eficaz a la
+        salida para $\tau = \qty{1}{s}$ y relación señal/ruido; lo mismo
+        para $\tau = \qty{10}{s}$.
+  \item ¿Dónde acaba la captación de \qty{50}{Hz} y con qué \omterm{def:b2:dispersion-wave-packets:complex}{atenuación}
+        para $\tau = \qty{1}{s}$?
+  \item La fase $\varphi$ es desconocida: ¿qué se pierde si $\varphi = \qty{60}{\degree}$?
+        Descríbase el lock-in de dos canales (en fase y en cuadratura) y
+        cómo recupera $A$ sea cual sea $\varphi$.
+  \item Tiempo de respuesta de la medida (el que tarda en llegar al $99\%$
+        del valor final) para $\tau = \qty{1}{s}$; el compromiso que eso
+        expresa.
+  \item La referencia deriva a \qty{1001}{Hz} mientras el troceador se
+        queda en \qty{1000}{Hz}: salida del lock-in; por qué la referencia
+        debe tomarse del propio troceador.
+\end{enumerate}
+
+\medskip
+\noindent\textbf{Parte IV --- La digitalización.}
+\begin{enumerate}[resume]
+  \item La salida del lock-in la muestrea un ordenador: ritmo mínimo para
+        $\tau = \qty{1}{s}$ (tómese el ancho de banda de salida como
+        $1/2\pi\tau$); una elección cómoda.
+  \item Como alternativa se digitaliza la señal bruta de \qty{1}{kHz} y la
+        detección se hace por programa: frecuencia de muestreo mínima; el
+        ruido llega hasta \qty{100}{kHz} --- ¿qué hay que hacer antes de
+        muestrear y qué \omterm{def:b2:dispersion-wave-packets:complex}{atenuación} a \qty{100}{kHz} da un muestreo a
+        \qty{20}{kS/s} con un filtro de cuarto orden cortado a \qty{5}{kHz}
+        (\qty{80}{dB} por década)?
+  \item Un convertidor de $16$ bits sobre $\pm\qty{1}{V}$: escalón; la
+        señal de \qty{10}{\micro V} amplificada por $1000$: ¿cuántos
+        escalones, y el ruido ayuda o estorba?
+  \item Lock-in digital: el ordenador multiplica cada muestra por
+        $\cos(2\pi f_0nT_s)$ y promedia $N$ muestras. A \qty{20}{kS/s},
+        ¿qué $N$ da un promedio de \qty{1}{s}?; ¿en qué factor se reduce
+        el ruido blanco y es el mismo que el del filtro analógico?
+  \item Una señal de \qty{1}{kHz} muestreada a \qty{999}{S/s}: ¿qué ve el
+        ordenador? ¿Qué relación tiene esto con el principio mismo del
+        lock-in?
+  \item Resúmase la cadena en una tabla: cada etapa, qué le hace a la
+        señal y qué le hace al ruido.
+\end{enumerate}
+\end{problem}

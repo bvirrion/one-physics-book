@@ -97,6 +97,16 @@ Book 4 written in English (2026-08-22); Book 5 structure only.**
   editions still carry hits (French `\text{body/ground}`, node
   `amplitude (arb.)`), so wiring it in would turn the repo-wide gate red
   before those are fixed.
+- **All four gates learned `\legend{...}` on 2026-08-22.** Every prose gate keyed
+  figure text on the pgfplots KEY form (`legend entries={…}`); the MACRO form
+  has no `=` and was invisible in every script, while `id_apply`'s `draw`
+  census compared it byte-for-byte and so refused any translation of it
+  without `!draw`. Fixed in `check_hindi_prose.py` (inherited by
+  `check_indonesian_prose.py`), `check_arabic_prose.py`, `check_latin_prose.py`
+  and `id_apply.py`. It had already shipped: Hindi and Arabic Book 2 each carry
+  six untranslated English legends. The generic lesson is in
+  `../translation_instruction.md` — when a gate keys on a KEY=VALUE shape, ask
+  what the MACRO form of the same thing looks like.
 - `tools/term_config/book{1,2}_*.py` are curated configs, not stubs —
   regenerate links after editing those books' definitions or prose.
 
@@ -115,7 +125,13 @@ Book 4 written in English (2026-08-22); Book 5 structure only.**
   (Year 2): div/curl introduced operationally in ch.~11 with Ostrogradski
   and Stokes `\admitted` (proved in the Year 3 mathematics volume),
   Fourier integrals used as a stated tool with a Year-3 remark, Fourier
-  series allowed. English only — no translations yet.
+  series allowed. **Ships in all eight languages (2026-08-22)** — one agent
+  per edition, every one self-scored 96/100 except `fr` at 97, all at
+  0 errors / 0 undefined / 0 overfull with the `.fls` honesty check at
+  62/62. Pages against English's 345: `ar` 326, `hi` 332, `pt` 357,
+  `es`/`fr`/`nl` 359, `id` 366. Link density against English's 1 231:
+  `nl` 1 166 < `ar` 1 183 < `hi` 1 211 < `pt` 1 335 < `es` 1 361 <
+  `fr` 1 365 < `id` 1 419.
 
 The invariant checks below are live for Books 1–4 and must stay
 green. Book 5 still has placeholder chapter bodies (a TODO comment
