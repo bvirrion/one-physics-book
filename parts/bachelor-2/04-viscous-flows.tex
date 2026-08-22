@@ -1,6 +1,577 @@
 \chapter{Viscous Flows}\label{ch:b2:viscous-flows}
 
-% TODO: course, examples, figures, and 8--12 graded exercises
-% (see CONTRIBUTING.md). Placeholder until written.
+Tip a jar of honey and it pours in a slow, thick ribbon; tip a jar of
+water and it is gone. Drag a spoon through each: the honey resists,
+and keeps resisting at any speed; the water barely notices until you
+move fast, and then it swirls. The difference is \emph{\omterm{def:b2:viscous-flows:viscosity}{viscosity}} ---
+the internal friction of a fluid --- and the fight between \omterm{def:b2:viscous-flows:viscosity}{viscosity}
+and inertia, summed up in one number, Reynolds', decides whether a
+flow creeps in orderly layers or tumbles into turbulence. This chapter
+adds the viscous force to \omterm{thm:b2:euler-bernoulli:euler}{Euler's equation}, solves the two \omterm{def:b2:viscous-flows:reynolds}{laminar
+flows} every engineer uses, and explains why, at high \omterm{def:b2:viscous-flows:reynolds}{Reynolds number},
+\omterm{def:b2:viscous-flows:viscosity}{viscosity} hides in a thin layer at the wall and yet still costs every
+car, ship and aircraft most of its fuel.
 
-\emph{This chapter has not been written yet.}
+\begin{omfigure}
+\includegraphics[width=0.34\linewidth]{images/book4/ai/b4-04-honey-spoon-viscous.png}
+
+{\small Honey pours in a thin, steady ribbon that coils as it lands: a \omterm{def:b2:viscous-flows:viscosity}{viscosity} ten thousand times that of water makes inertia irrelevant --- a creeping flow.}
+\end{omfigure}
+
+
+\section{Viscosity and the Navier--Stokes equation}
+
+\begin{definition}[Newtonian viscosity]\label{def:b2:viscous-flows:viscosity}
+\index{viscosity}\index{dynamic viscosity}\index{kinematic viscosity}\index{shear stress}\index{Newtonian fluid}
+In a plane shear flow $\vect v = v_x(y)\,\vect e_x$, the fluid above a
+surface $y = $ const exerts on the fluid below it (through a surface
+element $\dd S$) the tangential force
+\[
+\dd\vect F = \eta\,\frac{\dd v_x}{\dd y}\,\dd S\;\vect e_x ,
+\]
+dragging the slower layer forward and being dragged back in return.
+The \emph{shear stress} is $\tau = \eta\,\dd v_x/\dd y$; the coefficient
+$\eta$ (unit \unit{Pa.s}) is the \emph{dynamic viscosity} of the fluid,
+and $\nu = \eta/\rho$ (\unit{m^2/s}) its \emph{kinematic viscosity}. A fluid
+for which $\eta$ does not depend on the shear rate is \emph{Newtonian}:
+water, air, oils, alcohol; blood, paint, ketchup and polymer melts are
+not. Orders of magnitude at \qty{20}{\degreeCelsius}: air $\eta =
+\qty{1.8e-5}{Pa.s}$ ($\nu = \qty{1.5e-5}{m^2/s}$), water $\qty{1.0e-3}{Pa.s}$
+($\nu = \qty{1.0e-6}{m^2/s}$), olive oil $\qty{0.08}{Pa.s}$, glycerol
+$\qty{1.5}{Pa.s}$, honey $\sim\qty{10}{Pa.s}$. Liquids get thinner when
+heated, gases thicker.
+\end{definition}
+
+\begin{proposition}[Viscous force density; no-slip condition]\label{prop:b2:viscous-flows:density}
+\index{no-slip condition}\index{viscous force density}
+In the plane shear flow, the net viscous force on a slab of fluid
+between $y$ and $y + \dd y$ is, per unit volume, $\eta\,\dd^2v_x/\dd y^2$:
+\omterm{def:b2:viscous-flows:viscosity}{viscosity} acts as a volume force density $\eta\,\Delta\vect v$ (the
+Laplacian taken component by component), a result that holds for any
+\omterm{cor:b2:fluid-kinematics:incompressible}{incompressible flow}. At a solid wall the fluid \emph{sticks}: its
+velocity equals the wall's (the \emph{\omterm{prop:b2:viscous-flows:density}{no-slip condition}}), which is why
+dust stays on a fan blade and why a wall feels a viscous drag.
+\end{proposition}
+
+\begin{proof}
+The slab is pulled by $\eta\,v_x'(y + \dd y)\dd S$ from above and by
+$-\eta\,v_x'(y)\dd S$ from below: net $\eta v_x''\,\dd y\,\dd S$. The general
+form is admitted (it follows from writing the stress as a symmetric
+linear function of the velocity gradients). The \omterm{prop:b2:viscous-flows:density}{no-slip condition} is
+experimental.
+\end{proof}
+
+\begin{theorem}[Navier--Stokes equation]\label{thm:b2:viscous-flows:ns}
+\index{Navier--Stokes equation}
+An incompressible \omterm{def:b2:viscous-flows:viscosity}{Newtonian fluid} obeys
+\[
+\rho\Bigl(\frac{\partial\vect v}{\partial t} + (\vect v\cdot\operatorname{\vect{grad}})
+\vect v\Bigr) = -\operatorname{\vect{grad}}P + \rho\vect g + \eta\,\Delta\vect v ,
+\qquad \operatorname{div}\vect v = 0 ,
+\]
+with the \omterm{prop:b2:viscous-flows:density}{no-slip condition} on every wall. \omterm{thm:b2:euler-bernoulli:euler}{Euler's equation} is the case
+$\eta = 0$.
+\end{theorem}
+\admitted
+
+\begin{omfigure}
+\begin{tikzpicture}[font=\small, x=1cm, y=1cm, >=Stealth]
+  \begin{scope}
+    \draw[thick] (-0.2,0) -- (3.6,0); \fill[pattern=north east lines] (-0.2,-0.18) rectangle (3.6,0);
+    \draw[thick, omExo] (-0.2,2.2) -- (3.6,2.2); \fill[pattern=north east lines, pattern color=omExo] (-0.2,2.2) rectangle (3.6,2.38);
+    \draw[omExo, very thick, ->] (1.4,2.6) -- (2.6,2.6) node[right, font=\footnotesize] {$U$};
+    \foreach \y in {0.4,0.8,...,2.0} \draw[omDef, thick, ->] (0.4,\y) -- ({0.4+1.1*\y/2.2*1.8},\y);
+    \draw[omDef, thick] (0.4,0) -- (2.2,2.2);
+    \node[font=\footnotesize] at (1.8,-0.5) {Couette: $v_x = Uy/h$, $\tau = \eta U/h$};
+    \draw[<->] (3.3,0) -- (3.3,2.2) node[midway, right, font=\footnotesize] {$h$};
+  \end{scope}
+  \begin{scope}[xshift=7.2cm]
+    \draw[thick, fill=omDef!10] (0,0.6) rectangle (3.0,1.6);
+    \draw[omThm, very thick, ->] (1.5,1.6) -- (2.6,1.6) node[above, font=\footnotesize] {$\eta v_x'(y+\dd y)\,\dd S$};
+    \draw[omThm, very thick, ->] (1.5,0.6) -- (0.4,0.6) node[below, font=\footnotesize] {$\eta v_x'(y)\,\dd S$};
+    \node[font=\footnotesize] at (-0.5,1.6) {$y + \dd y$};
+    \node[font=\footnotesize] at (-0.4,0.6) {$y$};
+    \node[font=\footnotesize] at (1.5,-0.5) {net: $\eta\,v_x''\,\dd y\,\dd S$};
+  \end{scope}
+\end{tikzpicture}
+
+{\small Left: plane Couette flow between a fixed plate and a plate
+moving at $U$ --- a linear profile, the same \omterm{def:b2:viscous-flows:viscosity}{shear stress} on every
+layer. Right: the viscous forces on a slab of fluid; they cancel unless
+the velocity profile is curved.}
+\end{omfigure}
+
+\begin{example}[Shear stress on a table]\label{ex:b2:viscous-flows:table}
+A \qty{0.1}{mm} film of oil ($\eta = \qty{0.1}{Pa.s}$) between a plate and a
+table, the plate sliding at \qty{1}{m/s}: $\tau = \eta U/h = \qty{1}{kPa}$, a
+force of \qty{100}{N} on a tenth of a square metre --- the principle of
+the lubricated \omterm{def:b2:rigid-body-mechanics:pivot}{bearing}, where the viscous drag replaces dry friction
+a hundred times larger. Honey on a spoon, \qty{10}{Pa.s}, \qty{1}{mm} thick,
+draining at \qty{1}{mm/s}: $\tau = \qty{10}{Pa}$, exactly the weight of a
+millimetre of honey per unit area --- which is why it drains at that speed.
+\end{example}
+
+\section{The Reynolds number}
+
+\begin{definition}[Reynolds number]\label{def:b2:viscous-flows:reynolds}
+\index{Reynolds number}\index{laminar flow}\index{turbulent flow}
+For a flow of characteristic speed $U$ and length $L$, the \emph{Reynolds
+number}
+\[
+\mathrm{Re} = \frac{\rho UL}{\eta} = \frac{UL}{\nu}
+\]
+is the ratio of the orders of magnitude of the inertial term
+$\rho(\vect v\cdot\operatorname{\vect{grad}})\vect v \sim \rho U^2/L$ and the
+viscous term $\eta\Delta\vect v \sim \eta U/L^2$ in the \omterm{thm:b2:viscous-flows:ns}{Navier--Stokes
+equation}. At $\mathrm{Re} \ll 1$ inertia is negligible and the flow is
+\emph{creeping} (viscous, reversible, smooth); at $\mathrm{Re} \gg 1$
+\omterm{def:b2:viscous-flows:viscosity}{viscosity} is negligible except near walls and the flow is that of a
+\omterm{def:b2:euler-bernoulli:perfect}{perfect fluid} --- until, beyond a threshold of order $10^3$ (about $2000$
+to $3000$ in a pipe, based on the diameter), it becomes \emph{turbulent}:
+unsteady, chaotic, full of eddies at every scale. Between the two, a
+flow is \emph{laminar}: steady and layered.
+\end{definition}
+
+\begin{example}[Reynolds numbers of everyday flows]\label{ex:b2:viscous-flows:revalues}
+A bacterium (\qty{1}{\micro m}, \qty{30}{\micro m/s}, water): $\mathrm{Re} =
+3 \times 10^{-5}$ --- it lives in a world without inertia, where stopping
+its flagellum stops it within an atomic diameter. Blood in a capillary:
+$10^{-3}$; a falling dust grain: $10^{-2}$; a goldfish: $10^3$; a swimmer:
+$10^6$; a car at \qty{30}{m/s} (\qty{4}{m}): $8 \times 10^6$; an airliner: $10^8$;
+the Gulf Stream: $10^{11}$. Two flows with the same geometry and the same
+\omterm{def:b2:viscous-flows:reynolds}{Reynolds number} are \emph{similar}: this is what allows a \qty{1}{m} model
+of a ship to be tested in a towing tank, or an aircraft in a wind tunnel.
+\end{example}
+
+\section{Laminar flows: Couette, Poiseuille, Stokes}
+
+\begin{proposition}[Poiseuille flow in a pipe]\label{prop:b2:viscous-flows:poiseuille}
+\index{Poiseuille flow}\index{hydraulic resistance}
+In a horizontal cylindrical pipe of radius $R$ and length $L$, driven by
+the pressure difference $\Delta P = P_1 - P_2$ between its ends, the steady
+\omterm{def:b2:viscous-flows:reynolds}{laminar flow} is
+\[
+v(r) = \frac{\Delta P}{4\eta L}\,(R^2 - r^2) , \qquad
+D_V = \frac{\pi R^4}{8\eta L}\,\Delta P :
+\]
+a parabolic profile, maximal on the axis, with a mean speed
+$\langle v\rangle = v_{\max}/2$. The flow rate is proportional to the
+pressure drop (Poiseuille's law) with the \emph{\omterm{prop:b2:viscous-flows:poiseuille}{hydraulic resistance}}
+$R_h = \Delta P/D_V = 8\eta L/\pi R^4$ --- and to the \emph{fourth power} of
+the radius. The wall \omterm{def:b2:viscous-flows:viscosity}{shear stress} is $\tau_w = \Delta P\,R/2L = 4\eta\langle v
+\rangle/R$. Valid while $\mathrm{Re} = 2R\langle v\rangle/\nu \lesssim 2000$.
+\end{proposition}
+
+\begin{proof}
+Steady, $\vect v = v(r)\vect e_z$ (so the convective term vanishes: $\vect v
+\cdot\operatorname{\vect{grad}}$ acts along $z$, along which nothing
+varies). Navier--Stokes along $z$: $0 = -\partial_zP + \eta\Delta v$, and
+radially $\partial_rP = 0$: $P$ depends on $z$ only, $\Delta v$ on $r$ only, so
+both sides equal a constant, $\partial_zP = -\Delta P/L$. In cylindrical
+coordinates $\Delta v = \frac1r\frac{\dd}{\dd r}\bigl(r\frac{\dd v}{\dd r}\bigr)$
+(stated; it is the balance of viscous forces on a cylindrical shell,
+$2\pi rL\,\eta v'$ at $r$ and at $r + \dd r$). Integrating twice with $v$
+finite on the axis and $v(R) = 0$ gives the parabola; $D_V = \int_0^Rv\,2\pi
+r\,\dd r$. The wall stress is $-\eta v'(R)$; equivalently, the pressure
+force $\pi R^2\Delta P$ balances the wall friction $2\pi RL\tau_w$.
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}[font=\small, x=1cm, y=1cm, >=Stealth]
+  \begin{scope}
+    \draw[thick] (-2.8,1.0) -- (2.8,1.0) (-2.8,-1.0) -- (2.8,-1.0);
+    \fill[pattern=north east lines] (-2.8,1.0) rectangle (2.8,1.15); \fill[pattern=north east lines] (-2.8,-1.0) rectangle (2.8,-1.15);
+    \draw[omDef, thick, domain=-1:1, samples=40] plot ({-0.9+1.8*(1-\x*\x)},\x);
+    \foreach \y in {-0.8,-0.6,...,0.8} \draw[omDef, ->] (-0.9,\y) -- ({-0.9+1.8*(1-\y*\y)-0.05},\y);
+    \draw[dashed] (-0.9,-1) -- (-0.9,1);
+    \node[omDef, font=\footnotesize] at (1.6,0.3) {$v_{\max}$};
+    \node[font=\footnotesize] at (-2.3,0.0) {$P_1$}; \node[font=\footnotesize] at (2.4,0.0) {$P_2$};
+    \node[font=\footnotesize] at (0,-1.5) {$v(r) = \dfrac{\Delta P}{4\eta L}(R^2 - r^2)$};
+  \end{scope}
+  \begin{scope}[xshift=7.6cm]
+    \draw[thick] (-2.2,0) -- (2.2,0) (-2.2,0.5) -- (2.2,0.5) (-2.2,-0.5) -- (2.2,-0.5);
+    \draw[thick] (-2.2,-0.5) -- (-2.2,0.5) (2.2,-0.5) -- (2.2,0.5);
+    \fill[omDef!15] (-2.2,0) rectangle (2.2,0.5);
+    \draw[omThm, very thick, ->] (-3.2,0.25) -- (-2.25,0.25) node[pos=0.2, above, font=\footnotesize] {$P_1$};
+    \draw[omThm, very thick, ->] (3.2,0.25) -- (2.25,0.25) node[pos=0.2, above, font=\footnotesize] {$P_2$};
+    \draw[omProp, very thick, ->] (0.8,0.5) -- (-0.4,0.5) node[above, font=\footnotesize, pos=0.9] {$\tau(r+\dd r)$};
+    \draw[omProp, very thick, ->] (-0.4,0.0) -- (0.8,0.0) node[below, font=\footnotesize, pos=0.9] {$\tau(r)$};
+    \node[font=\footnotesize] at (0,-1.3) {shell $[r, r + \dd r]$: pressure $=$ viscous drag};
+  \end{scope}
+\end{tikzpicture}
+
+{\small Left: \omterm{prop:b2:viscous-flows:poiseuille}{Poiseuille flow} --- the parabolic profile in a pipe,
+driven by the pressure drop $P_1 - P_2$. Right: the force balance on a
+cylindrical shell of fluid: the pressure difference on its ends is
+balanced by the viscous stresses on its inner and outer surfaces.}
+\end{omfigure}
+
+\begin{example}[The fourth power]\label{ex:b2:viscous-flows:fourth}
+A syringe needle of inner diameter \qty{0.4}{mm} and length \qty{3}{cm},
+water, thumb pressure \qty{20}{kPa}: $D_V = \pi(2 \times 10^{-4})^4 \times 2 \times
+10^4/(8 \times 10^{-3} \times 0.03) = \qty{0.42}{mL/s}$; a needle twice as wide
+gives sixteen times more. An artery narrowed by a plaque to $70\%$ of its
+radius offers $(1/0.7)^4 = 4.2$ times its resistance: the body compensates
+by raising the pressure upstream, which is part of why atherosclerosis
+and hypertension go together.
+\end{example}
+
+\begin{proposition}[Stokes' drag]\label{prop:b2:viscous-flows:stokes}
+\index{Stokes' law}\index{terminal velocity}\index{sedimentation}
+A sphere of radius $R$ moving at speed $v$ through a fluid at
+$\mathrm{Re} = 2\rho vR/\eta \ll 1$ feels the drag
+\[
+F = 6\pi\eta Rv ,
+\]
+opposite to its velocity. A sphere of density $\rho_s$ falling in a fluid
+of density $\rho$ reaches the \emph{\omterm{prop:b2:viscous-flows:stokes}{terminal velocity}} $v_\infty =
+\dfrac{2R^2(\rho_s - \rho)g}{9\eta}$ --- the law of sedimentation,
+centrifuges, and Millikan's oil drops.
+\end{proposition}
+
+\begin{proof}
+The drag is admitted (it is the exact solution of the creeping-flow
+equations around a sphere, two thirds of it viscous friction, one third
+pressure). Terminal speed: weight minus buoyancy, $\tfrac43\pi R^3(\rho_s -
+\rho)g$, equals the drag; always check $\mathrm{Re} \ll 1$ afterwards.
+\end{proof}
+
+\begin{example}[Fog, rain and dust]\label{ex:b2:viscous-flows:fog}
+A fog droplet of \qty{10}{\micro m} diameter in air falls at $2 \times (5 \times
+10^{-6})^2 \times 10^4/(9 \times 1.8 \times 10^{-5}) = \qty{3}{mm/s}$ ($\mathrm{Re} = 2 \times
+10^{-3}$): the slightest updraft keeps it aloft, which is why clouds
+float. A \qty{1}{mm} raindrop would give \qty{30}{m/s} and $\mathrm{Re} \approx 2000$:
+Stokes no longer applies, and the quadratic drag of the next section
+gives the observed \qty{4}{m/s}. A \qty{10}{\micro m} dust grain ($\rho_s =
+\qty{2500}{kg/m^3}$) settles at \qty{8}{mm/s}, a metre in two minutes ---
+finer dust hangs for hours.
+\end{example}
+
+\section{High Reynolds number: boundary layers and drag}
+
+\begin{proposition}[The boundary layer]\label{prop:b2:viscous-flows:bl}
+\index{boundary layer}
+At high \omterm{def:b2:viscous-flows:reynolds}{Reynolds number} the flow around a body is that of a \omterm{def:b2:euler-bernoulli:perfect}{perfect
+fluid} everywhere except in a thin \emph{\omterm{prop:b2:viscous-flows:bl}{boundary layer}} along the wall,
+in which the velocity falls from its outer value $U$ to zero (no slip).
+Along a flat plate its thickness grows as
+\[
+\delta(x) \sim \sqrt{\frac{\nu x}{U}} = \frac{x}{\sqrt{\mathrm{Re}_x}} ,
+\qquad \mathrm{Re}_x = \frac{Ux}{\nu} ,
+\]
+with $x$ the distance from the leading edge; the layer itself turns
+turbulent beyond $\mathrm{Re}_x \sim 5 \times 10^5$. The viscous friction on the
+wall, and the \emph{separation} of the layer behind a blunt body (which
+leaves a turbulent wake of low pressure), are the two sources of drag.
+\end{proposition}
+
+\begin{proof}
+Order of magnitude: a \omterm{def:b2:fluid-kinematics:particle}{fluid particle} spends the time $x/U$ travelling
+along the plate, during which the wall's influence diffuses into the
+fluid --- the viscous term $\nu\,\partial^2v/\partial y^2$ is a diffusion of
+momentum with diffusivity $\nu$, reaching the distance $\sqrt{\nu t}$ in
+the time $t$ (\cref{ch:b2:particle-diffusion}). Hence $\delta \sim \sqrt{\nu x
+/U}$. The full (Prandtl) theory is admitted.
+\end{proof}
+
+\begin{proposition}[Drag at high Reynolds number]\label{prop:b2:viscous-flows:drag}
+\index{drag coefficient}\index{drag crisis}
+The drag on a body of frontal area $S$ moving at $v$ through a fluid is
+written
+\[
+F = \tfrac12\rho v^2\,S\,C_x ,
+\]
+where the \emph{\omterm{prop:b2:viscous-flows:drag}{drag coefficient}} $C_x$ depends on the shape and on
+$\mathrm{Re}$. For a sphere, $C_x = 24/\mathrm{Re}$ at $\mathrm{Re} \ll 1$ (Stokes,
+with $\mathrm{Re}$ based on the diameter), then about $0.4$--$0.5$, nearly
+constant, from $\mathrm{Re} \approx 10^3$ to $2 \times 10^5$, where it drops
+suddenly to about $0.1$ (the \emph{\omterm{prop:b2:viscous-flows:drag}{drag crisis}}: the \omterm{prop:b2:viscous-flows:bl}{boundary layer} turns
+turbulent, sticks longer to the surface and the wake shrinks --- the
+dimples on a golf ball trigger it early). Streamlined bodies have
+$C_x \approx 0.05$; a car $0.3$; a cyclist $0.9$; a flat plate facing the flow
+$1.2$. The power needed to move at $v$ is $Fv \propto v^3$.
+\end{proposition}
+\admitted
+
+\begin{omfigure}
+\begin{tikzpicture}
+\begin{axis}[omaxis, axis x line=bottom, axis y line=left, width=8.0cm, height=5.0cm,
+    xmode=log, ymode=log, xmin=0.1, xmax=1e7, ymin=0.05, ymax=300,
+    xlabel={$\mathrm{Re} = \rho v\,2R/\eta$}, ylabel={$C_x$},
+    xlabel style={at={(axis description cs:0.5,-0.12)}, anchor=north},
+    ylabel style={at={(axis description cs:-0.12,0.5)}, rotate=90, anchor=south},
+    xtick={0.1,10,1000,1e5,1e7}, ytick={0.1,1,10,100}, samples=100]
+  \addplot[omThm, thick, domain=0.1:2] {24/x};
+  \addplot[omThm, thick, domain=2:1000] {24/x*(1+0.15*x^0.687)};
+  \addplot[omThm, thick, domain=1000:2e5] {0.44};
+  \addplot[omThm, thick] coordinates {(2e5,0.44) (3.5e5,0.1)};
+  \addplot[omThm, thick, domain=3.5e5:1e7] {0.1+0.1*ln(x/3.5e5)/ln(30)};
+  \addplot[omDef, dashed, thick, domain=0.1:100] {24/x};
+  \node[font=\scriptsize, omDef, anchor=west] at (axis cs:6,40) {$24/\mathrm{Re}$ (Stokes)};
+  \node[font=\scriptsize] at (axis cs:1.5e4,0.9) {plateau $\approx 0.45$};
+  \node[font=\scriptsize] at (axis cs:1e6,0.06) {drag crisis};
+\end{axis}
+\end{tikzpicture}
+\hfill
+\begin{tikzpicture}[font=\small, x=1cm, y=1cm, >=Stealth]
+  \draw[thick] (0,0) -- (5.0,0); \fill[pattern=north east lines] (0,-0.15) rectangle (5.0,0);
+  \draw[omDef, thick, domain=0.05:5.0, samples=40] plot (\x,{0.55*sqrt(\x)});
+  \foreach \x in {0.8,2.0,3.6} {
+    \foreach \y in {0.1,0.2,...,1.4} {
+      \pgfmathsetmacro{\d}{0.55*sqrt(\x)}
+      \pgfmathsetmacro{\u}{min(1,\y/\d)}
+      \draw[omThm, ->] (\x,\y) -- ({\x+0.9*\u*(2-(\u)*(1))*0.5+0.0},\y);
+    }
+  }
+  \draw[omThm, very thick, ->] (-0.9,1.6) -- (-0.1,1.6) node[above, font=\footnotesize, pos=0.3] {$U$};
+  \node[omDef, font=\footnotesize] at (4.2,1.55) {$\delta(x) \sim \sqrt{\nu x/U}$};
+  \node[font=\footnotesize] at (2.5,-0.5) {boundary layer on a flat plate};
+\end{tikzpicture}
+
+{\small Left: the \omterm{prop:b2:viscous-flows:drag}{drag coefficient} of a sphere against the \omterm{def:b2:viscous-flows:reynolds}{Reynolds
+number} (log scales): \omterm{prop:b2:viscous-flows:stokes}{Stokes' law} at low $\mathrm{Re}$, a plateau near
+$0.45$, and the \omterm{prop:b2:viscous-flows:drag}{drag crisis} near $\mathrm{Re} = 2 \times 10^5$. Right: the
+\omterm{prop:b2:viscous-flows:bl}{boundary layer} thickening along a flat plate; outside it the flow is
+that of a \omterm{def:b2:euler-bernoulli:perfect}{perfect fluid}.}
+\end{omfigure}
+
+\begin{example}[A cyclist, a car]\label{ex:b2:viscous-flows:cyclist}
+A cyclist ($SC_x = \qty{0.35}{m^2}$) at \qty{10}{m/s}: $F = 0.5 \times 1.2 \times 100
+\times 0.35 = \qty{21}{N}$, $P = \qty{210}{W}$ --- a sustained effort; at \qty{15}{m/s}
+(\qty{54}{km/h}) it would take \qty{710}{W}, which is why sprinters draft.
+A car ($SC_x = \qty{0.7}{m^2}$) at \qty{130}{km/h}: \qty{550}{N}, \qty{20}{kW} against
+air alone --- the fuel consumption at motorway speed is mostly drag.
+\end{example}
+
+\begin{remark}[Surface tension]\label{rem:b2:viscous-flows:capillarity}
+\index{surface tension}\index{Laplace pressure}\index{capillary length}
+A second force lives at the boundaries of a liquid: its free surface
+behaves like a stretched membrane of tension $\gamma$ (\unit{N/m}; water
+\qty{0.072}{N/m}), because surface molecules lack half their neighbours.
+The pressure inside a drop of radius $R$ exceeds the outside pressure by
+the \emph{\omterm{rem:b2:viscous-flows:capillarity}{Laplace pressure}} $2\gamma/R$ (\qty{1.4}{kPa} in a \qty{0.1}{mm} drop,
+\qty{14}{bar} in a \qty{10}{nm} one); \omterm{rem:b2:viscous-flows:capillarity}{surface tension} beats gravity below
+the \emph{\omterm{rem:b2:viscous-flows:capillarity}{capillary length}} $\sqrt{\gamma/\rho g} = \qty{2.7}{mm}$ for water ---
+the size of dew drops, of the meniscus in a glass, of the rise in a
+capillary tube ($h = 2\gamma/\rho gr$, Jurin). It is why small insects walk
+on water, why a paintbrush's hairs cling together when wet, and why a
+liquid jet breaks into drops.
+\end{remark}
+
+\begin{method}[Which regime?]\label{met:b2:viscous-flows:regime}
+Before any viscous-flow calculation, compute $\mathrm{Re}$. $\mathrm{Re} \ll 1$:
+Stokes and creeping flow, drag $\propto v$, pressure drops $\propto$ flow
+rate. $\mathrm{Re}$ up to $\sim\!2000$ in a pipe: laminar, Poiseuille. Above:
+turbulent --- Poiseuille underestimates the loss badly; use the
+empirical law $\Delta P = \lambda(L/D)\,\tfrac12\rho\langle v\rangle^2$ with $\lambda
+\approx 0.3/\mathrm{Re}^{1/4}$ for smooth pipes, and $F = \tfrac12\rho v^2SC_x$ for
+bodies. In every case, check afterwards that the $\mathrm{Re}$ computed
+from the answer agrees with the regime assumed.
+\end{method}
+
+\section{Exercises}
+
+\begin{exercise}[$\star$]\label{exo:b2:viscous-flows:1}
+A \qty{0.50}{m^2} plate slides at \qty{2.0}{m/s} on a \qty{0.20}{mm} film of oil
+($\eta = \qty{0.25}{Pa.s}$). \omterm{def:b2:viscous-flows:viscosity}{Shear stress}, force on the plate, power
+dissipated; compare with dry friction ($f = 0.3$) if the plate weighs
+\qty{10}{kg}.
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b2:viscous-flows:2}
+\omterm{def:b2:viscous-flows:reynolds}{Reynolds numbers} of: (a) a \qty{2}{\micro m} bacterium at \qty{30}{\micro m/s} in
+water; (b) a swimmer (\qty{1.8}{m}, \qty{1.5}{m/s}); (c) a car (\qty{4}{m},
+\qty{30}{m/s}) in air; (d) blood in the aorta (\qty{2.5}{cm}, \qty{0.33}{m/s},
+$\nu = \qty{3.3e-6}{m^2/s}$); (e) oil ($\eta = \qty{0.1}{Pa.s}$, $\rho =
+\qty{900}{kg/m^3}$) at \qty{0.5}{m/s} in a \qty{1}{cm} pipe. Regime of each.
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b2:viscous-flows:3}
+Water is pushed through a \qty{0.40}{mm} (inner diameter), \qty{3.0}{cm}
+needle by \qty{20}{kPa}. Flow rate; time to inject \qty{5}{mL}; maximum speed
+and \omterm{def:b2:viscous-flows:reynolds}{Reynolds number}; wall \omterm{def:b2:viscous-flows:viscosity}{shear stress}. With a \qty{0.80}{mm} needle?
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b2:viscous-flows:4}
+Terminal speeds in air ($\eta = \qty{1.8e-5}{Pa.s}$) of (a) a \qty{20}{\micro m}
+pollen grain ($\rho_s = \qty{1100}{kg/m^3}$), (b) a \qty{2}{\micro m} smoke
+particle ($\rho_s = \qty{2000}{kg/m^3}$), (c) a \qty{0.2}{mm} drizzle drop.
+Check $\mathrm{Re}$ in each case; time to fall \qty{1}{m}.
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b2:viscous-flows:5}
+A water main of diameter \qty{30}{cm} carries \qty{0.10}{m^3/s} over
+\qty{1.0}{km}. (a) Mean speed and \omterm{def:b2:viscous-flows:reynolds}{Reynolds number}. (b) Pressure drop if
+Poiseuille's law applied. (c) Actual drop with $\lambda = 0.3/\mathrm{Re}^{1/4}$;
+ratio to (b); pumping power. (d) The same flow in two parallel
+\qty{21}{cm} mains (same total section): drop and power.
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b2:viscous-flows:6}
+Cells of diameter \qty{10}{\micro m} and density \qty{1050}{kg/m^3} in water.
+(a) Sedimentation speed under gravity; time to settle \qty{5}{cm}. (b) In
+a centrifuge at $1000\,g$. (c) Minimum rotation rate for $1000\,g$ at
+\qty{10}{cm} radius. (d) Why can the largest particles be separated first?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b2:viscous-flows:7}
+A cyclist ($SC_x = \qty{0.35}{m^2}$, rolling resistance \qty{4}{N}) rides at
+\qty{12}{m/s}. (a) Drag and total power. (b) At \qty{15}{m/s}. (c) Into a
+\qty{5}{m/s} headwind at \qty{12}{m/s} ground speed. (d) Drafting reduces
+$C_x$ by $30\%$: power saved. (e) Descending a $5\%$ slope with no pedalling
+(mass \qty{80}{kg}): terminal speed.
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b2:viscous-flows:8}
+Quadratic drag. (a) Terminal speed of a golf ball (\qty{46}{g}, \qty{43}{mm},
+$C_x = 0.25$) and of a skydiver (\qty{80}{kg}, $SC_x = \qty{0.7}{m^2}$, then
+$\qty{25}{m^2}$ with the parachute open). (b) Equation of motion for a fall
+from rest with quadratic drag; show $v = v_\infty\tanh(gt/v_\infty)$. (c)
+Time and distance for the skydiver to reach $90\%$ of $v_\infty$.
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b2:viscous-flows:9}
+\emph{Couette viscometer.} A cylinder of radius \qty{5.0}{cm} and height
+\qty{10}{cm} rotates at \qty{10}{rad/s} inside a fixed cylinder, the gap
+\qty{1.0}{mm} being filled with the liquid to test; the torque needed is
+\qty{2.0e-2}{N.m}. (a) Treating the gap as plane Couette flow, shear rate
+and \omterm{def:b2:viscous-flows:viscosity}{shear stress}. (b) \omterm{def:b2:viscous-flows:viscosity}{Viscosity}. (c) \omterm{def:b2:viscous-flows:reynolds}{Reynolds number} of the gap flow;
+is the flow laminar? (d) Why is the gap made thin?
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b2:viscous-flows:10}
+\emph{A vascular network.} Blood ($\eta = \qty{3.5}{mPa.s}$) flows at
+\qty{5.0}{L/min}. (a) \omterm{prop:b2:viscous-flows:poiseuille}{Hydraulic resistance} of the aorta (radius \qty{1.25}{cm},
+length \qty{40}{cm}) and pressure drop along it. (b) The $10^{10}$
+capillaries (radius \qty{4}{\micro m}, length \qty{1}{mm}) are in parallel:
+resistance of one, of all, and the pressure drop across the capillary
+bed. (c) The arterioles ($10^8$, radius \qty{10}{\micro m}, length
+\qty{2}{mm}): same questions; where is the resistance of the circulation?
+(d) The total drop is \qty{13}{kPa}: power of the heart's left ventricle,
+and what fraction of the body's \qty{100}{W}. (e) A drug dilates the
+arterioles by $10\%$: effect on the total resistance.
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b2:viscous-flows:11}
+\emph{\omterm{prop:b2:viscous-flows:bl}{Boundary layer} and friction drag.} A flat plate of length $L$ and
+width $b$ moves edge-on at $U$. In the laminar regime the wall \omterm{def:b2:viscous-flows:viscosity}{shear
+stress} is $\tau_w = 0.332\,\rho U^2/\sqrt{\mathrm{Re}_x}$ (Blasius). (a) Show that
+the \omterm{def:b2:rigid-body-mechanics:contact}{friction force} on one face is $F = 0.664\,\rho U^2bL/\sqrt{\mathrm{Re}_L}$.
+(b) Boundary-layer thickness at the trailing edge of a \qty{1}{m} plate
+in water at \qty{0.3}{m/s}, and the force on a \qty{1}{m^2} plate (both
+faces). (c) At \qty{10}{m/s}: $\mathrm{Re}_L$, and why the formula no longer
+applies. (d) A ship's hull (\qty{100}{m}, \qty{10}{m/s}): boundary-layer
+thickness estimate at the stern assuming the turbulent law $\delta \approx
+0.37x/\mathrm{Re}_x^{1/5}$.
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b2:viscous-flows:12}
+\emph{A falling film.} A liquid film of thickness $h$ flows down a
+vertical wall under gravity, steadily, the air exerting no stress on
+its free surface. (a) Write Navier--Stokes for $\vect v = v(y)\vect e_z$ ($y$
+the distance from the wall, $z$ downward) and the boundary conditions.
+(b) Show $v(y) = \dfrac{\rho g}{2\eta}(2hy - y^2)$ and compute the flow rate
+per unit width $q = \rho gh^3/3\eta$. (c) A fresh coat of paint ($\eta =
+\qty{0.5}{Pa.s}$, $\rho = \qty{1200}{kg/m^3}$) \qty{0.2}{mm} thick: surface
+speed and flow rate; how far does the surface move in \qty{10}{min}? Why
+does paint sag when applied too thick? (d) Honey ($\eta = \qty{10}{Pa.s}$)
+\qty{2}{mm} thick on a vertical spoon: surface speed.
+\end{exercise}
+
+\begin{omfigure}
+\includegraphics[width=0.34\linewidth]{images/book4/karman-vortex-street.jpg}
+
+{\small A von K\'arm\'an vortex street in the clouds downstream of an island, seen from space: the wake of a cylinder at a \omterm{def:b2:viscous-flows:reynolds}{Reynolds number} of a few hundred, drawn on the scale of a hundred kilometres (NASA).}
+\end{omfigure}
+
+\section{Problem: Blood, crude oil and rain}
+
+\begin{problem}[{Weekend problem --- the same viscous laws in an artery,
+in a thousand-kilometre pipeline, and in a falling drop}]
+\label{pb:b2:viscous-flows:1}
+
+\medskip
+\noindent\textbf{Part I --- Blood.}
+Blood: $\rho = \qty{1060}{kg/m^3}$, $\eta = \qty{3.5e-3}{Pa.s}$ (treated as
+Newtonian); cardiac output $D_V = \qty{5.0}{L/min}$.
+\begin{enumerate}
+  \item Aorta, radius \qty{1.25}{cm}: mean speed, \omterm{def:b2:viscous-flows:reynolds}{Reynolds number}, regime.
+  \item If the flow in the aorta were Poiseuille's, what would be the
+        maximum speed and the wall \omterm{def:b2:viscous-flows:viscosity}{shear stress}? (The endothelium
+        senses stresses of order \qty{1}{Pa}.)
+  \item A capillary, radius \qty{4.0}{\micro m}, carries blood at
+        \qty{0.30}{mm/s}: \omterm{def:b2:viscous-flows:reynolds}{Reynolds number}; pressure drop over its
+        \qty{1.0}{mm} length, in pascals and in millimetres of mercury
+        (\qty{1}{mmHg} = \qty{133}{Pa}).
+  \item Time for a red cell to cross the capillary; why is this the
+        right order for gas exchange?
+  \item Arterioles (radius \qty{10}{\micro m}, length \qty{2.0}{mm}, $10^8$
+        in parallel): resistance of the set and the pressure drop
+        across it at full cardiac output.
+  \item The total arterial-to-venous drop is \qty{13}{kPa}: mechanical
+        power delivered by the left ventricle. Compare with a
+        \qty{100}{W} body.
+  \item A stenosis reduces the radius of a coronary artery by $40\%$
+        over a short length: factor by which its resistance rises; why
+        the heart muscle downstream may still be supplied at rest but
+        not during effort.
+  \item During a hard effort the cardiac output reaches \qty{25}{L/min}:
+        \omterm{def:b2:viscous-flows:reynolds}{Reynolds number} in the aorta, and regime.
+  \item Blood is not Newtonian: its apparent \omterm{def:b2:viscous-flows:viscosity}{viscosity} falls at high
+        shear rate and rises at low. Which of the vessels above is
+        most affected, and in which direction?
+\end{enumerate}
+
+\medskip
+\noindent\textbf{Part II --- The pipeline.}
+A crude-oil pipeline: diameter $D = \qty{1.2}{m}$, length $L = \qty{1300}{km}$,
+flow $D_V = \qty{3.0}{m^3/s}$; oil $\rho = \qty{850}{kg/m^3}$, $\eta =
+\qty{2.0e-2}{Pa.s}$ when kept warm. Turbulent friction: $\Delta P = \lambda
+(L/D)\tfrac12\rho\langle v\rangle^2$, $\lambda = 0.316/\mathrm{Re}^{1/4}$.
+\begin{enumerate}[resume]
+  \item Mean speed and \omterm{def:b2:viscous-flows:reynolds}{Reynolds number}; regime.
+  \item Pressure drop per kilometre and over the whole line.
+  \item The pipe tolerates \qty{80}{bar}: minimum number of pump stations
+        along the line.
+  \item Total pumping power; energy per cubic metre of oil delivered,
+        compared with the energy content of the oil (\qty{36}{GJ/m^3}).
+  \item What drop would Poiseuille's law predict? Comment on the cost
+        of turbulence (and on why polymer additives that delay
+        turbulence are injected in some pipelines).
+  \item In winter the unheated oil would reach $\eta = \qty{2.0}{Pa.s}$:
+        new \omterm{def:b2:viscous-flows:reynolds}{Reynolds number} and regime; pressure drop over the line
+        with the appropriate law. Conclusion for the design (the real
+        line is insulated and the oil kept warm).
+  \item Transit time of the oil from one end to the other.
+  \item Wall \omterm{def:b2:viscous-flows:viscosity}{shear stress} in the warm, turbulent case, from the
+        pressure drop; total \omterm{def:b2:rigid-body-mechanics:contact}{friction force} on the pipe wall.
+  \item The same flow in a \qty{1.0}{m} pipe: by what factor does the
+        turbulent pressure drop change?
+  \item A \qty{0.10}{mm} grain of sand ($\rho_s = \qty{2650}{kg/m^3}$) is carried
+        in the warm oil: Stokes settling speed, \omterm{def:b2:viscous-flows:reynolds}{Reynolds number} of the
+        grain, time to settle across the pipe. Compare with the
+        turbulent velocity fluctuations, a few percent of $\langle v
+        \rangle$: does sand settle in the running pipeline? In a
+        stopped one?
+\end{enumerate}
+
+\medskip
+\noindent\textbf{Part III --- Drops.}
+Air: $\rho = \qty{1.2}{kg/m^3}$, $\eta = \qty{1.8e-5}{Pa.s}$; water $\rho_w =
+\qty{1000}{kg/m^3}$, $\gamma = \qty{0.072}{N/m}$.
+\begin{enumerate}[resume]
+  \item Cloud droplet, diameter \qty{10}{\micro m}: Stokes terminal speed,
+        \omterm{def:b2:viscous-flows:reynolds}{Reynolds number}, time to fall \qty{1}{km}; why the cloud stays.
+  \item Drizzle, \qty{0.20}{mm}: Stokes speed and \omterm{def:b2:viscous-flows:reynolds}{Reynolds number}; is
+        Stokes still reliable?
+  \item Raindrop, \qty{2.0}{mm}: show Stokes fails, and find the terminal
+        speed with $C_x = 0.5$. Time to fall from \qty{1}{km}.
+  \item In an updraft of \qty{1}{cm/s}, does the cloud droplet rise or
+        fall? What updraft would hold the drizzle drop?
+  \item \omterm{rem:b2:viscous-flows:capillarity}{Laplace pressure} inside the three drops; compare with the
+        \omterm{thm:b2:euler-bernoulli:bernoulli}{dynamic pressure} $\tfrac12\rho v_\infty^2$ for each, and explain why
+        large raindrops flatten and break up above about \qty{5}{mm}.
+  \item In one table, give for the eight flows of this problem the
+        \omterm{def:b2:viscous-flows:reynolds}{Reynolds number} and the law that governs it.
+\end{enumerate}
+\end{problem}

@@ -1,6 +1,627 @@
 \chapter{Perfect Fluids: Euler and Bernoulli}\label{ch:b2:euler-bernoulli}
 
-% TODO: course, examples, figures, and 8--12 graded exercises
-% (see CONTRIBUTING.md). Placeholder until written.
+Hold a sheet of paper by its edge and blow over its top: it lifts. Open
+the tap in the shower and the curtain leans in. A wing holds up three
+hundred tonnes because the air flows faster over its upper surface
+than under it. All three are the same statement: \emph{where a fluid
+moves faster, its pressure is lower}. This chapter writes Newton's
+second law for a \omterm{def:b2:fluid-kinematics:particle}{fluid particle} in the simplest model --- the
+\emph{perfect} fluid, which feels pressure but no friction --- and
+draws from it Bernoulli's theorem, the energy balance of a \omterm{def:b2:fluid-kinematics:euler}{streamline},
+whose applications run from the flow meter in a pipe to the speed
+indicator of an aircraft.
 
-\emph{This chapter has not been written yet.}
+\section{The Euler equation}
+
+\begin{proposition}[Pressure force on a fluid particle]\label{prop:b2:euler-bernoulli:pressure}
+\index{pressure force (volume density)}
+The resultant of the pressure forces exerted by the surrounding fluid
+on a particle of volume $\dd\tau$ is
+\[
+\dd\vect F_P = -\operatorname{\vect{grad}}P\,\dd\tau :
+\]
+pressure acts as a volume force of density $-\operatorname{\vect{grad}}P$,
+pushing from high toward low pressure.
+\end{proposition}
+
+\begin{proof}
+On the box of \cref{thm:b2:fluid-kinematics:continuity}, the faces at
+$x$ and $x + \dd x$ receive $+P(x)\dd y\dd z$ and $-P(x + \dd x)\dd y\dd z$
+along $x$: net $-\partial_xP\,\dd x\dd y\dd z$; likewise for $y$ and $z$.
+\end{proof}
+
+\begin{definition}[Perfect fluid]\label{def:b2:euler-bernoulli:perfect}
+\index{perfect fluid}
+A \emph{perfect fluid} is one in which the only contact force between
+neighbouring particles is the pressure --- normal to every surface, no
+tangential (viscous) stress. It is an idealization valid, as the next
+chapter explains, far from walls and at high Reynolds number: water in
+a pipe away from the wall, air around a wing outside the thin boundary
+layer, a wave on the sea.
+\end{definition}
+
+\begin{theorem}[Euler's equation]\label{thm:b2:euler-bernoulli:euler}
+\index{Euler's equation}
+In a Galilean frame, a \omterm{def:b2:euler-bernoulli:perfect}{perfect fluid} of density $\rho$ subject to
+gravity obeys, at every point,
+\[
+\rho\Bigl(\frac{\partial\vect v}{\partial t} + (\vect v\cdot\operatorname{\vect{grad}})
+\vect v\Bigr) = -\operatorname{\vect{grad}}P + \rho\vect g ,
+\]
+to which any other volume force density $\vect f_v$ (electric, inertial
+in a non-Galilean frame) is added on the right. At rest it reduces to
+the hydrostatic law $\operatorname{\vect{grad}}P = \rho\vect g$ of the
+Year 1 volume.
+\end{theorem}
+
+\begin{proof}
+Newton's second law for the particle of mass $\rho\,\dd\tau$: its
+acceleration is the \omterm{thm:b2:fluid-kinematics:material}{material derivative}
+(\cref{thm:b2:fluid-kinematics:material}), the forces are the pressure
+resultant and the weight $\rho\vect g\,\dd\tau$; divide by $\dd\tau$.
+\end{proof}
+
+\begin{example}[A tank that accelerates]\label{ex:b2:euler-bernoulli:tank}
+Water in a tank carried by a truck accelerating at $\vect a$ is at rest
+in the truck's frame; there, Euler with the inertial force $-\rho\vect a$
+gives $\operatorname{\vect{grad}}P = \rho(\vect g - \vect a)$: the pressure
+grows along the "effective gravity" $\vect g - \vect a$, the free
+surface (an isobar) is perpendicular to it and tilts backward by the
+angle $\arctan(a/g)$ --- \qty{11}{\degree} for $a = \qty{2}{m/s^2}$. In a
+bucket spinning at $\Omega$, the centrifugal force $\rho\Omega^2r\,\vect e_r$
+gives $P = P_0 + \tfrac12\rho\Omega^2r^2 - \rho gz$ and the free surface is
+the paraboloid $z = \Omega^2r^2/2g$.
+\end{example}
+
+\begin{omfigure}
+\begin{tikzpicture}[font=\small, x=1cm, y=1cm, >=Stealth]
+  \begin{scope}
+    \draw[thick, fill=omDef!10] (0,0) rectangle (1.8,1.4);
+    \draw[omThm, very thick, ->] (-1.0,0.7) -- (-0.05,0.7) node[pos=0.2, above, font=\footnotesize] {$P(x)\,\dd S$};
+    \draw[omThm, very thick, ->] (2.85,0.7) -- (1.85,0.7) node[pos=0.1, above, font=\footnotesize] {$P(x+\dd x)\,\dd S$};
+    \draw[omThm, very thick, ->] (0.9,-1.0) -- (0.9,-0.05);
+    \draw[omThm, very thick, ->] (0.9,2.4) -- (0.9,1.45);
+    \node[font=\footnotesize] at (0.9,-1.4) {$\dd\vect F_P = -\operatorname{\vect{grad}}P\,\dd\tau$};
+  \end{scope}
+  \begin{scope}[xshift=6.0cm]
+    \draw[thick] (-1.6,-0.2) -- (-1.6,1.6) (-1.6,-0.2) -- (1.6,-0.2) -- (1.6,1.6);
+    \draw[omDef, thick, fill=omDef!15] (-1.6,1.4) -- (1.6,0.2) -- (1.6,-0.2) -- (-1.6,-0.2) -- cycle;
+    \draw[->, very thick] (0,1.9) -- (0.45,1.9) node[right, font=\footnotesize] {$\vect a$};
+    \draw[omThm, ->, thick] (0,0.5) -- (0,-0.7) node[right, font=\footnotesize] {$\vect g$};
+    \draw[omProp, ->, thick] (0,0.5) -- (-0.45,-0.7) node[left, font=\footnotesize] {$\vect g - \vect a$};
+    \node[font=\footnotesize] at (0,-1.4) {accelerating tank: surface $\perp \vect g - \vect a$};
+  \end{scope}
+  \begin{scope}[xshift=11.2cm]
+    \draw[thick] (-1.4,-0.2) -- (-1.4,1.8) (-1.4,-0.2) -- (1.4,-0.2) -- (1.4,1.8);
+    \draw[omDef, thick, fill=omDef!15, domain=-1.4:1.4, samples=40] plot (\x,{0.35+0.6*\x*\x}) -- (1.4,-0.2) -- (-1.4,-0.2) -- cycle;
+    \draw[dashed] (0,-0.5) -- (0,2.1);
+    \draw[->] (-0.3,2.0) arc[start angle=150, end angle=30, radius=0.35] node[right, font=\footnotesize] {$\Omega$};
+    \node[font=\footnotesize] at (0,-1.4) {rotating bucket: $z = \Omega^2r^2/2g$};
+  \end{scope}
+\end{tikzpicture}
+
+{\small Left: the pressure forces on the faces of a fluid box do not
+cancel when $P$ varies --- their resultant is $-\operatorname{\vect{grad}}P$
+per unit volume. Middle and right: two fluids at rest in an
+accelerated frame; the free surface is everywhere perpendicular to the
+effective gravity.}
+\end{omfigure}
+
+\section{Bernoulli's theorem}
+
+\begin{theorem}[Bernoulli]\label{thm:b2:euler-bernoulli:bernoulli}
+\index{Bernoulli's theorem}\index{stagnation pressure}\index{dynamic pressure}
+For a \emph{perfect}, \emph{incompressible} fluid of uniform density in
+\emph{steady} flow, in a Galilean frame with uniform gravity, the quantity
+\[
+P + \tfrac12\rho v^2 + \rho gz
+\]
+is constant \emph{along each \omterm{def:b2:fluid-kinematics:euler}{streamline}}. If the flow is moreover
+\emph{irrotational}, it is the same constant throughout the fluid. The
+term $\tfrac12\rho v^2$ is the \emph{\omterm{thm:b2:euler-bernoulli:bernoulli}{dynamic pressure}}; $P + \tfrac12\rho v^2$
+is the \emph{\omterm{thm:b2:euler-bernoulli:bernoulli}{stagnation pressure}}, the pressure the fluid would reach
+if brought to rest along its \omterm{def:b2:fluid-kinematics:euler}{streamline}.
+\end{theorem}
+
+\begin{proof}
+Steady Euler with $(\vect v\cdot\operatorname{\vect{grad}})\vect v =
+\operatorname{\vect{grad}}(v^2/2) + \vect\omega\wedge\vect v$ and $\rho\vect g =
+-\operatorname{\vect{grad}}(\rho gz)$, $\rho$ uniform:
+\[
+\operatorname{\vect{grad}}\bigl(P + \tfrac12\rho v^2 + \rho gz\bigr) = -\rho\,
+\vect\omega\wedge\vect v .
+\]
+The right side is perpendicular to $\vect v$, so the gradient of the
+Bernoulli quantity has no component along the \omterm{def:b2:fluid-kinematics:euler}{streamline}: the quantity
+is constant along it. If $\vect\omega = \vect 0$ the gradient vanishes
+everywhere.
+\end{proof}
+
+\begin{remark}[What Bernoulli says and does not say]\label{rem:b2:euler-bernoulli:meaning}
+Divided by $\rho$, the theorem reads: the mechanical energy per unit
+mass, $v^2/2 + gz$, plus $P/\rho$ is conserved along a particle's path.
+The pressure term is the work done \emph{on} the particle by the
+pressure of the fluid behind it, minus the work it does on the fluid
+ahead: the energy theorem for a particle pushed through a pressure
+field without friction. Four conditions: \omterm{def:b2:euler-bernoulli:perfect}{perfect fluid} (no viscous
+loss), steady, incompressible, and \emph{along a \omterm{def:b2:fluid-kinematics:euler}{streamline}}. Comparing
+two points on different \omterm{def:b2:fluid-kinematics:euler}{streamlines} is allowed only in \omterm{def:b2:fluid-kinematics:vorticity}{irrotational
+flow}. It does not say "fast air sucks": it says that a particle that
+has been \emph{accelerated} (by a pressure drop) is now at lower
+pressure --- the cause is the pressure field, the speed is the effect.
+\end{remark}
+
+\begin{remark}[Compressible fluids]\label{rem:b2:euler-bernoulli:compressible}
+For a gas the density varies, but if the flow is steady, perfect and
+isentropic the same proof gives the conservation of $h + v^2/2 + gz$
+along a \omterm{def:b2:fluid-kinematics:euler}{streamline}, where $h$ is the enthalpy per unit mass ($h = c_PT$
+for a perfect gas): the form used for nozzles and turbines in
+\cref{ch:b2:open-systems}. At speeds well below the speed of sound
+($v \lesssim \qty{100}{m/s}$ in air) the density changes by less than $5\%$
+and the incompressible theorem is accurate.
+\end{remark}
+
+\section{Applications}
+
+\begin{proposition}[The Venturi meter]\label{prop:b2:euler-bernoulli:venturi}
+\index{Venturi effect}\index{Venturi meter}
+In a horizontal pipe narrowing from section $S_1$ to $S_2 < S_1$, the
+speed rises ($v_2 = v_1S_1/S_2$, mass conservation) and the pressure
+drops:
+\[
+P_1 - P_2 = \tfrac12\rho(v_2^2 - v_1^2) = \tfrac12\rho v_1^2\Bigl(\frac{S_1^2}{S_2^2} - 1\Bigr) ,
+\qquad
+D_V = S_1v_1 = S_1S_2\sqrt{\frac{2(P_1 - P_2)}{\rho(S_1^2 - S_2^2)}} .
+\]
+Measuring the pressure difference with a manometer gives the flow rate:
+a \emph{\omterm{prop:b2:euler-bernoulli:venturi}{Venturi meter}}. The same effect drives a carburettor, a paint
+spray, a Bunsen burner's air intake and the "suction" of a passing
+train.
+\end{proposition}
+
+\begin{proof}
+Bernoulli along a central \omterm{def:b2:fluid-kinematics:euler}{streamline} at constant height, with $v_2 =
+v_1S_1/S_2$; solve for $v_1$.
+\end{proof}
+
+\begin{proposition}[The Pitot tube]\label{prop:b2:euler-bernoulli:pitot}
+\index{Pitot tube}
+A tube facing the flow, closed at the far end, brings the fluid to rest
+at its mouth (a \emph{stagnation point}); a second opening on the side,
+parallel to the flow, reads the static pressure $P$. The difference is
+the \omterm{thm:b2:euler-bernoulli:bernoulli}{dynamic pressure}:
+\[
+P_{\text{stag}} - P = \tfrac12\rho v^2 , \qquad v = \sqrt{2(P_{\text{stag}} - P)/\rho} .
+\]
+Every aircraft measures its airspeed this way.
+\end{proposition}
+
+\begin{proof}
+Bernoulli along the \omterm{def:b2:fluid-kinematics:euler}{streamline} that ends at the stagnation point, where
+$v = 0$; the side holes do not disturb the flow, which passes at the
+undisturbed $v$ and $P$.
+\end{proof}
+
+\begin{proposition}[Torricelli's formula]\label{prop:b2:euler-bernoulli:torricelli}
+\index{Torricelli's formula}\index{efflux}
+A large open tank drains through a small hole at depth $h$ below the
+free surface; the jet leaves at
+\[
+v = \sqrt{2gh} ,
+\]
+the speed of free fall from the surface. The flow rate is $D_V \approx
+\alpha s\sqrt{2gh}$ with $s$ the hole's area and $\alpha \approx 0.6$ the
+\emph{contraction coefficient} of a sharp-edged orifice (the \omterm{def:b2:fluid-kinematics:euler}{streamlines}
+keep converging past the hole).
+\end{proposition}
+
+\begin{proof}
+Bernoulli from the free surface (at rest, since the tank is large:
+$v_{\text{surf}} = v\,s/S \ll v$; pressure $P_0$) to the jet (pressure $P_0$
+just outside the hole): $P_0 + \rho gh = P_0 + \tfrac12\rho v^2$. The flow
+is quasi-steady: $h$ varies slowly.
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}[font=\small, x=1cm, y=1cm, >=Stealth]
+  \begin{scope}
+    % Venturi
+    \draw[thick] (-2.6,0.7) -- (-1.2,0.7) -- (-0.3,0.3) -- (0.5,0.3) -- (1.4,0.7) -- (2.6,0.7);
+    \draw[thick] (-2.6,-0.7) -- (-1.2,-0.7) -- (-0.3,-0.3) -- (0.5,-0.3) -- (1.4,-0.7) -- (2.6,-0.7);
+    \draw[omThm, thick, ->] (-2.3,0) -- (-1.5,0) node[above, font=\footnotesize] {$v_1$};
+    \draw[omThm, thick, ->] (-0.5,0) -- (0.9,0) node[above, font=\footnotesize, yshift=-1pt] {$v_2$};
+    % manometer
+    \draw[thick] (-1.8,0.7) -- (-1.8,1.2) -- (-1.8,2.2); \draw[thick] (0.1,0.3) -- (0.1,2.2);
+    \draw[thick] (-1.8,1.2) -- (-1.8,1.25); 
+    \fill[omDef!40] (-1.85,0.7) rectangle (-1.75,1.9); \fill[omDef!40] (0.05,0.3) rectangle (0.15,1.2);
+    \draw[<->] (0.5,1.2) -- (0.5,1.9) node[midway, right, font=\footnotesize] {$\Delta h$};
+    \draw[dashed] (-1.8,1.9) -- (0.5,1.9); \draw[dashed] (0.1,1.2) -- (0.5,1.2);
+    \node[font=\footnotesize] at (0,-1.2) {Venturi: $P_1 - P_2 = \tfrac12\rho(v_2^2 - v_1^2)$};
+  \end{scope}
+  \begin{scope}[xshift=6.6cm]
+    % Pitot
+    % outer tube with rounded nose, static holes on the side
+    \draw[thick] (-1.0,0.3) -- (1.8,0.3) (-1.0,-0.3) -- (1.8,-0.3);
+    \draw[thick] (-1.0,0.3) arc[start angle=90, end angle=270, radius=0.3];
+    % inner (stagnation) tube
+    \draw[thick] (-1.3,0.08) -- (1.4,0.08) (-1.3,-0.08) -- (1.4,-0.08);
+    \fill[white] (-1.32,0.07) rectangle (-1.28,-0.07);
+    \draw[thick] (1.4,0.08) -- (1.4,1.0) node[above, font=\footnotesize] {$P_{\text{stag}}$};
+    \draw[thick] (1.56,0.08) -- (1.56,-0.08);
+    \draw[thick] (1.4,0.08) -- (1.56,0.08); \draw[thick] (1.4,-0.08) -- (1.56,-0.08);
+    % static holes and their tube
+    \fill[white] (0.2,0.27) rectangle (0.35,0.33); \fill[white] (0.2,-0.27) rectangle (0.35,-0.33);
+    \draw[thick] (0.6,0.3) -- (0.6,1.0) node[above, font=\footnotesize] {$P$};
+    \foreach \y in {0.75,-0.75} \draw[omThm, thick, ->] (-2.7,\y) -- (-1.7,\y);
+    \draw[omThm, thick, ->] (-2.7,0) -- (-1.6,0) node[above, font=\footnotesize, pos=0.3] {$v$};
+    \fill[omDef] (-1.3,0) circle (1.2pt);
+    \node[font=\footnotesize] at (0,-1.2) {Pitot: $P_{\text{stag}} - P = \tfrac12\rho v^2$};
+  \end{scope}
+  \begin{scope}[xshift=11.6cm]
+    \draw[thick] (-1.3,-0.9) -- (-1.3,1.6) (-1.3,-0.9) -- (1.0,-0.9) -- (1.0,-0.5) (1.0,-0.2) -- (1.0,1.6);
+    \fill[omDef!15] (-1.3,-0.9) rectangle (1.0,1.3); \draw[omDef, thick] (-1.3,1.3) -- (1.0,1.3);
+    \draw[omThm, thick, ->] (1.0,-0.35) -- (1.9,-0.35) node[right, font=\footnotesize] {$v$};
+    \draw[<->] (1.35,1.3) -- (1.35,-0.2) node[midway, right, font=\footnotesize] {$h$};
+    \node[font=\footnotesize] at (0,-1.35) {Torricelli: $v = \sqrt{2gh}$};
+  \end{scope}
+\end{tikzpicture}
+
+{\small Three applications of Bernoulli's theorem. Left: the \omterm{prop:b2:euler-bernoulli:venturi}{Venturi
+meter} --- the manometer reads the pressure drop at the throat, hence the
+flow rate. Middle: the \omterm{prop:b2:euler-bernoulli:pitot}{Pitot tube} --- the \omterm{thm:b2:euler-bernoulli:bernoulli}{stagnation pressure} at the
+mouth exceeds the static pressure at the side holes by the \omterm{thm:b2:euler-bernoulli:bernoulli}{dynamic
+pressure}. Right: Torricelli's efflux at the free-fall speed.}
+\end{omfigure}
+
+\begin{example}[Numbers]\label{ex:b2:euler-bernoulli:numbers}
+A Venturi of \qty{5}{cm} narrowing to \qty{2.5}{cm} on a water pipe, with
+$\Delta h = \qty{20}{cm}$ of water (\qty{2.0}{kPa}): $v_1 = \sqrt{2 \times 2000/
+(1000 \times 15)} = \qty{0.52}{m/s}$, $D_V = \qty{1.0}{L/s}$. An airliner at
+\qty{11}{km} ($\rho = \qty{0.36}{kg/m^3}$) at \qty{250}{m/s}: \omterm{thm:b2:euler-bernoulli:bernoulli}{dynamic pressure}
+\qty{11}{kPa}, $11\%$ of the ambient pressure --- the \omterm{prop:b2:euler-bernoulli:pitot}{Pitot tube} still
+works, with a compressibility correction. A water tower \qty{40}{m}
+above the taps: \qty{4}{bar} when closed, a jet at \qty{28}{m/s} if opened
+wide (in practice far less: the pipes are not perfect).
+\end{example}
+
+\begin{proposition}[Lift on a wing]\label{prop:b2:euler-bernoulli:lift}
+\index{lift}\index{Kutta--Joukowski theorem}\index{Magnus effect}
+In the flow around a wing the air passes faster over the upper
+surface than under the lower one; the pressure is therefore lower
+above than below, and the resultant is the \emph{lift} $F_L =
+\tfrac12\rho v^2SC_L$ ($S$ the wing area, $C_L \approx 0.3$--$1.5$ the lift
+coefficient, depending on the profile and the angle of attack). The
+speed difference is equivalent to a \emph{circulation} $\Gamma$ of the
+velocity around the profile, and the lift per unit span is $F_L' =
+\rho v\Gamma$ (Kutta--Joukowski, admitted). A spinning ball drags air
+round with it and is lifted sideways the same way: the \emph{\omterm{prop:b2:euler-bernoulli:lift}{Magnus
+effect}} of a sliced tennis ball or a curving free kick.
+\end{proposition}
+
+\begin{proof}
+Bernoulli on the \omterm{def:b2:fluid-kinematics:euler}{streamlines} just above and below, which start from the
+same upstream conditions: $P_{\text{low}} - P_{\text{up}} = \tfrac12\rho
+(v_{\text{up}}^2 - v_{\text{low}}^2)$; integrate over the chord. Why the
+upper flow is faster --- the sharp trailing edge forces the rear
+stagnation point there and fixes the circulation (the Kutta condition)
+--- is beyond the perfect-fluid model alone; it needs the boundary layer
+of the next chapter.
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}[font=\small, x=1cm, y=1cm, >=Stealth]
+  \begin{scope}
+    % airfoil
+    \draw[thick, fill=omExo!20, rotate=-8] (-2.0,0) .. controls (-1.5,0.55) and (0.5,0.5) .. (2.0,0.0) .. controls (0.5,-0.15) and (-1.5,-0.2) .. (-2.0,0);
+    \foreach \y/\s in {1.25/1.0, 0.95/1.0, -0.75/1.0, -1.1/1.0} {
+      \draw[omDef, thick, postaction={decorate, decoration={markings, mark=at position 0.5 with {\arrow{>}}}}] (-3.2,\y) .. controls (-1.5,\y) and (-0.5,{\y+0.25*(\y>0)-0.1*(\y<0)}) .. (3.2,{\y-0.15});
+    }
+    \draw[omDef, thick, postaction={decorate, decoration={markings, mark=at position 0.25 with {\arrow{>}}}}] (-3.2,0.55) .. controls (-2.2,0.55) and (-1.2,0.95) .. (0,0.85) .. controls (1.2,0.75) and (2.2,0.1) .. (3.2,-0.0);
+    \draw[omDef, thick, postaction={decorate, decoration={markings, mark=at position 0.25 with {\arrow{>}}}}] (-3.2,-0.35) .. controls (-2.2,-0.35) and (-1.2,-0.45) .. (0,-0.5) .. controls (1.2,-0.55) and (2.2,-0.45) .. (3.2,-0.4);
+    \node[omThm, font=\footnotesize] at (-0.2,1.65) {fast, $P$ low};
+    \node[omThm, font=\footnotesize] at (-0.2,-1.5) {slow, $P$ high};
+    \draw[omThm, very thick, ->] (0,0.05) -- (0,1.05) node[right, font=\footnotesize, pos=0.7] {$\vect F_L$};
+    \node[font=\footnotesize] at (0,-2.0) {$F_L' = \rho v\Gamma$};
+  \end{scope}
+  \begin{scope}[xshift=8.2cm]
+    % U-tube
+    \draw[thick] (-1.2,2.0) -- (-1.2,-0.4) arc[start angle=180, end angle=360, radius=1.2] -- (1.2,2.0);
+    \draw[thick] (-0.6,2.0) -- (-0.6,-0.4) arc[start angle=180, end angle=360, radius=0.6] -- (0.6,2.0);
+    \fill[omDef!25] (-1.2,1.3) -- (-1.2,-0.4) arc[start angle=180, end angle=360, radius=1.2] -- (1.2,0.7) -- (0.6,0.7) -- (0.6,-0.4) arc[start angle=360, end angle=180, radius=0.6] -- (-0.6,1.3) -- cycle;
+    \draw[omDef, thick] (-1.2,1.3) -- (-0.6,1.3); \draw[omDef, thick] (0.6,0.7) -- (1.2,0.7);
+    \draw[dashed] (-1.5,1.0) -- (1.5,1.0);
+    \draw[<->] (1.45,1.0) -- (1.45,0.7) node[midway, right, font=\footnotesize] {$z$};
+    \draw[<->] (-1.45,1.0) -- (-1.45,1.3) node[midway, left, font=\footnotesize] {$z$};
+    \node[font=\footnotesize] at (0,-2.0) {$\ddot z + \dfrac{2g}{L}z = 0$};
+  \end{scope}
+\end{tikzpicture}
+
+{\small Left: \omterm{def:b2:fluid-kinematics:euler}{streamlines} around a wing --- crowded and fast above,
+slow below; the pressure difference is the lift. Right: a liquid column
+of total length $L$ oscillating in a U-tube, the simplest unsteady
+application of \omterm{thm:b2:euler-bernoulli:euler}{Euler's equation}.}
+\end{omfigure}
+
+\begin{proposition}[An unsteady flow: the U-tube]\label{prop:b2:euler-bernoulli:utube}
+\index{U-tube oscillation}\index{unsteady Bernoulli}
+A liquid column of total length $L$ fills a U-tube of uniform section;
+displaced by $z$ from equilibrium, it oscillates with
+\[
+\ddot z + \frac{2g}{L}\,z = 0 , \qquad T = 2\pi\sqrt{\frac{L}{2g}} ,
+\]
+like a pendulum of length $L/2$. More generally, for an unsteady but
+\omterm{def:b2:fluid-kinematics:vorticity}{irrotational flow} with potential $\varphi$, Euler integrates to
+$\rho\,\partial_t\varphi + P + \tfrac12\rho v^2 + \rho gz = C(t)$, the same
+constant throughout the fluid (\omterm{prop:b2:euler-bernoulli:utube}{unsteady Bernoulli}).
+\end{proposition}
+
+\begin{proof}
+The speed $v = \dot z$ is uniform along the tube (incompressible,
+uniform section). Project Euler on the tube's axis and integrate along
+the column from one free surface to the other: the pressure terms
+cancel ($P_0$ at both ends), $\int\rho\,\partial_tv\,\dd s = \rho L\ddot z$, the
+convective term $\rho\,\Delta(v^2/2)$ vanishes (same speed at both ends),
+and the gravity term gives $\rho g\cdot2z$. Hence $\rho L\ddot z = -2\rho gz$.
+The general statement follows from $\partial_t\vect v = \operatorname{\vect{grad}}
+\partial_t\varphi$ for $\vect v = \operatorname{\vect{grad}}\varphi$.
+\end{proof}
+
+\begin{example}[Starting a pipe]\label{ex:b2:euler-bernoulli:start}
+A horizontal pipe of length $\ell$ leads from a reservoir of constant
+head $h$ to an open end; the valve is opened at $t = 0$. With $v$ uniform
+along the pipe, Euler integrated from the reservoir surface to the
+outlet gives $\ell\,\dd v/\dd t = gh - \tfrac12v^2$, whose solution is
+$v = V\tanh(Vt/2\ell)$ with $V = \sqrt{2gh}$: the flow reaches Torricelli's
+speed with the time constant $2\ell/V$ --- \qty{13}{s} for a \qty{400}{m}
+penstock under \qty{200}{m} of head.
+\end{example}
+
+\begin{method}[Using Bernoulli]\label{met:b2:euler-bernoulli:method}
+(1) Check the four conditions; decide whether the flow is irrotational
+(uniform upstream flow around an obstacle: yes; flow in a pipe with a
+velocity profile: no --- stay on one \omterm{def:b2:fluid-kinematics:euler}{streamline}). (2) Choose two points
+on a \omterm{def:b2:fluid-kinematics:euler}{streamline} where as many quantities as possible are known: a free
+surface ($P = P_0$, $v \approx 0$ if the section is large), a jet in the
+open air ($P = P_0$), a stagnation point ($v = 0$). (3) Add mass
+conservation $vS = $ const to relate the speeds. (4) For unsteady
+flows, integrate Euler along the line instead.
+\end{method}
+
+\section{Exercises}
+
+\begin{exercise}[$\star$]\label{exo:b2:euler-bernoulli:1}
+Water flows in a horizontal pipe of diameter \qty{8}{cm} at \qty{1.5}{m/s}
+and pressure \qty{3.0}{bar}. It passes into a \qty{4}{cm} section: speed
+and pressure there; into a \qty{2}{cm} section: pressure --- what happens
+if it would come out negative?
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b2:euler-bernoulli:2}
+The \omterm{prop:b2:euler-bernoulli:pitot}{Pitot tube} of an aircraft at \qty{5}{km} ($\rho = \qty{0.74}{kg/m^3}$)
+reads a \omterm{thm:b2:euler-bernoulli:bernoulli}{dynamic pressure} of \qty{15}{kPa}. True airspeed. The airspeed
+indicator is calibrated for sea-level density (\qty{1.22}{kg/m^3}): what
+"indicated airspeed" does it show, and why do pilots find the
+difference useful rather than annoying?
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b2:euler-bernoulli:3}
+A tank holds water \qty{3.0}{m} deep; a \qty{1.0}{cm^2} hole is pierced
+\qty{1.0}{m} above the floor. Exit speed; flow rate (contraction $0.6$);
+where does the jet hit the floor? At what depth should a second hole be
+pierced to reach the same point?
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b2:euler-bernoulli:4}
+A wind of \qty{30}{m/s} blows over a flat roof of \qty{100}{m^2}; the air
+under the roof is still at atmospheric pressure ($\rho = \qty{1.2}{kg/m^3}$).
+Pressure difference and net force on the roof; compare with the weight
+of the roof (\qty{50}{kg/m^2}). Which way is it pushed?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b2:euler-bernoulli:5}
+A closed rectangular tank \qty{2.0}{m} long, half full of water, sits on a
+truck. (a) Accelerating at \qty{3.0}{m/s^2}: angle of the free surface,
+and the difference of water height between the rear and the front
+walls. (b) Pressure difference between the two bottom corners. (c)
+Braking at \qty{6}{m/s^2} --- does the water reach the lid \qty{0.8}{m} above
+the bottom? (d) Same truck going round a bend of radius \qty{40}{m} at
+\qty{15}{m/s}: tilt of the surface.
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b2:euler-bernoulli:6}
+A bucket of radius \qty{15}{cm} containing water \qty{20}{cm} deep is spun
+about its axis at \qty{2.0}{turns/s}. (a) Shape and equation of the free
+surface. (b) Height difference between rim and centre. (c) Volume being
+conserved, height of the water at the centre and at the rim. (d) At
+what rotation rate does the bottom centre dry out? (e) Why does the
+same paraboloid make a perfect telescope mirror (a spinning pool of
+mercury)?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b2:euler-bernoulli:7}
+\emph{Siphon.} A tube carries water from a tank over a crest \qty{2.0}{m}
+above the free surface to an outlet \qty{3.0}{m} below it. (a) Exit speed
+and, for a \qty{2}{cm} tube, flow rate. (b) Pressure at the crest. (c)
+Maximum height of the crest for the siphon to work (the water's vapour
+pressure, \qty{2.3}{kPa}, must not be reached). (d) Why does the siphon
+not work with the tube full of air?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b2:euler-bernoulli:8}
+A light aircraft of \qty{1000}{kg} cruises at \qty{60}{m/s} at sea level on
+a wing of \qty{15}{m^2}. (a) Mean pressure difference between the two
+faces of the wing; lift coefficient. (b) If the speed under the wing is
+\qty{58}{m/s}, what is it over the wing (take the same upstream
+conditions)? (c) Circulation around the profile from the
+Kutta--Joukowski formula, for a span of \qty{10}{m}. (d) Stalling speed if
+$C_L$ cannot exceed $1.4$.
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b2:euler-bernoulli:9}
+\emph{Stenosis.} Blood ($\rho = \qty{1060}{kg/m^3}$) flows at \qty{0.50}{m/s}
+in an artery of section \qty{0.50}{cm^2} at \qty{13}{kPa} above atmospheric
+pressure. A plaque narrows it to \qty{0.10}{cm^2}. (a) Speed and pressure
+in the stenosis. (b) The tissue outside the artery is at about
+\qty{1}{kPa}: can the artery collapse? (c) If it narrows, the speed
+rises further: explain the runaway and why such a narrowing can flutter.
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b2:euler-bernoulli:10}
+\emph{Stagnation temperature.} For a perfect gas in steady isentropic
+flow, $c_PT + v^2/2$ is conserved along a \omterm{def:b2:fluid-kinematics:euler}{streamline}. (a) Show that the
+air brought to rest at the nose of an aircraft reaches $T_0 = T(1 +
+\tfrac{\gamma - 1}{2}M^2)$, with $M = v/c$ the Mach number and $c =
+\sqrt{\gamma RT/M_{\text{mol}}}$ the speed of sound. (b) Nose temperature
+of an airliner at $M = 0.85$ in air at \qty{220}{K}; of a supersonic
+aircraft at $M = 2$; of a re-entry capsule at $M = 25$ (is the formula
+still meaningful?). (c) Show that the incompressible Pitot formula
+overestimates the speed at $M = 0.85$, and by roughly how much (expand
+$P_0/P = (T_0/T)^{\gamma/(\gamma - 1)}$ to second order in $M^2$).
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b2:euler-bernoulli:11}
+\emph{Starting transient.} A pipe of length $\ell = \qty{50}{m}$ and uniform
+section leads from a large reservoir (head $h = \qty{5.0}{m}$ above the
+outlet) to a valve at the open end. The valve is opened at $t = 0$. (a)
+Integrate Euler along the pipe to get $\ell\,\dd v/\dd t = gh - v^2/2$.
+(b) Solve it: $v = V\tanh(Vt/2\ell)$ with $V = \sqrt{2gh}$. (c) Time to
+reach $90\%$ of the final speed. (d) The valve is now shut abruptly in
+\qty{0.5}{s} from full flow: estimate the mean deceleration and the
+over-pressure at the valve from $\rho\ell\,\dd v/\dd t$ --- and why a real
+closure produces far more (next chapters).
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b2:euler-bernoulli:12}
+\emph{The free surface of a vortex.} Water rotates as the \omterm{ex:b2:fluid-kinematics:planeflows}{point vortex}
+of \cref{ch:b2:fluid-kinematics}, $v_\theta = \Gamma/2\pi r$, irrotational,
+with a free surface at $z = 0$ far away. (a) Why may Bernoulli be applied
+between any two points? (b) Shape of the free surface $z(r)$. (c)
+Inside a Rankine core ($r < a$, $v_\theta = \Omega r$, rotational) use
+instead Euler in the rotating frame or directly: show $z = z(a) +
+\Omega^2(r^2 - a^2)/2g$. (d) Total depth of the funnel for a bathtub
+vortex with $\Gamma = \qty{0.03}{m^2/s}$ and $a = \qty{5}{mm}$; for a tornado
+($\Gamma = \qty{3e4}{m^2/s}$, $a = \qty{60}{m}$, in air: express the
+result as a pressure drop at the centre instead).
+\end{exercise}
+
+\begin{omfigure}
+\includegraphics[width=0.58\linewidth]{images/book4/ai/b4-03-dam-penstock.png}
+
+{\small Two penstocks carry the water of a mountain reservoir down to a turbine house: a head of two hundred metres, which Bernoulli's theorem turns into a jet at sixty metres per second.}
+\end{omfigure}
+
+\section{Problem: The dam, the penstock and the turbine}
+
+\begin{problem}[{Weekend problem --- a hydroelectric plant from the
+reservoir to the jet: pressures, speeds, powers, losses and the
+water hammer}]
+\label{pb:b2:euler-bernoulli:1}
+
+A reservoir holds water \qty{150}{m} deep behind a dam; its free surface
+is $H = \qty{200}{m}$ above the nozzles of a turbine. A penstock (a
+steel pipe) of diameter $D = \qty{3.0}{m}$ and length $\ell = \qty{400}{m}$
+carries the design flow $D_V = \qty{60}{m^3/s}$ down to the turbine house,
+where a nozzle turns it into a free jet at atmospheric pressure $P_0 =
+\qty{1.0}{bar}$ which strikes the buckets of a Pelton wheel. $\rho =
+\qty{1000}{kg/m^3}$, $g = \qty{9.81}{m/s^2}$; the fluid is perfect unless
+stated otherwise.
+
+\medskip
+\noindent\textbf{Part I --- At rest and at design flow.}
+\begin{enumerate}
+  \item Pressure at the base of the dam, and the force on a
+        \qty{1}{m}-wide vertical strip of the dam from top to bottom.
+  \item With the turbine valves closed, pressure in the penstock at the
+        turbine house.
+  \item Speed in the penstock at design flow; \omterm{thm:b2:euler-bernoulli:bernoulli}{dynamic pressure} there;
+        pressure at the turbine house end of the penstock (before the
+        nozzle), by Bernoulli from the reservoir surface.
+  \item Speed of the free jet; section and diameter of the nozzle.
+  \item Kinetic power carried by the jet; show it equals $\rho gD_VH$
+        and compute it.
+  \item Mass and kinetic energy of the water contained in the penstock
+        at design flow; transit time of a particle down the pipe.
+  \item Show that the head $H$ is shared, at design flow, between the
+        pressure at the bottom of the penstock and the kinetic energy
+        of the water, and that the nozzle converts the first into the
+        second: what is the pressure just after the nozzle?
+  \item A \omterm{def:b2:euler-bernoulli:perfect}{perfect fluid} has no head loss, a real one does: the loss in
+        a pipe is $\Delta P = \lambda(\ell/D)\,\tfrac12\rho v^2$ with $\lambda
+        \approx 0.015$ for smooth steel. Head loss in metres of water, and
+        the fraction of the power lost.
+  \item An engineer proposes a \qty{2}{m} penstock to save steel. Redo
+        question 7; comment.
+\end{enumerate}
+
+\medskip
+\noindent\textbf{Part II --- Measuring the flow.}
+A Venturi is built into the penstock, with a throat of \qty{2.0}{m}.
+\begin{enumerate}[resume]
+  \item Speed at the throat and pressure drop between the pipe and the
+        throat at design flow.
+  \item The drop is read on a mercury manometer ($\rho_{\text{Hg}} =
+        \qty{13600}{kg/m^3}$): height difference.
+  \item Show that the flow rate is proportional to the square root of
+        the manometer reading, and give the reading at half the design
+        flow.
+  \item Why must the pressure taps be flush with the wall and not
+        protrude into the flow?
+  \item A section of the pipe runs, for topographic reasons, over a
+        crest \qty{6}{m} \emph{above} the reservoir surface. Pressure there
+        at design flow; what happens, and what must the designer do?
+\end{enumerate}
+
+\medskip
+\noindent\textbf{Part III --- Unsteady regimes.}
+The reservoir has a surface area $A = \qty{2.0}{km^2}$.
+\begin{enumerate}[resume]
+  \item Rate at which the reservoir level falls at design flow, in
+        centimetres per hour.
+  \item The turbine is stopped and the nozzle (section from question 4)
+        is left open to the air: the reservoir drains by gravity. Write
+        the mass balance and find the level $h(t)$ (quasi-steady
+        Torricelli flow).
+  \item Time for the level to fall by \qty{10}{m}; compare with the time
+        at constant design flow.
+  \item Starting the plant: the penstock is full, the nozzle is opened
+        at $t = 0$. Taking the speed uniform along the penstock and
+        neglecting the nozzle's geometry, integrate Euler along the
+        pipe to obtain $\ell\,\dd v/\dd t = gH - v^2/2$, solve it, and give
+        the time constant.
+  \item During this start-up, at the instant when $v$ is half its final
+        value, what is the pressure at the bottom of the penstock?
+        Explain the sign of the difference with the steady value.
+\end{enumerate}
+
+\medskip
+\noindent\textbf{Part IV --- Closing the valve.}
+\begin{enumerate}[resume]
+  \item The valve at the turbine is shut in $\tau = \qty{10}{s}$; assume the
+        water in the penstock decelerates uniformly. Using Euler along
+        the pipe, estimate the over-pressure at the valve, in bars.
+  \item For a fast closure the water is not incompressible: a pressure
+        wave travels up the pipe at $c = \qty{1400}{m/s}$ (the speed of
+        sound in water in a steel pipe --- \cref{ch:b2:sound-waves}),
+        and the over-pressure is $\Delta P = \rho c\,\Delta v$ (Joukowsky).
+        Value for a sudden stop from design flow; compare with the
+        static pressure. How long does the wave take to reach the
+        reservoir and back, and what does that say about the meaning
+        of "fast"?
+  \item To protect the penstock a \emph{surge tank} --- a vertical open
+        shaft of section $A_s = \qty{100}{m^2}$ --- is connected where a
+        horizontal tunnel of length $L = \qty{2000}{m}$ and section $A =
+        \qty{7.0}{m^2}$ from the reservoir joins the penstock. After a
+        sudden closure, the water in the tunnel keeps moving and the
+        level $z$ in the shaft rises. Write mass conservation between
+        the tunnel and the shaft.
+  \item Integrate Euler along the tunnel (\omterm{def:b2:euler-bernoulli:perfect}{perfect fluid}) to show that
+        $z$ obeys $\ddot z + \dfrac{gA}{LA_s}z = 0$; period of the
+        oscillation.
+  \item Maximum rise of the level in the shaft after a closure from
+        design flow (energy argument: the kinetic energy of the tunnel
+        water becomes potential energy in the shaft).
+  \item Sum up: the five pressures met in this plant (static at the
+        dam, static at the turbine, dynamic in the pipe, water hammer,
+        surge) and the law that gives each.
+\end{enumerate}
+\end{problem}

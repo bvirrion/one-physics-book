@@ -17,7 +17,7 @@ physique for year 3 — **pure physics, no chemistry**. Grades 1–6, where
 the French primaire taught no physics, use age-adapted chapters.
 
 **Current state: Books 1, 2 and 3 written, each in eight languages;
-Books 4–5 structure only.**
+Book 4 written in English (2026-08-22); Book 5 structure only.**
 
 - **Book 1** (Primary & Middle School, grades 1–9): 71 chapters + 71
   solutions files (~435 pp), 142 figures, photographs and AI-generated
@@ -100,8 +100,25 @@ Books 4–5 structure only.**
 - `tools/term_config/book{1,2}_*.py` are curated configs, not stubs —
   regenerate links after editing those books' definitions or prose.
 
-The invariant checks below are live for Books 1, 2 and 3 and must stay
-green. Books 4–5 still have placeholder chapter bodies (a TODO comment
+- **Book 4** (University Year 2): 31 chapters in `parts/bachelor-2/`,
+  written in English 2026-08-22 on the Book 3 recipe — the chapter list
+  is the **union of the old (2004) and current (2021) PC* programmes**
+  with the 2013 one folded in (checked against the official annexes,
+  2026-08-21; provenance comments in `parts/bachelor-2/part.tex`): ~345 pp,
+  121 TikZ/pgfplots/circuitikz figures plus 13 photographs
+  (`images/book4/`, credited in `frontmatter/image-credits-book4.tex`)
+  and 30 AI illustrations (`images/book4/ai/`, prompts in `PROMPTS.md`),
+  exactly 12 exercises per chapter (4×★ / 5×★★ / 3×★★★), one
+  25-question weekend problem per chapter, a full solution for every
+  exercise and problem, ~1,230 generated `\omterm` links
+  (`tools/term_config/book4_en.py` is curated). Level guard = math Book 4
+  (Year 2): div/curl introduced operationally in ch.~11 with Ostrogradski
+  and Stokes `\admitted` (proved in the Year 3 mathematics volume),
+  Fourier integrals used as a stated tool with a Year-3 remark, Fourier
+  series allowed. English only — no translations yet.
+
+The invariant checks below are live for Books 1–4 and must stay
+green. Book 5 still has placeholder chapter bodies (a TODO comment
 and an "unwritten" line) with header-only solutions files, English only.
 
 `CONTRIBUTING.md` holds the authoritative style/structure conventions;

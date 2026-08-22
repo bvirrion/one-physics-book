@@ -1,6 +1,565 @@
 \chapter{Momentum and Energy Balances in Flows}\label{ch:b2:flow-balances}
 
-% TODO: course, examples, figures, and 8--12 graded exercises
-% (see CONTRIBUTING.md). Placeholder until written.
+A firefighter braces against the hose: the water leaving at thirty
+metres per second pushes back with hundreds of newtons, though nothing
+touches the nozzle but water. A jet engine hangs from a wing and pulls
+an aircraft through the sky by throwing air backward. A garden
+sprinkler spins with no motor. In each case a fluid enters a region,
+leaves it with a different momentum, and the difference is a force.
+This chapter writes the laws of mechanics --- momentum, angular
+momentum, energy --- not for a fixed mass of fluid but for the fluid
+crossing a fixed region, an \emph{\omterm{def:b2:flow-balances:cv}{open system}}: the form in which
+engineers size turbines, rockets, pumps and pipes.
 
-\emph{This chapter has not been written yet.}
+\section{Balances for an open system}
+
+\begin{definition}[Control volume; open system]\label{def:b2:flow-balances:cv}
+\index{control volume}\index{open system}
+A \emph{control volume} (or control surface) is a fixed region of space
+$\Sigma$ through which fluid flows; the fluid inside it at any instant
+is an \emph{open system}, which exchanges mass with the outside through
+the inlets and outlets of $\Sigma$. The closed system to which Newton's
+laws apply is the fluid that is inside $\Sigma$ at time $t$, followed
+to $t + \dd t$: it then occupies $\Sigma$ minus what has left plus what
+has entered.
+\end{definition}
+
+\begin{theorem}[Momentum balance in steady flow]\label{thm:b2:flow-balances:momentum}
+\index{momentum balance (steady flow)}\index{momentum flux}
+For a steady flow through a \omterm{def:b2:flow-balances:cv}{control volume} with one inlet (section
+$S_1$, uniform velocity $\vect v_1$) and one outlet ($S_2$, $\vect v_2$), the
+\omterm{def:b2:fluid-kinematics:flowrate}{mass flow rate} $D_m$ being the same at both,
+\[
+\sum\vect F_{\text{ext}} = D_m\,(\vect v_2 - \vect v_1) ,
+\]
+where $\sum\vect F_{\text{ext}}$ is the sum of all external forces on the
+fluid inside $\Sigma$: weight, forces from walls and bodies in contact
+with it, and the pressure forces on the inlet and outlet sections
+($P_1S_1\vect n_1$ pushing inward, $-P_2S_2\vect n_2$ at the outlet). With
+several inlets and outlets, the right side is the sum of the outgoing
+\omterm{thm:b2:flow-balances:momentum}{momentum fluxes} $D_{m,i}\vect v_i$ minus the incoming ones.
+\end{theorem}
+
+\begin{proof}
+Consider the closed system $\mathcal S$ made of the fluid in $\Sigma$ at
+time $t$ plus the slab $\delta m = D_m\dd t$ about to enter through $S_1$.
+At $t + \dd t$ it consists of the fluid in $\Sigma$ plus the slab $\delta m$
+that has left through $S_2$. Its momentum went from $\vect p_\Sigma(t) +
+\delta m\,\vect v_1$ to $\vect p_\Sigma(t + \dd t) + \delta m\,\vect v_2$; in steady
+flow $\vect p_\Sigma$ is constant, so $\dd\vect p_{\mathcal S} = D_m\dd t\,(\vect v_2
+- \vect v_1)$. Newton's second law for $\mathcal S$, whose external forces
+are (to first order) those on the fluid in $\Sigma$, gives the result.
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}[font=\small, x=1cm, y=1cm, >=Stealth]
+  \draw[thick, omExo, dashed] (-2.2,-1.2) rectangle (2.6,1.2);
+  \node[omExo, font=\footnotesize] at (-1.5,1.45) {control volume $\Sigma$};
+  \draw[thick] (-3.4,0.6) -- (-2.2,0.6) .. controls (-1,0.6) and (0,1.0) .. (1.2,1.0) -- (2.6,1.0) -- (3.4,1.0);
+  \draw[thick] (-3.4,-0.6) -- (-2.2,-0.6) .. controls (-1,-0.6) and (0,0.2) .. (1.2,0.2) -- (2.6,0.2) -- (3.4,0.2);
+  \fill[omDef!25] (-3.4,-0.6) -- (-2.2,-0.6) .. controls (-1,-0.6) and (0,0.2) .. (1.2,0.2) -- (3.4,0.2) -- (3.4,1.0) -- (1.2,1.0) .. controls (0,1.0) and (-1,0.6) .. (-2.2,0.6) -- (-3.4,0.6) -- cycle;
+  \draw[omDef, very thick] (-2.2,-0.6) -- (-2.2,0.6); \draw[omDef, very thick] (2.6,0.2) -- (2.6,1.0);
+  \draw[omThm, very thick, ->] (-3.1,0) -- (-2.4,0) node[above, font=\footnotesize, pos=0.3] {$\vect v_1$};
+  \draw[omThm, very thick, ->] (2.7,0.6) -- (3.3,0.6) node[above, font=\footnotesize, pos=0.3] {$\vect v_2$};
+  \node[omDef, font=\footnotesize] at (-2.2,-0.95) {$S_1$, $P_1$}; \node[omDef, font=\footnotesize] at (2.6,-0.2) {$S_2$, $P_2$};
+  \draw[omProp, very thick, ->] (0.3,-1.05) -- (0.3,-0.35) node[right, font=\footnotesize, pos=0.2] {$\vect F_{\text{wall}}$};
+  \node[font=\footnotesize] at (0.2,-1.7) {$\sum\vect F_{\text{ext}} = D_m(\vect v_2 - \vect v_1)$};
+\end{tikzpicture}
+\hfill
+\begin{tikzpicture}[font=\small, x=1cm, y=1cm, >=Stealth]
+  \begin{scope}
+    \fill[pattern=north east lines] (1.2,-1.5) rectangle (1.4,1.5); \draw[thick] (1.2,-1.5) -- (1.2,1.5);
+    \fill[omDef!25] (-2.2,-0.25) rectangle (1.2,0.25);
+    \draw[omDef, thick] (-2.2,0.25) -- (1.2,0.25) (-2.2,-0.25) -- (1.2,-0.25);
+    \draw[omDef, thick] (1.2,0.25) .. controls (0.9,0.7) and (0.8,1.0) .. (0.8,1.5);
+    \draw[omDef, thick] (1.2,-0.25) .. controls (0.9,-0.7) and (0.8,-1.0) .. (0.8,-1.5);
+    \draw[omThm, very thick, ->] (-1.6,0) -- (-0.6,0) node[above, font=\footnotesize] {$v$};
+    \draw[omProp, very thick, ->] (1.4,0) -- (2.4,0) node[above, font=\footnotesize] {$F = D_mv$};
+    \node[font=\footnotesize] at (0,-1.85) {jet on a wall};
+  \end{scope}
+  \begin{scope}[xshift=5.4cm]
+    \draw[thick] (0.2,0) .. controls (0.9,0) and (1.2,0.4) .. (1.2,1.0) .. controls (1.2,0.4) and (0.9,0) .. (0.2,0);
+    \draw[thick, omExo] (0.25,0.0) .. controls (1.1,-0.05) and (1.35,0.55) .. (1.25,1.2);
+    \draw[thick, omExo] (0.25,0.0) .. controls (1.1,0.05) and (1.35,-0.55) .. (1.25,-1.2);
+    \fill[omDef!25] (-2.0,-0.2) rectangle (0.25,0.2);
+    \draw[omDef, thick] (-2.0,0.2) -- (0.25,0.2) (-2.0,-0.2) -- (0.25,-0.2);
+    \draw[omThm, very thick, ->] (-1.6,0) -- (-0.8,0) node[above, font=\footnotesize] {$v$};
+    \draw[omDef, thick, ->] (0.4,0.3) .. controls (0.9,0.5) and (1.0,0.9) .. (0.6,1.2) node[left, font=\footnotesize] {$v - u$};
+    \draw[omDef, thick, ->] (0.4,-0.3) .. controls (0.9,-0.5) and (1.0,-0.9) .. (0.6,-1.2);
+    \draw[very thick, ->] (1.4,0.3) -- (2.1,0.3) node[right, font=\footnotesize] {$u$};
+    \node[font=\footnotesize] at (0.2,-1.85) {Pelton bucket};
+  \end{scope}
+\end{tikzpicture}
+
+{\small Left: a \omterm{def:b2:flow-balances:cv}{control volume} in a steady flow --- the momentum
+leaving through $S_2$ minus that entering through $S_1$ equals the sum
+of the external forces on the fluid inside, pressure forces on the two
+sections included. Right: a jet stopped by a wall pushes it with
+$D_mv$; a jet turned back by a Pelton bucket moving at $u$ pushes with
+up to $2D_m(v - u)$.}
+\end{omfigure}
+
+\begin{example}[Jet on a wall; the fire hose]\label{ex:b2:flow-balances:jet}
+A jet of section $s$ and speed $v$ strikes a wall perpendicularly and
+spreads along it: the outgoing momentum along the jet is zero, so the
+wall receives $F = D_mv = \rho sv^2$ --- \qty{1.1}{kN} for a \qty{5}{cm} jet
+at \qty{24}{m/s}. By the same balance applied to the fluid in the hose
+and nozzle, the nozzle pushes back on the firefighter with $D_mv$:
+\qty{20}{L/s} at \qty{30}{m/s} give \qty{600}{N}, the weight of a person.
+If the wall recedes at $u$, only $D_m' = \rho s(v - u)$ reaches it per unit
+time and it arrives at the relative speed $v - u$: $F = \rho s(v - u)^2$.
+\end{example}
+
+\begin{proposition}[Pelton bucket; rocket thrust]\label{prop:b2:flow-balances:pelton}
+\index{Pelton turbine}\index{thrust}\index{rocket equation}
+(i) A jet of speed $v$ and \omterm{def:b2:fluid-kinematics:flowrate}{mass flow rate} $D_m$ is turned back through
+$180^\circ$ by a bucket moving at $u$ in the jet's direction: the force
+on the bucket is $F = 2D_m(v - u)$ (with $D_m$ the flow rate actually
+intercepted by the moving buckets of a wheel), the power $Fu$ is
+maximal for $u = v/2$ and then equals $\tfrac12D_mv^2$: the jet's whole
+kinetic power. (ii) A rocket of mass $m(t)$ ejecting gas backward at
+the relative speed $v_e$ and \omterm{def:b2:fluid-kinematics:flowrate}{mass flow rate} $D_m = -\dd m/\dd t$ feels the
+thrust $F = D_mv_e$; in free space its speed increases by
+$\Delta v = v_e\ln(m_0/m_1)$ (Tsiolkovsky's \omterm{prop:b2:flow-balances:pelton}{rocket equation}); under gravity,
+$m\,\dd v/\dd t = D_mv_e - mg$.
+\end{proposition}
+
+\begin{proof}
+(i) In the bucket's frame the jet arrives at $v - u$ and leaves at
+$-(v - u)$; the momentum balance gives $2D_m(v - u)$ (the bucket is
+perfect: no loss of relative speed). Power $2D_mu(v - u)$, maximal at
+$u = v/2$. (ii) Momentum of rocket plus gas ejected in $\dd t$: $(m + \dd m)
+(v + \dd v) + (-\dd m)(v - v_e) = mv$ in free space, so $m\,\dd v = -\dd m\,v_e$
+and $v_1 - v_0 = v_e\ln(m_0/m_1)$; with gravity the total momentum changes
+by $-mg\,\dd t$.
+\end{proof}
+
+\begin{example}[A launcher]\label{ex:b2:flow-balances:rocket}
+First stage: $D_m = \qty{2500}{kg/s}$ at $v_e = \qty{3000}{m/s}$: thrust
+\qty{7.5}{MN}, which lifts a \qty{600}{t} rocket at $7.5 \times 10^6/6 \times 10^5 - g
+= \qty{2.7}{m/s^2}$ off the pad. Burning \qty{500}{t} in \qty{200}{s} gives
+$\Delta v = 3000\ln6 - 9.81 \times 200 = 5400 - 2000 = \qty{3.4}{km/s}$ --- the
+gravity loss is why launchers climb fast, and the logarithm why they
+are staged.
+\end{example}
+
+\begin{example}[Force on a pipe bend]\label{ex:b2:flow-balances:bend}
+Water at $P$ and $v$ in a pipe of section $S$ turns through $90^\circ$. The
+balance on the fluid in the elbow: $\vect F_{\text{wall}} + PS\vect e_x - PS
+\vect e_y = D_m(v\vect e_y - v\vect e_x)$, so the wall pushes the fluid with
+$\vect F_{\text{wall}} = -(PS + \rho Sv^2)(\vect e_x - \vect e_y)$ and the fluid
+pushes the elbow outward with $(PS + \rho Sv^2)\sqrt2$. For $D = \qty{20}{cm}$,
+$P = \qty{3}{bar}$, $v = \qty{3}{m/s}$: $PS = \qty{9.4}{kN}$, $\rho Sv^2 = \qty{0.28}{kN}$,
+force \qty{13.7}{kN} along the bisector --- the pressure term dominates,
+and it is what the anchor blocks of a pipeline hold.
+\end{example}
+
+\section{Angular momentum: turbines and sprinklers}
+
+\begin{theorem}[Angular momentum balance; Euler's turbine equation]\label{thm:b2:flow-balances:angular}
+\index{angular momentum balance (flow)}\index{Euler's turbine equation}
+In steady flow, the total moment about a point $O$ of the external
+forces on the fluid in $\Sigma$ equals the flux of angular momentum
+out minus in: $\sum\vect{\mathcal M}_O = D_m(\vect r_2\wedge\vect v_2 - \vect r_1
+\wedge\vect v_1)$. For a rotating machine (turbine or pump) of axis $Oz$,
+with the fluid entering at radius $r_1$ with azimuthal velocity
+$v_{\theta1}$ and leaving at $r_2$ with $v_{\theta2}$, the torque exerted by
+the fluid on the rotor and the power it delivers are
+\[
+\Gamma = D_m(r_1v_{\theta1} - r_2v_{\theta2}) , \qquad
+\mathcal P = \Gamma\omega = D_m\omega(r_1v_{\theta1} - r_2v_{\theta2}) .
+\]
+A turbine takes the swirl out of the fluid; a pump puts it in.
+\end{theorem}
+
+\begin{proof}
+Same closed-system argument with $\vect r\wedge\vect v$ in place of
+$\vect v$. The torque on the rotor is the opposite of the torque of the
+rotor on the fluid; the pressure forces on the inlet and outlet
+surfaces (which are surfaces of revolution) have no moment about the
+axis.
+\end{proof}
+
+\begin{example}[The lawn sprinkler]\label{ex:b2:flow-balances:sprinkler}
+Two arms of length $R$ eject water tangentially at the relative speed
+$w$; the sprinkler turns at $\omega$. Water enters on the axis with no
+angular momentum and leaves with $r v_\theta = R(w - R\omega)$ (absolute
+azimuthal speed $w - R\omega$, opposite to the rotation): the torque on the
+arms is $D_mR(w - R\omega)$. At rest it is $D_mRw$; with no friction the
+sprinkler accelerates until $R\omega = w$ --- the water leaves with zero
+absolute speed and the torque vanishes; with a friction torque
+$\Gamma_f$ it settles at $\omega = (w - \Gamma_f/D_mR)/R$.
+\end{example}
+
+\begin{omfigure}
+\begin{tikzpicture}[font=\small, x=1cm, y=1cm, >=Stealth]
+  \begin{scope}
+    \fill (0,0) circle (2pt);
+    \draw[thick] (-1.8,0.12) rectangle (1.8,-0.12);
+    \draw[thick] (1.8,-0.12) -- (1.8,0.5) (1.55,-0.12) -- (1.55,0.5);
+    \draw[thick] (-1.8,0.12) -- (-1.8,-0.5) (-1.55,0.12) -- (-1.55,-0.5);
+    \draw[omThm, very thick, ->] (1.68,0.5) -- (1.68,1.4) node[right, font=\footnotesize] {$w$};
+    \draw[omThm, very thick, ->] (-1.68,-0.5) -- (-1.68,-1.4) node[left, font=\footnotesize] {$w$};
+    \draw[omDef, ->, thick] (0.7,-0.6) arc[start angle=-40, end angle=-140, radius=0.9] node[midway, below, font=\footnotesize] {$\omega$};
+    \node[font=\footnotesize] at (0,-2.0) {$\Gamma = D_mR(w - R\omega)$};
+  \end{scope}
+  \begin{scope}[xshift=6.6cm]
+    \draw[omExo, thick] (0,0) circle (1.6); \draw[omExo, thick] (0,0) circle (0.6);
+    \foreach \a in {0,45,...,315} \draw[omExo, thick] ({0.6*cos(\a)},{0.6*sin(\a)}) .. controls ({1.0*cos(\a+25)},{1.0*sin(\a+25)}) .. ({1.6*cos(\a+40)},{1.6*sin(\a+40)});
+    \draw[omThm, very thick, ->] (1.9,-0.9) -- (1.55,-0.35) node[right, font=\footnotesize, pos=0.1] {$\vect v_1$};
+    \draw[omThm, very thick, ->] (0.42,0.42) -- (0.0,0.55);
+    \node[omThm, font=\footnotesize] at (0.15,0.85) {$\vect v_2$};
+    \draw[omDef, ->, thick] (1.0,1.73) arc[start angle=60, end angle=130, radius=2.0] node[midway, above, font=\footnotesize] {$\omega$};
+    \node[font=\footnotesize] at (0,-2.15) {$\Gamma = D_m(r_1v_{\theta1} - r_2v_{\theta2})$};
+  \end{scope}
+\end{tikzpicture}
+
+{\small Left: the lawn sprinkler --- water leaves the arms tangentially
+at the relative speed $w$; the outgoing angular momentum turns the arms
+the other way. Right: a radial-inflow turbine (a Francis runner seen
+along its axis): the fluid enters at the rim with a large swirl and
+leaves near the axis with little; the difference of angular \omterm{thm:b2:flow-balances:momentum}{momentum
+flux} is the torque on the runner.}
+\end{omfigure}
+
+\section{Energy balance: pumps, turbines and losses}
+
+\begin{theorem}[Mechanical energy balance of a steady flow]\label{thm:b2:flow-balances:energy}
+\index{energy balance (flow)}\index{hydraulic power}\index{head}
+For an incompressible fluid in steady flow through a machine (pump or
+turbine) between an inlet 1 and an outlet 2, with $\mathcal P_u$ the
+mechanical power delivered to the fluid by moving parts (positive for a
+pump, negative for a turbine) and $\mathcal P_{\text{diss}} \ge 0$ the power
+dissipated by \omterm{def:b2:viscous-flows:viscosity}{viscosity},
+\[
+D_V\Bigl[\bigl(P_2 + \tfrac12\rho v_2^2 + \rho gz_2\bigr) - \bigl(P_1 + \tfrac12\rho v_1^2
++ \rho gz_1\bigr)\Bigr] = \mathcal P_u - \mathcal P_{\text{diss}} .
+\]
+Dividing by $\rho gD_V$ gives the balance in \emph{heads} (metres of
+fluid): $H_2 - H_1 = H_{\text{pump}} - H_{\text{loss}}$, with $H = P/\rho g +
+v^2/2g + z$. For a \omterm{def:b2:euler-bernoulli:perfect}{perfect fluid} with no machine this is Bernoulli; the
+\emph{\omterm{thm:b2:flow-balances:energy}{hydraulic power}} of a pump raising the head by $H_{\text{pump}}$ is
+$\rho gD_VH_{\text{pump}}$.
+\end{theorem}
+
+\begin{proof}
+Kinetic energy theorem for the closed system of the proof of
+\cref{thm:b2:flow-balances:momentum}: in $\dd t$ its kinetic energy
+changes by $D_m\dd t\,(v_2^2 - v_1^2)/2$; the work done on it is that of
+gravity, $-D_m\dd t\,g(z_2 - z_1)$, of the pressure forces on the moving
+end faces, $(P_1S_1v_1 - P_2S_2v_2)\dd t = (P_1 - P_2)D_V\dd t$, of the
+moving parts, $\mathcal P_u\dd t$, and of the internal viscous forces,
+$-\mathcal P_{\text{diss}}\dd t$ (the walls, at rest, do no work). Divide by
+$\dd t$.
+\end{proof}
+
+\begin{example}[Sizing a pump]\label{ex:b2:flow-balances:pump}
+Water is to be lifted \qty{30}{m} at \qty{20}{L/s} through \qty{100}{m} of
+\qty{10}{cm} pipe ($\lambda = 0.02$): $v = \qty{2.5}{m/s}$, head loss $\lambda(L/D)
+v^2/2g = 0.02 \times 1000 \times 0.32 = \qty{6.4}{m}$, exit kinetic head
+\qty{0.32}{m}: $H_{\text{pump}} = \qty{36.7}{m}$, \omterm{thm:b2:flow-balances:energy}{hydraulic power} $\rho gD_VH =
+\qty{7.2}{kW}$, and \qty{10}{kW} of electricity at $70\%$ efficiency. The
+pressure at the pump outlet is $\rho gH_{\text{pump}} \approx \qty{3.6}{bar}$ above
+the inlet.
+\end{example}
+
+\begin{proposition}[Sudden expansion: the Borda--Carnot loss]\label{prop:b2:flow-balances:borda}
+\index{Borda--Carnot loss}\index{head loss (singular)}
+When a pipe of section $S_1$ opens suddenly into a pipe of section $S_2
+> S_1$, the jet spreads in a turbulent zone and the pressure
+\emph{rises} downstream, but less than Bernoulli would say: the
+mechanical energy lost per unit volume is
+\[
+\Delta P_{\text{loss}} = \tfrac12\rho(v_1 - v_2)^2 ,
+\]
+the kinetic energy of the "lost" relative velocity. A flow leaving a
+pipe into a large tank ($v_2 \to 0$) loses all its kinetic energy.
+\end{proposition}
+
+\begin{proof}
+Momentum balance on the fluid between the expansion and a section
+downstream where the flow is again uniform; experiment shows the
+pressure on the annular wall at the expansion to be $P_1$ (the jet has
+not yet spread). Hence $(P_1 - P_2)S_2 = D_m(v_2 - v_1) = \rho S_2v_2(v_2 -
+v_1)$, i.e.\ $P_2 - P_1 = \rho v_2(v_1 - v_2)$. Bernoulli would give
+$\tfrac12\rho(v_1^2 - v_2^2)$; the difference is $\tfrac12\rho(v_1 - v_2)^2$.
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}[font=\small, x=1cm, y=1cm, >=Stealth]
+  \draw[thick] (-3,0.5) -- (0,0.5) -- (0,1.2) -- (3.5,1.2);
+  \draw[thick] (-3,-0.5) -- (0,-0.5) -- (0,-1.2) -- (3.5,-1.2);
+  \fill[omDef!15] (-3,-0.5) rectangle (0,0.5); \fill[omDef!15] (0,-1.2) rectangle (3.5,1.2);
+  \draw[omDef, dashed] (0,0.5) .. controls (1.2,0.6) and (2.0,1.1) .. (2.8,1.2);
+  \draw[omDef, dashed] (0,-0.5) .. controls (1.2,-0.6) and (2.0,-1.1) .. (2.8,-1.2);
+  \foreach \y in {0.75,1.0} { \draw[omProp, ->] (0.9,\y) arc[start angle=90, end angle=-200, radius=0.12]; }
+  \foreach \y in {-0.75,-1.0} { \draw[omProp, ->] (0.9,\y) arc[start angle=-90, end angle=200, radius=0.12]; }
+  \draw[omThm, very thick, ->] (-2.4,0) -- (-1.4,0) node[above, font=\footnotesize] {$v_1$, $P_1$};
+  \draw[omThm, very thick, ->] (2.2,0) -- (3.0,0) node[above, font=\footnotesize] {$v_2$, $P_2$};
+  \node[font=\footnotesize] at (0.3,-1.6) {$\Delta P_{\text{loss}} = \tfrac12\rho(v_1 - v_2)^2$};
+\end{tikzpicture}
+\hfill
+\begin{tikzpicture}
+\begin{axis}[omaxis, axis x line=bottom, axis y line=left, width=6.4cm, height=4.3cm,
+    xlabel={$S_1/S_2$}, ylabel={fraction of $\tfrac12\rho v_1^2$}, xmin=0, xmax=1, ymin=0, ymax=1.05,
+    xlabel style={at={(axis description cs:0.5,-0.12)}, anchor=north},
+    ylabel style={at={(axis description cs:-0.14,0.5)}, rotate=90, anchor=south},
+    xtick={0,0.5,1}, ytick={0,0.5,1}, samples=60,
+    legend style={font=\scriptsize, at={(0.97,0.95)}, anchor=north east, draw=none, fill=none}]
+  \addplot[omThm, thick, domain=0:1] {(1-x)^2};
+  \addplot[omDef, thick, domain=0:1] {2*x*(1-x)};
+  \legend{lost, pressure recovered}
+\end{axis}
+\end{tikzpicture}
+
+{\small Left: a sudden expansion --- the jet spreads in a turbulent
+dead zone and part of its kinetic energy is dissipated. Right: the
+fractions of the upstream kinetic energy lost and recovered as
+pressure, against the section ratio; the loss is largest for a jet
+into a tank.}
+\end{omfigure}
+
+\begin{method}[Setting up a balance]\label{met:b2:flow-balances:method}
+(1) Draw the \omterm{def:b2:flow-balances:cv}{control volume}: its boundary should cut the flow only
+where the velocity and pressure are known or wanted (uniform sections,
+free jets at $P_0$, free surfaces). (2) List the external forces on the
+\emph{fluid inside}: weight, wall forces (unknown, the usual target),
+pressure on the cut sections. (3) Write the \omterm{thm:b2:flow-balances:momentum}{momentum flux} out minus in;
+for moving parts, work in the frame of the part if the flow is steady
+there. (4) For torques, the angular-momentum balance; for powers, the
+energy balance in heads. (5) The force on the wall is minus the force
+of the wall on the fluid; add the atmospheric pressure acting on the
+outside of the device if the net force on the device is wanted.
+\end{method}
+
+\section{Exercises}
+
+\begin{exercise}[$\star$]\label{exo:b2:flow-balances:1}
+A fire hose delivers \qty{25}{L/s} through a nozzle of \qty{3.0}{cm}
+diameter. Exit speed; reaction force on the nozzle; force of the jet
+on a wall it hits perpendicularly; on a wall receding at \qty{10}{m/s}.
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b2:flow-balances:2}
+A rocket engine ejects \qty{250}{kg/s} at \qty{3.0}{km/s}. Thrust; initial
+acceleration of a \qty{60}{t} rocket; acceleration when \qty{40}{t} of
+propellant have burned; speed gained after that burn (free space, then
+with gravity, duration \qty{160}{s}).
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b2:flow-balances:3}
+Water flows at \qty{2.0}{m/s} and \qty{4.0}{bar} in a \qty{15}{cm} pipe that
+turns through \qty{90}{\degree}. Force exerted by the water on the elbow
+(magnitude and direction); which part comes from the pressure, which
+from the momentum change? Same elbow with the pipe open to the air just
+after the bend.
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b2:flow-balances:4}
+A jet engine on a test stand swallows \qty{80}{kg/s} of still air and
+exhausts it at \qty{550}{m/s} (fuel mass negligible). Thrust. In flight
+at \qty{240}{m/s}, same exhaust speed relative to the engine: thrust,
+propulsive power, and the kinetic power given to the air in the engine
+frame; propulsive efficiency.
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b2:flow-balances:5}
+\emph{Pelton wheel.} A jet of \qty{0.50}{m^3/s} at \qty{60}{m/s} hits the
+buckets of a wheel of radius \qty{0.80}{m}. (a) Force and power on the
+buckets at bucket speed $u$ (perfect $180^\circ$ deflection); optimal $u$
+and the corresponding rotation speed in rpm. (b) Power and efficiency
+at the optimum. (c) Real buckets deflect the jet by \qty{165}{\degree}:
+force and power at $u = v/2$; efficiency. (d) Torque at the optimum;
+what happens to the torque at standstill and at the runaway speed?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b2:flow-balances:6}
+\emph{Sprinkler.} Two arms of \qty{15}{cm} end in \qty{3.0}{mm} nozzles;
+the total flow is \qty{0.20}{L/s}. (a) Relative exit speed. (b) Torque at
+rest. (c) Rotation rate with a \omterm{def:b2:rigid-body-mechanics:pivot}{bearing} friction torque of
+\qty{5.0e-3}{N.m}; the limiting rate with no friction. (d) Absolute speed
+of the water leaving, in each case.
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b2:flow-balances:7}
+\emph{Hovering.} A helicopter of \qty{2.0}{t} hovers with a rotor of
+\qty{10}{m} diameter. Model the rotor as a disk that takes in still air
+and pushes it down through a uniform speed $v_i$ at the disk, $2v_i$ far
+below (admit the factor 2). (a) Thrust in terms of $\rho$, $A$, $v_i$;
+value of $v_i$. (b) Power given to the air (its kinetic power far
+below). (c) Why does a larger rotor need less power? (d) Same
+calculation for a \qty{1}{kg} drone with four \qty{25}{cm} propellers;
+power-to-weight ratio compared.
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b2:flow-balances:8}
+\emph{Sudden expansion.} Water at \qty{4.0}{m/s} in a \qty{5}{cm} pipe enters
+a \qty{10}{cm} pipe. (a) Downstream speed; pressure rise according to
+Bernoulli and according to Borda--Carnot; loss in pascals and in metres
+of head. (b) The same expansion made gradual (a diffuser) recovers $80\%$
+of the Bernoulli rise: loss. (c) Loss when the \qty{5}{cm} pipe discharges
+into a large tank. (d) Power lost in case (a) and (c) at the given flow.
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b2:flow-balances:9}
+A pump draws water from a well \qty{5.0}{m} below it and delivers
+\qty{10}{L/s} to a tank \qty{25}{m} above it through \qty{60}{m} of \qty{6}{cm}
+pipe ($\lambda = 0.025$, plus a singular loss of $2\,v^2/2g$ for the fittings).
+(a) Speed and losses. (b) Pump head and \omterm{thm:b2:flow-balances:energy}{hydraulic power}; shaft power
+at $65\%$ efficiency. (c) Pressure at the pump inlet (suction side) and
+outlet. (d) The water's vapour pressure is \qty{2.3}{kPa}: maximum height
+of the pump above the well.
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b2:flow-balances:10}
+\emph{Water rocket.} A \qty{2.0}{L} bottle holds \qty{1.0}{L} of water and
+air at \qty{5.0}{bar} (absolute); the nozzle has a diameter of \qty{2.2}{cm};
+empty bottle \qty{0.10}{kg}. (a) Initial exit speed (Bernoulli, water
+surface at rest) and thrust; initial acceleration. (b) As water leaves
+the air expands isothermally: pressure and exit speed when half the
+water is gone. (c) Estimate the burn duration and the speed reached
+(neglect gravity and drag, treat the thrust as its mean value). (d)
+What does the empty bottle do once the water is gone, and why does a
+little water (not a lot) give the best height?
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b2:flow-balances:11}
+\emph{Francis turbine.} Water enters a runner at $r_1 = \qty{1.0}{m}$ with
+$v_{\theta1} = \qty{20}{m/s}$ and leaves at $r_2 = \qty{0.50}{m}$ with no swirl;
+flow \qty{30}{m^3/s}; rotation \qty{150}{rpm}. (a) Torque and power. (b)
+Head extracted, $H = \mathcal P/\rho gD_V$. (c) If the runner ran at
+\qty{200}{rpm} with the same inlet velocity and the exit swirl became
+$v_{\theta2} = \qty{3}{m/s}$ in the direction of rotation: power and the
+fraction of the head turned into useless exit swirl. (d) Why is the
+Pelton wheel used for high heads and small flows, the Francis for the
+opposite?
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b2:flow-balances:12}
+\emph{Hydraulic jump.} In a horizontal channel of unit width, water
+of depth $h_1$ flowing at $v_1$ jumps abruptly to depth $h_2$ and speed
+$v_2$ (the foamy step below a weir or in a kitchen sink). (a) Mass
+conservation. (b) Momentum balance on the fluid between the two sides
+of the jump, the pressure being hydrostatic on each side: show
+$\tfrac12gh_1^2 + v_1^2h_1 = \tfrac12gh_2^2 + v_2^2h_2$. (c) Deduce $h_2/h_1 =
+\tfrac12\bigl(-1 + \sqrt{1 + 8\,\mathrm{Fr}_1^2}\bigr)$ with $\mathrm{Fr}_1 =
+v_1/\sqrt{gh_1}$ (the Froude number); a jump needs $\mathrm{Fr}_1 > 1$. (d)
+Head lost in the jump, $\Delta H = (h_2 - h_1)^3/4h_1h_2$; numbers for $h_1 =
+\qty{0.20}{m}$, $v_1 = \qty{4.0}{m/s}$, and the power dissipated per metre
+of width.
+\end{exercise}
+
+\begin{omfigure}
+\includegraphics[width=0.58\linewidth]{images/book4/ai/b4-05-pelton-wheel.png}
+
+{\small The runner of a \omterm{prop:b2:flow-balances:pelton}{Pelton turbine}: each bucket turns the jet back through nearly $180^\circ$, and the change of the water's momentum is the force on the wheel.}
+\end{omfigure}
+
+\begin{omfigure}
+\includegraphics[width=0.42\linewidth]{images/book4/penstock-sabarigiri.jpg}
+
+{\small The penstocks of a hydroelectric plant feed the turbines below: the momentum balance of the jet on the buckets of a Pelton wheel turns the head of water into shaft work.}
+\end{omfigure}
+
+\section{Problem: Jets, rockets and runners}
+
+\begin{problem}[{Weekend problem --- what pushes a jet aircraft, what
+lifts a rocket, what turns a turbine, and what it costs to pump water
+uphill}]
+\label{pb:b2:flow-balances:1}
+
+\medskip
+\noindent\textbf{Part I --- The turbojet.}
+An engine on a test stand takes in $D_a = \qty{50}{kg/s}$ of still air,
+burns $D_f = \qty{1.0}{kg/s}$ of fuel, and exhausts the mixture at $v_e =
+\qty{600}{m/s}$ at atmospheric pressure.
+\begin{enumerate}
+  \item Thrust on the test stand.
+  \item In flight at $v = \qty{250}{m/s}$ (same $v_e$ relative to the
+        engine): thrust, and the propulsive power $Fv$.
+  \item Kinetic power given to the gas, computed in the engine's frame.
+        Propulsive efficiency $\eta_p = Fv/\mathcal P_{\text{kin}}$; show
+        that, neglecting the fuel mass, $\eta_p = 2v/(v + v_e)$.
+  \item The fuel releases \qty{43}{MJ/kg}: thermal efficiency of the
+        engine (kinetic power over heat power) and overall efficiency.
+  \item A turbofan uses the same kinetic power to accelerate
+        $\qty{500}{kg/s}$ of air: exhaust speed, thrust and $\eta_p$ at
+        \qty{250}{m/s}. Why do airliners have huge fans?
+  \item Why can a turbojet not work at rest on a rocket's job, above
+        the atmosphere?
+  \item Reverse thrust on landing deflects the fan flow forward at
+        \qty{45}{\degree} from the axis: braking force for the turbofan
+        of question 5 at \qty{70}{m/s}, the fan exhaust being then
+        \qty{150}{m/s} relative to the engine; compare with the forward
+        thrust the same flow would give.
+\end{enumerate}
+
+\medskip
+\noindent\textbf{Part II --- The rocket.}
+A single-stage rocket: initial mass $m_0 = \qty{300}{t}$, propellant
+\qty{200}{t}, exhaust speed $v_e = \qty{3.0}{km/s}$, burn time $\tau =
+\qty{150}{s}$ at constant \omterm{def:b2:fluid-kinematics:flowrate}{mass flow rate}.
+\begin{enumerate}[resume]
+  \item Apply the momentum balance to rocket plus the gas ejected in
+        $\dd t$ to derive $m\,\dd v/\dd t = D_mv_e - mg$ for a vertical
+        flight.
+  \item \omterm{def:b2:fluid-kinematics:flowrate}{Mass flow rate}, thrust, and the acceleration at lift-off and
+        at burn-out.
+  \item Integrate to get the burn-out speed; what is the "gravity
+        loss"?
+  \item Burn-out speed with the same rocket split into two stages of
+        \qty{100}{t} of propellant each, the first stage's empty mass
+        (\qty{20}{t}) being dropped before the second ignites (neglect
+        gravity here): compare with the single stage.
+  \item What exhaust speed would a single stage need to reach orbital
+        speed (\qty{7.8}{km/s}, neglecting gravity) with the same
+        mass ratio? Comment on the choice of propellants.
+  \item At lift-off the exhaust jet (\qty{1333}{kg/s} at \qty{3}{km/s}) hits
+        the flame deflector of the pad and is turned horizontally:
+        force on the deflector.
+  \item The rocket's exhaust is also a fluid flow: why does the thrust
+        \emph{increase} with altitude for a real nozzle (think of the
+        pressure on the nozzle exit section)?
+\end{enumerate}
+
+\medskip
+\noindent\textbf{Part III --- The Pelton wheel.}
+The jet of the previous chapter's plant: $D_V = \qty{60}{m^3/s}$ at $v =
+\qty{62.6}{m/s}$, split between two wheels; each wheel has a radius $R =
+\qty{1.5}{m}$ and buckets deflecting the jet by \qty{165}{\degree}.
+\begin{enumerate}[resume]
+  \item Force on the buckets of one wheel at bucket speed $u$, and the
+        power; optimal $u$.
+  \item Rotation speed at the optimum, in rpm; torque on the shaft.
+  \item The generator must turn at a multiple of \qty{50}{Hz} divided by
+        its number of pole pairs: choose the number of pole pairs.
+  \item Power of one wheel and efficiency with respect to the jet's
+        kinetic power; total electrical power at $95\%$ generator
+        efficiency.
+  \item Using the angular-momentum balance (\omterm{thm:b2:flow-balances:angular}{Euler's turbine equation})
+        on a bucket at the optimum: angular momentum of the water
+        entering and leaving, per kilogram, and check the torque.
+  \item The load drops suddenly and the wheel runs away toward $u =
+        v$: what happens to the force and to the torque, and why is a
+        deflector that diverts the jet part of every Pelton plant?
+\end{enumerate}
+
+\medskip
+\noindent\textbf{Part IV --- Pumping uphill.}
+The plant is also used as storage: at night \qty{40}{m^3/s} are pumped
+back up through the penstock (\qty{400}{m}, \qty{3}{m}, $\lambda = 0.015$) to the
+reservoir \qty{200}{m} above.
+\begin{enumerate}[resume]
+  \item Head losses in the penstock at \qty{40}{m^3/s}; pump head needed.
+  \item \omterm{thm:b2:flow-balances:energy}{Hydraulic power}, and electrical power drawn at $88\%$ pump
+        efficiency.
+  \item Pressure at the bottom of the penstock while pumping; compare
+        with its value in turbine mode (previous chapter).
+  \item Energy stored per night of \qty{8}{h} (potential energy of the
+        water raised); round-trip efficiency of the storage if the
+        turbine mode recovers $90\%$ of the available head and the
+        generator $95\%$.
+  \item Sum up the four balances used in this problem (momentum, angular
+        momentum, energy, mass) and the device each one sized.
+\end{enumerate}
+\end{problem}

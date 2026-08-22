@@ -1,0 +1,506 @@
+\chapter{Fraunhofer Diffraction and Spatial Filtering}\label{ch:b2:diffraction}
+
+Squint at a street lamp through the gap between two fingers and the
+lamp stretches into a band of fringes; look at a star through the
+finest telescope and you see not a point but a small disc ringed with
+faint circles. Light passing through an opening spreads --- the
+narrower the opening, the wider the spread --- and no lens can focus it
+tighter than this spread allows. This is \emph{\omterm{def:b2:diffraction:huygens}{diffraction}}, the reason
+a microscope cannot see a virus, a telescope's resolving power grows
+with its diameter, and a laser beam cannot stay parallel. This chapter
+computes the \omterm{def:b2:diffraction:huygens}{diffraction} pattern of an aperture in the far field, the
+limit it sets on every optical instrument, the way it combines with
+interference, and the idea --- Abbe's --- that turns the focal plane of a
+lens into a place where an image can be filtered.
+
+\section{The Huygens--Fresnel principle and the Fraunhofer regime}
+
+\begin{definition}[Huygens--Fresnel principle]\label{def:b2:diffraction:huygens}
+\index{Huygens--Fresnel principle}\index{diffraction}\index{Fraunhofer diffraction}
+Every point of a \omterm{def:b2:scalar-light-model:path}{wavefront} (or of an aperture lit by a wave) acts as a
+secondary source emitting a spherical wavelet, in phase with the wave
+there; the wave beyond is the coherent sum of the wavelets. For an
+aperture $\Sigma$ lit by a plane wave of amplitude $a$, the amplitude
+reaching a far point is $\underline s(M) = K\iint_\Sigma\eu^{-\iu\varphi(P, M)}\dd S$, with
+$\varphi(P, M)$ the phase of the path from the aperture point $P$ to $M$
+($K$ a constant). \emph{Fraunhofer} (far-field) diffraction is the case
+where $M$ is at infinity --- or in the focal plane of a lens --- so that
+the rays from all points of the aperture toward $M$ are parallel, in
+the direction $\vect u$, and
+\[
+\varphi(P, M) = \varphi_0 - \frac{2\pi}\lambda\,\vect{OP}\cdot\vect u , \qquad
+\underline s(\vect u) \propto \iint_\Sigma\eu^{\iu(2\pi/\lambda)\vect{OP}\cdot\vect u}\dd S .
+\]
+The pattern is observed at infinity, or at the focus $F'$ of a lens,
+where the direction $\vect u$ of small angles $(\alpha, \beta)$ maps to the
+point $(f\alpha, f\beta)$.
+\end{definition}
+\admitted
+
+\begin{remark}[When is it far enough?]\label{rem:b2:diffraction:fresnelnumber}
+\index{Fresnel number}
+For an aperture of size $D$ seen at distance $L$ without a lens, the
+rays are parallel enough when the quadratic term of
+\cref{exo:b2:scalar-light-model:12} is negligible, $D^2/L \ll \lambda$ ---
+the \emph{\omterm{rem:b2:diffraction:fresnelnumber}{Fresnel number}} $D^2/\lambda L \ll 1$. A \qty{0.1}{mm} slit at
+\qty{500}{nm} needs $L \gg \qty{2}{cm}$; a \qty{1}{cm} aperture, $L \gg \qty{200}{m}$ ---
+hence the lens, which brings infinity to its focal plane. Closer in
+(Fresnel \omterm{def:b2:diffraction:huygens}{diffraction}) the patterns are more complex; the shadow of a
+straight edge, for instance, has fringes along its lit side.
+\end{remark}
+
+\section{The single slit and the circular aperture}
+
+\begin{proposition}[Diffraction by a slit]\label{prop:b2:diffraction:slit}
+\index{single-slit diffraction}\index{sinc function}
+A slit of width $b$ (long along $y$) lit at normal incidence sends in
+the direction $\theta$ (in the plane perpendicular to the slit) the
+intensity
+\[
+I(\theta) = I_0\,\operatorname{sinc}^2\Bigl(\frac{\pi b\sin\theta}\lambda\Bigr) , \qquad \operatorname{sinc}x = \frac{\sin x}x :
+\]
+a bright central maximum of angular half-width $\lambda/b$ (first zeros at
+$\sin\theta = \pm\lambda/b$), containing $90\%$ of the light, and secondary maxima
+at about $\sin\theta = \pm1.43\lambda/b$, $\pm2.46\lambda/b$, \dots, of relative
+intensities $4.7\%$, $1.6\%$, \dots --- the narrower the slit, the wider
+the pattern. In the focal plane of a lens of focal length $f$ the
+central maximum is $2\lambda f/b$ wide.
+\end{proposition}
+
+\begin{proof}
+$\underline s(\theta) \propto \int_{-b/2}^{b/2}\eu^{\iu kx\sin\theta}\dd x = b\,\operatorname{sinc}(kb\sin\theta/2)$
+with $k = 2\pi/\lambda$; square. Zeros where $b\sin\theta = m\lambda$, $m \ne 0$: the
+wavelets from the two halves of the slit then cancel pairwise.
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}[font=\small, x=1cm, y=1cm, >=Stealth]
+  \begin{scope}
+    \draw[thick] (0,-2) -- (0,-0.5) (0,0.5) -- (0,2);
+    \draw[<->] (-0.35,-0.5) -- (-0.35,0.5) node[midway, left, font=\footnotesize] {$b$};
+    \foreach \y in {-1.6,-0.9,-0.2,0.5,1.2} \draw[omDef, ->] (-2.2,\y) -- (-0.1,\y);
+    \foreach \y in {-0.4,-0.2,0,0.2,0.4} \draw[omThm, thick, ->] (0.1,\y) -- (2.4,{\y+1.0});
+    \draw[dashed] (0.1,0) -- (2.6,0); \draw (1.4,0) arc[start angle=0, end angle=23.5, radius=1.4]; \node[font=\footnotesize] at (1.7,0.28) {$\theta$};
+    \node[font=\footnotesize] at (1.2,-1.6) {$b\sin\theta = \lambda$: first zero};
+  \end{scope}
+  \begin{scope}[xshift=8.6cm]
+    \begin{axis}[omaxis, axis x line=bottom, axis y line=left, width=6.4cm, height=4.4cm, at={(0,-2.0cm)},
+        xlabel={$b\sin\theta/\lambda$}, ylabel={$I/I_0$}, xmin=-3.2, xmax=3.2, ymin=0, ymax=1.1, xtick={-3,-2,-1,0,1,2,3}, ytick={0.5,1}, samples=400,
+        xlabel style={at={(axis description cs:0.5,-0.14)}, anchor=north},
+        ylabel style={at={(axis description cs:-0.1,0.5)}, rotate=90, anchor=south}]
+      \addplot[omDef, thick, domain=-3.2:3.2] {(sin(deg(pi*x))/(pi*x+1e-9))^2};
+    \end{axis}
+  \end{scope}
+\end{tikzpicture}
+
+{\small Left: the wavelets from across a slit, summed in the direction
+$\theta$. Right: the Fraunhofer pattern of the slit, $\operatorname{sinc}^2$: a
+central lobe twice as wide as the others and far brighter.}
+\end{omfigure}
+
+\begin{proposition}[Circular aperture; the Airy disc]\label{prop:b2:diffraction:airy}
+\index{Airy disc}\index{Rayleigh criterion (resolution)}\index{resolving power (instrument)}
+A circular aperture of diameter $D$ gives a central bright disc, the
+\emph{\omterm{prop:b2:diffraction:airy}{Airy disc}}, surrounded by faint rings; the first dark ring is at
+\[
+\sin\theta = 1.22\,\frac\lambda D ,
+\]
+and the disc holds $84\%$ of the light. Every instrument with an
+entrance pupil of diameter $D$ --- eye, camera, telescope, microscope
+objective --- turns a point source into an \omterm{prop:b2:diffraction:airy}{Airy disc} of that angular
+radius; two points are \emph{resolved} (Rayleigh's criterion) if their
+angular separation exceeds $1.22\lambda/D$: the resolving power of the
+instrument.
+\end{proposition}
+\admitted
+
+\begin{example}[Eye, telescope, microscope]\label{ex:b2:diffraction:instruments}
+The eye ($D = \qty{3}{mm}$, $\lambda = \qty{550}{nm}$): $1.22\lambda/D = \qty{2.2e-4}{rad}$, about
+\qty{45}{''} --- a \qty{1}{mm} detail at \qty{4}{m}, which is indeed about the
+acuity of a good eye: evolution matched the retina's cells to the
+\omterm{def:b2:diffraction:huygens}{diffraction} limit. A \qty{2.4}{m} telescope: \qty{0.06}{''}, a thousand times
+better, if the atmosphere lets it (it does not, from the ground:
+\qty{1}{''} of "seeing", whence space telescopes and adaptive optics). A
+radio dish of \qty{100}{m} at $\lambda = \qty{21}{cm}$: \qty{9}{'}, worse than the eye;
+interferometers across continents restore the resolution. A
+microscope objective of aperture angle $\alpha$ resolves $0.61\lambda/n\sin\alpha$
+--- about \qty{0.2}{\micro m} in the visible, whatever the magnification: the
+limit that drove microscopy to electrons and to X-rays.
+\end{example}
+
+\begin{omfigure}
+\begin{tikzpicture}[font=\small, x=1cm, y=1cm]
+  \begin{scope}
+    \foreach \r/\g in {1.5/85, 1.25/70, 1.0/50, 0.8/25, 0.6/5, 0.45/40, 0.3/70, 0.15/95} {
+      \fill[black!\g] (0,0) circle (\r);
+    }
+    \node[font=\footnotesize] at (0,-1.9) {Airy pattern of one star};
+  \end{scope}
+  \begin{scope}[xshift=4.2cm]
+    \foreach \r/\g in {0.8/25, 0.6/5, 0.45/40, 0.3/70, 0.15/95} {
+      \fill[black!\g] (-0.45,0) circle (\r);
+    }
+    \foreach \r/\g in {0.8/25, 0.6/5, 0.45/40, 0.3/70, 0.15/95} {
+      \fill[black!\g, opacity=0.6] (0.45,0) circle (\r);
+    }
+    \node[font=\footnotesize] at (0,-1.9) {two stars at the Rayleigh limit};
+  \end{scope}
+  \begin{scope}[xshift=9.6cm]
+    \begin{axis}[omaxis, axis x line=bottom, axis y line=left, width=5.4cm, height=4.0cm, at={(0,-1.8cm)},
+        xlabel={$\theta D/\lambda$}, ylabel={$I$}, xmin=-2.5, xmax=3.5, ymin=0, ymax=1.5, xtick={-1.22,0,1.22,2.44}, xticklabels={$-1.22$,$0$,$1.22$,$2.44$}, ytick=\empty, samples=300,
+        xlabel style={at={(axis description cs:0.5,-0.14)}, anchor=north},
+        ylabel style={at={(axis description cs:-0.06,0.5)}, rotate=90, anchor=south}]
+      \addplot[omDef, thick, domain=-2.5:3.5] {(sin(deg(pi*x/1.22))/(pi*x/1.22+1e-9))^2};
+      \addplot[omThm, thick, domain=-2.5:3.5] {(sin(deg(pi*(x-1.22)/1.22))/(pi*(x-1.22)/1.22+1e-9))^2};
+    \end{axis}
+  \end{scope}
+\end{tikzpicture}
+
+{\small Left and middle: the \omterm{prop:b2:diffraction:airy}{Airy disc} of a point source, and two
+sources at Rayleigh's limit --- the centre of one on the first dark
+ring of the other. Right: their profiles (sketched with $\operatorname{sinc}^2$
+shapes), separated by $1.22\lambda/D$.}
+\end{omfigure}
+
+\section{Diffraction and interference together}
+
+\begin{proposition}[Young's slits of finite width; the grating's envelope]\label{prop:b2:diffraction:combined}
+\index{envelope (diffraction)}\index{missing orders}
+Two slits of width $b$ whose centres are $a$ apart give
+\[
+I(\theta) = 4I_0\,\operatorname{sinc}^2\Bigl(\frac{\pi b\sin\theta}\lambda\Bigr)\cos^2\Bigl(\frac{\pi a\sin\theta}\lambda\Bigr) :
+\]
+Young's fringes (spacing $\lambda/a$ in $\sin\theta$) under the single-slit
+envelope (width $2\lambda/b$); $a/b$ fringes fill the central lobe, and the
+fringes at $a\sin\theta = p\lambda$ that fall on a zero of the envelope
+($b\sin\theta = m\lambda$) are \emph{missing}. A grating of $N$ slits of width
+$b$ likewise has its principal maxima modulated by the same envelope ---
+which the blaze of \cref{ch:b2:gratings} tilts toward the order in use.
+\end{proposition}
+
+\begin{proof}
+The aperture integral splits into a sum over the two slits of the same
+integral shifted by $\pm a/2$: $\underline s \propto b\,\operatorname{sinc}(\pi b\sin\theta/\lambda)
+\times2\cos(\pi a\sin\theta/\lambda)$. For $N$ slits the second factor is the
+$N$-wave sum.
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}
+\begin{axis}[omaxis, axis x line=bottom, axis y line=left, width=13.6cm, height=4.6cm,
+    xlabel={$a\sin\theta/\lambda$}, ylabel={$I/4I_0$}, xmin=-9, xmax=9, ymin=0, ymax=1.1, xtick={-8,-4,0,4,8}, ytick={0.5,1}, samples=1200,
+    xlabel style={at={(axis description cs:0.5,-0.12)}, anchor=north},
+    ylabel style={at={(axis description cs:-0.04,0.5)}, rotate=90, anchor=south}]
+  \addplot[omDef, thick, domain=-9:9] {(sin(deg(pi*x/4))/(pi*x/4+1e-9))^2*cos(deg(pi*x))^2};
+  \addplot[omThm, thick, dashed, domain=-9:9] {(sin(deg(pi*x/4))/(pi*x/4+1e-9))^2};
+\end{axis}
+\end{tikzpicture}
+
+{\small Two slits with $a = 4b$: Young's fringes under the single-slit
+envelope (dashed); the fourth-order fringes fall on the envelope's
+zeros and are missing.}
+\end{omfigure}
+
+\section{The Fourier plane and spatial filtering}
+
+\begin{proposition}[The lens as a Fourier analyser]\label{prop:b2:diffraction:fourier}
+\index{Fourier plane}\index{spatial frequency}\index{spatial filtering}\index{Abbe's theory}
+A transparency of transmittance $t(x, y)$ in the front focal plane of a
+lens, lit by a plane wave, produces in the back focal plane the
+amplitude
+\[
+\underline s(X, Y) \propto \iint t(x, y)\,\eu^{-\iu2\pi(xX + yY)/\lambda f}\dd x\,\dd y
+\]
+--- its two-dimensional Fourier transform, each point $(X, Y)$ of the
+\emph{\omterm{prop:b2:diffraction:fourier}{Fourier plane}} collecting the light diffracted at the angles
+$(X/f, Y/f)$, i.e.\ the \emph{spatial frequencies} $(X/\lambda f, Y/\lambda f)$ of
+the object: fine details (high frequencies) far from the axis, coarse
+ones near it. A second lens re-forms the image from that plane; whatever
+is blocked or altered there is filtered out of the image
+(\emph{\omterm{prop:b2:diffraction:fourier}{spatial filtering}}, \omterm{prop:b2:diffraction:fourier}{Abbe's theory} of the microscope): a pinhole
+on the axis keeps only the low frequencies (smoothing, "cleaning" a
+laser beam); a stop on the axis removes the uniform background and
+keeps the edges (dark-field, strioscopy); a \omterm{prop:b2:plane-waves-polarization:plates}{quarter-wave plate} on the
+axis turns phase objects, invisible otherwise, into intensity contrast
+(phase contrast, Zernike).
+\end{proposition}
+
+\begin{proof}[Justification]
+In the Fraunhofer integral, $\vect{OP}\cdot\vect u = x\alpha + y\beta$ with the
+direction mapped to $(X, Y) = (f\alpha, f\beta)$; the transmittance weights
+each secondary source. (The Fourier transform itself is studied in the
+Year 3 mathematics volume; here it is only the name of this integral.)
+For a periodic object of period $d$ the transform is the set of grating
+orders at $X = p\lambda f/d$: the image can show the period only if at least
+the orders $\pm1$ pass through the lens --- Abbe's condition, which is
+the microscope's resolution limit again.
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}[font=\small, x=1cm, y=1cm, >=Stealth]
+  \draw[omDef, thick, ->] (-5.6,0.8) -- (-4.6,0.8); \draw[omDef, thick, ->] (-5.6,0) -- (-4.6,0); \draw[omDef, thick, ->] (-5.6,-0.8) -- (-4.6,-0.8);
+  \draw[thick, fill=omExo!20] (-4.4,-1.4) rectangle (-4.3,1.4); \node[font=\footnotesize] at (-4.35,-1.75) {object $t(x, y)$};
+  \draw[thick, fill=omExo!20] (-2.4,0) ellipse (0.2 and 1.5); \node[font=\footnotesize] at (-2.4,-1.85) {$L_1$};
+  \draw[thick] (0,-1.4) -- (0,1.4); \fill[omThm] (0,0) circle (2pt); \fill[omThm] (0,0.7) circle (1.5pt); \fill[omThm] (0,-0.7) circle (1.5pt);
+  \node[font=\footnotesize] at (0,-1.75) {Fourier plane};
+  \draw[thick, fill=omExo!20] (2.4,0) ellipse (0.2 and 1.5); \node[font=\footnotesize] at (2.4,-1.85) {$L_2$};
+  \draw[thick, fill=omExo!20] (4.3,-1.4) rectangle (4.4,1.4); \node[font=\footnotesize] at (4.35,-1.75) {image};
+  \draw[omThm] (-4.35,0.6) -- (-2.4,1.0) -- (0,0.7) -- (2.4,0.4) -- (4.35,-0.6);
+  \draw[omThm] (-4.35,-0.6) -- (-2.4,-1.0) -- (0,-0.7) -- (2.4,-0.4) -- (4.35,0.6);
+  \draw[omProp] (-4.35,0.6) -- (-2.4,0.6) -- (0,0) -- (2.4,-0.6) -- (4.35,-0.6);
+  \draw[omProp] (-4.35,-0.6) -- (-2.4,-0.6) -- (0,0) -- (2.4,0.6) -- (4.35,0.6);
+  \draw[<->] (-4.35,1.7) -- (-2.4,1.7) node[midway, above, font=\footnotesize] {$f$}; \draw[<->] (-2.4,1.7) -- (0,1.7) node[midway, above, font=\footnotesize] {$f$};
+  \node[omThm, font=\footnotesize, anchor=west] at (0.15,0.95) {orders of a periodic object};
+\end{tikzpicture}
+
+{\small The $4f$ arrangement: the first lens forms the Fourier
+transform of the object in its focal plane (a periodic object gives
+discrete orders there), the second re-forms the image; a mask in the
+\omterm{prop:b2:diffraction:fourier}{Fourier plane} filters the image.}
+\end{omfigure}
+
+\begin{example}[Cleaning a beam, seeing the invisible]\label{ex:b2:diffraction:filtering}
+A laser beam carries dust and ripples: focus it through a pinhole of
+a few micrometres --- the size of the central \omterm{prop:b2:diffraction:airy}{Airy disc} of the clean
+Gaussian beam --- and everything else, which lies outside, is blocked;
+the re-collimated beam is smooth: a \emph{spatial filter}. A living
+cell is transparent; it changes only the phase of the light. Blocking
+the axial spot makes its edges bright on black; Zernike's plate
+shifts the undiffracted light by a quarter wave so that it interferes
+with the diffracted light in intensity: the cell's interior appears,
+and biology got its microscope (1953 Nobel prize).
+\end{example}
+
+\begin{method}[Diffraction estimates]\label{met:b2:diffraction:method}
+(1) Angular spread $\sim\lambda/b$ for an aperture of size $b$ ($1.22\lambda/D$ for
+a circle); the pattern's size at distance $L$ or focal length $f$ is
+$\lambda L/b$, $\lambda f/b$. (2) Check the Fraunhofer condition $b^2/\lambda L \ll 1$ or
+use a lens. (3) Combine: \omterm{def:b2:diffraction:huygens}{diffraction} envelope $\times$ interference
+fringes. (4) Resolution: two points need $\Delta\theta > 1.22\lambda/D$; a periodic
+object needs its first orders to enter the pupil. (5) The \omterm{prop:b2:diffraction:fourier}{Fourier
+plane} picture: what to block to remove which detail.
+\end{method}
+
+\section{Exercises}
+
+\begin{exercise}[$\star$]\label{exo:b2:diffraction:1}
+A slit of \qty{0.10}{mm} lit by a He--Ne laser (\qty{633}{nm}); screen at
+\qty{2.0}{m}. Width of the central maximum; position of the first two
+secondary maxima; \omterm{rem:b2:diffraction:fresnelnumber}{Fresnel number} --- is the screen far enough? Same
+slit with a lens of $f = \qty{50}{cm}$.
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b2:diffraction:2}
+Resolving power (Rayleigh) of: the eye (\qty{3}{mm}, \qty{550}{nm}); a
+\qty{10}{cm} amateur telescope; the \qty{2.4}{m} Hubble mirror; a \qty{64}{m}
+radio dish at \qty{6}{cm}; a \qty{50}{mm} camera lens at $f/8$ (pupil \qty{6}{mm}):
+size of the \omterm{prop:b2:diffraction:airy}{Airy disc} on the sensor, compared with a \qty{4}{\micro m} pixel.
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b2:diffraction:3}
+Two slits of width $b = \qty{0.05}{mm}$, centres $a = \qty{0.25}{mm}$ apart, $\lambda =
+\qty{500}{nm}$, lens $f = \qty{1}{m}$: fringe spacing; width of the central
+envelope; number of fringes in it; which orders are missing?
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b2:diffraction:4}
+A laser beam of diameter \qty{2}{mm} at \qty{633}{nm} propagates to the Moon
+(\qty{3.8e8}{m}): \omterm{def:b2:diffraction:huygens}{diffraction} angle $\sim1.22\lambda/D$, diameter of the spot;
+with a \qty{3.5}{m} telescope as emitter; why are lunar ranging returns so
+faint (the retroreflector, \qty{1}{m}, sends the light back with its own
+\omterm{def:b2:diffraction:huygens}{diffraction})?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b2:diffraction:5}
+\emph{The slit in detail.} (a) Carry out the Fraunhofer integral for
+the slit and obtain $\operatorname{sinc}^2$. (b) Show the secondary maxima
+are at $\tan x = x$ ($x = \pi b\sin\theta/\lambda$), the first near $x = 1.43\pi$, and
+compute its relative intensity. (c) Fraction of the energy in the
+central lobe (admit $\int_{-\pi}^\pi\operatorname{sinc}^2 = 0.903\pi$ and
+$\int_{-\infty}^\infty\operatorname{sinc}^2 = \pi$). (d) The slit is lit at incidence
+$\theta_0$: show the pattern is the same, centred on the direction $\theta_0$.
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b2:diffraction:6}
+\emph{Microscope.} An objective of \omterm{prop:b2:guided-waves:fibre}{numerical aperture} $n\sin\alpha = 1.4$
+(oil immersion) at \qty{500}{nm}: smallest resolved distance $0.61\lambda/n\sin
+\alpha$; with blue light (\qty{400}{nm}); in the ultraviolet (\qty{250}{nm}); why
+does a $1000\times$ eyepiece not help (the eye's own limit at \qty{25}{cm} is
+\qty{0.1}{mm})? What do electron microscopes change ($\lambda = \qty{4}{pm}$ at
+\qty{100}{keV})?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b2:diffraction:7}
+\emph{Rectangular and circular.} (a) A rectangular aperture $b \times h$:
+show the pattern is $\operatorname{sinc}^2(\pi b\sin\theta_x/\lambda)\operatorname{sinc}^2(\pi h
+\sin\theta_y/\lambda)$: a cross, wider along the narrower side. (b) A square of
+\qty{0.2}{mm} with $f = \qty{1}{m}$: size of the central square. (c) For a
+circle of the same width the first zero is at $1.22\lambda/D$ instead of $\lambda/b$:
+why further out (think of the light concentrated near the centre of a
+disc)? (d) A telescope's secondary mirror is held by four vanes: what do
+they add to the image of a bright star?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b2:diffraction:8}
+\emph{Abbe.} A grating of period $d = \qty{2}{\micro m}$ is observed with a
+microscope objective of aperture angle $\alpha$ in air, $\lambda = \qty{550}{nm}$.
+(a) Angles of its orders $\pm1$, $\pm2$. (b) Minimum $\sin\alpha$ for the image to
+show the period (orders $\pm1$ must enter). (c) With $\sin\alpha = 0.4$: what
+does the image show --- is it a faithful grating? (d) Oblique
+illumination lets the zero order and \emph{one} first order through:
+minimum $\sin\alpha$ then, and the gain.
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b2:diffraction:9}
+\emph{Spatial filter.} A \qty{2}{mm} laser beam ($\lambda = \qty{633}{nm}$) is
+focused by a lens of $f = \qty{20}{mm}$ through a pinhole. (a) Diameter of
+the central \omterm{prop:b2:diffraction:airy}{Airy disc} at the focus; pinhole diameter to let it through
+(take $1.5\times$). (b) A dust speck of \qty{50}{\micro m} on the beam
+diffracts light at what angle, and where does that light land in the
+focal plane --- through the pinhole or not? (c) Power lost if the beam
+is Gaussian and the pinhole passes $99\%$ of it; why is the emerging
+beam smooth? (d) Why does the pinhole have to be centred to a few
+micrometres?
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b2:diffraction:10}
+\emph{Babinet.} Two complementary screens (a slit, and an opaque
+strip of the same width) are lit by a plane wave. (a) Show that, away
+from the direction of the incident beam, their Fraunhofer patterns
+are identical (the sum of the two amplitudes is that of the
+unobstructed wave, zero off-axis). (b) The pattern of a hair of
+diameter \qty{80}{\micro m} at \qty{2}{m} with a laser: fringe spacing, and the
+hair's diameter from it --- a standard measurement. (c) What is seen
+on the axis itself? (d) Why do small droplets in a thin cloud produce a
+corona of coloured rings around the Moon, and what does the ring
+radius give?
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b2:diffraction:11}
+\emph{Dark field and phase contrast.} A transparent object has
+$t(x) = \eu^{\iu\varphi(x)} \approx 1 + \iu\varphi(x)$ with $|\varphi| \ll 1$. (a) Intensity of
+its ordinary image: show it is uniform to first order --- invisible. (b)
+In the \omterm{prop:b2:diffraction:fourier}{Fourier plane} the "1" is the axial spot and $\iu\varphi$ the
+diffracted light around it: if a stop blocks the axial spot, image
+intensity $\propto\varphi^2$ --- dark field; its weakness. (c) If instead the
+axial spot is retarded by $\pi/2$ (multiplied by $\iu$): image $\propto|1 +
+\varphi|^2 \approx 1 + 2\varphi$ --- phase contrast, linear in $\varphi$. (d) Why is the
+Zernike plate often also absorbing (it attenuates the axial spot)?
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b2:diffraction:12}
+\emph{Resolution of a spectrograph's slit image and the grating.} A
+grating of width $W$ is the aperture of the spectrograph: show that the
+\omterm{def:b2:diffraction:huygens}{diffraction} pattern of that aperture, $\operatorname{sinc}^2(\pi W\sin\theta/\lambda)$
+(for the beam leaving at $\theta \approx 0$), has the angular half-width
+$\lambda/W$, and that converted to wavelength through the dispersion $p/a\cos
+\theta$ this is $\Delta\lambda = \lambda/pN$ --- the resolving power of
+\cref{ch:b2:gratings}, seen as \omterm{def:b2:diffraction:huygens}{diffraction}. (b) A telescope of
+diameter $D$ and a grating of width $W$: the grating must be wider than
+$D\,f_{\text{coll}}/f_{\text{tel}}$: why? (c) Explain in one sentence why
+every "resolving power" in optics is $\sim$(size of the aperture)/$\lambda$.
+(d) What does the slit add, and when does it dominate?
+\end{exercise}
+
+\begin{omfigure}
+\includegraphics[width=0.58\linewidth]{images/book4/ai/b4-22-slit-diffraction-pattern.png}
+
+{\small A laser beam through a narrow slit: on the far screen, the wide bright central band and the fainter, narrower side maxima of the Fraunhofer pattern.}
+\end{omfigure}
+
+\section{Problem: What can be resolved}
+
+\begin{problem}[{Weekend problem --- the diffraction limit at four
+scales: the eye, a telescope, a microscope, and the laser beam that
+must be cleaned before it is used}]
+\label{pb:b2:diffraction:1}
+
+\medskip
+\noindent\textbf{Part I --- The eye.}
+Pupil $D = \qty{3}{mm}$ by day, \qty{7}{mm} at night; $\lambda = \qty{550}{nm}$; the
+retina's cones are \qty{2}{\micro m} apart at the fovea, the eye's focal
+length is \qty{17}{mm}.
+\begin{enumerate}
+  \item Angular radius of the \omterm{prop:b2:diffraction:airy}{Airy disc} by day; its linear radius on
+        the retina; compare with the cone spacing --- is the retina
+        matched to the optics?
+  \item Smallest separation of two points resolved at \qty{25}{cm}; at
+        \qty{10}{m}; can you read a \qty{1}{mm} text at arm's length?
+  \item At night the pupil opens to \qty{7}{mm}: \omterm{def:b2:diffraction:huygens}{diffraction} limit then;
+        why does vision nevertheless get worse (aberrations of the
+        lens at full aperture, rods coarser than cones)?
+  \item Two car headlights \qty{1.5}{m} apart: distance at which they merge
+        into one light.
+  \item A \qty{1}{mm} hole held before the eye: what does \omterm{def:b2:diffraction:huygens}{diffraction} do,
+        and why does a pinhole nevertheless help a short-sighted eye
+        (depth of field)?
+\end{enumerate}
+
+\medskip
+\noindent\textbf{Part II --- The telescope.}
+A \qty{1}{m} telescope, $f = \qty{10}{m}$, with a camera of \qty{10}{\micro m}
+pixels; $\lambda = \qty{550}{nm}$.
+\begin{enumerate}[resume]
+  \item \omterm{def:b2:diffraction:huygens}{Diffraction} limit in seconds of arc; Airy radius on the
+        detector; pixels per \omterm{prop:b2:diffraction:airy}{Airy disc}.
+  \item The atmosphere blurs images to \qty{1}{''}: how much of the
+        telescope's resolution is lost? Diameter of telescope for which
+        the \omterm{def:b2:diffraction:huygens}{diffraction} limit equals the seeing.
+  \item Adaptive optics corrects the atmosphere at \qty{2.2}{\micro m}:
+        \omterm{def:b2:diffraction:huygens}{diffraction} limit there; why is it easier in the infrared?
+  \item A binary star with components \qty{0.15}{''} apart: resolved with
+        adaptive optics at \qty{2.2}{\micro m}? At \qty{550}{nm} from space?
+  \item The Moon is \qty{3.8e5}{km} away: smallest crater this telescope
+        could resolve (\omterm{def:b2:diffraction:huygens}{diffraction} only); and the footprint of a lunar
+        lander (\qty{4}{m})?
+  \item Light-gathering power of the telescope relative to the
+        night eye (\qty{7}{mm}); what does that buy, and what not?
+  \item The light of a star through the four vanes holding the
+        secondary mirror: describe the image.
+\end{enumerate}
+
+\medskip
+\noindent\textbf{Part III --- The microscope.}
+Objective of \omterm{prop:b2:guided-waves:fibre}{numerical aperture} $\mathrm{NA} = n\sin\alpha = 0.9$ (dry) or $1.4$
+(oil), $\lambda = \qty{550}{nm}$; the resolved distance is $0.61\lambda/\mathrm{NA}$.
+\begin{enumerate}[resume]
+  \item Resolved distance with each objective; number of line pairs
+        per millimetre.
+  \item A bacterium of \qty{1}{\micro m} with internal structure at
+        \qty{0.2}{\micro m}: what is seen with each? A virus of \qty{0.1}{\micro m}?
+  \item Abbe: a periodic structure of period $d$ is imaged only if its
+        first orders at $\sin\theta = \lambda/d$ enter the objective: minimum $d$
+        for $\mathrm{NA} = 1.4$; compare with $0.61\lambda/\mathrm{NA}$.
+  \item Why does oil between the slide and the objective improve the
+        resolution?
+  \item Ultraviolet at \qty{250}{nm} and an electron microscope at \qty{4}{pm}:
+        resolved distances in the same formula (for electrons the
+        practical NA is \qty{0.01}{}): compare.
+  \item A cell is transparent: in bright field its image is empty.
+        Explain what the phase-contrast plate in the objective's
+        \omterm{prop:b2:diffraction:fourier}{Fourier plane} does, in two sentences.
+\end{enumerate}
+
+\medskip
+\noindent\textbf{Part IV --- The beam.}
+A laser at \qty{532}{nm}, beam diameter \qty{1.5}{mm}, is to be expanded to
+\qty{30}{mm} and cleaned.
+\begin{enumerate}[resume]
+  \item \omterm{def:b2:diffraction:huygens}{Diffraction} half-angle of the raw beam ($\sim1.22\lambda/D$); its
+        diameter after \qty{100}{m} with no optics.
+  \item A lens of $f_1 = \qty{10}{mm}$ focuses it: diameter of the focal spot;
+        pinhole diameter chosen ($1.5\times$ the spot).
+  \item A second lens of $f_2$ recollimates at \qty{30}{mm}: $f_2$; new
+        \omterm{def:b2:diffraction:huygens}{diffraction} angle; diameter after \qty{1}{km}.
+  \item Dust of \qty{100}{\micro m} on the first lens diffracts at what angle;
+        where does that light fall at the pinhole plane, and what
+        happens to it?
+  \item The pinhole passes $99\%$ of a Gaussian beam: power lost, and
+        where it goes.
+  \item Why must the expanded beam be \emph{larger} to stay parallel
+        (relate $\lambda/D$ to the distance over which the beam doubles,
+        $\sim D^2/\lambda$)?
+  \item Sum up the four limits of this problem in one table: aperture,
+        wavelength, $\lambda/D$, what it limits.
+\end{enumerate}
+\end{problem}

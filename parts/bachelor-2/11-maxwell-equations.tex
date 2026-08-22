@@ -1,0 +1,624 @@
+\chapter{Maxwell's Equations}\label{ch:b2:maxwell-equations}
+
+In 1865 James Clerk Maxwell wrote down the laws that Coulomb, Ampère
+and Faraday had found one by one, added to Ampère's a term that no
+experiment had yet demanded, and found that his equations admitted
+waves travelling at a speed he could compute from the constants of
+electricity and magnetism --- the speed of light. Electricity,
+magnetism and optics were one subject. The Year 1 volume stated the
+laws as integrals over surfaces and loops; this chapter writes them as
+four \emph{local} equations valid at every point and every instant,
+with the vector operators that make such a writing possible, and draws
+the first consequences: the \omterm{thm:b2:maxwell-equations:maxwell}{displacement current}, the potentials, the
+behaviour of the fields at an interface, and the approximations under
+which the circuits of the Year 1 volume are exact.
+
+\begin{omfigure}
+\includegraphics[width=0.3\linewidth]{images/book4/maxwell-profile.jpg}
+
+{\small James Clerk Maxwell (1831--1879), who wrote the four equations of this chapter and read in them the existence of electromagnetic waves travelling at the speed of light.}
+\end{omfigure}
+
+\section{Vector operators}
+
+\begin{definition}[Gradient, divergence, curl, Laplacian]\label{def:b2:maxwell-equations:operators}
+\index{gradient}\index{divergence}\index{curl}\index{Laplacian}\index{nabla}
+For a scalar field $f$ and a vector field $\vect A$, in Cartesian
+coordinates with the symbolic vector $\vect\nabla = (\partial_x, \partial_y,
+\partial_z)$:
+\begin{align*}
+\operatorname{\vect{grad}}f &= \vect\nabla f = (\partial_xf,\ \partial_yf,\ \partial_zf) ,\\
+\operatorname{div}\vect A &= \vect\nabla\cdot\vect A = \partial_xA_x + \partial_yA_y + \partial_zA_z ,\\
+\operatorname{\vect{curl}}\vect A &= \vect\nabla\wedge\vect A = (\partial_yA_z - \partial_zA_y,\ \partial_zA_x - \partial_xA_z,\ \partial_xA_y - \partial_yA_x) ,\\
+\Delta f &= \operatorname{div}\operatorname{\vect{grad}}f = \partial_x^2f + \partial_y^2f + \partial_z^2f ,
+\end{align*}
+and $\Delta\vect A$ is the Laplacian taken on each Cartesian component.
+Their meaning is independent of coordinates: $\operatorname{\vect{grad}}f
+\cdot\dd\vect l = \dd f$ is the change of $f$ along $\dd\vect l$; $\operatorname{div}
+\vect A$ is the outgoing flux of $\vect A$ through the surface of a small
+volume, per unit volume; $\operatorname{\vect{curl}}\vect A\cdot\vect n$ is the
+circulation of $\vect A$ around a small loop of normal $\vect n$, per unit
+area.
+\end{definition}
+
+\begin{theorem}[Divergence and Stokes theorems]\label{thm:b2:maxwell-equations:theorems}
+\index{divergence theorem}\index{Ostrogradski's theorem}\index{Stokes' theorem}
+For a closed surface $\Sigma$ bounding the volume $V$, and an oriented
+closed curve $C$ bounding the surface $S$ (normal $\vect n$ given by the
+right-hand rule),
+\[
+\iint_\Sigma\vect A\cdot\vect n\,\dd S = \iiint_V\operatorname{div}\vect A\,\dd\tau ,
+\qquad
+\oint_C\vect A\cdot\dd\vect l = \iint_S\operatorname{\vect{curl}}\vect A\cdot\vect n\,\dd S .
+\]
+\end{theorem}
+\admitted
+
+\begin{remark}[What is admitted and why it is believable]\label{rem:b2:maxwell-equations:whyadmitted}
+Both theorems are proved in the Year 3 mathematics volume; the
+mathematics volume of this year stops at their plane version
+(Green--Riemann) and at multiple integrals. Their content, however, is
+the one we used in \cref{ch:b2:fluid-kinematics}: tile the volume with
+small boxes (the loop's surface with small loops) --- the fluxes
+through the interior faces (the circulations along the interior
+edges) cancel in pairs, and only the boundary remains. Two identities
+follow from the definitions and are used constantly:
+$\operatorname{\vect{curl}}\operatorname{\vect{grad}}f = \vect 0$,
+$\operatorname{div}\operatorname{\vect{curl}}\vect A = 0$, and
+$\operatorname{\vect{curl}}\operatorname{\vect{curl}}\vect A = \operatorname{\vect{grad}}
+\operatorname{div}\vect A - \Delta\vect A$. For fields with a symmetry, the
+useful formulas are: for a radial field $A_r(r)\vect e_r$, $\operatorname{div}
+= \frac1{r^2}\partial_r(r^2A_r)$ (spherical) or $\frac1r\partial_r(rA_r)$
+(cylindrical); for an azimuthal field $A_\theta(r)\vect e_\theta$ around an
+axis, $(\operatorname{\vect{curl}})_z = \frac1r\partial_r(rA_\theta)$; and for $f(r)$,
+$\Delta f = \frac1{r^2}\partial_r(r^2\partial_rf) = \frac1r\partial_r^2(rf)$ (spherical),
+$\frac1r\partial_r(r\partial_rf)$ (cylindrical).
+\end{remark}
+
+\begin{omfigure}
+\begin{tikzpicture}[font=\small, x=1cm, y=1cm, >=Stealth]
+  \begin{scope}
+    \draw[thick, fill=omDef!10] (0,0) rectangle (1.8,1.4);
+    \draw[thick] (0,1.4) -- (0.5,1.85) -- (2.3,1.85) -- (1.8,1.4);
+    \draw[thick] (1.8,0) -- (2.3,0.45) -- (2.3,1.85);
+    \draw[omThm, thick, ->] (-0.9,0.7) -- (-0.1,0.7);
+    \draw[omThm, thick, ->] (1.9,0.7) -- (3.0,0.7);
+    \draw[omThm, thick, ->] (0.9,-0.8) -- (0.9,-0.1);
+    \draw[omThm, thick, ->] (1.1,1.9) -- (1.1,2.7);
+    \node[font=\footnotesize] at (1.0,-1.35) {$\operatorname{div}\vect A = \dfrac{\text{outgoing flux}}{\text{volume}}$};
+  \end{scope}
+  \begin{scope}[xshift=7.6cm]
+    \draw[thick, omDef, postaction={decorate, decoration={markings, mark=at position 0.15 with {\arrow{>}}, mark=at position 0.65 with {\arrow{>}}}}] (-1.2,0) rectangle (1.2,1.4);
+    \draw[omExo, thick, ->] (0,0.7) -- (0,2.3) node[right, font=\footnotesize] {$\vect n$};
+    \foreach \x in {-0.8,0,0.8} \draw[omThm, ->] ({\x-0.3},1.05) -- ({\x+0.3},1.05);
+    \foreach \x in {-0.8,0,0.8} \draw[omThm, ->] ({\x+0.15},0.35) -- ({\x-0.15},0.35);
+    \node[font=\footnotesize] at (0,-0.8) {$\operatorname{\vect{curl}}\vect A\cdot\vect n = \dfrac{\text{circulation}}{\text{area}}$};
+  \end{scope}
+\end{tikzpicture}
+
+{\small The two operators of the Maxwell equations, read
+geometrically: the \omterm{def:b2:maxwell-equations:operators}{divergence} measures how much a field flows out of a
+small volume, the \omterm{def:b2:maxwell-equations:operators}{curl} how much it circulates around a small loop.}
+\end{omfigure}
+
+\section{The four equations}
+
+\begin{theorem}[Maxwell's equations]\label{thm:b2:maxwell-equations:maxwell}
+\index{Maxwell's equations}\index{Maxwell--Gauss equation}\index{Maxwell--Faraday equation}\index{Maxwell--Ampère equation}\index{displacement current}
+In vacuum (and in matter described by its total charge and current
+densities $\rho$ and $\vect j$), the electric and magnetic fields obey, at
+every point and every time,
+\begin{align*}
+\operatorname{div}\vect E &= \frac\rho{\varepsilon_0} &&\text{(Maxwell--Gauss)} , &
+\operatorname{\vect{curl}}\vect E &= -\frac{\partial\vect B}{\partial t} &&\text{(Maxwell--Faraday)} ,\\
+\operatorname{div}\vect B &= 0 &&\text{(Maxwell--flux)} , &
+\operatorname{\vect{curl}}\vect B &= \mu_0\vect j + \mu_0\varepsilon_0\frac{\partial\vect E}{\partial t} &&\text{(Maxwell--Ampère)} ,
+\end{align*}
+with $\varepsilon_0 = \qty{8.85e-12}{F/m}$, $\mu_0 = 4\pi \times \qty{1e-7}{H/m}$ (and
+$\varepsilon_0\mu_0 = 1/c^2$). The fields act on charges through the Lorentz
+force $\vect F = q(\vect E + \vect v\wedge\vect B)$. The term $\varepsilon_0\partial_t\vect E$
+is Maxwell's \emph{\omterm{thm:b2:maxwell-equations:maxwell}{displacement current}} density.
+\end{theorem}
+
+\begin{proof}[Equivalence with the integral laws of the Year 1 volume]
+Apply the \omterm{def:b2:maxwell-equations:operators}{divergence} theorem to the first two: $\iint_\Sigma\vect E\cdot
+\vect n\,\dd S = Q_{\text{int}}/\varepsilon_0$ (Gauss) and the flux of $\vect B$
+through any closed surface is zero. Apply Stokes to the last two:
+$\oint_C\vect E\cdot\dd\vect l = -\dd\Phi_B/\dd t$ (Faraday, for a fixed loop)
+and $\oint_C\vect B\cdot\dd\vect l = \mu_0I_{\text{enc}} + \mu_0\varepsilon_0\,\dd\Phi_E/\dd t$
+(Ampère, completed). Conversely the integral laws, holding for every
+volume and loop, imply the local ones. The local equations are thus
+the Year 1 laws plus one new term, justified below; they are taken as
+the postulates of electromagnetism.
+\end{proof}
+
+\begin{proposition}[Why the displacement current is necessary]\label{prop:b2:maxwell-equations:displacement}
+Taking the \omterm{def:b2:maxwell-equations:operators}{divergence} of the \omterm{thm:b2:maxwell-equations:maxwell}{Maxwell--Ampère equation} and using
+$\operatorname{div}\operatorname{\vect{curl}} = 0$ and Maxwell--Gauss gives
+\[
+0 = \mu_0\operatorname{div}\vect j + \mu_0\varepsilon_0\,\partial_t\operatorname{div}\vect E
+= \mu_0\Bigl(\operatorname{div}\vect j + \frac{\partial\rho}{\partial t}\Bigr) :
+\]
+the equations contain the conservation of charge. Without the
+displacement term they would require $\operatorname{div}\vect j = 0$ always
+--- false in a charging capacitor, where the conduction current stops
+at the plate. There, between the plates, $\varepsilon_0\partial_t\vect E$ carries
+exactly the current that arrives in the wire, and the magnetic field
+circulates around the gap as around a wire.
+\end{proposition}
+
+\begin{proof}
+\omterm{def:b2:maxwell-equations:operators}{Divergence} of both sides, as stated; for the capacitor, the flux of
+$\varepsilon_0\partial_t\vect E$ through a surface between the plates is
+$\varepsilon_0S\,\dd E/\dd t = \dd Q/\dd t = I$.
+\end{proof}
+
+\begin{example}[The field inside a charging capacitor]\label{ex:b2:maxwell-equations:capacitor}
+Circular plates of radius $R$, separation $d \ll R$, charged by a current
+$I$: between them $E = Q/\varepsilon_0\pi R^2$ is uniform and grows at $\dd E/
+\dd t = I/\varepsilon_0\pi R^2$. By symmetry $\vect B = B(r)\vect e_\theta$; Ampère--Maxwell
+on a circle of radius $r < R$ (no conduction current crosses it): $2\pi rB
+= \mu_0\varepsilon_0\pi r^2\,\dd E/\dd t$, so $B = \mu_0Ir/2\pi R^2$ --- the field of a
+uniform current $I$ spread over the disk, continuous at $r = R$ with the
+wire's $\mu_0I/2\pi r$ outside. For $I = \qty{1}{A}$, $R = \qty{5}{cm}$: $B(R) =
+\qty{4}{\micro T}$, measurable; Maxwell's term is real.
+\end{example}
+
+\begin{omfigure}
+\begin{tikzpicture}[font=\small, x=1cm, y=1cm, >=Stealth]
+  \draw[thick, omThm] (-4.0,0) -- (-1.3,0); \draw[thick, omThm] (1.3,0) -- (4.0,0);
+  \draw[omThm, very thick, ->] (-3.4,0.25) -- (-2.4,0.25) node[above, font=\footnotesize, pos=0.5] {$I$};
+  \draw[omThm, very thick, ->] (2.4,0.25) -- (3.4,0.25) node[above, font=\footnotesize, pos=0.5] {$I$};
+  \draw[thick, fill=omExo!40] (-1.3,-1.4) rectangle (-1.1,1.4);
+  \draw[thick, fill=omExo!40] (1.1,-1.4) rectangle (1.3,1.4);
+  \foreach \y in {-1.0,-0.5,0,0.5,1.0} \draw[omDef, ->] (-1.05,\y) -- (1.05,\y);
+  \node[omDef, font=\footnotesize] at (0,1.25) {$\vect E(t)$};
+  \draw[omProp, thick] (0,0) ellipse (0.5 and 1.7);
+  \draw[omProp, thick, ->] (0.5,0.05) -- (0.5,-0.05);
+  \node[omProp, font=\footnotesize] at (0.95,-1.75) {$\vect B$};
+  \node[font=\footnotesize] at (0,-2.3) {$\oint\vect B\cdot\dd\vect l = \mu_0\varepsilon_0\,\dfrac{\dd\Phi_E}{\dd t} = \mu_0 I$};
+\end{tikzpicture}
+
+{\small A capacitor being charged: no charge crosses the gap, but the
+electric flux through a loop around it grows; Maxwell's term gives the
+loop the same circulation of $\vect B$ as if the wire continued --- the
+\omterm{thm:b2:maxwell-equations:maxwell}{displacement current}.}
+\end{omfigure}
+
+\begin{remark}[Linearity; what the equations say]\label{rem:b2:maxwell-equations:linearity}
+The equations are linear in the fields and their sources: fields
+superpose. Two of them (Gauss, Faraday--flux) carry no sources and
+express structure --- electric field lines start and end on charges,
+magnetic field lines never end; the other two say how charges and
+currents, and each field's variation, create the fields. Read
+together, a varying $\vect B$ makes a circulating $\vect E$ and a varying
+$\vect E$ makes a circulating $\vect B$: the two can sustain each other with
+no charge anywhere --- that is the wave of
+\cref{ch:b2:plane-waves-polarization}, and the \omterm{thm:b2:maxwell-equations:maxwell}{displacement current} is
+what makes it possible.
+\end{remark}
+
+\section{Potentials}
+
+\begin{proposition}[Scalar and vector potentials]\label{prop:b2:maxwell-equations:potentials}
+\index{vector potential}\index{scalar potential}\index{gauge}\index{Coulomb gauge}\index{Poisson equation}
+Because $\operatorname{div}\vect B = 0$ and $\operatorname{\vect{curl}}\vect E = -\partial_t
+\vect B$, the fields derive from a \emph{\omterm{prop:b2:maxwell-equations:potentials}{vector potential}} $\vect A$ and a
+\emph{\omterm{prop:b2:maxwell-equations:potentials}{scalar potential}} $V$:
+\[
+\vect B = \operatorname{\vect{curl}}\vect A , \qquad
+\vect E = -\operatorname{\vect{grad}}V - \frac{\partial\vect A}{\partial t} ,
+\]
+determined up to a \emph{gauge transformation} $\vect A \to \vect A +
+\operatorname{\vect{grad}}\chi$, $V \to V - \partial_t\chi$, which leaves the fields
+unchanged. In the \emph{\omterm{prop:b2:maxwell-equations:potentials}{Coulomb gauge}} $\operatorname{div}\vect A = 0$, Gauss's
+law becomes \emph{Poisson's equation}
+\[
+\Delta V = -\frac\rho{\varepsilon_0} ,
+\]
+and in a stationary regime Ampère's law becomes $\Delta\vect A = -\mu_0\vect j$.
+In statics $V$ is the electrostatic potential of the Year 1 volume.
+\end{proposition}
+
+\begin{proof}
+A divergence-free field is a \omterm{def:b2:maxwell-equations:operators}{curl} (admitted, like the converse
+statement that a curl-free field is a \omterm{def:b2:maxwell-equations:operators}{gradient}, both from the Year 2
+mathematics volume for simply connected regions); then $\operatorname{\vect{curl}}
+(\vect E + \partial_t\vect A) = \vect 0$, so $\vect E + \partial_t\vect A$ is a \omterm{def:b2:maxwell-equations:operators}{gradient}.
+Gauge: $\operatorname{\vect{curl}}\operatorname{\vect{grad}}\chi = \vect 0$ and the
+$\partial_t\operatorname{\vect{grad}}\chi$ terms cancel in $\vect E$. Poisson: $\operatorname{div}
+\vect E = -\Delta V - \partial_t\operatorname{div}\vect A$. Statics: $\operatorname{\vect{curl}}
+\operatorname{\vect{curl}}\vect A = \operatorname{\vect{grad}}\operatorname{div}\vect A - \Delta\vect A
+= \mu_0\vect j$.
+\end{proof}
+
+\begin{example}[Two vector potentials]\label{ex:b2:maxwell-equations:vectorpot}
+A uniform field $\vect B_0$ derives from $\vect A = \tfrac12\vect B_0\wedge\vect r$
+(check: $\operatorname{\vect{curl}}(\tfrac12\vect B_0\wedge\vect r) = \vect B_0$, and
+$\operatorname{div}\vect A = 0$); inside an infinite solenoid this is $A_\theta =
+Br/2$, outside $A_\theta = BR^2/2r$ --- a potential that does not vanish
+where the field does, and whose circulation along a loop is the flux
+of $\vect B$ through it: $\oint\vect A\cdot\dd\vect l = \Phi_B$ (Stokes). Faraday's
+law then reads $\vect E = -\partial_t\vect A$ for the induced field.
+\end{example}
+
+\section{The fields at an interface}
+
+\begin{proposition}[Boundary relations]\label{prop:b2:maxwell-equations:boundary}
+\index{boundary relations (fields)}\index{surface current}
+Across a surface carrying the surface \omterm{def:b2:charges-currents-conduction:densities}{charge density} $\sigma$ and the
+surface \omterm{def:b2:charges-currents-conduction:densities}{current density} $\vect j_s$ (\unit{A/m}), with $\vect n_{12}$ the unit
+normal from medium 1 to medium 2,
+\[
+\vect E_2 - \vect E_1 = \frac\sigma{\varepsilon_0}\,\vect n_{12} , \qquad
+\vect B_2 - \vect B_1 = \mu_0\,\vect j_s\wedge\vect n_{12} :
+\]
+the tangential component of $\vect E$ and the normal component of $\vect B$
+are continuous; the normal component of $\vect E$ jumps by $\sigma/\varepsilon_0$,
+the tangential component of $\vect B$ by $\mu_0j_s$. At the surface of a
+perfect conductor ($\vect E = \vect B = \vect 0$ inside, in the cases of
+\cref{ch:b2:wave-interfaces}), $\vect E$ is normal and equal to $\sigma\vect n/
+\varepsilon_0$, $\vect B$ is tangential and equal to $\mu_0\vect j_s\wedge\vect n$.
+\end{proposition}
+
+\begin{proof}
+Normal components: Gauss's and the flux law on a flat pillbox
+straddling the surface, of area $\dd S$ and vanishing height: $(E_{2n}
+- E_{1n})\dd S = \sigma\dd S/\varepsilon_0$, $(B_{2n} - B_{1n})\dd S = 0$. Tangential
+components: Faraday's and Ampère's laws on a small rectangle
+straddling the surface, of length $\dd l$ and vanishing height: the
+fluxes of $\partial_t\vect B$ and $\partial_t\vect E$ through the rectangle vanish
+with its area, but a \omterm{prop:b2:maxwell-equations:boundary}{surface current} $j_s\,\dd l$ crosses it:
+$(E_{2t} - E_{1t})\dd l = 0$, $(B_{2t} - B_{1t})\dd l = \mu_0j_s\dd l$ for the
+tangential direction perpendicular to $\vect j_s$.
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}[font=\small, x=1cm, y=1cm, >=Stealth]
+  \begin{scope}
+    \fill[omExo!15] (-2.6,-1.3) rectangle (2.6,0); \draw[thick] (-2.6,0) -- (2.6,0);
+    \node[font=\footnotesize] at (-2.2,0.4) {medium 2}; \node[font=\footnotesize] at (-2.2,-0.4) {medium 1};
+    \node[omThm, font=\footnotesize] at (1.8,0.25) {$\sigma$, $\vect j_s$};
+    \draw[omDef, thick] (0,0.35) ellipse (0.7 and 0.18); \draw[omDef, thick] (0,-0.35) ellipse (0.7 and 0.18);
+    \draw[omDef, thick] (-0.7,0.35) -- (-0.7,-0.35) (0.7,0.35) -- (0.7,-0.35);
+    \draw[omDef, thick, ->] (0,0.35) -- (0,1.1) node[right, font=\footnotesize] {$\vect n_{12}$};
+    \node[font=\footnotesize] at (0,-1.7) {pillbox: $E_{2n} - E_{1n} = \sigma/\varepsilon_0$, $B_{2n} = B_{1n}$};
+  \end{scope}
+  \begin{scope}[xshift=7.4cm]
+    \fill[omExo!15] (-2.6,-1.3) rectangle (2.6,0); \draw[thick] (-2.6,0) -- (2.6,0);
+    \draw[omProp, thick, postaction={decorate, decoration={markings, mark=at position 0.3 with {\arrow{>}}, mark=at position 0.8 with {\arrow{>}}}}] (-1.0,-0.3) rectangle (1.0,0.3);
+    \node[omProp, font=\footnotesize] at (0,0.6) {$\dd l$};
+    \node[omThm, font=\footnotesize] at (1.9,-0.25) {$\vect j_s$ (into page)};
+    \foreach \x in {-1.6,-0.8,0,0.8,1.6} \node[omThm, font=\scriptsize] at (\x,-0.02) {$\otimes$};
+    \node[font=\footnotesize] at (0,-1.7) {loop: $E_{2t} = E_{1t}$, $B_{2t} - B_{1t} = \mu_0j_s$};
+  \end{scope}
+\end{tikzpicture}
+
+{\small The boundary relations come from the integral laws applied to
+a flat pillbox and a thin loop straddling the interface: surface
+charge makes the normal $\vect E$ jump, \omterm{prop:b2:maxwell-equations:boundary}{surface current} makes the
+tangential $\vect B$ jump; the other components are continuous.}
+\end{omfigure}
+
+\begin{example}[Charged plane, current sheet, solenoid]\label{ex:b2:maxwell-equations:sheets}
+A plane with $\sigma$ alone in space: by symmetry $\vect E = \pm E\vect n$ on
+its two sides, and the jump $2E = \sigma/\varepsilon_0$ gives $E = \sigma/2\varepsilon_0$ ---
+the Year 1 result in one line. A plane sheet of current $j_s$: $B =
+\mu_0j_s/2$ on each side, antiparallel. A long solenoid of $n$ turns per
+metre carrying $I$ is a cylindrical current sheet $j_s = nI$: the jump
+$\mu_0nI$ across it, with $B = 0$ outside, gives $B = \mu_0nI$ inside.
+\end{example}
+
+\section{Quasi-stationary regimes}
+
+\begin{definition}[The quasi-stationary approximations]\label{def:b2:maxwell-equations:arqs}
+\index{quasi-stationary approximation}\index{ARQS}
+A system of size $L$ driven at frequency $f$ is \emph{quasi-stationary}
+when $L \ll \lambda = c/f$: the time $L/c$ the fields need to cross it is
+negligible compared with the period, and all its points "see" the
+sources at the same instant. Two limits are used:
+\begin{itemize}
+  \item the \emph{magnetic} quasi-stationary regime (circuits with
+        currents, coils, transformers, induction): the \omterm{thm:b2:maxwell-equations:maxwell}{displacement
+        current} is dropped from Ampère's law, $\operatorname{\vect{curl}}\vect B
+        = \mu_0\vect j$ (so $\operatorname{div}\vect j = 0$ and currents flow in
+        closed circuits), while Faraday's law is kept in full;
+  \item the \emph{electric} quasi-stationary regime (a charging
+        capacitor): Faraday's term is dropped, $\vect E$ is the
+        electrostatic field of the instantaneous charges, while the
+        \omterm{thm:b2:maxwell-equations:maxwell}{displacement current} is kept to find $\vect B$.
+\end{itemize}
+\end{definition}
+
+\begin{proof}[Justification]
+In the magnetic regime, compare the two terms of Ampère's law in a
+conductor: $\mu_0\varepsilon_0\partial_t E \sim \mu_0\varepsilon_0\omega E$ against $\mu_0\gamma E$,
+a ratio $\varepsilon_0\omega/\gamma = \omega\tau_r \sim 10^{-17}$ at \qty{50}{Hz} in copper;
+outside the conductor the \omterm{thm:b2:maxwell-equations:maxwell}{displacement current} is of order
+$\varepsilon_0\omega E$ with $E \sim \omega AB$, i.e.\ smaller than the conduction
+current's effect by $(\omega L/c)^2 = (L/\lambda)^2 \times 4\pi^2$. In the electric
+regime the induced field $\omega BL \sim \omega^2\varepsilon_0\mu_0L^2E$ is smaller than $E$
+by the same $(L/\lambda)^2$.
+\end{proof}
+
+\begin{example}[Circuits and antennas]\label{ex:b2:maxwell-equations:sizes}
+A mains circuit at \qty{50}{Hz} ($\lambda = \qty{6000}{km}$) is quasi-stationary
+up to the size of a country --- it is why Kirchhoff's laws and the
+transformer work. A \qty{10}{cm} circuit is quasi-stationary up to some
+\qty{100}{MHz}; at \qty{1}{GHz} ($\lambda = \qty{30}{cm}$) its wires are antennas,
+currents differ along a wire, and the circuit radiates: the domain of
+\cref{ch:b2:dipole-radiation} and of microwave design, where a track on
+a board is a \omterm{prop:b2:dispersion-wave-packets:coax}{transmission line}.
+\end{example}
+
+\begin{omfigure}
+\begin{tikzpicture}
+\begin{axis}[omaxis, axis x line=bottom, axis y line=left, width=8.6cm, height=5.0cm,
+    xmode=log, ymode=log, xmin=1, xmax=1e10, ymin=3e-4, ymax=1e4,
+    xlabel={$f$ (Hz)}, ylabel={$L$ (m)}, xtick={1,1e2,1e4,1e6,1e8,1e10}, ytick={1e-3,1,1e3},
+    xlabel style={at={(axis description cs:0.5,-0.12)}, anchor=north},
+    ylabel style={at={(axis description cs:-0.1,0.5)}, rotate=90, anchor=south}, samples=50]
+  \addplot[omThm, thick, domain=1:1e10] {3e8/x};
+  \addplot[omThm, dashed, domain=1:1e10] {3e7/x};
+  \node[font=\scriptsize, anchor=west] at (axis cs:1e6,4e3) {$L \gtrsim \lambda$: waves, radiation};
+  \node[font=\scriptsize, anchor=west] at (axis cs:10,3e-2) {$L \ll \lambda$: quasi-stationary, circuits};
+  \node[font=\scriptsize, omDef] at (axis cs:50,1) {mains};
+  \node[font=\scriptsize, omDef, anchor=east] at (axis cs:3e7,0.1) {mobile phone};
+  \node[font=\scriptsize, omDef, anchor=east] at (axis cs:3e9,1e-3) {chip};
+\end{axis}
+\end{tikzpicture}
+
+{\small Size against frequency: below the line $L = \lambda/10$ (dashed) a
+device is quasi-stationary and the circuit laws hold; near and above
+$L = \lambda$ the fields propagate, and the device radiates.}
+\end{omfigure}
+
+\begin{method}[Using the local equations]\label{met:b2:maxwell-equations:method}
+(1) Use the symmetries and invariances of the sources to fix the
+direction and the variables of the fields (as in the Year 1 volume).
+(2) Choose the form: integral (Gauss, Ampère on a well-chosen surface
+or loop) when there is enough symmetry; local when you need a
+differential equation (Poisson for $V$, the diffusion or \omterm{thm:b2:waves-on-strings:equation}{wave equation}
+for the fields). (3) In a time-dependent problem decide the regime:
+static, quasi-stationary magnetic or electric, or full Maxwell. (4)
+At interfaces, use the boundary relations --- they are the only place
+where surface charges and currents enter. (5) Check
+$\operatorname{div}\vect B = 0$ and the dimensions.
+\end{method}
+
+\section{Exercises}
+
+\begin{exercise}[$\star$]\label{exo:b2:maxwell-equations:1}
+Compute the \omterm{def:b2:maxwell-equations:operators}{divergence} and the \omterm{def:b2:maxwell-equations:operators}{curl} of (a) $\vect A = (x, y, z)$; (b)
+$\vect A = (-y, x, 0)$; (c) $\vect A = (yz, zx, xy)$; (d) $\vect A = \vect r/r^3$
+(use the radial formula, $r \ne 0$); (e) $\vect A = (0, 0, x^2)$. Which are
+\omterm{def:b2:maxwell-equations:operators}{gradients}, which are \omterm{def:b2:maxwell-equations:operators}{curls}, which are neither?
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b2:maxwell-equations:2}
+(a) Check the dimensions of each term of the four Maxwell equations.
+(b) Compute $1/\sqrt{\varepsilon_0\mu_0}$. (c) Ratio of the \omterm{thm:b2:maxwell-equations:maxwell}{displacement current}
+density to the conduction \omterm{def:b2:charges-currents-conduction:densities}{current density} in copper at \qty{50}{Hz}, in
+sea water ($\gamma = \qty{5}{S/m}$) at \qty{1}{GHz}, in glass ($\gamma =
+\qty{1e-12}{S/m}$, $\varepsilon_0$ taken for simplicity) at \qty{50}{Hz}: which is
+"a conductor" for each?
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b2:maxwell-equations:3}
+A capacitor with circular plates ($R = \qty{10}{cm}$, $d = \qty{2}{mm}$) is
+charged by $I = \qty{0.5}{A}$. Rate of change of $E$; \omterm{thm:b2:maxwell-equations:maxwell}{displacement
+current} density; $B$ at $r = \qty{5}{cm}$ and at $r = \qty{20}{cm}$ (in the
+plane midway between the plates); compare the latter with the field of
+the feeding wire at the same distance.
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b2:maxwell-equations:4}
+(a) $\vect E = kx\,\vect e_x$ fills a region: \omterm{def:b2:charges-currents-conduction:densities}{charge density} there. (b)
+Inside a ball of radius $R$, $\vect E = (\rho_0r/3\varepsilon_0)\vect e_r$: check with
+the radial \omterm{def:b2:maxwell-equations:operators}{divergence} that $\rho = \rho_0$, and recover the field outside
+from Gauss's integral law. (c) $\vect B = B_0(y/a)\vect e_x$: is it a possible
+magnetic field? What \omterm{def:b2:charges-currents-conduction:densities}{current density} sustains it?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b2:maxwell-equations:5}
+\emph{\omterm{prop:b2:maxwell-equations:potentials}{Vector potentials}.} (a) Show that $\vect A = \tfrac12\vect B_0\wedge\vect r$
+gives $\operatorname{\vect{curl}}\vect A = \vect B_0$ and $\operatorname{div}\vect A = 0$.
+(b) So does $\vect A' = B_0x\,\vect e_y$: find the gauge function $\chi$ with
+$\vect A' = \vect A + \operatorname{\vect{grad}}\chi$. (c) Solenoid of radius $R$,
+field $B$ inside: check $A_\theta = Br/2$ ($r < R$) and $BR^2/2r$ ($r > R$)
+with $(\operatorname{\vect{curl}}\vect A)_z = \frac1r\partial_r(rA_\theta)$; continuity at $R$.
+(d) Circulation of $\vect A$ on a circle of radius $r > R$ and the flux of
+$\vect B$: what does this say about the induced emf in a loop outside a
+solenoid whose current varies?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b2:maxwell-equations:6}
+\emph{Boundary relations.} (a) A conductor in electrostatic
+equilibrium carries $\sigma$ on its surface: field just outside (from the
+jump, with $\vect E = \vect 0$ inside); for $\sigma = \qty{1}{\micro C/m^2}$. (b) Two
+parallel planes with $+\sigma$ and $-\sigma$: field everywhere, by the jumps.
+(c) A long solenoid ($n = \qty{2000}{m^{-1}}$, $I = \qty{5}{A}$) as a current
+sheet: $j_s$, the jump of $B$, $B$ inside. (d) A toroidal coil: why is $B$
+zero outside and $\mu_0NI/2\pi r$ inside, from the same jump?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b2:maxwell-equations:7}
+\emph{Poisson in one dimension.} Between two plane electrodes at $x = 0$
+($V = 0$) and $x = d$ ($V = U$), a uniform \omterm{def:b2:charges-currents-conduction:densities}{charge density} $\rho_0$ fills the
+gap (a space charge). (a) Solve Poisson's equation for $V(x)$. (b) Field
+$E(x)$; where is it zero if $\rho_0 > 0$ and large? (c) Surface charges on
+the two electrodes, from the boundary relation. (d) With $\rho_0 = 0$
+recover the capacitor; with $U = 0$, sketch $V$.
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b2:maxwell-equations:8}
+\emph{Quasi-stationary or not.} (a) $\lambda$ at \qty{50}{Hz}, \qty{1}{MHz},
+\qty{100}{MHz}, \qty{2.4}{GHz}. (b) Up to what frequency is a \qty{10}{cm}
+circuit quasi-stationary (criterion $L < \lambda/10$)? A \qty{1}{cm} chip? A
+\qty{1000}{km} power grid? (c) In a capacitor of radius $R = \qty{5}{cm}$ at
+\qty{1}{MHz}, estimate the ratio of the induced electric field (from the
+varying $\vect B$ of the previous exercises) to the main field: $(\omega R/c)^2
+/4$. (d) Why is the mains frequency of a continent-wide grid a
+quasi-stationary problem although the grid is \qty{1000}{km} across?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b2:maxwell-equations:9}
+Show that Ampère's law without the \omterm{thm:b2:maxwell-equations:maxwell}{displacement current}, $\operatorname{\vect{curl}}
+\vect B = \mu_0\vect j$, contradicts charge conservation whenever $\partial_t\rho
+\ne 0$. In the capacitor of \cref{exo:b2:maxwell-equations:3}, evaluate
+$\operatorname{div}\vect j$ averaged over a plate of thickness $e = \qty{0.1}{mm}$
+(where the current $I$ stops), and the corresponding $\partial_t\rho$.
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b2:maxwell-equations:10}
+\emph{The betatron.} A uniform magnetic field $B(t)\vect e_z$ fills a
+cylinder of radius $R$, growing at $\dd B/\dd t = \dot B$. (a) By symmetry
+$\vect E = E_\theta(r)\vect e_\theta$: use the integral Faraday law to find $E_\theta$
+for $r < R$ and $r > R$. (b) There is no charge anywhere: comment on an
+electric field with closed lines. (c) An electron on a circle of
+radius $r_0 < R$ gains how much energy per turn? For $\dot B = \qty{10}{T/s}$,
+$r_0 = \qty{0.5}{m}$: energy per turn in eV; turns needed for \qty{20}{MeV}.
+(d) For the orbit radius to stay constant, the momentum $p = eBr_0$ (from
+the magnetic force) must grow as the energy gained by the induced field
+prescribes: show the condition $B(r_0) = \tfrac12\langle B\rangle_{\text{disk}}$
+--- the betatron condition.
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b2:maxwell-equations:11}
+\emph{Maxwell's waves.} In vacuum ($\rho = 0$, $\vect j = \vect 0$): (a) take
+the \omterm{def:b2:maxwell-equations:operators}{curl} of the \omterm{thm:b2:maxwell-equations:maxwell}{Maxwell--Faraday equation}, use $\operatorname{\vect{curl}}
+\operatorname{\vect{curl}} = \operatorname{\vect{grad}}\operatorname{div} - \Delta$ and the other
+equations to obtain $\Delta\vect E = \mu_0\varepsilon_0\,\partial_t^2\vect E$. (b) Same for
+$\vect B$. (c) This is the \omterm{thm:b2:waves-on-strings:equation}{d'Alembert equation} in three dimensions: speed?
+Compute it from $\varepsilon_0$ and $\mu_0$. (d) Why did this number convince
+Maxwell that light is electromagnetic, and what measurement of
+Weber and Kohlrausch did he use?
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b2:maxwell-equations:12}
+\emph{Fields in a conductor at low frequency.} In an ohmic conductor
+($\vect j = \gamma\vect E$) in the magnetic quasi-stationary regime: (a) take
+the \omterm{def:b2:maxwell-equations:operators}{curl} of Ampère's law and use Faraday's to show $\Delta\vect B = \mu_0\gamma\,
+\partial_t\vect B$; why is it a diffusion equation? (b) Characteristic time
+for $\vect B$ to penetrate a depth $d$: $\tau \sim \mu_0\gamma d^2$; numbers for a
+\qty{1}{cm} copper plate and for the Earth's core ($\gamma \approx \qty{5e5}{S/m}$,
+$d \approx \qty{3000}{km}$). (c) At frequency $f$, the depth reached in one
+period: show it is of order $\delta = \sqrt{2/\mu_0\gamma\omega}$; value for copper
+at \qty{50}{Hz} and \qty{1}{MHz} (the \omterm{def:b2:dispersion-wave-packets:complex}{skin depth} of
+\cref{ch:b2:waves-in-media}). (d) What does (b) imply for the time
+variations of the Earth's magnetic field?
+\end{exercise}
+
+\section{Problem: The capacitor, the betatron and the potentials}
+
+\begin{problem}[{Weekend problem --- Maxwell's equations at work in one
+charging capacitor, in the accelerator that runs on Faraday's law
+alone, and in the potentials that solve them}]
+\label{pb:b2:maxwell-equations:1}
+
+\medskip
+\noindent\textbf{Part I --- The charging capacitor.}
+Circular plates, radius $R = \qty{10}{cm}$, separation $d = \qty{1.0}{mm}$,
+air; a current $I(t) = I_0\cos\omega t$ with $I_0 = \qty{1.0}{A}$, $f = \qty{1.0}{MHz}$
+flows in the feeding wire along the axis. Edge effects neglected.
+\begin{enumerate}
+  \item Charge $Q(t)$ and field $E(t)$ between the plates; amplitude of
+        $E$.
+  \item \omterm{thm:b2:maxwell-equations:maxwell}{Displacement current} density between the plates; check that
+        its flux through a plate equals $I(t)$.
+  \item Magnetic field $B(r, t)$ between the plates for $r < R$, by the
+        integral Ampère--Maxwell law; amplitude at $r = R$.
+  \item Field for $r > R$ (still between the planes of the plates):
+        compare with the field of the wire at the same $r$; is there a
+        discontinuity at $r = R$?
+  \item The varying $\vect B$ induces, by Faraday's law, a correction
+        $\vect E_1$ to the electric field: using $\operatorname{\vect{curl}}\vect E_1
+        = -\partial_t\vect B$ with $\vect E_1 = E_1(r)\vect e_z$ (axial), show that
+        $E_1(r) - E_1(0) = \dfrac{\mu_0\varepsilon_0r^2}4\,\dfrac{\dd^2E}{\dd t^2}$, and
+        estimate $|E_1(R) - E_1(0)|/|E|$.
+  \item Conclude on the validity of the electric quasi-stationary
+        treatment at \qty{1}{MHz}; at what frequency would the correction
+        reach $10\%$? (The exact solution is a Bessel function: the
+        capacitor has become a cavity.)
+  \item Energy: the electric energy $\tfrac12\varepsilon_0E^2$ stored between the
+        plates, maximal value; the magnetic energy $\int B^2/2\mu_0\,\dd\tau$
+        at the instant $E = 0$; their ratio, and its relation to the
+        estimate of question 5.
+\end{enumerate}
+
+\medskip
+\noindent\textbf{Part II --- The betatron.}
+An electromagnet produces a field $\vect B = B(r, t)\vect e_z$ symmetric
+about the $z$ axis; electrons circulate in a vacuum ring of radius $r_0$.
+\begin{enumerate}[resume]
+  \item Show, from Maxwell--Faraday in integral form, that the
+        electric field on the orbit is $E_\theta(r_0) = -\dfrac1{2\pi r_0}
+        \dfrac{\dd\Phi}{\dd t}$, $\Phi$ the flux through the orbit.
+  \item Tangential equation of motion of an electron (charge $-e$):
+        $\dd p/\dd t = eE_\theta$ in magnitude; the energy gained per turn is
+        $e\,|\dd\Phi/\dd t|$.
+  \item Radial equilibrium on the circle: $p = eB(r_0)r_0$. For $r_0$ to
+        stay constant, show that $B(r_0, t) = \Phi(t)/2\pi r_0^2$, i.e.\ the
+        field on the orbit must be half the mean field inside it.
+  \item Why can the electrons not be accelerated by a uniform field?
+        How is the condition realized in practice (shape of the pole
+        pieces)?
+  \item $r_0 = \qty{0.50}{m}$, $B(r_0)$ ramped from $0$ to \qty{0.40}{T} in
+        \qty{5}{ms}: final momentum; final energy (use $E = pc$ for these
+        ultra-relativistic electrons, $\qty{1}{MeV} = \qty{1.6e-13}{J}$);
+        energy per turn and number of turns; distance travelled.
+  \item The electrons radiate when accelerated on a circle
+        (\cref{ch:b2:dipole-radiation}): this limits betatrons to a few
+        hundred MeV. Where does the energy of the electrons ultimately
+        come from, and through which term of \omterm{thm:b2:maxwell-equations:maxwell}{Maxwell's equations}?
+  \item After acceleration the electrons are thrown onto a target and
+        produce X-rays: why was the betatron the radiotherapy machine
+        of the 1950s, and what replaced it?
+\end{enumerate}
+
+\medskip
+\noindent\textbf{Part III --- Potentials and Poisson.}
+\begin{enumerate}[resume]
+  \item Write $\vect E$ and $\vect B$ in terms of $V$ and $\vect A$, and check
+        that Maxwell--Faraday and Maxwell--flux are then automatically
+        satisfied.
+  \item A ball of radius $a$ carries the uniform density $\rho_0$: write
+        Poisson's equation in spherical symmetry, solve it inside and
+        outside ($V \to 0$ at infinity, $V$ and $V'$ continuous at $a$), and
+        recover the fields of the Year 1 volume.
+  \item Potential energy of the ball, $\tfrac12\int\rho V\,\dd\tau$: value
+        $3Q^2/20\pi\varepsilon_0a$; for a uranium nucleus ($Q = 92e$, $a =
+        \qty{7.4}{fm}$), in MeV --- the energy released when it splits.
+  \item For the capacitor of Part I in the electric quasi-stationary
+        regime, give $V$ between the plates. Show that an \emph{axial}
+        \omterm{prop:b2:maxwell-equations:potentials}{vector potential} $A_z(r, t)\,\vect e_z$, for which $(\operatorname{\vect{curl}}
+        \vect A)_\theta = -\partial_rA_z$, reproduces the field $B_\theta$ of
+        question 3, and find $A_z$ for $r < R$ (take $A_z(0) = 0$).
+  \item Show that the correction $\vect E_1$ of question 5 is exactly
+        $-\partial_t\vect A$ for that $A_z$, up to a constant.
+  \item Gauge: the Coulomb condition $\operatorname{div}\vect A = 0$ holds for
+        your $A_z(r)$ --- why? What other $\vect A$ would give the same $\vect B$?
+\end{enumerate}
+
+\medskip
+\noindent\textbf{Part IV --- Interfaces and regimes.}
+\begin{enumerate}[resume]
+  \item Surface charge on the plates of Part I at the instant of
+        maximum $E$; check the boundary relation on the plate's inner
+        face (field zero inside the metal).
+  \item The current spreads radially in the plate from the axis to
+        the edge: surface \omterm{def:b2:charges-currents-conduction:densities}{current density} $j_s(r)$ in the plate; the
+        magnetic field just outside the plate's outer face, from the
+        boundary relation, compared with the field found in question 3
+        on the inner side.
+  \item Classify: the plates at \qty{1}{MHz} (electric QS?), the feeding
+        wire loop of \qty{20}{cm} (magnetic QS?), the same capacitor at
+        \qty{1}{GHz}; justify with $L/\lambda$.
+  \item In the betatron ring, why is the magnetic \omterm{def:b2:maxwell-equations:arqs}{quasi-stationary
+        approximation} excellent (sizes, \qty{100}{Hz} ramp) although the
+        electric field there is essential?
+  \item Summarize, in a table, which Maxwell equation (local or
+        integral) answered each Part, and which term --- \omterm{thm:b2:maxwell-equations:maxwell}{displacement
+        current}, Faraday, Gauss, boundary jump --- was decisive.
+\end{enumerate}
+\end{problem}

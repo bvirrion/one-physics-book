@@ -1,6 +1,568 @@
-\chapter{Waves on Strings}\label{ch:b2:waves-on-strings}
+\chapter{Waves on Strings and Rods: the d'Alembert Equation}\label{ch:b2:waves-on-strings}
 
-% TODO: course, examples, figures, and 8--12 graded exercises
-% (see CONTRIBUTING.md). Placeholder until written.
+Pluck a guitar string and a shape runs along it, bounces off the
+bridge, comes back, and settles into the standing pattern whose
+frequency you hear as a note. Put your ear to a railway rail and you
+hear the train long before it arrives: a compression runs down the
+steel at five kilometres per second. The Year 1 volume described such
+waves --- travelling, standing, superposed --- without saying why they
+exist. This chapter derives the equation that governs them, the
+\emph{d'Alembert \omterm{thm:b2:waves-on-strings:equation}{wave equation}}, first for the transverse motion of a
+string, then for the longitudinal motion of a rod built, atom by atom,
+from masses and springs; it computes the energy a wave carries and the
+impedance that decides what happens when it meets a change of medium.
 
-\emph{This chapter has not been written yet.}
+\section{The vibrating string}
+
+\begin{theorem}[Wave equation of a string]\label{thm:b2:waves-on-strings:equation}
+\index{d'Alembert equation}\index{wave equation}\index{wave speed (string)}
+A string of linear mass density $\mu$, stretched with tension $T$, makes
+small transverse displacements $y(x, t)$ (slopes $|\partial_xy| \ll 1$). Then
+\[
+\frac{\partial^2y}{\partial t^2} = c^2\,\frac{\partial^2y}{\partial x^2} ,
+\qquad c = \sqrt{\frac{T}{\mu}} ,
+\]
+the \emph{\omterm{thm:b2:waves-on-strings:equation}{d'Alembert equation}}, whose general solution is $y = f(x - ct)
++ g(x + ct)$: the superposition of a shape travelling to the right and
+one travelling to the left at the speed $c$, undeformed.
+\end{theorem}
+
+\begin{proof}
+Isolate the element between $x$ and $x + \dd x$, of mass $\mu\,\dd x$. Its
+neighbours pull it along the string's tangent with the tension $T$:
+horizontally $T\cos\theta \approx T$ at both ends (no horizontal motion, so
+$T$ is the same all along), vertically $T\sin\theta \approx T\partial_xy$, which
+gives the net force $T[\partial_xy(x + \dd x) - \partial_xy(x)] = T\,\partial_x^2y\,\dd x$.
+Newton: $\mu\,\dd x\,\partial_t^2y = T\partial_x^2y\,\dd x$. For the solution, put
+$u = x - ct$, $v = x + ct$: the equation becomes $\partial_u\partial_vy = 0$
+(chain rule), so $\partial_vy$ depends on $v$ only, and $y = f(u) + g(v)$;
+conversely any such $y$ satisfies it. Gravity, neglected, is legitimate
+when $T \gg \mu gL$.
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}[font=\small, x=1cm, y=1cm, >=Stealth]
+  \begin{scope}
+    \draw[->] (-2.5,0) -- (3.0,0) node[right, font=\footnotesize] {$x$};
+    \draw[omDef, very thick, domain=-2.3:2.8, samples=60] plot (\x,{0.9*exp(-(\x)^2/1.6)});
+    \coordinate (A) at (-0.6,{0.9*exp(-0.36/1.6)}); \coordinate (B) at (0.2,{0.9*exp(-0.04/1.6)});
+    \fill[omThm] (A) circle (1.5pt); \fill[omThm] (B) circle (1.5pt);
+    \draw[omThm, very thick, ->] (A) -- ($(A)+(-0.9,-0.55)$) node[above left, font=\footnotesize, yshift=2pt] {$\vect T(x)$};
+    \draw[omThm, very thick, ->] (B) -- ($(B)+(1.0,-0.12)$) node[right, font=\footnotesize] {$\vect T(x+\dd x)$};
+    \draw[dashed] (-0.6,0) -- (A); \draw[dashed] (0.2,0) -- (B);
+    \node[font=\footnotesize] at (-0.6,-0.3) {$x$}; \node[font=\footnotesize] at (0.35,-0.3) {$x + \dd x$};
+    \node[font=\footnotesize] at (0.2,-0.9) {$\mu\,\dd x\,\partial_t^2y = T\,\partial_x^2y\,\dd x$};
+  \end{scope}
+  \begin{scope}[xshift=7.6cm]
+    \draw[->] (-2.5,0) -- (3.0,0) node[right, font=\footnotesize] {$x$};
+    \draw[omDef, thick, domain=-2.3:2.8, samples=60] plot (\x,{0.8*exp(-(\x+1.3)^2/0.5)});
+    \draw[omDef, thick, dashed, domain=-2.3:2.8, samples=60] plot (\x,{0.8*exp(-(\x-0.5)^2/0.5)});
+    \draw[omDef, thick, ->] (-1.0,1.0) -- (0.2,1.0) node[above, font=\footnotesize, pos=0.5] {$c$};
+    \node[font=\footnotesize] at (-1.3,-0.35) {$t$}; \node[font=\footnotesize] at (0.5,-0.35) {$t + \tau$};
+    \node[font=\footnotesize] at (0.2,-0.9) {$y = f(x - ct)$};
+  \end{scope}
+\end{tikzpicture}
+
+{\small Left: the forces on an element of string --- the two tensions
+are not parallel when the string is curved, and their resultant is
+transverse. Right: a shape $f(x - ct)$ travels to the right at $c$
+without deforming.}
+\end{omfigure}
+
+\begin{example}[Guitar, piano, cable]\label{ex:b2:waves-on-strings:numbers}
+The low E string of a guitar ($\mu = \qty{5.5}{g/m}$, length \qty{0.65}{m},
+\qty{82.4}{Hz}) vibrates in its fundamental with $\lambda = 2L$: $c = 2Lf =
+\qty{107}{m/s}$ and $T = \mu c^2 = \qty{63}{N}$. A piano's A$_4$ string (steel,
+\qty{1}{mm}, $\mu = \qty{6.1}{g/m}$, \qty{0.38}{m}, \qty{440}{Hz}): $c = \qty{334}{m/s}$,
+$T = \qty{680}{N}$ --- and there are some $230$ strings in a piano, twenty
+tonnes of tension on a cast-iron frame. A \qty{1}{kg/m} cable at \qty{10}{kN}:
+\qty{100}{m/s}.
+\end{example}
+
+\section{Standing waves and modes}
+
+\begin{proposition}[Modes of a string fixed at both ends]\label{prop:b2:waves-on-strings:modes}
+\index{normal modes}\index{harmonics}\index{standing wave}
+A string fixed at $x = 0$ and $x = L$ admits the sinusoidal standing-wave
+solutions (\emph{\omterm{prop:b2:waves-on-strings:modes}{normal modes}})
+\[
+y_n(x, t) = A_n\sin\frac{n\pi x}{L}\cos(\omega_nt - \varphi_n) , \qquad
+f_n = \frac{\omega_n}{2\pi} = n\,\frac{c}{2L} = n f_1 , \quad n = 1, 2, 3, \dots
+\]
+--- the fundamental $f_1 = c/2L$ and its \emph{harmonics}. Mode $n$ has
+$n - 1$ nodes between the ends. Any motion of the string is a
+superposition $y = \sum_ny_n$, the amplitudes and phases being fixed by
+the initial shape and velocity (a Fourier series, as the mathematics
+volume of this year establishes): the mixture of harmonics is the
+\emph{timbre} of the note.
+\end{proposition}
+
+\begin{proof}
+Seek $y = F(x)\cos(\omega t - \varphi)$: $F'' + (\omega/c)^2F = 0$, $F(0) = 0$ gives
+$F = A\sin(\omega x/c)$, and $F(L) = 0$ requires $\omega L/c = n\pi$. Each mode is
+also the sum of two travelling waves: $\sin kx\cos\omega t = \tfrac12[\sin(kx -
+\omega t) + \sin(kx + \omega t)]$ --- the wave and its reflection. The
+completeness of the sines is the Fourier theorem.
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}
+\begin{axis}[omaxis, axis x line=bottom, axis y line=none, width=6.4cm, height=5.2cm,
+    xmin=0, xmax=1, ymin=-5.9, ymax=1.5, xtick={0,1}, xticklabels={$0$, $L$}, samples=80,
+    xlabel={}, ylabel={}]
+  \addplot[omDef, thick, domain=0:1] {sin(deg(pi*x))};
+  \addplot[omDef, thick, dashed, domain=0:1] {-sin(deg(pi*x))};
+  \addplot[omThm, thick, domain=0:1] {0.8*sin(deg(2*pi*x))-2.6};
+  \addplot[omThm, thick, dashed, domain=0:1] {-0.8*sin(deg(2*pi*x))-2.6};
+  \addplot[omProp, thick, domain=0:1] {0.7*sin(deg(3*pi*x))-5.0};
+  \addplot[omProp, thick, dashed, domain=0:1] {-0.7*sin(deg(3*pi*x))-5.0};
+  \addplot[black, thin] coordinates {(0,-2.6) (1,-2.6)};
+  \addplot[black, thin] coordinates {(0,-5.0) (1,-5.0)};
+  \node[font=\scriptsize] at (axis cs:0.5,1.25) {$n = 1$};
+  \node[font=\scriptsize] at (axis cs:0.5,-1.4) {$n = 2$};
+  \node[font=\scriptsize] at (axis cs:0.5,-3.85) {$n = 3$};
+\end{axis}
+\end{tikzpicture}
+\hfill
+\begin{tikzpicture}
+\begin{axis}[omaxis, axis x line=bottom, axis y line=left, width=5.0cm, height=4.2cm,
+    xlabel={$x/L$}, ylabel={$y$}, xmin=0, xmax=1, ymin=-0.05, ymax=1.1, xtick={0,0.5,1}, ytick=\empty, samples=200, clip=false,
+    xlabel style={at={(axis description cs:0.5,-0.12)}, anchor=north},
+    ylabel style={at={(axis description cs:-0.06,0.5)}, rotate=90, anchor=south}]
+  \addplot[black, thick] coordinates {(0,0) (0.5,1) (1,0)};
+  \addplot[omDef, thick, domain=0:1] {0.81*sin(deg(pi*x))};
+  \addplot[omThm, thick, domain=0:1] {0.81*sin(deg(pi*x)) - 0.09*sin(deg(3*pi*x))};
+  \node[font=\scriptsize, anchor=west] at (axis cs:0.03,0.95) {plucked};
+  \node[font=\scriptsize, omDef, anchor=east] at (axis cs:0.97,0.95) {$n = 1$};
+  \node[font=\scriptsize, omThm, anchor=east] at (axis cs:0.97,0.78) {$n = 1, 3$};
+\end{axis}
+\end{tikzpicture}
+
+{\small Left: the first three modes of a string fixed at both ends ($f_n = nc/2L$).
+Right: a string plucked at its middle (triangle) and the first terms
+of its Fourier series --- only odd harmonics appear, with amplitudes
+falling as $1/n^2$.}
+\end{omfigure}
+
+\begin{example}[Melde's experiment]\label{ex:b2:waves-on-strings:melde}
+\index{Melde's experiment}
+A string driven at one end by a vibrator at frequency $f$, the other end
+passing over a pulley to a hanging mass $m$ (so $T = mg$): a large
+\omterm{prop:b2:waves-on-strings:modes}{standing wave} appears whenever $f$ equals one of the $f_n = (n/2L)
+\sqrt{mg/\mu}$ --- resonance of mode $n$. For $L = \qty{1.2}{m}$, $\mu =
+\qty{1.0}{g/m}$ and $f = \qty{50}{Hz}$, the masses giving $n = 1, 2, 3$ loops
+are $m_n = 4L^2f^2\mu/n^2g = 1.47/n^2$ kg: \qty{1.47}{kg}, \qty{367}{g}, \qty{163}{g}.
+Pressing a guitar string at the twelfth fret halves $L$ and doubles
+$f_1$: the octave; touching it lightly at the middle without pressing
+kills the odd modes and leaves the second harmonic --- the flageolet.
+\end{example}
+
+\section{Energy, power and impedance}
+
+\begin{proposition}[Energy of a string wave]\label{prop:b2:waves-on-strings:energy}
+\index{energy density (string)}\index{energy flux (string)}\index{impedance (string)}
+A string carries the energy per unit length and the power (energy
+flux toward $+x$)
+\[
+e = \tfrac12\mu\Bigl(\frac{\partial y}{\partial t}\Bigr)^2 + \tfrac12T\Bigl(\frac{\partial y}{\partial x}\Bigr)^2 ,
+\qquad
+\mathcal P = -T\,\frac{\partial y}{\partial x}\,\frac{\partial y}{\partial t} ,
+\]
+which obey the local balance $\partial_te + \partial_x\mathcal P = 0$. For a
+progressive wave $y = f(x - ct)$, the kinetic and potential densities are
+equal and $\mathcal P = Z\,(\partial_ty)^2$ with
+\[
+Z = \sqrt{T\mu} = \mu c = \frac Tc ,
+\]
+the \emph{impedance} of the string (\unit{kg/s}): the ratio of the
+transverse force $-T\partial_xy$ exerted by the string on what lies ahead
+to the transverse velocity $\partial_ty$. A sinusoidal wave of amplitude $A$
+carries the mean power $\langle\mathcal P\rangle = \tfrac12Z\omega^2A^2$.
+\end{proposition}
+
+\begin{proof}
+The potential term is the work of the tension stretching the element:
+its length is
+\[
+\dd x\sqrt{1 + (\partial_xy)^2} \approx \dd x\bigl(1 + \tfrac12(\partial_xy)^2\bigr) ,
+\]
+so the excess length times $T$ gives $\tfrac12T(\partial_xy)^2\dd x$. The power
+transmitted across $x$ toward $+x$ is the transverse force exerted by
+the left part on the right part, $-T\partial_xy$, times the velocity
+$\partial_ty$. Balance:
+\[
+\partial_te = \mu\,\partial_ty\,\partial_t^2y + T\,\partial_xy\,\partial_x\partial_ty ,
+\qquad
+-\partial_x\mathcal P = T\,\partial_x^2y\,\partial_ty + T\,\partial_xy\,\partial_x\partial_ty ,
+\]
+equal by the \omterm{thm:b2:waves-on-strings:equation}{wave equation}. For $f(x - ct)$: $\partial_xy = -\partial_ty/c$, so $\mathcal P = (T/c)
+(\partial_ty)^2$ and both densities equal $\tfrac12\mu(\partial_ty)^2$.
+\end{proof}
+
+\begin{proposition}[Reflection and transmission at a junction]\label{prop:b2:waves-on-strings:junction}
+\index{reflection coefficient (string)}\index{transmission coefficient (string)}
+A wave of amplitude $A_i$ arrives from a string of impedance $Z_1$ on
+a string of impedance $Z_2$ joined at $x = 0$. Continuity of the
+displacement and of the transverse force at the junction gives the
+amplitude coefficients
+\[
+r = \frac{A_r}{A_i} = \frac{Z_1 - Z_2}{Z_1 + Z_2} , \qquad
+t = \frac{A_t}{A_i} = \frac{2Z_1}{Z_1 + Z_2} ,
+\]
+and the energy fractions $R = r^2$, $\mathcal T = 4Z_1Z_2/(Z_1 + Z_2)^2$, with
+$R + \mathcal T = 1$. A fixed end ($Z_2 \to \infty$) reflects with $r = -1$
+(the pulse comes back inverted), a free end ($Z_2 = 0$) with $r = +1$;
+equal impedances transmit everything.
+\end{proposition}
+
+\begin{proof}
+Sinusoidal waves $y_1 = A_i\cos(\omega t - k_1x) + A_r\cos(\omega t + k_1x)$ for
+$x < 0$, $y_2 = A_t\cos(\omega t - k_2x)$ for $x > 0$, the same $\omega$ on both
+sides. At $x = 0$: $y_1 = y_2$ gives $A_i + A_r = A_t$; the force $-T\partial_xy$
+continuous (a massless junction) gives $Z_1(A_i - A_r) = Z_2A_t$ (using
+$T_1k_1 = Z_1\omega$). Solve. Energies: the mean powers $\tfrac12Z\omega^2A^2$.
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}[font=\small, x=1cm, y=1cm, >=Stealth]
+  \begin{scope}
+    \draw[->] (-3.2,0) -- (3.2,0) node[right, font=\footnotesize] {$x$};
+    \draw[omDef, very thick, domain=-3.0:0, samples=50] plot (\x,{0.8*exp(-(\x+1.6)^2/0.25)});
+    \draw[omDef, very thick, domain=0:3.0, samples=50] plot (\x,{0});
+    \fill (0,0) circle (2pt); \node[font=\footnotesize] at (0,-0.35) {$Z_1 \to Z_2$};
+    \draw[omDef, ->, thick] (-1.6,1.0) -- (-0.8,1.0) node[above, font=\footnotesize, pos=0.5] {$A_i$};
+    \node[font=\footnotesize] at (-1.5,-0.6) {$Z_1$}; \node[font=\footnotesize] at (1.5,-0.6) {$Z_2 > Z_1$};
+    \node[font=\footnotesize] at (0,-1.1) {before};
+  \end{scope}
+  \begin{scope}[xshift=7.2cm]
+    \draw[->] (-3.2,0) -- (3.2,0) node[right, font=\footnotesize] {$x$};
+    \draw[omThm, very thick, domain=-3.0:0, samples=50] plot (\x,{-0.27*exp(-(\x+1.6)^2/0.25)});
+    \draw[omProp, very thick, domain=0:3.0, samples=50] plot (\x,{0.53*exp(-(\x-1.1)^2/0.12)});
+    \fill (0,0) circle (2pt);
+    \draw[omThm, ->, thick] (-1.0,0.5) -- (-1.8,0.5) node[above, font=\footnotesize, pos=0.5] {$rA_i$};
+    \draw[omProp, ->, thick] (1.0,0.9) -- (1.8,0.9) node[above, font=\footnotesize, pos=0.5] {$tA_i$};
+    \node[font=\footnotesize] at (0,-1.1) {after: $r = \dfrac{Z_1 - Z_2}{Z_1 + Z_2}$, $t = \dfrac{2Z_1}{Z_1 + Z_2}$};
+  \end{scope}
+\end{tikzpicture}
+
+{\small A pulse meets a junction with a heavier string ($Z_2 = 4Z_1$):
+part is transmitted, slower and narrower, part is reflected inverted.}
+\end{omfigure}
+
+\section{From the chain of atoms to the elastic rod}
+
+\begin{proposition}[The chain of atoms; Young's modulus]\label{prop:b2:waves-on-strings:chain}
+\index{chain of atoms}\index{Young's modulus}\index{Hooke's law}\index{longitudinal wave}
+A line of identical masses $m$ spaced by $a$ and linked by springs of
+stiffness $k$: if $u_n(t)$ is the displacement of mass $n$ along the
+line,
+\[
+m\ddot u_n = k(u_{n+1} - u_n) - k(u_n - u_{n-1}) = k(u_{n+1} - 2u_n + u_{n-1}) .
+\]
+When the displacement varies slowly from one mass to the next (over
+wavelengths $\lambda \gg a$), $u_n(t) \to u(x, t)$ with $u_{n\pm1} - u_n \approx
+\pm a\,\partial_xu + \tfrac12a^2\partial_x^2u$, and the chain obeys the \omterm{thm:b2:waves-on-strings:equation}{d'Alembert
+equation}
+\[
+\frac{\partial^2u}{\partial t^2} = c^2\frac{\partial^2u}{\partial x^2} , \qquad
+c = a\sqrt{\frac km} = \sqrt{\frac{E}{\rho}} ,
+\]
+with $\rho = m/a^3$ the density of a solid made of such chains in a
+cubic array and $E = k/a$ its \emph{\omterm{prop:b2:waves-on-strings:chain}{Young's modulus}}: the stiffness of
+a rod of section $S$ and length $\ell$ is $kS/a^2\cdot a/\ell = ES/\ell$,
+i.e.\ \emph{\omterm{prop:b2:waves-on-strings:chain}{Hooke's law}} $F/S = E\,\Delta\ell/\ell$ (stress $\sigma = E\varepsilon$).
+\end{proposition}
+
+\begin{proof}
+Each spring is stretched by the difference of the displacements of its
+ends. Insert the Taylor expansions: $m\partial_t^2u = ka^2\partial_x^2u$. A cube of
+side $a$ per atom gives $\rho = m/a^3$; a rod of section $S$ contains
+$S/a^2$ parallel chains of $\ell/a$ springs in series, of total stiffness
+$(S/a^2)(ka/\ell) = (k/a)S/\ell$.
+\end{proof}
+
+\begin{proposition}[Longitudinal waves in a rod]\label{prop:b2:waves-on-strings:rod}
+\index{sound in solids}
+Directly on the continuum: an element of a rod between $x$ and $x +
+\dd x$, displaced by $u(x, t)$, is strained by $\varepsilon = \partial_xu$ and pulled
+by the stress $\sigma = E\partial_xu$ on each face; Newton gives $\rho\,\partial_t^2u =
+E\,\partial_x^2u$: longitudinal (compression) waves travel at $c = \sqrt{E/\rho}$
+--- \qty{5100}{m/s} in steel ($E = \qty{200}{GPa}$), \qty{5000}{m/s} in aluminium,
+\qty{3700}{m/s} in granite, \qty{3500}{m/s} in wood along the grain. The
+impedance is $Z = \rho c = \sqrt{E\rho}$ per unit area, and the same
+junction formulas apply --- which is how ultrasound finds a crack in a
+rail.
+\end{proposition}
+
+\begin{proof}
+Net force on the element: $S[\sigma(x + \dd x) - \sigma(x)] = SE\partial_x^2u\,\dd x$;
+mass $\rho S\dd x$.
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}[font=\small, x=1cm, y=1cm, >=Stealth]
+  \begin{scope}
+    \foreach \i in {0,1,2,3,4} {
+      \fill[omDef] ({1.4*\i},0) circle (5pt);
+    }
+    \foreach \i in {0,1,2,3} {
+      \draw[thick, decorate, decoration={coil, aspect=0.5, segment length=4pt, amplitude=3pt}] ({1.4*\i+0.18},0) -- ({1.4*\i+1.22},0);
+    }
+    \node[font=\footnotesize] at (1.4,-0.5) {$u_{n-1}$}; \node[font=\footnotesize] at (2.8,-0.5) {$u_n$}; \node[font=\footnotesize] at (4.2,-0.5) {$u_{n+1}$};
+    \draw[<->] (1.4,0.45) -- (2.8,0.45) node[midway, above, font=\footnotesize] {$a$};
+    \node[font=\footnotesize] at (2.8,-1.1) {$m\ddot u_n = k(u_{n+1} - 2u_n + u_{n-1})$};
+  \end{scope}
+  \begin{scope}[xshift=8.0cm]
+    \draw[thick] (-2.0,-0.5) rectangle (2.6,0.5);
+    \fill[omDef!25] (-0.3,-0.5) rectangle (0.5,0.5);
+    \draw[omThm, very thick, ->] (-0.3,0) -- (-1.2,0) node[above, font=\footnotesize, pos=0.6] {$\sigma(x)S$};
+    \draw[omThm, very thick, ->] (0.5,0) -- (1.5,0) node[above, font=\footnotesize, pos=0.6] {$\sigma(x + \dd x)S$};
+    \node[font=\footnotesize] at (0.1,-0.8) {$\rho S\dd x\,\partial_t^2u = SE\,\partial_x^2u\,\dd x$};
+    \node[font=\footnotesize] at (0.3,-1.35) {$c = \sqrt{E/\rho}$};
+  \end{scope}
+\end{tikzpicture}
+
+{\small Left: the chain of masses and springs --- each mass feels the
+two springs around it, and the continuum limit is the \omterm{thm:b2:waves-on-strings:equation}{wave equation}
+with $c = a\sqrt{k/m}$. Right: an element of an elastic rod pulled by the
+stress on its two faces.}
+\end{omfigure}
+
+\begin{remark}[What the chain knows that the rod does not]\label{rem:b2:waves-on-strings:dispersion}
+Seeking $u_n = A\cos(\omega t - kna)$ in the exact chain equation gives
+$\omega = 2\sqrt{k/m}\,|\sin(ka/2)|$: for $ka \ll 1$ this is $\omega = ck$, the
+non-dispersive \omterm{thm:b2:waves-on-strings:equation}{wave equation}, but as the wavelength approaches $2a$ the
+frequency saturates at $2\sqrt{k/m}$ and the phase and group velocities
+differ --- the first \emph{dispersion relation} of this volume, the
+subject of \cref{ch:b2:dispersion-wave-packets}. For $a = \qty{0.25}{nm}$ and
+$c = \qty{5}{km/s}$ the cut-off lies at $\omega_{\max} = 2c/a = \qty{4e13}{rad/s}$
+(\qty{6}{THz}): the solid cannot vibrate faster than its atoms' springs
+allow.
+\end{remark}
+
+\section{Exercises}
+
+\begin{exercise}[$\star$]\label{exo:b2:waves-on-strings:1}
+A guitar's A string (\qty{110}{Hz}, $L = \qty{65}{cm}$, $\mu = \qty{3.0}{g/m}$):
+wave speed, tension, wavelength of the fundamental on the string and
+of the sound in air; frequency when the string is pressed at the fifth
+fret ($L$ reduced by a factor $2^{-5/12}$).
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b2:waves-on-strings:2}
+Speed of \omterm{prop:b2:waves-on-strings:chain}{longitudinal waves} in steel ($E = \qty{200}{GPa}$, $\rho =
+\qty{7800}{kg/m^3}$), aluminium (\qty{70}{GPa}, \qty{2700}{kg/m^3}) and lead
+(\qty{16}{GPa}, \qty{11300}{kg/m^3}). Time for a sound to travel \qty{1.0}{km}
+along a rail and through the air (\qty{340}{m/s}); what a listener with an
+ear on the rail hears.
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b2:waves-on-strings:3}
+A string of fundamental \qty{200}{Hz}: frequencies and number of nodes of
+modes 2, 3, 4; positions of the nodes of mode 3; frequency of the
+fundamental if the tension is doubled, if the length is halved, if the
+string is replaced by one three times heavier per metre.
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b2:waves-on-strings:4}
+A \qty{12}{m} rope ($\mu = \qty{0.20}{kg/m}$) is pulled with \qty{45}{N}; one
+end is fixed to a wall. A pulse is sent from the other end. Speed;
+time to reach the wall and come back; shape of the returning pulse;
+the same if the far end is tied to a light ring sliding freely on a
+pole.
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b2:waves-on-strings:5}
+A piano string for \qty{440}{Hz}: steel ($\rho = \qty{7800}{kg/m^3}$),
+diameter \qty{1.0}{mm}, speaking length \qty{38}{cm}. (a) $\mu$, wave speed,
+tension. (b) Stress in the wire; compare with the strength of piano
+wire, about \qty{2}{GPa}. (c) The same note with a \qty{0.5}{mm} wire: tension
+and stress. (d) Why are bass strings wound with copper rather than made
+longer or thicker?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b2:waves-on-strings:6}
+\emph{Melde.} A \qty{1.5}{m} string ($\mu = \qty{2.0}{g/m}$) is driven at
+\qty{60}{Hz}; its tension is set by a hanging mass. (a) Masses giving
+$1$, $2$, $3$ and $4$ loops. (b) With \qty{0.50}{kg}: is there resonance?
+The nearest mode. (c) The driven end is in fact a node or an antinode?
+(d) Why do the loops grow so large at resonance, and what limits them?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b2:waves-on-strings:7}
+A wave $y = A\cos(\omega t - kx)$ with $A = \qty{2.0}{mm}$, $f = \qty{100}{Hz}$
+travels on a string ($T = \qty{100}{N}$, $\mu = \qty{10}{g/m}$). Speed, $k$,
+wavelength; maximum transverse velocity and acceleration of a point;
+maximum slope; impedance; mean power carried; energy contained in one
+wavelength.
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b2:waves-on-strings:8}
+A string of $\mu_1 = \qty{2.0}{g/m}$ is tied to one of $\mu_2 = \qty{8.0}{g/m}$,
+both under \qty{20}{N}. (a) Speeds and impedances. (b) Amplitude
+reflection and transmission coefficients for a wave coming from the
+light string; from the heavy string. (c) Energy fractions in both
+cases; check they sum to one. (d) A \qty{1}{cm} pulse of \qty{10}{cm} width
+arrives from the light string: height and width of the transmitted and
+reflected pulses.
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b2:waves-on-strings:9}
+A \qty{2.0}{m} steel wire of diameter \qty{1.0}{mm} stretches by \qty{1.0}{mm}
+under \qty{80}{N}. (a) \omterm{prop:b2:waves-on-strings:chain}{Young's modulus}. (b) Speed of \omterm{prop:b2:waves-on-strings:chain}{longitudinal waves}.
+(c) Fundamental frequency of the wire's longitudinal vibration when it
+is clamped at both ends, and of its transverse vibration under that
+tension; why are they so different? (d) Stiffness $k$ and mass $m$ of an
+"atom" in the chain model, for $a = \qty{0.25}{nm}$.
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b2:waves-on-strings:10}
+\emph{The plucked string.} A string fixed at $0$ and $L$ is pulled aside
+at $x = L/2$ to a height $h$ (triangular shape) and released at rest.
+(a) Write the solution as $\sum_nb_n\sin(n\pi x/L)\cos(\omega_nt)$ and show
+that $b_n = \dfrac{8h}{n^2\pi^2}\sin\dfrac{n\pi}2$. (b) Which harmonics are
+absent and why? (c) Energy of mode $n$ ($E_n = \tfrac14\mu L\omega_n^2b_n^2$);
+fraction of the total in the fundamental. (d) The string is plucked at
+$L/5$ instead: which harmonics vanish? Why does a guitarist pluck near
+the bridge for a brighter sound?
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b2:waves-on-strings:11}
+\emph{Dispersion of the chain.} (a) Insert $u_n = A\cos(\omega t - kna)$ in
+the chain equation and derive $\omega(k) = 2\omega_0|\sin(ka/2)|$, $\omega_0 =
+\sqrt{k/m}$. (b) Phase velocity $\omega/k$ and group velocity $\dd\omega/\dd k$;
+their common limit for $ka \to 0$; their values at $ka = \pi$. (c) What
+does the wave look like at $ka = \pi$? Why is there no wave of
+wavelength shorter than $2a$? (d) For steel ($c = \qty{5.1}{km/s}$, $a =
+\qty{0.25}{nm}$): $\omega_0$, the maximum frequency, and the wavelength of a
+\qty{1}{MHz} ultrasound --- is it dispersive?
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b2:waves-on-strings:12}
+\emph{Hanging rope, cracking whip.} (a) A uniform rope of length $L$
+hangs from the ceiling: tension at height $x$ above the free end; local
+wave speed $c(x)$. (b) Time for a pulse to travel from the bottom to the
+top; number for $L = \qty{10}{m}$; why the pulse's shape changes. (c) A
+whip tapers, $\mu$ decreasing toward the tip, at (nearly) constant
+tension during the stroke: how does the speed change along it? (d)
+Admitting that the energy of the pulse is conserved and that its
+duration stays constant, show that its transverse velocity amplitude
+grows as $\mu^{-1/4}$, and estimate the tip speed of a whip whose
+$\mu$ falls by a factor $10^4$ from handle to tip if the hand gives
+\qty{10}{m/s}. (The crack is a sonic boom.)
+\end{exercise}
+
+\begin{omfigure}
+\includegraphics[width=0.58\linewidth]{images/book4/ai/b4-06-grand-piano-strings.png}
+
+{\small Inside a grand piano: some two hundred steel strings of graded length and thickness, each tuned by its tension to a fundamental $c/2L$; the bass strings are wound with copper for mass.}
+\end{omfigure}
+
+\section{Problem: The piano, from the hammer to the soundboard}
+
+\begin{problem}[{Weekend problem --- a piano string taken apart: its
+tension and stiffness, the hammer's blow and the harmonics it makes,
+the bridge that leaks its energy to the soundboard, and a rail that
+carries the same equation}]
+\label{pb:b2:waves-on-strings:1}
+
+\medskip
+\noindent\textbf{Part I --- The string.}
+The A$_4$ string of a piano (\qty{440}{Hz}): steel, $E = \qty{200}{GPa}$, $\rho =
+\qty{7800}{kg/m^3}$, diameter $d = \qty{1.0}{mm}$, speaking length $L =
+\qty{38}{cm}$. Each note above the bass has three such strings; the piano
+has $230$ strings.
+\begin{enumerate}
+  \item Linear mass density, wave speed and tension of the string.
+  \item Tensile stress in the wire; the wire breaks at \qty{2.0}{GPa}: the
+        safety margin, and why the tuner's last turn is the dangerous
+        one.
+  \item Estimate the total tension on the frame, taking all strings
+        at the same tension.
+  \item The lowest string (A$_0$, \qty{27.5}{Hz}) is \qty{1.9}{m} long; if it
+        were a plain steel wire at the same tension, what $\mu$ and
+        what diameter would it need? It is in fact a steel core wound with
+        copper: explain.
+  \item Modes of the A$_4$ string: frequencies of the first eight
+        harmonics; which ones lie at a consonant interval with the
+        fundamental (octave, fifth, fourth, major third) and which do
+        not?
+  \item The string vibrates in its fundamental with an amplitude of
+        \qty{0.50}{mm} at the antinode: energy stored (the energy of a
+        mode is $\tfrac14\mu L\omega^2A^2$).
+  \item Write the fundamental as the sum of two travelling waves; give
+        their amplitude and the mean power each carries.
+\end{enumerate}
+
+\medskip
+\noindent\textbf{Part II --- The hammer.}
+The hammer strikes the string at $x_0 = L/8$, giving it, at $t = 0$, a
+velocity $v_0$ over a short segment of width $w$ around $x_0$ and no
+displacement.
+\begin{enumerate}[resume]
+  \item Write the general solution $y = \sum_nB_n\sin(n\pi x/L)\sin(\omega_nt)$
+        and show, using the orthogonality of the sines, that $B_n =
+        \dfrac{2}{L\omega_n}\int_0^L\dot y(x, 0)\sin\dfrac{n\pi x}L\,\dd x$.
+  \item For a narrow strike ($w \ll L/n$), show $B_n \approx \dfrac{2v_0w}
+        {L\omega_n}\sin\dfrac{n\pi x_0}{L}$.
+  \item Which harmonics are absent for $x_0 = L/8$? Why do piano
+        makers strike near $L/7$ to $L/8$ (look at question 5)?
+  \item Describe the motion in the travelling-wave picture: what
+        leaves the struck point, what happens at the ends, and after
+        what time the initial state recurs.
+  \item A real string is slightly stiff: its modes are $f_n = nf_1
+        \sqrt{1 + Bn^2}$ with $B = \pi^3Ed^4/(64TL^2)$ (admitted). Compute
+        $B$ and the sharpening of the eighth harmonic, in percent and
+        in cents (\qty{1}{cent} = a frequency ratio $2^{1/1200}$).
+  \item Why do piano tuners "stretch" the octaves (tune high notes
+        slightly sharp)?
+\end{enumerate}
+
+\medskip
+\noindent\textbf{Part III --- The bridge and the soundboard.}
+The string crosses a bridge glued to the soundboard; the soundboard
+behaves, at the bridge, like a string of impedance $Z_b = \qty{2000}{kg/s}$.
+\begin{enumerate}[resume]
+  \item Impedance $Z_s$ of the string; amplitude reflection coefficient
+        at the bridge.
+  \item Fraction of the wave's energy transmitted to the soundboard at
+        each reflection.
+  \item Number of reflections per second at the bridge; deduce the time
+        constant of the energy decay and the time for the sound to fall
+        by \qty{60}{dB} (a factor $10^6$ in energy).
+  \item Power leaking into the soundboard just after the strike of
+        question 6; compare with the power of a quiet conversation,
+        about \qty{1e-5}{W} of sound.
+  \item Why is a string alone almost inaudible, and what does the
+        soundboard do about it? (Think of the impedance of air,
+        $\rho c \approx \qty{400}{kg.m^{-2}.s^{-1}}$, seen through a small
+        surface against a large one.)
+  \item With the damper lifted, the A$_3$ string (\qty{220}{Hz}) starts to
+        sound when A$_4$ is played: why?
+  \item A piano maker wants a longer sustain: should $Z_b$ be raised or
+        lowered, and what is lost?
+\end{enumerate}
+
+\medskip
+\noindent\textbf{Part IV --- The rail.}
+A steel rail ($E = \qty{200}{GPa}$, $\rho = \qty{7800}{kg/m^3}$, section
+\qty{70}{cm^2}).
+\begin{enumerate}[resume]
+  \item Speed of compression waves; time for the sound of a train to
+        travel \qty{5}{km} along the rail and through the air.
+  \item A hammer blow sends a compression pulse down a \qty{25}{m} rail
+        section with a free end: time for the echo; is the echo a
+        compression or a rarefaction?
+  \item An ultrasonic \qty{2}{MHz} probe looks for cracks: wavelength in
+        steel; amplitude reflection coefficient at a steel--air crack
+        (impedance of air $\qty{400}{kg.m^{-2}.s^{-1}}$); why a thin
+        crack is seen so well.
+  \item Earthquakes: in rock, compression (P) waves travel at
+        \qty{6.0}{km/s} and shear (S) waves at \qty{3.5}{km/s}. A station
+        records the S wave \qty{20}{s} after the P wave: distance to the
+        source.
+  \item In one table, collect the five wave speeds of this problem
+        (string, rail, rock P, rock S, air) with the stiffness and
+        inertia that set each one.
+\end{enumerate}
+\end{problem}

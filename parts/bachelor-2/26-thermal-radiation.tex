@@ -1,0 +1,562 @@
+\chapter{Thermal Radiation}\label{ch:b2:thermal-radiation}
+
+Everything warm glows. A hand, a wall, a glass of water at room
+temperature radiate invisibly, at wavelengths near \qty{10}{\micro m}, a
+few hundred watts per square metre; heat a poker and at
+\qty{600}{\celsius} it glows dull red, at \qty{1000}{\celsius} orange, at
+\qty{2500}{\celsius} --- the filament of a bulb --- white; the Sun's
+surface at \qty{5800}{K} radiates yellow-white, sixty megawatts per
+square metre, and that light, after eight minutes of travel, is what
+keeps the Earth at a temperature where water is liquid. Radiation is
+the third mode of heat transfer and the only one that crosses empty
+space; it is also the place where classical physics failed and Planck,
+in 1900, had to introduce the quantum. This chapter states the law he
+found, draws from it the two results that one uses constantly ---
+Wien's displacement and the Stefan--Boltzmann law --- and applies them
+to the exchanges between bodies, to the Sun and the Earth, and to the
+one-layer model of the \omterm{prop:b2:thermal-radiation:greenhouse}{greenhouse effect} that fixes our climate.
+
+\begin{omfigure}
+\includegraphics[width=0.58\linewidth]{images/book4/ai/b4-26-glowing-steel-forge.png}
+
+{\small Steel at the forge: the colour of the glow --- dull red, orange,
+yellow, white --- is a thermometer, because the spectrum of \omterm{def:b2:thermal-radiation:blackbody}{thermal
+radiation} depends on the temperature alone.}
+\end{omfigure}
+
+\section{Thermal radiation and the black body}
+
+\begin{definition}[Thermal radiation, absorptivity, black body]\label{def:b2:thermal-radiation:blackbody}
+Every body at temperature $T$ emits electromagnetic radiation from the
+thermal agitation of its charges: its \emph{thermal
+radiation}\index{thermal radiation}. Its surface also receives
+radiation from its surroundings and absorbs a fraction $\alpha$ of it
+(the \emph{absorptivity}, between $0$ and $1$, in general depending on
+the wavelength), reflecting or transmitting the rest. A \emph{black
+body}\index{black body} absorbs everything ($\alpha = 1$ at every
+wavelength). A small hole in the wall of a closed cavity is the
+practical black body: radiation entering it is absorbed at the walls
+before it can find the way out.
+\end{definition}
+
+\begin{proposition}[Equilibrium radiation and Kirchhoff's law]\label{prop:b2:thermal-radiation:kirchhoff}
+Inside a closed cavity whose walls are at $T$, the radiation is in
+equilibrium with the walls and is \emph{universal}: isotropic,
+unpolarised, with a spectral energy density $u_\nu(T)$ (energy per unit
+volume and unit frequency) that depends on $T$ and $\nu$ only, not on
+the cavity's material or shape. The radiation leaving a small hole in
+such a cavity is the \emph{black-body radiation} at $T$. A surface that
+absorbs the fraction $\alpha_\nu$ of the radiation it receives at the
+frequency $\nu$ emits, at that frequency, the fraction
+$\varepsilon_\nu = \alpha_\nu$ of what a \omterm{def:b2:thermal-radiation:blackbody}{black body} at the same
+temperature would emit (its \emph{emissivity}\index{emissivity}):
+\emph{good absorbers are good emitters}.
+\end{proposition}
+
+\begin{proof}
+Universality: connect two cavities at the same $T$ by a hole with a
+filter passing one frequency; if the densities differed, energy would
+flow from one to the other at equal temperatures, violating the second
+law. Kirchhoff: place the surface in the cavity at its own $T$; in
+equilibrium it must emit at each frequency exactly what it absorbs,
+$\varepsilon_\nu u_\nu = \alpha_\nu u_\nu$.
+\end{proof}
+
+\section{Planck's law}
+
+\begin{theorem}[Planck's law]\label{thm:b2:thermal-radiation:planck}
+The spectral energy density of black-body radiation at the temperature
+$T$ is
+\[
+u_\nu(T) = \frac{8\pi h\nu^3}{c^3}\,\frac{1}{\eu^{h\nu/k_BT} - 1},
+\]
+and the power radiated by a black surface per unit area and per unit
+wavelength (its \emph{spectral exitance}\index{spectral exitance}) is
+\[
+M_\lambda(T) = \frac{2\pi hc^2}{\lambda^5}\,\frac{1}{\eu^{hc/\lambda k_BT} - 1}.
+\]
+Two limits: for $h\nu \ll k_BT$, $u_\nu \approx 8\pi\nu^2 k_BT/c^3$
+(Rayleigh--Jeans: each mode of the cavity carries the classical energy
+$k_BT$ --- a law that integrates to infinity, the ``ultraviolet
+catastrophe''); for $h\nu \gg k_BT$, $u_\nu \approx (8\pi h\nu^3/c^3)
+\eu^{-h\nu/k_BT}$ (Wien: the Boltzmann factor of a photon of energy
+$h\nu$, \cref{ch:b2:boltzmann-factor}).
+\end{theorem}
+
+\begin{proof}
+Admitted: the counting of the cavity's modes ($8\pi\nu^2/c^3$ per unit
+volume and frequency, two polarizations) belongs to the Year 3 volume,
+and the mean energy of a mode, $h\nu/(\eu^{h\nu/k_BT} - 1)$ instead of the
+classical $k_BT$, is the quantum hypothesis: energy is exchanged with
+the mode in quanta $h\nu$, so that modes with $h\nu \gg k_BT$ are
+frozen out. The relation $M_\lambda\,\dd\lambda = (c/4)\,u_\nu\,\dd\nu$ is the
+geometric factor computed in \cref{thm:b2:thermal-radiation:stefan}.
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}
+  \begin{axis}[omaxis, width=9.2cm, height=5.2cm, xmin=0, xmax=3.1, ymin=0, ymax=1.12,
+    xlabel={$\lambda$ (\unit{\micro m})}, ylabel={$M_\lambda$ (arb.)}, xtick={0.5,1,1.5,2,2.5,3}, ytick=\empty, clip=false,
+    legend style={font=\scriptsize, at={(0.97,0.95)}, anchor=north east, draw=none, fill=none}]
+    \fill[yellow!40, opacity=0.6] (axis cs:0.4,0) rectangle (axis cs:0.7,1.08);
+    \addplot[omDef, thick, domain=0.2:3.1, samples=160] {9.25*x^(-5)/(exp(14388/(x*5000))-1)};
+    \addlegendentry{\qty{5000}{K}}
+    \addplot[omThm, thick, domain=0.25:3.1, samples=160] {9.25*x^(-5)/(exp(14388/(x*4500))-1)};
+    \addlegendentry{\qty{4500}{K}}
+    \addplot[omExo, thick, domain=0.3:3.1, samples=160] {9.25*x^(-5)/(exp(14388/(x*4000))-1)};
+    \addlegendentry{\qty{4000}{K}}
+    \node[font=\scriptsize, anchor=south] at (axis cs:0.55,1.08) {visible};
+  \end{axis}
+\end{tikzpicture}
+
+{\small Planck's spectrum at three temperatures: the peak moves to
+shorter wavelengths as $1/T$ (Wien) and the area grows as $T^4$
+(Stefan). Only the hottest curve puts much of its power in the visible
+band.}
+\end{omfigure}
+
+\begin{omfigure}
+\begin{tikzpicture}
+  \begin{axis}[omaxis, width=8.6cm, height=4.8cm, xmin=0, xmax=10.9, ymin=0, ymax=2.2,
+    xlabel={$x = h\nu/k_BT$}, ylabel={$x^3/(\eu^x - 1)$}, xtick={2,4,6,8,10}, ytick={1,2}, clip=false,
+    legend style={font=\scriptsize, at={(0.97,0.95)}, anchor=north east, draw=none, fill=none}]
+    \addplot[omDef, thick, domain=0.05:10, samples=160] {x^3/(exp(x)-1)};
+    \addlegendentry{Planck}
+    \addplot[omExo, thick, dashed, domain=0.05:1.45, samples=60] {x^2};
+    \addlegendentry{Rayleigh--Jeans $x^2$}
+    \addplot[omThm, thick, dashed, domain=1.2:10, samples=100] {x^3*exp(-x)};
+    \addlegendentry{Wien $x^3\eu^{-x}$}
+  \end{axis}
+\end{tikzpicture}
+
+{\small Planck's function and its two limits: classical equipartition
+at low frequency, the exponential Boltzmann cut-off at high frequency;
+the peak sits at $x = 2.82$ (per unit frequency).}
+\end{omfigure}
+
+\begin{proposition}[Wien's displacement law]\label{prop:b2:thermal-radiation:wien}
+The \omterm{thm:b2:thermal-radiation:planck}{spectral exitance} $M_\lambda$ peaks at
+\[
+\lambda_{\max}\,T = \frac{hc}{4.965\,k_B} = \qty{2.90e-3}{m.K} .
+\]
+A body at \qty{300}{K} radiates mostly near \qty{10}{\micro m}; the Sun
+(\qty{5800}{K}) near \qty{0.5}{\micro m}, in the green, where the eye is
+most sensitive --- not by chance.
+\end{proposition}
+
+\begin{proof}
+With $x = hc/\lambda k_BT$, $M_\lambda \propto x^5/(\eu^x - 1)$; $\dd/\dd x = 0$
+gives $5(\eu^x - 1) = x\eu^x$, i.e. $x = 5(1 - \eu^{-x})$, whose non-zero
+root is $x = 4.965$.
+\end{proof}
+
+\begin{theorem}[Stefan--Boltzmann law]\label{thm:b2:thermal-radiation:stefan}
+A black surface at $T$ radiates, per unit area, the total power
+\[
+M = \int_0^\infty M_\lambda\,\dd\lambda = \sigma T^4, \qquad
+\sigma = \frac{2\pi^5k_B^4}{15h^3c^2} = \qty{5.67e-8}{W/m^2/K^4} ;
+\]
+the energy density of the equilibrium radiation is $u = (4\sigma/c)T^4$
+and its pressure $P = u/3$. A grey surface of \omterm{prop:b2:thermal-radiation:kirchhoff}{emissivity} $\varepsilon$
+radiates $\varepsilon\sigma T^4$.
+\end{theorem}
+
+\begin{proof}
+Integrate Planck's density: $u = \int u_\nu\,\dd\nu = (8\pi h/c^3)(k_BT/h)^4
+\int_0^\infty x^3\,\dd x/(\eu^x - 1)$ and the integral is $\pi^4/15$
+(admitted from analysis): $u = (8\pi^5k_B^4/15h^3c^3)\,T^4$. The power
+leaving a hole of unit area in the cavity wall is $cu/4$: the
+radiation is isotropic, the photons moving toward the hole within the
+solid angle $\dd\Omega$ at the angle $\theta$ from its normal carry the
+flux $c\,u\,(\dd\Omega/4\pi)\cos\theta$, and $\int\cos\theta\,\dd\Omega/4\pi$
+over the outward hemisphere equals $1/4$. Hence $M = cu/4 = \sigma T^4$.
+The pressure, as for any isotropic gas of particles moving at $c$, is
+$u/3$.
+\end{proof}
+
+\begin{example}[Orders of magnitude]\label{ex:b2:thermal-radiation:orders}
+At \qty{300}{K}: $\sigma T^4 = \qty{460}{W/m^2}$ --- a person of
+\qty{1.7}{m^2} radiates \qty{800}{W}, but receives almost as much from
+the walls at \qty{293}{K}; the net loss, $\sigma A(T^4 - T_0^4) \approx
+\qty{100}{W}$, is the body's whole metabolic output, which is why one
+needs clothes in a room that feels mild. The Sun's surface: $\sigma
+(5800)^4 = \qty{6.4e7}{W/m^2}$, total $3.9 \times 10^{26}\,\unit{W}$. A
+bulb's filament at \qty{2800}{K}: \qty{3.5e6}{W/m^2}, \qty{60}{W} from half
+a square centimetre of tungsten. The cosmic background, \qty{2.7}{K}:
+peak at \qty{1}{mm}, $\qty{3e-6}{W/m^2}$, and $400$ photons per cubic
+centimetre of the universe.
+\end{example}
+
+\section{Radiative exchanges}
+
+\begin{proposition}[Net exchange and the radiative coefficient]\label{prop:b2:thermal-radiation:exchange}
+A small grey body (\omterm{prop:b2:thermal-radiation:kirchhoff}{emissivity} $\varepsilon$, area $S$, temperature $T$)
+inside large surroundings at $T_0$ loses the net power
+\[
+P = \varepsilon\sigma S\,(T^4 - T_0^4)
+\ \approx\ 4\varepsilon\sigma T_0^3\,S\,(T - T_0) = h_{\text{r}}S(T - T_0)
+\quad\text{for } |T - T_0| \ll T_0 ,
+\]
+where $h_{\text{r}} = 4\varepsilon\sigma T_0^3 \approx \qty{6}{W/m^2/K}$ at
+room temperature --- comparable to natural convection: in a room,
+radiation carries about half the heat leaving a body or a radiator.
+Between two large parallel black plates the net flux density is
+$\sigma(T_1^4 - T_2^4)$; for grey plates of emissivities $\varepsilon_1$,
+$\varepsilon_2$ it is $\sigma(T_1^4 - T_2^4)/(1/\varepsilon_1 + 1/\varepsilon_2
+- 1)$, and each thin \emph{radiation shield} interposed divides it
+further --- the principle of the vacuum flask and of the gold foil on
+satellites.
+\end{proposition}
+
+\begin{proof}
+The body emits $\varepsilon\sigma T^4$ and absorbs the fraction $\alpha =
+\varepsilon$ of the black radiation $\sigma T_0^4$ that fills the enclosure
+(Kirchhoff). Linearise $T^4 - T_0^4 \approx 4T_0^3(T - T_0)$. For the
+grey plates, sum the multiple reflections (a geometric series).
+\end{proof}
+
+\begin{example}[Frost under a clear sky, and the thermal camera]\label{ex:b2:thermal-radiation:frost}
+On a clear night the sky radiates like a body at about \qty{250}{K}
+(the dry upper atmosphere), while the air near the ground is at
+\qty{278}{K}. A leaf or a car roof ($\varepsilon = 0.95$) balances its
+radiative loss to the sky against convection from the air ($h =
+\qty{5}{W/m^2/K}$): $\varepsilon\sigma(T^4 - 250^4) = h(278 - T)$ gives $T
+\approx \qty{266}{K}$ --- frost at \qty{-7}{\celsius} on the grass while
+the thermometer reads $+5$. A cloud (radiating at \qty{275}{K}) lifts $T$
+to \qty{277}{K}: no frost. A thermal camera measures the radiance near
+\qty{10}{\micro m} and converts it to a temperature assuming
+$\varepsilon \approx 0.95$; a polished metal ($\varepsilon = 0.1$) mostly
+reflects the room and appears at the room's temperature whatever its
+own --- hence the black tape that thermographers stick on shiny parts.
+\end{example}
+
+\section{The Sun, the Earth and the greenhouse}
+
+\begin{proposition}[Solar constant and effective temperature]\label{prop:b2:thermal-radiation:earth}
+The Sun (radius $R_\odot$, surface temperature $T_\odot$) delivers at the
+distance $d$ the flux density $S = \sigma T_\odot^4 (R_\odot/d)^2 =
+\qty{1361}{W/m^2}$ above the Earth's atmosphere (the \emph{solar
+constant}\index{solar constant}). A planet of albedo $A$ (the fraction
+reflected) absorbs $(1 - A)S\pi R^2$ and, in the steady state, radiates it
+from its whole surface $4\pi R^2$ as a \omterm{def:b2:thermal-radiation:blackbody}{black body} at its \emph{effective
+temperature}\index{effective temperature}
+\[
+T_{\text{e}} = \Big(\frac{(1 - A)S}{4\sigma}\Big)^{1/4} = \qty{255}{K}
+\quad\text{for the Earth } (A = 0.30) .
+\]
+\end{proposition}
+
+\begin{proof}
+Energy conservation: absorbed $= $ emitted, the \omterm{prop:b2:laser:gain}{cross-section} $\pi R^2$
+for the intercepted beam, the full sphere for the emission (day and
+night, spread by rotation and circulation).
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}[scale=0.95, >=stealth]
+  % ground
+  \fill[omExo!15] (0,0) rectangle (8,0.6);
+  \draw[thick] (0,0.6) -- (8,0.6);
+  \node[font=\scriptsize] at (4,0.3) {surface $T_{\text{s}}$};
+  % atmosphere layer
+  \fill[omDef!12] (0,2.6) rectangle (8,3.0);
+  \draw (0,2.6) -- (8,2.6); \draw (0,3.0) -- (8,3.0);
+  \node[font=\scriptsize] at (4.3,2.8) {atmosphere $T_{\text{a}}$};
+  % solar in
+  \draw[->, yellow!60!orange, very thick] (1.2,4.3) -- (1.2,0.7);
+  \node[font=\scriptsize, yellow!50!orange, left] at (1.1,3.8) {$(1 - A)S/4$};
+  % surface up
+  \draw[->, omThm, very thick] (3.2,0.7) -- (3.2,2.5);
+  \node[font=\scriptsize, omThm, right] at (3.25,1.6) {$\sigma T_{\text{s}}^4$};
+  % atm up & down
+  \draw[->, omDef, very thick] (5.4,3.1) -- (5.4,4.3);
+  \node[font=\scriptsize, omDef, right] at (5.45,3.8) {$\sigma T_{\text{a}}^4$};
+  \draw[->, omDef, very thick] (6.8,2.5) -- (6.8,0.7);
+  \node[font=\scriptsize, omDef, right] at (6.85,1.6) {$\sigma T_{\text{a}}^4$};
+  \node[font=\scriptsize] at (4,4.6) {space};
+\end{tikzpicture}
+
+{\small The one-layer greenhouse: sunlight crosses the atmosphere and
+warms the ground; the ground's infrared is absorbed by the layer, which
+radiates half up and half down --- the surface must then radiate twice
+what it receives from the Sun.}
+\end{omfigure}
+
+\begin{proposition}[One-layer greenhouse model]\label{prop:b2:thermal-radiation:greenhouse}
+Surround the planet with a thin layer of atmosphere that is transparent
+to sunlight but absorbs all the infrared emitted by the surface, and
+radiates as a \omterm{def:b2:thermal-radiation:blackbody}{black body} at $T_{\text{a}}$ both up and down. In the
+steady state,
+\[
+T_{\text{a}} = T_{\text{e}}, \qquad
+T_{\text{s}} = 2^{1/4}\,T_{\text{e}} = \qty{303}{K} .
+\]
+If the layer absorbs only the fraction $\varepsilon$ of the infrared,
+$T_{\text{s}}^4 = T_{\text{e}}^4/(1 - \varepsilon/2)$; the observed
+\qty{288}{K} corresponds to $\varepsilon \approx 0.78$. The surface is
+warmer than the \omterm{prop:b2:thermal-radiation:earth}{effective temperature} because it receives, in addition
+to the Sun, the infrared that the atmosphere sends back down --- the
+\emph{greenhouse effect}\index{greenhouse effect}, \qty{33}{K} on Earth,
+without which the oceans would be frozen.
+\end{proposition}
+
+\begin{proof}
+Balance of the layer: absorbs $\sigma T_{\text{s}}^4$, emits $2\sigma
+T_{\text{a}}^4$. Balance of the planet seen from space: emits $\sigma
+T_{\text{a}}^4 = (1 - A)S/4 = \sigma T_{\text{e}}^4$. Balance of the
+surface: receives $(1 - A)S/4 + \sigma T_{\text{a}}^4 = 2\sigma T_{\text{e}}^4$,
+emits $\sigma T_{\text{s}}^4$. For the partial layer, replace the
+absorbed and emitted infrared by $\varepsilon\sigma T_{\text{s}}^4$ and
+$\varepsilon\sigma T_{\text{a}}^4$ and let the fraction $1 - \varepsilon$
+of the surface radiation escape directly.
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}
+  \begin{axis}[width=9.6cm, height=5cm, xmode=log, xmin=0.1, xmax=100, ymin=0, ymax=1.15,
+    axis x line=bottom, axis y line=left, xlabel={$\lambda$ (\unit{\micro m})}, ylabel={$M_\lambda$ (normalised)},
+    xlabel style={at={(axis description cs:0.5,-0.12)}, anchor=north},
+    xtick={0.1,1,10,100}, xticklabels={$0.1$,$1$,$10$,$100$}, ytick=\empty, clip=false,
+    legend style={font=\scriptsize, at={(0.02,0.97)}, anchor=north west, draw=none, fill=none}]
+    \fill[omDef!10] (axis cs:5,0) rectangle (axis cs:8,1.0);
+    \fill[omDef!10] (axis cs:14,0) rectangle (axis cs:17,1.0);
+    \fill[gray!10] (axis cs:2.6,0) rectangle (axis cs:2.9,1.0);
+    \addplot[yellow!60!orange, thick, domain=0.1:8, samples=200] {4.4*x^(-5)/(exp(14388/(x*5800))-1)};
+    \addlegendentry{Sun, \qty{5800}{K}}
+    \addplot[omExo, thick, domain=2.5:100, samples=200] {1.41e7*x^(-5)/(exp(14388/(x*288))-1)};
+    \addlegendentry{Earth, \qty{288}{K}}
+    \node[font=\tiny, omDef, anchor=south] at (axis cs:6.3,1.0) {H$_2$O};
+    \node[font=\tiny, omDef, anchor=south] at (axis cs:15.5,1.0) {CO$_2$};
+    \node[font=\tiny, anchor=south] at (axis cs:10.5,0.2) {window};
+  \end{axis}
+\end{tikzpicture}
+
+{\small The Sun's and the Earth's spectra (each normalised to its
+peak) barely overlap: the atmosphere can be transparent to the one and
+opaque to the other. Shaded: the main infrared absorption bands of
+water vapour and carbon dioxide; between them the \qty{8}{}--\qty{13}{\micro m}
+window through which the surface radiates directly to space.}
+\end{omfigure}
+
+\begin{remark}[Why the greenhouse is selective]\label{rem:b2:thermal-radiation:selective}
+Sunlight peaks at \qty{0.5}{\micro m}, the Earth's radiation at
+\qty{10}{\micro m}: the two spectra hardly overlap, so a gas can be
+transparent to the first and absorbing for the second. Nitrogen and
+oxygen absorb neither; water vapour, carbon dioxide, methane and ozone
+have vibration bands in the infrared and are the greenhouse gases. The
+window between \qty{8}{} and \qty{13}{\micro m} is what the thermal camera
+looks through, what the night sky's \qty{250}{K} refers to, and what
+radiative cooling paints exploit. The glass of a real greenhouse does
+the same (transparent to \qty{0.5}{\micro m}, opaque to \qty{10}{\micro m}),
+but mostly it blocks convection --- the name is a little unfair.
+\end{remark}
+
+\begin{method}[Radiation estimates]\label{meth:b2:thermal-radiation:method}
+(1) $\lambda_{\max} = \qty{2900}{\micro m.K}/T$ tells where the spectrum
+lies; (2) $\varepsilon\sigma T^4$ per unit area; (3) exchanges: emitted
+minus absorbed, linearised as $h_{\text{r}} = 4\varepsilon\sigma T^3$ near
+room temperature; (4) a planet: $(1 - A)S/4 = \sigma T_{\text{e}}^4$, then
+the layers; (5) compare with conduction and convection --- radiation
+wins at high temperature ($T^4$) and in vacuum; (6) mind emissivities:
+shiny metals \qty{0.05}{}, paints, skin, water, soil $\approx 0.9$--$0.98$
+in the infrared whatever their visible colour.
+\end{method}
+
+\section{Exercises}
+
+\begin{exercise}[$\star$]\label{exo:b2:thermal-radiation:1}
+$\lambda_{\max}$ and $\sigma T^4$ for: the Sun (\qty{5800}{K}), a human
+(\qty{310}{K}), a bulb's filament (\qty{2800}{K}), the cosmic background
+(\qty{2.73}{K}), liquid nitrogen (\qty{77}{K}), a red-hot poker
+(\qty{900}{K}). Which are visible?
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b2:thermal-radiation:2}
+From $T_\odot = \qty{5772}{K}$, $R_\odot = \qty{6.96e8}{m}$, $d = \qty{1.496e11}{m}$:
+the \omterm{prop:b2:thermal-radiation:earth}{solar constant}, the Sun's luminosity, the power intercepted by the
+Earth ($R = \qty{6.37e6}{m}$), and the same divided among $8 \times 10^9$
+people. Compare with the world's power consumption (\qty{2e13}{W}).
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b2:thermal-radiation:3}
+A person: skin at \qty{306}{K}, $\varepsilon = 0.98$, \qty{1.7}{m^2}, in a
+room at \qty{293}{K}. Emitted power, absorbed power, net loss; the
+radiative coefficient $h_{\text{r}}$; compare with the \qty{100}{W} of
+metabolism and conclude about clothes and about a \qty{20}{\celsius}
+room with cold walls.
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b2:thermal-radiation:4}
+A \qty{60}{W} bulb: tungsten filament at \qty{2800}{K}, $\varepsilon = 0.35$.
+Radiating area; length of a \qty{50}{\micro m} wire with that area;
+about $8\%$ of the power is visible: luminous power; a LED giving the
+same light at $30\%$ efficiency.
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b2:thermal-radiation:5}
+\emph{The two limits.} (a) Expand Planck's $u_\nu$ for $h\nu \ll k_BT$ and
+identify the energy per mode. (b) Show that the Rayleigh--Jeans law
+gives an infinite total energy. (c) At \qty{300}{K}, the frequency where
+$h\nu = k_BT$; conclude that radio and microwave \omterm{def:b2:thermal-radiation:blackbody}{thermal radiation} is
+classical. (d) In the Wien limit, interpret $\eu^{-h\nu/k_BT}$.
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b2:thermal-radiation:6}
+\emph{Wien.} (a) Derive $x = 5(1 - \eu^{-x})$ and solve it numerically
+to three figures. (b) Value of $\lambda_{\max}T$. (c) Show that $u_\nu$
+peaks at $h\nu = 2.82\,k_BT$, and that this does not correspond to
+$c/\lambda_{\max}$: why not? (d) Temperature of a star whose spectrum
+peaks at \qty{290}{nm}; its colour to the eye.
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b2:thermal-radiation:7}
+\emph{Stefan.} (a) Carry out the integration of Planck's law, given
+$\int_0^\infty x^3\dd x/(\eu^x - 1) = \pi^4/15$, and the value of $\sigma$.
+(b) Justify the factor $c/4$ between the density and the exitance. (c)
+Given $\int_0^\infty x^2\dd x/(\eu^x - 1) = 2.404$, the number of photons
+per unit volume at $T$, and the mean photon energy in units of $k_BT$.
+(d) Photons per cubic centimetre at \qty{300}{K} and at \qty{2.73}{K}.
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b2:thermal-radiation:8}
+\emph{Shields.} Two large black plates at $T_1$, $T_2$. (a) Net flux.
+(b) A thin black sheet is placed between them: its temperature and the
+new flux. (c) $n$ sheets. (d) Grey plates of \omterm{prop:b2:thermal-radiation:kirchhoff}{emissivity} $\varepsilon$:
+show the flux is $\sigma(T_1^4 - T_2^4)/(2/\varepsilon - 1)$ and compute
+it for polished surfaces ($\varepsilon = 0.05$) at \qty{300}{K} and
+\qty{77}{K} --- the vacuum flask.
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b2:thermal-radiation:9}
+\emph{Night frost.} Surface $\varepsilon = 0.95$, sky at \qty{250}{K}, air at
+\qty{278}{K} with $h = \qty{5}{W/m^2/K}$. (a) Write the balance and solve
+for the surface temperature. (b) Under a cloud at \qty{275}{K}. (c) Why
+does wind prevent frost? (d) Why does a car parked under a tree escape
+it?
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b2:thermal-radiation:10}
+\emph{Planets.} (a) \omterm{prop:b2:thermal-radiation:earth}{Effective temperatures} of Venus ($S = \qty{2600}{W/m^2}$,
+$A = 0.75$), Earth, Mars ($S = \qty{590}{W/m^2}$, $A = 0.25$). (b) Their
+surface temperatures are \qty{737}{K}, \qty{288}{K}, \qty{215}{K}:
+greenhouse warming of each. (c) In the model with $n$ opaque layers,
+show $T_{\text{s}}^4 = (n + 1)T_{\text{e}}^4$; how many layers for Venus?
+(d) The Moon: $A = 0.12$, no atmosphere, slow rotation --- temperature
+of the subsolar point, and why the night side falls to \qty{100}{K}.
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b2:thermal-radiation:11}
+\emph{Climate sensitivity without \omterm{def:b2:feedback-oscillators:loop}{feedbacks}.} (a) Linearise the
+planetary balance: a small extra forcing $\Delta F$ (in \unit{W/m^2}) at
+the top of the atmosphere raises the \omterm{prop:b2:thermal-radiation:earth}{effective temperature} by $\Delta T
+= \Delta F/4\sigma T_{\text{e}}^3$. Compute $4\sigma T_{\text{e}}^3$. (b)
+Doubling the carbon dioxide is a forcing of about \qty{3.7}{W/m^2}:
+$\Delta T$ in this model. (c) The ocean's mixed layer (\qty{50}{m} of
+water) stores the heat: time constant of the response. (d) Why do
+water-vapour and ice-albedo \omterm{def:b2:feedback-oscillators:loop}{feedbacks} make the real sensitivity larger
+than (b)?
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b2:thermal-radiation:12}
+\emph{Pyrometry.} (a) In the Wien limit, show that the ratio of the
+radiances at two wavelengths, $\lambda_1$ and $\lambda_2$, gives $T$
+independently of a grey \omterm{prop:b2:thermal-radiation:kirchhoff}{emissivity}. (b) A steel bar: $M_{0.65}/M_{0.9}
+= 0.10$: temperature. (c) A thermal camera at \qty{10}{\micro m} assumes
+$\varepsilon = 0.95$; it looks at polished aluminium ($\varepsilon = 0.1$)
+at \qty{350}{K} in a room at \qty{293}{K}: in the linearised regime,
+what temperature does it report? (d) Why does a painted surface next to
+the aluminium, at the same \qty{350}{K}, read correctly?
+\end{exercise}
+
+\begin{omfigure}
+\includegraphics[width=0.4\linewidth]{images/book4/sun-sdo-aia.jpg}\hfill
+\includegraphics[width=0.4\linewidth]{images/book4/earth-apollo17.jpg}
+
+{\small The two black bodies of this chapter: the Sun, at \qty{5800}{K}, seen by the Solar Dynamics Observatory in the extreme ultraviolet, and the Earth, at \qty{288}{K}, photographed by the crew of Apollo 17 --- peaks at \qty{0.5}{\micro m} and at \qty{10}{\micro m} (NASA).}
+\end{omfigure}
+
+\section{Problem: The Earth's energy budget and the incandescent bulb}
+
+\begin{problem}[{Weekend problem --- black bodies from the Sun to the
+filament}]\label{pb:b2:thermal-radiation:1}
+Data: $\sigma = \qty{5.67e-8}{W/m^2/K^4}$, $\lambda_{\max}T = \qty{2.90e-3}{m.K}$,
+$h = \qty{6.63e-34}{J.s}$, $k_B = \qty{1.38e-23}{J/K}$, $c = \qty{3.00e8}{m/s}$;
+Sun: $R_\odot = \qty{6.96e8}{m}$, $d = \qty{1.50e11}{m}$; Earth: $R =
+\qty{6.37e6}{m}$, albedo $0.30$.
+
+\textbf{Part I --- The Sun as a \omterm{def:b2:thermal-radiation:blackbody}{black body}.}
+\begin{enumerate}
+  \item The solar spectrum peaks at \qty{0.50}{\micro m}: surface
+        temperature.
+  \item Exitance of the surface and total luminosity.
+  \item \omterm{prop:b2:thermal-radiation:earth}{Solar constant} at the Earth; energy density and pressure of
+        sunlight there.
+  \item Mean photon energy ($\approx 2.7\,k_BT$) and number of solar
+        photons per second per square metre at the Earth.
+  \item The Sun has radiated at this rate for $4.5 \times 10^9$ years:
+        energy emitted; compare with $Mc^2$ for $M = \qty{2e30}{kg}$.
+\end{enumerate}
+
+\textbf{Part II --- The Earth without atmosphere.}
+\begin{enumerate}[resume]
+  \item Power absorbed by the Earth; \omterm{prop:b2:thermal-radiation:earth}{effective temperature}.
+  \item Why does the balance divide by $4$? What would the
+        temperature be at the subsolar point of a non-rotating airless
+        Earth ($A = 0.30$)?
+  \item The Moon ($A = 0.12$): subsolar temperature; and why its night
+        side drops to \qty{100}{K} (think of the heat stored in the
+        regolith during the two-week day, \qty{1e6}{J/m^2/K} effective).
+  \item Wavelength of the Earth's emission peak; compare with the
+        Sun's.
+  \item If more ice or cloud raised the albedo to $0.35$, by how much
+        would the \omterm{prop:b2:thermal-radiation:earth}{effective temperature} fall?
+\end{enumerate}
+
+\textbf{Part III --- The greenhouse.}
+\begin{enumerate}[resume]
+  \item Write the three balances (space, layer, surface) of the
+        one-layer model and obtain $T_{\text{s}} = 2^{1/4}T_{\text{e}}$.
+  \item With a layer absorbing the fraction $\varepsilon$ of the
+        infrared: $T_{\text{s}}(\varepsilon)$; the value of $\varepsilon$
+        giving \qty{288}{K}.
+  \item Which gases absorb, which do not, and in which wavelength
+        band; what is the atmospheric window?
+  \item The infrared sent back to the ground by the atmosphere,
+        in \unit{W/m^2}, in the $\varepsilon = 0.78$ model; compare with
+        the absorbed sunlight.
+  \item A forcing of \qty{3.7}{W/m^2} (doubled carbon dioxide):
+        temperature change $\Delta T = \Delta F/4\sigma T_{\text{e}}^3$
+        without \omterm{def:b2:feedback-oscillators:loop}{feedbacks}.
+  \item Heat capacity of a \qty{50}{m} ocean mixed layer per square
+        metre and the time constant of the response.
+  \item Why do clouds both cool (albedo) and warm (infrared) the
+        surface; which effect wins at night?
+\end{enumerate}
+
+\textbf{Part IV --- The incandescent bulb.}
+A \qty{60}{W} bulb has a tungsten filament at \qty{2800}{K},
+$\varepsilon = 0.35$; the fraction of a \omterm{def:b2:thermal-radiation:blackbody}{black body}'s power that falls in
+the visible ($0.4$--\qty{0.7}{\micro m}) is $0.08$ at \qty{2800}{K} and $0.14$
+at \qty{3200}{K}.
+\begin{enumerate}[resume]
+  \item Radiating area of the filament; length of a \qty{50}{\micro m}
+        wire having it; why is it coiled?
+  \item Peak wavelength; visible power; luminous efficiency.
+  \item Resistance of the filament in operation at \qty{230}{V};
+        tungsten's resistivity is about ten times smaller at room
+        temperature: current at switch-on, and a consequence.
+  \item At \qty{3200}{K}: the area needed for the same \qty{60}{W} and
+        the visible power; why not run every bulb at \qty{3200}{K}
+        (the tungsten's evaporation rate roughly doubles every
+        \qty{50}{K})?
+  \item What does the halogen cycle do, and why does it allow a hotter
+        filament?
+  \item Where does the rest of the \qty{60}{W} go, and why does the
+        bulb's glass reach \qty{150}{\celsius}?
+  \item The filament's cooling time once switched off: estimate from
+        its mass (\qty{20}{mg}, $c = \qty{140}{J/kg/K}$) and its radiated
+        power.
+  \item Summarise: what a \omterm{def:b2:thermal-radiation:blackbody}{black body}'s temperature fixes, and what
+        the filament, the Sun and the Earth have in common.
+\end{enumerate}
+\end{problem}
