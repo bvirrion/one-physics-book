@@ -867,6 +867,8 @@ class Parser:
                     read_group(cur)
                 elif name in ("dots", "ldots"):
                     text.append("…")
+                elif name == "texteuro":
+                    text.append("€")
                 elif name == "quad":
                     text.append(" ")
                 elif name == "qquad":

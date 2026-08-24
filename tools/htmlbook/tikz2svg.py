@@ -71,6 +71,9 @@ PREAMBLE = r"""
 \newcommand{\intoc}[2]{\left(#1,\,#2\right]}
 \newcommand{\intint}[2]{[\![#1,\,#2]\!]}
 \newcommand{\dd}{\mathop{}\!\mathrm{d}}
+% Defined-term links (\omterm, from link_defined_terms.py) can land inside
+% figure text; in an SVG they render as their display text.
+\providecommand{\omterm}[2]{#2}
 \newcommand{\eu}{\mathrm{e}}
 \newcommand{\iu}{\mathrm{i}}
 \newcommand{\vect}[1]{\overrightarrow{#1}}
@@ -243,10 +246,18 @@ def raster_trim(opts):
         return None
     m = re.search(r"trim\s*=\s*\{?\s*([\d.]+)bp\s+([\d.]+)bp\s+([\d.]+)bp"
                   r"\s+([\d.]+)bp\s*\}?", opts)
+    if m:
+        l, b, r, t = (float(v) for v in m.groups())
+        return f"crop=iw-{l + r}:ih-{t + b}:{l}:{t}"
+    # `viewport=llx lly urx ury` (bp, bottom-left origin): the kept box is
+    # (urx-llx) x (ury-lly) with its top edge at ih-ury in ffmpeg's
+    # top-left coordinates.
+    m = re.search(r"viewport\s*=\s*\{?\s*([\d.]+)(?:bp)?\s+([\d.]+)(?:bp)?"
+                  r"\s+([\d.]+)(?:bp)?\s+([\d.]+)(?:bp)?\s*\}?", opts)
     if not m:
         raise ParseError(f"unsupported clip/trim option: [{opts}]")
-    l, b, r, t = (float(v) for v in m.groups())
-    return f"crop=iw-{l + r}:ih-{t + b}:{l}:{t}"
+    llx, lly, urx, ury = (float(v) for v in m.groups())
+    return f"crop={urx - llx}:{ury - lly}:{llx}:ih-{ury}"
 
 
 def build_raster(path, opts=""):

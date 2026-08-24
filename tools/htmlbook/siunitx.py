@@ -28,6 +28,8 @@ UNIT_MACROS = {
     "degreeCelsius": "{}^{\\circ}\\mathrm{C}",
     "minute": "\\mathrm{min}",
     "gram": "\\mathrm{g}",
+    "percent": "\\%",
+    "delta": "\\delta",      # dioptre (physics book 3, optics)
 }
 
 SI_COMMANDS = {"qty": 2, "num": 1, "unit": 1, "ang": 1,
@@ -51,12 +53,16 @@ def format_number(value):
     v = value.strip()
     if "\\pm" in v:
         lo, hi = v.split("\\pm", 1)
+        if not lo.strip():
+            # \qty{\pm 6}{dB}: a signed number, not an uncertainty
+            return "\\pm " + format_number(hi)
         return format_number(lo) + " \\pm " + format_number(hi)
     m = re.fullmatch(r"([+-]?)(\d*(?:\.\d+)?)(?:[eE]([+-]?\d+))?", v)
     if not m or (not m.group(2) and m.group(3) is None):
         raise ParseError(f"unsupported siunitx number {value!r}")
     sign, mantissa, exponent = m.groups()
-    out = "-" if sign == "-" else ""
+    # siunitx keeps an explicit sign as written (+2.0 stays +2.0)
+    out = sign
     if mantissa:
         if "." in mantissa:
             whole, frac = mantissa.split(".")
@@ -79,8 +85,43 @@ def format_unit(body):
     while i < len(s):
         c = s[i]
         if c == "\\":
+            if s.startswith("\\%", i):
+                out.append("\\%")
+                i += 2
+                continue
             m = re.match(r"\\([a-zA-Z]+)", s[i:])
+            if not m:
+                raise ParseError(f"unsupported character {c!r} "
+                                 f"in siunitx unit {body!r}")
             name = m.group(1)
+            if name in ("sqrt", "omterm"):
+                # \sqrt{Hz}; \omterm{label}{unit} = a defined-term link
+                # around a unit (renders as the unit itself)
+                j = i + m.end()
+                groups = []
+                for _ in range(2 if name == "omterm" else 1):
+                    while j < len(s) and s[j] in " \t\n":
+                        j += 1
+                    if j >= len(s) or s[j] != "{":
+                        raise ParseError(f"\\{name} missing brace group "
+                                         f"in siunitx unit {body!r}")
+                    depth, k = 1, j + 1
+                    while k < len(s) and depth:
+                        if s[k] == "{":
+                            depth += 1
+                        elif s[k] == "}":
+                            depth -= 1
+                        k += 1
+                    if depth:
+                        raise ParseError(f"unbalanced braces in siunitx "
+                                         f"unit {body!r}")
+                    groups.append(s[j + 1:k - 1])
+                    j = k
+                inner = format_unit(groups[-1])
+                out.append(f"\\sqrt{{{inner}}}" if name == "sqrt"
+                           else inner)
+                i = j
+                continue
             if name not in UNIT_MACROS:
                 raise ParseError(f"unknown unit macro \\{name} "
                                  f"in siunitx unit {body!r}")
@@ -102,10 +143,11 @@ def format_unit(body):
         elif c in ".~":
             out.append("\\,")
             i += 1
-        elif c == "/":
-            out.append("/")
+        elif c in "/()'":
+            # literal shorthand: J/(kg.K), nV/\sqrt{Hz}; arcmin ' / arcsec ''
+            out.append(c)
             i += 1
-        elif c in " \t":
+        elif c in " \t\n":
             i += 1
         elif c.isdigit():
             # e.g. the "2" of a literal "m2" never appears; digits only
@@ -119,7 +161,9 @@ def format_unit(body):
 
 
 def _sep(unit_body):
-    return "" if unit_body.lstrip().startswith("\\degree") else "\\,"
+    u = unit_body.lstrip()
+    # \degree and the arcmin/arcsec marks carry no number-unit separator
+    return "" if (u.startswith("\\degree") or u.startswith("'")) else "\\,"
 
 
 def expand_command(name, args):
@@ -133,7 +177,7 @@ def expand_command(name, args):
     if name == "qty":
         value, unit = args
         number = format_number(value)
-        if "\\pm" in value:
+        if "\\pm" in value and value.split("\\pm", 1)[0].strip():
             # siunitx brackets an uncertainty before its unit
             number = f"({number})"
         return number + _sep(unit) + format_unit(unit)
