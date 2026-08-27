@@ -1,0 +1,517 @@
+\chapter{The Grand Canonical Ensemble}\label{ch:b3:grand-canonical}
+
+A drop of water in humid air neither grows nor shrinks; oxygen
+binds to haemoglobin in the lungs and unbinds in the muscles; a
+battery drives electrons through a phone because they are ``more
+expensive'' in one electrode than the other. In each case the
+currency being balanced is not temperature but the \emph{\omterm{thm:b3:grand-canonical:distribution}{chemical
+potential}} $\mu$: the free-energy cost of one more particle. This
+chapter opens the second reservoir valve --- particles as well as
+energy --- and builds the \omterm{thm:b3:grand-canonical:distribution}{grand canonical ensemble}, whose reward is
+astonishing efficiency: the occupation of a single quantum level,
+fermion or boson, follows in two lines, and with it the master
+formulas of the next chapter. Its applications run from the
+adsorption isotherms of gas masks and catalytic converters to the
+\omterm{prop:b3:grand-canonical:saha}{Saha equation}, with which a Harvard doctoral student in 1925 read
+the temperatures of the stars and discovered, against all
+expectation, that the universe is made of hydrogen.
+
+\section{Particles join the negotiation}
+
+\begin{theorem}[Grand canonical distribution]\label{thm:b3:grand-canonical:distribution}
+\index{grand canonical ensemble}\index{chemical potential}
+A system exchanging energy \emph{and particles} with a reservoir at
+temperature $T$ and \omterm{thm:b3:grand-canonical:distribution}{chemical potential} $\mu$ occupies its state $s$
+(energy $E_s$, particle number $N_s$) with probability
+\[
+\mathcal P_s = \frac{\eu^{-\beta(E_s - \mu N_s)}}{\Xi} , \qquad
+\Xi = \sum_s\eu^{-\beta(E_s - \mu N_s)} ,
+\]
+the \emph{grand \omterm{thm:b3:canonical-ensemble:boltzmann}{partition function}}. From $\Xi$: $\langle N\rangle
+= k_{\text{B}}T\,\partial\ln\Xi/\partial\mu$, and the \emph{grand
+potential} $\Phi = -k_{\text{B}}T\ln\Xi$ obeys $\Phi = -PV$.
+\end{theorem}
+
+\begin{proof}[Partial proof]
+As in \cref{thm:b3:canonical-ensemble:boltzmann}, expand the
+reservoir's entropy in both withdrawals:
+$S_{\text{res}}(E - E_s, N - N_s) \approx S_{\text{res}} - E_s/T +
+\mu N_s/T$, using $\partial S/\partial N = -\mu/T$
+(\cref{thm:b3:microcanonical-ensemble:temperature}). The averages
+follow by differentiation; $\Phi = -PV$ is admitted (it follows
+from extensivity).
+\end{proof}
+
+\begin{definition}[What $\mu$ means]\label{def:b3:grand-canonical:mu}
+\index{chemical potential!meaning}
+$\mu$ is the cost, in \omterm{prop:b3:canonical-ensemble:machine}{free energy}, of adding one particle at fixed
+$T$ and $V$. Particles flow spontaneously from high $\mu$ to low
+$\mu$ --- diffusion, osmosis, evaporation, chemical reactions and
+electric currents are all $\mu$-gradients relaxing. At equilibrium
+between any two phases or places, $\mu$ is equal on both sides ---
+the third equality (with $T$ and $P$) that governs coexistence. For
+a classical ideal gas,
+\[
+\mu = k_{\text{B}}T\,\ln\!\big(n\lambda_T^3\big) < 0
+\quad\text{(dilute gas)} :
+\]
+adding a particle to a dilute gas \emph{lowers} the \omterm{prop:b3:canonical-ensemble:machine}{free energy},
+because the entropy gain outweighs any energy cost --- the sign that
+drives evaporation into dry air. And a battery is a $\mu$-machine:
+its voltage is the chemical-potential drop per electron between its
+electrodes, $U = \Delta\mu/e$ --- volts are electron chemistry's
+exchange rate, which is why cells deliver single-digit volts.
+\end{definition}
+
+\section{One level at a time: the master trick}
+
+\begin{theorem}[Occupation of a single quantum level]\label{thm:b3:grand-canonical:occupation}
+\index{Fermi--Dirac distribution}\index{Bose--Einstein distribution}
+Take as ``the system'' one single-particle level of energy
+$\epsilon$, in grand contact with the gas of all the others.
+\emph{Fermions} (occupancy $0$ or $1$):
+\[
+\Xi = 1 + \eu^{-\beta(\epsilon - \mu)}
+\;\Longrightarrow\;
+\bar n_{\text{FD}} = \frac{1}{\eu^{\beta(\epsilon - \mu)} + 1} .
+\]
+\emph{Bosons} (occupancy $0, 1, 2, \dots$):
+\[
+\Xi = \frac{1}{1 - \eu^{-\beta(\epsilon - \mu)}}
+\;\Longrightarrow\;
+\bar n_{\text{BE}} = \frac{1}{\eu^{\beta(\epsilon - \mu)} - 1} ,
+\]
+requiring $\mu < \epsilon_{\min}$. Both reduce to the Boltzmann
+factor $\eu^{-\beta(\epsilon - \mu)}$ when occupations are rare.
+These two formulas, obtained in two lines each, are the entire
+input of quantum statistics: the next chapter is their harvest.
+\end{theorem}
+
+\begin{proof}
+Fermions: two terms. Bosons: a geometric series, convergent only
+for $\mu < \epsilon$. In both cases $\bar n = k_{\text{B}}T\,
+\partial\ln\Xi/\partial\mu$ gives the stated forms.
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}
+  \begin{axis}[omaxis, axis x line=bottom, axis y line=left,
+    width=11.2cm, height=5.6cm, xmin=-6, xmax=6, ymin=0, ymax=2.3,
+    xlabel={$(\epsilon - \mu)/k_{\text{B}}T$}, ylabel={$\bar n$},
+    xlabel style={at={(axis description cs:0.5,-0.1)}, anchor=north},
+    xtick={-4,-2,0,2,4}, ytick={0.5,1,2}, clip=false,
+    legend style={font=\scriptsize, at={(0.97,0.93)}, anchor=north east,
+      draw=none, fill=none}]
+    \addplot[omDef, very thick, domain=-6:6, samples=200]
+      {1/(exp(x)+1)};
+    \addlegendentry{Fermi--Dirac}
+    \addplot[omThm, very thick, domain=0.45:6, samples=200]
+      {1/(exp(x)-1)};
+    \addlegendentry{Bose--Einstein}
+    \addplot[omExo, dashed, thick, domain=-0.8:6, samples=100]
+      {exp(-x)};
+    \addlegendentry{Boltzmann}
+    \draw[gray, dashed] (axis cs:0,0) -- (axis cs:0,2.3);
+  \end{axis}
+\end{tikzpicture}
+
+{\small The three occupation laws against $(\epsilon -
+\mu)/k_{\text{B}}T$: fermions saturate at one per state (a
+smoothed step at $\epsilon = \mu$), bosons pile up without bound as
+$\epsilon \to \mu$, and both join the dilute Boltzmann tail on the
+right --- the classical regime is where a state is rarely visited
+at all.}
+\end{omfigure}
+
+\section{Adsorption: sites for rent}
+
+\begin{proposition}[The Langmuir isotherm]\label{prop:b3:grand-canonical:langmuir}
+\index{Langmuir isotherm}\index{adsorption}
+A surface offers independent sites, each empty or holding one gas
+molecule with binding energy $-\epsilon_0$; the gas above, at
+pressure $P$, is the reservoir. Each site is a two-state grand
+system, and its occupation is
+\[
+\theta = \frac{1}{\eu^{\beta(-\epsilon_0 - \mu)} + 1}
+ = \frac{P}{P + P_0(T)} , \qquad
+P_0(T) = \frac{k_{\text{B}}T}{\lambda_T^3}\,
+\eu^{-\epsilon_0/k_{\text{B}}T} ,
+\]
+using the ideal-gas $\mu$. Coverage rises linearly at low
+pressure and saturates at one monolayer --- the \emph{\omterm{prop:b3:grand-canonical:langmuir}{Langmuir
+isotherm}}, the working curve of catalytic converters, activated
+charcoal, gas masks and the oxygen-binding of blood
+(\cref{exo:b3:grand-canonical:6}). The crossover pressure $P_0$
+falls \emph{exponentially} with binding energy and rises steeply
+with temperature: heating a surface shakes its guests loose ---
+why baking glassware under vacuum is how one truly cleans it.
+\end{proposition}
+
+\begin{proof}
+The site's occupation is
+\cref{thm:b3:grand-canonical:occupation} (fermionic form: a site
+holds at most one) with $\epsilon = -\epsilon_0$; substitute
+$\eu^{\beta\mu} = n\lambda_T^3 = P\lambda_T^3/k_{\text{B}}T$.
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}
+  \begin{axis}[omaxis, axis x line=bottom, axis y line=left,
+    width=10.8cm, height=5.4cm, xmin=0, xmax=5, ymin=0, ymax=1.12,
+    xlabel={$P/P_0$ at the lower temperature}, ylabel={coverage $\theta$},
+    xlabel style={at={(axis description cs:0.5,-0.1)}, anchor=north},
+    xtick={1,2,3,4}, ytick={0.5,1}, clip=false,
+    legend style={font=\scriptsize, at={(0.97,0.42)}, anchor=north east,
+      draw=none, fill=none}]
+    \addplot[omDef, very thick, domain=0:5, samples=120] {x/(x+1)};
+    \addlegendentry{cold surface}
+    \addplot[omThm, very thick, domain=0:5, samples=120] {x/(x+6)};
+    \addlegendentry{hot surface ($P_0$ larger)}
+    \draw[gray, dashed] (axis cs:0,1) -- (axis cs:5,1);
+    \node[font=\scriptsize, anchor=south east, gray] at (axis cs:4.9,1.0)
+      {one monolayer};
+  \end{axis}
+\end{tikzpicture}
+
+{\small \omterm{prop:b3:grand-canonical:langmuir}{Langmuir isotherms}: coverage against pressure, saturating
+at a monolayer. Heat the surface and the same coverage demands far
+more pressure --- adsorption is a $\mu$ negotiation the hot surface
+keeps losing.}
+\end{omfigure}
+
+\section{Ionisation equilibria: the Saha equation}
+
+\begin{proposition}[Saha's equation]\label{prop:b3:grand-canonical:saha}
+\index{Saha equation}
+In a hot gas the reaction $\text{H} \rightleftharpoons \text{p} +
+\text{e}$ equilibrates when $\mu_{\text{H}} = \mu_{\text{p}} +
+\mu_{\text{e}}$. Writing each $\mu$ with the ideal-gas form (the
+atom credited with its binding $-E_{\text{I}}$) gives
+\[
+\frac{n_{\text{e}}\,n_{\text{p}}}{n_{\text{H}}}
+ = \frac{1}{\lambda_{T,\text{e}}^3}\,
+\eu^{-E_{\text{I}}/k_{\text{B}}T}
+\qquad\Big(\lambda_{T,\text{e}} =
+h/\sqrt{2\pi m_{\text{e}}k_{\text{B}}T}\Big)
+\]
+(up to spin-degeneracy factors of order one). Two competing
+currencies again: the Boltzmann factor taxes ionisation by
+$E_{\text{I}} = \qty{13.6}{eV}$, while the prefactor --- the
+\emph{entropy of the freed electron}, with its $\lambda_T^{-3}$
+worth of accessible states --- subsidises it. The subsidy is so
+large at stellar densities that hydrogen ionises appreciably
+already near \qty{10000}{K}, where $k_{\text{B}}T$ is only
+\qty{0.9}{eV}: equilibria are fought over \omterm{prop:b3:canonical-ensemble:machine}{free energy}, not energy
+--- and the stars' spectra are the ledger
+(\cref{pb:b3:grand-canonical:1}).
+\end{proposition}
+
+\begin{proof}[Partial proof]
+Set $\mu_{\text{H}} = \mu_{\text{p}} + \mu_{\text{e}}$ with $\mu_i
+= k_{\text{B}}T\ln(n_i\lambda_{T,i}^3) + \varepsilon_i$
+($\varepsilon_{\text{H}} = -E_{\text{I}}$, the others zero);
+exponentiate. The proton's and atom's thermal wavelengths nearly
+cancel (equal masses); degeneracy factors are admitted.
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}
+  \begin{axis}[omaxis, axis x line=bottom, axis y line=left,
+    width=10.8cm, height=5.4cm, xmin=3000, xmax=25000, ymin=0, ymax=1.1,
+    xlabel={$T$ (K)}, ylabel={ionised fraction of hydrogen},
+    xlabel style={at={(axis description cs:0.5,-0.1)}, anchor=north},
+    xtick={5000,10000,15000,20000}, ytick={0.5,1}, clip=false]
+    \addplot[omDef, very thick, domain=3000:25000, samples=300]
+      {1/(1+exp(-(x-9600)/1100))};
+    \draw[gray, dashed] (axis cs:9600,0) -- (axis cs:9600,0.5);
+    \node[font=\scriptsize, anchor=west] at (axis cs:10000,0.28)
+      {half-ionised near \qty{10000}{K}};
+  \end{axis}
+\end{tikzpicture}
+
+{\small The Saha ionisation of hydrogen at photospheric density
+(schematic): a sharp transition near \qty{10000}{K}, far below the
+naive $E_{\text{I}}/k_{\text{B}} \approx \qty{160000}{K}$ --- the
+freed electron's entropy pays most of the bill.}
+\end{omfigure}
+
+\begin{method}[Grand canonical craft]\label{met:b3:grand-canonical:method}
+(1) Anything exchanging particles with a large partner: give the
+partner a $\mu$ and weight states by $\eu^{-\beta(E - \mu N)}$.
+(2) Independent sites or levels factorise: solve \emph{one},
+multiply. (3) For a classical-gas reservoir, $\eu^{\beta\mu} =
+n\lambda_T^3$ converts $\mu$ to measurable pressure. (4) Reactions
+and phase changes: balance the $\mu$'s, one per species, binding
+energies included --- expect entropy prefactors to shift
+equilibria far from naive Boltzmann guesses. (5) Electrons in
+solids: their $\mu$ is the Fermi level, and differences of $\mu$
+are voltages --- the bridge to
+\cref{ch:b3:electrons-in-solids}.
+\end{method}
+
+\section{Exercises}
+
+\begin{exercise}[$\star$]\label{exo:b3:grand-canonical:1}
+(a) Two boxes of the same gas at the same $T$ but different
+densities are connected: which way do particles flow, in
+$\mu$-language? (b) Show from the ideal-gas $\mu$ that flow stops
+at equal densities. (c) Water sits under humid air: state the
+equilibrium condition in $\mu$'s. (d) Why does laundry dry even
+below $100\,^\circ$C when the air is dry (compare $\mu$'s, not
+temperatures)?
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b3:grand-canonical:2}
+The \omterm{thm:b3:grand-canonical:distribution}{chemical potential} of air. (a) Compute $\lambda_T$ for N$_2$
+at \qty{300}{K}. (b) Compute $n\lambda_T^3$ at \qty{1}{bar} and
+the resulting $\mu$ in eV. (c) Why is $\mu < 0$ no paradox
+(which term of $F = E - TS$ dominates on adding a molecule)? (d)
+At what density would $\mu$ reach zero, and what does
+$n\lambda_T^3 \sim 1$ herald
+(\cref{exo:b3:grand-canonical:11})?
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b3:grand-canonical:3}
+Derive the Fermi--Dirac occupation from its two-term $\Xi$,
+step by step; check the limits $\epsilon \ll \mu$, $\epsilon \gg
+\mu$, and the value at $\epsilon = \mu$. Where has this function
+already appeared in this book
+(\cref{exo:b3:microcanonical-ensemble:8})?
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b3:grand-canonical:4}
+Volts are chemistry. (a) A lithium cell holds \qty{3.0}{V}:
+express the chemical-potential difference per electron in eV and
+per mole in kJ. (b) Why are all everyday batteries single-digit
+volts (what sets the scale of chemical $\mu$ differences)? (c) A
+lead--acid car battery stacks six cells: why stack rather than
+find a \qty{12}{eV} reaction? (d) In $\mu$-language, what is a
+battery doing when it is ``flat''?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b3:grand-canonical:5}
+Bosons at a level. (a) Sum the geometric series for $\Xi$ and
+derive $\bar n_{\text{BE}}$. (b) Why must $\mu$ stay below the
+lowest level --- what diverges otherwise, and what does the
+divergence foreshadow (\cref{ch:b3:quantum-statistics})? (c)
+Compute $\bar n$ for $(\epsilon - \mu)/k_{\text{B}}T = 0.1$, $1$,
+$3$ and compare with Boltzmann. (d) Photons have $\mu = 0$: give
+the physical reason (their number is not conserved --- walls
+absorb and emit freely).
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b3:grand-canonical:6}
+Langmuir at work. (a) From the isotherm, what pressure achieves
+$\theta = 0.5$? $0.9$? (b) Myoglobin binds O$_2$ on one site:
+saturation follows Langmuir in the oxygen partial pressure ---
+why is a \emph{hyperbolic} (not sigmoidal) curve observed for
+myoglobin but a cooperative S-curve for four-site haemoglobin?
+(c) Carbon monoxide binds to the same sites with $\epsilon_0$
+larger by $\approx\qty{0.13}{eV}$: at equal partial pressures and
+\qty{310}{K}, compute the occupancy ratio CO:O$_2$ and explain CO
+poisoning. (d) Why does hyperbaric oxygen therapy work, in
+isotherm language?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b3:grand-canonical:7}
+Number fluctuations. (a) Show $\operatorname{Var}N =
+k_{\text{B}}T\,\partial\langle N\rangle/\partial\mu$. (b) For the
+classical ideal gas, deduce $\operatorname{Var}N = \langle
+N\rangle$: Poisson. (c) Reconcile with the density fluctuations of
+\cref{exo:b3:microcanonical-ensemble:12}. (d) For a single
+fermionic level, compute $\operatorname{Var}n = \bar n(1 - \bar
+n)$: where are fermion numbers quietest, and why?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b3:grand-canonical:8}
+Osmosis from $\mu$. A membrane passes water but not solute
+(concentration $c$ per volume, dilute). (a) Equating water's $\mu$
+across the membrane, show the pure-water side must be
+over-pressured by $\Pi = ck_{\text{B}}T$ (van 't Hoff) --- accept
+that dissolved solute lowers water's $\mu$ by
+$-k_{\text{B}}T\,c/n_{\text{w}}$ per water molecule. (b) Compute
+$\Pi$ for physiological saline ($c \approx \qty{3e26}{m^{-3}}$
+total particles). (c) Red cells in pure water: which way does
+water flow, and with what result? (d) Why do trees need neither
+pumps nor miracles to raise sap tens of metres (osmotic and
+capillary $\mu$-gradients)?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b3:grand-canonical:9}
+Equilibrium in a field. In gravity, equilibrium of a gas column
+requires the \emph{total} \omterm{thm:b3:grand-canonical:distribution}{chemical potential} $\mu(h) =
+k_{\text{B}}T\ln(n\lambda_T^3) + mgh$ to be uniform. (a) Derive
+the barometric law from this in one line. (b) Generalise to a
+centrifuge at angular velocity $\omega$ (potential
+$-\tfrac12 m\omega^2r^2$) and obtain the radial profile. (c)
+Uranium enrichment centrifuges spin at $\omega r \sim
+\qty{600}{m/s}$: compute the equilibrium ratio of $^{238}$UF$_6$
+to $^{235}$UF$_6$ enhancement per stage, $\exp[\Delta m\,\omega^2
+r^2/2k_{\text{B}}T]$ with $\Delta m = \qty{5e-27}{kg}$, $T =
+\qty{320}{K}$. (d) Why are many stages cascaded?
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b3:grand-canonical:10}
+Saha, by hand. (a) Carry out the $\mu$-balance proof of
+\cref{prop:b3:grand-canonical:saha}. (b) Define the ionised
+fraction $x$ at total hydrogen density $n$ and show $x^2/(1 - x)
+= \eu^{-E_{\text{I}}/k_{\text{B}}T}/n\lambda_{T,\text{e}}^3$. (c)
+Solar photosphere: $T = \qty{5800}{K}$, $n \approx
+\qty{e23}{m^{-3}}$: show the ionised fraction of hydrogen is only
+$\sim\num{e-4}$ --- the Sun's surface is neutral. (d) At $T =
+\qty{10000}{K}$ (same $n$): recompute and comment on the
+steepness.
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b3:grand-canonical:11}
+When gases go quantum. Degeneracy sets in at $n\lambda_T^3 \sim
+1$. (a) For air at \qty{300}{K}: how far below threshold
+(\cref{exo:b3:grand-canonical:2})? (b) For conduction electrons
+in copper ($n = \qty{8.5e28}{m^{-3}}$): find the temperature
+below which $n\lambda_T^3 > 1$ --- and conclude that a metal's
+electrons are degenerate at \emph{any} laboratory temperature.
+(c) For rubidium atoms at $n = \qty{e20}{m^{-3}}$: the quantum
+threshold temperature (the BEC scale of
+\cref{ch:b3:quantum-statistics}). (d) Rank the three and state the
+rule: light particles and high densities go quantum first.
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b3:grand-canonical:12}
+The universe loses its positrons. In the hot early universe,
+$\eu^+ + \eu^- \rightleftharpoons 2\gamma$ held pairs in
+equilibrium with $\mu_{e^+} + \mu_{e^-} = 0$ (photons: $\mu = 0$).
+(a) For a symmetric plasma this gives $\mu_{e^\pm} \approx 0$:
+show the pair density is then $n_\pm \approx
+\lambda_T^{-3}\eu^{-m_{\text{e}}c^2/k_{\text{B}}T}$ once
+$k_{\text{B}}T \ll m_{\text{e}}c^2$. (b) Compute the temperature
+at which $m_{\text{e}}c^2 = k_{\text{B}}T$ and the cosmic time
+scale it corresponds to (accept $t \sim \qty{1}{s}$ at
+$\qty{e10}{K}$). (c) Show that a modest further cooling (a factor
+of a few) collapses the pair density by many orders of magnitude:
+the positrons annihilate away, leaving only the tiny primordial
+excess of electrons. (d) The photons released reheat the
+radiation bath: which relic radiation carries the receipt
+(\cref{ch:b3:astrophysics})?
+\end{exercise}
+
+\section{Problem: Reading the temperatures of the stars}
+
+\begin{problem}[{Weekend problem --- Saha, Payne, and what the
+universe is made of}]\label{pb:b3:grand-canonical:1}
+Stellar spectra were catalogued through the 1890s into classes
+O, B, A, F, G, K, M by the strength of their absorption lines ---
+with hydrogen's Balmer lines strongest in class A and mysteriously
+weak both in hotter and in cooler stars. In 1925 Cecilia Payne
+applied the brand-new \omterm{prop:b3:grand-canonical:saha}{Saha equation} and showed the whole zoo was
+one substance at different temperatures --- and that stars are
+overwhelmingly hydrogen, a conclusion so heretical she was made to
+soften it in her thesis. This problem retraces her reasoning.
+Data: Balmer absorption starts from $n = 2$, at $E_2 - E_1 =
+\qty{10.2}{eV}$ above the ground state; $E_{\text{I}} =
+\qty{13.6}{eV}$; photospheric electron densities $n_{\text{e}}
+\sim \qty{e20}{m^{-3}}$.
+
+\medskip\noindent\textbf{Part I --- Two competing factors.}
+\begin{enumerate}
+  \item Balmer absorption needs neutral hydrogen \emph{in} $n =
+        2$: write the Boltzmann factor for the $n = 2$ population
+        (degeneracies: $g_2/g_1 = 4$).
+  \item Evaluate it at $5000$, $10000$ and \qty{20000}{K}: which
+        way does this factor push line strength as $T$ rises?
+  \item Now the Saha factor: as $T$ rises, what happens to the
+        \emph{neutral} fraction, and hence to the Balmer lines?
+  \item Explain qualitatively why the product --- excited
+        \emph{and} still neutral --- must peak at some
+        intermediate temperature.
+  \item Using the \omterm{prop:b3:grand-canonical:saha}{Saha equation} with $n_{\text{e}} =
+        \qty{e20}{m^{-3}}$, estimate the temperature of
+        half-ionisation of hydrogen.
+  \item Put the peak together: near what temperature should
+        Balmer lines be strongest, and which spectral class
+        (A stars, $\sim\qty{10000}{K}$) does that pick out?
+\end{enumerate}
+
+\medskip\noindent\textbf{Part II --- The spectral sequence
+decoded.}
+\begin{enumerate}[resume]
+  \item M stars (\qty{3000}{K}) show strong molecular bands (TiO)
+        and weak hydrogen: explain both with the two factors.
+  \item O stars (\qty{40000}{K}) show helium lines and again weak
+        hydrogen: explain (what has happened to hydrogen, and why
+        does helium, $E_{\text{I}} = \qty{24.6}{eV}$, now get its
+        turn?).
+  \item The Sun (G, \qty{5800}{K}) shows strong lines of
+        \emph{ionised calcium} ($E_{\text{I,Ca}} = \qty{6.1}{eV}$)
+        yet weak hydrogen: show with Saha logic why calcium is
+        already ionised while hydrogen is still neutral and mostly
+        in $n = 1$.
+  \item Pre-Payne astronomers read line strength as abundance:
+        what did the Sun's mighty calcium lines and feeble Balmer
+        lines make them conclude about its composition?
+  \item Payne's insight: correct each line's strength for its
+        Boltzmann--Saha ``visibility factor''. When she did, what
+        hierarchy of true abundances emerged?
+  \item Her result --- hydrogen a million times more abundant
+        than calcium, stars mostly hydrogen and helium --- why
+        was it resisted (what did Earth-centred chemistry
+        suggest), and when was she vindicated?
+\end{enumerate}
+
+\medskip\noindent\textbf{Part III --- Numbers on the peak.}
+\begin{enumerate}[resume]
+  \item Compute the $n = 2$ Boltzmann factor at exactly
+        \qty{9600}{K}.
+  \item With the Saha estimate of item 5, take the neutral
+        fraction at $9600$, $15000$ and \qty{25000}{K} to be
+        roughly $0.5$, $\num{e-3}$, $\num{e-5}$: form the product
+        (excited fraction $\times$ neutral fraction) at your three
+        temperatures and locate its maximum.
+  \item Why is the Balmer peak \emph{sharp} on the hot side
+        (which exponential wins) and \emph{gradual} on the cool
+        side?
+  \item A white-dwarf photosphere has $n_{\text{e}}$ a thousand
+        times larger: which way does the half-ionisation
+        temperature move, and why (Le Chatelier in $\mu$
+        language)?
+  \item Two stars of identical temperature but different
+        pressures thus show different line strengths: what
+        stellar property (giant versus dwarf --- surface gravity)
+        does this let spectroscopists read?
+  \item Modern surveys pin stellar temperatures to $\pm1\%$ from
+        line ratios: state the chain postulate $\to$ Boltzmann
+        $\to$ Saha $\to$ thermometer.
+\end{enumerate}
+
+\medskip\noindent\textbf{Part IV --- What it settled.}
+\begin{enumerate}[resume]
+  \item The OBAFGKM sequence had been alphabetical chaos
+        reordered empirically: after Saha, what single physical
+        variable orders it?
+  \item State why the \emph{same} element can dominate a
+        spectrum at one temperature and vanish at another without
+        any change in abundance --- the core lesson Payne taught
+        astronomy.
+  \item Hydrogen at three-quarters of all baryonic mass: name two
+        other pillars of this book that rest on that abundance
+        (stellar fusion, \cref{ch:b3:astrophysics}; the 21 cm
+        sky, \cref{ch:b3:spin-two-level}).
+  \item Otto Struve called Payne's thesis ``the most brilliant
+        PhD thesis ever written in astronomy'': from this
+        problem, justify the praise in one sentence.
+  \item The same Saha physics, run in reverse at cosmic scale,
+        predicts the temperature at which the whole universe's
+        hydrogen first combined ($\sim\qty{3000}{K}$ at the far
+        lower cosmic density): name the event and its relic
+        (\cref{ch:b3:astrophysics}).
+  \item Ionisation equilibria also run fluorescent lamps and
+        plasma processing: state in one sentence why a
+        \qty{10000}{K}-style ionised state can exist in a tube
+        whose glass stays cool (which two subsystems fail to
+        equilibrate?).
+  \item Summarise the named result: one equilibrium condition,
+        $\mu_{\text{H}} = \mu_{\text{p}} + \mu_{\text{e}}$, turns
+        the spectral alphabet into a thermometer running from
+        $3000$ to \qty{40000}{K}, places the Balmer peak at the A
+        stars, and reveals a universe made of hydrogen.
+\end{enumerate}
+\end{problem}

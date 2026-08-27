@@ -1,0 +1,552 @@
+\chapter{Phase Transitions}\label{ch:b3:phase-transitions}
+
+Heat water by one degree, and nothing much happens --- until, at one
+sharply defined temperature, the liquid tears itself into vapour.
+Cool iron through \qty{1043}{K} and, with no change of composition,
+it spontaneously magnetises. Nothing in a single molecule or a
+single spin announces these revolutions: they are \emph{collective}
+--- $10^{23}$ agents, each interacting with a few neighbours,
+conspiring to change their society's phase all at once. The Year 1
+volume catalogued the transitions; this chapter explains their
+mechanism with the tools of the last five: free-energy competition,
+\omterm{def:b3:phase-transitions:order}{order parameters}, the breaking of symmetry, and the astonishing
+discovery that near a \omterm{prop:b3:phase-transitions:vdw}{critical point} the microscopic details cease
+to matter --- a magnet and a boiling fluid share the same \omterm{prop:b3:phase-transitions:landau}{critical
+exponents}. The ideas of this chapter now run from pressure cookers
+to superconductors to the Higgs field of
+\cref{ch:b3:particle-physics}.
+
+\section{Order parameters and free-energy competition}
+
+\begin{definition}[Phases and order parameters]\label{def:b3:phase-transitions:order}
+\index{phase transition}\index{order parameter}\index{symmetry breaking}
+A \emph{phase transition} is a non-smooth change of a system's
+equilibrium state as a control parameter ($T$, $P$, $B$) crosses a
+boundary. Its bookkeeper is the \emph{order parameter}: a quantity
+zero in the disordered phase and nonzero in the ordered one --- the
+magnetisation $m$ of a ferromagnet, the density difference
+$\rho_{\text{liq}} - \rho_{\text{gas}}$ of a fluid, the condensate
+fraction of \cref{ch:b3:quantum-statistics}. Transitions come in
+two kinds: \emph{first-order} (order parameter jumps; latent heat;
+phases coexist --- boiling, melting) and \emph{continuous} (order
+parameter grows from zero; no latent heat; wild fluctuations ---
+the Curie point, the \omterm{prop:b3:phase-transitions:vdw}{critical point}, superfluid helium). When the
+ordered state must \emph{choose} among equivalent options --- a
+magnet's north has to point somewhere --- the transition
+\emph{breaks a symmetry} that the underlying laws respect: a theme
+that will return, at the highest stakes, with the Higgs mechanism.
+The engine behind every case is the \omterm{prop:b3:canonical-ensemble:machine}{free energy} $F = E - TS$
+(\cref{prop:b3:canonical-ensemble:machine}): energy favours order,
+entropy favours disorder, and $T$ sets the exchange rate --- phase
+boundaries are where the ledger ties.
+\end{definition}
+
+\section{The liquid--gas transition: van der Waals}
+
+\begin{proposition}[Van der Waals isotherms]\label{prop:b3:phase-transitions:vdw}
+\index{van der Waals equation}\index{critical point}
+The real-gas equation of the Year 1 volume,
+\[
+\Big(P + \frac{aN^2}{V^2}\Big)(V - Nb) = Nk_{\text{B}}T ,
+\]
+encodes attraction ($a$) and hard cores ($b$). Above a critical
+temperature $T_{\text{c}} = 8a/27bk_{\text{B}}$ its isotherms are
+monotonic: one fluid phase. Below it they develop a loop containing
+a mechanically \emph{unstable} stretch ($\partial P/\partial V >
+0$): the fluid there splits into coexisting liquid and gas, at the
+pressure fixed by equality of \omterm{thm:b3:grand-canonical:distribution}{chemical potentials} (Maxwell's
+equal-area rule). The coexistence region closes at the \omterm{prop:b3:phase-transitions:vdw}{critical
+point} ($P_{\text{c}}, V_{\text{c}}, T_{\text{c}}$), where liquid
+and gas become \emph{indistinguishable}: approaching it, the
+density difference vanishes, the compressibility diverges, and
+density fluctuations grow to optical size --- the critical
+opalescence of \cref{pb:b3:perturbation-theory:1}.
+\end{proposition}
+\admitted
+
+\begin{omfigure}
+\begin{tikzpicture}
+  \begin{axis}[omaxis, axis x line=bottom, axis y line=left,
+    width=10.8cm, height=6.0cm, xmin=0.32, xmax=5, ymin=0, ymax=2.1,
+    xlabel={$V/V_{\text{c}}$}, ylabel={$P/P_{\text{c}}$},
+    xlabel style={at={(axis description cs:0.5,-0.09)}, anchor=north},
+    xtick={1,2,3,4}, ytick={1}, clip=true,
+    legend pos=north east,
+    legend style={font=\scriptsize, draw=none, fill=none}]
+    % reduced vdw: P = 8T/(3V-1) - 3/V^2 (T in units of Tc)
+    \addplot[omDef, very thick, domain=0.42:5, samples=250]
+      {8*1.05/(3*x-1) - 3/(x*x)};
+    \addplot[omThm, very thick, domain=0.42:5, samples=250]
+      {8/(3*x-1) - 3/(x*x)};
+    \addplot[omExo, very thick, domain=0.44:5, samples=300]
+      {8*0.9/(3*x-1) - 3/(x*x)};
+    \legend{$T > T_{\text{c}}$, $T = T_{\text{c}}$, $T < T_{\text{c}}$}
+    % coexistence dome (schematic)
+    \addplot[gray, dashed, domain=0.5:2.9, samples=100, forget plot]
+      {1 - 0.62*(ln(x/1.06))^2};
+    \fill (axis cs:1,1) circle (1.8pt);
+    \draw[gray, ->] (axis cs:1.55,1.5) -- (axis cs:1.05,1.06);
+    \node[font=\scriptsize, anchor=west] at (axis cs:1.6,1.55)
+      {critical point};
+    \node[gray, font=\scriptsize, anchor=north] at (axis cs:1.7,0.62)
+      {coexistence dome};
+  \end{axis}
+\end{tikzpicture}
+
+{\small Van der Waals isotherms in reduced units. Above
+$T_{\text{c}}$: one fluid. Below: the loop's unstable middle is
+replaced by flat two-phase coexistence inside the dashed dome. At
+the dome's summit, liquid and gas merge --- the \omterm{prop:b3:phase-transitions:vdw}{critical point},
+where fluctuations turn the fluid milky.}
+\end{omfigure}
+
+\begin{proposition}[Clausius--Clapeyron]\label{prop:b3:phase-transitions:clapeyron}
+\index{Clausius--Clapeyron relation}
+Along any first-order coexistence line, equality of \omterm{thm:b3:grand-canonical:distribution}{chemical
+potentials} on both sides
+(\cref{def:b3:grand-canonical:mu}) forces the line's slope to be
+\[
+\frac{\dd P}{\dd T} = \frac{L}{T\,\Delta v} ,
+\]
+with $L$ the latent heat and $\Delta v$ the volume change per
+particle (or per kilogram, consistently). Everything about
+coexistence lines is in this one formula: water's boiling line
+climbs at $\approx\qty{3.6}{kPa/K}$ near \qty{100}{\celsius}
+(pressure cookers, altitude cooking ---
+\cref{pb:b3:phase-transitions:1}); and water's \emph{melting} line
+tilts backwards ($\Delta v < 0$: ice floats), so pressure melts
+ice --- a rarity among substances with consequences from glaciers
+to skating rinks.
+\end{proposition}
+
+\begin{proof}
+On the line, $\mu_1(T, P) = \mu_2(T, P)$; move along it:
+$-s_1\dd T + v_1\dd P = -s_2\dd T + v_2\dd P$ (per particle, using
+$\dd\mu = -s\,\dd T + v\,\dd P$). Solve for $\dd P/\dd T$ and use
+$L = T(s_2 - s_1)$.
+\end{proof}
+
+\section{The ferromagnet: mean-field theory}
+
+\begin{theorem}[Mean-field Ising transition]\label{thm:b3:phase-transitions:meanfield}
+\index{Ising model}\index{mean-field theory}\index{Curie temperature}
+Model a magnet as spins $s_i = \pm1$ on a lattice, neighbours
+coupled by the exchange energy $-J\,s_is_j$
+(\cref{exo:b3:identical-particles:12}), each spin having $q$
+neighbours. Replace each spin's neighbours by their average $m =
+\langle s\rangle$ (the \emph{mean-field} approximation): a spin
+then sits in the effective field $qJm$, and
+\cref{exo:b3:canonical-ensemble:11} gives the self-consistency
+condition
+\[
+m = \tanh\!\Big(\frac{T_{\text{c}}}{T}\,m\Big) , \qquad
+k_{\text{B}}T_{\text{c}} = qJ .
+\]
+Above $T_{\text{c}}$ the only solution is $m = 0$; below it two
+symmetric solutions $\pm m(T)$ appear and are the stable ones: the
+magnet \emph{must} magnetise, choosing a direction at random ---
+spontaneous \omterm{def:b3:phase-transitions:order}{symmetry breaking}. Near $T_{\text{c}}$, $m \propto
+(T_{\text{c}} - T)^{1/2}$, and above it the susceptibility obeys
+the Curie--Weiss law $\chi \propto 1/(T - T_{\text{c}})$:
+divergent at the transition --- an infinitely obliging magnet.
+\end{theorem}
+
+\begin{proof}[Partial proof]
+A spin in field $B_{\text{eff}} = qJm/\mu$ has $\langle s\rangle =
+\tanh(\beta qJm)$; demanding $\langle s\rangle = m$ gives the
+stated equation. Graphically: the line $y = m$ cuts the curve $y =
+\tanh(T_{\text{c}}m/T)$ only at the origin when the curve's initial
+slope $T_{\text{c}}/T < 1$, and also at $\pm m^* \neq 0$ when
+$T < T_{\text{c}}$. Expanding $\tanh$ for small
+$m$ gives $m^2 = 3(1 - T/T_{\text{c}})$, the square-root growth;
+adding a small applied field and expanding likewise gives
+Curie--Weiss (\cref{exo:b3:phase-transitions:6}).
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}
+  \begin{axis}[omaxis, axis x line=bottom, axis y line=left,
+    width=6.6cm, height=5.2cm, xmin=0, xmax=1.6, ymin=0, ymax=1.15,
+    xlabel={$m$}, ylabel={},
+    xlabel style={at={(axis description cs:0.5,-0.11)}, anchor=north},
+    xtick=\empty, ytick=\empty, clip=false]
+    \addplot[gray, thick, domain=0:1.1] {x};
+    \addplot[omDef, very thick, domain=0:1.6, samples=100]
+      {tanh(1.5*x)};
+    \addplot[omExo, thick, dashed, domain=0:1.6, samples=100]
+      {tanh(0.7*x)};
+    \fill[omDef] (axis cs:0.858,0.858) circle (1.8pt);
+    \node[omDef, font=\scriptsize, anchor=north west] at (axis cs:0.88,0.84)
+      {$m^*$};
+    \node[omDef, font=\scriptsize, anchor=south east] at (axis cs:1.55,1.0)
+      {$T < T_{\text{c}}$};
+    \node[omExo, font=\scriptsize, anchor=north] at (axis cs:1.32,0.62)
+      {$T > T_{\text{c}}$};
+    \node[gray, font=\scriptsize, anchor=west, rotate=38] at (axis cs:0.3,0.38)
+      {$y = m$};
+  \end{axis}
+  \begin{axis}[omaxis, axis x line=bottom, axis y line=left,
+    width=6.6cm, height=5.2cm, xmin=0, xmax=1.25, ymin=0, ymax=1.15,
+    xshift=7.2cm,
+    xlabel={$T/T_{\text{c}}$}, ylabel={$m(T)$},
+    xlabel style={at={(axis description cs:0.5,-0.11)}, anchor=north},
+    xtick={0.5,1}, ytick={1}, clip=false]
+    \addplot[omThm, very thick, domain=0.02:0.999, samples=250]
+      {(1-x^3.4)^0.42};
+    \addplot[omThm, very thick, domain=1:1.18] {0};
+    \node[omThm, font=\scriptsize, anchor=east] at (axis cs:0.88,0.45)
+      {$\propto(T_{\text{c}} - T)^{1/2}$ near $T_{\text{c}}$};
+  \end{axis}
+\end{tikzpicture}
+
+{\small Left: the self-consistency $m = \tanh(T_{\text{c}}m/T)$ ---
+below $T_{\text{c}}$ the curve's initial slope exceeds one and a
+nonzero crossing $m^*$ exists. Right: the resulting spontaneous
+magnetisation, rising as a square root below the Curie point and
+identically zero above.}
+\end{omfigure}
+
+\section{Landau's viewpoint and universality}
+
+\begin{proposition}[Landau theory]\label{prop:b3:phase-transitions:landau}
+\index{Landau theory}\index{critical exponents}\index{universality}
+Near a continuous transition, expand the \omterm{prop:b3:canonical-ensemble:machine}{free energy} in the small
+\omterm{def:b3:phase-transitions:order}{order parameter}, keeping only what symmetry allows ($m \to -m$
+here):
+\[
+F(m) = a\,(T - T_{\text{c}})\,m^2 + b\,m^4 , \qquad a, b > 0 .
+\]
+Above $T_{\text{c}}$: a single well at $m = 0$. Below: the origin
+becomes a summit and two symmetric wells appear at $m = \pm
+\sqrt{a(T_{\text{c}} - T)/2b}$ --- the same square root as mean
+field, now from symmetry alone. This is why wildly different
+systems behave identically near their \omterm{prop:b3:phase-transitions:vdw}{critical points}:
+\emph{universality}. Measured exponents (e.g.\ $m \propto |T -
+T_{\text{c}}|^\beta$ with $\beta \approx 0.33$ for both fluids
+\emph{and} uniaxial magnets) differ from the mean-field $1/2$
+because near $T_{\text{c}}$ fluctuations rage on all scales ---
+their taming, the renormalisation group (Wilson, Nobel 1982),
+showed that only dimensionality and symmetry, never microscopic
+details, decide the exponents. The double-well picture itself has
+a career beyond magnets: give the \omterm{def:b3:phase-transitions:order}{order parameter} the role of a
+field filling space, and its symmetry-breaking well is the Higgs
+mechanism (\cref{ch:b3:particle-physics}).
+\end{proposition}
+\admitted
+
+\begin{omfigure}
+\begin{tikzpicture}
+  \begin{axis}[omaxis, axis x line=bottom, axis y line=left,
+    width=11.6cm, height=5.2cm, xmin=-1.6, xmax=1.6, ymin=-0.45, ymax=0.85,
+    xlabel={order parameter $m$}, ylabel={$F(m)$},
+    xlabel style={at={(axis description cs:0.5,-0.11)}, anchor=north},
+    xtick={0}, ytick=\empty, clip=false,
+    legend style={font=\scriptsize, at={(0.5,0.98)}, anchor=north,
+      draw=none, fill=none}]
+    \addplot[omDef, very thick, domain=-1.07:1.07, samples=120]
+      {0.5*x*x + 0.2*x^4};
+    \addlegendentry{$T > T_{\text{c}}$: one well}
+    \addplot[omExo, thick, domain=-1.31:1.31, samples=120]
+      {0.28*x^4};
+    \addlegendentry{$T = T_{\text{c}}$: flat bottom}
+    \addplot[omThm, very thick, domain=-1.6:1.6, samples=150]
+      {-0.55*x*x + 0.28*x^4 + 0.27};
+    \addlegendentry{$T < T_{\text{c}}$: two wells}
+    \fill[omThm] (axis cs:0.99,0.0) circle (1.6pt);
+    \fill[omThm] (axis cs:-0.99,0.0) circle (1.6pt);
+  \end{axis}
+\end{tikzpicture}
+
+{\small Landau's \omterm{prop:b3:canonical-ensemble:machine}{free energy}: cooling through $T_{\text{c}}$ turns
+one well into two. The system must roll into one of them ---
+equivalent by symmetry, distinguishable in fact: spontaneous
+\omterm{def:b3:phase-transitions:order}{symmetry breaking}, from magnets to the Higgs field.}
+\end{omfigure}
+
+\begin{method}[Reading a transition]\label{met:b3:phase-transitions:method}
+(1) Identify the \omterm{def:b3:phase-transitions:order}{order parameter} and whether it jumps
+(first-order: latent heat, coexistence, hysteresis, nucleation) or
+grows continuously (\omterm{prop:b3:phase-transitions:vdw}{critical point}: divergences, opalescence,
+universality). (2) First-order lines: Clausius--Clapeyron for the
+slope; $\mu$-equality for coexistence. (3) Continuous: mean-field
+first ($\tanh$ or Landau) for the phase diagram's shape; trust its
+\emph{topology}, not its exponents. (4) Below $T_{\text{c}}$,
+remember the choice: broken symmetry means domains, defects and
+history-dependence. (5) Estimates: $k_{\text{B}}T_{\text{c}} \sim$
+(coupling per neighbour) $\times$ (number of neighbours).
+\end{method}
+
+\begin{omfigure}
+\includegraphics[width=0.58\linewidth]{images/book5/ai/b5-26-liquid-crystal.png}
+
+{\small A liquid crystal between crossed polarisers: an \omterm{def:b3:phase-transitions:order}{order parameter} (the molecular axis) swirling through defects where the brushes meet. Matter's phases between liquid and solid --- and the working substance of most screens.}
+\end{omfigure}
+
+\section{Exercises}
+
+\begin{exercise}[$\star$]\label{exo:b3:phase-transitions:1}
+Classify (first-order or continuous), naming the \omterm{def:b3:phase-transitions:order}{order parameter}
+and the broken symmetry if any: (a) boiling at \qty{1}{atm}; (b)
+the Curie point; (c) the superfluid $\lambda$ point; (d) boiling
+\emph{exactly at} the \omterm{prop:b3:phase-transitions:vdw}{critical point}.
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b3:phase-transitions:2}
+Latent heats as entropy. (a) Water: $L_{\text{vap}} =
+\qty{2.26e6}{J/kg}$ at \qty{373}{K}: compute $\Delta S$ per
+molecule in units of $k_{\text{B}}$. (b) The same for melting
+($L_{\text{fus}} = \qty{3.3e5}{J/kg}$ at \qty{273}{K}). (c) Most
+liquids vaporise with $\Delta S \approx 10$--$11\,k_{\text{B}}$
+(Trouton's rule): what does the number roughly count (the
+$\ln$ of what volume ratio)? (d) Why is melting's entropy jump so
+much smaller than boiling's?
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b3:phase-transitions:3}
+Van der Waals critical constants ($V_{\text{c}} = 3Nb$,
+$k_{\text{B}}T_{\text{c}} = 8a/27b$, $P_{\text{c}} = a/27b^2$ ---
+accept). (a) Show $P_{\text{c}}V_{\text{c}}/Nk_{\text{B}}T_{\text{
+c}} = 3/8$, a universal number for the model; the measured values
+cluster near $0.29$ --- comment. (b) For CO$_2$
+($T_{\text{c}} = \qty{304}{K}$, $P_{\text{c}} = \qty{73.8}{bar}$):
+extract $a$ and $b$. (c) From $b$, estimate the molecular
+diameter. (d) Why does room-temperature CO$_2$ liquefy under
+pressure while room-temperature N$_2$ ($T_{\text{c}} =
+\qty{126}{K}$) never does?
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b3:phase-transitions:4}
+\omterm{def:b3:phase-transitions:order}{Order parameters}, quickly: give one for (a) a ferromagnet; (b)
+the liquid--gas transition; (c) \omterm{thm:b3:quantum-statistics:bec}{Bose--Einstein condensation}; (d)
+an antiferromagnet (two sublattices --- what quantity orders while
+the total magnetisation stays zero?).
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b3:phase-transitions:5}
+Mean field by hand. (a) Derive $m = \tanh(\beta qJm)$ from a spin
+in the average field of its $q$ neighbours. (b) Show a nonzero
+solution exists exactly when $T < qJ/k_{\text{B}}$. (c) Expand to
+third order and derive $m(T) \approx \sqrt{3(1 -
+T/T_{\text{c}})}$. (d) Iron: $T_{\text{c}} = \qty{1043}{K}$, $q =
+8$: extract $J$ in eV and check the exchange scale of
+\cref{exo:b3:identical-particles:12}.
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b3:phase-transitions:6}
+Curie--Weiss. Add a small field: $m = \tanh[\beta(qJm + \mu B)]$.
+(a) Linearise above $T_{\text{c}}$ and derive $\chi = \partial
+m/\partial B \propto 1/(T - T_{\text{c}})$. (b) Compare with the
+free-spin Curie law: what does plotting $1/\chi$ against $T$ give
+in each case, and how does the intercept diagnose ferromagnetic
+coupling? (c) Nickel's $1/\chi$ line hits zero at \qty{631}{K}:
+interpret. (d) For an antiferromagnet the intercept is
+\emph{negative}: what sign of $J$ does that betray?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b3:phase-transitions:7}
+Clausius--Clapeyron at work. (a) Water at \qty{100}{\celsius}
+($\Delta v = \qty{1.67}{m^3/kg}$): compute $\dd P/\dd T$. (b)
+Use $\dd\ln P/\dd T = Lm_{\text{w}}/k_{\text{B}}T^2$ to estimate
+the boiling temperature at $P = \qty{0.7}{atm}$ (a \qty{3000}{m}
+summit). (c) Melting: with $\Delta v = \qty{-9.1e-5}{m^3/kg}$ and
+$L = \qty{3.3e5}{J/kg}$, compute $\dd T/\dd P$ and the pressure
+to depress ice's melting point by \qty{5}{K}. (d) A
+\qty{70}{kg} skater on \qty{30}{mm^2} of blade: the pressure and
+its melting-point shift --- does pressure-melting explain
+skating? (What does: friction and surface premelting.)
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b3:phase-transitions:8}
+Landau computations. (a) Minimise $F = a(T - T_{\text{c}})m^2 +
+bm^4$ below $T_{\text{c}}$. (b) Compute $F$ at the minimum and
+show the heat capacity has a finite \emph{jump} $\Delta C =
+a^2T_{\text{c}}/2b$ at the transition. (c) Sketch $C(T)$:
+mean-field step versus the measured near-logarithmic peak of
+helium's $\lambda$ point --- what do real fluctuations add? (d)
+Add a field term $-hm$: show the transition rounds off ---
+symmetry must be exact for it to break.
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b3:phase-transitions:9}
+Nucleation. A droplet of radius $r$ in supersaturated vapour
+gains bulk \omterm{prop:b3:canonical-ensemble:machine}{free energy} $-\tfrac43\pi r^3\,n\,\delta\mu$ but pays
+surface tension $4\pi r^2\sigma$. (a) Show the barrier peaks at
+$r^* = 2\sigma/n\,\delta\mu$. (b) Explain: why do clean
+supersaturated vapours and superheated liquids persist
+(metastability), and what do dust, ions and scratches provide?
+(c) Cloud chambers (\cref{ch:b3:particle-physics}'s ancestor
+detectors) and bubble chambers run \emph{on} this physics: which
+role does the passing particle's ion trail play? (d) Why are
+``boiling chips'' put in laboratory flasks?
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b3:phase-transitions:10}
+No transition in one dimension. Consider a 1D Ising chain of $N$
+spins, all up, and insert one ``domain wall'' (all spins beyond
+some bond flipped). (a) Energy cost of the wall: $2J$,
+independent of position. (b) Entropy gain: the wall can sit at
+any of $\sim N$ bonds --- $\Delta S = k_{\text{B}}\ln N$. (c)
+Show $\Delta F = 2J - k_{\text{B}}T\ln N < 0$ for any $T > 0$ at
+large $N$: walls always proliferate, and long-range order is
+impossible --- the 1D \omterm{thm:b3:phase-transitions:meanfield}{Ising model} has $T_{\text{c}} = 0$. (d) In
+2D, a wall is a line of length $\ell$ costing $2J\ell$ but with
+$\sim3^\ell$ shapes: redo the estimate and show order
+\emph{survives} below a finite $T_{\text{c}}$ --- the
+Peierls argument behind Onsager's exact $2.269\,J/k_{\text{B}}$.
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b3:phase-transitions:11}
+Universality audited. Mean field predicts $\beta = 1/2$, $\gamma
+= 1$ ($\chi \sim |t|^{-\gamma}$), $\delta = 3$ ($m \sim h^{1/3}$
+at $T_{\text{c}}$). Measured, for both the liquid--gas \omterm{prop:b3:phase-transitions:vdw}{critical
+point} \emph{and} three-dimensional uniaxial magnets: $\beta
+\approx 0.326$, $\gamma \approx 1.237$, $\delta \approx 4.79$.
+(a) What justifies comparing a fluid with a magnet at all (what
+do their \omterm{def:b3:phase-transitions:order}{order parameters} share --- a single sign choice)? (b)
+Why does mean field fail near $T_{\text{c}}$ (what diverges,
+invalidating the neglect of fluctuations)? (c) Why does it fail
+\emph{less} in higher dimensions (neighbour count versus
+fluctuation reach; mean field becomes exact above four
+dimensions)? (d) State the renormalisation-group moral in two
+sentences: what is being averaged scale by scale, and why only
+symmetry and dimension survive the averaging.
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b3:phase-transitions:12}
+From magnets to the Higgs. Promote the \omterm{def:b3:phase-transitions:order}{order parameter} to a field
+$\phi(\vect r)$ with Landau energy density $\alpha(T -
+T_{\text{c}})\phi^2 + b\phi^4$ plus a gradient term. (a) Below
+$T_{\text{c}}$ the field sits at $\pm\phi_0$: \omterm{prop:b3:lagrangian-mechanics:modes}{small oscillations}
+\emph{along} the well have a restoring curvature --- compute
+$F''(\phi_0)$ and interpret it, in field language, as a
+\emph{mass}. (b) For a \emph{complex} \omterm{def:b3:phase-transitions:order}{order parameter} (a circle
+of minima --- the ``Mexican hat''), oscillations \emph{around}
+the rim cost no potential energy: a massless mode --- name the
+condensed-matter analogues (spin waves, superfluid phonons). (c)
+In the electroweak theory, the vacuum itself sits in such a
+broken-symmetry well; particles acquire mass from the field's
+nonzero value, and the radial oscillation \emph{is} the Higgs
+boson: map each element onto (a)--(b). (d) In one sentence: what
+did condensed-matter physics teach particle physics here (the
+export, via Anderson, of \omterm{def:b3:phase-transitions:order}{symmetry breaking})?
+\end{exercise}
+
+\begin{omfigure}
+\includegraphics[width=0.58\linewidth]{images/book5/ai/b5-17-pressure-cooker.png}
+
+{\small A pressure cooker venting: two atmospheres inside move the liquid--vapour coexistence line to \qty{121}{\celsius} --- Clausius and Clapeyron, cooking dinner faster.}
+\end{omfigure}
+
+\section{Problem: The kitchen phase diagram}
+
+\begin{problem}[{Weekend problem --- pressure cookers, mountain
+tea, and the end of boiling}]\label{pb:b3:phase-transitions:1}
+Water's phase diagram hangs, unnoticed, over every stove. This
+problem walks its three lines with Clausius--Clapeyron in hand ---
+from why a pressure cooker halves cooking times, through why tea
+disappoints at altitude, to the strange world beyond the \omterm{prop:b3:phase-transitions:vdw}{critical
+point} where boiling itself ceases to exist. Data: $L_{\text{vap}}
+= \qty{2.26e6}{J/kg}$, $L_{\text{fus}} = \qty{3.34e5}{J/kg}$;
+water vapour at \qty{373}{K}, \qty{1}{atm}: $\Delta v_{\text{vap}}
+= \qty{1.67}{m^3/kg}$; melting: $\Delta v = \qty{-9.1e-5}{m^3/kg}$;
+molecular mass $m_{\text{w}} = \qty{3.0e-26}{kg}$; \omterm{prop:b3:phase-transitions:vdw}{critical point}:
+$T_{\text{c}} = \qty{647}{K}$, $P_{\text{c}} = \qty{221}{bar}$.
+
+\medskip\noindent\textbf{Part I --- The boiling line.}
+\begin{enumerate}
+  \item What defines ``boiling'' at a given pressure (which two
+        \omterm{thm:b3:grand-canonical:distribution}{chemical potentials} tie)?
+  \item Compute the slope $\dd P/\dd T$ of the vaporisation line
+        at \qty{100}{\celsius}.
+  \item A pressure cooker holds \qty{2}{atm}: integrate the slope
+        (or use the exponential form with $Lm_{\text{w}}/
+        k_{\text{B}} \approx \qty{4900}{K}$) to find its boiling
+        temperature.
+  \item With the Arrhenius kitchen rule of
+        \cref{exo:b3:canonical-ensemble:9} (rates double per
+        \qty{10}{K}), estimate the speed-up over open-pot
+        cooking.
+  \item At La Paz (\qty{3600}{m}, $P \approx \qty{0.65}{atm}$):
+        boiling temperature, and why tea brews badly.
+  \item Why does adding salt raise the boiling point (whose $\mu$
+        does the solute lower --- recall
+        \cref{exo:b3:grand-canonical:8})?
+\end{enumerate}
+
+\medskip\noindent\textbf{Part II --- The melting line.}
+\begin{enumerate}[resume]
+  \item Compute $\dd T/\dd P$ for melting and note the sign.
+  \item Which everyday observation encodes $\Delta v < 0$ (what
+        does ice do in your glass), and why is that anomaly rare
+        among substances?
+  \item A glacier \qty{300}{m} thick: the pressure at its base
+        and the melting-point depression --- does basal
+        pressure-melting matter for glacier flow?
+  \item Revisit the skater of
+        \cref{exo:b3:phase-transitions:7}(d): what actually
+        lubricates the blade?
+  \item If ice sank (positive slope, like almost every other
+        solid), what would winter do to lakes and their fish ---
+        trace the consequence chain.
+  \item The negative slope ends at high pressure where other ice
+        crystal forms take over (ice III, V, VI): what does the
+        existence of a dozen ices say about the free-energy
+        landscape of one simple molecule?
+\end{enumerate}
+
+\medskip\noindent\textbf{Part III --- The end of the line.}
+\begin{enumerate}[resume]
+  \item The boiling line terminates at ($T_{\text{c}},
+        P_{\text{c}}$): what happens to the latent heat and the
+        density difference as the end is approached?
+  \item Beyond the \omterm{prop:b3:phase-transitions:vdw}{critical point} one can carry water from
+        ``liquid-like'' to ``gas-like'' with \emph{no} transition
+        at all: describe the path in the $(P, T)$ plane.
+  \item Approaching the \omterm{prop:b3:phase-transitions:vdw}{critical point}, the fluid turns milky:
+        connect this opalescence to
+        \cref{exo:b3:microcanonical-ensemble:12} and
+        \cref{pb:b3:perturbation-theory:1}.
+  \item Supercritical CO$_2$ ($T_{\text{c}} = \qty{304}{K}$,
+        $P_{\text{c}} = \qty{74}{bar}$) dissolves like a liquid
+        and penetrates like a gas: name the industrial use that
+        decaffeinates coffee, and why the solvent leaves no
+        residue.
+  \item Supercritical water (in power-plant boilers above
+        \qty{221}{bar}): why does eliminating boiling ---
+        bubbles, films, burnout --- appeal to boiler engineers?
+  \item Deep-ocean hydrothermal vents emit water at
+        \qty{400}{\celsius} that does not boil: check against the
+        local pressure ($\sim\qty{300}{bar}$ at \qty{3}{km}) and
+        the phase diagram.
+\end{enumerate}
+
+\medskip\noindent\textbf{Part IV --- Reading the whole map.}
+\begin{enumerate}[resume]
+  \item Sketch (in words) water's $(P, T)$ diagram: the three
+        lines, the triple point ($\qty{0.01}{\celsius}$,
+        \qty{611}{Pa}), the \omterm{prop:b3:phase-transitions:vdw}{critical point}.
+  \item Below \qty{611}{Pa}, ice sublimes without melting: which
+        appliance (freeze-drying) and which planet's polar caps
+        (Mars, CO$_2$ and H$_2$O) live on this fact?
+  \item Why was the triple point of water --- exactly
+        \qty{273.16}{K} by definition until 2019 --- such a good
+        temperature standard (how many coexisting phases pin how
+        many \omterm{def:b3:lagrangian-mechanics:coordinates}{degrees of freedom})?
+  \item Each line of the map is a first-order transition; only
+        its endpoint is critical: restate the distinction with
+        \omterm{def:b3:phase-transitions:order}{order parameters} and latent heat.
+  \item Humid air's dew line is the same physics run backwards:
+        explain dew, fog and the morning mist on a cold window
+        with one $\mu$-crossing sentence.
+  \item Every pot lid is an experiment: droplets condense on it
+        and rain back --- identify the miniature water cycle's
+        two \omterm{def:b3:phase-transitions:order}{phase transitions} and the latent-heat shuttle that
+        makes a covered pot boil sooner.
+  \item Summarise the named result: one slope formula, $\dd P/
+        \dd T = L/T\Delta v$, explains the pressure cooker's
+        \qty{121}{\celsius}, the mountain's \qty{88}{\celsius}
+        tea, ice floating backwards up its melting line, and the
+        supercritical kettle where boiling ends at
+        $\qty{647}{K}, \qty{221}{bar}$.
+\end{enumerate}
+\end{problem}

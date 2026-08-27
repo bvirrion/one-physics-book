@@ -17,7 +17,8 @@ physique for year 3 — **pure physics, no chemistry**. Grades 1–6, where
 the French primaire taught no physics, use age-adapted chapters.
 
 **Current state: Books 1, 2 and 3 written, each in eight languages;
-Book 4 written in English (2026-08-22); Book 5 structure only.**
+Book 4 written in English (2026-08-22), in all eight languages
+(2026-08-22); Book 5 written in English (2026-08-27).**
 
 - **Book 1** (Primary & Middle School, grades 1–9): 71 chapters + 71
   solutions files (~435 pp), 142 figures, photographs and AI-generated
@@ -108,7 +109,8 @@ Book 4 written in English (2026-08-22); Book 5 structure only.**
   `../translation_instruction.md` — when a gate keys on a KEY=VALUE shape, ask
   what the MACRO form of the same thing looks like.
 - `tools/term_config/book{1,2}_*.py` are curated configs, not stubs —
-  regenerate links after editing those books' definitions or prose.
+  regenerate links after editing those books' definitions or prose
+  (`book3_en.py`, `book4_en.py` and `book5_en.py` likewise).
 
 - **Book 4** (University Year 2): 31 chapters in `parts/bachelor-2/`,
   written in English 2026-08-22 on the Book 3 recipe — the chapter list
@@ -133,9 +135,33 @@ Book 4 written in English (2026-08-22); Book 5 structure only.**
   `nl` 1 166 < `ar` 1 183 < `hi` 1 211 < `pt` 1 335 < `es` 1 361 <
   `fr` 1 365 < `id` 1 419.
 
-The invariant checks below are live for Books 1–4 and must stay
-green. Book 5 still has placeholder chapter bodies (a TODO comment
-and an "unwritten" line) with header-only solutions files, English only.
+- **Book 5** (University Year 3): 27 chapters in `parts/bachelor-3/`,
+  written in English 2026-08-27 on the Book 3 recipe. The chapter list
+  was re-scoped from 21 placeholders to 27 chapters so that **Books
+  3+4+5 together cover a French licence de physique (L3)** — the
+  provenance comment in `parts/bachelor-3/part.tex` cites the surveyed
+  curricula. Six groups: analytical/continuum mechanics (1–3), special
+  relativity with covariant electromagnetism (4–6), the full quantum
+  mechanics course (7–15), statistical physics (16–21), matter (22–24:
+  EM in matter, crystals, electrons in solids), subatomic and the
+  universe (25–27). 302 pp, 82 TikZ/pgfplots figures plus 10
+  photographs (`images/book5/`, credited in
+  `frontmatter/image-credits-book5.tex`) and 26 AI illustrations
+  (`images/book5/ai/`, prompts in `PROMPTS.md`), exactly 12 exercises
+  per chapter (4×★ / 5×★★ / 3×★★★), one 25-question weekend problem
+  per chapter, a full solution for every exercise and problem, ~916
+  generated `\omterm` links (`tools/term_config/book5_en.py` is
+  curated). Level guard = math Book 5 (Year 3): Hilbert spaces,
+  spectral theory and Fourier transforms available by prose reference
+  ("the Year 3 mathematics volume"); the spectral theorem for
+  unbounded operators, Bloch's theorem, Clausius–Mossotti's cavity
+  field and the SEMF are `\admitted` with honest remarks; tensor
+  index notation is introduced operationally in chs. 4–6.
+  Cross-volume references are prose-only. English only — translations
+  are a separate later effort.
+
+The invariant checks below are live for Books 1–5 and must stay
+green.
 
 `CONTRIBUTING.md` holds the authoritative style/structure conventions;
 `THEME.md` documents the One Course cover brand. Read both before writing

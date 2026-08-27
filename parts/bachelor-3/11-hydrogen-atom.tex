@@ -1,6 +1,502 @@
 \chapter{The Hydrogen Atom}\label{ch:b3:hydrogen-atom}
 
-% TODO: course, examples, figures, and 8--12 graded exercises
-% (see CONTRIBUTING.md). Placeholder until written.
+Nine-tenths of the atoms in the universe are hydrogen: one proton
+holding one electron, the only atom physics can solve exactly --- and
+the key that opened every other. The old quantum theory of
+\cref{ch:b3:hamiltonian-mechanics} guessed its energies; the
+machinery is now in place to \emph{derive} them: the Coulomb
+potential enters the \omterm{prop:b3:schrodinger-three-dimensions:swave}{radial equation} of the last chapter, and out
+come the levels $-E_{\text{I}}/n^2$, the \omterm{thm:b3:hydrogen-atom:levels}{Bohr radius}, the shells and
+subshells of chemistry's periodic table, and the spectral series
+astronomers read in every nebula. The same solution, rescaled,
+describes ionised helium, muonic atoms, positronium, and the
+electron--hole ``atoms'' inside semiconductors; stretched to $n
+\approx 100$ it describes Rydberg atoms half a micrometre across,
+whose radio whispers map the Galaxy's ionised clouds and whose
+interactions now drive quantum computers.
+% NOTE: full radial solutions (Laguerre) admitted; ground state solved
+% exactly; emphasis on scaling laws and applications.
 
-\emph{This chapter has not been written yet.}
+\section{The Coulomb problem solved}
+
+\begin{theorem}[Levels of hydrogen]\label{thm:b3:hydrogen-atom:levels}
+\index{hydrogen atom}\index{principal quantum number}\index{Bohr radius}
+For $V(r) = -e^2/4\pi\varepsilon_0 r$ (write $k = e^2/4\pi
+\varepsilon_0$), the bound states are labelled $(n, l, m)$ with
+\[
+E_n = -\frac{E_{\text{I}}}{n^2} , \qquad
+E_{\text{I}} = \frac{m_{\text{e}}k^2}{2\hbar^2} = \qty{13.6}{eV} ,
+\qquad n = 1, 2, 3, \dots
+\]
+and, for each $n$, the orbital numbers $l = 0, 1, \dots, n-1$ and
+$m = -l, \dots, l$. The natural length is the \omterm{thm:b3:hydrogen-atom:levels}{Bohr radius} $a_0 =
+\hbar^2/m_{\text{e}}k = \qty{52.9}{pm}$; the ground state is
+\[
+\psi_{100} = \frac{1}{\sqrt{\pi a_0^3}}\;\eu^{-r/a_0} .
+\]
+The energy depends on $n$ \emph{alone}: counting the $m$'s and
+$l$'s, level $n$ is $n^2$-fold degenerate (doubled by spin,
+\cref{ch:b3:spin-two-level}) --- far beyond the $(2l+1)$-fold
+degeneracy that isotropy explains.
+\end{theorem}
+
+\begin{proof}[Partial proof]
+For the ground state, try $u = Cr\,\eu^{-r/a}$ in the \omterm{prop:b3:schrodinger-three-dimensions:swave}{radial
+equation} with $l = 0$: $u'' = (1/a^2 - 2/ar)u$, so
+$-\tfrac{\hbar^2}{2m_{\text{e}}}u'' - \tfrac kr u = Eu$ requires
+$\hbar^2/m_{\text{e}}a = k$ (matching the $1/r$ terms) --- which is
+$a = a_0$ --- and $E = -\hbar^2/2m_{\text{e}}a_0^2 = -E_{\text{I}}$.
+The general solution (Laguerre polynomials, $n - l - 1$ radial
+nodes) is admitted; each step of the construction is elementary but
+long. The ``accidental'' $l$-degeneracy mirrors a classical secret
+of the pure $1/r$ force --- Kepler ellipses do not precess, and an
+extra conserved vector (Laplace--Runge--Lenz) points along the fixed
+major axis; its quantum version is what ties different $l$ to one
+energy (\cref{exo:b3:hydrogen-atom:12}).
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}[font=\small, >=Stealth]
+  % energy scale: E = -13.6/n^2, map E -> y = 5.6 + E*0.42 (E in eV)
+  % n=1: y=-0.11? choose y(E) = 5.9 + 0.42*E: n1: 0.19, n2: 4.47, n3: 5.27, n4: 5.55, inf: 5.9
+  \draw[->] (-0.4,-0.4) -- (-0.4,6.6);
+  \node[anchor=south] at (-0.4,6.6) {$E$ (eV)};
+  % continuum
+  \fill[gray!15] (0,5.9) rectangle (8.6,6.45);
+  \node[anchor=west, font=\footnotesize] at (8.7,6.15) {continuum: ionised};
+  \draw[thick] (0,5.9) -- (8.6,5.9);
+  \node[anchor=east, font=\footnotesize] at (-0.5,5.9) {$0$};
+  % levels, split by l columns
+  \foreach \n/\y in {1/0.19, 2/4.47, 3/5.27, 4/5.55}
+    {\node[anchor=east, font=\footnotesize] at (-0.5,\y) {$-13.6/\n^2$};}
+  % l columns: s at x 0-1.4, p at 1.9-3.3, d at 3.8-5.2, f 5.7-7.1
+  \node[font=\footnotesize] at (0.7,-0.3) {$l = 0$ ($s$)};
+  \node[font=\footnotesize] at (2.6,-0.3) {$l = 1$ ($p$)};
+  \node[font=\footnotesize] at (4.5,-0.3) {$l = 2$ ($d$)};
+  \node[font=\footnotesize] at (6.4,-0.3) {$l = 3$ ($f$)};
+  \draw[very thick, omDef] (0,0.19) -- (1.4,0.19);
+  \foreach \x in {0,1.9} \draw[very thick, omDef] (\x,4.47) -- ({\x+1.4},4.47);
+  \foreach \x in {0,1.9,3.8} \draw[very thick, omDef] (\x,5.27) -- ({\x+1.4},5.27);
+  \foreach \x in {0,1.9,3.8,5.7} \draw[very thick, omDef] (\x,5.55) -- ({\x+1.4},5.55);
+  % series arrows
+  \draw[->, omExo, thick] (0.5,4.47) -- (0.6,0.24);
+  \draw[->, omExo, thick] (1.0,5.27) -- (0.85,0.24);
+  \node[omExo, font=\footnotesize, anchor=west] at (0.95,2.3) {Lyman (UV)};
+  \draw[->, omThm, thick] (2.6,5.27) -- (2.45,4.52);
+  \draw[->, omThm, thick] (3.1,5.55) -- (2.9,4.52);
+  \node[omThm, font=\footnotesize, anchor=west] at (3.25,4.95) {Balmer (visible)};
+  \node at (1.9,1.55) {};
+\end{tikzpicture}
+
+{\small The hydrogen levels $-E_{\text{I}}/n^2$, spread by $l$: all
+subshells of one $n$ coincide (the Coulomb ``accident''). Downward
+jumps ending on $n = 1$ form the ultraviolet \omterm{prop:b3:hydrogen-atom:series}{Lyman series}; those
+ending on $n = 2$, the visible \omterm{prop:b3:hydrogen-atom:series}{Balmer series} that colours nebulae
+red.}
+\end{omfigure}
+
+\section{Where the electron is}
+
+\begin{proposition}[Radial distributions]\label{prop:b3:hydrogen-atom:radial}
+\index{radial probability}
+The probability of finding the electron between $r$ and $r + \dd r$
+is $P(r)\,\dd r$ with $P(r) = |u(r)|^2$, the square of the
+normalised radial function of \cref{thm:b3:quantum-angular-momentum:radial}. For the lowest states:
+$P_{1s} \propto r^2\eu^{-2r/a_0}$, peaking at exactly $r = a_0$ with
+$\langle r\rangle = \tfrac32 a_0$; $P_{2s}$ shows two humps
+separated by a spherical \emph{node}; $P_{2p} \propto
+r^4\eu^{-r/a_0}$, peaking at $4a_0$. Generally $\langle r\rangle
+\approx n^2a_0$: atoms grow \emph{quadratically} with excitation,
+while their binding shrinks as $1/n^2$ --- the leverage behind the
+Rydberg giants of \cref{pb:b3:hydrogen-atom:1}.
+\end{proposition}
+\admitted
+
+\begin{omfigure}
+\begin{tikzpicture}
+  \begin{axis}[omaxis, axis x line=bottom, axis y line=left,
+    width=11.6cm, height=5.8cm, xmin=0, xmax=14, ymin=0, ymax=0.62,
+    xlabel={$r/a_0$}, ylabel={$P(r)$ (per $a_0$)},
+    xlabel style={at={(axis description cs:0.5,-0.1)}, anchor=north},
+    xtick={1,4,5,10}, ytick=\empty, clip=false,
+    legend style={font=\scriptsize, at={(0.95,0.9)}, anchor=north east,
+      draw=none, fill=none}]
+    \addplot[omDef, very thick, domain=0:8, samples=120] {4*x*x*exp(-2*x)};
+    \addlegendentry{$1s$}
+    \addplot[omThm, thick, domain=0:14, samples=140] {0.125*x*x*(2-x)^2*exp(-x)};
+    \addlegendentry{$2s$}
+    \addplot[omExo, thick, domain=0:14, samples=140] {x^4*exp(-x)/24};
+    \addlegendentry{$2p$}
+    \draw[gray, dashed] (axis cs:1,0) -- (axis cs:1,0.545);
+  \end{axis}
+\end{tikzpicture}
+
+{\small \omterm{prop:b3:hydrogen-atom:radial}{Radial probability} densities. The $1s$ peak sits at exactly
+$a_0$; the $2s$ state carries a spherical node and a lobe close to
+the nucleus --- the ``penetration'' that will order the periodic
+table --- while $2p$, walled off by the \omterm{thm:b3:quantum-angular-momentum:radial}{centrifugal barrier}, keeps
+away.}
+\end{omfigure}
+
+\begin{example}[Reading the sizes]\label{ex:b3:hydrogen-atom:sizes}
+Ground state: \qty{0.1}{nm} across, \qty{13.6}{eV} deep --- the
+scales of all chemistry. At $n = 10$: radius $\sim\qty{5}{nm}$,
+binding \qty{0.136}{eV} --- loosely held. At $n = 100$: a
+\emph{micrometre}-scale atom bound by \qty{1.4}{meV}, wrecked by the
+feeblest field --- yet interstellar space is empty enough for such
+atoms to live and broadcast
+(\cref{pb:b3:hydrogen-atom:1}).
+\end{example}
+
+\section{The spectrum}
+
+\begin{proposition}[Series and selection rules]\label{prop:b3:hydrogen-atom:series}
+\index{Balmer series}\index{Lyman series}
+A jump $n' \to n$ emits the wavelength
+\[
+\frac{1}{\lambda} = R_{\text{H}}\Big(\frac{1}{n^2} -
+\frac{1}{n'^2}\Big) , \qquad
+R_{\text{H}} = \frac{E_{\text{I}}}{hc} = \qty{1.097e7}{m^{-1}} ,
+\]
+subject to the dipole selection rule $\Delta l = \pm1$ (the photon
+carries $\hbar$). The \omterm{prop:b3:hydrogen-atom:series}{Lyman series} ($\to n = 1$) lies in the far
+ultraviolet from \qty{121.6}{nm}; the \omterm{prop:b3:hydrogen-atom:series}{Balmer series} ($\to n = 2$)
+begins at the red $H\alpha$ line, \qty{656.3}{nm} --- the colour of
+emission nebulae and solar prominences; the Paschen and later series
+recede into the infrared, and between $n = 110$ and $109$ the same
+formula lands at \qty{5.0}{GHz}: hydrogen speaks from the
+ultraviolet to the radio dial.
+\end{proposition}
+
+\begin{proof}
+Energy conservation with \cref{thm:b3:hydrogen-atom:levels};
+$R_{\text{H}}$ as in \cref{pb:b3:hamiltonian-mechanics:1}, now
+derived rather than postulated.
+\end{proof}
+
+\begin{example}[Hydrogen-like atoms: one solution, many atoms]\label{ex:b3:hydrogen-atom:scaling}
+Replace the proton's charge by $Ze$ and the electron by any orbiting
+mass $\mu$: every formula rescales as
+\[
+a \to a_0\,\frac{m_{\text{e}}}{\mu}\,\frac1Z , \qquad
+E_{\text{I}} \to E_{\text{I}}\,\frac{\mu}{m_{\text{e}}}\,Z^2 .
+\]
+He$^+$ ($Z = 2$): \qty{54.4}{eV}. Inner electrons of heavy atoms
+($Z \sim 30$): K-shell energies in the keV --- the characteristic
+X-rays by which Moseley ordered the elements
+(\cref{exo:b3:hydrogen-atom:5}). Muonic hydrogen ($\mu = 207
+m_{\text{e}}$): a femtometre-scale atom probing the proton itself.
+Positronium ($e^+e^-$, $\mu = m_{\text{e}}/2$): half the binding,
+twice the size, and a short life ending in annihilation photons.
+And in a semiconductor, an electron and a hole orbit each other
+with small effective masses in a screening dielectric: an
+\emph{exciton}, the same atom grown to ten nanometres and
+millielectronvolts (\cref{exo:b3:hydrogen-atom:7}) --- hydrogen is
+less an atom than a template.
+\end{example}
+
+\begin{omfigure}
+\begin{tikzpicture}[font=\small]
+  % size comparison, hand-drawn
+  \draw[omDef, thick, fill=omDef!12] (1.2,0) circle (1.05);
+  \fill[omDef] (1.2,0) circle (1.5pt);
+  \node[align=center, font=\footnotesize] at (1.2,-1.75)
+    {hydrogen\\$a_0$, \qty{-13.6}{eV}};
+  \draw[omThm, thick, fill=omThm!12] (4.6,0) circle (0.42);
+  \fill[omThm] (4.6,0) circle (1.5pt);
+  \node[align=center, font=\footnotesize] at (4.6,-1.75)
+    {muonic H\\$a_0/207$ ($\times 40$ here)\\\qty{-2.5}{keV}};
+  \draw[omExo, thick, fill=omExo!12] (8.1,0) circle (1.55);
+  \fill[omExo] (8.1,0) circle (1.5pt);
+  \node[align=center, font=\footnotesize] at (8.1,-2.25)
+    {positronium\\$2a_0$, \qty{-6.8}{eV}};
+  \draw[omProp, thick, fill=omProp!10] (12.4,0) circle (2.0);
+  \fill[omProp] (12.4,0) circle (1.5pt);
+  \node[align=center, font=\footnotesize] at (12.4,-2.75)
+    {exciton in a crystal\\$\sim 170\,a_0$ ($\div 50$ here)\\$\sim\qty{-7}{meV}$};
+\end{tikzpicture}
+
+{\small One solution, four ``atoms'': rescaling mass, charge and
+dielectric surroundings turns hydrogen into probes of the proton,
+tests of pure quantum electrodynamics, and the light-emitting
+quasi-atoms of semiconductors.}
+\end{omfigure}
+
+\begin{method}[Working with hydrogenic systems]\label{met:b3:hydrogen-atom:method}
+(1) Scale first: $a \propto 1/\mu Z$, $E \propto \mu Z^2$ turn any
+hydrogen answer into any hydrogen-like answer. (2) Sizes: $\langle
+r\rangle \sim n^2a$; spacings near level $n$: $\dd E/\dd n =
+2E_{\text{I}}/n^3$. (3) Spectra: Rydberg formula plus $\Delta l =
+\pm1$. (4) Penetration: $s$ states feel the nucleus, high-$l$
+states orbit outside --- the lever of multi-electron chemistry. (5)
+Sanity anchors: $\qty{13.6}{eV}$, $\qty{52.9}{pm}$,
+$\qty{121.6}{nm}$, $\qty{656.3}{nm}$ --- four numbers worth
+memorising for life.
+\end{method}
+
+\begin{omfigure}
+\includegraphics[width=0.58\linewidth]{images/book5/ai/b5-11-discharge-tube.png}
+
+{\small A hydrogen discharge tube and a pocket spectroscope: the pink glow, split, becomes the Balmer lines --- the integer fingerprint this chapter derives from the Coulomb potential.}
+\end{omfigure}
+
+\section{Exercises}
+
+\begin{exercise}[$\star$]\label{exo:b3:hydrogen-atom:1}
+(a) Verify by substitution that $u = Cr\eu^{-r/a_0}$ solves the
+$l = 0$ \omterm{prop:b3:schrodinger-three-dimensions:swave}{radial equation} with $E = -E_{\text{I}}$, provided $a_0 =
+\hbar^2/m_{\text{e}}k$. (b) Normalise it ($\int_0^\infty
+x^2\eu^{-x}\dd x = 2$). (c) Check the dimensions of $a_0$ and
+$E_{\text{I}}$. (d) Why is there no state below $-E_{\text{I}}$
+(argue with \cref{exo:b3:schrodinger-three-dimensions:12})?
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b3:hydrogen-atom:2}
+Compute (a) the wavelengths of Lyman $\alpha$ and of the Lyman
+limit; (b) the first three Balmer lines and the Balmer limit ---
+which are visible, and what colours? (c) the Paschen series' range;
+(d) the frequency of the $n = 110 \to 109$ transition.
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b3:hydrogen-atom:3}
+For the ground state: (a) locate the maximum of $P_{1s}(r)$; (b)
+compute $\langle r\rangle$; (c) compute the probability of finding
+the electron beyond $2a_0$ ($\int_x^\infty t^2\eu^{-t}\dd t = (x^2 +
+2x + 2)\eu^{-x}$); (d) why do ``orbit'' pictures at radius exactly
+$a_0$ mislead?
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b3:hydrogen-atom:4}
+(a) List the $(l, m)$ pairs of $n = 3$ and verify the count $n^2 =
+9$. (b) With spin, how many states in shells $n = 1, 2, 3$? (c)
+Match to the lengths $2, 8, 18$ of the periodic table's rows. (d)
+Which degeneracy (in $m$, or in $l$) survives in the outer electron
+of sodium, and why does the other break?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b3:hydrogen-atom:5}
+Moseley's ladder. An inner (K-shell) electron of an element $Z$
+moves in a nearly bare nuclear field screened by the one other K
+electron: effective charge $\approx Z - 1$. (a) Show the $2p \to 1s$
+X-ray energy is approximately $\tfrac34(Z-1)^2E_{\text{I}}$. (b)
+Evaluate for copper ($Z = 29$) and compare with the measured
+K$\alpha$ at \qty{8.05}{keV}. (c) Moseley (1913) plotted
+$\sqrt{\nu}$ against $Z$ and got straight lines: what did this prove
+about the meaning of atomic number? (d) Predict the K$\alpha$ energy
+of the then-missing element $Z = 43$.
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b3:hydrogen-atom:6}
+Positronium. (a) Justify $\mu = m_{\text{e}}/2$ and give its
+binding energy and \omterm{thm:b3:hydrogen-atom:levels}{Bohr radius}. (b) Its Lyman $\alpha$ wavelength.
+(c) Para-positronium annihilates into two photons: their energies
+and relative directions (from \cref{ch:b3:relativistic-dynamics}).
+(d) Where does medicine detect exactly this signature daily?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b3:hydrogen-atom:7}
+Excitons. In gallium arsenide, $\varepsilon_{\text{r}} = 12.9$ and
+the reduced effective mass is $\mu = 0.058\,m_{\text{e}}$. (a) Show
+$a_{\text{ex}} = a_0\,\varepsilon_{\text{r}}\,m_{\text{e}}/\mu$ and
+evaluate. (b) The exciton binding energy. (c) Compare
+$a_{\text{ex}}$ with the quantum-dot radii of
+\cref{pb:b3:schrodinger-three-dimensions:1} and justify, at last,
+neglecting the Coulomb term in small dots. (d) Why do excitonic
+lines appear only in \emph{pure, cold} semiconductors
+($k_{\text{B}}T$ against your answer to (b))?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b3:hydrogen-atom:8}
+Penetration and the alkali metals. Sodium is a hydrogen-like
+valence electron outside a closed core of charge $+e$ effective.
+(a) Which of $3s$, $3p$, $3d$ feels the incompletely screened
+nucleus most, and why (recall the radial figure)? (b) The measured
+levels are $E_{3s} = \qty{-5.14}{eV}$, $E_{3p} = \qty{-3.04}{eV},
+E_{3d} = \qty{-1.52}{eV}$: check that $3d$ is nearly hydrogenic
+($n = 3$) while $3s$ is far deeper, and explain. (c) Compute the
+wavelength of $3p \to 3s$: what famous colour is that? (d) Write
+the alkali levels as $-E_{\text{I}}/(n - \delta_l)^2$ and extract
+the ``quantum defects'' $\delta_s$ and $\delta_p$ for sodium.
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b3:hydrogen-atom:9}
+A proton in a nebula captures an electron into $n = 100$. (a) How
+much energy is released in the capture photon if the electron
+arrived nearly free? (b) The atom cascades down, preferentially by
+$\Delta n = 1$ steps at high $n$: in which band do those photons
+fall? (c) The cascade's last step is Lyman $\alpha$; the visible
+light of nebulae is dominated by H$\alpha$: trace which cascade
+step that is. (d) Explain why emission nebulae glow \emph{red}
+although hydrogen's strongest line (Lyman $\alpha$) is
+ultraviolet.
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b3:hydrogen-atom:10}
+Averages and the virial. For the ground state, compute (a)
+$\langle 1/r\rangle$ and check $\langle E_p\rangle = -2E_{\text{I}}
+= 2E_1$; (b) $\langle E_k\rangle = +E_{\text{I}}$, verifying the
+virial ratio of \cref{exo:b3:hamiltonian-mechanics:4}; (c) the
+electron's r.m.s.\ speed and $v/c$; (d) the order of magnitude of the magnetic field that the
+\emph{proton} experiences from the electron's motion (a current loop
+$ev/2\pi a_0$ seen at distance $a_0$) --- a number hyperfine
+structure will need.
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b3:hydrogen-atom:11}
+How fine is fine structure. (a) Show the ground-state speed scale
+is $\langle v^2\rangle^{1/2}/c = \alpha \approx 1/137$, and for
+hydrogen-like $Z$: $Z\alpha/n$. (b) Relativistic corrections enter
+at relative order $(v/c)^2$: estimate the fine-structure scale
+$\alpha^2E_{\text{I}}$ in meV, and the splitting's order for
+$n = 2$ in GHz. (c) For hydrogen-like uranium ($Z = 92$): $v/c$ at
+$n = 1$ --- is the non-relativistic treatment tenable? (d) What
+does the formal divergence at $Z\alpha \to 1$ ($Z \approx 137$)
+announce physically?
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b3:hydrogen-atom:12}
+The unreasonable degeneracy. (a) In classical mechanics, show that
+for $V = -k/r$ the orbit closes (no precession) by citing the
+conserved Laplace--Runge--Lenz vector $\vect A = \vect p\wedge\vect
+L - mk\,\vect e_r$ --- verify $\dd\vect A/\dd t = 0$ using Newton's
+law. (b) Argue: a conserved vector fixing the ellipse's axis is an
+extra symmetry beyond rotations --- and extra symmetry means extra
+degeneracy (recall \cref{exo:b3:quantum-formalism:9}). (c) Add a
+small $1/r^2$ correction to the potential and show the ellipse
+precesses: the axis turns, $\vect A$ is no longer conserved. (d)
+Connect: in multi-electron atoms the effective potential is not
+pure $1/r$, and the $l$-degeneracy breaks (sodium!); in hydrogen
+itself, relativity supplies the small correction --- which
+observed feature of \cref{exo:b3:hydrogen-atom:11} is that?
+\end{exercise}
+
+\section{Problem: Giant atoms}
+
+\begin{problem}[{Weekend problem --- Rydberg atoms, from the
+Galaxy's radio glow to quantum computers}]\label{pb:b3:hydrogen-atom:1}
+Stretch hydrogen to $n \approx 100$ and it becomes a different kind
+of object: micrometres across, bound by millielectronvolts,
+absurdly sensitive --- and absurdly useful. This problem scales the
+hydrogen solution up, first to the interstellar clouds that
+broadcast at centimetre wavelengths, then to the laboratory arrays
+where such giants entangle each other into processors. Data:
+$E_{\text{I}} = \qty{13.6}{eV}$, $a_0 = \qty{52.9}{pm}$,
+$R_{\text{H}}c = \qty{3.29e15}{Hz}$, $k_{\text{B}}T$ at
+\qty{300}{K} is \qty{25.9}{meV}.
+
+\medskip\noindent\textbf{Part I --- The scaling laws.}
+\begin{enumerate}
+  \item Give the four basic scalings with $n$: size $\langle
+        r\rangle$, binding $|E_n|$, spacing $E_{n+1} - E_n$ (for
+        large $n$), and the classical orbital frequency of the
+        corresponding Bohr orbit.
+  \item Show that for large $n$ the transition frequency $n+1 \to
+        n$ approaches $2R_{\text{H}}c/n^3$, and verify it equals
+        the classical orbital frequency (the correspondence
+        principle of \cref{pb:b3:hamiltonian-mechanics:1},
+        completed).
+  \item Evaluate size and binding at $n = 50$ and $n = 100$.
+  \item The electric dipole of a Rydberg atom scales as $n^2ea_0$:
+        evaluate at $n = 50$ in debye ($1\,\text{D} =
+        \qty{3.34e-30}{C.m}$) and compare with a water molecule's
+        \qty{1.85}{D}.
+  \item Estimate the electric field that rips the $n = 50$ atom
+        apart, as $F \sim |E_n|/(e\,\langle r\rangle)$, in V/cm.
+  \item Why can such atoms not survive ordinary laboratory vacuum
+        chemistry --- yet survive fine in interstellar space
+        (compare collision rates)?
+\end{enumerate}
+
+\medskip\noindent\textbf{Part II --- The Galaxy's recombination
+lines.}
+In ionised nebulae, protons capture electrons into high $n$; the
+cascade radiates a comb of ``radio recombination lines''.
+\begin{enumerate}[resume]
+  \item Compute the frequency of the $n = 110 \to 109$ transition
+        (called H109$\alpha$).
+  \item In what band does it fall, and what kind of telescope
+        receives it?
+  \item Compute the wavelength of H109$\alpha$ and compare it with
+        the size of the emitting atom: how many atoms fit in one
+        wavelength?
+  \item These lines measure the nebula's temperature by their
+        Doppler width: at $T = \qty{e4}{K}$, the hydrogen thermal
+        speed is $\sim\qty{12.8}{km/s}$ --- compute the fractional
+        linewidth $\Delta\nu/\nu$ and the width of H109$\alpha$ in
+        kHz.
+  \item Radio waves cross the dust that blackens the optical sky:
+        what does that let recombination-line astronomers map that
+        Balmer-line astronomers cannot?
+  \item Above roughly $n \sim 1000$ (atoms $0.05$ millimetres
+        across!), the levels blur into a continuum even in space:
+        name two effects that broaden or destroy such states.
+\end{enumerate}
+
+\medskip\noindent\textbf{Part III --- Giants in the laboratory.}
+\begin{enumerate}[resume]
+  \item Lasers drive rubidium atoms to $n \approx 70$ in
+        micrometre-spaced optical-tweezer arrays. Two such atoms a
+        distance $R$ apart interact by their induced dipoles
+        (recall \cref{exo:b3:harmonic-oscillator:10}): with dipole
+        $\propto n^2$, show the van der Waals strength scales as a
+        colossal $n^{11}$ (use $C_6 \propto d^4/\Delta E$ with
+        level spacing $\Delta E \propto n^{-3}$).
+  \item The ``blockade'': within a radius $R_{\text{b}}$, the
+        interaction shifts the doubly excited state out of laser
+        resonance, so \emph{two} atoms cannot both be excited.
+        Explain in one sentence why this realises a two-qubit
+        gate.
+  \item Blockade radii reach several micrometres --- thousands of
+        times the atoms' ground-state size: why is this
+        long reach (compare chemistry's nanometre range)
+        exactly what a scalable processor wants?
+  \item A Rydberg state at $n = 70$ lives $\sim\qty{100}{\micro s}$
+        while a gate takes $\sim\qty{0.5}{\micro s}$: roughly how
+        many operations fit in one lifetime, and why does that
+        ratio, not the lifetime alone, matter?
+  \item Room-temperature blackbody radiation, peaking near
+        \qty{100}{meV} but rich in a low-energy tail, drives
+        transitions between neighbouring Rydberg levels spaced by
+        only $\sim\qty{0.1}{meV}$: why must precision experiments
+        enclose the atoms in cold shields?
+  \item Estimate how many antenna-like dipole transitions
+        ($\propto n^2$) a \qty{300}{K} photon bath drives per
+        second compared with an $n = 1$ atom: which scaling makes
+        Rydberg atoms exquisite \emph{sensors} of microwave and
+        terahertz fields?
+\end{enumerate}
+
+\medskip\noindent\textbf{Part IV --- The big picture.}
+\begin{enumerate}[resume]
+  \item One formula, $E_n = -E_{\text{I}}\mu Z^2/m_{\text{e}}n^2$,
+        spans how many orders of magnitude of binding energy from
+        hydrogen-like uranium ($Z = 92$, $n = 1$) down to an
+        $n = 1000$ Rydberg state? Compute both ends.
+  \item Radiative lifetimes of low-$l$ states scale as $n^3$: from
+        the $2p$ lifetime of \qty{1.6}{ns}, estimate the lifetime
+        of a $100p$ state --- and compare with the room-temperature
+        blackbody problem of Part III.
+  \item At CERN, anti-atoms of antihydrogen are now spectroscopied
+        on the $1s \to 2s$ interval to fifteen digits: what
+        fundamental symmetry does agreement with ordinary hydrogen
+        test, and why is hydrogen the right atom for the
+        comparison?
+  \item At $n \sim 100$ the electron's de Broglie wave wraps a
+        nearly classical orbit; at $n = 1$ no orbit exists at all:
+        in one sentence, where does the classical picture switch
+        on?
+  \item Rydberg constants are measured to fifteen digits: why is
+        hydrogen, of all systems, the natural precision anchor of
+        atomic physics?
+  \item The 2012 Nobel Prize (Haroche) used Rydberg atoms as
+        photon-counters that do not destroy the photon: which two
+        properties from Part I and III make them ideal
+        non-demolition probes of microwave fields?
+  \item Summarise the named result: the $n^2$, $n^{-2}$, $n^{-3}$
+        and $n^{11}$ scalings of one exactly solved atom stretch
+        hydrogen from \qty{52.9}{pm} to half a micrometre, tune its
+        voice from \qty{121.6}{nm} to \qty{6}{cm}, and turn it into
+        both the Galaxy's radio beacon and the two-qubit gate of
+        neutral-atom quantum computers.
+\end{enumerate}
+\end{problem}

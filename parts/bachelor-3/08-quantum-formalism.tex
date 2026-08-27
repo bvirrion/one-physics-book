@@ -1,0 +1,574 @@
+\chapter{The Formalism of Quantum Mechanics}\label{ch:b3:quantum-formalism}
+
+Take three polarizing filters. Two of them, crossed at $90^\circ$,
+block light completely; slide the third between them at $45^\circ$
+and light comes \emph{through} --- adding an obstacle opens the way.
+No picture of filters as sieves survives this experiment; what does
+survive is linear algebra: the polarization of a photon is a
+\emph{vector}, each filter measures it along an axis and projects it,
+and the probabilities are squared components. This chapter installs
+that algebra as the actual foundation of quantum mechanics. The wave
+functions of the previous chapters were one concrete costume of a
+more abstract body: states are vectors in a \omterm{def:b3:quantum-formalism:state}{Hilbert space},
+\omterm{def:b3:quantum-formalism:observable}{observables} are \omterm{def:b3:quantum-formalism:observable}{Hermitian operators}, measured values are \omterm{def:b3:quantum-formalism:observable}{eigenvalues},
+probabilities are squared scalar products, and evolution is generated
+by the \omterm{def:b3:hamiltonian-mechanics:hamiltonian}{Hamiltonian}. Five postulates, all of them already at work in
+everything we have computed --- and, once stated cleanly, powerful
+enough to handle systems no wave on a line can describe: the photon's
+polarization, the electron's spin, and the neutrinos whose identity
+oscillates across the Earth.
+
+\section{States are vectors}
+
+\begin{definition}[State space, kets and brackets]\label{def:b3:quantum-formalism:state}
+\index{Hilbert space}\index{ket}\index{bra}
+The states of a quantum system form a complex vector space with an
+inner product --- a \emph{Hilbert space} $\mathcal H$ (the
+mathematics is developed in the Year 3 mathematics volume). A state
+is a vector, written as a \emph{ket} $\ket\psi$, normalised:
+$\braket\psi\psi = 1$. The inner product of two states is the complex
+number $\braket\varphi\psi$, conjugate-linear in the first slot,
+with $\braket\varphi\psi = \braket\psi\varphi^*$. In an orthonormal
+basis $\{\ket{e_i}\}$,
+\[
+\ket\psi = \sum_i c_i\ket{e_i} , \qquad
+c_i = \braket{e_i}\psi , \qquad
+\sum_i|c_i|^2 = 1 .
+\]
+The wave function of the previous chapters is the family of
+components of $\ket\psi$ along position: $\psi(x) =
+\braket{x}{\psi}$; nothing is lost, and systems with \emph{finite}
+state spaces --- undreamable as waves --- become describable.
+\end{definition}
+
+\begin{example}[The photon's polarization: a two-dimensional world]\label{ex:b3:quantum-formalism:polarization}
+A photon heading down the $z$ axis carries a polarization state in a
+\emph{two}-dimensional \omterm{def:b3:quantum-formalism:state}{Hilbert space}, with basis $\ket H$
+(horizontal) and $\ket V$ (vertical). Light polarized at angle
+$\theta$ is the superposition
+\[
+\ket\theta = \cos\theta\,\ket H + \sin\theta\,\ket V ,
+\]
+and circular polarization is the complex combination $(\ket H \pm
+\iu\ket V)/\sqrt2$: the coefficients being complex is not decoration
+but physics. Every quantum two-level system --- spin, the ammonia
+molecule, a superconducting qubit --- is this same vector space in
+different clothing.
+\end{example}
+
+\begin{omfigure}
+\begin{tikzpicture}[font=\small, >=Stealth]
+  \draw[->] (-0.3,0) -- (3.3,0) node[right] {$\ket H$};
+  \draw[->] (0,-0.3) -- (0,3.3) node[above] {$\ket V$};
+  \draw[->, omDef, very thick] (0,0) -- (35:2.9);
+  \node[omDef, anchor=west] at (35:3.0) {$\ket\theta$};
+  \draw[dashed, omThm] (35:2.9) -- ({2.9*cos(35)},0);
+  \draw[dashed, omExo] (35:2.9) -- (0,{2.9*sin(35)});
+  \node[omThm, anchor=north] at ({2.9*cos(35)},-0.08) {$\cos\theta$};
+  \node[omExo, anchor=east] at (-0.08,{2.9*sin(35)}) {$\sin\theta$};
+  \draw (1.0,0) arc (0:35:1.0);
+  \node at (17:1.35) {$\theta$};
+  \node[align=left, anchor=west] at (5.3,1.7)
+    {probability along $\ket H$: $\cos^2\theta$\\[2pt]
+     probability along $\ket V$: $\sin^2\theta$};
+  \node[align=left, anchor=west, font=\footnotesize] at (5.3,0.45)
+    {(Malus's law of the Year 1 volume,\\re-read as Born's rule)};
+\end{tikzpicture}
+
+{\small A polarization state as a vector: its squared components on
+an analyser's basis are the outcome probabilities --- geometry become
+probability.}
+\end{omfigure}
+
+\section{Observables are operators}
+
+\begin{definition}[Observables]\label{def:b3:quantum-formalism:observable}
+\index{observable}\index{Hermitian operator}\index{eigenvalue}
+An \emph{observable} is a linear operator $\hat A$ on $\mathcal H$
+that is \emph{Hermitian}: $\braket{\varphi}{\hat A\psi} =
+\braket{\hat A\varphi}{\psi}$ for all states (in matrix language,
+$A = A^{*\top}$). Its \emph{eigenvectors} and \emph{eigenvalues},
+$\hat A\ket{a} = a\ket{a}$, carry the physics: the $a$ are the
+possible measured values. Familiar cases: position ($\hat x$:
+multiplication by $x$), momentum ($\hat p = -\iu\hbar\,\dd/\dd x$),
+energy ($\hat H = \hat p^2/2m + V(\hat x)$) --- and, in two
+dimensions, any Hermitian $2\times2$ matrix.
+\end{definition}
+
+\begin{theorem}[Why Hermitian]\label{thm:b3:quantum-formalism:hermitian}
+A \omterm{def:b3:quantum-formalism:observable}{Hermitian operator} has real \omterm{def:b3:quantum-formalism:observable}{eigenvalues}, and eigenvectors with
+distinct \omterm{def:b3:quantum-formalism:observable}{eigenvalues} are orthogonal; on the spaces of this book its
+eigenvectors form an orthonormal basis of $\mathcal H$ (the
+\emph{spectral theorem}, proved in finite dimension in the Year 2
+mathematics volume; for the unbounded operators $\hat x$, $\hat p$,
+$\hat H$ the full statement belongs to Year 3 spectral theory and is
+admitted). Measured values must be real and distinguishable outcomes
+must be orthogonal: Hermiticity is exactly the condition that an
+operator can represent a measurement.
+\end{theorem}
+
+\begin{proof}[Partial proof]
+$a\braket aa = \braket{a}{\hat Aa} = \braket{\hat Aa}{a} =
+a^*\braket aa$: $a$ real. For $\hat A\ket a = a\ket a$, $\hat A\ket b
+= b\ket b$: $a\braket ba = \braket{b}{\hat Aa} = \braket{\hat
+Ab}{a} = b\braket ba$, so $(a - b)\braket ba = 0$.
+\end{proof}
+
+\begin{example}[A two-level observable]\label{ex:b3:quantum-formalism:twolevel}
+On the polarization space, in the $(\ket H, \ket V)$ basis, consider
+\[
+\hat A = \begin{pmatrix} 0 & 1\\ 1 & 0\end{pmatrix} :
+\]
+Hermitian; \omterm{def:b3:quantum-formalism:observable}{eigenvalues} $\pm1$; eigenvectors $(\ket H \pm
+\ket V)/\sqrt2$ --- the polarizations at $\pm45^\circ$. Measuring
+$\hat A$ \emph{means} asking ``diagonal or antidiagonal?'', and the
+eigenbasis is the pair of questions' answers. Every $45^\circ$
+polarizer in the opening experiment is this matrix in glass.
+\end{example}
+
+\section{The postulates}
+
+\begin{theorem}[The rules of quantum mechanics]\label{thm:b3:quantum-formalism:postulates}
+\index{postulates of quantum mechanics}\index{Born's rule}\index{collapse}
+\emph{(P1)} A system's state is a normalised \omterm{def:b3:quantum-formalism:state}{ket} $\ket\psi$ in its
+\omterm{def:b3:quantum-formalism:state}{Hilbert space}.
+\emph{(P2)} Every measurable quantity is a \omterm{def:b3:quantum-formalism:observable}{Hermitian operator}
+$\hat A$.
+\emph{(P3)} The only possible results of measuring $\hat A$ are its
+\omterm{def:b3:quantum-formalism:observable}{eigenvalues}.
+\emph{(P4)} On a state $\ket\psi$, the result $a$ occurs with
+probability $\mathcal P(a) = |\braket a\psi|^2$ (Born's rule; for a
+degenerate \omterm{def:b3:quantum-formalism:observable}{eigenvalue}, sum the squared components over its
+eigenspace). The mean of many trials is $\langle\hat A\rangle =
+\bra\psi\hat A\ket\psi$.
+\emph{(P5)} Immediately after a measurement giving $a$, the state is
+the (normalised) projection of $\ket\psi$ onto the $a$ eigenspace
+--- the \emph{collapse}: measurement is an interaction that leaves
+the system in the state matching its own answer.
+\emph{(P6)} Between measurements, the state evolves unitarily under
+the Schrödinger equation
+$\iu\hbar\,\dfrac{\dd}{\dd t}\ket{\psi(t)} = \hat H\ket{\psi(t)}$.
+\end{theorem}
+\admitted
+
+\begin{example}[The three polarizers, computed]\label{ex:b3:quantum-formalism:threepolarizers}
+Vertical light meets a $90^\circ$-crossed analyser: $|\braket
+HV|^2 = 0$ --- extinction. Insert a $45^\circ$ polarizer: the state
+$\ket V$ passes it with probability $|\braket{45^\circ}{V}|^2 =
+\tfrac12$ and \emph{collapses} to $\ket{45^\circ}$ (P5); that state
+then passes the horizontal analyser with probability
+$|\braket{H}{45^\circ}|^2 = \tfrac12$. Net transmission $\tfrac14$
+instead of zero: the middle filter does not ``open a hole'' --- it
+performs a measurement, and the collapse re-prepares the photon. No
+classical sieve does this; a projection does nothing else.
+\end{example}
+
+\begin{omfigure}
+\begin{tikzpicture}[font=\small, >=Stealth]
+  % light path
+  \draw[->, omExo, very thick] (-0.9,0) -- (0.35,0);
+  \draw[->, omExo, very thick] (0.65,0) -- (2.85,0);
+  \draw[->, omExo, thick] (3.15,0) -- (5.35,0);
+  \draw[->, omExo, thin] (5.65,0) -- (7.4,0);
+  % polarizers
+  \foreach \x/\ang/\lab in {0.5/90/{$V$}, 3.0/45/{$45^\circ$}, 5.5/0/{$H$}}
+   {\draw[thick, fill=omDef!12] (\x,-1.05) ellipse (0.16 and 1.05);
+    \draw[very thick, omDef] ($(\x,-1.05)+({\ang}:0.85)$) -- ($(\x,-1.05)-({\ang}:0.85)$);
+    \node at (\x,-2.5) {\lab};}
+  \node at (-0.9,0.45) {$I_0$};
+  \node at (1.8,0.45) {$I_0$};
+  \node at (4.3,0.45) {$I_0/2$};
+  \node at (6.9,0.45) {$I_0/4$};
+  \node[align=center, font=\footnotesize] at (3.0,1.5)
+    {each filter projects the state onto its axis:\\
+     remove the middle one and the output is zero};
+\end{tikzpicture}
+
+{\small The three-polarizer experiment as three successive
+measurements: project, collapse, project again. An added filter
+\emph{increases} the transmitted light --- impossible for sieves,
+automatic for projections.}
+\end{omfigure}
+
+\begin{remark}[What the collapse does not allow]\label{rem:b3:quantum-formalism:nosignal}
+Collapse is instantaneous in the formalism, and quantum correlations
+between distant particles are real and measured --- but no
+\emph{message} rides on them: the outcomes at one detector, read
+alone, are indistinguishable from coin flips whatever is done far
+away. Quantum randomness is also irreducible: Born's rule gives
+probabilities even when the state is known \emph{completely} ---
+there is nothing more to know. Both statements are theorems of the
+formalism, tested to high precision; unease about them is
+respectable and has driven a century of experiments, every one of
+which quantum mechanics has won.
+\end{remark}
+
+\section{Commutators and uncertainty}
+
+\begin{definition}[Commutator; compatible observables]\label{def:b3:quantum-formalism:commutator}
+\index{commutator}\index{compatible observables}
+The \emph{commutator} of two operators is $[\hat A, \hat B] = \hat
+A\hat B - \hat B\hat A$. The founding example, from $\hat p =
+-\iu\hbar\,\dd/\dd x$:
+\[
+[\hat x, \hat p] = \iu\hbar .
+\]
+Two \omterm{def:b3:quantum-formalism:observable}{observables} are \emph{compatible} when $[\hat A, \hat B] = 0$:
+they then admit a common eigenbasis and can be known simultaneously;
+measuring one does not disturb a state sharp in the other. A set of
+commuting \omterm{def:b3:quantum-formalism:observable}{observables} whose common eigenbasis is unique (a
+\emph{CSCO}) is what ``completely labelling a state'' means --- the
+labels $(n_1, n_2, n_3)$ of the box were exactly this.
+\end{definition}
+
+\begin{theorem}[The uncertainty relation, in general]\label{thm:b3:quantum-formalism:uncertainty}
+\index{uncertainty relation}
+In any state, the standard deviations of two \omterm{def:b3:quantum-formalism:observable}{observables} obey
+\[
+\Delta A\;\Delta B \ \ge\ \tfrac12\,\big|\langle[\hat A, \hat
+B]\rangle\big| .
+\]
+For $\hat x$ and $\hat p$: $\Delta x\,\Delta p \ge \hbar/2$ ---
+Heisenberg's relation, now a theorem of linear algebra rather than a
+heuristic. Incompatibility is quantitative: the \omterm{def:b3:quantum-formalism:commutator}{commutator}'s size
+sets the floor under joint sharpness.
+\end{theorem}
+
+\begin{proof}[Partial proof]
+Let $\hat\alpha = \hat A - \langle A\rangle$, $\hat\beta = \hat B -
+\langle B\rangle$. The Cauchy--Schwarz inequality of the Year 3
+mathematics volume gives $\Delta A^2\Delta B^2 =
+\|\hat\alpha\psi\|^2\|\hat\beta\psi\|^2 \ge
+|\braket{\hat\alpha\psi}{\hat\beta\psi}|^2$; the imaginary part of
+that product is $\tfrac1{2\iu}\langle[\hat A, \hat B]\rangle$, and
+$|z|^2 \ge (\operatorname{Im}z)^2$.
+\end{proof}
+
+\begin{remark}[The classical shadow]\label{rem:b3:quantum-formalism:poisson}
+Divide by $\iu\hbar$ and let $\hbar \to 0$: \omterm{def:b3:quantum-formalism:commutator}{commutators} become the
+\omterm{def:b3:hamiltonian-mechanics:poisson}{Poisson brackets} of \cref{ch:b3:hamiltonian-mechanics}, $\{x, p\} =
+1$ echoing $[\hat x, \hat p] = \iu\hbar$, and the angular-momentum
+brackets computed there will return as \omterm{def:b3:quantum-formalism:commutator}{commutators}, unchanged, in
+\cref{ch:b3:quantum-angular-momentum}. Dirac's rule --- classical
+bracket times $\iu\hbar$ --- is how the skeleton of mechanics
+survived the revolution.
+\end{remark}
+
+\section{Evolution and conservation}
+
+\begin{proposition}[Evolution of averages; conserved quantities]\label{prop:b3:quantum-formalism:evolution}
+\index{Ehrenfest theorem}
+For an \omterm{def:b3:quantum-formalism:observable}{observable} without explicit time dependence,
+\[
+\frac{\dd\langle\hat A\rangle}{\dd t}
+ = \frac{\iu}{\hbar}\,\big\langle[\hat H, \hat A]\big\rangle .
+\]
+An \omterm{def:b3:quantum-formalism:observable}{observable} commuting with the \omterm{def:b3:hamiltonian-mechanics:hamiltonian}{Hamiltonian} is conserved --- its
+probabilities, not merely its mean, are frozen; symmetries again
+deliver conservation laws, now as commutation. Stationary states are
+the eigenvectors of $\hat H$, evolving only by the phase
+$\eu^{-\iu Et/\hbar}$; a superposition of two levels beats at the
+Bohr frequency $(E_2 - E_1)/h$, as the Year 2 volume's wells already
+showed.
+\end{proposition}
+
+\begin{proof}
+Differentiate $\bra\psi\hat A\ket\psi$ and insert P6 and its
+conjugate:
+\[
+\frac{\dd\langle\hat A\rangle}{\dd t}
+ = \frac{\iu}{\hbar}\bra\psi\hat H\hat A\ket\psi
+ - \frac{\iu}{\hbar}\bra\psi\hat A\hat H\ket\psi
+ = \frac{\iu}{\hbar}\,\langle[\hat H, \hat A]\rangle .
+\qedhere
+\]
+\end{proof}
+
+\begin{method}[Matrix quantum mechanics]\label{met:b3:quantum-formalism:method}
+For any finite-level problem: (1) choose a basis suited to the
+question (the analyser's axes, the energy eigenstates); (2) write
+states as column vectors, \omterm{def:b3:quantum-formalism:observable}{observables} as Hermitian matrices; (3)
+diagonalise what is measured --- \omterm{def:b3:quantum-formalism:observable}{eigenvalues} are the outcomes,
+squared components the probabilities; (4) evolve energy eigenstates
+by phases $\eu^{-\iu E_it/\hbar}$ and re-express in the measurement
+basis; (5) after a measurement, restart from the projected state.
+The whole of \cref{pb:b3:quantum-formalism:1} is this recipe run on
+a two-level universe.
+\end{method}
+
+\begin{omfigure}
+\includegraphics[width=0.58\linewidth]{images/book5/ai/b5-08-three-polarizers.png}
+
+{\small Three polarisers on a bench: each is a measurement, projecting the light's state onto an axis. Cross two and nothing passes; slip a third between them at an angle and light returns --- the postulates of this chapter, performed on a table.}
+\end{omfigure}
+
+\section{Exercises}
+
+\begin{exercise}[$\star$]\label{exo:b3:quantum-formalism:1}
+In an orthonormal basis $(\ket1, \ket2)$, let $\ket\psi = (2\ket1 +
+\iu\ket2)/\sqrt5$ and $\ket\varphi = (\ket1 - \ket2)/\sqrt2$. (a)
+Check the normalisations. (b) Compute $\braket\varphi\psi$ and
+$\braket\psi\varphi$. (c) The probability of finding $\ket\psi$ in
+the state $\ket\varphi$. (d) Construct the state orthogonal to
+$\ket\psi$ (up to phase).
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b3:quantum-formalism:2}
+Which of these matrices are Hermitian, and what are the \omterm{def:b3:quantum-formalism:observable}{eigenvalues}
+and normalised eigenvectors of those that are?
+\[
+\begin{pmatrix}0 & 1\\ 1 & 0\end{pmatrix} , \quad
+\begin{pmatrix}0 & -\iu\\ \iu & 0\end{pmatrix} , \quad
+\begin{pmatrix}1 & 1\\ -1 & 1\end{pmatrix} , \quad
+\begin{pmatrix}2 & 1-\iu\\ 1+\iu & 3\end{pmatrix} .
+\]
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b3:quantum-formalism:3}
+Light polarized at angle $\alpha$ meets an analyser at angle
+$\beta$. (a) Write both states in the $(\ket H, \ket V)$ basis and
+compute the transmission probability. (b) Recover Malus's law. (c)
+For a stream of $N$ photons, what is the variance of the transmitted
+number? (d) Circular light $(\ket H + \iu\ket V)/\sqrt2$ on a linear
+analyser at any angle: transmission? Explain the answer's
+independence of the angle.
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b3:quantum-formalism:4}
+(a) Prove $[\hat x, \hat p] = \iu\hbar$ by acting on a test function.
+(b) Compute $[\hat x^2, \hat p]$ and $[\hat x, \hat p^2]$. (c) Show
+$[\hat A, \hat B\hat C] = [\hat A, \hat B]\hat C + \hat B[\hat A,
+\hat C]$. (d) Deduce $[\hat x, \hat p^n] = \iu\hbar\,n\hat p^{n-1}$
+and interpret: which classical operation does $[\hat x, \cdot\,]$
+mimic?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b3:quantum-formalism:5}
+Sequential measurements. A photon starts as $\ket V$. (a) It meets
+polarizers at $45^\circ$ then $0^\circ$ (horizontal): compute the
+probability of surviving both, with the intermediate collapse made
+explicit. (b) Replace the middle polarizer by ones at $30^\circ$,
+$60^\circ$: transmission? (c) $N - 1$ intermediate polarizers
+stepping by $90^\circ/N$: show the survival probability is
+$\cos^{2N}(\pi/2N)$ and evaluate for $N = 2, 5, 20$. (d) The limit
+$N \to \infty$ rotates the polarization with \emph{no} loss:
+comment (this ``quantum Zeno'' rotation is used on real qubits).
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b3:quantum-formalism:6}
+On the two-level space, $\hat A = \begin{pmatrix}0&1\\1&0
+\end{pmatrix}$, $\hat B = \begin{pmatrix}1&0\\0&-1\end{pmatrix}$.
+(a) Compute $[\hat A, \hat B]$: compatible? (b) The state is
+$\ket1$: give the outcome statistics of measuring $\hat B$, then of
+measuring $\hat A$ \emph{after} a $\hat B$ measurement gave $+1$.
+(c) Measure $\hat A$ first (outcome $+1$), then $\hat B$, then
+$\hat A$ again: with what probability does the final $\hat A$
+\emph{contradict} the first? (d) What would zero \omterm{def:b3:quantum-formalism:commutator}{commutator} have
+implied for (c)?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b3:quantum-formalism:7}
+(a) For the Gaussian state of
+\cref{exo:b3:schrodinger-three-dimensions:1} restricted to one
+dimension, compute $\Delta x$ and $\Delta p$ (use the Fourier pair or
+integrate) and verify equality in Heisenberg's relation. (b) Which
+states saturate the general uncertainty theorem (state the condition
+from the Cauchy--Schwarz equality case)? (c) An electron confined to
+$\Delta x = \qty{0.1}{nm}$: minimum kinetic energy scale? (d) Same
+for a marble ($\qty{10}{g}$) localised to a micron: conclude.
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b3:quantum-formalism:8}
+(a) From \cref{prop:b3:quantum-formalism:evolution}, recover
+Ehrenfest's pair for $\hat x$ and $\hat p$ with $\hat H = \hat
+p^2/2m + V$. (b) Show that parity $\hat\Pi$ ($\hat\Pi\psi(x) =
+\psi(-x)$) is Hermitian, squares to the identity, and has
+\omterm{def:b3:quantum-formalism:observable}{eigenvalues} $\pm1$. (c) Show $[\hat H, \hat\Pi] = 0$ for a symmetric
+potential and conclude that non-degenerate levels have definite
+parity. (d) Which observed fact about the levels of a symmetric
+double well does this explain (recall the ammonia doublet of the
+Year 2 volume)?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b3:quantum-formalism:9}
+A CSCO at work. In the square two-dimensional box, the level $E
+\propto 5$ is spanned by $\ket{1,2}$ and $\ket{2,1}$. (a) Show
+energy alone does not label states. (b) Let $\hat S$ exchange $x
+\leftrightarrow y$: show $\hat S$ is Hermitian, commutes with $\hat
+H$, and find its eigenstates within the level. (c) Verify that the pair $(\hat H, \hat S)$ labels
+every state of this level uniquely. (d) Give the general moral:
+degeneracy means the labelling set was not yet complete, and
+symmetry supplies the missing label.
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b3:quantum-formalism:10}
+Energy--time uncertainty, honestly. For any \omterm{def:b3:quantum-formalism:observable}{observable} $\hat A$,
+define the evolution time $\tau_A = \Delta A\,/\,|\dd\langle\hat
+A\rangle/\dd t|$ --- the time for the mean to move by one standard
+deviation. (a) From \cref{thm:b3:quantum-formalism:uncertainty} and
+\cref{prop:b3:quantum-formalism:evolution}, prove $\Delta
+E\;\tau_A \ge \hbar/2$. (b) Why is this \emph{not} an uncertainty
+between two \omterm{def:b3:quantum-formalism:observable}{observables} (what is time, in the formalism)? (c) Apply
+to an excited atomic state of lifetime \qty{10}{ns}: linewidth. (d)
+Apply to your wristwatch: how sharp can the energy of a system be if
+something in it visibly changes every second?
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b3:quantum-formalism:11}
+Proof of the uncertainty theorem. With $\hat\alpha, \hat\beta$ as in
+the text: (a) justify $\Delta A^2 = \|\hat\alpha\ket\psi\|^2$ using
+Hermiticity; (b) apply Cauchy--Schwarz and split
+$\braket{\hat\alpha\psi}{\hat\beta\psi}$ into Hermitian and
+anti-Hermitian parts, identifying them with the anticommutator and
+\omterm{def:b3:quantum-formalism:commutator}{commutator} averages; (c) conclude, and state when equality holds;
+(d) show that for $[\hat A, \hat B] = \iu\hbar$ no state can be an
+eigenvector of either \omterm{def:b3:quantum-formalism:observable}{observable} while keeping both deviations
+finite --- and reconcile with plane waves.
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b3:quantum-formalism:12}
+The watched pot. A two-level system starts in $\ket1$ and its
+\omterm{def:b3:hamiltonian-mechanics:hamiltonian}{Hamiltonian} drives Rabi-like oscillation: after time $t$ the state
+is $\cos(\omega t)\ket1 + \sin(\omega t)\ket2$ (take this as given).
+(a) With no measurement, when is the transfer to $\ket2$ complete?
+(b) Measure ``which state?'' at times $T/N, 2T/N, \dots$ with $T =
+\pi/2\omega$: show the probability of finding the system
+\emph{still} in $\ket1$ at every check is $[\cos^2(\pi/2N)]^N$. (c)
+Evaluate for $N = 1, 4, 20, 100$ and show it tends to $1$: frequent
+observation freezes the evolution (the quantum Zeno effect,
+observed with trapped ions in 1990). (d) Explain in one sentence
+which postulate does the freezing.
+\end{exercise}
+
+\begin{omfigure}
+\includegraphics[width=0.62\linewidth]{images/book5/photo-solvay-1927.jpg}
+
+{\small The 1927 Solvay conference (photograph by Benjamin Couprie, public domain): the people who built this chapter's postulates, in one room --- and still arguing, that very week, about what measurement means.}
+\end{omfigure}
+
+\section{Problem: Neutrinos change costume mid-flight}
+
+\begin{problem}[{Weekend problem --- two-level oscillations across
+the Earth}]\label{pb:b3:quantum-formalism:1}
+Neutrinos are born in nuclear reactions as \emph{flavour} states ---
+electron-neutrino $\ket{\nu_e}$ or muon-neutrino $\ket{\nu_\mu}$ ---
+but they \emph{propagate} as energy (mass) eigenstates $\ket{\nu_1},
+\ket{\nu_2}$. The two bases do not coincide: they are rotated by a
+\emph{mixing angle} $\theta$,
+\[
+\ket{\nu_e} = \cos\theta\,\ket{\nu_1} + \sin\theta\,\ket{\nu_2} ,
+\qquad
+\ket{\nu_\mu} = -\sin\theta\,\ket{\nu_1} + \cos\theta\,\ket{\nu_2} .
+\]
+The discovery that neutrinos therefore \emph{oscillate} between
+flavours in flight --- hence have mass --- earned the 2015 Nobel
+Prize. This problem derives the effect with nothing beyond this
+chapter. An ultrarelativistic neutrino of momentum $p$ and mass
+$m_i$ has energy $E_i \approx pc + m_i^2c^4/2pc \approx E +
+m_i^2c^4/2E$.
+
+\medskip\noindent\textbf{Part I --- The formalism set up.}
+\begin{enumerate}
+  \item Check that $(\ket{\nu_1}, \ket{\nu_2})$ orthonormal makes
+        $(\ket{\nu_e}, \ket{\nu_\mu})$ orthonormal too.
+  \item Why must the propagation basis be the \emph{energy}
+        eigenbasis, whatever basis the neutrino was born in? (Which
+        postulate governs free flight?)
+  \item A muon-neutrino is born at $t = 0$. Write $\ket{\psi(0)}$ in
+        the mass basis.
+  \item Write $\ket{\psi(t)}$, each mass component carrying its
+        phase $\eu^{-\iu E_it/\hbar}$.
+  \item Show that a \emph{global} phase is irrelevant and factor out
+        $\eu^{-\iu E_1t/\hbar}$: only the \emph{relative} phase
+        $\Delta\phi = (E_2 - E_1)t/\hbar$ drives the physics.
+  \item Express $E_2 - E_1$ in terms of $\Delta m^2 = m_2^2 - m_1^2$
+        and $E$, for ultrarelativistic neutrinos.
+\end{enumerate}
+
+\medskip\noindent\textbf{Part II --- The oscillation formula.}
+\begin{enumerate}[resume]
+  \item Compute the amplitude $\braket{\nu_e}{\psi(t)}$.
+  \item Show the appearance probability is
+        \[
+        \mathcal P_{\nu_\mu \to \nu_e}(t) =
+        \sin^2(2\theta)\,\sin^2\Big(\frac{\Delta\phi}{2}\Big) .
+        \]
+        (Use $2\sin\theta\cos\theta = \sin2\theta$.)
+  \item Check the two sanity limits: $\theta = 0$ and $m_1 = m_2$.
+        What does any observed oscillation therefore prove?
+  \item With $t \approx L/c$, show
+        \[
+        \mathcal P = \sin^2(2\theta)\,
+        \sin^2\Big(\frac{\Delta m^2c^4}{4\hbar c}\,\frac{L}{E}\Big) ,
+        \]
+        and define the oscillation length $L_{\text{osc}} =
+        4\pi\hbar cE/\Delta m^2c^4$.
+  \item Show the survival probability $\mathcal P_{\nu_\mu \to
+        \nu_\mu} = 1 - \mathcal P_{\nu_\mu\to\nu_e}$: where has
+        unitarity been used?
+  \item Why does the oscillation measure only $\Delta m^2$, never
+        the masses themselves?
+\end{enumerate}
+
+\medskip\noindent\textbf{Part III --- Reading the experiments.}
+Atmospheric muon-neutrinos ($E \approx \qty{1}{GeV}$) rain on a
+detector from above ($L \approx \qty{15}{km}$) and from below,
+through the Earth ($L \approx \qty{12800}{km}$). Super-Kamiokande
+(1998) found the from-below flux halved, the from-above flux intact.
+\begin{enumerate}[resume]
+  \item Using $\hbar c = \qty{197}{MeV.fm}$, show the handy form
+        $\dfrac{\Delta m^2c^4\,L}{4\hbar cE} = 1.27\,
+        \dfrac{\Delta m^2c^4\,[\unit{eV^2}]\ L\,[\unit{km}]}
+        {E\,[\unit{GeV}]}$.
+  \item If the oscillation is to be \emph{well developed} at $L =
+        \qty{12800}{km}$ but \emph{negligible} at \qty{15}{km} for
+        $E = \qty{1}{GeV}$, bracket $\Delta m^2c^4$ roughly.
+  \item The measured value is $\Delta m^2c^4 \approx
+        \qty{2.5e-3}{eV^2}$: compute the oscillation length at
+        \qty{1}{GeV} and check it against both baselines.
+  \item The from-below suppression is close to $1/2$, not to $0$:
+        show that \emph{averaging} $\sin^2$ over many oscillation
+        lengths (and over energies) gives $\tfrac12\sin^22\theta$,
+        and deduce that the atmospheric mixing is nearly
+        \emph{maximal} ($\theta \approx 45^\circ$).
+  \item What does $\Delta m^2c^4 = \qty{2.5e-3}{eV^2}$ give for the
+        heavier mass alone if the lighter is negligible --- and
+        compare that with the electron's mass: how oddly light are
+        neutrinos?
+  \item Reactor antineutrinos have $E \approx \qty{4}{MeV}$. Using
+        the same $1.27$ formula, show that a baseline of one to two
+        kilometres is tuned to the $\qty{2.5e-3}{eV^2}$ splitting
+        (the Daya Bay experiment), while $L \approx \qty{180}{km}$
+        (KamLAND) is tuned to the smaller ``solar'' splitting
+        $\qty{7.5e-5}{eV^2}$ --- verify both numerically.
+\end{enumerate}
+
+\medskip\noindent\textbf{Part IV --- What it means.}
+\begin{enumerate}[resume]
+  \item The Sun emits $\nu_e$; for decades detectors counted only a
+        third of the prediction. Explain the ``solar neutrino
+        problem'' and its resolution in one sentence each.
+  \item Why did oscillations force the conclusion that neutrinos
+        \emph{have mass}, against the Standard Model's original
+        bookkeeping?
+  \item A quantum system maintaining phase coherence over
+        $12800$ kilometres: what does this say about how weakly
+        neutrinos interact, and why the detector must be enormous?
+  \item Flavour is an \omterm{def:b3:quantum-formalism:observable}{observable}: why does its operator fail to
+        commute with the free \omterm{def:b3:hamiltonian-mechanics:hamiltonian}{Hamiltonian}, and what conservation
+        law is therefore \emph{not} available to flavour (while
+        energy and momentum remain conserved)?
+  \item Nature has three flavours and three masses: why does the
+        two-level treatment nevertheless describe each experiment
+        so well? (Consider the hierarchy of the two $\Delta m^2$
+        and which one each baseline resolves.)
+  \item In the formalism of this chapter, name exactly which
+        ingredients produced the oscillation: which basis mismatch,
+        which postulate, which phase.
+  \item Summarise the named result: a rotation angle near
+        $45^\circ$ and a splitting $\Delta m^2c^4 =
+        \qty{2.5e-3}{eV^2}$ make a GeV muon-neutrino disappear with
+        oscillation length $\sim\qty{1000}{km}$ --- two-level linear
+        algebra, confirmed through the body of the Earth.
+\end{enumerate}
+\end{problem}

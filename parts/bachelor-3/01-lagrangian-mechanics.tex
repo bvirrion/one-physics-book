@@ -1,6 +1,781 @@
 \chapter{Lagrangian Mechanics}\label{ch:b3:lagrangian-mechanics}
 
-% TODO: course, examples, figures, and 8--12 graded exercises
-% (see CONTRIBUTING.md). Placeholder until written.
+Try to write Newton's law for a double pendulum: two tension forces,
+neither known in advance, both changing direction at every instant, and
+four scalar equations to untangle just to find how two angles evolve.
+Now do the same for a bead on a rotating hoop, a chain of coupled
+springs, a robot arm. The forces that hold a system together --- rods,
+rails, hinges --- do no work, yet Newton's method forces us to carry
+them through every calculation. This chapter presents the reformulation
+that Lagrange published in 1788: describe the system by the few
+coordinates that can actually change, write a single function
+$L = E_k - E_p$, and one recipe produces the equations of motion in any
+coordinates, with every rod and rail already eliminated. Better, the
+new formulation makes visible what Newton's hides: each symmetry of $L$
+yields a conserved quantity --- momentum from uniformity of space,
+energy from uniformity of time --- a result of Emmy Noether that has
+become the organising principle of physics far beyond mechanics.
 
-\emph{This chapter has not been written yet.}
+\section{From forces to coordinates}
+
+\begin{definition}[Constraints, degrees of freedom, generalized coordinates]\label{def:b3:lagrangian-mechanics:coordinates}
+\index{constraint}\index{degrees of freedom}\index{generalized coordinates}
+A \emph{constraint} is a geometric condition imposed on the positions
+of a system --- a bead stays on its wire, a pendulum's rod keeps a fixed
+length, two wheels of an axle turn together. A constraint expressible
+as an equation $f(\vect r_1, \dots, \vect r_N, t) = 0$ among the
+coordinates (and possibly the time) is called \emph{holonomic}. The
+number of independent ways the configuration can still vary is the
+number of \emph{degrees of freedom} $n$; any set of $n$ independent
+quantities $q_1, \dots, q_n$ that fixes the configuration completely is
+a set of \emph{generalized coordinates} --- angles, lengths, or any
+convenient mixture. Their time derivatives $\dot q_1, \dots, \dot q_n$
+are the \emph{generalized velocities}\index{generalized velocities}.
+\end{definition}
+
+\begin{example}[Counting degrees of freedom]\label{ex:b3:lagrangian-mechanics:counting}
+A point on a table: $n = 2$. A plane pendulum of fixed length: one
+angle, $n = 1$. A double pendulum: two angles, $n = 1 + 1 = 2$. A bead
+on a rigid hoop: one angle, $n = 1$ --- even if the hoop itself is
+forced to rotate, since the imposed rotation adds no freedom. A rigid
+body free in space: three coordinates of its centre plus three angles,
+$n = 6$. A gas of $N$ free molecules (points): $n = 3N$. Each holonomic
+\omterm{def:b3:lagrangian-mechanics:coordinates}{constraint} removes one degree of freedom: two points joined by a rod
+have $3 + 3 - 1 = 5$.
+\end{example}
+
+\begin{omfigure}
+\begin{tikzpicture}[font=\small, >=Stealth]
+  % (a) plane pendulum
+  \begin{scope}
+    \draw[thick] (-1,0) -- (1,0);
+    \foreach \i in {-0.8,-0.5,-0.2,0.1,0.4,0.7} \draw (\i,0) -- (\i+0.18,0.16);
+    \fill (0,0) circle (1.5pt);
+    \draw[dashed] (0,0) -- (0,-2.2);
+    \draw[thick] (0,0) -- (-55:2.1);
+    \fill[omDef] (-55:2.1) circle (3pt);
+    \draw[->] (0,-1.0) arc (-90:-55:1.0);
+    \node at (-72:1.35) {$\theta$};
+    \node at (-55:2.5) {$m$};
+    \node at ($(-55:1.35)+(0.28,0.12)$) {$\ell$};
+    \node at (0,-2.9) {one coordinate: $\theta$};
+  \end{scope}
+  % (b) bead on rotating hoop
+  \begin{scope}[xshift=6.2cm]
+    \coordinate (C) at (0,-2.35);
+    \draw[thick] (C) circle (1.55);
+    \draw[dashed] (0,-0.3) -- (0,-4.6);
+    \draw[->, thick] (0.35,-0.15) arc (20:160:0.37);
+    \node at (0,0.25) {$\omega$};
+    \fill (C) circle (1pt);
+    \draw (C) -- ++(-50:1.55);
+    \fill[omDef] ($(C)+(-50:1.55)$) circle (3pt);
+    \draw[->] ($(C)+(0,-0.85)$) arc (-90:-50:0.85);
+    \node at ($(C)+(-70:1.18)$) {$\theta$};
+    \node at ($(C)+(-38:2.0)$) {$m$};
+    \draw (C) -- ++(135:1.55);
+    \node at (-1.35,-1.35) {$R$};
+    \node at (0,-4.95) {one coordinate: $\theta$};
+  \end{scope}
+  % (c) double pendulum
+  \begin{scope}[xshift=11.4cm]
+    \draw[thick] (-0.9,0) -- (0.9,0);
+    \foreach \i in {-0.7,-0.4,-0.1,0.2,0.5} \draw (\i,0) -- (\i+0.18,0.16);
+    \fill (0,0) circle (1.5pt);
+    \draw[dashed] (0,0) -- (0,-1.7);
+    \draw[thick] (0,0) -- (-65:1.5) coordinate (m1);
+    \fill[omDef] (m1) circle (2.6pt);
+    \draw[dashed] (m1) -- ++(0,-1.5);
+    \draw[thick] (m1) -- ++(-40:1.5) coordinate (m2);
+    \fill[omThm] (m2) circle (2.6pt);
+    \draw[->] (0,-0.8) arc (-90:-65:0.8);
+    \node at (-80:1.1) {$\theta_1$};
+    \draw[->] ($(m1)+(0,-0.75)$) arc (-90:-40:0.75);
+    \node at ($(m1)+(-68:1.05)$) {$\theta_2$};
+    \node at (0.3,-3.4) {two coordinates: $\theta_1, \theta_2$};
+  \end{scope}
+\end{tikzpicture}
+
+{\small \omterm{def:b3:lagrangian-mechanics:coordinates}{Generalized coordinates}: each system is described by the
+angles that can actually change, not by the Cartesian coordinates of
+its masses. The rod tensions and the hoop's normal force never appear.}
+\end{omfigure}
+
+\section{The principle of least action}
+
+\begin{definition}[Lagrangian and action]\label{def:b3:lagrangian-mechanics:action}
+\index{Lagrangian}\index{action}
+The \emph{Lagrangian} of a mechanical system whose forces derive from a
+potential energy $E_p$ is the function of the coordinates, the
+velocities, and possibly the time
+\[
+L(q, \dot q, t) = E_k - E_p ,
+\]
+kinetic \emph{minus} potential energy, both expressed in the
+\omterm{def:b3:lagrangian-mechanics:coordinates}{generalized coordinates}. The \emph{action} of a conceivable motion
+$q(t)$ between fixed endpoints $q(t_1)$ and $q(t_2)$ is the number
+\[
+S[q] = \int_{t_1}^{t_2} L\big(q(t), \dot q(t), t\big)\,\dd t .
+\]
+$S$ is a \emph{functional}: it eats a whole path and returns one
+number, in joule-seconds --- the units of Planck's constant.
+\end{definition}
+
+\begin{theorem}[Hamilton's principle and the Euler--Lagrange equations]\label{thm:b3:lagrangian-mechanics:euler-lagrange}
+\index{Hamilton's principle}\index{Euler--Lagrange equations}\index{least action}
+Among all conceivable motions joining the same two endpoints in the
+same time, the actual motion is the one that makes the \omterm{def:b3:lagrangian-mechanics:action}{action}
+\emph{stationary} (\emph{Hamilton's principle}, or the principle of
+\emph{\omterm{thm:b3:lagrangian-mechanics:euler-lagrange}{least action}}). Equivalently, the motion obeys the
+\emph{\omterm{thm:b3:lagrangian-mechanics:euler-lagrange}{Euler--Lagrange equations}}
+\[
+\frac{\dd}{\dd t}\frac{\partial L}{\partial\dot q_i}
+ - \frac{\partial L}{\partial q_i} = 0 ,
+\qquad i = 1, \dots, n :
+\]
+one second-order equation per degree of freedom, in whatever
+coordinates were chosen.
+\end{theorem}
+
+\begin{proof}
+Deform the path: $q_i(t) \to q_i(t) + \delta q_i(t)$ with
+$\delta q_i(t_1) = \delta q_i(t_2) = 0$. To first order,
+\[
+\delta S = \int_{t_1}^{t_2}\sum_i\Big(
+  \frac{\partial L}{\partial q_i}\,\delta q_i
+ + \frac{\partial L}{\partial\dot q_i}\,\delta\dot q_i\Big)\dd t
+ = \int_{t_1}^{t_2}\sum_i\Big(
+  \frac{\partial L}{\partial q_i}
+ - \frac{\dd}{\dd t}\frac{\partial L}{\partial\dot q_i}\Big)\delta q_i\,\dd t ,
+\]
+after integrating the second term by parts ($\delta\dot q_i =
+\dd(\delta q_i)/\dd t$) and dropping the boundary term, which vanishes
+at the fixed endpoints. If $\delta S = 0$ for \emph{every} deformation,
+the bracket must vanish at every instant and for each $i$ --- were it
+positive somewhere, a bump $\delta q_i$ concentrated there would give
+$\delta S \neq 0$. The converse is read off the same line.
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}[font=\small, >=Stealth]
+  \draw[->] (0,0) -- (7.6,0) node[right] {$t$};
+  \draw[->] (0,0) -- (0,3.4) node[above] {$q$};
+  \fill (0.8,0.7) circle (2pt) node[below left] {$q(t_1)$};
+  \fill (6.8,2.3) circle (2pt) node[above right] {$q(t_2)$};
+  \draw[omDef, very thick] (0.8,0.7) .. controls (2.6,2.6) and (5.0,1.4) .. (6.8,2.3);
+  \draw[omExo, dashed] (0.8,0.7) .. controls (2.2,0.6) and (5.4,0.9) .. (6.8,2.3);
+  \draw[omExo, dashed] (0.8,0.7) .. controls (3.0,3.6) and (5.2,2.9) .. (6.8,2.3);
+  \node[omDef] at (1.9,3.35) {actual path};
+  \draw[->, omDef] (2.25,3.15) -- (2.85,2.3);
+  \node[omExo] at (3.4,0.42) {varied paths};
+  \draw[<->] (4.1,1.62) -- (4.1,2.62);
+  \node at (4.55,2.15) {$\delta q$};
+\end{tikzpicture}
+
+{\small Hamilton's principle: among all paths with the same endpoints
+and duration, the actual one makes $S = \int L\,\dd t$ stationary ---
+first-order deformations $\delta q$ change $S$ only at second order.}
+\end{omfigure}
+
+\begin{proposition}[Newton recovered]\label{prop:b3:lagrangian-mechanics:newton}
+For a particle in Cartesian coordinates, $L = \tfrac12 m(\dot x^2 +
+\dot y^2 + \dot z^2) - E_p(x,y,z)$, and the \omterm{thm:b3:lagrangian-mechanics:euler-lagrange}{Euler--Lagrange equations}
+read $m\ddot x = -\partial E_p/\partial x$ and likewise for $y$, $z$:
+exactly $m\vect a = \vect F$. \omterm{def:b3:lagrangian-mechanics:action}{Lagrangian} and Newtonian mechanics agree
+wherever both apply; the new form simply survives a change of
+coordinates, which Newton's component equations do not.
+\end{proposition}
+
+\begin{proof}
+$\partial L/\partial\dot x = m\dot x$, $\partial L/\partial x =
+-\partial E_p/\partial x$; the Euler--Lagrange equation is
+$\dd(m\dot x)/\dd t + \partial E_p/\partial x = 0$.
+\end{proof}
+
+\begin{remark}[Why the constraint forces disappear]\label{rem:b3:lagrangian-mechanics:constraints}
+The tension of a rod, the normal force of a rail, act perpendicularly
+to every displacement the \omterm{def:b3:lagrangian-mechanics:coordinates}{constraint} allows: they do no work in any
+motion compatible with the \omterm{def:b3:lagrangian-mechanics:coordinates}{constraint}. Since the \omterm{def:b3:lagrangian-mechanics:action}{action} is built from
+energies evaluated only on such motions, these forces never enter $L$
+--- that is the practical miracle of the method. The general
+justification (d'Alembert's principle of virtual work) is admitted
+here; for every system of this book the recipe below can be checked
+directly against Newton, as \cref{prop:b3:lagrangian-mechanics:newton}
+began to do. If a \omterm{def:b3:lagrangian-mechanics:coordinates}{constraint} force is itself wanted --- will the rod
+snap? --- one returns to Newton for that force alone, with the motion
+already known.
+\end{remark}
+
+\begin{method}[The Lagrangian recipe]\label{met:b3:lagrangian-mechanics:recipe}
+(1) Count the \omterm{def:b3:lagrangian-mechanics:coordinates}{degrees of freedom} and choose coordinates $q_i$ ---
+angles for rotations, abscissas along rails. (2) Express the positions
+$\vect r(q_i, t)$, differentiate to get the velocities, and write
+$E_k$; write $E_p$. (3) $L = E_k - E_p$, dropping any additive
+constant. (4) One Euler--Lagrange equation per coordinate. (5) Before
+solving, harvest the conserved quantities: \omterm{def:b3:lagrangian-mechanics:momentum}{cyclic coordinates}
+(\cref{def:b3:lagrangian-mechanics:momentum}) and the \omterm{prop:b3:lagrangian-mechanics:energy}{energy function}
+(\cref{prop:b3:lagrangian-mechanics:energy}). (6) Check limits: small
+angles, switched-off rotation, known special cases.
+\end{method}
+
+\begin{example}[The pendulum, in three lines]\label{ex:b3:lagrangian-mechanics:pendulum}
+One coordinate $\theta$; $\vect v = \ell\dot\theta\,\vect e_\theta$, so
+$E_k = \tfrac12 m\ell^2\dot\theta^2$ and $E_p = -mg\ell\cos\theta$.
+Then $L = \tfrac12 m\ell^2\dot\theta^2 + mg\ell\cos\theta$, and
+$\dd(m\ell^2\dot\theta)/\dd t = -mg\ell\sin\theta$:
+\[
+\ddot\theta = -\frac{g}{\ell}\sin\theta ,
+\]
+the equation the Year 1 volume obtained from the torque of the weight
+--- with the tension never mentioned.
+\end{example}
+
+\begin{example}[Bead on a rotating hoop]\label{ex:b3:lagrangian-mechanics:hoop}
+A bead of mass $m$ slides on a vertical circular hoop of radius $R$
+forced to spin about its vertical diameter at constant $\omega$
+(\cref{ex:b3:lagrangian-mechanics:counting}). One coordinate, the
+polar angle $\theta$ from the bottom. The bead's velocity has a
+component $R\dot\theta$ along the hoop and $\omega R\sin\theta$ due to
+the imposed rotation, perpendicular to it:
+\[
+L = \tfrac12 mR^2\dot\theta^2 + \tfrac12 m\omega^2R^2\sin^2\theta
+ + mgR\cos\theta ,
+\qquad
+mR^2\ddot\theta = m\omega^2R^2\sin\theta\cos\theta - mgR\sin\theta .
+\]
+Equilibria where $\ddot\theta = 0$: the bottom $\theta = 0$ (and the
+top, always unstable), and, when $\omega^2 > g/R$, a new pair
+$\cos\theta_{\text{eq}} = g/\omega^2R$. Writing the equation as
+$mR^2\ddot\theta = -\dd U_{\text{eff}}/\dd\theta$ with the
+\emph{effective potential energy}\index{effective potential energy}
+\[
+U_{\text{eff}}(\theta) = -mgR\cos\theta
+ - \tfrac12 m\omega^2R^2\sin^2\theta
+\]
+makes the geometry visible: below the critical rate
+$\omega_{\text{c}} = \sqrt{g/R}$ the bottom is a well; above it, the
+bottom becomes a summit and the bead settles on the slope, climbing
+higher as the hoop spins faster --- the principle of the centrifugal
+governor that regulated steam engines.
+\end{example}
+
+\begin{omfigure}
+\begin{tikzpicture}
+  \begin{axis}[omaxis, axis x line=bottom, axis y line=left,
+    width=11.4cm, height=5.6cm, xmin=-180, xmax=180,
+    ymin=-1.65, ymax=1.2, xlabel={$\theta$ (degrees)},
+    xlabel style={at={(axis description cs:0.5,-0.1)}, anchor=north},
+    ylabel={$U_{\text{eff}}/mgR$}, xtick={-180,-90,0,90,180}, ytick=\empty,
+    clip=false,
+    legend style={font=\scriptsize, at={(0.5,-0.32)}, anchor=north,
+      draw=none, fill=none, legend columns=2}]
+    \addplot[omDef, thick, domain=-180:180, samples=90]
+      {-cos(x) - 0.25*sin(x)^2};
+    \addlegendentry{$\omega^2 = g/2R$ (slow): well at $\theta = 0$}
+    \addplot[omThm, thick, domain=-180:180, samples=90]
+      {-cos(x) - 1.0*sin(x)^2};
+    \addlegendentry{$\omega^2 = 2g/R$ (fast): wells at $\pm 60^\circ$}
+    \fill[omThm] (axis cs:60,-1.25) circle (1.8pt);
+    \fill[omThm] (axis cs:-60,-1.25) circle (1.8pt);
+    \fill[omDef] (axis cs:0,-1) circle (1.8pt);
+  \end{axis}
+\end{tikzpicture}
+
+{\small The effective potential of the bead on the rotating hoop. As
+$\omega$ crosses $\sqrt{g/R}$ the single well at the bottom splits into
+two symmetric wells: the equilibrium angle rises with the spin rate.}
+\end{omfigure}
+
+\section{Symmetries and conservation laws}
+
+\begin{definition}[Generalized momentum, cyclic coordinate]\label{def:b3:lagrangian-mechanics:momentum}
+\index{generalized momentum}\index{cyclic coordinate}
+The \emph{generalized momentum} conjugate to the coordinate $q_i$ is
+\[
+p_i = \frac{\partial L}{\partial\dot q_i} .
+\]
+For a Cartesian coordinate it is the ordinary momentum $m\dot x$; for
+an angle it is an angular momentum. A coordinate that does not appear
+in $L$ (though its velocity does) is called \emph{cyclic}.
+\end{definition}
+
+\begin{proposition}[Cyclic coordinates give conservation laws]\label{prop:b3:lagrangian-mechanics:cyclic}
+If $q_i$ is cyclic, its conjugate momentum is conserved:
+$\partial L/\partial q_i = 0$ implies $\dd p_i/\dd t = 0$. Choosing
+coordinates so that as many as possible are cyclic is the single most
+effective step in solving a mechanics problem.
+\end{proposition}
+
+\begin{proof}
+Immediate from the Euler--Lagrange equation for $q_i$.
+\end{proof}
+
+\begin{example}[Central force, solved by inspection]\label{ex:b3:lagrangian-mechanics:central}
+A particle in a central potential $E_p(r)$, in polar coordinates in its
+plane of motion:
+\[
+L = \tfrac12 m(\dot r^2 + r^2\dot\varphi^2) - E_p(r) .
+\]
+$\varphi$ is cyclic, so $p_\varphi = mr^2\dot\varphi$ --- the angular
+momentum --- is conserved: Kepler's law of areas, which the Year 1
+volume derived from the torque equation, here falls out before any
+equation is solved. The remaining radial equation is
+$m\ddot r = mr\dot\varphi^2 - E_p'(r)$, i.e.\ the one-dimensional
+motion in the effective potential $E_p(r) + p_\varphi^2/2mr^2$ of that
+volume.
+\end{example}
+
+\begin{theorem}[Noether's theorem]\label{thm:b3:lagrangian-mechanics:noether}
+\index{Noether's theorem}\index{symmetry}
+To every continuous symmetry of the \omterm{def:b3:lagrangian-mechanics:action}{Lagrangian} corresponds a conserved
+quantity. Precisely: if the shift $q_i \to q_i + \varepsilon\,K_i(q)$
+leaves $L$ unchanged to first order in $\varepsilon$ for all motions,
+then
+\[
+Q = \sum_i p_i\,K_i(q)
+\]
+is constant along every actual motion. Uniformity of space (invariance
+under translation) yields momentum; isotropy of space (invariance under
+rotation) yields angular momentum; uniformity of time yields the energy
+(\cref{prop:b3:lagrangian-mechanics:energy}).
+\end{theorem}
+
+\begin{proof}
+Invariance to first order means
+$0 = \delta L = \sum_i\big(\partial_{q_i}L\,K_i +
+\partial_{\dot q_i}L\,\dot K_i\big)\varepsilon$. On an actual motion,
+$\partial_{q_i}L = \dot p_i$ by Euler--Lagrange, so the bracket is
+$\sum_i(\dot p_iK_i + p_i\dot K_i) = \dd Q/\dd t$. A \omterm{def:b3:lagrangian-mechanics:momentum}{cyclic coordinate}
+is the special case $K_i = \delta_{ij}$. The time-shift case needs the
+separate computation of
+\cref{prop:b3:lagrangian-mechanics:energy}; the full theorem, for
+transformations that also change $t$ or alter $L$ by a total
+derivative, is proved in courses on analytical mechanics and admitted
+here in that generality.
+\end{proof}
+
+\begin{proposition}[The energy function]\label{prop:b3:lagrangian-mechanics:energy}
+\index{energy function}
+Along any motion, the \emph{\omterm{prop:b3:lagrangian-mechanics:energy}{energy function}}
+\[
+h = \sum_i \dot q_i\,\frac{\partial L}{\partial\dot q_i} - L
+\qquad\text{obeys}\qquad
+\frac{\dd h}{\dd t} = -\frac{\partial L}{\partial t} .
+\]
+If $L$ does not depend explicitly on time, $h$ is conserved. If
+moreover the relations $\vect r(q)$ between positions and coordinates
+do not involve time --- no imposed rotation, no moving support --- then
+$E_k$ is a quadratic form in the $\dot q_i$ and $h = E_k + E_p$: the
+mechanical energy. With a time-dependent \omterm{def:b3:lagrangian-mechanics:coordinates}{constraint}, $h$ is still
+conserved when $\partial L/\partial t = 0$, but it is \emph{not} the
+energy: the motor enforcing the \omterm{def:b3:lagrangian-mechanics:coordinates}{constraint} exchanges work with the
+system.
+\end{proposition}
+
+\begin{proof}
+$\dd h/\dd t = \sum_i(\ddot q_ip_i + \dot q_i\dot p_i) -
+\sum_i(\partial_{q_i}L\,\dot q_i + \partial_{\dot q_i}L\,\ddot q_i) -
+\partial_tL$. The $\ddot q_i$ terms cancel; the \omterm{thm:b3:lagrangian-mechanics:euler-lagrange}{Euler--Lagrange
+equations} turn $\dot p_i$ into $\partial_{q_i}L$, cancelling the next
+pair; $-\partial_tL$ remains. If $E_k = \tfrac12\sum a_{jk}(q)\dot
+q_j\dot q_k$, Euler's identity for quadratic forms gives $\sum\dot
+q_i\,\partial E_k/\partial\dot q_i = 2E_k$, so $h = 2E_k - (E_k - E_p)
+= E_k + E_p$.
+\end{proof}
+
+\begin{example}[The spinning hoop keeps $h$, not $E$]\label{ex:b3:lagrangian-mechanics:hoop-energy}
+For the bead of \cref{ex:b3:lagrangian-mechanics:hoop}, $L$ has no
+explicit $t$, so $h = \tfrac12 mR^2\dot\theta^2 + U_{\text{eff}}
+(\theta)$ is conserved --- but the mechanical energy $E = \tfrac12
+mR^2\dot\theta^2 + \tfrac12 m\omega^2R^2\sin^2\theta - mgR\cos\theta$
+is not: $E = h + m\omega^2R^2\sin^2\theta$ varies as the bead slides.
+The difference is the work of the motor that keeps $\omega$ constant
+while the bead's distance from the axis changes.
+\end{example}
+
+\section{Charged particles and small oscillations}
+
+\begin{proposition}[Lagrangian of a charged particle]\label{prop:b3:lagrangian-mechanics:charge}
+\index{velocity-dependent potential}
+In an electromagnetic field described by the potentials $V$ and
+$\vect A$ (with $\vect E = -\vect\nabla V - \partial_t\vect A$ and
+$\vect B = \operatorname{\vect{curl}}\vect A$, as in the Year 2
+volume), the \omterm{def:b3:lagrangian-mechanics:action}{Lagrangian}
+\[
+L = \tfrac12 m\vect v^{\,2} - qV + q\,\vect v\cdot\vect A
+\]
+yields, through the \omterm{thm:b3:lagrangian-mechanics:euler-lagrange}{Euler--Lagrange equations}, exactly the Lorentz
+force $m\dot{\vect v} = q(\vect E + \vect v\wedge\vect B)$. The
+magnetic force, which does no work and derives from no ordinary
+potential energy, enters through a term linear in the velocity; the
+conjugate momentum becomes $\vect p = m\vect v + q\vect A$, no longer
+$m\vect v$ alone.
+\end{proposition}
+
+\begin{proof}
+For the $x$ component: $p_x = m\dot x + qA_x$, and
+$\partial_xL = -q\,\partial_xV + q\,\vect v\cdot\partial_x\vect A$. The
+Euler--Lagrange equation gives $m\ddot x = -q\,\partial_xV -
+q\,\dd A_x/\dd t + q\,\vect v\cdot\partial_x\vect A$. Along the motion
+$\dd A_x/\dd t = \partial_tA_x + (\vect v\cdot\vect\nabla)A_x$, so
+$m\ddot x = qE_x + q\big[\vect v\cdot\partial_x\vect A - (\vect v\cdot
+\vect\nabla)A_x\big]$, and the bracket is the $x$ component of $\vect
+v\wedge(\vect\nabla\wedge\vect A) = \vect v\wedge\vect B$ --- expand
+both to check.
+\end{proof}
+
+\begin{proposition}[Small oscillations and normal modes]\label{prop:b3:lagrangian-mechanics:modes}
+\index{normal modes}\index{small oscillations}
+Near a stable equilibrium $q^{\text{eq}}$, expand $L$ to second order
+in the displacements $u_i = q_i - q_i^{\text{eq}}$:
+$L \approx \tfrac12\sum m_{ij}\dot u_i\dot u_j -
+\tfrac12\sum k_{ij}u_iu_j$ with constant symmetric matrices. The
+equations of motion are linear, and every motion is a superposition of
+\emph{\omterm{prop:b3:lagrangian-mechanics:modes}{normal modes}}: collective oscillations $u_i(t) = a_i\cos(\Omega t
++ \phi)$ in which all coordinates vibrate at one common frequency, the
+amplitudes and frequencies solving $\sum_j(k_{ij} -
+\Omega^2m_{ij})\,a_j = 0$ --- a matrix eigenvalue problem, with $n$
+modes for $n$ \omterm{def:b3:lagrangian-mechanics:coordinates}{degrees of freedom}.
+\end{proposition}
+
+\begin{proof}
+Linear terms vanish at an equilibrium; the \omterm{thm:b3:lagrangian-mechanics:euler-lagrange}{Euler--Lagrange equations} of
+the quadratic $L$ read $\sum_jm_{ij}\ddot u_j = -\sum_jk_{ij}u_j$.
+Inserting the trial oscillation gives the stated linear system, which
+has a nonzero amplitude vector only when $\det(k_{ij} -
+\Omega^2m_{ij}) = 0$: $n$ values of $\Omega^2$, all positive at a
+stable equilibrium. That the general motion is a superposition of the
+modes is the diagonalisation of a pair of quadratic forms, a result of
+the linear algebra of the Year 2 mathematics volume; completeness is
+admitted.
+\end{proof}
+
+\begin{example}[Two pendulums coupled by a spring]\label{ex:b3:lagrangian-mechanics:coupled}
+Two equal pendulums (mass $m$, length $\ell$), their bobs joined by a
+spring of stiffness $k$ relaxed when both hang straight. For small
+angles,
+\[
+L = \tfrac12 m\ell^2(\dot\theta_1^2 + \dot\theta_2^2)
+ - \tfrac12 mg\ell(\theta_1^2 + \theta_2^2)
+ - \tfrac12 k\ell^2(\theta_2 - \theta_1)^2 .
+\]
+Symmetry suggests the combinations $s = \theta_1 + \theta_2$ and $d =
+\theta_1 - \theta_2$, which decouple the equations: the \emph{in-phase
+mode} ($\theta_1 = \theta_2$, spring inert) at $\Omega_1 =
+\sqrt{g/\ell}$, and the \emph{opposed mode} ($\theta_1 = -\theta_2$,
+spring stretched twice) at $\Omega_2 = \sqrt{g/\ell + 2k/m}$. Start one
+pendulum alone --- an equal mixture of the two modes --- and the energy
+migrates entirely from one pendulum to the other and back at the beat
+frequency $(\Omega_2 - \Omega_1)/2\pi$: the coupled-pendulum
+demonstration, and the mechanism behind every resonant energy transfer
+from tuned circuits to molecular vibrations.
+\end{example}
+
+\begin{omfigure}
+\begin{tikzpicture}[font=\small, >=Stealth]
+  % in-phase mode
+  \begin{scope}
+    \draw[thick] (-0.4,0) -- (3.4,0);
+    \foreach \i in {-0.2,0.3,0.8,1.3,1.8,2.3,2.8} \draw (\i,0) -- (\i+0.18,0.16);
+    \fill (0.5,0) circle (1.2pt);
+    \fill (2.5,0) circle (1.2pt);
+    \draw[thick] (0.5,0) -- ++(-75:1.9) coordinate (a1);
+    \draw[thick] (2.5,0) -- ++(-75:1.9) coordinate (a2);
+    \fill[omDef] (a1) circle (2.6pt);
+    \fill[omDef] (a2) circle (2.6pt);
+    \draw[decorate, decoration={coil, aspect=0.6, segment length=3pt, amplitude=2pt}] (a1) -- (a2);
+    \draw[->, omDef] ($(a1)+(0.05,-0.3)$) -- ++(0.5,0);
+    \draw[->, omDef] ($(a2)+(0.05,-0.3)$) -- ++(0.5,0);
+    \node at (1.5,-2.9) {in phase: $\Omega_1 = \sqrt{g/\ell}$};
+  \end{scope}
+  % opposed mode
+  \begin{scope}[xshift=6.4cm]
+    \draw[thick] (-0.4,0) -- (3.4,0);
+    \foreach \i in {-0.2,0.3,0.8,1.3,1.8,2.3,2.8} \draw (\i,0) -- (\i+0.18,0.16);
+    \fill (0.5,0) circle (1.2pt);
+    \fill (2.5,0) circle (1.2pt);
+    \draw[thick] (0.5,0) -- ++(-105:1.9) coordinate (b1);
+    \draw[thick] (2.5,0) -- ++(-75:1.9) coordinate (b2);
+    \fill[omThm] (b1) circle (2.6pt);
+    \fill[omThm] (b2) circle (2.6pt);
+    \draw[decorate, decoration={coil, aspect=0.6, segment length=5pt, amplitude=2pt}] (b1) -- (b2);
+    \draw[->, omThm] ($(b1)+(-0.05,-0.3)$) -- ++(-0.5,0);
+    \draw[->, omThm] ($(b2)+(0.05,-0.3)$) -- ++(0.5,0);
+    \node at (1.5,-2.9) {opposed: $\Omega_2 = \sqrt{g/\ell + 2k/m}$};
+  \end{scope}
+\end{tikzpicture}
+
+{\small The two \omterm{prop:b3:lagrangian-mechanics:modes}{normal modes} of the coupled pendulums. In phase, the
+spring never stretches and the frequency is the free pendulum's;
+opposed, each bob feels the spring doubled.}
+\end{omfigure}
+
+\begin{omfigure}
+\includegraphics[width=0.58\linewidth]{images/book5/ai/b5-01-double-pendulum-trace.png}
+
+{\small A double pendulum traced by a long exposure: two coordinates, one \omterm{def:b3:lagrangian-mechanics:action}{Lagrangian}, and a motion no formula predicts for long --- the \omterm{def:b3:lagrangian-mechanics:action}{least-action} machinery of this chapter writes the equations; chaos keeps their solutions humble.}
+\end{omfigure}
+
+\section{Exercises}
+
+\begin{exercise}[$\star$]\label{exo:b3:lagrangian-mechanics:1}
+Count the \omterm{def:b3:lagrangian-mechanics:coordinates}{degrees of freedom} and propose \omterm{def:b3:lagrangian-mechanics:coordinates}{generalized coordinates}: (a) a
+particle on the inside of a fixed bowl; (b) a cylinder rolling without
+slipping down a fixed incline; (c) a double pendulum whose upper pivot
+slides on a horizontal rail; (d) a dumbbell (two masses, rigid rod) in
+space; (e) two beads on the same fixed circular wire. Which \omterm{def:b3:lagrangian-mechanics:coordinates}{constraint}
+in this list relates velocities rather than positions, and why is it
+nevertheless integrable to a holonomic one?
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b3:lagrangian-mechanics:2}
+For the plane pendulum (\cref{ex:b3:lagrangian-mechanics:pendulum}):
+(a) verify the dimensions of $L$ and of $p_\theta =
+\partial L/\partial\dot\theta$; (b) identify $p_\theta$ physically; (c)
+derive the small-angle period; (d) compute the \omterm{def:b3:lagrangian-mechanics:action}{action} $S$ of one full
+small oscillation of amplitude $\theta_0$ --- and explain the answer
+before computing (what is the time average of $E_k - E_p$ for a
+harmonic oscillation?).
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b3:lagrangian-mechanics:3}
+An Atwood machine: masses $m_1$ and $m_2$ hang from an ideal string
+over a massless pulley. (a) Choose one coordinate and write $L$. (b)
+Find the acceleration. (c) Newton's treatment needed the tension ---
+where did it go? (d) How would you recover the tension once the motion
+is known?
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b3:lagrangian-mechanics:4}
+A free particle in cylindrical coordinates: $L = \tfrac12 m(\dot r^2 +
+r^2\dot\varphi^2 + \dot z^2)$. (a) Which coordinates are cyclic, and
+what are the conserved momenta? (b) Why is $p_r$ \emph{not} conserved
+even though no force acts? (c) Write the Euler--Lagrange equation for
+$r$ and interpret the term $mr\dot\varphi^2$. (d) Check that a
+straight line traversed at constant speed solves it.
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b3:lagrangian-mechanics:5}
+A block of mass $m$ slides on the frictionless face (angle $\alpha$) of
+a wedge of mass $M$, itself free to slide on a frictionless floor. (a)
+Choose two coordinates: the wedge's abscissa $X$ and the block's
+distance $s$ down the face; write $L$. (b) Which coordinate is cyclic,
+and what conservation law does it express? (c) Find the two
+accelerations. (d) Check the limits $M \to \infty$ and $\alpha \to
+90^\circ$.
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b3:lagrangian-mechanics:6}
+The spherical pendulum: a bob on a rod of length $\ell$, free in both
+angles ($\theta$ from the downward vertical, $\varphi$ around it). (a)
+Write $L$. (b) Identify the \omterm{def:b3:lagrangian-mechanics:momentum}{cyclic coordinate} and the conserved
+$p_\varphi$. (c) Reduce the motion of $\theta$ to an effective
+potential and sketch it. (d) For the conical motion $\theta =
+\theta_0$, recover the conical-pendulum relation $\cos\theta_0 =
+g/\ell\omega^2$ of the Year 1 volume.
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b3:lagrangian-mechanics:7}
+A pendulum (mass $m$, length $\ell$) hangs from a cart of mass $M$ free
+to roll on a horizontal rail. (a) With coordinates $X$ (cart) and
+$\theta$, write $L$. (b) What is conserved, and why physically? (c)
+Linearise for small $\theta$ and show that the oscillation frequency is
+$\Omega = \sqrt{(1 + m/M)\,g/\ell}$. (d) Explain the limits $M \to
+\infty$ and $M \to 0$ --- why does a light cart \emph{raise} the
+frequency?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b3:lagrangian-mechanics:8}
+A particle of charge $q$ in a uniform field $\vect B = B\vect e_z$,
+described by $\vect A = \tfrac12\vect B\wedge\vect r$. (a) Write $L$ in
+Cartesian coordinates. (b) Derive the equations of motion and check
+they describe the cyclotron circle at $\omega_{\text{c}} = qB/m$. (c)
+Compute the conjugate momenta $p_x$, $p_y$: are they $m\dot x$,
+$m\dot y$? Are they conserved? (d) Show that $L$ written in cylindrical
+coordinates has $\varphi$ cyclic, and identify the conserved
+$p_\varphi$ for a circle centred on the axis.
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b3:lagrangian-mechanics:9}
+For the bead on the rotating hoop
+(\cref{ex:b3:lagrangian-mechanics:hoop}): (a) compute the \omterm{prop:b3:lagrangian-mechanics:energy}{energy
+function} $h$ and verify it is conserved by the equation of motion; (b)
+compute the mechanical energy $E$ and show $E - h =
+m\omega^2R^2\sin^2\theta$; (c) find the power delivered by the motor as
+a function of $\theta$ and $\dot\theta$; (d) find the frequency of
+\omterm{prop:b3:lagrangian-mechanics:modes}{small oscillations} about the tilted equilibrium when $\omega^2 > g/R$,
+and show it vanishes as $\omega^2 \to g/R$ --- the slowing down that
+announces the split of the well.
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b3:lagrangian-mechanics:10}
+The equal double pendulum ($m_1 = m_2 = m$, $\ell_1 = \ell_2 = \ell$).
+(a) Show that for small angles $L = \tfrac12 m\ell^2(2\dot\theta_1^2 +
+2\dot\theta_1\dot\theta_2 + \dot\theta_2^2) - \tfrac12 mg\ell(2
+\theta_1^2 + \theta_2^2)$. (b) Write the two equations of motion. (c)
+Find the normal frequencies $\Omega_\pm^2 = (2 \mp \sqrt2)\,g/\ell$ and
+the shape of each mode ($\theta_2 = \pm\sqrt2\,\theta_1$). (d) At large
+amplitude this system is a standard example of chaos: explain in a few
+lines what breaks the small-angle analysis, and why no conservation law
+is lost.
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b3:lagrangian-mechanics:11}
+\emph{The brachistochrone.} A bead slides without friction from rest at
+the origin down a curve $y(x)$ ($y$ downward) to a point $(a, b)$. (a)
+Using energy conservation, show the descent time is $T =
+\int_0^a\sqrt{(1 + y'^2)/2gy}\,\dd x$ --- a functional, with $x$
+playing the role of time. (b) The integrand $F(y, y')$ has no explicit
+$x$: show that $h = y'\,\partial F/\partial y' - F$ is constant along
+the optimal curve (the same computation as
+\cref{prop:b3:lagrangian-mechanics:energy}). (c) Deduce $y(1 + y'^2) =
+2r$ for a constant $r$, and verify that the cycloid $x = r(\phi -
+\sin\phi)$, $y = r(1 - \cos\phi)$ satisfies it. (d) Show the bead's
+descent to the bottom of one arch takes $\pi\sqrt{r/g}$, and compare
+with the straight chute to the same point.
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b3:lagrangian-mechanics:12}
+\emph{Fermat as \omterm{thm:b3:lagrangian-mechanics:euler-lagrange}{least action}.} Light in a medium of index $n(y)$
+travels between two points in the least time (Year 2 volume). (a) Show
+the travel time along $y(x)$ is $T = \tfrac1c\int n(y)\sqrt{1 +
+y'^2}\,\dd x$. (b) Since the integrand has no explicit $x$, use the
+conserved $h$ of the previous exercise to show $n(y)\big/\sqrt{1 +
+y'^2} = \text{const}$, and check this is Snell's law $n\sin i =
+\text{const}$ for a ray measured from the vertical. (c) Over a hot road
+the index grows with height as $n(y) \approx n_0(1 + \beta y)$;
+show a nearly horizontal ray bends with curvature radius $R \approx
+1/\beta$. (d) With $\beta = \qty{1.2e-5}{m^{-1}}$, from what distance
+does a driver whose eyes are \qty{1.2}{m} above the road see the
+``water'' mirage on it?
+\end{exercise}
+
+\begin{omfigure}
+\includegraphics[width=0.6\linewidth]{images/book5/photo-foucault-pantheon.jpg}
+
+{\small Foucault's pendulum in the Panth\'eon, Paris. Generalised coordinates, a \omterm{def:b3:lagrangian-mechanics:coordinates}{constraint}, and a slowly turning frame: the room's rotation appears in the equations of motion --- and the swing plane's drift lets a basement measure the Earth's spin. Photograph: Olga Khomitsevich, CC~BY~2.0.}
+\end{omfigure}
+
+\section{Problem: The broom that stands upside down}
+
+\begin{problem}[{Weekend problem --- Kapitza's inverted pendulum}]\label{pb:b3:lagrangian-mechanics:1}
+A rigid pendulum can stand stably \emph{above} its pivot if the pivot
+is shaken up and down fast enough --- a discovery analysed by Kapitza
+in 1951, striking enough to look like a conjuring trick, and the
+principle by which oscillating electric fields trap single ions. We
+model the pendulum as a point mass $m$ at the end of a massless rigid
+rod of length $\ell = \qty{40}{cm}$; $\theta$ is the angle from the
+\emph{downward} vertical; $g = \qty{9.81}{m/s^2}$.
+
+\medskip\noindent\textbf{Part I --- The rigid pendulum.}
+The pivot is first held fixed.
+\begin{enumerate}
+  \item Write the \omterm{def:b3:lagrangian-mechanics:action}{Lagrangian} and the equation of motion.
+  \item Give the frequency $f_0$ of \omterm{prop:b3:lagrangian-mechanics:modes}{small oscillations} about $\theta =
+        0$, and its value.
+  \item Show that $h = E$ here, and use its conservation to find the
+        minimum launch speed of the bob, at the bottom, that carries
+        it to the top.
+  \item Linearise the equation near $\theta = \pi$ (set $\theta = \pi +
+        \epsilon$) and show $\ddot\epsilon = +(g/\ell)\epsilon$: how
+        fast does an initial millidegree of tilt grow? Give the time
+        for it to grow by a factor $e$.
+  \item A broom balanced on a fingertip falls in about a second, yet
+        never stands alone: state in one sentence what the linearised
+        equation says about the equilibrium $\theta = \pi$.
+\end{enumerate}
+
+\medskip\noindent\textbf{Part II --- Shaking the pivot.}
+The pivot now oscillates vertically, its height $y_{\text{s}}(t) =
+a\cos\Omega t$ with $a = \qty{2.0}{cm}$, $\Omega$ adjustable.
+\begin{enumerate}[resume]
+  \item Write the coordinates of the bob and show
+        $\vect v^{\,2} = \ell^2\dot\theta^2 -
+        2a\Omega\ell\sin(\Omega t)\sin\theta\,\dot\theta +
+        a^2\Omega^2\sin^2\Omega t$.
+  \item Show that two \omterm{def:b3:lagrangian-mechanics:action}{Lagrangians} differing by a total time derivative
+        $\dd F(q,t)/\dd t$ give the same \omterm{thm:b3:lagrangian-mechanics:euler-lagrange}{Euler--Lagrange equations}.
+  \item Using this freedom, reduce the \omterm{def:b3:lagrangian-mechanics:action}{Lagrangian} to $L = \tfrac12 m
+        \ell^2\dot\theta^2 - ma\Omega^2\ell\cos(\Omega t)\cos\theta +
+        mg\ell\cos\theta$. (Hint: $\sin(\Omega t)\sin\theta\,\dot\theta$
+        combines with a $\cos(\Omega t)\cos\theta$ term into a total
+        derivative; terms in $t$ alone may be dropped.)
+  \item Derive the equation of motion
+        \[
+        \ddot\theta = -\frac{g}{\ell}\sin\theta
+         + \frac{a\Omega^2}{\ell}\cos(\Omega t)\sin\theta .
+        \]
+        Interpret the second term as the weight being replaced by $g +
+        \ddot y_{\text{s}}$: the pendulum lives in an elevator.
+  \item Is the \omterm{prop:b3:lagrangian-mechanics:energy}{energy function} $h$ conserved now? Is the energy? What
+        pumps energy in and out?
+  \item In Kapitza's regime $a \ll \ell$ and $\Omega \gg \omega_0 =
+        \sqrt{g/\ell}$: check these for $a = \qty{2}{cm}$, $\ell =
+        \qty{40}{cm}$, $\Omega/2\pi = \qty{40}{Hz}$, and explain
+        physically why the bob then cannot follow the drive.
+\end{enumerate}
+
+\medskip\noindent\textbf{Part III --- Separating fast from slow.}
+Seek the motion as $\theta(t) = \Theta(t) + \xi(t)$: a slow drift
+$\Theta$ plus a small ripple $\xi$ at the drive frequency.
+\begin{enumerate}[resume]
+  \item Keeping only the largest term on each side, show the ripple
+        obeys $\ddot\xi \approx +(a\Omega^2/\ell)\cos(\Omega t)
+        \sin\Theta$, with $\Theta$ frozen on the drive timescale.
+  \item Deduce $\xi(t) = -(a/\ell)\cos(\Omega t)\sin\Theta$, and check
+        that its amplitude is small, of order $a/\ell$.
+  \item Expand $\sin\theta = \sin(\Theta + \xi)$ to first order in
+        $\xi$ and insert it into the equation of motion.
+  \item Average over one drive period, with $\Theta$ held fixed:
+        using $\langle\cos\Omega t\rangle = 0$ and
+        $\langle\cos^2\Omega t\rangle = \tfrac12$, show
+        \[
+        \ddot\Theta = -\frac{g}{\ell}\sin\Theta
+         - \frac{a^2\Omega^2}{2\ell^2}\sin\Theta\cos\Theta .
+        \]
+  \item Show this is motion in the effective potential
+        \[
+        U_{\text{eff}}(\Theta) = mg\ell\Big({-\cos\Theta}
+         + \frac{a^2\Omega^2}{4g\ell}\sin^2\Theta\Big) .
+        \]
+  \item Compare with the bead on the rotating hoop
+        (\cref{ex:b3:lagrangian-mechanics:hoop}): same mathematics,
+        opposite sign of the new term --- what does the shaking do to
+        the \emph{bottom} equilibrium that the rotation did not?
+  \item Sketch $U_{\text{eff}}$ for slow and for fast drive, and
+        describe every equilibrium and its stability in each case.
+\end{enumerate}
+
+\medskip\noindent\textbf{Part IV --- The broom stands up.}
+\begin{enumerate}[resume]
+  \item Expanding $U_{\text{eff}}$ near $\Theta = \pi$, show the
+        inverted position is stable exactly when
+        \[
+        a^2\Omega^2 > 2g\ell .
+        \]
+  \item Compute the critical drive frequency $f_{\text{c}} =
+        \Omega_{\text{c}}/2\pi$ for our pendulum, and the peak pivot
+        speed $a\Omega_{\text{c}}$ and acceleration
+        $a\Omega_{\text{c}}^2$ (in units of $g$) it demands.
+  \item At $\Omega = 2\Omega_{\text{c}}$, find the frequency of the
+        slow swaying of the standing pendulum about $\Theta = \pi$,
+        and its value; check it is indeed slow compared with the
+        drive.
+  \item Still at $\Omega = 2\Omega_{\text{c}}$, what is the ripple
+        amplitude $\xi$ at $\Theta$ slightly off $\pi$, in degrees,
+        for $a/\ell = 0.05$? Would a photograph betray the trick?
+  \item How far from the vertical may the broom lean and still return?
+        Show the standing well extends over $|\Theta - \pi| <
+        \arccos(2g\ell/a^2\Omega^2)$, and evaluate it at $\Omega =
+        2\Omega_{\text{c}}$.
+  \item A juggler balancing a broom on a still fingertip also keeps it
+        up --- by what entirely different mechanism? Name the feature
+        of Kapitza's pendulum that needs no feedback.
+  \item Summarise the named result: a pivot shaken with amplitude
+        \qty{2}{cm} at \qty{45}{Hz} --- twice the critical frequency
+        --- holds a \qty{40}{cm} pendulum upside down, in a well
+        reaching some $75^\circ$ from the vertical, swaying gently at
+        about \qty{1.4}{Hz}. Where in physics is the same averaged
+        trapping used to hold a single charged particle?
+\end{enumerate}
+\end{problem}

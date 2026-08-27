@@ -1,6 +1,532 @@
 \chapter{The Quantum Harmonic Oscillator}\label{ch:b3:harmonic-oscillator}
 
-% TODO: course, examples, figures, and 8--12 graded exercises
-% (see CONTRIBUTING.md). Placeholder until written.
+Almost nothing in nature is exactly a harmonic oscillator, and almost
+everything is approximately one: any system nudged from stable
+equilibrium --- a molecule's bond, an atom in a crystal, a bridge, a
+mode of the electromagnetic field --- feels a restoring force
+proportional to the displacement, because every smooth potential is a
+parabola at the bottom of its well. Whoever solves the quantum
+oscillator once therefore solves the small vibrations of the whole
+world. This chapter solves it in the algebraic style that has become
+the signature of quantum mechanics: two \omterm{def:b3:harmonic-oscillator:ladder}{ladder operators} climb and
+descend a perfectly even staircase of levels $\big(n +
+\tfrac12\big)\hbar\omega$, the half-step at the bottom --- the
+\omterm{thm:b3:harmonic-oscillator:spectrum}{zero-point energy} --- being a theorem, not an option. The
+consequences reach from why helium never freezes to how a carbon
+dioxide molecule, ringing at its own $\hbar\omega$, intercepts the
+Earth's outgoing heat.
 
-\emph{This chapter has not been written yet.}
+\section{The ladder}
+
+\begin{definition}[Ladder operators]\label{def:b3:harmonic-oscillator:ladder}
+\index{ladder operators}\index{annihilation operator}\index{creation operator}
+For $\hat H = \hat p^2/2m + \tfrac12 m\omega^2\hat x^2$, introduce
+the dimensionless, non-Hermitian pair
+\[
+\hat a = \sqrt{\frac{m\omega}{2\hbar}}\Big(\hat x +
+\frac{\iu\hat p}{m\omega}\Big) , \qquad
+\hat a^\dagger = \sqrt{\frac{m\omega}{2\hbar}}\Big(\hat x -
+\frac{\iu\hat p}{m\omega}\Big) .
+\]
+From $[\hat x, \hat p] = \iu\hbar$:
+\[
+[\hat a, \hat a^\dagger] = 1 , \qquad
+\hat H = \hbar\omega\Big(\hat N + \tfrac12\Big) , \quad
+\hat N = \hat a^\dagger\hat a .
+\]
+$\hat N$ is Hermitian; its \omterm{def:b3:quantum-formalism:observable}{eigenvalues} will count \emph{quanta}, and
+$\hat a$, $\hat a^\dagger$ --- the \emph{annihilation} and
+\emph{creation} operators --- will remove and add one.
+\end{definition}
+
+\begin{theorem}[The spectrum, by algebra alone]\label{thm:b3:harmonic-oscillator:spectrum}
+\index{zero-point energy}
+The \omterm{def:b3:quantum-formalism:observable}{eigenvalues} of $\hat H$ are exactly
+\[
+E_n = \Big(n + \tfrac12\Big)\hbar\omega , \qquad n = 0, 1, 2, \dots
+\]
+--- an infinite ladder of equal steps $\hbar\omega$ above a ground
+level that is \emph{not} zero: the \emph{\omterm{thm:b3:harmonic-oscillator:spectrum}{zero-point energy}}
+$\tfrac12\hbar\omega$. The normalised eigenstates $\ket n$ are
+connected by
+\[
+\hat a\ket n = \sqrt n\,\ket{n - 1} , \qquad
+\hat a^\dagger\ket n = \sqrt{n + 1}\,\ket{n + 1} ,
+\qquad
+\ket n = \frac{(\hat a^\dagger)^n}{\sqrt{n!}}\,\ket0 .
+\]
+\end{theorem}
+
+\begin{proof}
+From the \omterm{def:b3:quantum-formalism:commutator}{commutator}, $\hat N\hat a = \hat a(\hat N - 1)$: if
+$\ket\nu$ has $\hat N$-eigenvalue $\nu$, then $\hat a\ket\nu$ is an
+eigenvector with $\nu - 1$ (or the zero vector). Each descent is
+allowed only while $\nu \ge 0$, since $\nu = \braket{\nu}{\hat
+N\nu} = \|\hat a\ket\nu\|^2 \ge 0$; the descent must therefore
+terminate, and it terminates only on a state with $\hat a\ket{\nu_0}
+= 0$, whence $\nu_0 = 0$. So $\nu$ runs over the non-negative
+integers. The normalisations follow from $\|\hat a\ket n\|^2 = n$
+and $\|\hat a^\dagger\ket n\|^2 = n + 1$.
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}[font=\small, >=Stealth]
+  \draw[->] (0,-0.3) -- (0,5.4);
+  \node[anchor=south] at (0,5.4) {$E$};
+  \foreach \n in {0,1,2,3,4}
+    {\draw[very thick, omDef] (0.5,{0.55+\n*1.05}) -- (3.3,{0.55+\n*1.05});
+     \node[anchor=west] at (3.45,{0.55+\n*1.05})
+       {$\ket{\n}$\; $E = (\n + \tfrac12)\hbar\omega$};}
+  \draw[->, omThm, very thick] (1.35,0.62) -- (1.35,1.53);
+  \node[omThm, anchor=east] at (1.28,1.08) {$\hat a^\dagger$};
+  \draw[->, omExo, very thick] (2.45,1.53) -- (2.45,0.62);
+  \node[omExo, anchor=west] at (2.52,1.08) {$\hat a$};
+  \draw[<->] (0.15,0) -- (0.15,0.55);
+  \node[anchor=west, font=\footnotesize] at (0.28,0.22) {$\tfrac12\hbar\omega$};
+  \draw[dashed] (0,0) -- (3.3,0);
+\end{tikzpicture}
+
+{\small The oscillator's ladder: equal steps $\hbar\omega$, climbed
+by $\hat a^\dagger$ and descended by $\hat a$, standing on a floor
+half a step above the classical \omterm{def:b3:relativistic-dynamics:momentum-energy}{rest energy}.}
+\end{omfigure}
+
+\begin{proposition}[The states in space]\label{prop:b3:harmonic-oscillator:wavefunctions}
+The ground state is the Gaussian
+\[
+\varphi_0(x) = \Big(\frac{m\omega}{\pi\hbar}\Big)^{1/4}
+\eu^{-m\omega x^2/2\hbar} ,
+\]
+obtained by solving the \emph{first-order} equation $\hat a\varphi_0
+= 0$; it saturates Heisenberg's inequality, $\Delta x\,\Delta p =
+\hbar/2$, with $\Delta x = \sqrt{\hbar/2m\omega}$. Applying
+$\hat a^\dagger$ repeatedly generates $\varphi_n$: a polynomial of
+degree $n$ (with $n$ nodes) times the same Gaussian. For large $n$,
+$|\varphi_n|^2$ oscillates rapidly about the classical dwell-time
+distribution, largest near the turning points --- the correspondence
+principle in a picture.
+\end{proposition}
+
+\begin{proof}[Partial proof]
+$\hat a\varphi_0 = 0$ reads $\varphi_0' = -(m\omega/\hbar)x
+\varphi_0$: the Gaussian, normalised. Saturation: the Gaussian is
+the equality case of \cref{thm:b3:quantum-formalism:uncertainty}.
+The polynomial structure follows from $\hat a^\dagger$ being first
+order in $x$ and $\dd/\dd x$; the large-$n$ statement is checked in
+\cref{exo:b3:harmonic-oscillator:12}.
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}
+  \begin{axis}[omaxis, axis x line=bottom, axis y line=left,
+    width=6.6cm, height=5.2cm, xmin=-4, xmax=4, ymin=0, ymax=3.6,
+    xlabel={$x$ (units of $\sqrt{\hbar/m\omega}$)}, ylabel={},
+    xlabel style={at={(axis description cs:0.5,-0.1)}, anchor=north},
+    xtick={-2,0,2}, ytick=\empty, clip=false]
+    \addplot[omDef, thick, domain=-4:4, samples=90]
+      {0.56*exp(-x*x)+0.25};
+    \addplot[omThm, thick, domain=-4:4, samples=90]
+      {1.13*x*x*exp(-x*x)+1.3};
+    \addplot[omExo, thick, domain=-4:4, samples=120]
+      {0.28*(2*x*x-1)^2*exp(-x*x)+2.35};
+    \node[omDef, font=\scriptsize, anchor=west] at (axis cs:2.4,0.5) {$|\varphi_0|^2$};
+    \node[omThm, font=\scriptsize, anchor=west] at (axis cs:2.4,1.55) {$|\varphi_1|^2$};
+    \node[omExo, font=\scriptsize, anchor=west] at (axis cs:2.4,2.6) {$|\varphi_2|^2$};
+  \end{axis}
+  \begin{axis}[omaxis, axis x line=bottom, axis y line=left,
+    width=6.6cm, height=5.2cm, xmin=-5.2, xmax=5.2, ymin=0, ymax=0.45,
+    xshift=7.1cm,
+    xlabel={$x$}, ylabel={},
+    xlabel style={at={(axis description cs:0.5,-0.1)}, anchor=north},
+    xtick=\empty, ytick=\empty, clip=false]
+    \addplot[omDef, domain=-4.6:4.6, samples=300]
+      {(64*x^6-480*x^4+720*x^2-120)^2*exp(-x*x)/81680};
+    \addplot[omThm, very thick, dashed, domain=-3.54:3.54, samples=120]
+      {0.3183/sqrt(max(0.35,13-x*x))};
+    \node[omThm, font=\scriptsize, anchor=south] at (axis cs:0,0.36) {classical dwell time};
+    \node[omDef, font=\scriptsize, anchor=west] at (axis cs:1.9,0.42) {$|\varphi_6|^2$};
+  \end{axis}
+\end{tikzpicture}
+
+{\small Left: the lowest probability densities (offset vertically):
+a nodeless Gaussian, then $n$ nodes for $\varphi_n$. Right:
+at large $n$ the quantum density oscillates about the classical
+distribution, which piles up at the turning points where the
+oscillating mass lingers.}
+\end{omfigure}
+
+\section{The zero-point energy is real}
+
+\begin{remark}[Why the floor cannot be lower]\label{rem:b3:harmonic-oscillator:zeropoint}
+A state of zero energy would need $\langle\hat p^2\rangle =
+\langle\hat x^2\rangle = 0$: perfectly still \emph{and} perfectly
+centred, forbidden by $\Delta x\,\Delta p \ge \hbar/2$. The ground
+state is the best compromise the inequality allows, and
+$\tfrac12\hbar\omega$ is the rent. It is not a bookkeeping constant:
+zero-point motion smears X-ray diffraction patterns at absolute
+zero; it gives lighter isotopes weaker effective bonds (H$_2$ and
+D$_2$ dissociate at measurably different energies from the same
+electronic well); and in helium it is so violent --- light atoms,
+feeble attraction --- that the liquid \emph{never} freezes under its
+own vapour pressure: the only element still liquid at absolute
+zero, solidifying only under 25 atmospheres of help.
+\end{remark}
+
+\begin{example}[Scales of $\hbar\omega$]\label{ex:b3:harmonic-oscillator:scales}
+Carbon monoxide bond ($\omega = \qty{4.1e14}{rad/s}$): $\hbar\omega =
+\qty{0.27}{eV}$, ten times room temperature's $k_{\text{B}}T$ ---
+molecular vibrations are frozen in everyday air, which is why
+diatomic heat capacities puzzled the nineteenth century. A pendulum
+($\omega = \qty{5}{rad/s}$): $\hbar\omega = \qty{3e-15}{eV}$,
+hopelessly beyond resolution --- the correspondence limit. A LIGO
+mirror of \qty{40}{kg}, suspended so that it swings at
+\qty{100}{Hz}, has as an oscillator mode the zero-point amplitude $\Delta x =
+\sqrt{\hbar/2m\omega} \approx \qty{5e-20}{m}$ --- and the observatory
+routinely resolves displacements \emph{at} this quantum floor: the
+zero-point motion of a forty-kilogram object is now an engineering
+\omterm{def:b3:lagrangian-mechanics:coordinates}{constraint} (\cref{exo:b3:harmonic-oscillator:3}).
+\end{example}
+
+\section{Coherent states: the classical face of the quantum oscillator}
+
+\begin{definition}[Coherent states]\label{def:b3:harmonic-oscillator:coherent}
+\index{coherent state}
+A \emph{coherent state} $\ket\alpha$ is an eigenvector of the
+\omterm{def:b3:harmonic-oscillator:ladder}{annihilation operator}, $\hat a\ket\alpha = \alpha\ket\alpha$, with
+$\alpha$ any complex number. Expanded on the ladder,
+\[
+\ket\alpha = \eu^{-|\alpha|^2/2}\sum_{n=0}^\infty
+\frac{\alpha^n}{\sqrt{n!}}\,\ket n :
+\]
+the quantum count is Poisson-distributed with mean $\langle\hat
+N\rangle = |\alpha|^2$ and spread $\Delta N = |\alpha|$.
+\end{definition}
+
+\begin{proposition}[Why lasers are classical]\label{prop:b3:harmonic-oscillator:coherent-motion}
+A \omterm{def:b3:harmonic-oscillator:coherent}{coherent state} is the ground-state Gaussian displaced in \omterm{def:b3:hamiltonian-mechanics:hamiltonian}{phase
+space}; under the oscillator's evolution it \emph{stays} coherent,
+$\alpha(t) = \alpha\,\eu^{-\iu\omega t}$: its centre executes exactly
+the classical motion, $\langle\hat x\rangle(t) =
+x_0\cos\omega t + \cdots$, while its widths remain the minimal
+$\Delta x\,\Delta p = \hbar/2$ forever --- a wave packet that never
+spreads. \omterm{def:b3:harmonic-oscillator:coherent}{Coherent states} are how a quantum oscillator impersonates a
+classical one; the light of a laser is a \omterm{def:b3:harmonic-oscillator:coherent}{coherent state} of a field
+mode, its photon number Poissonian (the \emph{shot noise} of every
+photodetector), its field oscillating like Maxwell said.
+\end{proposition}
+
+\begin{proof}[Partial proof]
+The expansion follows by writing $\ket\alpha = \sum c_n\ket n$ in
+$\hat a\ket\alpha = \alpha\ket\alpha$: $c_n = \alpha c_{n-1}/\sqrt
+n$. Evolution: each $\ket n$ picks up $\eu^{-\iu(n + 1/2)\omega t}$,
+which resums to a \omterm{def:b3:harmonic-oscillator:coherent}{coherent state} of $\alpha\eu^{-\iu\omega t}$
+(global phase apart). $\langle\hat x\rangle \propto
+\operatorname{Re}\alpha(t)$ from $\hat x \propto \hat a +
+\hat a^\dagger$. That the state is the displaced Gaussian is
+admitted here.
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}[font=\small, >=Stealth]
+  \draw[->] (-3.1,0) -- (3.4,0) node[right] {$\langle\hat x\rangle$};
+  \draw[->] (0,-3.0) -- (0,3.2) node[above] {$\langle\hat p\rangle$};
+  \draw[gray, dashed] (0,0) circle (2.2);
+  \fill[omDef!25, draw=omDef, thick] (2.2,0) circle (0.42);
+  \fill[omDef!25, draw=omDef, thick] (50:2.2) circle (0.42);
+  \fill[omDef!25, draw=omDef, thick] (100:2.2) circle (0.42);
+  \draw[->, thick] (2.53,0.9) arc (20:40:2.6);
+  \node[anchor=west] at (2.62,1.35) {$\omega$};
+  \fill[omThm!30, draw=omThm, thick] (0,0) circle (0.42);
+  \node[omThm, font=\footnotesize, anchor=east] at (-0.3,-0.68) {$\ket0$};
+  \node[omDef, font=\footnotesize, anchor=west] at (2.3,-0.62) {$\ket\alpha$};
+  \node[font=\footnotesize, anchor=west] at (-3.05,2.75)
+    {minimal blob $\Delta x\,\Delta p = \hbar/2$, circling classically};
+\end{tikzpicture}
+
+{\small Phase-space portrait (compare
+\cref{ch:b3:hamiltonian-mechanics}): the ground state is a minimal
+uncertainty blob at the origin; a \omterm{def:b3:harmonic-oscillator:coherent}{coherent state} is the same blob
+displaced, circling at $\omega$ without deforming --- quantum
+mechanics' best imitation of a classical oscillation.}
+\end{omfigure}
+
+\begin{method}[Oscillator algebra]\label{met:b3:harmonic-oscillator:method}
+(1) Express whatever is asked in $\hat a$, $\hat a^\dagger$: $\hat x
+= \sqrt{\hbar/2m\omega}\,(\hat a + \hat a^\dagger)$, $\hat p =
+\iu\sqrt{m\hbar\omega/2}\,(\hat a^\dagger - \hat a)$. (2) Move
+$\hat a$'s to the right with $[\hat a, \hat a^\dagger] = 1$; use
+$\hat a\ket0 = 0$. (3) Matrix elements: $\hat x$ connects only
+neighbouring rungs --- the selection rule $\Delta n = \pm1$ of
+vibrational spectroscopy. (4) Any quadratic \omterm{def:b3:hamiltonian-mechanics:hamiltonian}{Hamiltonian} (coupled
+oscillators, circuits, field modes) diagonalises into independent
+ladders: find the \omterm{prop:b3:lagrangian-mechanics:modes}{normal modes} first, quantise each. (5) Numbers
+first: $\hbar\omega$ against $k_{\text{B}}T$ decides whether the
+system is quantum or classical before any algebra.
+\end{method}
+
+\section{Exercises}
+
+\begin{exercise}[$\star$]\label{exo:b3:harmonic-oscillator:1}
+(a) Verify $[\hat a, \hat a^\dagger] = 1$ from $[\hat x, \hat p] =
+\iu\hbar$. (b) Verify $\hat H = \hbar\omega(\hat a^\dagger\hat a +
+\tfrac12)$ by direct expansion. (c) Invert to express $\hat x$ and
+$\hat p$. (d) Show $\hat N$ is Hermitian and explain why $\hat a$
+alone could not be an observable.
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b3:harmonic-oscillator:2}
+On the eigenstate $\ket n$: (a) show $\langle\hat x\rangle =
+\langle\hat p\rangle = 0$; (b) compute $\langle\hat x^2\rangle$ and
+$\langle\hat p^2\rangle$; (c) deduce $\Delta x\,\Delta p = (n +
+\tfrac12)\hbar$; (d) check the virial ratio $\langle E_k\rangle =
+\langle E_p\rangle$.
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b3:harmonic-oscillator:3}
+Zero-point amplitudes $\Delta x = \sqrt{\hbar/2m\omega}$: compute
+for (a) the CO molecule ($\mu = \qty{1.14e-26}{kg}$, $\omega =
+\qty{4.1e14}{rad/s}$), compared with the bond length
+\qty{0.11}{nm}; (b) a hydrogen atom in a solid ($m =
+\qty{1.7e-27}{kg}$, $\hbar\omega = \qty{0.1}{eV}$); (c) a LIGO
+mirror ($m = \qty{40}{kg}$, $f = \qty{100}{Hz}$); (d) rank the three
+as fractions of their systems' sizes and comment on who is
+``quantum''.
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b3:harmonic-oscillator:4}
+(a) Using the ladder relations, compute $\bra m\hat x\ket n$ and
+show it vanishes unless $m = n \pm 1$. (b) Deduce the vibrational
+selection rule $\Delta n = \pm1$ for light absorption (the coupling
+is $\propto\hat x$). (c) Why does a heteronuclear molecule (CO)
+absorb infrared light while N$_2$ does not? (d) Real molecules show
+weak ``overtone'' lines at $\approx 2\hbar\omega$: what does that
+reveal about the potential?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b3:harmonic-oscillator:5}
+(a) Solve $\hat a\varphi_0 = 0$ as a differential equation and
+normalise. (b) Generate $\varphi_1$ and $\varphi_2$ by applying
+$\hat a^\dagger$. (c) Verify $\varphi_1 \perp \varphi_0$ by parity
+alone. (d) Sketch the three densities and check the node count.
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b3:harmonic-oscillator:6}
+Boltzmann preview. A collection of identical oscillators at
+temperature $T$ occupies level $n$ with probability $\propto
+\eu^{-E_n/k_{\text{B}}T}$ (Year 2 volume, Boltzmann factor). (a)
+Show the mean quantum number is $\langle n\rangle =
+1/(\eu^{\hbar\omega/k_{\text{B}}T} - 1)$. (b) Evaluate for the CO
+vibration at \qty{300}{K} and at \qty{2000}{K}. (c) Show the mean
+energy tends to $k_{\text{B}}T$ at high temperature (equipartition
+recovered) and to $\tfrac12\hbar\omega$ at low. (d) At what
+temperature does a \qty{15}{\micro m} vibration (carbon dioxide's
+bend) hold $\langle n\rangle = 0.1$?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b3:harmonic-oscillator:7}
+Coherent-state statistics. (a) From the expansion of $\ket\alpha$,
+show $\mathcal P(n)$ is Poisson with mean $|\alpha|^2$. (b) Show
+$\langle\hat N\rangle = |\alpha|^2$ and $\Delta N = |\alpha|$. (c) A
+\qty{1}{mW} laser at \qty{633}{nm}: photons per second, and the
+relative fluctuation $\Delta N/\langle N\rangle$ in one second. (d)
+Shot noise: show the photocurrent noise-to-signal falls as
+$1/\sqrt{\langle N\rangle}$ --- why bright beams look smooth.
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b3:harmonic-oscillator:8}
+Evolution of a \omterm{def:b3:harmonic-oscillator:coherent}{coherent state}. (a) Apply the evolution phases to the
+expansion and show $\ket{\alpha(t)}$ with $\alpha(t) =
+\alpha\eu^{-\iu\omega t}$ (up to a global phase). (b) Deduce
+$\langle\hat x\rangle(t)$ and $\langle\hat p\rangle(t)$ and compare
+with the classical solution. (c) Why does an energy eigenstate,
+despite being stationary, \emph{not} describe a swinging pendulum
+--- which feature of the \omterm{def:b3:harmonic-oscillator:coherent}{coherent state} does? (d) Estimate $|\alpha|$
+for a real pendulum (\qty{10}{g}, \qty{10}{cm} amplitude,
+\qty{1}{Hz}) and comment.
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b3:harmonic-oscillator:9}
+The quantum LC circuit. A superconducting loop with $L =
+\qty{10}{nH}$ and $C = \qty{0.4}{pF}$ oscillates charge and flux
+like $x$ and $p$. (a) Its resonance frequency (Year 1 volume) and
+the quantum $\hbar\omega$ in $\unit{\micro eV}$. (b) Below what
+temperature is $k_{\text{B}}T \ll \hbar\omega$, so the circuit sits
+in its ground state? (c) Why are superconducting qubits operated in
+dilution refrigerators at \qty{20}{mK}? (d) The zero-point voltage
+fluctuation $\Delta V = \Delta q/C$ with $\Delta q =
+\sqrt{\hbar\omega C/2}$: evaluate it.
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b3:harmonic-oscillator:10}
+Van der Waals from zero-point motion. Model two neutral atoms at
+distance $R$ as two identical dipole oscillators (charge $e$, mass
+$m$, frequency $\omega_0$) whose displacements couple by the dipole
+energy $\lambda\,x_1x_2$ with $\lambda = e^2/2\pi\varepsilon_0R^3$.
+(a) Show the normal coordinates $(x_1 \pm x_2)/\sqrt2$ oscillate at
+$\omega_\pm = \omega_0\sqrt{1 \pm \lambda/m\omega_0^2}$. (b) The
+ground energy is $\tfrac\hbar2(\omega_+ + \omega_-)$: expand to
+second order in $\lambda$ and show the interaction energy is
+\[
+\Delta E = -\frac{\hbar\lambda^2}{8m^2\omega_0^3}
+\ \propto\ -\frac{1}{R^6} .
+\]
+(c) Why is this attraction universal --- present between atoms with
+no permanent dipoles at all? (d) The $1/R^6$ law is the van der
+Waals force of the Year 1 volume's real-gas corrections: what,
+microscopically, is ``fluctuating'' --- and what would happen to
+this force in a world with $\hbar = 0$?
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b3:harmonic-oscillator:11}
+Sidebands of a trapped ion. An ion in a harmonic trap ($f =
+\qty{1}{MHz}$) absorbs laser light. Because the ion moves, its
+absorption spectrum shows the electronic line at $\nu_0$ flanked by
+lines at $\nu_0 \pm f$: transitions that change the \emph{motional}
+quantum number by $\mp1$ alongside the electronic one. (a) What is
+$\hbar\omega_{\text{trap}}$ in $\unit{neV}$, and why does resolving
+sidebands need a very narrow line? (b) Driving the $\nu_0 - f$ line
+removes one motional quantum per cycle: explain \emph{sideband
+cooling} to the ground state. (c) Once $\langle n\rangle \approx
+0$, the lower sideband disappears entirely --- why is that
+asymmetry a proof of reaching the quantum ground state? (d) This is
+how the motional ground state of a single atom --- and of
+kilogram-scale LIGO mirrors, by other means --- is certified: state
+what ``temperature'' the ion has reached for $f = \qty{1}{MHz}$ and
+$\langle n\rangle = 0.05$.
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b3:harmonic-oscillator:12}
+The classical limit, quantitatively. A classical oscillator of
+amplitude $A$ spends in $[x, x + \dd x]$ the fraction $\dd
+t/T = \dd x/\pi\sqrt{A^2 - x^2}$. (a) Derive this dwell-time
+distribution. (b) For the quantum state $n$, take $A_n$ from $E_n =
+\tfrac12 m\omega^2A_n^2$ and compare the classical distribution with
+the (given) locally averaged $|\varphi_n|^2$: where do they agree
+and where must they differ? (c) Show the fractional spacing between
+adjacent levels, $\Delta E/E$, vanishes as $1/n$: energy becomes
+effectively continuous. (d) For the pendulum of
+\cref{exo:b3:harmonic-oscillator:8}(d), estimate $n$ and $\Delta
+E/E$, and conclude the correspondence argument in one sentence.
+\end{exercise}
+
+\section{Problem: The molecule that warms the Earth}
+
+\begin{problem}[{Weekend problem --- carbon dioxide's quantum ladder
+and the greenhouse effect}]\label{pb:b3:harmonic-oscillator:1}
+A carbon dioxide molecule is a linear O=C=O chain: a few quantised
+oscillators. That its bending mode's $\hbar\omega$ happens to sit in
+the middle of the Earth's outgoing thermal glow is why this trace
+gas --- four molecules in ten thousand --- steers the planet's
+climate. Data: bend wavenumber $\tilde\nu_2 = \qty{667}{cm^{-1}}$
+(the spectroscopist's unit: $E = hc\tilde\nu$, $\qty{1}{cm^{-1}} =
+\qty{1.24e-4}{eV}$); asymmetric stretch $\tilde\nu_3 =
+\qty{2349}{cm^{-1}}$; symmetric stretch $\tilde\nu_1 =
+\qty{1388}{cm^{-1}}$; $k_{\text{B}}T$ at $\qty{288}{K}$ is
+\qty{24.8}{meV}; Wien's law (Year 2 volume): $\lambda_{\max}T =
+\qty{2898}{\micro m.K}$.
+
+\medskip\noindent\textbf{Part I --- The modes of a linear molecule.}
+\begin{enumerate}
+  \item Three atoms have nine \omterm{def:b3:lagrangian-mechanics:coordinates}{degrees of freedom}: how many are
+        translations of the whole molecule, how many rotations (the
+        molecule is \emph{linear}), and how many vibrations remain?
+  \item Describe the four vibrations: symmetric stretch, asymmetric
+        stretch, and a doubly degenerate bend --- why does the bend
+        come twice?
+  \item Light couples to a vibrating \emph{electric dipole}
+        (\cref{exo:b3:harmonic-oscillator:4}). Which modes of
+        O=C=O modulate the dipole moment, and which one is
+        infrared-silent?
+  \item Convert the three wavenumbers to photon wavelengths, and
+        place them: which are in the thermal infrared?
+  \item Why do the two main air gases, N$_2$ and O$_2$, absorb
+        essentially no infrared at all --- with what consequence for
+        the atmosphere's transparency?
+  \item Water vapour, bent and dipolar, absorbs across much of the
+        infrared: in which spectral ``window'' does carbon dioxide's
+        bend operate largely alone (compare \qty{15}{\micro m} with
+        water's strong bands below \qty{8}{\micro m} and above
+        \qty{20}{\micro m})?
+\end{enumerate}
+
+\medskip\noindent\textbf{Part II --- The quantum ladder of the bend.}
+\begin{enumerate}[resume]
+  \item Compute $\hbar\omega_2$ in meV, and the ladder $E_n$.
+  \item What fraction of molecules occupies $n = 1$ at
+        \qty{288}{K} (relative to $n = 0$, Boltzmann factor)? And
+        $n = 2$?
+  \item Which photon wavelength drives $n = 0 \to 1$? Why does the
+        \emph{same} wavelength dominate emission?
+  \item Justify from the harmonic ladder that one wavelength serves
+        the whole ladder ($n \to n + 1$ for every $n$): what
+        property of the level spacing is at work?
+  \item The molecule also rotates, adding fine structure: the
+        \qty{15}{\micro m} feature is really a \emph{band} some
+        \qty{1}{\micro m} wide. Why does band \emph{width} matter
+        for a greenhouse gas (think of what happens once the band
+        centre is opaque)?
+  \item A vibrationally excited CO$_2$ in air is far more likely to
+        lose its quantum by collision than by radiating (radiative
+        lifetime $\sim\qty{1}{s}$, collision time $\sim\qty{e-9}{s}$):
+        where does the absorbed radiant energy actually go?
+  \item Conversely, air at \qty{288}{K} keeps a thermal population
+        in $n = 1$ (question 8): what does that population do that
+        matters for the energy budget?
+\end{enumerate}
+
+\medskip\noindent\textbf{Part III --- The planet's radiation ledger.}
+\begin{enumerate}[resume]
+  \item The Sun radiates as a \qty{5800}{K} body: compute its Wien
+        peak. Does CO$_2$'s bend intercept much sunlight?
+  \item The ground radiates as a \qty{288}{K} body: compute its
+        Wien peak, and locate \qty{15}{\micro m} on that thermal
+        curve.
+  \item Explain the greenhouse mechanism in four sentences:
+        sunlight in, thermal infrared out, interception at
+        \qty{15}{\micro m}, re-emission both up \emph{and} down.
+  \item The re-emission that escapes to space comes from high, cold
+        layers ($\sim\qty{220}{K}$): why does emitting from a colder
+        layer reduce the planet's outgoing power at those
+        wavelengths (recall that thermal emission grows with $T$)?
+  \item More CO$_2$ pushes the emitting layer higher and colder:
+        state in one sentence why the surface must then warm to
+        rebalance the books.
+  \item The band centre is already opaque; the effect of added
+        CO$_2$ works in the band's \emph{wings}, giving a
+        logarithmic growth of forcing with concentration: connect
+        this to question 11.
+\end{enumerate}
+
+\medskip\noindent\textbf{Part IV --- Isotopes: the quantum
+fingerprint.}
+\begin{enumerate}[resume]
+  \item An oscillator's frequency scales as $\sqrt{k/\mu}$: for the
+        asymmetric stretch, replacing $^{12}$C by $^{13}$C changes
+        the effective mass; the observed line shifts from
+        \qty{2349}{cm^{-1}} to about \qty{2283}{cm^{-1}}. Check the
+        order of magnitude of this $\approx 3\%$ shift from the
+        masses.
+  \item Lasers tuned to these two lines count $^{13}$CO$_2$ and
+        $^{12}$CO$_2$ separately in a gas sample: explain why the
+        quantised ladder makes such isotope-resolved detection
+        possible at all.
+  \item Plants prefer the lighter isotope, so fossil carbon is
+        $^{13}$C-poor: what has the measured isotopic ratio of
+        atmospheric CO$_2$ done as its concentration rose --- and
+        what does that prove about the \emph{source} of the added
+        gas?
+  \item The same \qty{15}{\micro m} physics operates on Venus
+        ($96\%$ CO$_2$, \qty{90}{bar}): what does its
+        \qty{737}{K} surface illustrate?
+  \item Mars also breathes nearly pure CO$_2$, but at \qty{6}{mbar},
+        and is frigid: what does the Venus--Earth--Mars trio
+        demonstrate about which variable controls the strength of
+        the effect?
+  \item Summarise the named result: a quantum of \qty{83}{meV} ---
+        $\hbar\omega$ of a bending triatomic --- parked at
+        \qty{15}{\micro m} on a \qty{288}{K} planet's thermal
+        spectrum, absorbed, thermalised in nanoseconds and
+        re-emitted from cold altitudes, is the mechanism by which
+        $0.04\%$ of the air sets the temperature of the Earth.
+\end{enumerate}
+\end{problem}

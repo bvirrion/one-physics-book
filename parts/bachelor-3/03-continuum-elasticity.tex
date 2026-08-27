@@ -1,0 +1,638 @@
+\chapter{Continuum Mechanics and Elasticity}\label{ch:b3:continuum-elasticity}
+
+Press your ear to a long steel rail while a distant worker strikes it:
+you hear two clangs --- one through the steel, one through the air, a
+second or more apart. Rock, steel, bone and rubber all carry forces
+and waves the way a fluid carries pressure, but with something no
+fluid has: they resist \emph{changes of shape}, not only changes of
+volume. The Year 2 volume built the mechanics of fluids on two ideas,
+the material particle and the pressure field; this chapter extends
+them to solids. The displacement of each particle becomes a field, its
+local distortion a \emph{strain}, the internal forces a \emph{stress},
+and between them stands the solid's identity card, \omterm{thm:b3:continuum-elasticity:hooke}{Hooke's law} with
+its two elastic constants. The payoff runs from the everyday --- why
+cables stretch, why bottles burst, how a diving board bends --- to the
+planetary: earthquakes send through the Earth exactly the two kinds of
+elastic wave this chapter predicts, and their arrival times were the
+first sound ever taken of our planet's interior.
+
+\section{Strain: describing deformation}
+
+\begin{definition}[Displacement field and strain tensor]\label{def:b3:continuum-elasticity:strain}
+\index{displacement field}\index{strain tensor}\index{dilatation}
+When a solid deforms, the particle initially at $\vect r$ moves to
+$\vect r + \vect u(\vect r)$: $\vect u$ is the \emph{displacement
+field}. For small deformations, the local distortion is measured by
+the \emph{strain tensor}, the symmetric array
+\[
+\varepsilon_{ij} = \frac12\Big(
+ \frac{\partial u_i}{\partial x_j} + \frac{\partial u_j}{\partial x_i}
+\Big) , \qquad i, j \in \{x, y, z\} .
+\]
+A diagonal component $\varepsilon_{xx}$ is the relative elongation of
+the material along $x$ (dimensionless, e.g.\ $\num{e-3}$ for a steel
+cable in service); an off-diagonal component $\varepsilon_{xy}$ is half
+the closing of the angle between the $x$ and $y$ material directions
+--- a \emph{shear}. The trace is the relative change of volume, the
+\emph{dilatation}:
+\[
+\frac{\delta V}{V} = \varepsilon_{xx} + \varepsilon_{yy} +
+\varepsilon_{zz} = \operatorname{div}\vect u .
+\]
+\end{definition}
+
+\begin{example}[Three elementary deformations]\label{ex:b3:continuum-elasticity:elementary}
+Uniform dilation $\vect u = \alpha\vect r$: $\varepsilon_{ij} =
+\alpha\,\delta_{ij}$, volume change $3\alpha$, no shear. Simple shear
+$\vect u = (\gamma y, 0, 0)$: $\varepsilon_{xy} = \gamma/2$, all
+diagonal components zero --- shape changes, volume does not. Rigid
+rotation $\vect u = (-\omega y, \omega x, 0)$: $\varepsilon_{ij} = 0$
+identically --- the antisymmetric part of $\partial u_i/\partial x_j$,
+discarded by the symmetrisation, is exactly the part that rotates
+without deforming. Strain measures deformation only.
+\end{example}
+
+\begin{omfigure}
+\begin{tikzpicture}[font=\small, >=Stealth]
+  % stretch
+  \begin{scope}
+    \draw[gray, dashed] (0,0) rectangle (1.6,1.6);
+    \draw[omDef, thick] (-0.2,0.16) rectangle (1.8,1.44);
+    \draw[->] (2.0,0.8) -- (2.55,0.8);
+    \draw[->] (-0.4,0.8) -- (-0.95,0.8);
+    \node at (0.8,-0.85) {elongation $\varepsilon_{xx} > 0$,};
+    \node at (0.8,-1.3) {contraction $\varepsilon_{yy} < 0$};
+  \end{scope}
+  % shear
+  \begin{scope}[xshift=5.3cm]
+    \draw[gray, dashed] (0,0) rectangle (1.6,1.6);
+    \draw[omThm, thick] (0,0) -- (1.6,0) -- (2.0,1.6) -- (0.4,1.6) -- cycle;
+    \draw[->] (0.9,1.8) -- (1.5,1.8);
+    \draw[->] (0.7,-0.2) -- (0.1,-0.2);
+    \node at (0.9,-0.85) {shear $\varepsilon_{xy} = \gamma/2$:};
+    \node at (0.9,-1.3) {shape changes, volume not};
+  \end{scope}
+  % rotation
+  \begin{scope}[xshift=10.6cm]
+    \draw[gray, dashed] (0,0) rectangle (1.6,1.6);
+    \begin{scope}[rotate around={14:(0.8,0.8)}]
+      \draw[omExo, thick] (0,0) rectangle (1.6,1.6);
+    \end{scope}
+    \draw[->] (1.75,1.5) arc (30:80:1.1);
+    \node at (0.8,-0.85) {rotation: $\varepsilon_{ij} = 0$,};
+    \node at (0.8,-1.3) {no deformation at all};
+  \end{scope}
+\end{tikzpicture}
+
+{\small The \omterm{def:b3:continuum-elasticity:strain}{strain tensor} sees only true deformation: stretching
+(diagonal components), shearing (off-diagonal components) --- and a
+rigid rotation not at all.}
+\end{omfigure}
+
+\section{Stress: describing internal forces}
+
+\begin{definition}[Traction and the stress tensor]\label{def:b3:continuum-elasticity:stress}
+\index{stress tensor}\index{traction}
+Cut the solid, in thought, along a small surface $\dd S$ of normal
+$\vect n$: the material on the $+\vect n$ side pulls on the other side
+with a force $\dd\vect F = \boldsymbol\sigma(\vect n)\,\dd S$ --- the
+\emph{traction}. This force depends linearly on $\vect n$ (Cauchy),
+so it is encoded by the \emph{stress tensor} $\sigma_{ij}$:
+\[
+\dd F_i = \sum_j \sigma_{ij}\,n_j\,\dd S ,
+\]
+in pascals. $\sigma_{xx}$ is a pull ($> 0$: tension) or push ($< 0$:
+compression) across a face normal to $x$; $\sigma_{xy}$ is a force
+along $x$ carried by a face normal to $y$ --- a shear stress. A fluid
+at rest is the special case $\sigma_{ij} = -p\,\delta_{ij}$: pressure
+pushes equally on every face and shears on none, which is why fluids
+flow --- they cannot carry static shear.
+\end{definition}
+
+\begin{proposition}[Equilibrium and symmetry]\label{prop:b3:continuum-elasticity:equilibrium}
+In a solid at equilibrium under a body force $\vect f$ per unit
+volume (e.g.\ $\rho\vect g$),
+\[
+\sum_j\frac{\partial\sigma_{ij}}{\partial x_j} + f_i = 0
+\]
+at every interior point; and the \omterm{def:b3:continuum-elasticity:stress}{stress tensor} is symmetric,
+$\sigma_{ij} = \sigma_{ji}$.
+\end{proposition}
+
+\begin{proof}[Partial proof]
+Balance the forces on a small cube of side $a$: the \omterm{def:b3:continuum-elasticity:stress}{tractions} on the
+two faces normal to $x$ differ by $a\,\partial_x\sigma_{ix}$ per unit
+area, and likewise for the other pairs; the net surface force per unit
+volume is $\sum_j\partial_j\sigma_{ij}$, which must cancel $f_i$ ---
+the same bookkeeping that gave $-\vect\nabla p + \rho\vect g = \vect 0$
+in the fluid statics of the Year 1 volume. Symmetry: the torque of the
+shear stresses about the cube's centre is $(\sigma_{xy} -
+\sigma_{yx})a^3$ at leading order, while its moment of inertia scales
+as $a^5$; an asymmetric stress would spin small cubes infinitely fast.
+The full continuum argument is admitted.
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}[font=\small, >=Stealth, scale=1.05]
+  % cube in light 3D
+  \coordinate (A) at (0,0); \coordinate (B) at (2.4,0);
+  \coordinate (C) at (2.4,2.4); \coordinate (D) at (0,2.4);
+  \coordinate (E) at (0.9,0.75); \coordinate (F) at (3.3,0.75);
+  \coordinate (G) at (3.3,3.15);
+  \draw[thick] (A) -- (B) -- (C) -- (D) -- cycle;
+  \draw[thick] (B) -- (F) -- (G) -- (C);
+  \draw[thick] (D) -- (0.9,3.15) -- (G);
+  \draw[thick, dashed] (A) -- (E) -- (F);
+  \draw[thick, dashed] (E) -- (0.9,3.15);
+  % normal stress on +x face
+  \draw[->, omThm, very thick] (2.85,1.55) -- (4.05,1.55);
+  \node[omThm, anchor=west] at (4.1,1.55) {$\sigma_{xx}$};
+  % shear on +x face
+  \draw[->, omDef, very thick] (2.85,1.9) -- (2.85,3.0);
+  \node[omDef, anchor=south] at (2.85,3.05) {$\sigma_{yx}$};
+  \draw[->, omExo, very thick] (3.1,1.3) -- (2.5,0.85);
+  \node[omExo, anchor=east] at (2.35,0.48) {$\sigma_{zx}$};
+  \node at (1.2,1.2) {face $\perp x$};
+  \node[align=left, anchor=west, font=\footnotesize] at (5.6,2.3)
+    {$\sigma_{xx}$: tension/compression\\[2pt]
+     $\sigma_{yx}$, $\sigma_{zx}$: shear stresses\\[2pt]
+     carried by the same face};
+\end{tikzpicture}
+
+{\small The three components of the \omterm{def:b3:continuum-elasticity:stress}{traction} on one face of a material
+cube: one normal (tension or compression), two tangential (shear). The
+nine components over the three faces form the \omterm{def:b3:continuum-elasticity:stress}{stress tensor}.}
+\end{omfigure}
+
+\section{Hooke's law and the elastic constants}
+
+\begin{theorem}[Linear isotropic elasticity]\label{thm:b3:continuum-elasticity:hooke}
+\index{Hooke's law}\index{Young's modulus}\index{Poisson's ratio}
+For small strains, an isotropic solid responds linearly: stress is
+proportional to strain,
+\[
+\sigma_{ij} = \lambda\,(\varepsilon_{xx} + \varepsilon_{yy} +
+\varepsilon_{zz})\,\delta_{ij} + 2\mu\,\varepsilon_{ij} ,
+\]
+with two material constants, the \emph{Lamé coefficients} $\lambda$ and
+$\mu$ ($\mu$ is also written $G$, the \emph{shear modulus}). In the
+simple \omterm{def:b3:continuum-elasticity:stress}{traction} test --- a bar pulled along $x$, free on its sides ---
+the same law takes the engineer's form
+\[
+\varepsilon_{xx} = \frac{\sigma_{xx}}{E} , \qquad
+\varepsilon_{yy} = \varepsilon_{zz} = -\nu\,\varepsilon_{xx} ,
+\]
+defining \emph{\omterm{thm:b3:continuum-elasticity:hooke}{Young's modulus}} $E$ (stiffness against stretching) and
+\emph{\omterm{thm:b3:continuum-elasticity:hooke}{Poisson's ratio}} $\nu$ (lateral contraction), with
+\[
+\mu = \frac{E}{2(1 + \nu)} , \qquad
+\lambda = \frac{E\nu}{(1 + \nu)(1 - 2\nu)} .
+\]
+This is Hooke's ``as the extension, so the force'' (1678), promoted to
+a tensor. It holds up to a material-dependent \emph{elastic limit}.
+\end{theorem}
+\admitted
+
+\begin{remark}[Orders of magnitude]\label{rem:b3:continuum-elasticity:orders}
+$E \approx \qty{200}{GPa}$ for steel, \qty{70}{GPa} for aluminium and
+window glass, \qty{50}{GPa} for granite, \qty{15}{GPa} for bone and
+concrete, \qty{10}{GPa} for wood along the grain, and only a few MPa
+for rubber --- five orders of magnitude, the span between a bridge and
+an elastic band. $\nu$ lies between $0$ (cork, nearly) and $1/2$
+(rubber): $\nu = 1/2$ means volume-preserving deformation, and
+$\nu \approx 0.3$ is typical of metals. A strain of $\num{e-3}$ in
+steel already means $\sigma = \qty{200}{MPa}$, close to the yield
+stress of ordinary grades: everyday elasticity lives below one part
+in a thousand.
+\end{remark}
+
+\begin{example}[An elevator cable]\label{ex:b3:continuum-elasticity:cable}
+A \qty{60}{m} steel cable of cross-section \qty{2.0}{cm^2} carries a
+\qty{1000}{kg} car: $\sigma = mg/S = \qty{49}{MPa}$, $\varepsilon =
+\sigma/E = \num{2.5e-4}$, stretch $\varepsilon L = \qty{15}{mm}$ ---
+and the cable behaves as a spring of stiffness $k = ES/L =
+\qty{6.7e5}{N/m}$: the formula $k = ES/L$ is how a continuum hands
+back the springs of the Year 1 volume.
+\end{example}
+
+\begin{proposition}[Elastic energy]\label{prop:b3:continuum-elasticity:energy}
+\index{elastic energy}
+A strained solid stores, per unit volume, the energy density
+\[
+w = \frac12\sum_{i,j}\sigma_{ij}\,\varepsilon_{ij}
+\qquad\text{(simple traction: } w = \tfrac12 E\varepsilon^2 =
+\sigma^2/2E\text{)} ,
+\]
+the three-dimensional $\tfrac12 kx^2$.
+\end{proposition}
+
+\begin{proof}[Partial proof]
+In simple \omterm{def:b3:continuum-elasticity:stress}{traction}, bringing the stress from $0$ to $\sigma$ does the
+work per unit volume $\int_0^\varepsilon\sigma'\,\dd\varepsilon' =
+\int_0^\varepsilon E\varepsilon'\,\dd\varepsilon' = \tfrac12
+E\varepsilon^2$ --- the area under the stress--strain line, exactly as
+for a spring. The general quadratic form follows by superposing the
+components; admitted.
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}[font=\small, >=Stealth]
+  % traction test sketch
+  \begin{scope}[yshift=0.4cm]
+    \draw[gray, dashed] (0,0) rectangle (3.2,1.0);
+    \draw[omDef, thick] (-0.25,0.07) rectangle (3.45,0.93);
+    \draw[->, very thick] (3.65,0.5) -- (4.55,0.5) node[right] {$F$};
+    \draw[->, very thick] (-0.45,0.5) -- (-1.35,0.5) node[left] {$F$};
+    \draw[<->] (0,-0.35) -- (3.2,-0.35);
+    \node at (1.6,-0.7) {$L(1 + \varepsilon)$};
+    \node at (1.6,1.55) {section $S$, $\sigma = F/S$};
+  \end{scope}
+  % stress-strain curve
+  \begin{scope}[xshift=7.3cm, yshift=-0.6cm]
+  \begin{axis}[omaxis, axis x line=bottom, axis y line=left,
+    width=6.4cm, height=4.6cm, xmin=0, xmax=10, ymin=0, ymax=1.25,
+    xlabel={$\varepsilon$}, ylabel={$\sigma$},
+    xlabel style={at={(axis description cs:0.5,-0.1)}, anchor=north},
+    xtick=\empty, ytick=\empty, clip=false]
+    \addplot[omDef, very thick, domain=0:2] {0.4*x};
+    \addplot[omExo, thick, domain=2:8.7, samples=40]
+      {0.8 + 0.32*(1-exp(-(x-2)/2.2))};
+    \fill (axis cs:2,0.8) circle (1.6pt);
+    \draw (axis cs:2.05,0.83) -- (axis cs:2.55,1.1);
+    \node[font=\scriptsize, anchor=west] at (axis cs:2.55,1.14) {elastic limit};
+    \node[font=\scriptsize, omExo, anchor=west] at (axis cs:4.6,0.87) {plastic flow};
+    \node[font=\scriptsize, anchor=west] at (axis cs:8.55,1.2) {fracture};
+    \fill[omThm] (axis cs:8.7,1.115) circle (1.6pt);
+    \node[font=\scriptsize, omDef, rotate=38, anchor=south] at (axis cs:1.15,0.48) {slope $E$};
+  \end{axis}
+  \end{scope}
+\end{tikzpicture}
+
+{\small Left: the \omterm{def:b3:continuum-elasticity:stress}{traction} test defines $E$ (relative elongation) and
+$\nu$ (lateral thinning, exaggerated). Right: the stress--strain
+curve of a metal --- linear elasticity up to the elastic limit, then
+irreversible plastic flow, then fracture. This chapter lives on the
+straight part.}
+\end{omfigure}
+
+\begin{method}[Solving small-elasticity problems]\label{met:b3:continuum-elasticity:method}
+(1) Identify the geometry and the loading; guess which stress
+components are nonzero (a pulled bar: only $\sigma_{xx}$; a twisted
+wire: shear; a pressurised shell: tangential tensions). (2) Write
+force balance on a well-chosen piece --- a half-cylinder, a slice, a
+cube. (3) Convert stress to strain by \omterm{thm:b3:continuum-elasticity:hooke}{Hooke's law}, strain to
+displacement by integrating. (4) Energies via $w = \sigma^2/2E$ (or
+$\sigma^2/2G$ in shear). (5) Always check the strain stays small and
+the stress below the elastic limit --- otherwise the answer describes
+a solid that no longer exists.
+\end{method}
+
+\section{Elastic waves}
+
+\begin{proposition}[The two sounds of a solid]\label{prop:b3:continuum-elasticity:waves}
+\index{elastic waves}\index{P wave}\index{S wave}
+In an unbounded elastic solid of density $\rho$, small disturbances
+propagate as two independent kinds of wave:
+\emph{longitudinal} (P) waves, in which matter oscillates along the
+propagation direction by compression and dilation, at speed
+\[
+c_{\text{P}} = \sqrt{\frac{\lambda + 2\mu}{\rho}} ,
+\]
+and \emph{transverse} (S) waves, in which matter shears sideways, at
+\[
+c_{\text{S}} = \sqrt{\frac{\mu}{\rho}} < c_{\text{P}} .
+\]
+A fluid has $\mu = 0$: no \omterm{prop:b3:continuum-elasticity:waves}{S waves} --- shear cannot be transmitted ---
+and the P speed reduces to the sound speed of the Year 2 volume. For
+$\nu = 1/4$ (typical rock), $\lambda = \mu$ and $c_{\text{P}} =
+\sqrt3\,c_{\text{S}}$.
+\end{proposition}
+
+\begin{proof}[Partial proof]
+Take a plane disturbance $\vect u = \vect u(x, t)$. Newton's law per
+unit volume is $\rho\,\partial_t^2u_i = \sum_j\partial_j\sigma_{ij}$
+(the equilibrium equation with inertia restored). For the longitudinal
+component, \omterm{thm:b3:continuum-elasticity:hooke}{Hooke's law} gives $\sigma_{xx} = (\lambda +
+2\mu)\,\partial_xu_x$ (the lateral strains vanish in a plane wave, the
+neighbouring matter forbidding lateral release), so
+$\rho\,\partial_t^2u_x = (\lambda + 2\mu)\,\partial_x^2u_x$: d'Alembert
+at speed $c_{\text{P}}$. For the transverse component, $\sigma_{yx} =
+2\mu\varepsilon_{yx} = \mu\,\partial_xu_y$, whence
+$\rho\,\partial_t^2u_y = \mu\,\partial_x^2u_y$: speed $c_{\text{S}}$.
+That a general disturbance splits into these two families is admitted.
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}[font=\small, >=Stealth]
+  % P wave: compressions along x
+  \begin{scope}
+    \foreach \x/\s in {0/1.0, 0.42/0.72, 0.76/0.5, 1.04/0.5, 1.32/0.72,
+                       1.74/1.0, 2.26/1.28, 2.86/1.44, 3.46/1.28, 3.98/1.0,
+                       4.4/0.72, 4.74/0.5, 5.02/0.5, 5.3/0.72, 5.72/1.0,
+                       6.24/1.28, 6.84/1.44, 7.44/1.28, 7.96/1.0}
+      \draw[omDef, thick] (\x,0) -- (\x,1.5);
+    \draw[->, very thick] (8.4,0.75) -- (9.2,0.75) node[right] {$c_{\text{P}}$};
+    \draw[<->, omThm, thick] (0.6,-0.35) -- (1.5,-0.35);
+    \node[anchor=west] at (3.6,-0.42) {matter moves $\parallel$ propagation};
+  \end{scope}
+  % S wave: sheared line
+  \begin{scope}[yshift=-3.3cm]
+    \draw[omExo, thick, domain=0:8, samples=90, variable=\t]
+      plot ({\t}, {0.55*sin(deg(\t*0.785))+0.75});
+    \foreach \x in {0.5,1.5,2.5,3.5,4.5,5.5,6.5,7.5}
+      \draw[->, omExo!70] (\x,{0.55*sin(deg(\x*0.785))+0.75}) --
+        (\x,{0.9*sin(deg(\x*0.785+25))+0.75});
+    \draw[->, very thick] (8.4,0.75) -- (9.2,0.75) node[right] {$c_{\text{S}}$};
+    \node at (2.9,-0.5) {matter moves $\perp$ propagation};
+  \end{scope}
+\end{tikzpicture}
+
+{\small The two \omterm{prop:b3:continuum-elasticity:waves}{elastic waves}. P: planes of matter bunch and spread
+along the travel direction (compression wave --- exists in solids,
+liquids and gases). S: matter shears sideways (exists only where shear
+is resisted: solids).}
+\end{omfigure}
+
+\begin{example}[The rail and the earthquake]\label{ex:b3:continuum-elasticity:rail}
+Steel: $c_{\text{P}} \approx \qty{5.9}{km/s}$ --- a strike on a rail
+\qty{2}{km} away arrives through the steel in \qty{0.34}{s} and
+through the air ($\qty{340}{m/s}$) in \qty{5.9}{s}: two clangs.
+Granite ($E = \qty{75}{GPa}$, $\nu = 1/4$, $\rho =
+\qty{2.7e3}{kg/m^3}$): $c_{\text{P}} \approx \qty{5.8}{km/s}$,
+$c_{\text{S}} \approx \qty{3.3}{km/s}$. An earthquake therefore
+announces itself twice: a sharp P jolt, then, seconds later, the
+slower, stronger S shaking --- and the delay measures the distance
+(\cref{pb:b3:continuum-elasticity:1}). Earthquake early-warning
+systems live inside that delay: the \omterm{prop:b3:continuum-elasticity:waves}{P wave}, and the radio message it
+triggers, outrun the \omterm{prop:b3:continuum-elasticity:waves}{S wave} that does the damage.
+\end{example}
+
+\begin{remark}[Strings, rods and sound recovered]\label{rem:b3:continuum-elasticity:limits}
+The waves of the Year 2 volume are all limits of this chapter. A thin
+rod, free to thin sideways, carries compression waves at
+$\sqrt{E/\rho}$ (slower than $c_{\text{P}}$: the lateral release
+softens the response); a stretched string carries transverse waves at
+$\sqrt{T/\rho_\ell}$, with tension standing in for stiffness; a fluid
+keeps only $\lambda$ --- its bulk modulus --- and the single sound
+speed $\sqrt{\lambda/\rho}$.
+\end{remark}
+
+\begin{omfigure}
+\includegraphics[width=0.58\linewidth]{images/book5/ai/b5-03-diving-board.png}
+
+{\small A loaded diving board: stress and strain distributed through a continuum, bent into the cubic deflection profile of the cantilever --- and a spring about to give its \omterm{prop:b3:continuum-elasticity:energy}{elastic energy} back.}
+\end{omfigure}
+
+\section{Exercises}
+
+\begin{exercise}[$\star$]\label{exo:b3:continuum-elasticity:1}
+(a) Check the units: what is a pascal in terms of kg, m, s, and what
+is the unit of strain? (b) A steel cable works at $\sigma =
+\qty{200}{MPa}$: compute its strain. (c) A rubber band ($E \approx
+\qty{2}{MPa}$) is stretched to twice its length: what ``strain'' is
+that, and why does this chapter's framework not really apply? (d)
+Rank by stored \omterm{prop:b3:continuum-elasticity:energy}{elastic energy} density at their working stress: steel
+at \qty{200}{MPa}, rubber at \qty{1}{MPa}.
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b3:continuum-elasticity:2}
+Compute the \omterm{def:b3:continuum-elasticity:strain}{strain tensor} of each \omterm{def:b3:continuum-elasticity:strain}{displacement field} and describe the
+deformation: (a) $\vect u = \alpha(x, y, z)$; (b) $\vect u =
+(\gamma y, 0, 0)$; (c) $\vect u = (-\omega y, \omega x, 0)$; (d)
+$\vect u = (\varepsilon x, -\nu\varepsilon y, -\nu\varepsilon z)$ ---
+which experiment realises it?
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b3:continuum-elasticity:3}
+The base of a granite column of height $h$ carries the stress $\sigma
+= \rho gh$. (a) Derive this from the equilibrium equation with
+gravity. (b) Granite crushes at about \qty{200}{MPa}: what is the
+tallest column? (c) Everest is \qty{8.8}{km} high: comment. (d) Why
+can a mountain be a little taller than a column of its own rock
+(think about the shape)?
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b3:continuum-elasticity:4}
+A steel rod ($E = \qty{200}{GPa}$, $\nu = 0.30$) is stretched by
+$\varepsilon = \num{e-3}$. (a) Lateral strain? (b) Relative volume
+change? (c) For which $\nu$ would the volume not change at all, and
+which common material is close to it? (d) Why is $\nu > 1/2$
+impossible (consider hydrostatic compression)?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b3:continuum-elasticity:5}
+Hoop stress. A thin-walled cylinder (radius $R$, wall thickness $t \ll
+R$) holds a pressure $p$. (a) Balancing forces on a half-cylinder of
+unit length, show the wall carries the tangential stress
+$\sigma_\theta = pR/t$. (b) Show the longitudinal stress (balance on a
+cross-section) is $pR/2t$: a cylinder is stressed twice as hard around
+as along --- which way do sausages split? (c) A diving cylinder: $p =
+\qty{200}{bar}$, $R = \qty{9}{cm}$, $t = \qty{5}{mm}$: compute
+$\sigma_\theta$ and compare with a steel yield stress of
+\qty{700}{MPa}. (d) Why do high-pressure tanks have hemispherical
+ends?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b3:continuum-elasticity:6}
+A rubber block ($E = \qty{3.0}{MPa}$, $\nu \approx 0.5$), base $10
+\times \qty{10}{cm}$, height \qty{2}{cm}, is glued between two plates;
+the top plate is pushed sideways with \qty{150}{N}. (a) Compute $G$.
+(b) Shear stress and shear angle $\gamma = \sigma_{xy}/G$; sideways
+displacement of the top plate. (c) Why is $\nu \approx 1/2$ for
+rubber (what is hard and what is easy for a tangle of polymer
+chains)? (d) Such rubber blocks carry entire buildings in earthquake
+zones: which property of this mount protects the building, stiffness
+in compression or softness in shear?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b3:continuum-elasticity:7}
+A climbing rope, length $L = \qty{20}{m}$, cross-section $S =
+\qty{80}{mm^2}$, effective modulus $E = \qty{1.2}{GPa}$. (a) Its
+stiffness $k = ES/L$. (b) A \qty{80}{kg} climber falls freely
+\qty{4}{m} before the rope engages: equating energies, find the
+maximum rope stretch (solve the quadratic; neglect the fall continued
+during braking at your first pass). (c) Deduce the peak force and the
+peak deceleration in $g$. (d) Why must a rope that has held a hard
+fall be retired (where did the energy go, and what does the
+stress--strain curve say)?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b3:continuum-elasticity:8}
+Torsion. A wire of radius $a$, length $L$, shear modulus $G$ is
+twisted by an angle $\theta$. (a) Show a tube of radius $r$ inside it
+suffers the shear angle $\gamma(r) = r\theta/L$. (b) Its shear stress
+is $G\gamma$: integrate $r \times$ stress over the section to get the
+restoring torque $\Gamma = (\pi Ga^4/2L)\,\theta$. (c) The $a^4$:
+halve the radius, and by what factor does the torsional stiffness
+drop? (d) This extreme softness is why Cavendish (1798) hung his
+balance from a fine wire: for $a = \qty{25}{\micro m}$, $L =
+\qty{1}{m}$, $G = \qty{40}{GPa}$, compute $C = \pi Ga^4/2L$ and the
+period with a rod of moment of inertia $I = \qty{5e-4}{kg.m^2}$.
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b3:continuum-elasticity:9}
+(a) From the plane-wave derivation of
+\cref{prop:b3:continuum-elasticity:waves}, compute $c_{\text{P}}$ and
+$c_{\text{S}}$ for steel ($E = \qty{200}{GPa}$, $\nu = 0.29$, $\rho =
+\qty{7.85e3}{kg/m^3}$). (b) Compare $c_{\text{P}}$ with the thin-rod
+speed $\sqrt{E/\rho}$ and explain the difference in one sentence. (c)
+For water ($\mu = 0$, bulk modulus \qty{2.2}{GPa}): the S speed and
+the P speed. (d) At what angle does a \omterm{prop:b3:continuum-elasticity:waves}{P wave}'s matter motion differ
+from an \omterm{prop:b3:continuum-elasticity:waves}{S wave}'s, and how does a seismometer with three components
+tell them apart?
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b3:continuum-elasticity:10}
+Bending. A beam is bent to a radius of curvature $R$; its inner fibres
+shorten, its outer fibres stretch, and a \emph{neutral surface} in
+between keeps its length. (a) Show the fibre at distance $y$ from the
+neutral surface has strain $\varepsilon = y/R$, hence stress $Ey/R$.
+(b) Summing moments over the cross-section, show the bending moment is
+$M = EI/R$ with $I = \int y^2\,\dd S$ (the \emph{second moment});
+compute $I$ for a rectangle of width $b$ and height $h$. (c) The
+$h^3$: why does a plank bent flat-wise sag visibly while the same
+plank on edge feels rigid? Compute the ratio for $b/h = 5$. (d) For a
+cantilever of length $L$ loaded by $F$ at its tip, the tip sag is
+$\delta = FL^3/3EI$ (admitted): estimate $\delta$ for a diving board
+($L = \qty{1.8}{m}$, $b = \qty{50}{cm}$, $h = \qty{3.5}{cm}$, wood $E
+= \qty{12}{GPa}$) under a \qty{75}{kg} diver, and comment.
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b3:continuum-elasticity:11}
+Buckling. A slender column (length $L$, flexural rigidity $EI$),
+pinned at both ends, carries an axial load $P$. Suppose it bows
+sideways by $y(x)$. (a) Show the load then exerts the bending moment
+$M(x) = -Py(x)$ about the displaced axis, so $EI\,y'' = -Py$. (b) With
+$y(0) = y(L) = 0$, show a nonzero bow first becomes possible at
+Euler's critical load
+$P_{\text{c}} = \pi^2EI/L^2$. (c) Compute $P_{\text{c}}$ for a metre
+rule ($b = \qty{3}{cm}$, $h = \qty{1.5}{mm}$, $E = \qty{12}{GPa}$) and
+compare with your hand's push. (d) Explain from $I$ why bones,
+bamboo and bicycle frames are \emph{tubes}.
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b3:continuum-elasticity:12}
+The speed of sound in a solid, from atoms. Model a solid as chains of
+atoms, spacing $a$, connected by ``springs'' of stiffness $\kappa$;
+atomic mass $m$. (a) Show that stretching the chain maps onto
+continuum \omterm{def:b3:continuum-elasticity:stress}{traction} with $E = \kappa/a$ (count springs per unit area,
+stretch per spring). (b) Show $\rho = m/a^3$ and conclude $c =
+\sqrt{E/\rho} = a\sqrt{\kappa/m}$. (c) Estimate $\kappa$ from the
+depth of an interatomic bond ($\sim\qty{3}{eV}$ over $\sim
+\qty{0.1}{nm}$): $\kappa \sim \qty{50}{N/m}$; with $a =
+\qty{2.5e-10}{m}$ and $m = \qty{1e-25}{kg}$, estimate $c$. (d) Compare
+with measured metal sound speeds, and conclude what everyday
+elasticity is made of.
+\end{exercise}
+
+\section{Problem: Listening to the Earth}
+
+\begin{problem}[{Weekend problem --- how earthquakes revealed the
+liquid core}]\label{pb:b3:continuum-elasticity:1}
+A single earthquake rings the whole planet, and the two \omterm{prop:b3:continuum-elasticity:waves}{elastic waves}
+of this chapter, crossing it, x-ray it. This problem follows the
+physics from \omterm{thm:b3:continuum-elasticity:hooke}{Hooke's law} in granite to Oldham's 1906 discovery that
+the Earth has a core --- with the straight-ray estimate of its size.
+Take for the crust and mantle rock $E = \qty{75}{GPa}$, $\nu = 1/4$,
+$\rho = \qty{2.7e3}{kg/m^3}$; Earth radius $R_{\text{E}} =
+\qty{6371}{km}$.
+
+\medskip\noindent\textbf{Part I --- Rock as an elastic solid.}
+\begin{enumerate}
+  \item Compute the Lamé coefficients $\mu$ and $\lambda$ of this
+        rock, and observe that $\nu = 1/4$ makes them equal.
+  \item Compute $c_{\text{P}}$ and $c_{\text{S}}$, and verify
+        $c_{\text{P}} = \sqrt3\,c_{\text{S}}$.
+  \item An earthquake slips two rock faces by metres in seconds:
+        estimate the strain released if a \qty{2}{m} slip relaxes rock
+        over a \qty{50}{km} scale, and the stress that had built up.
+  \item From the energy density $w = \tfrac12 E\varepsilon^2$,
+        estimate the \omterm{prop:b3:continuum-elasticity:energy}{elastic energy} per cubic metre, then the energy
+        in a $50 \times 50 \times \qty{20}{km^3}$ volume; compare
+        with a megaton (\qty{4.2e15}{J}).
+  \item Why does the \omterm{prop:b3:continuum-elasticity:waves}{S wave} usually shake buildings harder than the \omterm{prop:b3:continuum-elasticity:waves}{P
+        wave} (think about the direction of ground motion for a wave
+        arriving from below)?
+  \item In which of the two waves does the ground change volume?
+\end{enumerate}
+
+\medskip\noindent\textbf{Part II --- The seismometer's two arrivals.}
+\begin{enumerate}[resume]
+  \item A station records the P arrival, then the S arrival $\Delta t$
+        later. For a source at distance $d$ (short enough for straight
+        rays), show
+        \[
+        d = \frac{\Delta t}{\dfrac{1}{c_{\text{S}}} -
+        \dfrac{1}{c_{\text{P}}}} .
+        \]
+  \item Evaluate the coefficient: how many kilometres per second of
+        S--P delay?
+  \item A station measures $\Delta t = \qty{28}{s}$: how far is the
+        earthquake?
+  \item One station gives a distance, not a place: how many stations
+        determine the epicentre, and how, geometrically?
+  \item Japan's early-warning sirens sound seconds before the strong
+        shaking: for a quake \qty{80}{km} below a city, how much
+        warning does the P--S delay itself provide?
+  \item Modern warnings add the speed of light: the \omterm{prop:b3:continuum-elasticity:waves}{P wave} detected
+        near the source is radioed ahead of both waves. For a city
+        \qty{200}{km} from the epicentre, how long after the rupture
+        does the \omterm{prop:b3:continuum-elasticity:waves}{S wave} arrive, and what warning can a radio message
+        sent at the P's first arrival \qty{20}{km} from the source
+        give?
+\end{enumerate}
+
+\medskip\noindent\textbf{Part III --- Waves that cross the planet.}
+\begin{enumerate}[resume]
+  \item At the pressures of the deep mantle the moduli grow: P speeds
+        reach \qty{13.7}{km/s} at the mantle's base. Taking a rough
+        average $c_{\text{P}} \approx \qty{10}{km/s}$, how long does a
+        \omterm{prop:b3:continuum-elasticity:waves}{P wave} need to cross the Earth diametrically?
+  \item Stations register quakes from the far side of the globe:
+        what does the mere existence of these arrivals say about the
+        deep Earth (is it elastic? molten through?)?
+  \item Define the epicentral angle $\Delta$ (angle at the Earth's
+        centre between source and station). For straight rays, show
+        that the chord length is $2R_{\text{E}}\sin(\Delta/2)$.
+  \item Evaluate the chord and its straight-ray travel time for
+        $\Delta = 60^\circ$ at the average $c_{\text{P}} \approx
+        \qty{10}{km/s}$.
+  \item Around 1900, Oldham noticed that \omterm{prop:b3:continuum-elasticity:waves}{S waves} are recorded up to
+        $\Delta \approx 103^\circ$ and then \emph{disappear}: no
+        direct S beyond. What property of a region deep inside the
+        Earth kills \omterm{prop:b3:continuum-elasticity:waves}{S waves}, and what state of matter has that
+        property?
+  \item \omterm{prop:b3:continuum-elasticity:waves}{P waves} beyond $103^\circ$ are not absent but weakened,
+        delayed and displaced (a ``shadow zone'' up to
+        $\approx 142^\circ$): why does a liquid region delay and
+        refract \omterm{prop:b3:continuum-elasticity:waves}{P waves} but not stop them?
+  \item Conclude in one sentence what sits at the centre of the
+        Earth.
+\end{enumerate}
+
+\medskip\noindent\textbf{Part IV --- Weighing the core with a ruler.}
+\begin{enumerate}[resume]
+  \item A straight S ray leaving the source grazes the core if its
+        closest approach to the centre equals the core radius
+        $R_{\text{c}}$. Show that this grazing ray reaches the
+        surface at the epicentral angle $\Delta^* =
+        2\arccos(R_{\text{c}}/R_{\text{E}})$.
+  \item From $\Delta^* = 103^\circ$, compute $R_{\text{c}}$.
+  \item The modern value is \qty{3480}{km}: compute your error, and
+        explain its \emph{sign}: real rays curve back toward the
+        surface as speed grows with depth --- argue whether straight
+        rays over- or underestimate the core.
+  \item In 1936 Inge Lehmann found weak P arrivals \emph{inside} the
+        shadow zone: what did she conclude sits inside the liquid
+        core?
+  \item The inner core's radius is \qty{1220}{km} and it is solid:
+        propose the wave observation that could confirm solidity
+        (which wave exists there that the outer core forbids?).
+  \item Summarise the named result: two elastic wave speeds in rock
+        ($5.8$ and \qty{3.3}{km/s}), one missing wave beyond
+        $103^\circ$, and a ruler give a liquid core of radius
+        $\approx \qty{4000}{km}$ --- within $15\%$ of the modern
+        \qty{3480}{km}, measured through \qty{6000}{km} of solid
+        rock.
+\end{enumerate}
+\end{problem}
