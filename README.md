@@ -66,7 +66,7 @@ solution.
 | **2. High School** (Grades 10–12) — complete | [EN](https://github.com/bvirrion/one-physics-book/releases/latest/download/one_physics_book_2_high_school.pdf) · [ES](https://github.com/bvirrion/one-physics-book/releases/latest/download/one_physics_book_2_high_school_es.pdf) · [FR](https://github.com/bvirrion/one-physics-book/releases/latest/download/one_physics_book_2_high_school_fr.pdf) · [HI](https://github.com/bvirrion/one-physics-book/releases/latest/download/one_physics_book_2_high_school_hi.pdf) · [AR](https://github.com/bvirrion/one-physics-book/releases/latest/download/one_physics_book_2_high_school_ar.pdf) · [NL](https://github.com/bvirrion/one-physics-book/releases/latest/download/one_physics_book_2_high_school_nl.pdf) · [PT](https://github.com/bvirrion/one-physics-book/releases/latest/download/one_physics_book_2_high_school_pt.pdf) |
 | **3. University — Year 1** — complete (English) | [EN](https://github.com/bvirrion/one-physics-book/releases/latest/download/one_physics_book_3_university_year_1.pdf) |
 | **4. University — Year 2** | [EN](https://github.com/bvirrion/one-physics-book/releases/latest/download/one_physics_book_4_university_year_2.pdf) |
-| **5. University — Year 3** — complete (English) | [EN](https://github.com/bvirrion/one-physics-book/releases/latest/download/one_physics_book_5_university_year_3.pdf) |
+| **5. University — Year 3** — complete | [EN](https://github.com/bvirrion/one-physics-book/releases/latest/download/one_physics_book_5_university_year_3.pdf) · [ES](https://github.com/bvirrion/one-physics-book/releases/latest/download/one_physics_book_5_university_year_3_es.pdf) · [FR](https://github.com/bvirrion/one-physics-book/releases/latest/download/one_physics_book_5_university_year_3_fr.pdf) · [HI](https://github.com/bvirrion/one-physics-book/releases/latest/download/one_physics_book_5_university_year_3_hi.pdf) · [AR](https://github.com/bvirrion/one-physics-book/releases/latest/download/one_physics_book_5_university_year_3_ar.pdf) · [NL](https://github.com/bvirrion/one-physics-book/releases/latest/download/one_physics_book_5_university_year_3_nl.pdf) · [PT](https://github.com/bvirrion/one-physics-book/releases/latest/download/one_physics_book_5_university_year_3_pt.pdf) · [ID](https://github.com/bvirrion/one-physics-book/releases/latest/download/one_physics_book_5_university_year_3_id.pdf) |
 
 The PDF links always point at the newest release; the online reader at
 [one-course.com/books](https://www.one-course.com/books) will carry the
@@ -98,8 +98,10 @@ mechanics course, statistical physics, electromagnetism in matter and
 solid-state physics, nuclear, particle and astrophysics — with 82 TikZ
 figures, photographs and illustrations, 324 graded exercises, 27 weekend
 problems of 25 questions each, full solutions and ~900 defined-term
-links: about 300 pages. Book 4 is fully written and, since 2026-08-22,
-translated into all seven other languages; the newest PDFs appear in the
+links: about 300 pages. **Since 2026-09-03 it ships in all eight
+languages too** (English, French, Dutch, Spanish, Portuguese, Hindi,
+Arabic and Indonesian), so every book in the series is now complete in
+every language; the newest PDFs appear in the
 download table at the next tagged release.
 
 ## Building the books

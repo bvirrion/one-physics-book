@@ -1,0 +1,570 @@
+\chapter{L'équation de Schrödinger à trois dimensions}\label{ch:b3:schrodinger-three-dimensions}
+
+L'écran d'un téléviseur moderne brille de cristaux si petits que leur
+\emph{taille} fixe leur couleur~: un grain de séléniure de cadmium de
+quatre nanomètres brille en rouge, la même substance à deux nanomètres
+brille en bleu-vert. Rien ne diffère dans la chimie --- seulement la
+taille de la boîte qui confine les électrons. Le volume de deuxième
+année s'achevait sur la mécanique quantique à une dimension~: fonctions
+d'onde sur une droite, puits, barrières et effet tunnel. Mais les
+électrons vivent à trois dimensions, et le pas de la droite à l'espace
+apporte une physique authentiquement nouvelle~: la probabilité s'écoule
+comme un courant dans l'espace, les énergies d'une boîte s'empilent avec
+des \emph{dégénérescences} qui trahissent sa symétrie, les états doivent
+être \emph{comptés} --- ce comptage qui régira plus tard toute la
+physique statistique --- et les problèmes sphériques se ramènent, dans
+leur cas le plus simple, à une équation unidimensionnelle déguisée
+portant sur le rayon. Ce chapitre franchit ces pas, et ses pièces
+maîtresses sont la boîte quantique d'un téléviseur et le plus léger des
+noyaux de la nature.
+
+\section{Fonctions d'onde dans l'espace}
+
+\begin{definition}[Fonction d'onde et probabilité à trois dimensions]\label{def:b3:schrodinger-three-dimensions:psi3d}
+\index{fonction d'onde!tridimensionnelle}
+L'état d'une particule est un champ complexe $\psi(\vect r, t)$ muni de
+la règle de Born
+\[
+\dd\mathcal P = |\psi(\vect r, t)|^2\,\dd^3r , \qquad
+\int|\psi|^2\,\dd^3r = 1 ,
+\]
+et son évolution est l'équation de Schrödinger, avec le laplacien à la
+place de la dérivée seconde~:
+\[
+\iu\hbar\,\frac{\partial\psi}{\partial t}
+ = -\frac{\hbar^2}{2m}\,\Delta\psi + V(\vect r)\,\psi ,
+\qquad
+\Delta = \frac{\partial^2}{\partial x^2} +
+\frac{\partial^2}{\partial y^2} + \frac{\partial^2}{\partial z^2} .
+\]
+Tout ce qu'établissait le volume de deuxième année survit
+textuellement~: linéarité et superposition, états stationnaires
+$\varphi(\vect r)\,\eu^{-\iu Et/\hbar}$ avec
+$-\tfrac{\hbar^2}{2m}\Delta\varphi + V\varphi = E\varphi$, et
+l'opérateur quantité de mouvement, désormais le gradient $\hat{\vect p} =
+-\iu\hbar\vect\nabla$.
+\end{definition}
+
+\begin{proposition}[La probabilité s'écoule~: le courant]\label{prop:b3:schrodinger-three-dimensions:current}
+\index{courant de probabilité}
+La densité $\rho = |\psi|^2$ obéit à une équation de continuité,
+\[
+\frac{\partial\rho}{\partial t} + \operatorname{div}\vect\jmath = 0 ,
+\qquad
+\vect\jmath = \frac{\hbar}{m}\,
+\operatorname{Im}\big(\psi^*\vect\nabla\psi\big) :
+\]
+la probabilité est localement conservée, transportée par le courant
+$\vect\jmath$ --- pour une onde plane $A\eu^{\iu\vect k\cdot\vect r}$,
+$\vect\jmath = |A|^2\hbar\vect k/m = \rho\vect v$, un écoulement
+uniforme~; pour tout $\varphi$ réel, $\vect\jmath = \vect 0$~: les
+états liés stationnaires ne portent aucun écoulement net.
+\end{proposition}
+
+\begin{proof}
+Comme à une dimension~: $\partial_t(\psi^*\psi)$ à partir de l'équation
+et de sa conjuguée~; les termes de potentiel se compensent, et $(\iu\hbar/2m)
+(\psi^*\Delta\psi - \psi\Delta\psi^*) =
+-\operatorname{div}\big[(\hbar/m)\operatorname{Im}(\psi^*\vect\nabla
+\psi)\big]$ par la règle du produit pour la divergence.
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}[font=\small, >=Stealth]
+  % plane wave current
+  \begin{scope}
+    \foreach \y in {0.3,0.9,1.5,2.1}
+      \foreach \x in {0.2,1.2,2.2,3.2}
+        \draw[->, omDef] (\x,\y) -- (\x+0.62,\y);
+    \foreach \x in {0.55,1.55,2.55,3.55}
+      \draw[omExo!60, dashed] (\x,-0.05) -- (\x,2.45);
+    \node at (1.95,-0.62) {onde plane~: courant uniforme $\rho\vect v$};
+  \end{scope}
+  % vortex-free bound state
+  \begin{scope}[xshift=7.6cm]
+    \draw[omThm, thick] (1.7,1.2) circle (1.35);
+    \draw[omThm!50, thick] (1.7,1.2) circle (0.75);
+    \node[omThm] at (1.7,1.2) {$\varphi$ réelle};
+    \node at (1.85,-0.62) {état lié~: $\vect\jmath = \vect 0$ partout};
+  \end{scope}
+\end{tikzpicture}
+
+{\small Le \omterm{prop:b3:schrodinger-three-dimensions:current}{courant de probabilité}~: une onde progressive transporte sa
+densité comme un fluide~; une fonction d'onde réelle (liée,
+stationnaire) reste immobile --- le nuage électronique de l'atome ne
+circule pas, sauf si l'état est complexe.}
+\end{omfigure}
+
+\section{Boîtes, dégénérescence et comptage des états}
+
+\begin{theorem}[Séparation des variables]\label{thm:b3:schrodinger-three-dimensions:separation}
+\index{séparation des variables}
+Si le potentiel se scinde en $V = V_1(x) + V_2(y) + V_3(z)$, on peut
+prendre les états stationnaires sous forme de produits
+$\varphi(\vect r) = \varphi_1(x)\,\varphi_2(y)\,\varphi_3(z)$, où
+chaque facteur résout son propre problème unidimensionnel, et les
+énergies \emph{s'ajoutent}~: $E = E_1 + E_2 + E_3$. Trois dimensions,
+en pareil cas, c'est une dimension trois fois.
+\end{theorem}
+
+\begin{proof}
+Portons le produit dans l'équation stationnaire et divisons par
+$\varphi$~: la somme de trois expressions à une variable vaut la
+constante $E$, donc chacune est séparément constante. Que tout état
+soit une superposition de tels produits est la complétude des solutions
+à une dimension, admise.
+\end{proof}
+
+\begin{proposition}[La boîte cubique et ses dégénérescences]\label{prop:b3:schrodinger-three-dimensions:box}
+\index{dégénérescence}
+Dans une boîte de côté $a$ à parois impénétrables, les états sont
+indexés par trois entiers positifs,
+\[
+\varphi_{n_1n_2n_3} \propto
+\sin\frac{n_1\pi x}{a}\sin\frac{n_2\pi y}{a}\sin\frac{n_3\pi z}{a} ,
+\qquad
+E = \frac{h^2}{8ma^2}\,(n_1^2 + n_2^2 + n_3^2) .
+\]
+Des états distincts partagent désormais des énergies~: le niveau
+$(2,1,1)$ vient en trois exemplaires, $(1,2,1)$ et $(1,1,2)$ étant des
+états physiquement distincts de même $E$. Une telle
+\emph{dégénérescence} est la signature d'une symétrie --- ici,
+l'interchangeabilité des trois axes de la boîte~; aplatir un peu la
+boîte et le triplet se scinde.
+\end{proposition}
+
+\begin{proof}
+Séparation en trois puits infinis du volume de deuxième année~; les
+énergies s'ajoutent.
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}[font=\small]
+  \draw[->] (0,0) -- (0,6.1);
+  \node[anchor=south] at (0,6.1) {$E\,/\,\dfrac{h^2}{8ma^2}$};
+  \foreach \e/\lab/\deg in {3/{(1,1,1)}/1, 6/{(2,1,1)}/3, 9/{(2,2,1)}/3,
+      11/{(3,1,1)}/3, 12/{(2,2,2)}/1, 14/{(3,2,1)}/6}
+    {\draw[very thick, omDef] (0.6,\e*0.42) -- (2.6,\e*0.42);
+     \node[anchor=west] at (2.75,\e*0.42) {$\e$\quad\lab, dégénérescence \deg};}
+\end{tikzpicture}
+
+{\small Les niveaux les plus bas de la boîte cubique~: énergies en
+unités de $h^2/8ma^2$ avec leurs nombres quantiques. Les permutations
+de $n_i$ inégaux donnent des triplets et des sextuplets dégénérés ---
+l'empreinte de la symétrie cubique.}
+\end{omfigure}
+
+\begin{proposition}[Compter les états]\label{prop:b3:schrodinger-three-dimensions:counting}
+\index{densité d'états}
+Le nombre d'états de la boîte d'énergie inférieure à $E$ vaut, pour $E$ grand,
+\[
+N(E) \approx \frac{V}{6\pi^2}\Big(\frac{2mE}{\hbar^2}\Big)^{3/2} ,
+\qquad V = a^3 :
+\]
+proportionnel au volume et à $E^{3/2}$. De façon équivalente, l'\omterm{def:b3:hamiltonian-mechanics:hamiltonian}{espace
+des phases} contient un état quantique par volume $h^3$ --- la cellule
+de Bohr--Sommerfeld du
+\cref{ch:b3:hamiltonian-mechanics}, désormais démontrée. Ce seul
+comptage est la matière première de la physique statistique et de la
+physique du solide plus loin dans ce volume~: les électrons des métaux,
+les photons des cavités, le rayonnement des corps chauds commencent
+tous ici.
+\end{proposition}
+
+\begin{proof}
+Les états sont les points entiers $(n_1, n_2, n_3)$ de l'octant
+positif~; $E \le E_{\max}$ garde ceux qui sont dans la sphère de rayon $R =
+\sqrt{8ma^2E/h^2}$. Pour $R$ grand, le compte est le volume de l'octant
+$\tfrac18\cdot\tfrac43\pi R^3$~; substituer. (Version dans l'\omterm{def:b3:hamiltonian-mechanics:hamiltonian}{espace des
+phases}~: $N = \tfrac{V\cdot\frac43\pi p^3}{h^3}$ avec $p = \sqrt{2mE}$
+--- le même nombre.)
+\end{proof}
+
+\begin{example}[Un métal, première estimation]\label{ex:b3:schrodinger-three-dimensions:metal}
+Le cuivre offre à peu près un électron mobile par atome, $n =
+\qty{8.5e28}{m^{-3}}$. En remplissant les états de la boîte de deux
+électrons chacun (spin, \cref{ch:b3:spin-two-level}) jusqu'à l'énergie
+qui les loge tous, l'inversion du comptage donne $E_{\text{F}}
+\approx \qty{7}{eV}$ --- une énergie énorme devant l'agitation
+thermique ($k_{\text{B}}T \approx \qty{25}{meV}$)~: même à température
+ambiante, les électrons d'un métal forment une foule profondément
+quantique. L'histoire complète est le
+\cref{ch:b3:electrons-in-solids}.
+\end{example}
+
+\begin{example}[L'oscillateur isotrope]\label{ex:b3:schrodinger-three-dimensions:oscillator}
+Pour $V = \tfrac12 m\omega^2r^2 = \tfrac12 m\omega^2(x^2 + y^2 +
+z^2)$, la séparation donne $E = (n_x + n_y + n_z + \tfrac32)\hbar\omega$~:
+des niveaux $\tfrac32, \tfrac52, \tfrac72\hbar\omega\ldots$ de
+dégénérescences $1, 3, 6, 10, \dots$ --- croissantes, contrairement au
+motif irrégulier de la boîte, avec une parfaite régularité. Une
+dégénérescence supplémentaire, au-delà de ce qu'explique la permutation
+des axes, signale une symétrie cachée \emph{plus grande}~; l'atome
+d'hydrogène répétera le tour de façon spectaculaire. Remplies de
+particules appariées par le spin, ces couches d'oscillateur logent $2,
+8, 20, \dots$ --- la première approximation des «~nombres magiques~» de
+la physique nucléaire (\cref{ch:b3:nuclear-physics}).
+\end{example}
+
+\section{Problèmes sphériques~: l'astuce de l'onde s}
+
+\begin{proposition}[États à symétrie sphérique]\label{prop:b3:schrodinger-three-dimensions:swave}
+\index{s etat@état $s$}\index{équation radiale}
+Pour un potentiel central $V(r)$, cherchons les états ne dépendant que
+de $r$ (les \emph{états s}~; le cas général, avec structure angulaire,
+attend le \cref{ch:b3:quantum-angular-momentum}). En écrivant
+$\varphi(r) = u(r)/r$, la fonction $u$ obéit à
+\[
+-\frac{\hbar^2}{2m}\,u'' + V(r)\,u = E\,u ,
+\qquad u(0) = 0 :
+\]
+\emph{exactement} l'équation de Schrödinger unidimensionnelle sur une
+demi-droite, avec un mur à l'origine. Tout l'outillage à une dimension
+du volume de deuxième année --- puits, raccordements, effet tunnel ---
+s'applique textuellement aux problèmes sphériques, au prix d'une seule
+substitution.
+\end{proposition}
+
+\begin{proof}
+Pour $\varphi(r)$, le laplacien se réduit à $\Delta\varphi =
+\tfrac1r(r\varphi)'' = u''/r$~; substituer et multiplier par $r$. La
+condition $u(0) = 0$ maintient $\varphi = u/r$ fini à l'origine~; la
+normalisation est $\int_0^\infty|u|^2\dd r$ multipliée par $4\pi$ ---
+$u$ est une véritable fonction d'onde unidimensionnelle.
+\end{proof}
+
+\begin{example}[Le deuton~: à peine un noyau]\label{ex:b3:schrodinger-three-dimensions:deuteron}
+Le deuton --- un proton, un neutron --- est le noyau le plus simple~:
+énergie de liaison $B = \qty{2.2}{MeV}$, minuscule à l'échelle
+nucléaire. Comme modèle, plaçons le mouvement relatif (masse réduite
+$m_{\text{p}}/2$) dans un puits sphérique de portée $R = \qty{2.1}{fm}$
+et de profondeur $V_0$~: l'équation en $u$ est le puits fini à une
+dimension. Le raccordement des solutions intérieure et extérieure exige
+une profondeur minimale $V_0 > \pi^2\hbar^2/8\mu R^2
+\approx \qty{23}{MeV}$ pour qu'existe \emph{un} état lié, et
+reproduire $B = \qty{2.2}{MeV}$ demande $V_0 \approx \qty{35}{MeV}$
+(\cref{exo:b3:schrodinger-three-dimensions:10})~: l'interaction forte
+ne lie le deuton qu'avec dix pour cent de marge. La fonction d'onde
+fuit loin hors du puits --- la paire de nucléons passe l'essentiel de
+son temps hors de portée de la force --- et il n'existe pas de second
+état lié~: le deuxième noyau le plus simple de la nature, l'hélium,
+réclame un troisième nucléon.
+\end{example}
+
+\begin{omfigure}
+\begin{tikzpicture}
+  \begin{axis}[omaxis, axis x line=bottom, axis y line=left,
+    width=11.2cm, height=5.6cm, xmin=0, xmax=8, ymin=-1.25, ymax=1.15,
+    xlabel={$r$ (fm)}, ylabel={},
+    xlabel style={at={(axis description cs:0.5,-0.1)}, anchor=north},
+    xtick={2.1}, xticklabels={$R$}, ytick=\empty, clip=false]
+    % well
+    \draw[omExo, thick] (axis cs:0,-1.0) -- (axis cs:2.1,-1.0) --
+      (axis cs:2.1,0) -- (axis cs:8,0);
+    \node[omExo, font=\scriptsize, anchor=west] at (axis cs:0.12,-1.12) {$-V_0$};
+    % energy level
+    \draw[omThm, dashed] (axis cs:0,-0.063) -- (axis cs:8,-0.063);
+    \node[omThm, font=\scriptsize, anchor=south west] at (axis cs:5.3,-0.05) {$E = -B$};
+    % u(r): sin inside, exp outside, matched at R
+    \addplot[omDef, very thick, domain=0:2.1, samples=50]
+      {0.92*sin(deg(0.87*x))};
+    \addplot[omDef, very thick, domain=2.1:8, samples=50]
+      {0.888*exp(-0.232*(x-2.1))};
+    \node[omDef, font=\scriptsize, anchor=west] at (axis cs:3.6,0.75) {$u(r)$~: longue queue exponentielle};
+  \end{axis}
+\end{tikzpicture}
+
+{\small La fonction d'onde radiale $u(r)$ du deuton dans le modèle du
+puits sphérique~: à peine un quart d'oscillation tient à l'intérieur du
+puits, et l'état survit grâce à une queue qui s'étend bien au-delà de
+la portée de la force --- un noyau lié par \qty{2.2}{MeV} dans un puits
+profond de \qty{35}{MeV}.}
+\end{omfigure}
+
+\begin{method}[Problèmes à trois dimensions]\label{met:b3:schrodinger-three-dimensions:method}
+(1) Potentiel additif ($V_1 + V_2 + V_3$)~? Séparer~; les énergies
+s'ajoutent~; rassembler les dégénérescences par symétrie. (2) Potentiel
+central, état sphérique~? Substituer $\varphi = u/r$ et réutiliser tous
+les résultats à une dimension avec $u(0) = 0$. (3) Pour compter les
+états, penser dans l'espace des $\vect n$ ou dans l'\omterm{def:b3:hamiltonian-mechanics:hamiltonian}{espace des phases},
+à raison d'un état par $h^3$ (et par état de spin). (4) Courants~:
+calculer $\vect\jmath$ lorsqu'un écoulement ou un flux importe~; se
+rappeler que fonction d'onde réelle $=$ pas de courant. (5) Estimer
+d'abord~: l'énergie de confinement $\sim h^2/8mL^2$ par direction fixe
+les échelles, des boîtes quantiques aux noyaux, avant toute résolution.
+\end{method}
+
+\begin{omfigure}
+\includegraphics[width=0.58\linewidth]{images/book5/ai/b5-07-quantum-dot-vials.png}
+
+{\small Des boîtes quantiques sous lumière ultraviolette~: le même semi-conducteur, en cristaux de plus en plus petits, brille du rouge au bleu. La couleur est fixée par les énergies de la particule dans une boîte de ce chapitre --- du confinement que l'on voit.}
+\end{omfigure}
+
+\section{Exercices}
+
+\begin{exercise}[$\star$]\label{exo:b3:schrodinger-three-dimensions:1}
+L'état gaussien $\psi(\vect r) = A\,\eu^{-r^2/4\sigma^2}$. (a)
+Le normaliser ($\int_0^\infty x^2\eu^{-x^2}\dd x = \sqrt\pi/4$). (b)
+Calculer $\langle r^2\rangle$ et $\Delta x$ (l'isotropie aide). (c)
+Que vaut $\vect\jmath$ pour cet état, et pourquoi~? (d) Multiplier par
+$\eu^{\iu\vect k_0\cdot\vect r}$~: que valent maintenant $\langle\vect
+p\rangle$ et $\vect\jmath$~?
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b3:schrodinger-three-dimensions:2}
+Pour la boîte cubique, dresser la liste de tous les niveaux jusqu'à
+$E = 15$ (en unités de $h^2/8ma^2$) avec leurs dégénérescences. Montrer
+ensuite que le niveau $27$ est dégénéré \emph{au-delà} des
+permutations~: trouver ses deux familles de nombres quantiques et dites
+pourquoi une telle dégénérescence «~accidentelle~» ne découle pas de la
+symétrie cubique.
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b3:schrodinger-three-dimensions:3}
+Calculer le courant $\vect\jmath$ pour~: (a) l'onde plane
+$A\eu^{\iu kx}$~; (b) l'onde stationnaire $A\sin kx$~; (c) la
+superposition $A(\eu^{\iu kx} + r\,\eu^{-\iu kx})$, $r$ réel ---
+interpréter le résultat comme flux incident moins flux réfléchi~; (d)
+l'état $A\,\eu^{\iu m\varphi}$ sur un anneau de rayon $b$ (y utiliser
+$|\vect\nabla|
+= (1/b)\partial_\varphi$)~: un courant qui circule à jamais.
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b3:schrodinger-three-dimensions:4}
+Un cristallite de boîte quantique confine une paire électron--trou de
+masse effective $\mu = 0.10\,m_{\text{e}}$~; l'énergie du photon émis
+est la largeur de bande interdite du matériau massif
+$E_{\text{g}} = \qty{1.74}{eV}$ augmentée de l'énergie de confinement
+d'une boîte sphérique, $\pi^2\hbar^2/2\mu R^2$. (a) Calculer l'énergie
+de confinement à $R = \qty{3}{nm}$. (b) La longueur d'onde émise. (c)
+Dans quel sens la couleur se déplace-t-elle quand la boîte rétrécit~?
+(d) Pourquoi le séléniure de cadmium massif (grand $R$) montre-t-il une
+couleur unique et fixe~?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b3:schrodinger-three-dimensions:5}
+Une particule sur un anneau (rayon $b$, coordonnée $\varphi$)~: les
+états stationnaires sont $\psi_m = \eu^{\iu m\varphi}/\sqrt{2\pi}$. (a)
+Pourquoi $m$ doit-il être entier~? (b) Montrer que
+$E_m = \hbar^2m^2/2mb^2$ --- attention aux deux $m$~: écrire
+$E_m = \hbar^2 m^2/2Mb^2$ pour une masse $M$ --- et remarquer que
+chaque niveau $m \neq 0$ est deux fois dégénéré~: quelle symétrie
+apparie $+m$ et $-m$~? (c) Calculer le courant de $\psi_m$ et le moment
+magnétique «~orbital~» associé si la particule porte la charge $q$. (d)
+Les six électrons mobiles du benzène vivent sur un anneau de
+$b \approx \qty{1.4}{\angstrom}$~: estimer l'énergie du photon de la
+première excitation permise ($m = \pm1 \to \pm2$) et comparer à
+l'absorption ultraviolette du benzène vers \qty{180}{nm} --- un anneau,
+sans chimie.
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b3:schrodinger-three-dimensions:6}
+Dégénérescences de l'oscillateur isotrope. (a) Montrer que le nombre de
+triplets vérifiant $n_x + n_y + n_z = n$ vaut $(n+1)(n+2)/2$. (b)
+Donner les populations de couche pour $n = 0$ à $3$, doublées pour le
+spin. (c) Montrer que les remplissages cumulés valent $2, 8, 20, 40, \dots$~: les trois premiers
+coïncident avec les nombres de nucléons «~magiques~» particulièrement
+stables de la physique nucléaire --- que suggère l'échec à $40$ (les
+vrais magiques~: $28$, $50$) sur le potentiel nucléaire~? (d) Pourquoi
+le motif irrégulier des niveaux de la boîte ne produit-il, contrairement
+à l'oscillateur, aucune structure en couches marquée~?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b3:schrodinger-three-dimensions:7}
+Le puits sphérique infini (rayon $R$)~: par l'astuce de l'onde $s$,
+(a) trouver les niveaux $E_n = n^2\pi^2\hbar^2/2MR^2$ et les fonctions
+d'onde $u_n$~; (b) calculer $E_1$ pour un nucléon ($Mc^2 =
+\qty{939}{MeV}$) dans $R = \qty{5}{fm}$ (prendre $\hbar c =
+\qty{197.3}{MeV.fm}$)~; (c) comparer aux écarts de niveaux mesurés de
+quelques MeV dans les noyaux moyens~; (d) où la particule a-t-elle le
+plus de chances de se trouver dans l'état fondamental --- calculer le
+maximum de $|u_1|^2$, et l'opposer à la réponse de la boîte à une
+dimension pour $|\varphi|^2$.
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b3:schrodinger-three-dimensions:8}
+Compter les électrons d'un métal. (a) À partir de
+\cref{prop:b3:schrodinger-three-dimensions:counting} avec deux états de
+spin, montrer qu'en logeant $N$ électrons dans le volume $V$ on atteint
+l'énergie de Fermi
+\[
+E_{\text{F}} = \frac{\hbar^2}{2m_{\text{e}}}\,(3\pi^2n)^{2/3} ,
+\qquad n = N/V .
+\]
+(b) L'évaluer pour le cuivre. (c) Calculer la vitesse de Fermi et la
+température $E_{\text{F}}/k_{\text{B}}$ correspondantes. (d) En une
+phrase~: pourquoi les électrons ne se placent-ils pas tous dans l'état
+fondamental, et quel principe (annoncé ici, démontré au
+\cref{ch:b3:identical-particles}) l'interdit~?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b3:schrodinger-three-dimensions:9}
+Profondeur minimale d'un puits sphérique. Pour le puits fini ($-V_0$
+pour $r < R$), l'état fondamental de l'onde $s$ vaut $u = \sin kr$ à
+l'intérieur et $\eu^{-\kappa r}$ à l'extérieur. (a) Écrire $k$ et
+$\kappa$ ainsi que la condition de raccordement $k\cot kR = -\kappa$.
+(b) Montrer qu'un état lié apparaît pour la première fois quand
+$kR = \pi/2$, exactement à $E = 0$, ce qui donne
+$V_{0,\min} = \pi^2\hbar^2/8MR^2$. (c) L'évaluer pour le deuton
+($M \to \mu = m_{\text{p}}/2$, $R = \qty{2.1}{fm}$). (d) Opposer au cas
+unidimensionnel, où le puits le moins profond lie déjà~: que change
+physiquement le mur $u(0) = 0$~?
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b3:schrodinger-three-dimensions:10}
+Le deuton, résolu. Avec $\mu c^2 = \qty{469}{MeV}$, $R =
+\qty{2.1}{fm}$, $B = \qty{2.22}{MeV}$~: (a) calculer $\kappa$ à partir
+de $B$ et la longueur de queue $1/\kappa$~; (b) écrire la condition de
+raccordement et montrer qu'elle devient $\cot kR = -\kappa/k$ avec $k$
+fixé par $V_0 - B$~; (c) résoudre en $V_0$ (par itération~: partir de
+$kR \approx 0.6\pi$) et donner $V_0$ au MeV près~; (d) calculer la
+probabilité que les nucléons soient distants de plus de $R$ (intégrer
+la queue), et commenter «~un noyau qui vit surtout hors de sa propre
+force~».
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b3:schrodinger-three-dimensions:11}
+Ehrenfest et la continuité à trois dimensions. (a) Démontrer que
+$\dd\langle\vect r\rangle/\dd t = \langle\vect p\rangle/m$ à partir de
+l'équation de continuité (intégrer $\vect r\,\partial_t\rho$ par
+parties). (b) Démontrer que $\dd\langle\vect p\rangle/\dd t =
+-\langle\vect\nabla V\rangle$. (c) Sous quelle condition sur $V$ le
+$\langle\vect r\rangle$ suit-il exactement la trajectoire classique~?
+(d) Donner un cas concret où il ne la suit pas (un paquet scindé par un
+potentiel à deux fentes, par exemple) et expliquer ce que la moyenne
+décrit alors.
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b3:schrodinger-three-dimensions:12}
+Pourquoi les atomes ne s'effondrent pas. Modélisons l'état fondamental
+de l'hydrogène par la fonction d'essai $\psi \propto \eu^{-r/a}$ avec
+$a$ ajustable. (a) En admettant $\langle E_k\rangle = \hbar^2/2m_{\text{e}}a^2$ et
+$\langle E_p\rangle = -e^2/4\pi\varepsilon_0a$, expliquer l'origine de
+chaque loi d'échelle. (b) Minimiser $E(a)$ et montrer que l'optimum est
+le rayon de Bohr, avec $E = \qty{-13.6}{eV}$. (c) Pourquoi réduire $a$
+sous l'optimum \emph{augmente}-t-il l'énergie, alors même que le
+potentiel se creuse~? (d) Le même raisonnement avec le $1/r$ remplacé
+par l'attraction gravitationnelle entre électron et proton~: trouver le
+«~rayon de Bohr gravitationnel~» et conclure pourquoi la gravitation ne
+construit aucun atome.
+\end{exercise}
+
+\section{Problème~: la couleur d'une boîte quantique}
+
+\begin{problem}[{Problème du week-end --- fabriquer de la lumière en
+comptant des nanomètres}]\label{pb:b3:schrodinger-three-dimensions:1}
+Le prix Nobel de chimie 2023 a récompensé la découverte et la synthèse
+des boîtes quantiques~: des cristallites si petits que les énergies de
+la particule dans une boîte de ce chapitre fixent leur couleur, et qui
+brillent aujourd'hui dans les écrans de téléviseurs et marquent des
+molécules dans des cellules vivantes. Ce problème conçoit un écran à
+boîtes quantiques à partir de l'équation de Schrödinger. Modèle~: la
+paire électron--trou optiquement active, de masse effective
+$\mu = 0.10\,m_{\text{e}}$ ($m_{\text{e}}c^2 = \qty{511}{keV}$),
+confinée dans une sphère de rayon $R$~; énergie du photon émis
+\[
+E(R) = E_{\text{g}} + \frac{\pi^2\hbar^2}{2\mu R^2} ,
+\]
+avec la largeur de bande interdite du matériau massif
+$E_{\text{g}} = \qty{1.74}{eV}$ (séléniure de cadmium). Prendre $\hbar c = \qty{197.3}{eV.nm}$, $hc =
+\qty{1240}{eV.nm}$.
+
+\medskip\noindent\textbf{Partie I --- La physique de la formule.}
+\begin{enumerate}
+  \item D'où vient le terme $\pi^2\hbar^2/2\mu R^2$~? L'obtenir comme
+        niveau fondamental du puits sphérique infini, par la
+        substitution de l'onde $s$.
+  \item Pourquoi le confinement \emph{augmente}-t-il toujours l'énergie
+        émise, sans jamais l'abaisser~?
+  \item Évaluer l'énergie de confinement pour $R = 10$, $4$, $2$ et
+        \qty{1}{nm}, et repérer la taille à partir de laquelle elle
+        cesse d'être une petite correction à $E_{\text{g}}$.
+  \item Le modèle ignore l'attraction électron--trou. Dans quel sens sa
+        prise en compte déplacerait-elle l'émission, et pourquoi la
+        négliger est-il plus légitime pour les \emph{petites} boîtes
+        (comparer les lois en $1/R^2$ et en $1/R$)~?
+  \item À quelle longueur d'onde le séléniure de cadmium massif
+        émet-il~? Dans quelle partie du spectre cela tombe-t-il~?
+  \item Pourquoi un verre de solution de boîtes brille-t-il d'\emph{une}
+        couleur pure alors qu'il contient $10^{15}$ boîtes~? Quelle
+        qualité de la synthèse s'en trouve certifiée~?
+\end{enumerate}
+
+\medskip\noindent\textbf{Partie II --- Composer la palette.}
+Un écran a besoin de rouge \qty{630}{nm}, de vert \qty{530}{nm} et de
+bleu \qty{460}{nm}.
+\begin{enumerate}[resume]
+  \item Convertir chaque longueur d'onde en énergie de photon.
+  \item Pour chaque couleur, calculer l'énergie de confinement requise
+        et le rayon de la boîte.
+  \item Dresser un tableau~: combien d'atomes de large fait grossièrement
+        chaque boîte (pas du réseau $\approx \qty{0.6}{nm}$)~?
+  \item Le bleu est le plus difficile pour les boîtes de séléniure de
+        cadmium~: expliquer pourquoi à partir de vos rayons (qu'advient-il
+        de la tolérance quand $R$ diminue~?).
+  \item Montrer que la sensibilité de l'énergie émise à la taille vaut
+        \[
+        \frac{\dd E}{\dd R} = -\frac{\pi^2\hbar^2}{\mu R^3} ,
+        \]
+        et l'évaluer, en $\unit{meV}$ par nanomètre, au rayon de la
+        boîte verte.
+  \item Un lot varie de $\pm5\%$ en rayon~: calculer la dispersion en
+        longueur d'onde de l'émission verte, et comparer à la largeur
+        de raie de $\sim\qty{25}{nm}$ qu'un bon écran tolère.
+  \item Pourquoi les écrans à boîtes quantiques ont-ils dû attendre une
+        chimie capable d'un contrôle de taille \emph{à l'échelle
+        atomique} --- et pourquoi est-ce là une prouesse de rang Nobel~?
+\end{enumerate}
+
+\medskip\noindent\textbf{Partie III --- Plus brillant, plus pur, plus étrange.}
+\begin{enumerate}[resume]
+  \item Les téléviseurs modernes utilisent les boîtes comme
+        convertisseurs de couleur~: une diode bleue éclaire des boîtes
+        rouges et vertes. Pourquoi l'énergie du photon de pompe
+        doit-elle dépasser l'énergie d'émission de la boîte, et où passe
+        la différence~?
+  \item Calculer la fraction de l'énergie d'un photon de pompe à
+        \qty{460}{nm} perdue en chaleur lorsqu'un photon rouge à
+        \qty{630}{nm} est émis.
+  \item Une boîte peut aussi \emph{absorber} à de nombreuses longueurs
+        d'onde et n'\emph{émettre} qu'à une seule~: expliquer, à partir
+        de la structure des niveaux, pourquoi l'absorption est large et
+        l'émission étroite.
+  \item Les biologistes marquent des protéines avec des boîtes de
+        plusieurs tailles excitées par une seule lampe ultraviolette~:
+        quelle propriété des boîtes fait qu'une lampe suffit là où les
+        colorants organiques exigent un laser par couleur~?
+  \item Estimer le nombre d'atomes de la boîte rouge ($4/3\pi R^3$,
+        volume atomique $\sim(\qty{0.3}{nm})^3$)~: «~atome
+        artificiel~» est-il un nom juste pour un objet de cette taille
+        doté de niveaux discrets~?
+  \item En une phrase~: qu'est-ce qui tient le rôle du «~noyau~» dans
+        cet atome artificiel --- qu'est-ce qui retient l'électron~?
+\end{enumerate}
+
+\medskip\noindent\textbf{Partie IV --- Le confinement à travers la physique.}
+\begin{enumerate}[resume]
+  \item La même estimation $E_1 \sim \pi^2\hbar^2/2MR^2$ appliquée à un
+        nucléon dans $R = \qty{3}{fm}$ donne quelle échelle d'énergie~?
+        (C'est pourquoi la physique nucléaire parle en MeV.)
+  \item Appliquée à un électron confiné à la taille d'un noyau, elle
+        donne quelle énergie scandaleuse --- et qu'en conclure sur des
+        électrons «~à l'intérieur~» du noyau (un argument qui a jadis
+        tué une théorie de la désintégration bêta)~?
+  \item Appliquée à vous (\qty{70}{kg}) dans une pièce de \qty{2}{m}~:
+        calculer l'énergie de confinement et conclure.
+  \item Inverser la formule~: à quelle taille de confinement l'énergie
+        de confinement d'un \emph{électron} atteint-elle son \omterm{def:b3:relativistic-dynamics:momentum-energy}{énergie de
+        masse} $m_{\text{e}}c^2$ --- et quelle physique nouvelle
+        (création de paires, \cref{ch:b3:relativistic-dynamics})
+        avertit que l'équation de Schrödinger à une particule est alors
+        hors de son domaine~?
+  \item Énoncer la loi d'échelle générale~: énergie de confinement en
+        fonction de la masse et de la taille.
+  \item Résumer le résultat nommé~: une seule formule,
+        $E_{\text{g}} + \pi^2\hbar^2/2\mu R^2$, change des rayons de
+        $4.0$, $2.5$ et \qty{2.0}{nm} en rouge, vert et bleu --- de la
+        couleur fabriquée en comptant des nanomètres, en vente dans
+        n'importe quel magasin d'électronique.
+\end{enumerate}
+\end{problem}

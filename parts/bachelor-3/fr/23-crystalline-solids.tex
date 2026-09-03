@@ -1,0 +1,548 @@
+\chapter{Solides cristallins}\label{ch:b3:crystalline-solids}
+
+% Provenance (not for print): first half of the "physique du solide"
+% module (structures, diffraction, cohesion, lattice dynamics) common to
+% the surveyed third-year curricula; electronic properties follow in the
+% next chapter.
+
+Les grains de sel sont de minuscules cubes. Les flocons de neige
+tiennent à leurs six branches. Un joaillier peut fendre un diamant
+proprement selon certains plans et pas d'autres. Tous trois avouent le
+même secret~: sous leur surface, les atomes sont empilés en rangs qui
+se répètent, identiques, des milliards de fois --- un \emph{\omterm{def:b3:crystalline-solids:lattice}{cristal}}.
+Ce chapitre apprend à lire cet ordre. Les rayons X le mesurent (et ont
+mesuré au passage le nombre d'Avogadro)~; une électrostatique simple
+et les liaisons quantiques du \cref{ch:b3:identical-particles}
+expliquent pourquoi l'empilement tient~; et faire vibrer l'empilement
+redonne, à partir des premiers principes, les ondes sonores du volume
+de deuxième année et les phonons du \cref{ch:b3:photons-phonons}. Le
+chapitre suivant versera des électrons dans cet échafaudage~; ici,
+nous le construisons.
+
+\section{Réseaux, mailles et structures}
+
+\begin{definition}[Réseau et motif]\label{def:b3:crystalline-solids:lattice}
+\index{cristal}\index{réseau}\index{motif (cristallographie)}\index{maille}
+Un \emph{cristal} est un arrangement qui se répète~: un \emph{réseau}
+(la grille de points mathématiques $\vect r = n_1\vect a_1 + n_2\vect a_2
++ n_3\vect a_3$, avec des entiers $n_i$) décoré par un \emph{motif}
+(l'atome ou le groupe accroché identiquement à chaque point). Le
+parallélépipède engendré par $\vect a_1, \vect a_2, \vect a_3$ est une
+\emph{maille}~; son arête $a$ est le \emph{paramètre de maille},
+quelques \unit{\angstrom}. Trois empilements cubiques portent
+l'essentiel de ce cours~: le \emph{cubique simple} (points aux coins du
+cube --- rare~: un atome par maille)~; le \emph{cubique centré} (cc~:
+coins $+$ centre, 2 atomes par maille --- fer, chrome)~; le
+\emph{cubique à faces centrées} (cfc~: coins $+$ centres des faces, 4
+atomes par maille --- cuivre, aluminium, argent, or~: l'empilement
+cubique le plus dense, qui remplit 74\,\% de l'espace). Le diamant est
+cfc avec un motif à deux atomes~; le sel gemme est cfc avec une paire
+Na--Cl.
+\end{definition}
+
+\begin{omfigure}
+\begin{tikzpicture}[scale=0.92, line join=round]
+  % a cube drawing macro-by-hand, three times
+  \foreach \dx/\name/\extra in {0/simple cubic/none, 4.4/body-centred/bcc, 8.8/face-centred/fcc}{
+  \begin{scope}[xshift=\dx cm]
+    % cube: front square (0,0)-(2,2); back square shifted (0.8,0.6)
+    \draw[thick] (0,0) rectangle (2,2);
+    \draw[thick] (2,0) -- (2.8,0.6) (2,2) -- (2.8,2.6) (0,2) -- (0.8,2.6);
+    \draw[thick] (0.8,2.6) -- (2.8,2.6) -- (2.8,0.6);
+    \draw[gray, dashed] (0,0) -- (0.8,0.6) -- (2.8,0.6) (0.8,0.6) -- (0.8,2.6);
+    % corner atoms
+    \foreach \p in {(0,0),(2,0),(0,2),(2,2),(0.8,0.6),(2.8,0.6),(0.8,2.6),(2.8,2.6)}
+      \fill[omDef] \p circle (3.2pt);
+  \end{scope}}
+  % bcc center atom
+  \fill[omThm] (4.4+1.4,1.3) circle (3.2pt);
+  % fcc face centers (6 faces; show 5 visible-ish)
+  \foreach \p in {(9.8,1),(10.6,1.6),(10.2,0.3),(10.2,2.3),(9.2,1.3),(11.2,1.3)}
+    \fill[omThm] \p circle (2.6pt);
+  \node[font=\scriptsize, anchor=north] at (1.4,-0.35) {cubique simple};
+  \node[font=\scriptsize, anchor=north] at (5.8,-0.35) {cubique centré (cc)};
+  \node[font=\scriptsize, anchor=north] at (10.2,-0.35) {à faces centrées (cfc)};
+\end{tikzpicture}
+
+{\small Les trois réseaux cubiques. Les atomes des coins sont
+partagés entre huit \omterm{def:b3:crystalline-solids:lattice}{mailles}, ceux des faces entre deux, celui du
+centre par une seule~: les compter et les \omterm{def:b3:crystalline-solids:lattice}{mailles} contiennent
+respectivement 1, 2 et 4 atomes --- la comptabilité derrière chaque
+calcul de densité de ce chapitre.}
+\end{omfigure}
+
+\begin{example}[Peser une maille]\label{ex:b3:crystalline-solids:density}
+Le cuivre est cfc avec $a = \qty{3.61}{\angstrom}$. Sa \omterm{def:b3:crystalline-solids:lattice}{maille} contient
+4 atomes de masse molaire \qty{63.5}{g/mol}, donc
+\[
+\rho = \frac{4M/N_{\text{A}}}{a^3}
+= \frac{4\times\qty{1.055e-25}{kg}}{\qty{4.71e-29}{m^3}}
+\approx \qty{8960}{kg/m^3} ,
+\]
+la valeur des tables. Prise à l'envers, la même arithmétique
+transforme un $a$ mesuré et une densité de paillasse en
+$N_{\text{A}}$ --- la voie par laquelle les rayons X ont compté les
+atomes pour la première fois
+(\cref{exo:b3:crystalline-solids:6}).
+\end{example}
+
+\section{Voir l'empilement~: la diffraction des rayons X}
+
+\begin{proposition}[La loi de Bragg]\label{prop:b3:crystalline-solids:bragg}
+\index{loi de Bragg}\index{diffraction des rayons X}\index{indices de Miller}
+Un \omterm{def:b3:crystalline-solids:lattice}{cristal} contient des familles de plans atomiques parallèles. Un
+faisceau de rayons X monochromatique de longueur d'onde $\lambda$,
+frappant une famille d'espacement $d$ sous l'angle rasant $\theta$, ne
+se réfléchit fortement que si les ondes issues des plans successifs
+se remettent en phase~:
+\[
+2d\sin\theta = n\lambda , \qquad n = 1, 2, \dots
+\]
+Dans un \omterm{def:b3:crystalline-solids:lattice}{cristal} cubique, la famille dont les \emph{\omterm{prop:b3:crystalline-solids:bragg}{indices de Miller}}
+sont $(hkl)$ --- des plans qui découpent les arêtes de la \omterm{def:b3:crystalline-solids:lattice}{maille} en
+$h$, $k$, $l$ parts --- a l'espacement
+$d = a/\sqrt{h^2 + k^2 + l^2}$, si bien que le jeu des angles de
+réflexion signe à la fois le type de \omterm{def:b3:crystalline-solids:lattice}{réseau} et son paramètre~: la
+cristallographie en deux formules.
+\end{proposition}
+
+\begin{proof}
+Le rayon qui se réfléchit sur le plan inférieur parcourt un chemin
+supplémentaire $2d
+\sin\theta$ (les deux côtés rasants du triangle rectangle de
+profondeur $d$). L'interférence constructive exige que ce soit un
+nombre entier de longueurs d'onde. La formule d'espacement pour les
+familles cubiques $(hkl)$ est de la géométrie plane~: des plans
+successifs coupent l'arête $a$ du cube à intervalles $a/h$ selon $x$,
+etc., ce qui donne le $d$ annoncé.
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}[scale=1.0]
+  % two atomic planes
+  \foreach \y in {0,-1.3}{
+    \draw[omDef!60] (-1.6,\y) -- (7.6,\y);
+    \foreach \x in {-1,0,1,...,7} \fill[omDef] (\x,\y) circle (2pt);}
+  % ray 1: reflects off the top plane at (3,0); direction (2.5,-1.7)
+  \draw[->, thick] (0.5,1.7) -- (2.95,0.034);
+  \draw[->, thick] (3.05,0.034) -- (5.5,1.7);
+  % ray 2: parallel, reflects off the bottom plane at (3,-1.3)
+  \draw[thick] (-1.41,1.7) -- (2.96,-1.272);
+  \draw[->, thick] (3.04,-1.272) -- (7.41,1.7);
+  % spacing d
+  \draw[omThm, very thick] (3,0) -- (3,-1.3);
+  \node[omThm, font=\scriptsize, anchor=west] at (3.06,-0.6) {$d$};
+  % theta labels at the top-plane vertex
+  \node[font=\scriptsize] at (2.25,0.22) {$\theta$};
+  \node[font=\scriptsize] at (3.75,0.22) {$\theta$};
+  \node[font=\scriptsize, anchor=north] at (3,-1.75)
+    {le rayon inférieur parcourt $2d\sin\theta$ de plus};
+\end{tikzpicture}
+
+{\small Réflexion de Bragg. Les ondes qui rasent des plans successifs
+diffèrent d'un chemin $2d\sin\theta$~; seuls les angles qui en font un
+nombre entier de longueurs d'onde réfléchissent --- tourner le
+\omterm{def:b3:crystalline-solids:lattice}{cristal}, enregistrer les éclats, lire l'architecture.}
+\end{omfigure}
+
+\section{Ce qui le tient ensemble}
+
+\begin{proposition}[Cohésion ionique~: la somme de Madelung]\label{prop:b3:crystalline-solids:madelung}
+\index{énergie de cohésion}\index{constante de Madelung}
+L'\emph{\omterm{prop:b3:crystalline-solids:madelung}{énergie de cohésion}} est ce qu'il en coûte de démonter un
+\omterm{def:b3:crystalline-solids:lattice}{cristal} en atomes (ou en ions) éloignés. Dans le sel gemme, chaque ion
+de charge $\pm e$ siège au milieu de voisins alternés~; sommer
+l'énergie coulombienne de tout le \omterm{def:b3:crystalline-solids:lattice}{réseau} par paire d'ions donne
+\[
+U = -\alpha\,\frac{e^2}{4\pi\varepsilon_0 r_0} ,
+\qquad \alpha_{\text{NaCl}} = 1.7476 ,
+\]
+avec $r_0$ la distance entre plus proches voisins et $\alpha$ la
+\emph{\omterm{prop:b3:crystalline-solids:madelung}{constante de Madelung}} --- la géométrie du \omterm{def:b3:crystalline-solids:lattice}{cristal} entier
+comprimée en un nombre (la série doit être sommée en couches neutres
+croissantes~; terme à terme, elle diverge). Avec $r_0 =
+\qty{2.82}{\angstrom}$ cela donne \qty{8.9}{eV} par paire~; la
+répulsion quantique de cœur dur en rend $\sim12\,\%$, ce qui atterrit
+à quelques pour cent des \qty{7.9}{eV} mesurés
+(\cref{exo:b3:crystalline-solids:7}).
+\end{proposition}
+\admitted
+
+\begin{remark}[Le quatuor des liaisons]\label{rem:b3:crystalline-solids:bonds}
+\index{liaison de van der Waals}\index{liaison covalente}\index{liaison métallique}
+Quatre colles bâtissent tous les cristaux. L'\emph{ionique} (NaCl)~:
+transfert d'électron, puis électrostatique de Madelung --- des
+isolants durs, cassants, transparents. La \emph{covalente} (diamant,
+silicium)~: des paires partagées dans les liaisons directionnelles du
+\cref{ch:b3:identical-particles} --- la plus rigide de toutes. La
+\emph{métallique} (cuivre)~: des ions baignés d'électrons délocalisés
+--- le sujet du chapitre suivant, ductile parce que la colle se moque
+de savoir quel ion est où. La \emph{van der Waals} (argon solide,
+cristaux moléculaires)~: attraction en $\sim r^{-6}$ entre dipôles
+fluctuants contre la répulsion quantique de cœur dur, empaquetée dans
+le potentiel de Lennard-Jones
+$U = 4\epsilon[(\sigma/r)^{12} - (\sigma/r)^6]$ --- faible
+($\epsilon \sim \qty{0.01}{eV}$), d'où des solides de gaz rares qui
+fondent quelques dizaines de kelvins au-dessus du zéro absolu
+(\cref{exo:b3:crystalline-solids:8}).
+\end{remark}
+
+\begin{omfigure}
+\begin{tikzpicture}
+  \begin{axis}[omaxis, axis x line=bottom, axis y line=left,
+    width=9.8cm, height=5.8cm, xmin=0.9, xmax=2.5, ymin=-1.3, ymax=1.6,
+    xlabel={$r/\sigma$}, ylabel={$U/\epsilon$},
+    xlabel style={at={(axis description cs:0.5,-0.1)}, anchor=north},
+    xtick={1,1.5,2,2.5}, ytick={-1,0,1}, clip=true]
+    \addplot[gray, thin, domain=0.9:2.5] {0};
+    \addplot[omDef, very thick, domain=0.955:2.5, samples=400]
+      {4*((1/x)^12 - (1/x)^6)};
+    \fill[omThm] (axis cs:1.122,-1) circle (1.8pt);
+    \node[omThm, font=\scriptsize, anchor=west] at (axis cs:1.42,-0.9)
+      {$r_0 = 2^{1/6}\sigma$, profondeur $-\epsilon$};
+    \node[font=\scriptsize, anchor=west, align=left] at (axis cs:1.02,1.2)
+      {répulsion\\quantique};
+    \node[font=\scriptsize, anchor=south, align=left] at (axis cs:2.05,0.08)
+      {van der Waals $\sim -1/r^6$};
+  \end{axis}
+\end{tikzpicture}
+
+{\small Le potentiel de Lennard-Jones. L'attraction en $r^{-6}$ des
+dipôles fluctuants rencontre la raide répulsion quantique des couches
+qui se recouvrent~; les atomes se posent dans le puits en $r_0$, et la
+raideur du \omterm{def:b3:crystalline-solids:lattice}{cristal} comme son point de fusion se lisent tous deux dans
+sa forme.}
+\end{omfigure}
+
+\section{L'empilement vibre~: la dispersion}
+
+\begin{theorem}[Dispersion de la chaîne monoatomique]\label{thm:b3:crystalline-solids:dispersion}
+\index{relation de dispersion (réseau)}\index{branche acoustique}
+Modélisez une rangée de \omterm{def:b3:crystalline-solids:lattice}{cristal} par des masses $m$ espacées de $a$,
+reliées par des ressorts $K$ (la raideur de liaison --- la courbure
+des figures ci-dessus). Chercher des ondes
+$u_n = A\eu^{\iu(kna - \omega t)}$ dans la loi de Newton
+$m\ddot u_n = K(u_{n+1} + u_{n-1} - 2u_n)$ donne
+\[
+\omega(k) = 2\sqrt{\frac{K}{m}}\,\Big|\sin\frac{ka}{2}\Big| .
+\]
+Aux grandes longueurs d'onde ($ka \ll 1$) c'est le son,
+$\omega = vk$ avec $v = a\sqrt{K/m}$ --- des kilomètres par seconde
+issus de ressorts atomiques. Mais la courbe \emph{s'infléchit}~: au
+bord de zone $k = \pi/a$ (longueur d'onde $2a$, voisins en
+opposition de phase) la vitesse de groupe s'annule --- l'onde se
+réfléchit à la Bragg sur le \omterm{def:b3:crystalline-solids:lattice}{réseau} même qui la porte --- et aucune
+fréquence supérieure ne se propage~: un \omterm{def:b3:crystalline-solids:lattice}{cristal} est un filtre
+passe-bas à coupure térahertz. Ces ondes quantifiées sont les phonons
+dont le \cref{ch:b3:photons-phonons} a déjà fait la statistique~; la
+partie linéaire de cette courbe est exactement ce que le \omterm{thm:b3:photons-phonons:debye}{modèle de
+Debye} a gardé.
+\end{theorem}
+
+\begin{proof}
+En substituant l'onde dans l'équation du mouvement~: $-m\omega^2 =
+K(\eu^{\iu ka} + \eu^{-\iu ka} - 2) = -2K(1 - \cos ka) =
+-4K\sin^2(ka/2)$.
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}
+  \begin{axis}[omaxis, axis x line=bottom, axis y line=left,
+    width=10.2cm, height=5.6cm, xmin=0, xmax=3.4, ymin=0, ymax=1.35,
+    xlabel={$ka$}, ylabel={$\omega/\omega_{\text{max}}$},
+    xlabel style={at={(axis description cs:0.5,-0.1)}, anchor=north},
+    xtick={3.1416}, xticklabels={$\pi$}, ytick={1}, clip=true]
+    \addplot[omDef, very thick, domain=0:3.1416, samples=200]
+      {abs(sin(deg(x/2)))};
+    \addplot[omThm, dashed, thick, domain=0:1.6] {x/2};
+    \draw[gray, dashed] (axis cs:3.1416,0) -- (axis cs:3.1416,1.0);
+    \node[omThm, font=\scriptsize, anchor=west] at (axis cs:0.25,0.9)
+      {son~: $\omega = vk$};
+    \node[font=\scriptsize, anchor=west, align=left] at (axis cs:2.35,0.35)
+      {bord de zone~:\\onde stationnaire};
+  \end{axis}
+\end{tikzpicture}
+
+{\small Dispersion de la chaîne atomique. Les grandes ondes
+chevauchent la branche sonore linéaire~; en $k = \pi/a$ les atomes
+voisins battent en opposition de phase, l'onde reste immobile, et le
+spectre plafonne vers \qty{e13}{Hz}. Les cristaux à deux atomes par
+\omterm{def:b3:crystalline-solids:lattice}{maille} ajoutent une seconde branche, \emph{optique}, au-dessus d'un
+gap interdit --- la raison pour laquelle le sel absorbe l'infrarouge.}
+\end{omfigure}
+
+\begin{omfigure}
+\includegraphics[width=0.58\linewidth]{images/book5/ai/b5-19-pyrite-cubes.png}
+
+{\small Cristaux de pyrite~: des cubes formés par la géologie, non taillés par des mains. Les faces sont des plans réticulaires (100) --- l'ordre atomique, répété $10^{23}$ fois, affleurant à l'échelle humaine.}
+\end{omfigure}
+
+\section{Exercices}
+
+\begin{exercise}[$\star$]\label{exo:b3:crystalline-solids:1}
+Comptabilité des \omterm{def:b3:crystalline-solids:lattice}{mailles}. (a) Vérifier les nombres d'atomes~: cs 1,
+cc 2, cfc 4. (b) Dans le cc, les atomes se touchent le long de la
+diagonale du cube~: exprimer le rayon atomique en fonction de $a$. (c)
+Idem pour le cfc, où ils se touchent le long d'une diagonale de face.
+(d) Calculer les compacités
+($\pi\sqrt3/8 \approx 0.68$ et $\pi/\sqrt{18} \approx 0.74$) et dites
+quelle structure les métaux préfèrent quand la liaison est aveugle à
+la direction.
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b3:crystalline-solids:2}
+Le cuivre en chiffres. Cfc, $a = \qty{3.61}{\angstrom}$, $M =
+\qty{63.5}{g/mol}$. Calculer (a) la distance entre plus proches
+voisins~; (b) le nombre de plus proches voisins~; (c) la masse
+volumique~; (d) le nombre d'atomes dans un cube de \qty{1}{\micro m}
+de fil d'interconnexion.
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b3:crystalline-solids:3}
+Premiers angles de Bragg. Des rayons X K$\alpha$ du cuivre
+($\lambda = \qty{1.54}{\angstrom}$) frappent des plans de NaCl
+d'espacement $d = \qty{2.82}{\angstrom}$. (a) Trouver l'angle du
+premier ordre $\theta_1$. (b) Combien d'ordres existent~? (c)
+Pourquoi faut-il $\lambda \le 2d$ pour toute réflexion --- et
+pourquoi la lumière visible est-elle sans espoir~? (d) Qu'advient-il
+de $\theta_1$ si l'on chauffe le \omterm{def:b3:crystalline-solids:lattice}{cristal} de sorte que $d$ se dilate
+de 1\,\%~?
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b3:crystalline-solids:4}
+Espacements de Miller. Pour un \omterm{def:b3:crystalline-solids:lattice}{cristal} cubique de paramètre $a$~: (a)
+classer les familles (100), (110), (111) par espacement à l'aide de
+$d = a/\sqrt{h^2+k^2+l^2}$. (b) Laquelle réfléchit au plus petit
+angle de Bragg~? (c) Le diamant se clive selon ses plans les plus
+espacés et les plus faiblement liés~: quelle famille~? (d) Pourquoi un
+échantillon en poudre (beaucoup de grains aléatoires) change-t-il les
+taches de Bragg en cônes~?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b3:crystalline-solids:5}
+Choisir la sonde. (a) Pourquoi toute sonde de diffraction doit-elle
+avoir $\lambda \sim \qty{1}{\angstrom}$~? (b) Photons X~: quelle
+énergie cela fait-il~? (c) Électrons~: avec $\lambda = h/p$ des ondes
+de matière du volume de deuxième année, quelle tension accélératrice
+donne \qty{0.05}{\angstrom}~? (d) Neutrons thermiques à \qty{300}{K}~:
+montrer que
+$\lambda = h/\sqrt{3mk_{\text{B}}T} \approx \qty{1.5}{\angstrom}$,
+et donner une raison pour laquelle les faisceaux de neutrons voient ce
+que les rayons X manquent (indice~: les rayons X diffusent sur les
+électrons).
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b3:crystalline-solids:6}
+Compter les atomes avec une règle. NaCl~: masse volumique
+$\rho = \qty{2165}{kg/m^3}$, masse molaire \qty{58.44}{g/mol},
+\omterm{def:b3:crystalline-solids:lattice}{paramètre de maille} mesuré $a = \qty{5.64}{\angstrom}$ (4 paires
+Na--Cl par \omterm{def:b3:crystalline-solids:lattice}{maille}). (a) Écrire $\rho = 4M/N_{\text{A}}a^3$. (b)
+Résoudre en $N_{\text{A}}$ et évaluer. (c) Propager une erreur de
+0,1\,\% sur $a$~: quelle erreur sur $N_{\text{A}}$~? (d) Commenter~:
+le kilogramme a été redéfini en 2019 en partie par cette voie
+cristalline (une sphère de silicium) --- pourquoi la méthode
+exige-t-elle un \omterm{def:b3:crystalline-solids:lattice}{cristal} quasi parfait~?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b3:crystalline-solids:7}
+Le grand livre de Madelung. (a) Pour la rangée infinie de NaCl à
+charges alternées espacées de $r_0$, montrer que l'énergie par ion
+vaut $-(e^2/4\pi\varepsilon_0r_0)\times2\ln2$ --- la \omterm{prop:b3:crystalline-solids:madelung}{constante de
+Madelung} à une dimension est donc $2\ln2 \approx 1.386$. (b)
+Avec $\alpha = 1.7476$ et $r_0 = \qty{2.82}{\angstrom}$, évaluer
+$U$. (c) La répulsion de Born varie comme $r^{-9}$~: minimiser
+$U(r) = -A/r + B/r^9$ montre que la liaison nette vaut
+$U(r_0)(1 - 1/9)$ --- refaites l'estimation. (d) Comparer aux
+\qty{7.9}{eV} par paire mesurées et commenter ce qu'un modèle à deux
+termes a rapporté.
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b3:crystalline-solids:8}
+L'argon de Lennard-Jones. $\epsilon = \qty{0.0104}{eV}$, $\sigma =
+\qty{3.40}{\angstrom}$. (a) Localiser le minimum $r_0 = 2^{1/6}
+\sigma$ et comparer aux \qty{3.76}{\angstrom} mesurés de l'argon
+solide. (b) Estimer la température de fusion à partir de
+$k_{\text{B}}T_{\text{m}} \sim \epsilon/2$ et comparer à
+\qty{84}{K}. (c) Pourquoi la masse minuscule de l'hélium et son puits
+peu profond le maintiennent-ils liquide au zéro absolu
+(\cref{ch:b3:quantum-statistics})~? (d) Pourquoi les solides de van
+der Waals sont-ils mous et volatils, alors que le diamant, aux
+liaisons trois cents fois plus profondes, raye tout~?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b3:crystalline-solids:9}
+Des ressorts tirés du son. (a) À partir de
+\cref{thm:b3:crystalline-solids:dispersion}, obtenir la vitesse du
+son $v = a\sqrt{K/m}$. (b) Un ressort de liaison vaut grossièrement $K \approx
+Ea$ avec $E$ le module d'Young~: justifier par analyse dimensionnelle
+d'une \omterm{def:b3:crystalline-solids:lattice}{maille} étirée. (c) Pour le cuivre ($E = \qty{1.2e11}{Pa}$,
+$a = \qty{2.55}{\angstrom}$ interatomique, $m =
+\qty{1.05e-25}{kg}$)~: estimer $K$ et $v$, et comparer aux
+$\sim\qty{4000}{m/s}$ mesurés. (d) Pourquoi les cristaux rigides et
+légers (le diamant) portent-ils à la fois le son le plus rapide et les
+températures de Debye les plus hautes~?
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b3:crystalline-solids:10}
+La vie au bord de zone. (a) Montrer que la vitesse de groupe
+$\dd\omega/\dd k$ s'annule en $k = \pi/a$. (b) Écrire les
+déplacements atomiques là-bas ($u_n \propto (-1)^n$) et décrire le
+mouvement. (c) Interpréter~: la longueur d'onde $2a$ satisfait la
+condition de Bragg sur la chaîne elle-même --- l'onde est sa propre
+expérience de diffraction. (d) Évaluer la fréquence de coupure
+$\omega_{\text{max}} = 2\sqrt{K/m}$ pour les nombres du cuivre de
+\cref{exo:b3:crystalline-solids:9} et la situer sur l'échelle du
+spectre électromagnétique.
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b3:crystalline-solids:11}
+Deux atomes par \omterm{def:b3:crystalline-solids:lattice}{maille}. Dans une chaîne diatomique (masses
+$m \ne M$), la dispersion se scinde en une branche \emph{acoustique}
+(voisins au pas~: le son) et une branche \emph{optique} (les deux
+sous-réseaux battant l'un contre l'autre), séparées par un gap
+interdit. (a) Pourquoi le mode optique peut-il, dans un \omterm{def:b3:crystalline-solids:lattice}{cristal}
+ionique, se coupler directement à la lumière~? (b) Estimer sa
+fréquence pour NaCl ($K \approx
+\qty{25}{N/m}$, masse réduite de la paire Na--Cl) et la longueur
+d'onde correspondante. (c) Expliquer ainsi pourquoi le sel,
+transparent dans le visible, est opaque dans l'infrarouge lointain
+(reststrahlen). (d) Pourquoi un tel gap n'existe-t-il pas pour la
+chaîne monoatomique~?
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b3:crystalline-solids:12}
+Reconstruire Debye. Le \omterm{thm:b3:photons-phonons:debye}{modèle de Debye} du
+\cref{ch:b3:photons-phonons} n'a gardé que $\omega = vk$ jusqu'à une
+coupure ajustée au comptage des modes~:
+$k_{\text{D}} = (6\pi^2n)^{1/3}$. (a) Justifier le comptage~: $N$
+atomes, $3N$ modes. (b) Pour le cuivre ($n = \qty{8.5e28}{m^{-3}}$,
+vitesse du son moyenne $v \approx \qty{2700}{m/s}$), calculer
+$k_{\text{D}}$ et $\Theta_{\text{D}} =
+\hbar vk_{\text{D}}/k_{\text{B}}$~; comparer aux \qty{343}{K}
+calorimétriques. (c) Quel trait de la dispersion réelle (la figure de
+ce chapitre) la droite de Debye manque-t-elle, et à quelles
+températures cela compte-t-il~? (d) Expliquer en une phrase pourquoi
+$\Theta_{\text{D}}$ et la coupure de bord de zone de
+\cref{exo:b3:crystalline-solids:10} sont la même physique en deux
+tenues.
+\end{exercise}
+
+\section{Problème~: la limaille du musée}
+
+\begin{problem}\label{pb:b3:crystalline-solids:1}
+\emph{La limaille du musée.} Un musée maritime récupère un lingot
+corrodé d'une épave du dix-huitième siècle et envoie à votre
+laboratoire quelques milligrammes de limaille~: métal précieux, mais
+lequel~? Votre diffractomètre à poudre utilise les rayons X
+K$\alpha$ du cuivre, $\lambda = \qty{1.5406}{\angstrom}$. Le
+détecteur, en balayant l'angle de déviation $2\theta$, trouve des
+anneaux intenses en $2\theta =
+38.1^\circ$, $44.3^\circ$, $64.4^\circ$ et $77.5^\circ$.
+
+\medskip\noindent\textbf{Partie I --- Lire les anneaux.}
+
+\begin{enumerate}
+  \item Énoncer la \omterm{prop:b3:crystalline-solids:bragg}{loi de Bragg} et expliquer, en une phrase chacun,
+        les rôles de la lumière monochromatique et des grains
+        orientés au hasard de la poudre.
+  \item Convertir les quatre anneaux en $\theta$ et calculer
+        $\sin^2\theta$ pour chacun.
+  \item Pour un \omterm{def:b3:crystalline-solids:lattice}{cristal} cubique, montrer que la \omterm{prop:b3:crystalline-solids:bragg}{loi de Bragg} donne
+        $\sin^2\theta = (\lambda^2/4a^2)(h^2 + k^2 + l^2)$.
+  \item Diviser vos quatre valeurs de $\sin^2\theta$ par la plus
+        petite~: montrer que les rapports valent à peu près
+        $1 : 1.33 : 2.67 : 3.67$, soit $3 : 4 : 8 : 11$ sur 3.
+  \item Les cristaux cfc ne réfléchissent que si $h, k, l$ sont tous
+        pairs ou tous impairs~: vérifier que $(111)$, $(200)$,
+        $(220)$, $(311)$ --- sommes 3, 4, 8, 11 --- conviennent, et
+        que les sommes manquantes (1, 2, 5, 6, 7) confirment le cfc
+        contre le cubique simple.
+  \item Pourquoi un métal cc (sommes autorisées 2, 4, 6, 8, \dots)
+        montre-t-il une empreinte différente --- et pourquoi ce jeu
+        de parité, plutôt que les angles absolus, est-il
+        l'identifiant robuste~?
+  \item Expliquer pourquoi les anneaux s'affinent quand les grains
+        grossissent~: que fait à une réflexion de Bragg une
+        cristallite large de cinq atomes~?
+\end{enumerate}
+
+\medskip\noindent\textbf{Partie II --- Nommer le métal.}
+
+\begin{enumerate}[resume]
+  \item À partir de chaque anneau, calculer le \omterm{def:b3:crystalline-solids:lattice}{paramètre de maille}
+        $a$ par $a = \lambda\sqrt{h^2+k^2+l^2}/2\sin\theta$.
+  \item Moyenner vos quatre valeurs et donner $a$ à trois chiffres
+        significatifs.
+  \item Avec 4 atomes par \omterm{def:b3:crystalline-solids:lattice}{maille} cfc, exprimer la masse volumique en
+        fonction de $a$ et de la masse molaire $M$.
+  \item Les candidats précieux cfc~: l'argent
+        ($M = \qty{107.9}{g/mol}$, $\rho = \qty{10.5}{g/cm^3}$),
+        l'or ($197.0$, $19.3$), le platine ($195.1$, $21.4$).
+        Calculer la masse volumique que votre $a$ prédit pour
+        chaque $M$ candidat et identifier le lingot.
+  \item Le \omterm{def:b3:crystalline-solids:lattice}{paramètre de maille} de l'or vaut
+        $\qty{4.08}{\angstrom}$ --- presque identique à celui de
+        l'argent. Quelle mesure unique de ce problème les sépare
+        malgré tout, et pourquoi est-elle insensible à la
+        coïncidence~?
+  \item Le musée demande une vérification non destructive sur le
+        lingot entier. En proposer une (la densité par Archimède
+        convient) et la réconcilier avec votre réponse
+        microscopique.
+\end{enumerate}
+
+\medskip\noindent\textbf{Partie III --- Le \omterm{def:b3:crystalline-solids:lattice}{cristal} en mouvement.}
+
+\begin{enumerate}[resume]
+  \item L'argent tiède vibre~: chaque atome s'agite autour de son
+        site avec $\langle x^2\rangle \propto T$ (équipartition sur
+        les ressorts de liaison). Pourquoi cela n'élargit-il
+        \emph{pas} les anneaux de Bragg~?
+  \item Cela les \emph{affaiblit} pourtant~: les ondes diffusées par
+        des atomes déplacés perdent leur synchronie. Dites
+        qualitativement comment l'intensité doit se comporter quand
+        $T$ monte (l'effet Debye--Waller).
+  \item Estimer le ressort de liaison de l'argent~: $K \approx Ea$
+        avec $E = \qty{8.3e10}{Pa}$, $a = \qty{2.89}{\angstrom}$
+        entre plus proches voisins.
+  \item Avec $m = \qty{1.79e-25}{kg}$, calculer l'échelle de vitesse
+        du son $v = a\sqrt{K/m}$ et comparer aux
+        $\sim\qty{2700}{m/s}$ mesurés de l'argent.
+  \item Estimer le déplacement thermique quadratique moyen à
+        \qty{300}{K} à partir de $\tfrac12K\langle x^2\rangle \sim
+        \tfrac32k_{\text{B}}T$ et le comparer à la longueur de
+        liaison~: quelle fraction cela fait-il~?
+  \item La règle de Lindemann fait fondre un \omterm{def:b3:crystalline-solids:lattice}{cristal} quand cette
+        fraction atteint $\sim10\,\%$~: vérifier la cohérence avec
+        l'argent qui fond à \qty{1235}{K}.
+\end{enumerate}
+
+\medskip\noindent\textbf{Partie IV --- Au-delà du lingot.}
+
+\begin{enumerate}[resume]
+  \item Le chrome est cc avec $a = \qty{2.88}{\angstrom}$~: prédiser
+        le $2\theta$ de son premier anneau (famille (110)) sous les
+        mêmes rayons X.
+  \item Pourquoi les microscopes électroniques diffractent-ils sur
+        les surfaces et les lames minces, tandis que rayons X et
+        neutrons sondent le volume~? (Une phrase sur la force du
+        couplage de chacun à la matière.)
+  \item En 1952, un cliché de diffraction d'une fibre étirée --- un
+        motif en X de taches étalées --- a révélé un pas de
+        \qty{3.4}{\angstrom} empilé le long d'une hélice~: quelle
+        molécule, et pourquoi la diffraction a-t-elle réussi là où
+        les microscopes ne le pouvaient pas~?
+  \item La fonderie fait fondre une éprouvette~: décrire ce que
+        deviennent les anneaux nets dans le diagramme de diffraction
+        du liquide, et ce que cela dit de l'ordre que garde un
+        liquide.
+  \item Un \omterm{def:b3:crystalline-solids:lattice}{quasi-cristal} diffracte des taches nettes à symétrie
+        d'ordre cinq --- impossible pour tout \omterm{def:b3:crystalline-solids:lattice}{réseau} périodique. Que
+        certifie néanmoins son diagramme net sur son ordre~?
+  \item Résumer l'identification en trois lignes~: rapports des
+        anneaux $\to$ cfc~; $a = \qty{4.09}{\angstrom}$ $+$ masse
+        volumique $\to$ argent~; et les vibrations propres du \omterm{def:b3:crystalline-solids:lattice}{cristal}
+        $\to$ pourquoi le musée ne devrait pas vous demander de le
+        radiographier fondu.
+\end{enumerate}
+\end{problem}

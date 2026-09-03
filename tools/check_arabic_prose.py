@@ -278,9 +278,26 @@ def blank_math(text: str, findings: list, path: str) -> str:
             # ordinary TeX and appears in the English sources too; only a
             # leading space, or a trailing one after an ordinary token, is the
             # MT fingerprint we are after ("$P $ और $ Q $").
+            #
+            # A trailing RELATION or BINARY OPERATOR is the same exemption and
+            # was missing here as it was in check_hindi_prose.py. The canon's
+            # idiom closes the math on the operator and lets the operand
+            # follow outside as text or a macro -- "$\lambda_{\max}T = $ const",
+            # "$\Delta^{++} = $ uuu". Six such spans exist in the Book 5
+            # ENGLISH source, so the rule fired on prose no translator may
+            # touch: id_apply's math census requires the span byte-identical
+            # to English, and this gate demanded it change. Predicted from the
+            # Hindi fix and confirmed by the Arabic Book 5 agent, 2026-09-03,
+            # which had worked around it by post-editing an empty group
+            # ("= {}$") into six spans.
+            #
+            # It cannot mask the fingerprint it exists to catch: MT spacing
+            # damage leaves the space after an ordinary TOKEN ("$P $"), never
+            # after a dangling relation.
             bad_lead = bool(body) and body[0] == " "
             bad_trail = (bool(body) and body[-1] == " "
-                         and not re.search(r"\\[A-Za-z]+\s*$", body))
+                         and not re.search(r"\\[A-Za-z]+\s*$", body)
+                         and not re.search(r"[=+\-<>*/~]\s*$", body))
             if dollars == 1 and (bad_lead or bad_trail):
                 findings.append(
                     (path, line_of(text, i), "math-space",

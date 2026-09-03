@@ -1,0 +1,661 @@
+\chapter{Mecânica dos meios contínuos e elasticidade}\label{ch:b3:continuum-elasticity}
+
+Encoste o ouvido num longo trilho de aço enquanto um operário distante
+o golpeia: você ouve duas batidas --- uma pelo aço, outra pelo ar,
+separadas por um segundo ou mais. Rocha, aço, osso e borracha
+transmitem forças e ondas como um fluido transmite pressão, mas com
+algo que nenhum fluido tem: resistem a \emph{mudanças de forma}, e não
+apenas a mudanças de volume. O volume do segundo ano construiu a
+mecânica dos fluidos sobre duas ideias, a partícula material e o campo
+de pressão; este capítulo as estende aos sólidos. O deslocamento de
+cada partícula torna-se um campo, sua distorção local uma
+\emph{deformação}, as forças internas uma \emph{tensão}, e entre elas
+está a carteira de identidade do sólido, a \omterm{thm:b3:continuum-elasticity:hooke}{lei de Hooke} com suas duas
+constantes elásticas. O proveito vai do cotidiano --- por que os cabos
+se alongam, por que as garrafas estouram, como um trampolim se verga
+--- ao planetário: os terremotos enviam pela Terra exatamente os dois
+tipos de onda elástica que este capítulo prevê, e seus tempos de
+chegada foram a primeira sondagem já feita do interior do nosso
+planeta.
+
+\section{Deformação: descrever a distorção}
+
+\begin{definition}[Campo de deslocamentos e tensor de deformações]\label{def:b3:continuum-elasticity:strain}
+\index{campo de deslocamentos}\index{tensor de deformações}\index{dilatação}
+Quando um sólido se deforma, a partícula inicialmente em $\vect r$ vai
+para $\vect r + \vect u(\vect r)$: $\vect u$ é o
+\emph{campo de deslocamentos}. Para pequenas deformações, a distorção
+local é medida pelo \emph{tensor de deformações}, o arranjo simétrico
+\[
+\varepsilon_{ij} = \frac12\Big(
+ \frac{\partial u_i}{\partial x_j} + \frac{\partial u_j}{\partial x_i}
+\Big) , \qquad i, j \in \{x, y, z\} .
+\]
+Uma componente diagonal $\varepsilon_{xx}$ é o alongamento relativo do
+material ao longo de $x$ (adimensional; por exemplo, $\num{e-3}$ para
+um cabo de aço em serviço); uma componente fora da diagonal
+$\varepsilon_{xy}$ é a metade do fechamento do ângulo entre as
+direções materiais $x$ e $y$ --- um \emph{cisalhamento}. O traço é a
+variação relativa de volume, a \emph{dilatação}:
+\[
+\frac{\delta V}{V} = \varepsilon_{xx} + \varepsilon_{yy} +
+\varepsilon_{zz} = \operatorname{div}\vect u .
+\]
+\end{definition}
+
+\begin{example}[Três deformações elementares]\label{ex:b3:continuum-elasticity:elementary}
+\omterm{def:b3:continuum-elasticity:strain}{Dilatação} uniforme $\vect u = \alpha\vect r$: $\varepsilon_{ij} =
+\alpha\,\delta_{ij}$, variação de volume $3\alpha$, sem cisalhamento.
+Cisalhamento simples $\vect u = (\gamma y, 0, 0)$: $\varepsilon_{xy} = \gamma/2$,
+todas as componentes diagonais nulas --- a forma muda, o volume não.
+Rotação rígida $\vect u = (-\omega y, \omega x, 0)$: $\varepsilon_{ij} = 0$
+identicamente --- a parte antissimétrica de
+$\partial u_i/\partial x_j$, descartada pela simetrização, é
+exatamente a parte que gira sem deformar. A deformação mede apenas a
+distorção.
+\end{example}
+
+\begin{omfigure}
+\begin{tikzpicture}[font=\small, >=Stealth]
+  % stretch
+  \begin{scope}
+    \draw[gray, dashed] (0,0) rectangle (1.6,1.6);
+    \draw[omDef, thick] (-0.2,0.16) rectangle (1.8,1.44);
+    \draw[->] (2.0,0.8) -- (2.55,0.8);
+    \draw[->] (-0.4,0.8) -- (-0.95,0.8);
+    \node at (0.8,-0.85) {alongamento $\varepsilon_{xx} > 0$,};
+    \node at (0.8,-1.3) {contração $\varepsilon_{yy} < 0$};
+  \end{scope}
+  % shear
+  \begin{scope}[xshift=5.3cm]
+    \draw[gray, dashed] (0,0) rectangle (1.6,1.6);
+    \draw[omThm, thick] (0,0) -- (1.6,0) -- (2.0,1.6) -- (0.4,1.6) -- cycle;
+    \draw[->] (0.9,1.8) -- (1.5,1.8);
+    \draw[->] (0.7,-0.2) -- (0.1,-0.2);
+    \node at (0.9,-0.85) {cisalhamento $\varepsilon_{xy} = \gamma/2$:};
+    \node at (0.9,-1.3) {a forma muda, o volume não};
+  \end{scope}
+  % rotation
+  \begin{scope}[xshift=10.6cm]
+    \draw[gray, dashed] (0,0) rectangle (1.6,1.6);
+    \begin{scope}[rotate around={14:(0.8,0.8)}]
+      \draw[omExo, thick] (0,0) rectangle (1.6,1.6);
+    \end{scope}
+    \draw[->] (1.75,1.5) arc (30:80:1.1);
+    \node at (0.8,-0.85) {rotação: $\varepsilon_{ij} = 0$,};
+    \node at (0.8,-1.3) {nenhuma deformação};
+  \end{scope}
+\end{tikzpicture}
+
+{\small O \omterm{def:b3:continuum-elasticity:strain}{tensor de deformações} vê apenas a distorção verdadeira:
+alongamento (componentes diagonais), cisalhamento (componentes fora da
+diagonal) --- e uma rotação rígida, de modo algum.}
+\end{omfigure}
+
+\section{Tensão: descrever as forças internas}
+
+\begin{definition}[Tração e tensor de tensões]\label{def:b3:continuum-elasticity:stress}
+\index{tensor de tensões}\index{tração}
+Corte o sólido, em pensamento, ao longo de uma pequena superfície
+$\dd S$ de normal $\vect n$: o material do lado $+\vect n$ puxa o
+outro lado com uma força
+$\dd\vect F = \boldsymbol\sigma(\vect n)\,\dd S$ --- a \emph{tração}.
+Essa força depende linearmente de $\vect n$ (Cauchy) e por isso é
+codificada pelo \emph{tensor de tensões} $\sigma_{ij}$:
+\[
+\dd F_i = \sum_j \sigma_{ij}\,n_j\,\dd S ,
+\]
+em pascals. $\sigma_{xx}$ é um puxão ($> 0$: tração) ou um empurrão
+($< 0$: compressão) através de uma face normal a $x$; $\sigma_{xy}$ é
+uma força ao longo de $x$ suportada por uma face normal a $y$ --- uma
+tensão de cisalhamento. Um fluido em repouso é o caso particular
+$\sigma_{ij} = -p\,\delta_{ij}$: a pressão empurra igualmente cada face
+e não cisalha nenhuma, e é por isso que os fluidos escoam --- não
+conseguem suportar cisalhamento estático.
+\end{definition}
+
+\begin{proposition}[Equilíbrio e simetria]\label{prop:b3:continuum-elasticity:equilibrium}
+Num sólido em equilíbrio sob uma força de volume $\vect f$ por unidade
+de volume (por exemplo, $\rho\vect g$),
+\[
+\sum_j\frac{\partial\sigma_{ij}}{\partial x_j} + f_i = 0
+\]
+em todo ponto interior; e o \omterm{def:b3:continuum-elasticity:stress}{tensor de tensões} é simétrico,
+$\sigma_{ij} = \sigma_{ji}$.
+\end{proposition}
+
+\begin{proof}[Demonstração parcial]
+Faça o balanço de forças num pequeno cubo de aresta $a$: as \omterm{def:b3:continuum-elasticity:stress}{trações}
+nas duas faces normais a $x$ diferem de $a\,\partial_x\sigma_{ix}$ por
+unidade de área, e o mesmo vale para os outros pares; a força de
+superfície líquida por unidade de volume é
+$\sum_j\partial_j\sigma_{ij}$, que deve cancelar $f_i$ --- a mesma
+contabilidade que deu $-\vect\nabla p + \rho\vect g = \vect 0$ na
+estática dos fluidos do volume do primeiro ano. Simetria: o torque das
+tensões de cisalhamento em torno do centro do cubo vale $(\sigma_{xy} -
+\sigma_{yx})a^3$ em ordem dominante, ao passo que seu momento de
+inércia escala como $a^5$; uma tensão assimétrica faria os cubos
+pequenos girarem infinitamente rápido. O argumento contínuo completo é
+admitido.
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}[font=\small, >=Stealth, scale=1.05]
+  % cube in light 3D
+  \coordinate (A) at (0,0); \coordinate (B) at (2.4,0);
+  \coordinate (C) at (2.4,2.4); \coordinate (D) at (0,2.4);
+  \coordinate (E) at (0.9,0.75); \coordinate (F) at (3.3,0.75);
+  \coordinate (G) at (3.3,3.15);
+  \draw[thick] (A) -- (B) -- (C) -- (D) -- cycle;
+  \draw[thick] (B) -- (F) -- (G) -- (C);
+  \draw[thick] (D) -- (0.9,3.15) -- (G);
+  \draw[thick, dashed] (A) -- (E) -- (F);
+  \draw[thick, dashed] (E) -- (0.9,3.15);
+  % normal stress on +x face
+  \draw[->, omThm, very thick] (2.85,1.55) -- (4.05,1.55);
+  \node[omThm, anchor=west] at (4.1,1.55) {$\sigma_{xx}$};
+  % shear on +x face
+  \draw[->, omDef, very thick] (2.85,1.9) -- (2.85,3.0);
+  \node[omDef, anchor=south] at (2.85,3.05) {$\sigma_{yx}$};
+  \draw[->, omExo, very thick] (3.1,1.3) -- (2.5,0.85);
+  \node[omExo, anchor=east] at (2.35,0.48) {$\sigma_{zx}$};
+  \node at (1.2,1.2) {face $\perp x$};
+  \node[align=left, anchor=west, font=\footnotesize] at (5.6,2.3)
+    {$\sigma_{xx}$: tração/compressão\\[2pt]
+     $\sigma_{yx}$, $\sigma_{zx}$: tensões de cisalhamento\\[2pt]
+     suportadas pela mesma face};
+\end{tikzpicture}
+
+{\small As três componentes da \omterm{def:b3:continuum-elasticity:stress}{tração} sobre uma face de um cubo
+material: uma normal (\omterm{def:b3:continuum-elasticity:stress}{tração} ou compressão), duas tangenciais
+(cisalhamento). As nove componentes das três faces formam o \omterm{def:b3:continuum-elasticity:stress}{tensor de
+tensões}.}
+\end{omfigure}
+
+\section{A lei de Hooke e as constantes elásticas}
+
+\begin{theorem}[Elasticidade linear isotrópica]\label{thm:b3:continuum-elasticity:hooke}
+\index{lei de Hooke}\index{módulo de Young}\index{coeficiente de Poisson}
+Para pequenas deformações, um sólido isotrópico responde linearmente: a
+tensão é proporcional à deformação,
+\[
+\sigma_{ij} = \lambda\,(\varepsilon_{xx} + \varepsilon_{yy} +
+\varepsilon_{zz})\,\delta_{ij} + 2\mu\,\varepsilon_{ij} ,
+\]
+com duas constantes do material, os \emph{coeficientes de Lamé}
+$\lambda$ e $\mu$ ($\mu$ também se escreve $G$, o \emph{módulo de
+cisalhamento}). No ensaio de \omterm{def:b3:continuum-elasticity:stress}{tração} simples --- uma barra puxada ao
+longo de $x$, livre nas laterais --- a mesma lei toma a forma do
+engenheiro
+\[
+\varepsilon_{xx} = \frac{\sigma_{xx}}{E} , \qquad
+\varepsilon_{yy} = \varepsilon_{zz} = -\nu\,\varepsilon_{xx} ,
+\]
+definindo o \emph{\omterm{thm:b3:continuum-elasticity:hooke}{módulo de Young}} $E$ (rigidez ao alongamento) e o
+\emph{\omterm{thm:b3:continuum-elasticity:hooke}{coeficiente de Poisson}} $\nu$ (contração lateral), com
+\[
+\mu = \frac{E}{2(1 + \nu)} , \qquad
+\lambda = \frac{E\nu}{(1 + \nu)(1 - 2\nu)} .
+\]
+Este é o ``tal a extensão, tal a força'' de Hooke (1678), promovido a
+tensor. Vale até um \emph{limite elástico} que depende do material.
+\end{theorem}
+\admitted
+
+\begin{remark}[Ordens de grandeza]\label{rem:b3:continuum-elasticity:orders}
+$E \approx \qty{200}{GPa}$ para o aço, \qty{70}{GPa} para o alumínio e
+o vidro de janela, \qty{50}{GPa} para o granito, \qty{15}{GPa} para o
+osso e o concreto, \qty{10}{GPa} para a madeira na direção das fibras
+e apenas alguns MPa para a borracha --- cinco ordens de grandeza, o
+intervalo que vai de uma ponte a um elástico. $\nu$ está entre $0$ (a
+cortiça, quase) e $1/2$ (a borracha): $\nu = 1/2$ significa deformação
+que preserva o volume, e $\nu \approx 0.3$ é típico dos metais. Uma
+deformação de $\num{e-3}$ no aço já significa
+$\sigma = \qty{200}{MPa}$, próxima da tensão de escoamento das ligas
+comuns: a elasticidade cotidiana vive abaixo de uma parte em mil.
+\end{remark}
+
+\begin{example}[Um cabo de elevador]\label{ex:b3:continuum-elasticity:cable}
+Um cabo de aço de \qty{60}{m} e seção \qty{2.0}{cm^2} sustenta uma
+cabine de \qty{1000}{kg}: $\sigma = mg/S = \qty{49}{MPa}$, $\varepsilon =
+\sigma/E = \num{2.5e-4}$, alongamento $\varepsilon L = \qty{15}{mm}$
+--- e o cabo se comporta como uma mola de constante $k = ES/L =
+\qty{6.7e5}{N/m}$: a fórmula $k = ES/L$ é como um meio contínuo
+devolve as molas do volume do primeiro ano.
+\end{example}
+
+\begin{proposition}[Energia elástica]\label{prop:b3:continuum-elasticity:energy}
+\index{energia elástica}
+Um sólido deformado armazena, por unidade de volume, a densidade de
+energia
+\[
+w = \frac12\sum_{i,j}\sigma_{ij}\,\varepsilon_{ij}
+\qquad\text{(tração simples: } w = \tfrac12 E\varepsilon^2 =
+\sigma^2/2E\text{)} ,
+\]
+a versão tridimensional de $\tfrac12 kx^2$.
+\end{proposition}
+
+\begin{proof}[Demonstração parcial]
+Em \omterm{def:b3:continuum-elasticity:stress}{tração} simples, levar a tensão de $0$ a $\sigma$ realiza o trabalho
+por unidade de volume $\int_0^\varepsilon\sigma'\,\dd\varepsilon' =
+\int_0^\varepsilon E\varepsilon'\,\dd\varepsilon' = \tfrac12
+E\varepsilon^2$ --- a área sob a reta tensão--deformação, exatamente
+como para uma mola. A forma quadrática geral segue por superposição
+das componentes; admitida.
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}[font=\small, >=Stealth]
+  % traction test sketch
+  \begin{scope}[yshift=0.4cm]
+    \draw[gray, dashed] (0,0) rectangle (3.2,1.0);
+    \draw[omDef, thick] (-0.25,0.07) rectangle (3.45,0.93);
+    \draw[->, very thick] (3.65,0.5) -- (4.55,0.5) node[right] {$F$};
+    \draw[->, very thick] (-0.45,0.5) -- (-1.35,0.5) node[left] {$F$};
+    \draw[<->] (0,-0.35) -- (3.2,-0.35);
+    \node at (1.6,-0.7) {$L(1 + \varepsilon)$};
+    \node at (1.6,1.55) {seção $S$, $\sigma = F/S$};
+  \end{scope}
+  % stress-strain curve
+  \begin{scope}[xshift=7.3cm, yshift=-0.6cm]
+  \begin{axis}[omaxis, axis x line=bottom, axis y line=left,
+    width=6.4cm, height=4.6cm, xmin=0, xmax=10, ymin=0, ymax=1.25,
+    xlabel={$\varepsilon$}, ylabel={$\sigma$},
+    xlabel style={at={(axis description cs:0.5,-0.1)}, anchor=north},
+    xtick=\empty, ytick=\empty, clip=false]
+    \addplot[omDef, very thick, domain=0:2] {0.4*x};
+    \addplot[omExo, thick, domain=2:8.7, samples=40]
+      {0.8 + 0.32*(1-exp(-(x-2)/2.2))};
+    \fill (axis cs:2,0.8) circle (1.6pt);
+    \draw (axis cs:2.05,0.83) -- (axis cs:2.55,1.1);
+    \node[font=\scriptsize, anchor=west] at (axis cs:2.55,1.14) {limite elástico};
+    \node[font=\scriptsize, omExo, anchor=west] at (axis cs:4.6,0.87) {escoamento plástico};
+    \node[font=\scriptsize, anchor=west] at (axis cs:8.55,1.2) {ruptura};
+    \fill[omThm] (axis cs:8.7,1.115) circle (1.6pt);
+    \node[font=\scriptsize, omDef, rotate=38, anchor=south] at (axis cs:1.15,0.48) {inclinação $E$};
+  \end{axis}
+  \end{scope}
+\end{tikzpicture}
+
+{\small À esquerda: o ensaio de \omterm{def:b3:continuum-elasticity:stress}{tração} define $E$ (alongamento
+relativo) e $\nu$ (afinamento lateral, exagerado). À direita: a curva
+tensão--deformação de um metal --- elasticidade linear até o limite
+elástico, depois escoamento plástico irreversível, depois ruptura.
+Este capítulo vive na parte reta.}
+\end{omfigure}
+
+\begin{method}[Resolver problemas de elasticidade linear]\label{met:b3:continuum-elasticity:method}
+(1) Identifique a geometria e o carregamento; adivinhe quais
+componentes de tensão são não nulas (uma barra puxada: só
+$\sigma_{xx}$; um fio torcido: cisalhamento; um casco pressurizado:
+\omterm{def:b3:continuum-elasticity:stress}{trações} tangenciais). (2) Escreva o balanço de forças sobre uma peça
+bem escolhida --- um semicilindro, uma fatia, um cubo. (3) Converta
+tensão em deformação pela \omterm{thm:b3:continuum-elasticity:hooke}{lei de Hooke} e deformação em deslocamento
+por integração. (4) Energias por $w = \sigma^2/2E$ (ou
+$\sigma^2/2G$ em cisalhamento). (5) Verifique sempre que a deformação
+permanece pequena e a tensão abaixo do limite elástico --- do
+contrário, a resposta descreve um sólido que já não existe.
+\end{method}
+
+\section{Ondas elásticas}
+
+\begin{proposition}[Os dois sons de um sólido]\label{prop:b3:continuum-elasticity:waves}
+\index{ondas elásticas}\index{onda P}\index{onda S}
+Num sólido elástico ilimitado de densidade $\rho$, as pequenas
+perturbações se propagam como dois tipos independentes de onda: as
+ondas \emph{longitudinais} (P), em que a matéria oscila ao longo da
+direção de propagação por compressão e \omterm{def:b3:continuum-elasticity:strain}{dilatação}, com velocidade
+\[
+c_{\text{P}} = \sqrt{\frac{\lambda + 2\mu}{\rho}} ,
+\]
+e as ondas \emph{transversais} (S), em que a matéria cisalha de lado, com
+velocidade
+\[
+c_{\text{S}} = \sqrt{\frac{\mu}{\rho}} < c_{\text{P}} .
+\]
+Um fluido tem $\mu = 0$: não há \omterm{prop:b3:continuum-elasticity:waves}{ondas S} --- o cisalhamento não pode ser
+transmitido --- e a velocidade P se reduz à velocidade do som do volume
+do segundo ano. Para $\nu = 1/4$ (rocha típica), $\lambda = \mu$ e $c_{\text{P}} =
+\sqrt3\,c_{\text{S}}$.
+\end{proposition}
+
+\begin{proof}[Demonstração parcial]
+Tome uma perturbação plana $\vect u = \vect u(x, t)$. A lei de Newton
+por unidade de volume é $\rho\,\partial_t^2u_i = \sum_j\partial_j\sigma_{ij}$
+(a equação de equilíbrio com a inércia restituída). Para a componente
+longitudinal, a \omterm{thm:b3:continuum-elasticity:hooke}{lei de Hooke} dá $\sigma_{xx} = (\lambda +
+2\mu)\,\partial_xu_x$ (as deformações laterais se anulam numa onda
+plana, pois a matéria vizinha proíbe o alívio lateral), de modo que
+$\rho\,\partial_t^2u_x = (\lambda + 2\mu)\,\partial_x^2u_x$:
+d'Alembert com velocidade $c_{\text{P}}$. Para a componente
+transversal, $\sigma_{yx} =
+2\mu\varepsilon_{yx} = \mu\,\partial_xu_y$, de onde
+$\rho\,\partial_t^2u_y = \mu\,\partial_x^2u_y$: velocidade $c_{\text{S}}$.
+Que uma perturbação geral se separe nessas duas famílias é admitido.
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}[font=\small, >=Stealth]
+  % P wave: compressions along x
+  \begin{scope}
+    \foreach \x/\s in {0/1.0, 0.42/0.72, 0.76/0.5, 1.04/0.5, 1.32/0.72,
+                       1.74/1.0, 2.26/1.28, 2.86/1.44, 3.46/1.28, 3.98/1.0,
+                       4.4/0.72, 4.74/0.5, 5.02/0.5, 5.3/0.72, 5.72/1.0,
+                       6.24/1.28, 6.84/1.44, 7.44/1.28, 7.96/1.0}
+      \draw[omDef, thick] (\x,0) -- (\x,1.5);
+    \draw[->, very thick] (8.4,0.75) -- (9.2,0.75) node[right] {$c_{\text{P}}$};
+    \draw[<->, omThm, thick] (0.6,-0.35) -- (1.5,-0.35);
+    \node[anchor=west] at (3.6,-0.42) {a matéria se move $\parallel$ à propagação};
+  \end{scope}
+  % S wave: sheared line
+  \begin{scope}[yshift=-3.3cm]
+    \draw[omExo, thick, domain=0:8, samples=90, variable=\t]
+      plot ({\t}, {0.55*sin(deg(\t*0.785))+0.75});
+    \foreach \x in {0.5,1.5,2.5,3.5,4.5,5.5,6.5,7.5}
+      \draw[->, omExo!70] (\x,{0.55*sin(deg(\x*0.785))+0.75}) --
+        (\x,{0.9*sin(deg(\x*0.785+25))+0.75});
+    \draw[->, very thick] (8.4,0.75) -- (9.2,0.75) node[right] {$c_{\text{S}}$};
+    \node at (2.9,-0.5) {a matéria se move $\perp$ à propagação};
+  \end{scope}
+\end{tikzpicture}
+
+{\small As duas \omterm{prop:b3:continuum-elasticity:waves}{ondas elásticas}. P: os planos de matéria se juntam e se
+afastam ao longo da direção de percurso (onda de compressão --- existe
+em sólidos, líquidos e gases). S: a matéria cisalha de lado (existe
+apenas onde o cisalhamento encontra resistência: nos sólidos).}
+\end{omfigure}
+
+\begin{example}[O trilho e o terremoto]\label{ex:b3:continuum-elasticity:rail}
+Aço: $c_{\text{P}} \approx \qty{5.9}{km/s}$ --- uma pancada num trilho
+a \qty{2}{km} chega pelo aço em \qty{0.34}{s} e pelo ar
+($\qty{340}{m/s}$) em \qty{5.9}{s}: duas batidas. Granito
+($E = \qty{75}{GPa}$, $\nu = 1/4$, $\rho =
+\qty{2.7e3}{kg/m^3}$): $c_{\text{P}} \approx \qty{5.8}{km/s}$,
+$c_{\text{S}} \approx \qty{3.3}{km/s}$. Um terremoto, portanto, se
+anuncia duas vezes: um solavanco P agudo e, segundos depois, a
+sacudida S mais lenta e mais forte --- e o atraso mede a distância
+(\cref{pb:b3:continuum-elasticity:1}). Os sistemas de alerta precoce de
+terremotos vivem dentro desse atraso: a \omterm{prop:b3:continuum-elasticity:waves}{onda P}, e a mensagem de rádio
+que ela dispara, correm mais que a \omterm{prop:b3:continuum-elasticity:waves}{onda S}, que é a que causa o dano.
+\end{example}
+
+\begin{remark}[Cordas, hastes e som recuperados]\label{rem:b3:continuum-elasticity:limits}
+As ondas do volume do segundo ano são todas limites deste capítulo. Uma
+haste fina, livre para afinar lateralmente, transporta ondas de
+compressão a $\sqrt{E/\rho}$ (mais lentas que $c_{\text{P}}$: o alívio
+lateral amolece a resposta); uma corda esticada transporta ondas
+transversais a $\sqrt{T/\rho_\ell}$, com a \omterm{def:b3:continuum-elasticity:stress}{tração} no papel da rigidez;
+um fluido guarda apenas $\lambda$ --- seu módulo de compressibilidade
+--- e a única velocidade do som $\sqrt{\lambda/\rho}$.
+\end{remark}
+
+\begin{omfigure}
+\includegraphics[width=0.58\linewidth]{images/book5/ai/b5-03-diving-board.png}
+
+{\small Um trampolim carregado: tensão e deformação distribuídas por um meio contínuo, curvado no perfil cúbico de deflexão da viga em balanço --- e uma mola prestes a devolver a sua \omterm{prop:b3:continuum-elasticity:energy}{energia elástica}.}
+\end{omfigure}
+
+\section{Exercícios}
+
+\begin{exercise}[$\star$]\label{exo:b3:continuum-elasticity:1}
+(a) Verifique as unidades: o que é um pascal em termos de kg, m, s, e
+qual é a unidade da deformação? (b) Um cabo de aço trabalha a $\sigma =
+\qty{200}{MPa}$: calcule sua deformação. (c) Um elástico ($E \approx
+\qty{2}{MPa}$) é esticado ao dobro do comprimento: que ``deformação''
+é essa, e por que o arcabouço deste capítulo não se aplica de fato?
+(d) Ordene pela densidade de \omterm{prop:b3:continuum-elasticity:energy}{energia elástica} armazenada na tensão de
+trabalho: aço a \qty{200}{MPa}, borracha a \qty{1}{MPa}.
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b3:continuum-elasticity:2}
+Calcule o \omterm{def:b3:continuum-elasticity:strain}{tensor de deformações} de cada \omterm{def:b3:continuum-elasticity:strain}{campo de deslocamentos} e
+descreva a deformação: (a) $\vect u = \alpha(x, y, z)$; (b) $\vect u =
+(\gamma y, 0, 0)$; (c) $\vect u = (-\omega y, \omega x, 0)$; (d)
+$\vect u = (\varepsilon x, -\nu\varepsilon y, -\nu\varepsilon z)$ ---
+que experimento o realiza?
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b3:continuum-elasticity:3}
+A base de uma coluna de granito de altura $h$ suporta a tensão $\sigma
+= \rho gh$. (a) Deduza isso da equação de equilíbrio com a gravidade.
+(b) O granito se esmaga por volta de \qty{200}{MPa}: qual é a coluna
+mais alta possível? (c) O Everest tem \qty{8.8}{km} de altura:
+comente. (d) Por que uma montanha pode ser um pouco mais alta que uma
+coluna da sua própria rocha (pense na forma)?
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b3:continuum-elasticity:4}
+Uma haste de aço ($E = \qty{200}{GPa}$, $\nu = 0.30$) é alongada de
+$\varepsilon = \num{e-3}$. (a) Deformação lateral? (b) Variação
+relativa de volume? (c) Para que $\nu$ o volume não mudaria em nada, e
+qual material comum se aproxima disso? (d) Por que $\nu > 1/2$ é
+impossível (considere a compressão hidrostática)?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b3:continuum-elasticity:5}
+Tensão circunferencial. Um cilindro de parede fina (raio $R$,
+espessura da parede $t \ll
+R$) contém uma pressão $p$. (a) Fazendo o balanço de forças sobre um
+semicilindro de comprimento unitário, mostre que a parede suporta a
+tensão tangencial $\sigma_\theta = pR/t$. (b) Mostre que a tensão
+longitudinal (balanço sobre uma seção transversal) é $pR/2t$: um
+cilindro é solicitado duas vezes mais ao redor do que ao longo --- de
+que modo racham as salsichas? (c) Um cilindro de mergulho: $p =
+\qty{200}{bar}$, $R = \qty{9}{cm}$, $t = \qty{5}{mm}$: calcule
+$\sigma_\theta$ e compare com uma tensão de escoamento do aço de
+\qty{700}{MPa}. (d) Por que os tanques de alta pressão têm
+extremidades hemisféricas?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b3:continuum-elasticity:6}
+Um bloco de borracha ($E = \qty{3.0}{MPa}$, $\nu \approx 0.5$), de base $10
+\times \qty{10}{cm}$ e altura \qty{2}{cm}, é colado entre duas placas;
+a placa de cima é empurrada lateralmente com \qty{150}{N}. (a) Calcule
+$G$. (b) A tensão e o ângulo de cisalhamento $\gamma = \sigma_{xy}/G$;
+o deslocamento lateral da placa de cima. (c) Por que $\nu \approx 1/2$
+para a borracha (o que é difícil e o que é fácil para um emaranhado de
+cadeias poliméricas)? (d) Blocos de borracha assim sustentam edifícios
+inteiros em zonas sísmicas: qual propriedade desse apoio protege o
+edifício, a rigidez à compressão ou a maciez ao cisalhamento?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b3:continuum-elasticity:7}
+Uma corda de escalada, comprimento $L = \qty{20}{m}$, seção $S =
+\qty{80}{mm^2}$, módulo efetivo $E = \qty{1.2}{GPa}$. (a) Sua
+constante elástica $k = ES/L$. (b) Um escalador de \qty{80}{kg} cai
+livremente \qty{4}{m} antes que a corda atue: igualando energias,
+encontre o alongamento máximo da corda (resolva a equação do segundo
+grau; despreze, numa primeira passagem, a queda que continua durante a
+frenagem). (c) Deduza a força máxima e a desaceleração máxima em $g$.
+(d) Por que uma corda que segurou uma queda severa deve ser aposentada
+(para onde foi a energia, e o que diz a curva tensão--deformação)?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b3:continuum-elasticity:8}
+Torção. Um fio de raio $a$, comprimento $L$ e módulo de cisalhamento
+$G$ é torcido de um ângulo $\theta$. (a) Mostre que um tubo de raio $r$
+em seu interior sofre o ângulo de cisalhamento $\gamma(r) = r\theta/L$.
+(b) Sua tensão de cisalhamento vale $G\gamma$: integre $r \times$
+tensão sobre a seção para obter o torque restaurador
+$\Gamma = (\pi Ga^4/2L)\,\theta$. (c) O $a^4$: reduza o raio à metade
+e, por que fator cai a rigidez torcional? (d) Essa maciez extrema é a
+razão por que Cavendish (1798) pendurou sua balança de um fio fino:
+para $a = \qty{25}{\micro m}$, $L =
+\qty{1}{m}$, $G = \qty{40}{GPa}$, calcule $C = \pi Ga^4/2L$ e o
+período com uma haste de momento de inércia $I = \qty{5e-4}{kg.m^2}$.
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b3:continuum-elasticity:9}
+(a) A partir da dedução por ondas planas da
+\cref{prop:b3:continuum-elasticity:waves}, calcule $c_{\text{P}}$ e
+$c_{\text{S}}$ para o aço ($E = \qty{200}{GPa}$, $\nu = 0.29$, $\rho =
+\qty{7.85e3}{kg/m^3}$). (b) Compare $c_{\text{P}}$ com a velocidade
+$\sqrt{E/\rho}$ da haste fina e explique a diferença numa frase. (c)
+Para a água ($\mu = 0$, módulo de compressibilidade \qty{2.2}{GPa}): a
+velocidade S e a velocidade P. (d) Em que ângulo o movimento da
+matéria numa \omterm{prop:b3:continuum-elasticity:waves}{onda P} difere do de uma \omterm{prop:b3:continuum-elasticity:waves}{onda S}, e como um sismômetro de
+três componentes as distingue?
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b3:continuum-elasticity:10}
+Flexão. Uma viga é curvada até um raio de curvatura $R$; suas fibras
+internas encurtam, as externas alongam, e uma \emph{superfície neutra}
+intermediária conserva o comprimento. (a) Mostre que a fibra à
+distância $y$ da superfície neutra tem deformação $\varepsilon = y/R$
+e, portanto, tensão $Ey/R$. (b) Somando os momentos sobre a seção
+transversal, mostre que o momento fletor é $M = EI/R$ com
+$I = \int y^2\,\dd S$ (o \emph{momento de segunda ordem}); calcule $I$
+para um retângulo de largura $b$ e altura $h$. (c) O $h^3$: por que uma
+tábua flexionada de chapa cede visivelmente, enquanto a mesma tábua de
+canto parece rígida? Calcule a razão para $b/h = 5$. (d) Para uma viga
+em balanço de comprimento $L$ carregada por $F$ na ponta, a flecha na
+ponta vale $\delta = FL^3/3EI$ (admitido): estime $\delta$ para um
+trampolim ($L = \qty{1.8}{m}$, $b = \qty{50}{cm}$, $h = \qty{3.5}{cm}$,
+madeira $E
+= \qty{12}{GPa}$) sob um saltador de \qty{75}{kg}, e comente.
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b3:continuum-elasticity:11}
+Flambagem. Uma coluna esbelta (comprimento $L$, rigidez à flexão
+$EI$), articulada nas duas extremidades, suporta uma carga axial $P$.
+Suponha que ela se curve lateralmente segundo $y(x)$. (a) Mostre que a
+carga exerce então o momento fletor $M(x) = -Py(x)$ em torno do eixo
+deslocado, de modo que $EI\,y'' = -Py$. (b) Com
+$y(0) = y(L) = 0$, mostre que uma curvatura não nula só se torna
+possível a partir da carga crítica de Euler
+$P_{\text{c}} = \pi^2EI/L^2$. (c) Calcule $P_{\text{c}}$ para uma
+régua de um metro ($b = \qty{3}{cm}$, $h = \qty{1.5}{mm}$, $E = \qty{12}{GPa}$)
+e compare com o empurrão da sua mão. (d) Explique, a partir de $I$,
+por que ossos, bambus e quadros de bicicleta são \emph{tubos}.
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b3:continuum-elasticity:12}
+A velocidade do som num sólido, a partir dos átomos. Modele um sólido
+como cadeias de átomos, com espaçamento $a$, ligados por ``molas'' de
+constante $\kappa$; a massa atômica é $m$. (a) Mostre que esticar a
+cadeia corresponde à \omterm{def:b3:continuum-elasticity:stress}{tração} contínua com $E = \kappa/a$ (conte as molas
+por unidade de área e o alongamento por mola). (b) Mostre que
+$\rho = m/a^3$ e conclua que $c =
+\sqrt{E/\rho} = a\sqrt{\kappa/m}$. (c) Estime $\kappa$ a partir da
+profundidade de uma ligação interatômica ($\sim\qty{3}{eV}$ ao longo de $\sim
+\qty{0.1}{nm}$): $\kappa \sim \qty{50}{N/m}$; com $a =
+\qty{2.5e-10}{m}$ e $m = \qty{1e-25}{kg}$, estime $c$. (d) Compare com
+as velocidades do som medidas em metais e conclua de que é feita a
+elasticidade cotidiana.
+\end{exercise}
+
+\section{Problema: Ouvir a Terra}
+
+\begin{problem}[{Problema de fim de semana --- como os terremotos
+revelaram o núcleo líquido}]\label{pb:b3:continuum-elasticity:1}
+Um único terremoto faz o planeta inteiro ressoar, e as duas \omterm{prop:b3:continuum-elasticity:waves}{ondas
+elásticas} deste capítulo, ao atravessá-lo, radiografam-no. Este
+problema segue a física da \omterm{thm:b3:continuum-elasticity:hooke}{lei de Hooke} no granito até a descoberta,
+feita por Oldham em 1906, de que a Terra tem um núcleo --- com a
+estimativa do seu tamanho por raios retos. Tome, para a rocha da
+crosta e do manto, $E = \qty{75}{GPa}$, $\nu = 1/4$,
+$\rho = \qty{2.7e3}{kg/m^3}$; o raio da Terra é $R_{\text{E}} =
+\qty{6371}{km}$.
+
+\medskip\noindent\textbf{Parte I --- A rocha como sólido elástico.}
+\begin{enumerate}
+  \item Calcule os coeficientes de Lamé $\mu$ e $\lambda$ desta rocha
+        e observe que $\nu = 1/4$ os torna iguais.
+  \item Calcule $c_{\text{P}}$ e $c_{\text{S}}$ e verifique que
+        $c_{\text{P}} = \sqrt3\,c_{\text{S}}$.
+  \item Um terremoto desliza duas faces de rocha por metros em
+        segundos: estime a deformação liberada se um deslizamento de
+        \qty{2}{m} relaxa a rocha numa escala de \qty{50}{km}, e a
+        tensão que se havia acumulado.
+  \item A partir da densidade de energia $w = \tfrac12 E\varepsilon^2$,
+        estime a \omterm{prop:b3:continuum-elasticity:energy}{energia elástica} por metro cúbico e depois a energia
+        num volume de $50 \times 50 \times \qty{20}{km^3}$; compare
+        com um megaton (\qty{4.2e15}{J}).
+  \item Por que a \omterm{prop:b3:continuum-elasticity:waves}{onda S} costuma sacudir os edifícios mais forte que a
+        \omterm{prop:b3:continuum-elasticity:waves}{onda P} (pense na direção do movimento do solo para uma onda
+        que chega de baixo)?
+  \item Em qual das duas ondas o solo muda de volume?
+\end{enumerate}
+
+\medskip\noindent\textbf{Parte II --- As duas chegadas no sismômetro.}
+\begin{enumerate}[resume]
+  \item Uma estação registra a chegada P e, $\Delta t$ mais tarde, a
+        chegada S. Para uma fonte à distância $d$ (curta o bastante
+        para raios retos), mostre que
+        \[
+        d = \frac{\Delta t}{\dfrac{1}{c_{\text{S}}} -
+        \dfrac{1}{c_{\text{P}}}} .
+        \]
+  \item Avalie o coeficiente: quantos quilômetros por segundo de
+        atraso S--P?
+  \item Uma estação mede $\Delta t = \qty{28}{s}$: a que distância
+        está o terremoto?
+  \item Uma estação dá uma distância, não um lugar: quantas estações
+        determinam o epicentro, e como, geometricamente?
+  \item As sirenes de alerta precoce do Japão soam segundos antes da
+        sacudida forte: para um tremor \qty{80}{km} abaixo de uma
+        cidade, quanto aviso o próprio atraso P--S fornece?
+  \item Os alertas modernos acrescentam a velocidade da luz: a \omterm{prop:b3:continuum-elasticity:waves}{onda P}
+        detectada perto da fonte é transmitida por rádio à frente das
+        duas ondas. Para uma cidade a \qty{200}{km} do epicentro,
+        quanto tempo após a ruptura chega a \omterm{prop:b3:continuum-elasticity:waves}{onda S}, e que aviso pode
+        dar uma mensagem de rádio enviada na primeira chegada P a
+        \qty{20}{km} da fonte?
+\end{enumerate}
+
+\medskip\noindent\textbf{Parte III --- Ondas que atravessam o planeta.}
+\begin{enumerate}[resume]
+  \item Às pressões do manto profundo os módulos crescem: as
+        velocidades P chegam a \qty{13.7}{km/s} na base do manto.
+        Tomando uma média grosseira $c_{\text{P}} \approx \qty{10}{km/s}$,
+        quanto tempo uma \omterm{prop:b3:continuum-elasticity:waves}{onda P} leva para atravessar a Terra
+        diametralmente?
+  \item As estações registram tremores do outro lado do globo: o que a
+        simples existência dessas chegadas diz sobre a Terra profunda
+        (ela é elástica? é fundida por inteiro?)?
+  \item Defina o ângulo epicentral $\Delta$ (ângulo, no centro da
+        Terra, entre a fonte e a estação). Para raios retos, mostre
+        que o comprimento da corda é $2R_{\text{E}}\sin(\Delta/2)$.
+  \item Avalie a corda e seu tempo de percurso em raio reto para
+        $\Delta = 60^\circ$ à velocidade média $c_{\text{P}} \approx
+        \qty{10}{km/s}$.
+  \item Por volta de 1900, Oldham notou que as \omterm{prop:b3:continuum-elasticity:waves}{ondas S} são registradas
+        até $\Delta \approx 103^\circ$ e depois \emph{desaparecem}:
+        não há S direta além disso. Que propriedade de uma região
+        profunda dentro da Terra mata as \omterm{prop:b3:continuum-elasticity:waves}{ondas S}, e que estado da
+        matéria tem essa propriedade?
+  \item As \omterm{prop:b3:continuum-elasticity:waves}{ondas P} além de $103^\circ$ não estão ausentes, mas
+        enfraquecidas, atrasadas e deslocadas (uma ``zona de sombra''
+        até $\approx 142^\circ$): por que uma região líquida atrasa e
+        refrata as \omterm{prop:b3:continuum-elasticity:waves}{ondas P}, mas não as detém?
+  \item Conclua numa frase o que existe no centro da Terra.
+\end{enumerate}
+
+\medskip\noindent\textbf{Parte IV --- Pesar o núcleo com uma régua.}
+\begin{enumerate}[resume]
+  \item Um raio S reto que sai da fonte tangencia o núcleo se sua
+        maior aproximação ao centro for igual ao raio do núcleo
+        $R_{\text{c}}$. Mostre que esse raio rasante atinge a
+        superfície no ângulo epicentral $\Delta^* =
+        2\arccos(R_{\text{c}}/R_{\text{E}})$.
+  \item A partir de $\Delta^* = 103^\circ$, calcule $R_{\text{c}}$.
+  \item O valor moderno é \qty{3480}{km}: calcule seu erro e explique
+        o \emph{sinal} dele: os raios reais se recurvam de volta para
+        a superfície à medida que a velocidade cresce com a
+        profundidade --- argumente se os raios retos superestimam ou
+        subestimam o núcleo.
+  \item Em 1936, Inge Lehmann encontrou chegadas P fracas
+        \emph{dentro} da zona de sombra: o que ela concluiu que existe
+        dentro do núcleo líquido?
+  \item O raio do núcleo interno é \qty{1220}{km} e ele é sólido:
+        proponha a observação de ondas que poderia confirmar a solidez
+        (que onda existe ali e que o núcleo externo proíbe?).
+  \item Resuma o resultado central: duas velocidades de onda elástica
+        na rocha ($5.8$ e \qty{3.3}{km/s}), uma onda ausente além de
+        $103^\circ$ e uma régua dão um núcleo líquido de raio
+        $\approx \qty{4000}{km}$ --- a $15\%$ do valor moderno de
+        \qty{3480}{km}, medido através de \qty{6000}{km} de rocha
+        sólida.
+\end{enumerate}
+\end{problem}

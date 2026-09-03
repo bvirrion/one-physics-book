@@ -1,0 +1,653 @@
+\chapter{Continuümmechanica en elasticiteit}\label{ch:b3:continuum-elasticity}
+
+Druk uw oor tegen een lange stalen rail terwijl een werkman er ver weg op
+slaat: u hoort twee klappen --- één door het staal, één door de lucht,
+een seconde of meer uit elkaar. Gesteente, staal, bot en rubber dragen
+krachten en golven zoals een vloeistof druk draagt, maar met iets wat
+geen enkele vloeistof heeft: zij weerstaan \emph{vormveranderingen}, niet
+alleen volumeveranderingen. Het volume van jaar 2 bouwde de mechanica van
+vloeistoffen op twee ideeën, het materiële deeltje en het drukveld; dit
+hoofdstuk breidt ze uit naar vaste stoffen. De verplaatsing van elk
+deeltje wordt een veld, de plaatselijke vervorming een \emph{rek}, de
+inwendige krachten een \emph{spanning}, en daartussen staat het
+identiteitsbewijs van de vaste stof: de \omterm{thm:b3:continuum-elasticity:hooke}{wet van Hooke} met haar twee
+elastische constanten. De opbrengst loopt van het alledaagse --- waarom
+kabels uitrekken, waarom flessen barsten, hoe een duikplank doorbuigt ---
+tot het planetaire: aardbevingen sturen precies de twee soorten
+elastische golf door de aarde die dit hoofdstuk voorspelt, en hun
+aankomsttijden waren de eerste peiling ooit van het binnenste van onze
+planeet.
+
+\section{Rek: de vervorming beschrijven}
+
+\begin{definition}[Verplaatsingsveld en rektensor]\label{def:b3:continuum-elasticity:strain}
+\index{verplaatsingsveld}\index{rektensor}\index{volumerek}
+Vervormt een vaste stof, dan verplaatst het deeltje dat aanvankelijk in
+$\vect r$ zat zich naar $\vect r + \vect u(\vect r)$: $\vect u$ is het
+\emph{verplaatsingsveld}. Bij kleine vervormingen wordt de plaatselijke
+vervorming gemeten door de \emph{rektensor}, het symmetrische schema
+\[
+\varepsilon_{ij} = \frac12\Big(
+ \frac{\partial u_i}{\partial x_j} + \frac{\partial u_j}{\partial x_i}
+\Big) , \qquad i, j \in \{x, y, z\} .
+\]
+Een diagonaalcomponent $\varepsilon_{xx}$ is de relatieve verlenging van
+het materiaal langs $x$ (dimensieloos, bijvoorbeeld $\num{e-3}$ voor een
+stalen kabel in bedrijf); een niet-diagonale component $\varepsilon_{xy}$
+is de helft van de vernauwing van de hoek tussen de materiaalrichtingen
+$x$ en $y$ --- een \emph{afschuiving}. Het spoor is de relatieve
+volumeverandering, de \emph{volumerek}:
+\[
+\frac{\delta V}{V} = \varepsilon_{xx} + \varepsilon_{yy} +
+\varepsilon_{zz} = \operatorname{div}\vect u .
+\]
+\end{definition}
+
+\begin{example}[Drie elementaire vervormingen]\label{ex:b3:continuum-elasticity:elementary}
+Uniforme uitzetting $\vect u = \alpha\vect r$: $\varepsilon_{ij} =
+\alpha\,\delta_{ij}$, volumeverandering $3\alpha$, geen afschuiving.
+Zuivere afschuiving $\vect u = (\gamma y, 0, 0)$: $\varepsilon_{xy} = \gamma/2$, alle diagonaalcomponenten nul --- de vorm verandert, het
+volume niet. Starre rotatie $\vect u = (-\omega y, \omega x, 0)$:
+$\varepsilon_{ij} = 0$ identiek --- het antisymmetrische deel van
+$\partial u_i/\partial x_j$, dat de symmetrisatie weggooit, is precies
+het deel dat draait zonder te vervormen. De rek meet uitsluitend
+vervorming.
+\end{example}
+
+\begin{omfigure}
+\begin{tikzpicture}[font=\small, >=Stealth]
+  % stretch
+  \begin{scope}
+    \draw[gray, dashed] (0,0) rectangle (1.6,1.6);
+    \draw[omDef, thick] (-0.2,0.16) rectangle (1.8,1.44);
+    \draw[->] (2.0,0.8) -- (2.55,0.8);
+    \draw[->] (-0.4,0.8) -- (-0.95,0.8);
+    \node at (0.8,-0.85) {verlenging $\varepsilon_{xx} > 0$,};
+    \node at (0.8,-1.3) {inkrimping $\varepsilon_{yy} < 0$};
+  \end{scope}
+  % shear
+  \begin{scope}[xshift=5.3cm]
+    \draw[gray, dashed] (0,0) rectangle (1.6,1.6);
+    \draw[omThm, thick] (0,0) -- (1.6,0) -- (2.0,1.6) -- (0.4,1.6) -- cycle;
+    \draw[->] (0.9,1.8) -- (1.5,1.8);
+    \draw[->] (0.7,-0.2) -- (0.1,-0.2);
+    \node at (0.9,-0.85) {afschuiving $\varepsilon_{xy} = \gamma/2$:};
+    \node at (0.9,-1.3) {vorm verandert, volume niet};
+  \end{scope}
+  % rotation
+  \begin{scope}[xshift=10.6cm]
+    \draw[gray, dashed] (0,0) rectangle (1.6,1.6);
+    \begin{scope}[rotate around={14:(0.8,0.8)}]
+      \draw[omExo, thick] (0,0) rectangle (1.6,1.6);
+    \end{scope}
+    \draw[->] (1.75,1.5) arc (30:80:1.1);
+    \node at (0.8,-0.85) {rotatie: $\varepsilon_{ij} = 0$,};
+    \node at (0.8,-1.3) {in het geheel geen vervorming};
+  \end{scope}
+\end{tikzpicture}
+
+{\small De \omterm{def:b3:continuum-elasticity:strain}{rektensor} ziet alleen werkelijke vervorming: rekken
+(diagonaalcomponenten), afschuiven (niet-diagonale componenten) --- en
+een starre rotatie in het geheel niet.}
+\end{omfigure}
+
+\section{Spanning: de inwendige krachten beschrijven}
+
+\begin{definition}[Trekvector en spanningstensor]\label{def:b3:continuum-elasticity:stress}
+\index{spanningstensor}\index{trekvector}
+Snijd de vaste stof in gedachten door langs een klein oppervlak $\dd S$
+met normaal $\vect n$: het materiaal aan de kant van $+\vect n$ trekt aan
+de andere kant met een kracht $\dd\vect F = \boldsymbol\sigma(\vect n)\,\dd S$ --- de \emph{trekvector}. Die kracht hangt lineair van $\vect n$ af (Cauchy) en wordt dus vastgelegd door de \emph{spanningstensor}
+$\sigma_{ij}$:
+\[
+\dd F_i = \sum_j \sigma_{ij}\,n_j\,\dd S ,
+\]
+in pascal. $\sigma_{xx}$ is een trek ($> 0$: trekspanning) of een duw
+($< 0$: druk) over een vlak met normaal $x$; $\sigma_{xy}$ is een kracht
+langs $x$ gedragen door een vlak met normaal $y$ --- een
+schuifspanning. Een vloeistof in rust is het bijzondere geval
+$\sigma_{ij} = -p\,\delta_{ij}$: de druk duwt op elk vlak even hard en
+schuift op geen enkel, en daarom stromen vloeistoffen --- zij kunnen geen
+statische afschuiving dragen.
+\end{definition}
+
+\begin{proposition}[Evenwicht en symmetrie]\label{prop:b3:continuum-elasticity:equilibrium}
+In een vaste stof in evenwicht onder een volumekracht $\vect f$ per
+eenheid van volume (bijvoorbeeld $\rho\vect g$) geldt
+\[
+\sum_j\frac{\partial\sigma_{ij}}{\partial x_j} + f_i = 0
+\]
+in elk inwendig punt; en de \omterm{def:b3:continuum-elasticity:stress}{spanningstensor} is symmetrisch,
+$\sigma_{ij} = \sigma_{ji}$.
+\end{proposition}
+
+\begin{proof}[Gedeeltelijk bewijs]
+Breng de krachten op een klein kubusje met ribbe $a$ in evenwicht: de
+\omterm{def:b3:continuum-elasticity:stress}{trekvectoren} op de twee vlakken met normaal $x$ verschillen per eenheid
+van oppervlak $a\,\partial_x\sigma_{ix}$, en zo ook voor de andere paren;
+de netto oppervlaktekracht per eenheid van volume is
+$\sum_j\partial_j\sigma_{ij}$, die $f_i$ moet opheffen --- dezelfde
+boekhouding die in de vloeistofstatica van het volume van jaar 1
+$-\vect\nabla p + \rho\vect g = \vect 0$ opleverde. Symmetrie: het moment
+van de schuifspanningen om het middelpunt van het kubusje is in laagste
+orde $(\sigma_{xy} -
+\sigma_{yx})a^3$, terwijl zijn traagheidsmoment als
+$a^5$ schaalt; een asymmetrische spanning zou kleine kubusjes oneindig
+snel doen tollen. Het volledige continuümargument wordt aangenomen.
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}[font=\small, >=Stealth, scale=1.05]
+  % cube in light 3D
+  \coordinate (A) at (0,0); \coordinate (B) at (2.4,0);
+  \coordinate (C) at (2.4,2.4); \coordinate (D) at (0,2.4);
+  \coordinate (E) at (0.9,0.75); \coordinate (F) at (3.3,0.75);
+  \coordinate (G) at (3.3,3.15);
+  \draw[thick] (A) -- (B) -- (C) -- (D) -- cycle;
+  \draw[thick] (B) -- (F) -- (G) -- (C);
+  \draw[thick] (D) -- (0.9,3.15) -- (G);
+  \draw[thick, dashed] (A) -- (E) -- (F);
+  \draw[thick, dashed] (E) -- (0.9,3.15);
+  % normal stress on +x face
+  \draw[->, omThm, very thick] (2.85,1.55) -- (4.05,1.55);
+  \node[omThm, anchor=west] at (4.1,1.55) {$\sigma_{xx}$};
+  % shear on +x face
+  \draw[->, omDef, very thick] (2.85,1.9) -- (2.85,3.0);
+  \node[omDef, anchor=south] at (2.85,3.05) {$\sigma_{yx}$};
+  \draw[->, omExo, very thick] (3.1,1.3) -- (2.5,0.85);
+  \node[omExo, anchor=east] at (2.35,0.48) {$\sigma_{zx}$};
+  \node at (1.2,1.2) {vlak $\perp x$};
+  \node[align=left, anchor=west, font=\footnotesize] at (5.6,2.3)
+    {$\sigma_{xx}$: trek/druk\\[2pt]
+     $\sigma_{yx}$, $\sigma_{zx}$: schuifspanningen\\[2pt]
+     gedragen door hetzelfde vlak};
+\end{tikzpicture}
+
+{\small De drie componenten van de \omterm{def:b3:continuum-elasticity:stress}{trekvector} op één vlak van een
+materiaalkubusje: één normale (trek of druk), twee tangentiële
+(afschuiving). De negen componenten over de drie vlakken vormen de
+\omterm{def:b3:continuum-elasticity:stress}{spanningstensor}.}
+\end{omfigure}
+
+\section{De wet van Hooke en de elastische constanten}
+
+\begin{theorem}[Lineaire isotrope elasticiteit]\label{thm:b3:continuum-elasticity:hooke}
+\index{wet van Hooke}\index{elasticiteitsmodulus}\index{constante van Poisson}
+Bij kleine rekken reageert een isotrope vaste stof lineair: de spanning
+is evenredig met de rek,
+\[
+\sigma_{ij} = \lambda\,(\varepsilon_{xx} + \varepsilon_{yy} +
+\varepsilon_{zz})\,\delta_{ij} + 2\mu\,\varepsilon_{ij} ,
+\]
+met twee materiaalconstanten, de \emph{coëfficiënten van Lamé} $\lambda$
+en $\mu$ ($\mu$ wordt ook $G$ geschreven, de \emph{glijdingsmodulus}). In
+de eenvoudige trekproef --- een staaf getrokken langs $x$, vrij aan haar
+zijkanten --- neemt dezelfde wet de vorm van de ingenieur aan
+\[
+\varepsilon_{xx} = \frac{\sigma_{xx}}{E} , \qquad
+\varepsilon_{yy} = \varepsilon_{zz} = -\nu\,\varepsilon_{xx} ,
+\]
+en definieert daarmee de \emph{\omterm{thm:b3:continuum-elasticity:hooke}{elasticiteitsmodulus}} $E$ (stijfheid tegen
+rekken) en de \emph{\omterm{thm:b3:continuum-elasticity:hooke}{constante van Poisson}} $\nu$ (dwarscontractie), met
+\[
+\mu = \frac{E}{2(1 + \nu)} , \qquad
+\lambda = \frac{E\nu}{(1 + \nu)(1 - 2\nu)} .
+\]
+Dit is Hookes ``zoals de verlenging, zo de kracht'' (1678), verheven tot
+tensor. Zij geldt tot aan een materiaalafhankelijke \emph{elasticiteitsgrens}.
+\end{theorem}
+\admitted
+
+\begin{remark}[Ordes van grootte]\label{rem:b3:continuum-elasticity:orders}
+$E \approx \qty{200}{GPa}$ voor staal, \qty{70}{GPa} voor aluminium en
+vensterglas, \qty{50}{GPa} voor graniet, \qty{15}{GPa} voor bot en beton,
+\qty{10}{GPa} voor hout in de vezelrichting, en slechts enkele MPa voor
+rubber --- vijf ordes van grootte, de afstand tussen een brug en een
+elastiekje. $\nu$ ligt tussen $0$ (kurk, bijna) en $1/2$ (rubber): $\nu = 1/2$ betekent vervorming met behoud van volume, en $\nu \approx 0.3$ is
+typisch voor metalen. Een rek van $\num{e-3}$ in staal betekent al
+$\sigma = \qty{200}{MPa}$, dicht bij de vloeigrens van gewone soorten:
+alledaagse elasticiteit speelt zich onder één duizendste af.
+\end{remark}
+
+\begin{example}[Een liftkabel]\label{ex:b3:continuum-elasticity:cable}
+Een stalen kabel van \qty{60}{m} met doorsnede \qty{2.0}{cm^2} draagt een
+cabine van \qty{1000}{kg}: $\sigma = mg/S = \qty{49}{MPa}$, $\varepsilon =
+\sigma/E = \num{2.5e-4}$, verlenging $\varepsilon L = \qty{15}{mm}$ ---
+en de kabel gedraagt zich als een veer met veerconstante $k = ES/L =
+\qty{6.7e5}{N/m}$: de formule $k = ES/L$ is hoe een continuüm de veren
+van het volume van jaar 1 teruggeeft.
+\end{example}
+
+\begin{proposition}[Elastische energie]\label{prop:b3:continuum-elasticity:energy}
+\index{elastische energie}
+Een gerekte vaste stof slaat per eenheid van volume de energiedichtheid
+\[
+w = \frac12\sum_{i,j}\sigma_{ij}\,\varepsilon_{ij}
+\qquad\text{(zuivere trek: } w = \tfrac12 E\varepsilon^2 =
+\sigma^2/2E\text{)} ,
+\]
+op, de driedimensionale $\tfrac12 kx^2$.
+\end{proposition}
+
+\begin{proof}[Gedeeltelijk bewijs]
+Bij zuivere trek verricht het opvoeren van de spanning van $0$ tot
+$\sigma$ per eenheid van volume de arbeid
+$\int_0^\varepsilon\sigma'\,\dd\varepsilon' =
+\int_0^\varepsilon E\varepsilon'\,\dd\varepsilon' = \tfrac12
+E\varepsilon^2$ --- de oppervlakte onder de spanning--rekrechte, precies
+als bij een veer. De algemene kwadratische vorm volgt door de componenten
+te superponeren; aangenomen.
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}[font=\small, >=Stealth]
+  % traction test sketch
+  \begin{scope}[yshift=0.4cm]
+    \draw[gray, dashed] (0,0) rectangle (3.2,1.0);
+    \draw[omDef, thick] (-0.25,0.07) rectangle (3.45,0.93);
+    \draw[->, very thick] (3.65,0.5) -- (4.55,0.5) node[right] {$F$};
+    \draw[->, very thick] (-0.45,0.5) -- (-1.35,0.5) node[left] {$F$};
+    \draw[<->] (0,-0.35) -- (3.2,-0.35);
+    \node at (1.6,-0.7) {$L(1 + \varepsilon)$};
+    \node at (1.6,1.55) {doorsnede $S$, $\sigma = F/S$};
+  \end{scope}
+  % stress-strain curve
+  \begin{scope}[xshift=7.3cm, yshift=-0.6cm]
+  \begin{axis}[omaxis, axis x line=bottom, axis y line=left,
+    width=6.4cm, height=4.6cm, xmin=0, xmax=10, ymin=0, ymax=1.25,
+    xlabel={$\varepsilon$}, ylabel={$\sigma$},
+    xlabel style={at={(axis description cs:0.5,-0.1)}, anchor=north},
+    xtick=\empty, ytick=\empty, clip=false]
+    \addplot[omDef, very thick, domain=0:2] {0.4*x};
+    \addplot[omExo, thick, domain=2:8.7, samples=40]
+      {0.8 + 0.32*(1-exp(-(x-2)/2.2))};
+    \fill (axis cs:2,0.8) circle (1.6pt);
+    \draw (axis cs:2.05,0.83) -- (axis cs:2.55,1.1);
+    \node[font=\scriptsize, anchor=west] at (axis cs:2.55,1.14) {elasticiteitsgrens};
+    \node[font=\scriptsize, omExo, anchor=west] at (axis cs:4.6,0.87) {plastisch vloeien};
+    \node[font=\scriptsize, anchor=west] at (axis cs:8.55,1.2) {breuk};
+    \fill[omThm] (axis cs:8.7,1.115) circle (1.6pt);
+    \node[font=\scriptsize, omDef, rotate=38, anchor=south] at (axis cs:1.15,0.48) {helling $E$};
+  \end{axis}
+  \end{scope}
+\end{tikzpicture}
+
+{\small Links: de trekproef definieert $E$ (relatieve verlenging) en
+$\nu$ (dwarsversmalling, overdreven weergegeven). Rechts: de
+spanning--rekkromme van een metaal --- lineaire elasticiteit tot aan de
+elasticiteitsgrens, dan onomkeerbaar plastisch vloeien, dan breuk. Dit
+hoofdstuk speelt zich op het rechte stuk af.}
+\end{omfigure}
+
+\begin{method}[Vraagstukken over kleine elasticiteit oplossen]\label{met:b3:continuum-elasticity:method}
+(1) Benoem de meetkunde en de belasting; raad welke spanningscomponenten
+ongelijk nul zijn (een getrokken staaf: alleen $\sigma_{xx}$; een
+gedraaide draad: afschuiving; een schaal onder druk: tangentiële
+trekspanningen). (2) Stel het krachtenevenwicht op voor een goed gekozen
+stuk --- een halve cilinder, een plakje, een kubusje. (3) Zet spanning om
+in rek met de \omterm{thm:b3:continuum-elasticity:hooke}{wet van Hooke}, en rek in verplaatsing door te integreren.
+(4) Energieën via $w = \sigma^2/2E$ (of $\sigma^2/2G$ bij afschuiving).
+(5) Ga altijd na dat de rek klein blijft en de spanning onder de
+elasticiteitsgrens --- anders beschrijft het antwoord een vaste stof die
+niet meer bestaat.
+\end{method}
+
+\section{Elastische golven}
+
+\begin{proposition}[De twee geluiden van een vaste stof]\label{prop:b3:continuum-elasticity:waves}
+\index{elastische golven}\index{P-golf}\index{S-golf}
+In een onbegrensde elastische vaste stof met dichtheid $\rho$ planten
+kleine verstoringen zich voort als twee onafhankelijke soorten golf:
+\emph{longitudinale} golven (P), waarin de materie langs de
+voortplantingsrichting trilt door samendrukking en uitzetting, met
+snelheid
+\[
+c_{\text{P}} = \sqrt{\frac{\lambda + 2\mu}{\rho}} ,
+\]
+en \emph{transversale} golven (S), waarin de materie zijdelings afschuift, met
+\[
+c_{\text{S}} = \sqrt{\frac{\mu}{\rho}} < c_{\text{P}} .
+\]
+Een vloeistof heeft $\mu = 0$: geen S-golven --- afschuiving kan niet
+worden doorgegeven --- en de P-snelheid herleidt zich tot de
+geluidssnelheid van het volume van jaar 2. Voor $\nu = 1/4$ (typisch
+gesteente) is $\lambda = \mu$ en $c_{\text{P}} =
+\sqrt3\,c_{\text{S}}$.
+\end{proposition}
+
+\begin{proof}[Gedeeltelijk bewijs]
+Neem een vlakke verstoring $\vect u = \vect u(x, t)$. De wet van Newton
+per eenheid van volume luidt $\rho\,\partial_t^2u_i = \sum_j\partial_j\sigma_{ij}$ (de evenwichtsvergelijking met de traagheid
+terug). Voor de longitudinale component geeft de \omterm{thm:b3:continuum-elasticity:hooke}{wet van Hooke}
+$\sigma_{xx} = (\lambda +
+2\mu)\,\partial_xu_x$ (de dwarsrekken
+verdwijnen in een vlakke golf, omdat de omringende materie zijdelings
+uitwijken verbiedt), dus $\rho\,\partial_t^2u_x = (\lambda + 2\mu)\,\partial_x^2u_x$: d'Alembert met snelheid $c_{\text{P}}$. Voor de
+transversale component is $\sigma_{yx} =
+2\mu\varepsilon_{yx} = \mu\,\partial_xu_y$, waaruit $\rho\,\partial_t^2u_y = \mu\,\partial_x^2u_y$: snelheid $c_{\text{S}}$. Dat een algemene
+verstoring in deze twee families uiteenvalt, wordt aangenomen.
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}[font=\small, >=Stealth]
+  % P wave: compressions along x
+  \begin{scope}
+    \foreach \x/\s in {0/1.0, 0.42/0.72, 0.76/0.5, 1.04/0.5, 1.32/0.72,
+                       1.74/1.0, 2.26/1.28, 2.86/1.44, 3.46/1.28, 3.98/1.0,
+                       4.4/0.72, 4.74/0.5, 5.02/0.5, 5.3/0.72, 5.72/1.0,
+                       6.24/1.28, 6.84/1.44, 7.44/1.28, 7.96/1.0}
+      \draw[omDef, thick] (\x,0) -- (\x,1.5);
+    \draw[->, very thick] (8.4,0.75) -- (9.2,0.75) node[right] {$c_{\text{P}}$};
+    \draw[<->, omThm, thick] (0.6,-0.35) -- (1.5,-0.35);
+    \node[anchor=west] at (3.6,-0.42) {materie beweegt $\parallel$ voortplanting};
+  \end{scope}
+  % S wave: sheared line
+  \begin{scope}[yshift=-3.3cm]
+    \draw[omExo, thick, domain=0:8, samples=90, variable=\t]
+      plot ({\t}, {0.55*sin(deg(\t*0.785))+0.75});
+    \foreach \x in {0.5,1.5,2.5,3.5,4.5,5.5,6.5,7.5}
+      \draw[->, omExo!70] (\x,{0.55*sin(deg(\x*0.785))+0.75}) --
+        (\x,{0.9*sin(deg(\x*0.785+25))+0.75});
+    \draw[->, very thick] (8.4,0.75) -- (9.2,0.75) node[right] {$c_{\text{S}}$};
+    \node at (2.9,-0.5) {materie beweegt $\perp$ voortplanting};
+  \end{scope}
+\end{tikzpicture}
+
+{\small De twee \omterm{prop:b3:continuum-elasticity:waves}{elastische golven}. P: vlakken materie dringen samen en
+waaieren uiteen langs de looprichting (drukgolf --- bestaat in vaste
+stoffen, vloeistoffen en gassen). S: de materie schuift zijdelings af
+(bestaat alleen waar afschuiving weerstand ondervindt: vaste stoffen).}
+\end{omfigure}
+
+\begin{example}[De rail en de aardbeving]\label{ex:b3:continuum-elasticity:rail}
+Staal: $c_{\text{P}} \approx \qty{5.9}{km/s}$ --- een klap op een rail
+\qty{2}{km} verderop komt door het staal in \qty{0.34}{s} aan en door de
+lucht ($\qty{340}{m/s}$) in \qty{5.9}{s}: twee klappen. Graniet ($E = \qty{75}{GPa}$, $\nu = 1/4$, $\rho =
+\qty{2.7e3}{kg/m^3}$):
+$c_{\text{P}} \approx \qty{5.8}{km/s}$, $c_{\text{S}} \approx \qty{3.3}{km/s}$. Een aardbeving kondigt zich dus tweemaal aan: een
+scherpe P-schok, en seconden later het tragere, sterkere S-beven --- en
+de vertraging meet de afstand
+(\cref{pb:b3:continuum-elasticity:1}). Waarschuwingssystemen voor
+aardbevingen leven binnen die vertraging: de \omterm{prop:b3:continuum-elasticity:waves}{P-golf}, en het radiobericht
+dat zij afvuurt, zijn de \omterm{prop:b3:continuum-elasticity:waves}{S-golf} die de schade aanricht te snel af.
+\end{example}
+
+\begin{remark}[Snaren, staven en geluid teruggevonden]\label{rem:b3:continuum-elasticity:limits}
+De golven van het volume van jaar 2 zijn alle limietgevallen van dit
+hoofdstuk. Een dunne staaf, vrij om zijdelings te versmallen, draagt
+drukgolven met $\sqrt{E/\rho}$ (trager dan $c_{\text{P}}$: het zijdelings
+uitwijken maakt de reactie zachter); een gespannen snaar draagt
+transversale golven met $\sqrt{T/\rho_\ell}$, waarin de spankracht de rol
+van de stijfheid speelt; een vloeistof houdt alleen $\lambda$ over ---
+haar compressiemodulus --- en de enkele geluidssnelheid
+$\sqrt{\lambda/\rho}$.
+\end{remark}
+
+\begin{omfigure}
+\includegraphics[width=0.58\linewidth]{images/book5/ai/b5-03-diving-board.png}
+
+{\small Een belaste duikplank: spanning en rek verdeeld over een continuüm, gebogen tot het kubische doorbuigingsprofiel van de uitkragende balk --- en een veer die haar \omterm{prop:b3:continuum-elasticity:energy}{elastische energie} zo dadelijk teruggeeft.}
+\end{omfigure}
+
+\section{Opgaven}
+
+\begin{exercise}[$\star$]\label{exo:b3:continuum-elasticity:1}
+(a) Controleer de eenheden: wat is een pascal uitgedrukt in kg, m en s,
+en wat is de eenheid van rek? (b) Een stalen kabel werkt bij $\sigma =
+\qty{200}{MPa}$: bereken zijn rek. (c) Een elastiekje ($E \approx
+\qty{2}{MPa}$) wordt tot tweemaal zijn lengte uitgerekt: welke ``rek'' is
+dat, en waarom is het kader van dit hoofdstuk daar eigenlijk niet op van
+toepassing? (d) Rangschik naar opgeslagen elastische energiedichtheid bij
+hun werkspanning: staal bij \qty{200}{MPa}, rubber bij \qty{1}{MPa}.
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b3:continuum-elasticity:2}
+Bereken de \omterm{def:b3:continuum-elasticity:strain}{rektensor} van elk \omterm{def:b3:continuum-elasticity:strain}{verplaatsingsveld} en beschrijf de
+vervorming: (a) $\vect u = \alpha(x, y, z)$; (b) $\vect u =
+(\gamma y, 0, 0)$; (c) $\vect u = (-\omega y, \omega x, 0)$; (d)
+$\vect u = (\varepsilon x, -\nu\varepsilon y, -\nu\varepsilon z)$ ---
+welke proef verwezenlijkt dat laatste?
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b3:continuum-elasticity:3}
+De voet van een granieten zuil met hoogte $h$ draagt de spanning $\sigma
+= \rho gh$. (a) Leid dit af uit de evenwichtsvergelijking met
+zwaartekracht. (b) Graniet verbrijzelt bij ongeveer \qty{200}{MPa}: hoe
+hoog kan de zuil hoogstens zijn? (c) De Mount Everest is \qty{8.8}{km}
+hoog: geef commentaar. (d) Waarom kan een berg iets hoger zijn dan een
+zuil van zijn eigen gesteente (denk aan de vorm)?
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b3:continuum-elasticity:4}
+Een stalen staaf ($E = \qty{200}{GPa}$, $\nu = 0.30$) wordt met
+$\varepsilon = \num{e-3}$ gerekt. (a) Dwarsrek? (b) Relatieve
+volumeverandering? (c) Voor welke $\nu$ zou het volume in het geheel niet
+veranderen, en welk alledaags materiaal komt daarbij in de buurt? (d)
+Waarom is $\nu > 1/2$ onmogelijk (denk aan hydrostatische samendrukking)?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b3:continuum-elasticity:5}
+Ringspanning. Een dunwandige cilinder (straal $R$, wanddikte $t \ll
+R$)
+houdt een druk $p$ vast. (a) Toon met een krachtenevenwicht op een halve
+cilinder van eenheidslengte aan dat de wand de tangentiële spanning
+$\sigma_\theta = pR/t$ draagt. (b) Toon aan dat de langsspanning
+(evenwicht op een dwarsdoorsnede) $pR/2t$ is: een cilinder wordt in de
+omtrek tweemaal zo zwaar belast als in de lengte --- in welke richting
+barsten worstjes open? (c) Een duikfles: $p =
+\qty{200}{bar}$, $R = \qty{9}{cm}$, $t = \qty{5}{mm}$: bereken $\sigma_\theta$ en vergelijk met
+een vloeigrens van staal van \qty{700}{MPa}. (d) Waarom hebben tanks voor
+hoge druk halfbolvormige einden?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b3:continuum-elasticity:6}
+Een rubberblok ($E = \qty{3.0}{MPa}$, $\nu \approx 0.5$), grondvlak $10
+\times \qty{10}{cm}$, hoogte \qty{2}{cm}, is tussen twee platen gelijmd;
+de bovenste plaat wordt met \qty{150}{N} zijwaarts geduwd. (a) Bereken
+$G$. (b) Schuifspanning en schuifhoek $\gamma = \sigma_{xy}/G$; de
+zijwaartse verplaatsing van de bovenplaat. (c) Waarom is $\nu \approx 1/2$ voor rubber (wat is moeilijk en wat is makkelijk voor een kluwen
+polymeerketens)? (d) Zulke rubberblokken dragen in aardbevingsgebieden
+hele gebouwen: welke eigenschap van deze oplegging beschermt het gebouw,
+de stijfheid onder druk of de zachtheid bij afschuiving?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b3:continuum-elasticity:7}
+Een klimtouw, lengte $L = \qty{20}{m}$, doorsnede $S =
+\qty{80}{mm^2}$,
+effectieve modulus $E = \qty{1.2}{GPa}$. (a) De veerconstante $k = ES/L$.
+(b) Een klimmer van \qty{80}{kg} valt \qty{4}{m} vrij voordat het touw
+aangrijpt: bepaal met het energiebehoud de maximale uitrekking van het
+touw (los de vierkantsvergelijking op; verwaarloos bij een eerste poging
+de val die tijdens het afremmen doorgaat). (c) Leid daaruit de piekkracht
+en de piekvertraging in $g$ af. (d) Waarom moet een touw dat een harde
+val heeft opgevangen uit de omloop worden genomen (waar is de energie
+gebleven, en wat zegt de spanning--rekkromme)?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b3:continuum-elasticity:8}
+Torsie. Een draad met straal $a$, lengte $L$ en glijdingsmodulus $G$
+wordt over een hoek $\theta$ verdraaid. (a) Toon aan dat een buisje met
+straal $r$ erbinnen de schuifhoek $\gamma(r) = r\theta/L$ ondergaat. (b)
+Zijn schuifspanning is $G\gamma$: integreer $r \times$ spanning over de
+doorsnede om het terugdrijvende moment $\Gamma = (\pi Ga^4/2L)\,\theta$
+te krijgen. (c) De $a^4$: halveer de straal, en met welke factor daalt de
+torsiestijfheid? (d) Die extreme zachtheid is de reden dat Cavendish
+(1798) zijn balans aan een fijne draad ophing: bereken voor $a = \qty{25}{\micro m}$, $L =
+\qty{1}{m}$ en $G = \qty{40}{GPa}$ de waarde
+van $C = \pi Ga^4/2L$ en de periode bij een staaf met traagheidsmoment
+$I = \qty{5e-4}{kg.m^2}$.
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b3:continuum-elasticity:9}
+(a) Bereken met de afleiding voor vlakke golven uit
+\cref{prop:b3:continuum-elasticity:waves} de waarden van $c_{\text{P}}$
+en $c_{\text{S}}$ voor staal ($E = \qty{200}{GPa}$, $\nu = 0.29$, $\rho =
+\qty{7.85e3}{kg/m^3}$). (b) Vergelijk $c_{\text{P}}$ met de snelheid
+$\sqrt{E/\rho}$ in een dunne staaf en verklaar het verschil in één zin.
+(c) Voor water ($\mu = 0$, compressiemodulus \qty{2.2}{GPa}): de
+S-snelheid en de P-snelheid. (d) Onder welke hoek verschilt de
+materiebeweging van een \omterm{prop:b3:continuum-elasticity:waves}{P-golf} van die van een \omterm{prop:b3:continuum-elasticity:waves}{S-golf}, en hoe houdt een
+seismometer met drie componenten ze uit elkaar?
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b3:continuum-elasticity:10}
+Buiging. Een balk wordt tot een kromtestraal $R$ gebogen; zijn binnenste
+vezels korten in, zijn buitenste rekken uit, en een \emph{neutraal vlak}
+ertussen houdt zijn lengte. (a) Toon aan dat de vezel op afstand $y$ van
+het neutrale vlak de rek $\varepsilon = y/R$ heeft, en dus de spanning
+$Ey/R$. (b) Toon door de momenten over de doorsnede te sommeren aan dat
+het buigend moment $M = EI/R$ bedraagt met $I = \int y^2\,\dd S$ (het
+\emph{tweede oppervlaktemoment}); bereken $I$ voor een rechthoek met
+breedte $b$ en hoogte $h$. (c) De $h^3$: waarom zakt een plank die plat
+ligt zichtbaar door, terwijl dezelfde plank op zijn kant stijf aanvoelt?
+Bereken de verhouding voor $b/h = 5$. (d) Voor een uitkragende balk met
+lengte $L$ die aan haar tip met $F$ wordt belast is de doorbuiging aan de
+tip $\delta = FL^3/3EI$ (aangenomen): schat $\delta$ voor een duikplank
+($L = \qty{1.8}{m}$, $b = \qty{50}{cm}$, $h = \qty{3.5}{cm}$, hout $E
+= \qty{12}{GPa}$) onder een duiker van \qty{75}{kg}, en geef commentaar.
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b3:continuum-elasticity:11}
+Knik. Een slanke zuil (lengte $L$, buigstijfheid $EI$), aan beide
+uiteinden scharnierend, draagt een axiale last $P$. Neem aan dat zij
+zijwaarts uitwijkt over $y(x)$. (a) Toon aan dat de last dan om de
+verplaatste as het buigend moment $M(x) = -Py(x)$ uitoefent, zodat
+$EI\,y'' = -Py$. (b) Toon met $y(0) = y(L) = 0$ aan dat een uitwijking
+ongelijk nul pas mogelijk wordt bij de kritische last van Euler
+$P_{\text{c}} = \pi^2EI/L^2$. (c) Bereken $P_{\text{c}}$ voor een
+meetlat ($b = \qty{3}{cm}$, $h = \qty{1.5}{mm}$, $E = \qty{12}{GPa}$) en
+vergelijk met de duw van uw hand. (d) Verklaar uit $I$ waarom botten,
+bamboe en fietsframes \emph{buizen} zijn.
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b3:continuum-elasticity:12}
+De geluidssnelheid in een vaste stof, vanuit de atomen. Modelleer een
+vaste stof als ketens van atomen met afstand $a$, verbonden door
+``veren'' met veerconstante $\kappa$; de atoommassa is $m$. (a) Toon aan
+dat het rekken van de keten overeenkomt met trek in een continuüm met $E = \kappa/a$ (tel de veren per eenheid van oppervlak en de rek per veer).
+(b) Toon aan dat $\rho = m/a^3$ en concludeer $c =
+\sqrt{E/\rho} = a\sqrt{\kappa/m}$. (c) Schat $\kappa$ uit de diepte van een
+interatomaire binding ($\sim\qty{3}{eV}$ over $\sim
+\qty{0.1}{nm}$):
+$\kappa \sim \qty{50}{N/m}$; met $a =
+\qty{2.5e-10}{m}$ en $m = \qty{1e-25}{kg}$: schat $c$. (d) Vergelijk met gemeten geluidssnelheden in metalen
+en concludeer waarvan alledaagse elasticiteit gemaakt is.
+\end{exercise}
+
+\section{Vraagstuk: Naar de aarde luisteren}
+
+\begin{problem}[{Weekendvraagstuk --- hoe aardbevingen de vloeibare
+kern verrieden}]\label{pb:b3:continuum-elasticity:1}
+Eén aardbeving laat de hele planeet meetrillen, en de twee \omterm{prop:b3:continuum-elasticity:waves}{elastische
+golven} van dit hoofdstuk doorlichten haar op hun tocht. Dit vraagstuk
+volgt de natuurkunde van de \omterm{thm:b3:continuum-elasticity:hooke}{wet van Hooke} in graniet tot Oldhams
+ontdekking uit 1906 dat de aarde een kern heeft --- met de schatting van
+haar afmeting uit rechte stralen. Neem voor het gesteente van korst en
+mantel $E = \qty{75}{GPa}$, $\nu = 1/4$, $\rho = \qty{2.7e3}{kg/m^3}$;
+de straal van de aarde is $R_{\text{E}} =
+\qty{6371}{km}$.
+
+\medskip\noindent\textbf{Deel I --- Gesteente als elastische vaste stof.}
+\begin{enumerate}
+  \item Bereken de coëfficiënten van Lamé $\mu$ en $\lambda$ van dit
+        gesteente, en merk op dat $\nu = 1/4$ ze gelijk maakt.
+  \item Bereken $c_{\text{P}}$ en $c_{\text{S}}$, en ga
+        $c_{\text{P}} = \sqrt3\,c_{\text{S}}$ na.
+  \item Bij een aardbeving verschuiven twee gesteentevlakken in
+        seconden over meters: schat de vrijgekomen rek als een
+        verschuiving van \qty{2}{m} het gesteente over een schaal van
+        \qty{50}{km} ontspant, en de spanning die was opgebouwd.
+  \item Schat uit de energiedichtheid $w = \tfrac12 E\varepsilon^2$ de
+        \omterm{prop:b3:continuum-elasticity:energy}{elastische energie} per kubieke meter, en vervolgens de energie
+        in een volume van $50 \times 50 \times \qty{20}{km^3}$;
+        vergelijk met een megaton (\qty{4.2e15}{J}).
+  \item Waarom schudt de \omterm{prop:b3:continuum-elasticity:waves}{S-golf} gebouwen doorgaans harder door dan de
+        \omterm{prop:b3:continuum-elasticity:waves}{P-golf} (denk aan de richting van de bodembeweging bij een golf
+        die van onderen aankomt)?
+  \item In welke van de twee golven verandert de bodem van volume?
+\end{enumerate}
+
+\medskip\noindent\textbf{Deel II --- De twee aankomsten van de seismometer.}
+\begin{enumerate}[resume]
+  \item Een station registreert de P-aankomst en $\Delta t$ later de
+        S-aankomst. Toon voor een bron op afstand $d$ (klein genoeg
+        voor rechte stralen) aan dat
+        \[
+        d = \frac{\Delta t}{\dfrac{1}{c_{\text{S}}} -
+        \dfrac{1}{c_{\text{P}}}} .
+        \]
+  \item Bereken de coëfficiënt: hoeveel kilometer per seconde
+        S--P-vertraging?
+  \item Een station meet $\Delta t = \qty{28}{s}$: hoe ver weg ligt de
+        aardbeving?
+  \item Eén station geeft een afstand, geen plaats: hoeveel stations
+        bepalen het epicentrum, en hoe, meetkundig?
+  \item De Japanse waarschuwingssirenes loeien seconden voor het
+        zware schudden: hoeveel waarschuwing levert de P--S-vertraging
+        zelf bij een beving \qty{80}{km} onder een stad?
+  \item Moderne waarschuwingen voegen de lichtsnelheid toe: de \omterm{prop:b3:continuum-elasticity:waves}{P-golf}
+        die dicht bij de bron wordt opgemerkt, wordt beide golven per
+        radio vooruitgestuurd. Hoe lang na de breuk komt voor een stad
+        \qty{200}{km} van het epicentrum de \omterm{prop:b3:continuum-elasticity:waves}{S-golf} aan, en welke
+        waarschuwing kan een radiobericht geven dat bij de eerste
+        P-aankomst \qty{20}{km} van de bron wordt verzonden?
+\end{enumerate}
+
+\medskip\noindent\textbf{Deel III --- Golven die de planeet doorkruisen.}
+\begin{enumerate}[resume]
+  \item Bij de drukken van de diepe mantel groeien de moduli: de
+        P-snelheden bereiken \qty{13.7}{km/s} aan de voet van de
+        mantel. Hoe lang doet een \omterm{prop:b3:continuum-elasticity:waves}{P-golf} er met een ruw gemiddelde
+        $c_{\text{P}} \approx \qty{10}{km/s}$ over om de aarde
+        diametraal te doorkruisen?
+  \item Stations registreren bevingen van de andere kant van de wereld:
+        wat zegt het loutere bestaan van die aankomsten over de diepe
+        aarde (is zij elastisch? door en door gesmolten?)?
+  \item Definieer de epicentrale hoek $\Delta$ (de hoek in het
+        middelpunt van de aarde tussen bron en station). Toon voor
+        rechte stralen aan dat de koorde $2R_{\text{E}}\sin(\Delta/2)$
+        lang is.
+  \item Bereken de koorde en haar looptijd langs een rechte straal voor
+        $\Delta = 60^\circ$ bij het gemiddelde $c_{\text{P}} \approx
+        \qty{10}{km/s}$.
+  \item Omstreeks 1900 merkte Oldham op dat S-golven tot $\Delta \approx 103^\circ$ worden geregistreerd en dan
+        \emph{verdwijnen}: er is geen directe S meer voorbij die hoek.
+        Welke eigenschap van een gebied diep in de aarde doodt
+        S-golven, en welke aggregatietoestand heeft die eigenschap?
+  \item Voorbij $103^\circ$ zijn P-golven niet afwezig maar verzwakt,
+        vertraagd en verplaatst (een ``schaduwzone'' tot
+        $\approx 142^\circ$): waarom vertraagt en breekt een vloeibaar gebied
+        P-golven wel, maar houdt het ze niet tegen?
+  \item Concludeer in één zin wat er in het middelpunt van de aarde
+        zit.
+\end{enumerate}
+
+\medskip\noindent\textbf{Deel IV --- De kern wegen met een liniaal.}
+\begin{enumerate}[resume]
+  \item Een rechte S-straal die de bron verlaat scheert langs de kern
+        wanneer haar kleinste afstand tot het middelpunt gelijk is aan
+        de kernstraal $R_{\text{c}}$. Toon aan dat deze scherende
+        straal het oppervlak bereikt bij de epicentrale hoek
+        $\Delta^* =
+        2\arccos(R_{\text{c}}/R_{\text{E}})$.
+  \item Uit $\Delta^* = 103^\circ$: bereken $R_{\text{c}}$.
+  \item De moderne waarde is \qty{3480}{km}: bereken uw fout en
+        verklaar haar \emph{teken}: echte stralen buigen naar het
+        oppervlak terug omdat de snelheid met de diepte groeit ---
+        beredeneer of rechte stralen de kern te groot of te klein
+        schatten.
+  \item In 1936 vond Inge Lehmann zwakke P-aankomsten \emph{binnen} de
+        schaduwzone: wat concludeerde zij dat er binnen de vloeibare
+        kern zit?
+  \item De straal van de binnenkern is \qty{1220}{km} en zij is vast:
+        stel de golfwaarneming voor die de vastheid zou kunnen
+        bevestigen (welke golf bestaat daar die de buitenkern
+        verbiedt?).
+  \item Vat het genoemde resultaat samen: twee elastische
+        golfsnelheden in gesteente ($5.8$ en \qty{3.3}{km/s}), één
+        ontbrekende golf voorbij $103^\circ$ en een liniaal geven een
+        vloeibare kern met straal $\approx \qty{4000}{km}$ --- binnen
+        $15\%$ van de moderne \qty{3480}{km}, gemeten dwars door
+        \qty{6000}{km} vast gesteente.
+\end{enumerate}
+\end{problem}

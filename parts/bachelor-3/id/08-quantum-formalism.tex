@@ -1,0 +1,590 @@
+\chapter{Formalisme Mekanika Kuantum}\label{ch:b3:quantum-formalism}
+
+Ambillah tiga penapis polarisasi. Dua di antaranya, yang disilangkan
+pada $90^\circ$, menghalangi cahaya sepenuhnya; sisipkanlah yang ketiga
+di antaranya pada $45^\circ$ dan cahaya justru \emph{menembus} ---
+menambah penghalang malah membuka jalan. Tak ada gambaran penapis
+sebagai ayakan yang selamat dari percobaan ini; yang selamat adalah
+aljabar linear: polarisasi sebuah foton adalah sebuah \emph{vektor},
+tiap penapis mengukurnya sepanjang sebuah sumbu lalu memproyeksikannya,
+dan peluangnya adalah kuadrat komponennya. Bab ini memasang aljabar itu
+sebagai landasan mekanika kuantum yang sesungguhnya. Fungsi gelombang
+pada bab sebelumnya hanyalah satu busana nyata dari tubuh yang lebih
+abstrak: keadaan adalah vektor dalam \omterm{def:b3:quantum-formalism:state}{ruang Hilbert}, \omterm{def:b3:quantum-formalism:observable}{besaran teramati}
+adalah \omterm{def:b3:quantum-formalism:observable}{operator Hermitian}, nilai terukur adalah \omterm{def:b3:quantum-formalism:observable}{nilai eigen}, peluang
+adalah kuadrat hasil kali skalar, dan perkembangannya dibangkitkan oleh
+\omterm{def:b3:hamiltonian-mechanics:hamiltonian}{Hamiltonian}. Lima postulat, yang semuanya sudah bekerja dalam segala
+yang telah kita hitung --- dan, sekali dinyatakan dengan rapi, cukup
+ampuh untuk menangani sistem yang tak dapat diperikan gelombang mana pun
+pada sebuah garis: polarisasi foton, spin elektron, dan neutrino yang
+jati dirinya berayun melintasi Bumi.
+
+\section{Keadaan adalah vektor}
+
+\begin{definition}[Ruang keadaan, ket dan kurung]\label{def:b3:quantum-formalism:state}
+\index{ruang Hilbert}\index{ket}\index{bra}
+Keadaan sebuah sistem kuantum membentuk ruang vektor kompleks dengan
+sebuah hasil kali dalam --- yakni \emph{ruang Hilbert} $\mathcal H$
+(matematikanya dikembangkan dalam jilid matematika Tahun 3). Sebuah
+keadaan adalah sebuah vektor, yang ditulis sebagai \emph{ket}
+$\ket\psi$, yang ternormalkan: $\braket\psi\psi = 1$. Hasil kali dalam
+dua keadaan adalah bilangan kompleks $\braket\varphi\psi$, yang
+konjugat-linear pada lubang pertamanya, dengan
+$\braket\varphi\psi = \braket\psi\varphi^*$. Dalam basis ortonormal
+$\{\ket{e_i}\}$,
+\[
+\ket\psi = \sum_i c_i\ket{e_i} , \qquad
+c_i = \braket{e_i}\psi , \qquad
+\sum_i|c_i|^2 = 1 .
+\]
+Fungsi gelombang pada bab sebelumnya adalah keluarga komponen
+$\ket\psi$ sepanjang kedudukan: $\psi(x) =
+\braket{x}{\psi}$; tak ada yang hilang, dan sistem dengan ruang keadaan
+\emph{berhingga} --- yang tak terbayangkan sebagai gelombang --- menjadi
+dapat diperikan.
+\end{definition}
+
+\begin{example}[Polarisasi foton: dunia berdimensi dua]\label{ex:b3:quantum-formalism:polarization}
+Sebuah foton yang meluncur menuruni sumbu $z$ membawa keadaan polarisasi
+dalam \omterm{def:b3:quantum-formalism:state}{ruang Hilbert} berdimensi \emph{dua}, dengan basis $\ket H$
+(mendatar) dan $\ket V$ (tegak). Cahaya yang terpolarisasi pada sudut
+$\theta$ adalah superposisi
+\[
+\ket\theta = \cos\theta\,\ket H + \sin\theta\,\ket V ,
+\]
+dan polarisasi lingkaran adalah gabungan kompleks $(\ket H \pm
+\iu\ket V)/\sqrt2$: koefisiennya yang kompleks bukanlah hiasan melainkan
+fisika. Setiap sistem kuantum dua aras --- spin, molekul amonia, sebuah
+kubit adiwarsa --- adalah ruang vektor yang sama ini dalam pakaian yang
+berbeda.
+\end{example}
+
+\begin{omfigure}
+\begin{tikzpicture}[font=\small, >=Stealth]
+  \draw[->] (-0.3,0) -- (3.3,0) node[right] {$\ket H$};
+  \draw[->] (0,-0.3) -- (0,3.3) node[above] {$\ket V$};
+  \draw[->, omDef, very thick] (0,0) -- (35:2.9);
+  \node[omDef, anchor=west] at (35:3.0) {$\ket\theta$};
+  \draw[dashed, omThm] (35:2.9) -- ({2.9*cos(35)},0);
+  \draw[dashed, omExo] (35:2.9) -- (0,{2.9*sin(35)});
+  \node[omThm, anchor=north] at ({2.9*cos(35)},-0.08) {$\cos\theta$};
+  \node[omExo, anchor=east] at (-0.08,{2.9*sin(35)}) {$\sin\theta$};
+  \draw (1.0,0) arc (0:35:1.0);
+  \node at (17:1.35) {$\theta$};
+  \node[align=left, anchor=west] at (5.3,1.7)
+    {peluang sepanjang $\ket H$: $\cos^2\theta$\\[2pt]
+     peluang sepanjang $\ket V$: $\sin^2\theta$};
+  \node[align=left, anchor=west, font=\footnotesize] at (5.3,0.45)
+    {(hukum Malus jilid Tahun 1,\\dibaca ulang sebagai kaidah Born)};
+\end{tikzpicture}
+
+{\small Keadaan polarisasi sebagai sebuah vektor: kuadrat komponennya
+pada basis sebuah penganalisis adalah peluang hasilnya --- geometri yang
+menjelma peluang.}
+\end{omfigure}
+
+\section{Besaran teramati adalah operator}
+
+\begin{definition}[Besaran teramati]\label{def:b3:quantum-formalism:observable}
+\index{besaran teramati}\index{operator Hermitian}\index{nilai eigen}
+Yang disebut \emph{besaran teramati} adalah operator linear $\hat A$
+pada $\mathcal H$ yang bersifat \emph{Hermitian}:
+$\braket{\varphi}{\hat A\psi} =
+\braket{\hat A\varphi}{\psi}$ untuk semua keadaan (dalam bahasa
+matriks, $A = A^{*\top}$). \emph{Vektor eigen} dan \emph{nilai eigen}nya,
+$\hat A\ket{a} = a\ket{a}$, membawa fisikanya: $a$-nya adalah nilai
+terukur yang mungkin. Kasus yang sudah dikenal: kedudukan ($\hat x$:
+perkalian dengan $x$), momentum ($\hat p = -\iu\hbar\,\dd/\dd x$),
+energi ($\hat H = \hat p^2/2m + V(\hat x)$) --- dan, dalam dua
+dimensi, sembarang matriks Hermitian $2\times2$.
+\end{definition}
+
+\begin{theorem}[Mengapa Hermitian]\label{thm:b3:quantum-formalism:hermitian}
+\omterm{def:b3:quantum-formalism:observable}{Operator Hermitian} mempunyai \omterm{def:b3:quantum-formalism:observable}{nilai eigen} yang real, dan vektor eigen
+dengan \omterm{def:b3:quantum-formalism:observable}{nilai eigen} yang berbeda saling ortogonal; pada ruang dalam buku
+ini vektor eigennya membentuk basis ortonormal $\mathcal H$ (yakni
+\emph{teorema spektral}, yang dibuktikan dalam dimensi berhingga pada
+jilid matematika Tahun 2; untuk operator tak terbatas $\hat x$, $\hat p$,
+$\hat H$ pernyataan lengkapnya termasuk teori spektral Tahun 3 dan
+diterima tanpa bukti). Nilai terukur haruslah real dan hasil yang dapat
+dibedakan haruslah ortogonal: kehermitianan justru merupakan syarat agar
+sebuah operator dapat mewakili sebuah pengukuran.
+\end{theorem}
+
+\begin{proof}[Bukti sebagian]
+$a\braket aa = \braket{a}{\hat Aa} = \braket{\hat Aa}{a} =
+a^*\braket aa$: jadi $a$ real. Untuk $\hat A\ket a = a\ket a$, $\hat A\ket b
+= b\ket b$: $a\braket ba = \braket{b}{\hat Aa} = \braket{\hat
+Ab}{a} = b\braket ba$, sehingga $(a - b)\braket ba = 0$.
+\end{proof}
+
+\begin{example}[Sebuah besaran teramati dua aras]\label{ex:b3:quantum-formalism:twolevel}
+Pada ruang polarisasinya, dalam basis $(\ket H, \ket V)$, tinjaulah
+\[
+\hat A = \begin{pmatrix} 0 & 1\\ 1 & 0\end{pmatrix} :
+\]
+Ia Hermitian; \omterm{def:b3:quantum-formalism:observable}{nilai eigennya} $\pm1$; vektor eigennya $(\ket H \pm
+\ket V)/\sqrt2$ --- yakni polarisasi pada $\pm45^\circ$. Mengukur
+$\hat A$ \emph{berarti} bertanya ``diagonal atau antidiagonal?'', dan
+basis eigennya adalah jawaban kedua pertanyaan itu. Setiap polarisator
+$45^\circ$ dalam percobaan pembuka adalah matriks ini dalam wujud kaca.
+\end{example}
+
+\section{Postulatnya}
+
+\begin{theorem}[Aturan mekanika kuantum]\label{thm:b3:quantum-formalism:postulates}
+\index{postulat mekanika kuantum}\index{kaidah Born}\index{keruntuhan}
+\emph{(P1)} Keadaan sebuah sistem adalah \omterm{def:b3:quantum-formalism:state}{ket} ternormalkan $\ket\psi$
+dalam \omterm{def:b3:quantum-formalism:state}{ruang Hilbertnya}.
+\emph{(P2)} Setiap besaran terukur adalah \omterm{def:b3:quantum-formalism:observable}{operator Hermitian}
+$\hat A$.
+\emph{(P3)} Satu-satunya hasil yang mungkin dari mengukur $\hat A$
+adalah \omterm{def:b3:quantum-formalism:observable}{nilai eigennya}.
+\emph{(P4)} Pada keadaan $\ket\psi$, hasil $a$ muncul dengan peluang
+$\mathcal P(a) = |\braket a\psi|^2$ (kaidah Born; untuk \omterm{def:b3:quantum-formalism:observable}{nilai eigen} yang
+berdegenerasi, jumlahkanlah kuadrat komponennya pada ruang eigennya).
+Rata-rata banyak percobaan adalah $\langle\hat A\rangle =
+\bra\psi\hat A\ket\psi$.
+\emph{(P5)} Segera setelah pengukuran yang memberikan $a$, keadaannya
+adalah proyeksi (ternormalkan) $\ket\psi$ pada ruang eigen $a$ ---
+yakni \emph{keruntuhan}: pengukuran adalah interaksi yang meninggalkan
+sistemnya dalam keadaan yang cocok dengan jawabannya sendiri.
+\emph{(P6)} Di antara pengukuran, keadaannya berkembang secara uniter
+menurut persamaan Schrödinger
+$\iu\hbar\,\dfrac{\dd}{\dd t}\ket{\psi(t)} = \hat H\ket{\psi(t)}$.
+\end{theorem}
+\admitted
+
+\begin{example}[Tiga polarisator, dihitung]\label{ex:b3:quantum-formalism:threepolarizers}
+Cahaya tegak bertemu penganalisis yang disilangkan $90^\circ$: $|\braket
+HV|^2 = 0$ --- padam. Sisipkanlah polarisator $45^\circ$: keadaan
+$\ket V$ melewatinya dengan peluang $|\braket{45^\circ}{V}|^2 =
+\tfrac12$ lalu \emph{runtuh} menjadi $\ket{45^\circ}$ (P5); keadaan itu
+kemudian melewati penganalisis mendatarnya dengan peluang
+$|\braket{H}{45^\circ}|^2 = \tfrac12$. Transmisi netonya $\tfrac14$
+alih-alih nol: penapis di tengah tidak ``membuka lubang'' --- ia
+melakukan sebuah pengukuran, dan keruntuhannya menyiapkan ulang fotonnya.
+Tak ada ayakan klasik yang berbuat demikian; sebuah proyeksi tak berbuat
+lain.
+\end{example}
+
+\begin{omfigure}
+\begin{tikzpicture}[font=\small, >=Stealth]
+  % light path
+  \draw[->, omExo, very thick] (-0.9,0) -- (0.35,0);
+  \draw[->, omExo, very thick] (0.65,0) -- (2.85,0);
+  \draw[->, omExo, thick] (3.15,0) -- (5.35,0);
+  \draw[->, omExo, thin] (5.65,0) -- (7.4,0);
+  % polarizers
+  \foreach \x/\ang/\lab in {0.5/90/{$V$}, 3.0/45/{$45^\circ$}, 5.5/0/{$H$}}
+   {\draw[thick, fill=omDef!12] (\x,-1.05) ellipse (0.16 and 1.05);
+    \draw[very thick, omDef] ($(\x,-1.05)+({\ang}:0.85)$) -- ($(\x,-1.05)-({\ang}:0.85)$);
+    \node at (\x,-2.5) {\lab};}
+  \node at (-0.9,0.45) {$I_0$};
+  \node at (1.8,0.45) {$I_0$};
+  \node at (4.3,0.45) {$I_0/2$};
+  \node at (6.9,0.45) {$I_0/4$};
+  \node[align=center, font=\footnotesize] at (3.0,1.5)
+    {tiap penapis memproyeksikan keadaannya pada sumbunya:\\
+     buanglah yang di tengah dan keluarannya nol};
+\end{tikzpicture}
+
+{\small Percobaan tiga polarisator sebagai tiga pengukuran berturutan:
+proyeksikan, runtuhkan, proyeksikan lagi. Penapis tambahan justru
+\emph{menaikkan} cahaya yang diteruskan --- mustahil bagi ayakan,
+otomatis bagi proyeksi.}
+\end{omfigure}
+
+\begin{remark}[Apa yang tidak diizinkan keruntuhannya]\label{rem:b3:quantum-formalism:nosignal}
+Keruntuhannya seketika dalam formalismenya, dan korelasi kuantum antara
+partikel yang berjauhan itu nyata dan terukur --- tetapi tak ada
+\emph{pesan} yang menumpanginya: hasil pada satu detektor, dibaca
+sendirian, tak terbedakan dari lemparan koin apa pun yang dilakukan di
+kejauhan. Keacakan kuantum juga tak dapat direduksi: kaidah Born
+memberikan peluang bahkan ketika keadaannya diketahui
+\emph{selengkapnya} --- tak ada lagi yang dapat diketahui. Kedua
+pernyataan itu adalah teorema formalismenya, yang teruji sampai
+ketelitian tinggi; kegelisahan terhadap keduanya wajar dan telah
+menggerakkan percobaan selama seabad, yang semuanya dimenangkan mekanika
+kuantum.
+\end{remark}
+
+\section{Komutator dan ketaktentuan}
+
+\begin{definition}[Komutator; besaran teramati yang serasi]\label{def:b3:quantum-formalism:commutator}
+\index{komutator}\index{besaran teramati serasi}
+Yang disebut \emph{komutator} dua operator adalah $[\hat A, \hat B] = \hat
+A\hat B - \hat B\hat A$. Contoh pendirinya, dari $\hat p =
+-\iu\hbar\,\dd/\dd x$:
+\[
+[\hat x, \hat p] = \iu\hbar .
+\]
+Dua \omterm{def:b3:quantum-formalism:observable}{besaran teramati} bersifat \emph{serasi} apabila $[\hat A, \hat B] = 0$:
+keduanya lalu mempunyai basis eigen bersama dan dapat diketahui
+serentak; mengukur yang satu tidak mengganggu keadaan yang tajam pada
+yang lain. Sekumpulan \omterm{def:b3:quantum-formalism:observable}{besaran teramati} yang berkomutasi dan basis eigen
+bersamanya tunggal (sebuah \emph{CSCO}) adalah makna ``melabeli sebuah
+keadaan selengkapnya'' --- label $(n_1, n_2, n_3)$ kotaknya persis
+itulah.
+\end{definition}
+
+\begin{theorem}[Hubungan ketaktentuan, secara umum]\label{thm:b3:quantum-formalism:uncertainty}
+\index{hubungan ketaktentuan}
+Dalam keadaan apa pun, simpangan baku dua \omterm{def:b3:quantum-formalism:observable}{besaran teramati} memenuhi
+\[
+\Delta A\;\Delta B \ \ge\ \tfrac12\,\big|\langle[\hat A, \hat
+B]\rangle\big| .
+\]
+Untuk $\hat x$ dan $\hat p$: $\Delta x\,\Delta p \ge \hbar/2$ ---
+yakni hubungan Heisenberg, yang kini menjadi teorema aljabar linear
+alih-alih patokan kasar. Ketakserasiannya bersifat kuantitatif: besar
+\omterm{def:b3:quantum-formalism:commutator}{komutatornya} menetapkan lantai ketajaman bersamanya.
+\end{theorem}
+
+\begin{proof}[Bukti sebagian]
+Misalkan $\hat\alpha = \hat A - \langle A\rangle$, $\hat\beta = \hat B -
+\langle B\rangle$. Ketaksamaan Cauchy--Schwarz jilid matematika Tahun 3
+memberikan $\Delta A^2\Delta B^2 =
+\|\hat\alpha\psi\|^2\|\hat\beta\psi\|^2 \ge
+|\braket{\hat\alpha\psi}{\hat\beta\psi}|^2$; bagian khayal hasil kali
+itu adalah $\tfrac1{2\iu}\langle[\hat A, \hat B]\rangle$, dan
+$|z|^2 \ge (\operatorname{Im}z)^2$.
+\end{proof}
+
+\begin{remark}[Bayangan klasiknya]\label{rem:b3:quantum-formalism:poisson}
+Bagilah dengan $\iu\hbar$ lalu biarkan $\hbar \to 0$: \omterm{def:b3:quantum-formalism:commutator}{komutatornya}
+menjadi \omterm{def:b3:hamiltonian-mechanics:poisson}{kurung Poisson} pada \cref{ch:b3:hamiltonian-mechanics}, dengan $\{x, p\} =
+1$ menggemakan $[\hat x, \hat p] = \iu\hbar$, dan kurung
+momentum sudut yang dihitung di sana akan kembali sebagai \omterm{def:b3:quantum-formalism:commutator}{komutator},
+tanpa perubahan, dalam \cref{ch:b3:quantum-angular-momentum}. Kaidah
+Dirac --- kurung klasik dikalikan $\iu\hbar$ --- adalah cara kerangka
+mekanika selamat dari revolusinya.
+\end{remark}
+
+\section{Perkembangan dan kekekalan}
+
+\begin{proposition}[Perkembangan rata-rata; besaran kekal]\label{prop:b3:quantum-formalism:evolution}
+\index{teorema Ehrenfest}
+Untuk \omterm{def:b3:quantum-formalism:observable}{besaran teramati} tanpa kebergantungan waktu eksplisit,
+\[
+\frac{\dd\langle\hat A\rangle}{\dd t}
+ = \frac{\iu}{\hbar}\,\big\langle[\hat H, \hat A]\big\rangle .
+\]
+\omterm{def:b3:quantum-formalism:observable}{Besaran teramati} yang berkomutasi dengan \omterm{def:b3:hamiltonian-mechanics:hamiltonian}{Hamiltoniannya} bersifat kekal
+--- peluangnya, bukan sekadar rata-ratanya, membeku; simetri sekali lagi
+menyerahkan hukum kekekalan, kini dalam bentuk komutasi. Keadaan
+stasioner adalah vektor eigen $\hat H$, yang berkembang hanya lewat fase
+$\eu^{-\iu Et/\hbar}$; superposisi dua aras berlayang pada frekuensi
+Bohr $(E_2 - E_1)/h$, sebagaimana sudah ditunjukkan sumur jilid Tahun 2.
+\end{proposition}
+
+\begin{proof}
+Turunkanlah $\bra\psi\hat A\ket\psi$ lalu masukkanlah P6 beserta
+konjugatnya:
+\[
+\frac{\dd\langle\hat A\rangle}{\dd t}
+ = \frac{\iu}{\hbar}\bra\psi\hat H\hat A\ket\psi
+ - \frac{\iu}{\hbar}\bra\psi\hat A\hat H\ket\psi
+ = \frac{\iu}{\hbar}\,\langle[\hat H, \hat A]\rangle .
+\qedhere
+\]
+\end{proof}
+
+\begin{method}[Mekanika kuantum matriks]\label{met:b3:quantum-formalism:method}
+Untuk sembarang soal beraras berhingga: (1) pilihlah basis yang sesuai
+dengan pertanyaannya (sumbu penganalisisnya, keadaan eigen energinya);
+(2) tuliskanlah keadaannya sebagai vektor kolom dan \omterm{def:b3:quantum-formalism:observable}{besaran teramatinya}
+sebagai matriks Hermitian; (3) diagonalkanlah apa yang diukur --- \omterm{def:b3:quantum-formalism:observable}{nilai
+eigennya} adalah hasilnya, dan kuadrat komponennya adalah peluangnya;
+(4) kembangkanlah keadaan eigen energinya lewat fase
+$\eu^{-\iu E_it/\hbar}$ lalu nyatakanlah kembali dalam basis
+pengukurannya; (5) setelah sebuah pengukuran, mulailah lagi dari keadaan
+yang terproyeksikan. Seluruh \cref{pb:b3:quantum-formalism:1} adalah
+resep ini yang dijalankan pada semesta dua aras.
+\end{method}
+
+\begin{omfigure}
+\includegraphics[width=0.58\linewidth]{images/book5/ai/b5-08-three-polarizers.png}
+
+{\small Tiga polarisator di atas meja kerja: masing-masingnya sebuah pengukuran, yang memproyeksikan keadaan cahayanya pada sebuah sumbu. Silangkanlah dua dan tak ada yang lewat; selipkanlah yang ketiga di antaranya secara miring dan cahayanya kembali --- postulat bab ini, yang diperagakan di atas meja.}
+\end{omfigure}
+
+\section{Latihan}
+
+\begin{exercise}[$\star$]\label{exo:b3:quantum-formalism:1}
+Dalam basis ortonormal $(\ket1, \ket2)$, misalkan $\ket\psi = (2\ket1 +
+\iu\ket2)/\sqrt5$ dan $\ket\varphi = (\ket1 - \ket2)/\sqrt2$. (a)
+Periksalah penormalannya. (b) Hitunglah $\braket\varphi\psi$ dan
+$\braket\psi\varphi$. (c) Berapa peluang menemukan $\ket\psi$ dalam
+keadaan $\ket\varphi$? (d) Susunlah keadaan yang ortogonal terhadap
+$\ket\psi$ (sampai pada fasenya).
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b3:quantum-formalism:2}
+Matriks manakah di antara berikut ini yang Hermitian, dan berapa \omterm{def:b3:quantum-formalism:observable}{nilai
+eigen} serta vektor eigen ternormalkan dari yang memang Hermitian?
+\[
+\begin{pmatrix}0 & 1\\ 1 & 0\end{pmatrix} , \quad
+\begin{pmatrix}0 & -\iu\\ \iu & 0\end{pmatrix} , \quad
+\begin{pmatrix}1 & 1\\ -1 & 1\end{pmatrix} , \quad
+\begin{pmatrix}2 & 1-\iu\\ 1+\iu & 3\end{pmatrix} .
+\]
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b3:quantum-formalism:3}
+Cahaya yang terpolarisasi pada sudut $\alpha$ bertemu penganalisis pada
+sudut $\beta$. (a) Tuliskanlah kedua keadaannya dalam basis
+$(\ket H, \ket V)$ lalu hitunglah peluang transmisinya. (b) Perolehlah
+kembali hukum Malus. (c) Untuk aliran berisi $N$ foton, berapa ragam
+cacah yang diteruskan? (d) Cahaya lingkaran $(\ket H + \iu\ket V)/\sqrt2$
+pada penganalisis linear bersudut sembarang: berapa transmisinya?
+Jelaskanlah ketakbergantungan jawabannya pada sudutnya.
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b3:quantum-formalism:4}
+(a) Buktikanlah $[\hat x, \hat p] = \iu\hbar$ dengan mengenakannya pada
+sebuah fungsi coba. (b) Hitunglah $[\hat x^2, \hat p]$ dan $[\hat x, \hat p^2]$.
+(c) Tunjukkanlah $[\hat A, \hat B\hat C] = [\hat A, \hat B]\hat C + \hat B[\hat A,
+\hat C]$. (d) Simpulkanlah $[\hat x, \hat p^n] = \iu\hbar\,n\hat p^{n-1}$
+lalu tafsirkanlah: operasi klasik manakah yang ditiru $[\hat x, \cdot\,]$?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b3:quantum-formalism:5}
+Pengukuran berturutan. Sebuah foton bermula sebagai $\ket V$. (a) Ia
+bertemu polarisator pada $45^\circ$ lalu $0^\circ$ (mendatar):
+hitunglah peluang selamat melewati keduanya, dengan keruntuhan
+antaranya dibuat gamblang. (b) Gantilah polarisator tengahnya dengan
+polarisator pada $30^\circ$, $60^\circ$: berapa transmisinya? (c) Untuk
+$N - 1$ polarisator antara yang melangkah $90^\circ/N$: tunjukkanlah
+bahwa peluang selamatnya adalah $\cos^{2N}(\pi/2N)$ lalu hitunglah untuk
+$N = 2, 5, 20$. (d) Limit $N \to \infty$ memutar polarisasinya
+\emph{tanpa} rugi: berilah ulasan (rotasi ``Zeno kuantum'' ini dipakai
+pada kubit sungguhan).
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b3:quantum-formalism:6}
+Pada ruang dua arasnya, $\hat A = \begin{pmatrix}0&1\\1&0
+\end{pmatrix}$, $\hat B = \begin{pmatrix}1&0\\0&-1\end{pmatrix}$.
+(a) Hitunglah $[\hat A, \hat B]$: apakah keduanya serasi? (b)
+Keadaannya $\ket1$: berikanlah statistik hasil pengukuran $\hat B$,
+lalu statistik pengukuran $\hat A$ \emph{setelah} pengukuran $\hat B$
+memberikan $+1$. (c) Ukurlah $\hat A$ lebih dahulu (hasilnya $+1$),
+lalu $\hat B$, lalu $\hat A$ lagi: dengan peluang berapa $\hat A$ yang
+terakhir \emph{bertentangan} dengan yang pertama? (d) Apa yang akan
+disiratkan \omterm{def:b3:quantum-formalism:commutator}{komutator} nol bagi (c)?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b3:quantum-formalism:7}
+(a) Untuk keadaan Gauss pada
+\cref{exo:b3:schrodinger-three-dimensions:1} yang dibatasi pada satu
+dimensi, hitunglah $\Delta x$ dan $\Delta p$ (pakailah pasangan Fourier
+atau integralkanlah) lalu periksalah kesamaan dalam hubungan
+Heisenbergnya. (b) Keadaan mana yang menjenuhkan teorema ketaktentuan
+umumnya (nyatakanlah syaratnya dari kasus kesamaan Cauchy--Schwarz)? (c)
+Sebuah elektron yang terkurung pada
+$\Delta x = \qty{0.1}{nm}$: berapa skala energi kinetik minimumnya? (d)
+Hal yang sama untuk sebutir kelereng ($\qty{10}{g}$) yang terlokalkan
+sampai satu mikron: simpulkanlah.
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b3:quantum-formalism:8}
+(a) Dari \cref{prop:b3:quantum-formalism:evolution}, perolehlah kembali
+pasangan Ehrenfest untuk $\hat x$ dan $\hat p$ dengan $\hat H = \hat
+p^2/2m + V$. (b) Tunjukkanlah bahwa paritas $\hat\Pi$ ($\hat\Pi\psi(x) =
+\psi(-x)$) bersifat Hermitian, kuadratnya identitas, dan \omterm{def:b3:quantum-formalism:observable}{nilai eigennya}
+$\pm1$. (c) Tunjukkanlah $[\hat H, \hat\Pi] = 0$ untuk potensial
+setangkup lalu simpulkanlah bahwa aras yang tak berdegenerasi mempunyai
+paritas tertentu. (d) Fakta teramati apa tentang aras sumur ganda
+setangkup yang dijelaskan hal ini (ingatlah dublet amonia jilid Tahun 2)?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b3:quantum-formalism:9}
+Sebuah CSCO yang bekerja. Dalam kotak persegi berdimensi dua, aras $E
+\propto 5$ direntang oleh $\ket{1,2}$ dan $\ket{2,1}$. (a) Tunjukkanlah
+bahwa energi saja tidak melabeli keadaannya. (b) Misalkan $\hat S$
+menukar $x
+\leftrightarrow y$: tunjukkanlah bahwa $\hat S$ Hermitian, berkomutasi dengan $\hat
+H$, lalu carilah keadaan eigennya di dalam aras itu. (c)
+Periksalah bahwa pasangan $(\hat H, \hat S)$ melabeli tiap keadaan aras
+ini secara tunggal. (d) Berikanlah pelajaran umumnya: degenerasi berarti
+himpunan pelabelnya belum lengkap, dan simetrinya memasok label yang
+hilang.
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b3:quantum-formalism:10}
+Ketaktentuan energi--waktu, secara jujur. Untuk sembarang \omterm{def:b3:quantum-formalism:observable}{besaran
+teramati} $\hat A$, definisikanlah waktu perkembangannya $\tau_A = \Delta A\,/\,|\dd\langle\hat
+A\rangle/\dd t|$ --- yakni waktu yang diperlukan rata-ratanya untuk
+bergerak sejauh satu simpangan baku. (a) Dari
+\cref{thm:b3:quantum-formalism:uncertainty} dan
+\cref{prop:b3:quantum-formalism:evolution}, buktikanlah $\Delta
+E\;\tau_A \ge \hbar/2$. (b) Mengapa ini \emph{bukan} ketaktentuan antara
+dua \omterm{def:b3:quantum-formalism:observable}{besaran teramati} (apakah waktu itu, dalam formalismenya)? (c)
+Terapkanlah pada keadaan atom tereksitasi berumur \qty{10}{ns}: berapa
+lebar garisnya? (d) Terapkanlah pada arloji Anda: seberapa tajam energi
+sebuah sistem dapat ditetapkan jika sesuatu di dalamnya berubah kasat
+mata tiap sekon?
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b3:quantum-formalism:11}
+Pembuktian teorema ketaktentuan. Dengan $\hat\alpha, \hat\beta$ seperti
+dalam teksnya: (a) berilah alasan bagi $\Delta A^2 = \|\hat\alpha\ket\psi\|^2$
+dengan memakai kehermitianannya; (b) kenakanlah Cauchy--Schwarz lalu
+belahlah $\braket{\hat\alpha\psi}{\hat\beta\psi}$ menjadi bagian
+Hermitian dan anti-Hermitian, lalu kenalilah keduanya dengan rata-rata
+antikomutator dan \omterm{def:b3:quantum-formalism:commutator}{komutatornya}; (c) simpulkanlah, lalu nyatakanlah kapan
+kesamaannya berlaku; (d) tunjukkanlah bahwa untuk $[\hat A, \hat B] = \iu\hbar$
+tak ada keadaan yang dapat menjadi vektor eigen salah satu \omterm{def:b3:quantum-formalism:observable}{besaran
+teramatinya} sambil menjaga kedua simpangannya tetap berhingga --- lalu
+damaikanlah dengan gelombang bidang.
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b3:quantum-formalism:12}
+Panci yang ditunggui. Sebuah sistem dua aras bermula dalam $\ket1$ dan
+\omterm{def:b3:hamiltonian-mechanics:hamiltonian}{Hamiltoniannya} menggerakkan osilasi mirip Rabi: setelah waktu $t$
+keadaannya adalah $\cos(\omega t)\ket1 + \sin(\omega t)\ket2$ (terimalah
+ini sebagaimana adanya).
+(a) Tanpa pengukuran, kapan pemindahan ke $\ket2$ selesai?
+(b) Ukurlah ``keadaan yang mana?'' pada waktu $T/N, 2T/N, \dots$ dengan $T =
+\pi/2\omega$: tunjukkanlah bahwa peluang menemukan sistemnya
+\emph{masih} dalam $\ket1$ pada tiap pemeriksaan adalah $[\cos^2(\pi/2N)]^N$. (c)
+Hitunglah untuk $N = 1, 4, 20, 100$ lalu tunjukkanlah bahwa nilainya
+menuju $1$: pengamatan yang sering membekukan perkembangannya (yakni
+efek Zeno kuantum, yang teramati dengan ion terperangkap pada 1990). (d)
+Jelaskanlah dalam satu kalimat postulat mana yang melakukan pembekuan itu.
+\end{exercise}
+
+\begin{omfigure}
+\includegraphics[width=0.62\linewidth]{images/book5/photo-solvay-1927.jpg}
+
+{\small Konferensi Solvay 1927 (foto oleh Benjamin Couprie, domain publik): orang-orang yang membangun postulat bab ini, dalam satu ruangan --- dan pada pekan itu juga masih berdebat tentang apa arti pengukuran.}
+\end{omfigure}
+
+\section{Soal: Neutrino berganti busana di tengah perjalanan}
+
+\begin{problem}[{Soal akhir pekan --- osilasi dua aras melintasi
+Bumi}]\label{pb:b3:quantum-formalism:1}
+Neutrino lahir dalam reaksi inti sebagai keadaan \emph{rasa} ---
+neutrino elektron $\ket{\nu_e}$ atau neutrino muon $\ket{\nu_\mu}$ ---
+tetapi ia \emph{merambat} sebagai keadaan eigen energi (massa) $\ket{\nu_1},
+\ket{\nu_2}$. Kedua basisnya tidak berimpit: keduanya terputar oleh
+sebuah \emph{sudut pencampuran} $\theta$,
+\[
+\ket{\nu_e} = \cos\theta\,\ket{\nu_1} + \sin\theta\,\ket{\nu_2} ,
+\qquad
+\ket{\nu_\mu} = -\sin\theta\,\ket{\nu_1} + \cos\theta\,\ket{\nu_2} .
+\]
+Penemuan bahwa neutrino karena itu \emph{berayun} antarrasa selama
+terbang --- sehingga ia bermassa --- meraih Hadiah Nobel 2015. Soal ini
+menurunkan efeknya tanpa apa pun di luar bab ini. Neutrino
+ultrarelativistik bermomentum $p$ dan bermassa
+$m_i$ mempunyai energi $E_i \approx pc + m_i^2c^4/2pc \approx E +
+m_i^2c^4/2E$.
+
+\medskip\noindent\textbf{Bagian I --- Menyiapkan formalismenya.}
+\begin{enumerate}
+  \item Periksalah bahwa $(\ket{\nu_1}, \ket{\nu_2})$ yang ortonormal
+        membuat $(\ket{\nu_e}, \ket{\nu_\mu})$ ortonormal pula.
+  \item Mengapa basis perambatannya haruslah basis eigen \emph{energi},
+        apa pun basis kelahiran neutrinonya? (Postulat mana yang
+        mengatur penerbangan bebasnya?)
+  \item Sebuah neutrino muon lahir pada $t = 0$. Tuliskanlah
+        $\ket{\psi(0)}$ dalam basis massanya.
+  \item Tuliskanlah $\ket{\psi(t)}$, dengan tiap komponen massanya
+        membawa fasenya $\eu^{-\iu E_it/\hbar}$.
+  \item Tunjukkanlah bahwa fase \emph{global} tidak berperan lalu
+        faktorkanlah $\eu^{-\iu E_1t/\hbar}$: hanya fase \emph{nisbi}
+        $\Delta\phi = (E_2 - E_1)t/\hbar$ yang menggerakkan fisikanya.
+  \item Nyatakanlah $E_2 - E_1$ dalam $\Delta m^2 = m_2^2 - m_1^2$
+        dan $E$, untuk neutrino ultrarelativistik.
+\end{enumerate}
+
+\medskip\noindent\textbf{Bagian II --- Rumus osilasinya.}
+\begin{enumerate}[resume]
+  \item Hitunglah amplitudo $\braket{\nu_e}{\psi(t)}$.
+  \item Tunjukkanlah bahwa peluang kemunculannya adalah
+        \[
+        \mathcal P_{\nu_\mu \to \nu_e}(t) =
+        \sin^2(2\theta)\,\sin^2\Big(\frac{\Delta\phi}{2}\Big) .
+        \]
+        (Pakailah $2\sin\theta\cos\theta = \sin2\theta$.)
+  \item Periksalah kedua limit uji warasnya: $\theta = 0$ dan $m_1 = m_2$.
+        Karena itu, apa yang dibuktikan osilasi yang teramati?
+  \item Dengan $t \approx L/c$, tunjukkanlah
+        \[
+        \mathcal P = \sin^2(2\theta)\,
+        \sin^2\Big(\frac{\Delta m^2c^4}{4\hbar c}\,\frac{L}{E}\Big) ,
+        \]
+        lalu definisikanlah panjang osilasinya $L_{\text{osc}} =
+        4\pi\hbar cE/\Delta m^2c^4$.
+  \item Tunjukkanlah bahwa peluang bertahannya $\mathcal P_{\nu_\mu \to
+        \nu_\mu} = 1 - \mathcal P_{\nu_\mu\to\nu_e}$: di manakah
+        keuniterannya dipakai?
+  \item Mengapa osilasinya hanya mengukur $\Delta m^2$, tak pernah
+        massanya sendiri?
+\end{enumerate}
+
+\medskip\noindent\textbf{Bagian III --- Membaca percobaannya.}
+Neutrino muon atmosfer ($E \approx \qty{1}{GeV}$) turun bagai hujan pada
+sebuah detektor dari atas ($L \approx \qty{15}{km}$) dan dari bawah,
+menembus Bumi ($L \approx \qty{12800}{km}$). Super-Kamiokande
+(1998) mendapati fluks dari bawah berkurang separuh, dan fluks dari atas utuh.
+\begin{enumerate}[resume]
+  \item Dengan memakai $\hbar c = \qty{197}{MeV.fm}$, tunjukkanlah bentuk praktisnya
+        $\dfrac{\Delta m^2c^4\,L}{4\hbar cE} = 1.27\,
+        \dfrac{\Delta m^2c^4\,[\unit{eV^2}]\ L\,[\unit{km}]}
+        {E\,[\unit{GeV}]}$.
+  \item Jika osilasinya harus \emph{berkembang penuh} pada $L =
+        \qty{12800}{km}$ tetapi \emph{dapat diabaikan} pada \qty{15}{km}
+        untuk $E = \qty{1}{GeV}$, kurunglah $\Delta m^2c^4$ secara kasar.
+  \item Nilai terukurnya $\Delta m^2c^4 \approx
+        \qty{2.5e-3}{eV^2}$: hitunglah panjang osilasinya pada
+        \qty{1}{GeV} lalu periksalah terhadap kedua jarak lintasannya.
+  \item Penekanan dari bawahnya dekat dengan $1/2$, bukan $0$:
+        tunjukkanlah bahwa \emph{merata-ratakan} $\sin^2$ pada banyak
+        panjang osilasi (dan pada energinya) memberikan
+        $\tfrac12\sin^22\theta$, lalu simpulkanlah bahwa pencampuran
+        atmosfernya nyaris \emph{maksimum} ($\theta \approx 45^\circ$).
+  \item Berapa yang diberikan $\Delta m^2c^4 = \qty{2.5e-3}{eV^2}$ bagi
+        massa yang lebih berat saja jika yang lebih ringan dapat
+        diabaikan --- lalu bandingkanlah dengan massa elektron: seberapa
+        anehkah ringannya neutrino?
+  \item Antineutrino reaktor mempunyai $E \approx \qty{4}{MeV}$. Dengan
+        memakai rumus $1.27$ yang sama, tunjukkanlah bahwa jarak lintasan
+        satu sampai dua kilometer tertala pada belahan
+        $\qty{2.5e-3}{eV^2}$ (percobaan Daya Bay), sedangkan
+        $L \approx \qty{180}{km}$ (KamLAND) tertala pada belahan ``surya''
+        yang lebih kecil $\qty{7.5e-5}{eV^2}$ --- periksalah keduanya
+        secara numerik.
+\end{enumerate}
+
+\medskip\noindent\textbf{Bagian IV --- Apa maknanya.}
+\begin{enumerate}[resume]
+  \item Matahari memancarkan $\nu_e$; selama berpuluh tahun detektor
+        hanya mencacah sepertiga ramalannya. Jelaskanlah ``masalah
+        neutrino surya'' dan penyelesaiannya, masing-masing dalam satu
+        kalimat.
+  \item Mengapa osilasinya memaksa kesimpulan bahwa neutrino
+        \emph{bermassa}, bertentangan dengan pembukuan asli Model Baku?
+  \item Sebuah sistem kuantum yang mempertahankan keterpaduan fase
+        sepanjang $12800$ kilometer: apa yang dikatakan hal ini tentang
+        betapa lemahnya neutrino berinteraksi, dan mengapa detektornya
+        harus raksasa?
+  \item Rasa adalah sebuah \omterm{def:b3:quantum-formalism:observable}{besaran teramati}: mengapa operatornya gagal
+        berkomutasi dengan \omterm{def:b3:hamiltonian-mechanics:hamiltonian}{Hamiltonian} bebasnya, dan hukum kekekalan apa
+        yang karena itu \emph{tidak} tersedia bagi rasa (sedangkan energi
+        dan momentum tetap kekal)?
+  \item Alam mempunyai tiga rasa dan tiga massa: mengapa perlakuan dua
+        arasnya toh memerikan tiap percobaan dengan begitu baik?
+        (Tinjaulah hierarki kedua $\Delta m^2$-nya dan yang mana yang
+        dipilah tiap jarak lintasannya.)
+  \item Dalam formalisme bab ini, sebutkanlah tepat bahan apa saja yang
+        menghasilkan osilasinya: ketakcocokan basis yang mana, postulat
+        yang mana, fase yang mana.
+  \item Ringkaslah hasil bernama itu: sudut rotasi di dekat
+        $45^\circ$ dan belahan $\Delta m^2c^4 =
+        \qty{2.5e-3}{eV^2}$ membuat neutrino muon berenergi GeV lenyap
+        dengan panjang osilasi $\sim\qty{1000}{km}$ --- aljabar linear
+        dua aras, yang dibenarkan menembus tubuh Bumi.
+\end{enumerate}
+\end{problem}

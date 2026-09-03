@@ -1,0 +1,586 @@
+\chapter{Het formalisme van de kwantummechanica}\label{ch:b3:quantum-formalism}
+
+Neem drie polarisatiefilters. Twee ervan, gekruist onder $90^\circ$,
+houden het licht volledig tegen; schuif het derde er onder $45^\circ$
+tussen en het licht komt er \emph{doorheen} --- een obstakel toevoegen
+opent de weg. Geen enkel beeld van filters als zeven overleeft deze proef;
+wat wel overleeft is lineaire algebra: de polarisatie van een foton is een
+\emph{vector}, elk filter meet haar langs een as en projecteert haar, en de
+kansen zijn gekwadrateerde componenten. Dit hoofdstuk installeert die
+algebra als de eigenlijke grondslag van de kwantummechanica. De
+golffuncties van de vorige hoofdstukken waren één concreet kostuum van een
+abstracter lichaam: toestanden zijn vectoren in een \omterm{def:b3:quantum-formalism:state}{hilbertruimte},
+\omterm{def:b3:quantum-formalism:observable}{observabelen} zijn \omterm{def:b3:quantum-formalism:observable}{hermitische operatoren}, gemeten waarden zijn
+\omterm{def:b3:quantum-formalism:observable}{eigenwaarden}, kansen zijn gekwadrateerde scalaire producten, en de
+evolutie wordt door de \omterm{def:b3:hamiltonian-mechanics:hamiltonian}{hamiltoniaan} voortgebracht. Vijf postulaten, die
+alle al aan het werk waren in alles wat we hebben berekend --- en die,
+eenmaal netjes geformuleerd, krachtig genoeg zijn voor stelsels die geen
+golf op een lijn kan beschrijven: de polarisatie van het foton, de spin van
+het elektron, en de neutrino's waarvan de identiteit dwars door de aarde
+heen oscilleert.
+
+\section{Toestanden zijn vectoren}
+
+\begin{definition}[Toestandsruimte, kets en haakjes]\label{def:b3:quantum-formalism:state}
+\index{hilbertruimte}\index{ket}\index{bra}
+De toestanden van een kwantumstelsel vormen een complexe vectorruimte met
+een inproduct --- een \emph{hilbertruimte} $\mathcal H$ (de wiskunde
+ervan wordt in het wiskundevolume van jaar 3 ontwikkeld). Een toestand is
+een vector, geschreven als een \emph{ket} $\ket\psi$, genormeerd:
+$\braket\psi\psi = 1$. Het inproduct van twee toestanden is het complexe
+getal $\braket\varphi\psi$, toegevoegd-lineair in het eerste vak, met
+$\braket\varphi\psi = \braket\psi\varphi^*$. In een orthonormale basis
+$\{\ket{e_i}\}$ geldt
+\[
+\ket\psi = \sum_i c_i\ket{e_i} , \qquad
+c_i = \braket{e_i}\psi , \qquad
+\sum_i|c_i|^2 = 1 .
+\]
+De golffunctie van de vorige hoofdstukken is de familie componenten van
+$\ket\psi$ langs de positie: $\psi(x) =
+\braket{x}{\psi}$; er gaat niets
+verloren, en stelsels met \emph{eindige} toestandsruimten --- als golf
+ondenkbaar --- worden beschrijfbaar.
+\end{definition}
+
+\begin{example}[De polarisatie van het foton: een tweedimensionale wereld]\label{ex:b3:quantum-formalism:polarization}
+Een foton dat langs de $z$-as loopt draagt een polarisatietoestand in een
+\emph{twee}dimensionale \omterm{def:b3:quantum-formalism:state}{hilbertruimte}, met basis $\ket H$ (horizontaal)
+en $\ket V$ (verticaal). Licht dat onder een hoek $\theta$ is
+gepolariseerd is de superpositie
+\[
+\ket\theta = \cos\theta\,\ket H + \sin\theta\,\ket V ,
+\]
+en circulaire polarisatie is de complexe combinatie $(\ket H \pm
+\iu\ket V)/\sqrt2$: dat de coëfficiënten complex zijn is geen versiering
+maar natuurkunde. Elk kwantumstelsel met twee niveaus --- spin, het
+ammoniakmolecuul, een supergeleidende qubit --- is dezelfde vectorruimte
+in andere kleren.
+\end{example}
+
+\begin{omfigure}
+\begin{tikzpicture}[font=\small, >=Stealth]
+  \draw[->] (-0.3,0) -- (3.3,0) node[right] {$\ket H$};
+  \draw[->] (0,-0.3) -- (0,3.3) node[above] {$\ket V$};
+  \draw[->, omDef, very thick] (0,0) -- (35:2.9);
+  \node[omDef, anchor=west] at (35:3.0) {$\ket\theta$};
+  \draw[dashed, omThm] (35:2.9) -- ({2.9*cos(35)},0);
+  \draw[dashed, omExo] (35:2.9) -- (0,{2.9*sin(35)});
+  \node[omThm, anchor=north] at ({2.9*cos(35)},-0.08) {$\cos\theta$};
+  \node[omExo, anchor=east] at (-0.08,{2.9*sin(35)}) {$\sin\theta$};
+  \draw (1.0,0) arc (0:35:1.0);
+  \node at (17:1.35) {$\theta$};
+  \node[align=left, anchor=west] at (5.3,1.7)
+    {kans langs $\ket H$: $\cos^2\theta$\\[2pt]
+     kans langs $\ket V$: $\sin^2\theta$};
+  \node[align=left, anchor=west, font=\footnotesize] at (5.3,0.45)
+    {(de wet van Malus uit het volume van jaar 1,\\herlezen als de regel van Born)};
+\end{tikzpicture}
+
+{\small Een polarisatietoestand als vector: haar gekwadrateerde
+componenten op de basis van een analysator zijn de kansen op de uitkomsten
+--- meetkunde die kans wordt.}
+\end{omfigure}
+
+\section{Observabelen zijn operatoren}
+
+\begin{definition}[Observabelen]\label{def:b3:quantum-formalism:observable}
+\index{observabele}\index{hermitische operator}\index{eigenwaarde}
+Een \emph{observabele} is een lineaire operator $\hat A$ op $\mathcal H$
+die \emph{hermitisch} is: $\braket{\varphi}{\hat A\psi} =
+\braket{\hat A\varphi}{\psi}$ voor alle toestanden (in matrixtaal $A = A^{*\top}$).
+Haar \emph{eigenvectoren} en \emph{eigenwaarden}, $\hat A\ket{a} = a\ket{a}$, dragen de natuurkunde: de $a$ zijn de mogelijke gemeten
+waarden. Vertrouwde gevallen: de positie ($\hat x$: vermenigvuldigen met
+$x$), de impuls ($\hat p = -\iu\hbar\,\dd/\dd x$), de energie ($\hat H = \hat p^2/2m + V(\hat x)$) --- en, in twee dimensies, elke hermitische
+$2\times2$-matrix.
+\end{definition}
+
+\begin{theorem}[Waarom hermitisch]\label{thm:b3:quantum-formalism:hermitian}
+Een \omterm{def:b3:quantum-formalism:observable}{hermitische operator} heeft reële \omterm{def:b3:quantum-formalism:observable}{eigenwaarden}, en eigenvectoren bij
+verschillende \omterm{def:b3:quantum-formalism:observable}{eigenwaarden} staan loodrecht op elkaar; op de ruimten van
+dit boek vormen haar eigenvectoren een orthonormale basis van $\mathcal H$
+(de \emph{spectraalstelling}, in eindige dimensie bewezen in het
+wiskundevolume van jaar 2; voor de onbegrensde operatoren $\hat x$, $\hat p$ en $\hat H$ hoort de volledige uitspraak bij de spectraaltheorie van
+jaar 3 en wordt zij aangenomen). Gemeten waarden moeten reëel zijn en
+onderscheidbare uitkomsten moeten loodrecht staan: hermiticiteit is precies
+de voorwaarde waaronder een operator een meting kan voorstellen.
+\end{theorem}
+
+\begin{proof}[Gedeeltelijk bewijs]
+$a\braket aa = \braket{a}{\hat Aa} = \braket{\hat Aa}{a} =
+a^*\braket aa$: $a$ is reëel. Voor $\hat A\ket a = a\ket a$ en $\hat A\ket b
+= b\ket b$ geldt $a\braket ba = \braket{b}{\hat Aa} = \braket{\hat
+Ab}{a} = b\braket ba$, dus $(a - b)\braket ba = 0$.
+\end{proof}
+
+\begin{example}[Een observabele met twee niveaus]\label{ex:b3:quantum-formalism:twolevel}
+Beschouw op de polarisatieruimte, in de basis $(\ket H, \ket V)$, de
+matrix
+\[
+\hat A = \begin{pmatrix} 0 & 1\\ 1 & 0\end{pmatrix} :
+\]
+hermitisch; \omterm{def:b3:quantum-formalism:observable}{eigenwaarden} $\pm1$; eigenvectoren $(\ket H \pm
+\ket V)/\sqrt2$ --- de polarisaties onder $\pm45^\circ$. $\hat A$ meten
+\emph{betekent} vragen ``diagonaal of antidiagonaal?'', en de eigenbasis
+is het antwoordenpaar op die vraag. Elke polarisator van $45^\circ$ in de
+openingsproef is deze matrix in glas.
+\end{example}
+
+\section{De postulaten}
+
+\begin{theorem}[De regels van de kwantummechanica]\label{thm:b3:quantum-formalism:postulates}
+\index{postulaten van de kwantummechanica}\index{regel van Born}\index{ineenstorting}
+\emph{(P1)} De toestand van een stelsel is een genormeerde \omterm{def:b3:quantum-formalism:state}{ket} $\ket\psi$
+in zijn \omterm{def:b3:quantum-formalism:state}{hilbertruimte}.
+\emph{(P2)} Elke meetbare grootheid is een \omterm{def:b3:quantum-formalism:observable}{hermitische operator} $\hat A$.
+\emph{(P3)} De enige mogelijke uitkomsten van een meting van $\hat A$
+zijn haar \omterm{def:b3:quantum-formalism:observable}{eigenwaarden}.
+\emph{(P4)} Op een toestand $\ket\psi$ treedt de uitkomst $a$ op met kans
+$\mathcal P(a) = |\braket a\psi|^2$ (de \omterm{thm:b3:quantum-formalism:postulates}{regel van Born}; bij een ontaarde
+\omterm{def:b3:quantum-formalism:observable}{eigenwaarde} telt men de gekwadrateerde componenten over haar eigenruimte
+op). Het gemiddelde van vele proeven is $\langle\hat A\rangle =
+\bra\psi\hat A\ket\psi$.
+\emph{(P5)} Onmiddellijk na een meting die $a$ opleverde is de toestand de
+(genormeerde) projectie van $\ket\psi$ op de eigenruimte bij $a$ --- de
+\emph{ineenstorting}: meten is een wisselwerking die het stelsel achterlaat
+in de toestand die bij zijn eigen antwoord past.
+\emph{(P6)} Tussen metingen evolueert de toestand unitair volgens de
+schrödingervergelijking
+$\iu\hbar\,\dfrac{\dd}{\dd t}\ket{\psi(t)} = \hat H\ket{\psi(t)}$.
+\end{theorem}
+\admitted
+
+\begin{example}[De drie polarisatoren, doorgerekend]\label{ex:b3:quantum-formalism:threepolarizers}
+Verticaal licht treft een analysator die er onder $90^\circ$ op staat:
+$|\braket
+HV|^2 = 0$ --- uitdoving. Voeg een polarisator van $45^\circ$
+toe: de toestand $\ket V$ passeert die met kans
+$|\braket{45^\circ}{V}|^2 =
+\tfrac12$ en \emph{stort in} tot
+$\ket{45^\circ}$ (P5); die toestand passeert vervolgens de horizontale
+analysator met kans $|\braket{H}{45^\circ}|^2 = \tfrac12$. De netto
+doorlating is $\tfrac14$ in plaats van nul: het middelste filter ``maakt
+geen gat'' --- het voert een meting uit, en de ineenstorting bereidt het
+foton opnieuw. Geen enkele klassieke zeef doet dit; een projectie doet
+niets anders.
+\end{example}
+
+\begin{omfigure}
+\begin{tikzpicture}[font=\small, >=Stealth]
+  % light path
+  \draw[->, omExo, very thick] (-0.9,0) -- (0.35,0);
+  \draw[->, omExo, very thick] (0.65,0) -- (2.85,0);
+  \draw[->, omExo, thick] (3.15,0) -- (5.35,0);
+  \draw[->, omExo, thin] (5.65,0) -- (7.4,0);
+  % polarizers
+  \foreach \x/\ang/\lab in {0.5/90/{$V$}, 3.0/45/{$45^\circ$}, 5.5/0/{$H$}}
+   {\draw[thick, fill=omDef!12] (\x,-1.05) ellipse (0.16 and 1.05);
+    \draw[very thick, omDef] ($(\x,-1.05)+({\ang}:0.85)$) -- ($(\x,-1.05)-({\ang}:0.85)$);
+    \node at (\x,-2.5) {\lab};}
+  \node at (-0.9,0.45) {$I_0$};
+  \node at (1.8,0.45) {$I_0$};
+  \node at (4.3,0.45) {$I_0/2$};
+  \node at (6.9,0.45) {$I_0/4$};
+  \node[align=center, font=\footnotesize] at (3.0,1.5)
+    {elk filter projecteert de toestand op zijn as:\\
+     haal het middelste weg en de uitvoer is nul};
+\end{tikzpicture}
+
+{\small De proef met drie polarisatoren als drie opeenvolgende metingen:
+projecteren, ineenstorten, opnieuw projecteren. Een extra filter
+\emph{verhoogt} het doorgelaten licht --- onmogelijk voor zeven,
+vanzelfsprekend voor projecties.}
+\end{omfigure}
+
+\begin{remark}[Wat de ineenstorting niet toelaat]\label{rem:b3:quantum-formalism:nosignal}
+De ineenstorting is in het formalisme ogenblikkelijk, en kwantumcorrelaties
+tussen ver uiteenliggende deeltjes zijn echt en gemeten --- maar er rijdt
+geen \emph{bericht} op mee: de uitkomsten bij één detector zijn, op
+zichzelf gelezen, niet van muntworpen te onderscheiden, wat men ver weg ook
+doet. Ook is de kwantumtoevalligheid onherleidbaar: de \omterm{thm:b3:quantum-formalism:postulates}{regel van Born} geeft
+kansen zelfs wanneer de toestand \emph{volledig} bekend is --- er valt niets
+meer te weten. Beide uitspraken zijn stellingen van het formalisme, tot op
+hoge precisie getoetst; onbehagen erover is respectabel en heeft een eeuw
+van proeven aangedreven, die de kwantummechanica alle heeft gewonnen.
+\end{remark}
+
+\section{Commutatoren en onzekerheid}
+
+\begin{definition}[Commutator; verenigbare observabelen]\label{def:b3:quantum-formalism:commutator}
+\index{commutator}\index{verenigbare observabelen}
+De \emph{commutator} van twee operatoren is $[\hat A, \hat B] = \hat
+A\hat B - \hat B\hat A$. Het stichtende voorbeeld, uit $\hat p =
+-\iu\hbar\,\dd/\dd x$:
+\[
+[\hat x, \hat p] = \iu\hbar .
+\]
+Twee \omterm{def:b3:quantum-formalism:observable}{observabelen} heten \emph{verenigbaar} wanneer $[\hat A, \hat B] = 0$:
+zij laten dan een gemeenschappelijke eigenbasis toe en kunnen gelijktijdig
+bekend zijn; de een meten verstoort een toestand die scherp is in de ander
+niet. Een stel commuterende \omterm{def:b3:quantum-formalism:observable}{observabelen} waarvan de gemeenschappelijke
+eigenbasis uniek is (een \emph{VSCO}) is wat ``een toestand volledig
+etiketteren'' betekent --- de etiketten $(n_1, n_2, n_3)$ van de doos waren
+precies dat.
+\end{definition}
+
+\begin{theorem}[De onzekerheidsrelatie, in het algemeen]\label{thm:b3:quantum-formalism:uncertainty}
+\index{onzekerheidsrelatie}
+In elke toestand voldoen de standaardafwijkingen van twee \omterm{def:b3:quantum-formalism:observable}{observabelen} aan
+\[
+\Delta A\;\Delta B \ \ge\ \tfrac12\,\big|\langle[\hat A, \hat
+B]\rangle\big| .
+\]
+Voor $\hat x$ en $\hat p$: $\Delta x\,\Delta p \ge \hbar/2$ --- de relatie
+van Heisenberg, nu een stelling uit de lineaire algebra in plaats van een
+vuistregel. Onverenigbaarheid is kwantitatief: de grootte van de
+\omterm{def:b3:quantum-formalism:commutator}{commutator} legt de bodem onder de gezamenlijke scherpte.
+\end{theorem}
+
+\begin{proof}[Gedeeltelijk bewijs]
+Zij $\hat\alpha = \hat A - \langle A\rangle$ en $\hat\beta = \hat B -
+\langle B\rangle$. De ongelijkheid van Cauchy--Schwarz uit het
+wiskundevolume van jaar 3 geeft $\Delta A^2\Delta B^2 =
+\|\hat\alpha\psi\|^2\|\hat\beta\psi\|^2 \ge
+|\braket{\hat\alpha\psi}{\hat\beta\psi}|^2$; het imaginaire deel van dat
+product is $\tfrac1{2\iu}\langle[\hat A, \hat B]\rangle$, en
+$|z|^2 \ge (\operatorname{Im}z)^2$.
+\end{proof}
+
+\begin{remark}[De klassieke schaduw]\label{rem:b3:quantum-formalism:poisson}
+Deel door $\iu\hbar$ en laat $\hbar \to 0$: \omterm{def:b3:quantum-formalism:commutator}{commutatoren} worden de
+\omterm{def:b3:hamiltonian-mechanics:poisson}{poissonhaakjes} van \cref{ch:b3:hamiltonian-mechanics}, waarbij $\{x, p\} =
+1$ het $[\hat x, \hat p] = \iu\hbar$ weerklinkt, en de daar berekende
+haakjes van het impulsmoment zullen ongewijzigd als \omterm{def:b3:quantum-formalism:commutator}{commutatoren}
+terugkeren in \cref{ch:b3:quantum-angular-momentum}. De regel van Dirac ---
+het klassieke haakje maal $\iu\hbar$ --- is hoe het skelet van de mechanica
+de omwenteling overleefde.
+\end{remark}
+
+\section{Evolutie en behoud}
+
+\begin{proposition}[Evolutie van gemiddelden; behouden grootheden]\label{prop:b3:quantum-formalism:evolution}
+\index{stelling van Ehrenfest}
+Voor een \omterm{def:b3:quantum-formalism:observable}{observabele} zonder expliciete tijdsafhankelijkheid geldt
+\[
+\frac{\dd\langle\hat A\rangle}{\dd t}
+ = \frac{\iu}{\hbar}\,\big\langle[\hat H, \hat A]\big\rangle .
+\]
+Een \omterm{def:b3:quantum-formalism:observable}{observabele} die met de \omterm{def:b3:hamiltonian-mechanics:hamiltonian}{hamiltoniaan} commuteert blijft behouden --- haar
+kansen liggen vast, niet alleen haar gemiddelde; symmetrieën leveren
+opnieuw behoudswetten, nu in de vorm van commutatie. Stationaire toestanden
+zijn de eigenvectoren van $\hat H$, die alleen via de fase
+$\eu^{-\iu Et/\hbar}$ evolueren; een superpositie van twee niveaus zweeft
+met de bohrfrequentie $(E_2 - E_1)/h$, zoals de putten van het volume van
+jaar 2 al lieten zien.
+\end{proposition}
+
+\begin{proof}
+Differentieer $\bra\psi\hat A\ket\psi$ en vul P6 en haar toegevoegde in:
+\[
+\frac{\dd\langle\hat A\rangle}{\dd t}
+ = \frac{\iu}{\hbar}\bra\psi\hat H\hat A\ket\psi
+ - \frac{\iu}{\hbar}\bra\psi\hat A\hat H\ket\psi
+ = \frac{\iu}{\hbar}\,\langle[\hat H, \hat A]\rangle .
+\qedhere
+\]
+\end{proof}
+
+\begin{method}[Kwantummechanica met matrices]\label{met:b3:quantum-formalism:method}
+Voor elk vraagstuk met eindig veel niveaus: (1) kies een basis die bij de
+vraag past (de assen van de analysator, de energie-eigentoestanden); (2)
+schrijf toestanden als kolomvectoren en \omterm{def:b3:quantum-formalism:observable}{observabelen} als hermitische
+matrices; (3) diagonaliseer wat gemeten wordt --- de \omterm{def:b3:quantum-formalism:observable}{eigenwaarden} zijn de
+uitkomsten, de gekwadrateerde componenten de kansen; (4) laat
+energie-eigentoestanden evolueren met de fasen $\eu^{-\iu E_it/\hbar}$ en
+druk ze opnieuw uit in de meetbasis; (5) begin na een meting opnieuw
+vanuit de geprojecteerde toestand. Het hele
+\cref{pb:b3:quantum-formalism:1} is dit recept, uitgevoerd op een heelal
+met twee niveaus.
+\end{method}
+
+\begin{omfigure}
+\includegraphics[width=0.58\linewidth]{images/book5/ai/b5-08-three-polarizers.png}
+
+{\small Drie polarisatoren op een bank: elk is een meting die de toestand van het licht op een as projecteert. Kruis er twee en er komt niets door; schuif er een derde onder een hoek tussen en het licht keert terug --- de postulaten van dit hoofdstuk, op tafel uitgevoerd.}
+\end{omfigure}
+
+\section{Opgaven}
+
+\begin{exercise}[$\star$]\label{exo:b3:quantum-formalism:1}
+Zij in een orthonormale basis $(\ket1, \ket2)$ gegeven $\ket\psi = (2\ket1 +
+\iu\ket2)/\sqrt5$ en $\ket\varphi = (\ket1 - \ket2)/\sqrt2$. (a)
+Controleer de normeringen. (b) Bereken $\braket\varphi\psi$ en
+$\braket\psi\varphi$. (c) De kans om $\ket\psi$ in de toestand
+$\ket\varphi$ aan te treffen. (d) Construeer de toestand die loodrecht op
+$\ket\psi$ staat (op een fase na).
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b3:quantum-formalism:2}
+Welke van deze matrices zijn hermitisch, en wat zijn de \omterm{def:b3:quantum-formalism:observable}{eigenwaarden} en
+genormeerde eigenvectoren van die welke het zijn?
+\[
+\begin{pmatrix}0 & 1\\ 1 & 0\end{pmatrix} , \quad
+\begin{pmatrix}0 & -\iu\\ \iu & 0\end{pmatrix} , \quad
+\begin{pmatrix}1 & 1\\ -1 & 1\end{pmatrix} , \quad
+\begin{pmatrix}2 & 1-\iu\\ 1+\iu & 3\end{pmatrix} .
+\]
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b3:quantum-formalism:3}
+Licht dat onder een hoek $\alpha$ is gepolariseerd treft een analysator
+onder een hoek $\beta$. (a) Schrijf beide toestanden in de basis $(\ket H, \ket V)$ en bereken de doorlaatkans. (b) Vind de wet van Malus terug. (c)
+Wat is voor een stroom van $N$ fotonen de variantie van het doorgelaten
+aantal? (d) Circulair licht $(\ket H + \iu\ket V)/\sqrt2$ op een lineaire
+analysator onder een willekeurige hoek: doorlating? Verklaar waarom het
+antwoord niet van de hoek afhangt.
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b3:quantum-formalism:4}
+(a) Bewijs $[\hat x, \hat p] = \iu\hbar$ door op een testfunctie te werken.
+(b) Bereken $[\hat x^2, \hat p]$ en $[\hat x, \hat p^2]$. (c) Toon aan dat
+$[\hat A, \hat B\hat C] = [\hat A, \hat B]\hat C + \hat B[\hat A,
+\hat C]$. (d) Leid $[\hat x, \hat p^n] = \iu\hbar\,n\hat p^{n-1}$ af en
+duid dit: welke klassieke bewerking bootst $[\hat x, \cdot\,]$ na?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b3:quantum-formalism:5}
+Opeenvolgende metingen. Een foton begint als $\ket V$. (a) Het treft
+polarisatoren onder $45^\circ$ en daarna $0^\circ$ (horizontaal): bereken
+de kans dat het beide overleeft, met de tussenliggende ineenstorting
+expliciet gemaakt. (b) Vervang de middelste polarisator door twee onder
+$30^\circ$ en $60^\circ$: doorlating? (c) Met $N - 1$ tussenliggende
+polarisatoren in stappen van $90^\circ/N$: toon aan dat de
+overlevingskans $\cos^{2N}(\pi/2N)$ is en reken haar uit voor $N = 2, 5, 20$. (d) De limiet $N \to \infty$ draait de polarisatie \emph{zonder}
+verlies: geef commentaar (deze ``kwantumzeno''-rotatie wordt op echte
+qubits gebruikt).
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b3:quantum-formalism:6}
+Op de ruimte met twee niveaus is $\hat A = \begin{pmatrix}0&1\\1&0
+\end{pmatrix}$ en $\hat B = \begin{pmatrix}1&0\\0&-1\end{pmatrix}$.
+(a) Bereken $[\hat A, \hat B]$: verenigbaar? (b) De toestand is $\ket1$:
+geef de uitkomststatistiek van een meting van $\hat B$, en vervolgens van
+een meting van $\hat A$ \emph{nadat} een meting van $\hat B$ de waarde
+$+1$ gaf. (c) Meet eerst $\hat A$ (uitkomst $+1$), dan $\hat B$, dan
+opnieuw $\hat A$: met welke kans \emph{weerspreekt} de laatste $\hat A$
+de eerste? (d) Wat zou een \omterm{def:b3:quantum-formalism:commutator}{commutator} nul voor (c) hebben
+betekend?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b3:quantum-formalism:7}
+(a) Bereken voor de gaussische toestand van
+\cref{exo:b3:schrodinger-three-dimensions:1}, beperkt tot één dimensie,
+$\Delta x$ en $\Delta p$ (gebruik het fourierpaar of integreer) en ga na
+dat de relatie van Heisenberg met gelijkheid geldt. (b) Welke toestanden
+verzadigen de algemene onzekerheidsstelling (formuleer de voorwaarde uit
+het gelijkheidsgeval van Cauchy--Schwarz)? (c) Een elektron opgesloten tot
+$\Delta x = \qty{0.1}{nm}$: welke schaal heeft de minimale kinetische
+energie? (d) Hetzelfde voor een knikker ($\qty{10}{g}$) tot op een micron
+gelokaliseerd: trek uw conclusie.
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b3:quantum-formalism:8}
+(a) Vind uit \cref{prop:b3:quantum-formalism:evolution} het paar van
+Ehrenfest voor $\hat x$ en $\hat p$ terug met $\hat H = \hat
+p^2/2m + V$.
+(b) Toon aan dat de pariteit $\hat\Pi$ ($\hat\Pi\psi(x) =
+\psi(-x)$)
+hermitisch is, tot de identiteit kwadrateert en de \omterm{def:b3:quantum-formalism:observable}{eigenwaarden} $\pm1$
+heeft. (c) Toon aan dat $[\hat H, \hat\Pi] = 0$ voor een symmetrische
+potentiaal en concludeer dat niet-ontaarde niveaus een bepaalde pariteit
+hebben. (d) Welk waargenomen feit over de niveaus van een symmetrische
+dubbele put verklaart dit (denk aan het ammoniakdoublet uit het volume van
+jaar 2)?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b3:quantum-formalism:9}
+Een VSCO aan het werk. In de vierkante tweedimensionale doos wordt het
+niveau $E
+\propto 5$ opgespannen door $\ket{1,2}$ en $\ket{2,1}$. (a) Toon
+aan dat de energie alleen de toestanden niet etiketteert. (b) Laat $\hat S$
+$x
+\leftrightarrow y$ verwisselen: toon aan dat $\hat S$ hermitisch is, met
+$\hat
+H$ commuteert, en bepaal haar eigentoestanden binnen het niveau. (c) Ga na dat het paar $(\hat H, \hat S)$
+elke toestand van dit niveau uniek etiketteert. (d) Geef de algemene
+moraal: ontaarding betekent dat het stel etiketten nog niet volledig was, en
+de symmetrie levert het ontbrekende etiket.
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b3:quantum-formalism:10}
+Onzekerheid tussen energie en tijd, eerlijk. Definieer voor elke
+\omterm{def:b3:quantum-formalism:observable}{observabele} $\hat A$ de evolutietijd $\tau_A = \Delta A\,/\,|\dd\langle\hat
+A\rangle/\dd t|$ --- de tijd waarin het gemiddelde één standaardafwijking
+opschuift. (a) Bewijs $\Delta
+E\;\tau_A \ge \hbar/2$ uit
+\cref{thm:b3:quantum-formalism:uncertainty} en
+\cref{prop:b3:quantum-formalism:evolution}. (b) Waarom is dit \emph{geen}
+onzekerheid tussen twee \omterm{def:b3:quantum-formalism:observable}{observabelen} (wat is de tijd in het formalisme)?
+(c) Pas het toe op een aangeslagen atomaire toestand met levensduur
+\qty{10}{ns}: lijnbreedte. (d) Pas het toe op uw polshorloge: hoe scherp
+kan de energie van een stelsel zijn als er zichtbaar elke seconde iets in
+verandert?
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b3:quantum-formalism:11}
+Bewijs van de onzekerheidsstelling. Met $\hat\alpha, \hat\beta$ als in de
+tekst: (a) rechtvaardig $\Delta A^2 = \|\hat\alpha\ket\psi\|^2$ met de
+hermiticiteit; (b) pas Cauchy--Schwarz toe en splits
+$\braket{\hat\alpha\psi}{\hat\beta\psi}$ in een hermitisch en een
+antihermitisch deel, en vereenzelvig die met de gemiddelden van de
+anticommutator en de \omterm{def:b3:quantum-formalism:commutator}{commutator}; (c) concludeer en zeg wanneer de
+gelijkheid geldt; (d) toon aan dat voor $[\hat A, \hat B] = \iu\hbar$
+geen enkele toestand eigenvector van een van beide \omterm{def:b3:quantum-formalism:observable}{observabelen} kan zijn
+terwijl beide afwijkingen eindig blijven --- en verzoen dit met vlakke
+golven.
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b3:quantum-formalism:12}
+De bewaakte pan. Een stelsel met twee niveaus begint in $\ket1$ en zijn
+\omterm{def:b3:hamiltonian-mechanics:hamiltonian}{hamiltoniaan} drijft een rabi-achtige oscillatie: na een tijd $t$ is de
+toestand $\cos(\omega t)\ket1 + \sin(\omega t)\ket2$ (neem dit als
+gegeven). (a) Wanneer is de overdracht naar $\ket2$ zonder meting
+voltooid? (b) Meet ``welke toestand?'' op de tijdstippen $T/N, 2T/N, \dots$ met $T =
+\pi/2\omega$: toon aan dat de kans om het stelsel bij elke
+controle \emph{nog steeds} in $\ket1$ aan te treffen $[\cos^2(\pi/2N)]^N$
+is. (c) Reken dit uit voor $N = 1, 4, 20, 100$ en toon aan dat het naar $1$
+gaat: veelvuldig waarnemen bevriest de evolutie (het kwantumzeno-effect,
+in 1990 met gevangen ionen waargenomen). (d) Leg in één zin uit welk
+postulaat het bevriezen doet.
+\end{exercise}
+
+\begin{omfigure}
+\includegraphics[width=0.62\linewidth]{images/book5/photo-solvay-1927.jpg}
+
+{\small De Solvayconferentie van 1927 (foto van Benjamin Couprie, publiek domein): de mensen die de postulaten van dit hoofdstuk bouwden, in één zaal --- en die diezelfde week nog ruzieden over wat meten betekent.}
+\end{omfigure}
+
+\section{Vraagstuk: Neutrino's verkleden zich onderweg}
+
+\begin{problem}[{Weekendvraagstuk --- oscillaties met twee niveaus dwars
+door de aarde}]\label{pb:b3:quantum-formalism:1}
+Neutrino's worden in kernreacties geboren als \emph{smaak}toestanden ---
+elektronneutrino $\ket{\nu_e}$ of muonneutrino $\ket{\nu_\mu}$ --- maar
+zij \emph{planten zich voort} als eigentoestanden van de energie (de
+massa), $\ket{\nu_1},
+\ket{\nu_2}$. De twee bases vallen niet samen:
+zij zijn over een \emph{menghoek} $\theta$ gedraaid,
+\[
+\ket{\nu_e} = \cos\theta\,\ket{\nu_1} + \sin\theta\,\ket{\nu_2} ,
+\qquad
+\ket{\nu_\mu} = -\sin\theta\,\ket{\nu_1} + \cos\theta\,\ket{\nu_2} .
+\]
+De ontdekking dat neutrino's daardoor onderweg tussen smaken
+\emph{oscilleren} --- en dus massa hebben --- leverde de Nobelprijs van
+2015 op. Dit vraagstuk leidt het effect af met niets buiten dit hoofdstuk.
+Een ultrarelativistisch neutrino met impuls $p$ en massa $m_i$ heeft
+energie $E_i \approx pc + m_i^2c^4/2pc \approx E +
+m_i^2c^4/2E$.
+
+\medskip\noindent\textbf{Deel I --- Het formalisme opgezet.}
+\begin{enumerate}
+  \item Ga na dat een orthonormaal $(\ket{\nu_1}, \ket{\nu_2})$ ook
+        $(\ket{\nu_e}, \ket{\nu_\mu})$ orthonormaal maakt.
+  \item Waarom moet de voortplantingsbasis de eigenbasis van de
+        \emph{energie} zijn, in welke basis het neutrino ook geboren is?
+        (Welk postulaat regeert de vrije vlucht?)
+  \item Een muonneutrino wordt op $t = 0$ geboren. Schrijf
+        $\ket{\psi(0)}$ in de massabasis.
+  \item Schrijf $\ket{\psi(t)}$, waarbij elke massacomponent haar fase
+        $\eu^{-\iu E_it/\hbar}$ draagt.
+  \item Toon aan dat een \emph{globale} fase er niet toe doet, en zonder
+        $\eu^{-\iu E_1t/\hbar}$ af: alleen de \emph{relatieve} fase
+        $\Delta\phi = (E_2 - E_1)t/\hbar$ drijft de natuurkunde.
+  \item Druk $E_2 - E_1$ uit in $\Delta m^2 = m_2^2 - m_1^2$ en $E$,
+        voor ultrarelativistische neutrino's.
+\end{enumerate}
+
+\medskip\noindent\textbf{Deel II --- De oscillatieformule.}
+\begin{enumerate}[resume]
+  \item Bereken de amplitude $\braket{\nu_e}{\psi(t)}$.
+  \item Toon aan dat de verschijningskans
+        \[
+        \mathcal P_{\nu_\mu \to \nu_e}(t) =
+        \sin^2(2\theta)\,\sin^2\Big(\frac{\Delta\phi}{2}\Big) .
+        \]
+        bedraagt. (Gebruik $2\sin\theta\cos\theta = \sin2\theta$.)
+  \item Toets de twee gezondheidslimieten: $\theta = 0$ en $m_1 = m_2$.
+        Wat bewijst elke waargenomen oscillatie dus?
+  \item Toon met $t \approx L/c$ aan dat
+        \[
+        \mathcal P = \sin^2(2\theta)\,
+        \sin^2\Big(\frac{\Delta m^2c^4}{4\hbar c}\,\frac{L}{E}\Big) ,
+        \]
+        en definieer de oscillatielengte $L_{\text{osc}} =
+        4\pi\hbar cE/\Delta m^2c^4$.
+  \item Toon aan dat de overlevingskans $\mathcal P_{\nu_\mu \to
+        \nu_\mu} = 1 - \mathcal P_{\nu_\mu\to\nu_e}$ is: waar is de
+        unitariteit gebruikt?
+  \item Waarom meet de oscillatie alleen $\Delta m^2$ en nooit de
+        massa's zelf?
+\end{enumerate}
+
+\medskip\noindent\textbf{Deel III --- De proeven lezen.}
+Atmosferische muonneutrino's ($E \approx \qty{1}{GeV}$) regenen van boven
+op een detector ($L \approx \qty{15}{km}$) en van onderen, dwars door de
+aarde ($L \approx \qty{12800}{km}$). Super-Kamiokande (1998) vond de flux
+van onderen gehalveerd en die van boven ongeschonden.
+\begin{enumerate}[resume]
+  \item Toon met $\hbar c = \qty{197}{MeV.fm}$ de handige vorm
+        $\dfrac{\Delta m^2c^4\,L}{4\hbar cE} = 1.27\,
+        \dfrac{\Delta m^2c^4\,[\unit{eV^2}]\ L\,[\unit{km}]}
+        {E\,[\unit{GeV}]}$ aan.
+  \item Als de oscillatie bij $L =
+        \qty{12800}{km}$ \emph{goed
+        ontwikkeld} moet zijn maar bij \qty{15}{km} \emph{verwaarloosbaar}
+        voor $E = \qty{1}{GeV}$: geef ruwe grenzen voor $\Delta m^2c^4$.
+  \item De gemeten waarde is $\Delta m^2c^4 \approx
+        \qty{2.5e-3}{eV^2}$: bereken de oscillatielengte bij
+        \qty{1}{GeV} en toets haar aan beide basislijnen.
+  \item De onderdrukking van onderen ligt dicht bij $1/2$, niet bij $0$:
+        toon aan dat het \emph{uitmiddelen} van $\sin^2$ over vele
+        oscillatielengten (en over energieën) $\tfrac12\sin^22\theta$
+        geeft, en leid daaruit af dat de atmosferische menging bijna
+        \emph{maximaal} is ($\theta \approx 45^\circ$).
+  \item Wat geeft $\Delta m^2c^4 = \qty{2.5e-3}{eV^2}$ voor de zwaarste
+        massa alleen als de lichtste verwaarloosbaar is --- en vergelijk
+        dat met de massa van het elektron: hoe zonderling licht zijn
+        neutrino's?
+  \item Reactorantineutrino's hebben $E \approx \qty{4}{MeV}$. Toon met
+        dezelfde formule met $1.27$ aan dat een basislijn van één tot
+        twee kilometer op de splitsing $\qty{2.5e-3}{eV^2}$ is afgestemd
+        (de proef Daya Bay), terwijl $L \approx \qty{180}{km}$ (KamLAND)
+        op de kleinere ``zonne''-splitsing $\qty{7.5e-5}{eV^2}$ is
+        afgestemd --- ga beide numeriek na.
+\end{enumerate}
+
+\medskip\noindent\textbf{Deel IV --- Wat het betekent.}
+\begin{enumerate}[resume]
+  \item De zon zendt $\nu_e$ uit; decennialang telden detectoren maar een
+        derde van de voorspelling. Leg het ``zonneneutrinoprobleem'' en
+        de oplossing ervan elk in één zin uit.
+  \item Waarom dwongen de oscillaties tot de conclusie dat neutrino's
+        \emph{massa hebben}, tegen de oorspronkelijke boekhouding van het
+        standaardmodel in?
+  \item Een kwantumstelsel dat over $12800$ kilometer fasecoherentie
+        bewaart: wat zegt dit over hoe zwak neutrino's wisselwerken, en
+        waarom moet de detector enorm zijn?
+  \item Smaak is een \omterm{def:b3:quantum-formalism:observable}{observabele}: waarom commuteert haar operator niet
+        met de vrije \omterm{def:b3:hamiltonian-mechanics:hamiltonian}{hamiltoniaan}, en welke behoudswet is voor smaak dus
+        \emph{niet} beschikbaar (terwijl energie en impuls behouden
+        blijven)?
+  \item De natuur heeft drie smaken en drie massa's: waarom beschrijft de
+        behandeling met twee niveaus elke proef toch zo goed? (Denk aan
+        de hiërarchie van de twee $\Delta m^2$ en aan welke daarvan elke
+        basislijn oplost.)
+  \item Benoem in het formalisme van dit hoofdstuk precies welke
+        ingrediënten de oscillatie voortbrachten: welke basisontstemming,
+        welk postulaat, welke fase.
+  \item Vat het genoemde resultaat samen: een draaihoek nabij $45^\circ$
+        en een splitsing $\Delta m^2c^4 =
+        \qty{2.5e-3}{eV^2}$ laten een
+        muonneutrino van een GeV verdwijnen met oscillatielengte
+        $\sim\qty{1000}{km}$ --- lineaire algebra met twee niveaus,
+        bevestigd dwars door het lichaam van de aarde.
+\end{enumerate}
+\end{problem}

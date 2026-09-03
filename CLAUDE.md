@@ -16,9 +16,10 @@ for the school years, PCSI and PC* for university years 1–2, an L3 de
 physique for year 3 — **pure physics, no chemistry**. Grades 1–6, where
 the French primaire taught no physics, use age-adapted chapters.
 
-**Current state: Books 1, 2 and 3 written, each in eight languages;
-Book 4 written in English (2026-08-22), in all eight languages
-(2026-08-22); Book 5 written in English (2026-08-27).**
+**Current state: all five books are written, and every one ships in
+eight languages** — English plus `fr`, `nl`, `es`, `pt`, `hi`, `ar`
+and `id`. Books 1–3 landed earlier; Book 4 was written and translated
+2026-08-22; Book 5 was written 2026-08-27 and translated 2026-09-03.
 
 - **Book 1** (Primary & Middle School, grades 1–9): 71 chapters + 71
   solutions files (~435 pp), 142 figures, photographs and AI-generated
@@ -48,7 +49,7 @@ Book 4 written in English (2026-08-22), in all eight languages
   The level guard is math Book 3 (Year 1): no surface integrals, div or
   curl — Gauss's and Ampère's laws are stated in integral form and used
   through symmetry; no wave equation in ch.~05.
-- **Language editions**: all three written books ship in `fr`, `nl`, `es`,
+- **Language editions**: all five books ship in `fr`, `nl`, `es`,
   `pt`, `hi`, `ar` and `id` alongside English — bodies under `parts/<year>/<lang>/` and
   `parts/<year>/solutions/<lang>/`, one entry file each, all registered
   in `latexmkrc` and `.github/workflows/release.yml`. Every edition is
@@ -108,6 +109,29 @@ Book 4 written in English (2026-08-22), in all eight languages
   six untranslated English legends. The generic lesson is in
   `../translation_instruction.md` — when a gate keys on a KEY=VALUE shape, ask
   what the MACRO form of the same thing looks like.
+- **`tools/check_orphan_lines.py` (2026-09-03) catches a line the translation
+  ABSORBED.** When a sentence's translation swallows the next source line's
+  content, that line falls outside every patch range and `id_apply` copies it
+  byte-identically — which is the guarantee, not a violation. Every census
+  passes, `check_translation.sh` never reads prose, and gate 9 files a one-word
+  match in tier 2 among true cognates, where it is invisible. Found by the
+  Spanish Book 5 agent (a bare English line reading `then`) and then live in
+  French, Dutch and Portuguese. Standalone — it imports nothing, so it is safe
+  to run while other agents hold the prose-gate modules.
+- **Homograph collisions are invisible to every gate here; the only detectors
+  are two link-count diffs against the English twin.** A collision is a
+  well-formed link, a real word and a native sentence, pointed at the wrong
+  definition — 188 of them shipped across six Book 5 editions before they were
+  hunted. Use the *frequency* census (a target linked far more than English
+  links it) **and** the *chapter-set* census (a target linked in a chapter
+  English never links it in); the first goes blind when the wrong sense lands
+  on a heavily-linked target, which is how Spanish hid 19 wrong `ligadura`
+  links at a ratio of 1.0. Both are written up, with the script and the
+  false-alarm classes, in `../translation_instruction.md`.
+- **Re-run the linker and both censuses AFTER the overfull sweep.** A late
+  rewording can mint a fresh wrong link: the Hindi Book 5 agent cleared a box
+  and created a new false link to *free energy*, because the word it introduced
+  meant *released*. The last action of a run must be a measurement, not an edit.
 - `tools/term_config/book{1,2}_*.py` are curated configs, not stubs —
   regenerate links after editing those books' definitions or prose
   (`book3_en.py`, `book4_en.py` and `book5_en.py` likewise).
@@ -157,8 +181,18 @@ Book 4 written in English (2026-08-22), in all eight languages
   unbounded operators, Bloch's theorem, Clausius–Mossotti's cavity
   field and the SEMF are `\admitted` with honest remarks; tensor
   index notation is introduced operationally in chs. 4–6.
-  Cross-volume references are prose-only. English only — translations
-  are a separate later effort.
+  Cross-volume references are prose-only. **Ships in all eight
+  languages (2026-09-03)** — one agent per edition, `es` self-scored
+  97/100 and the other six 96/100, every edition at 0 errors /
+  0 undefined / 0 overfull / 0 “invalid in math mode”, nullfont at the
+  English baseline of 10, and the `.fls` honesty check 54/54. Pages
+  against English’s 302: `ar` 277 < `hi` 292 < `pt` 316 < `nl` 320 <
+  `es`/`fr` 323 < `id` 329. Links against English’s 916: `ar` 686 <
+  `hi` 812 < `nl` 817 < `id` 954 < `pt` 967 < `es` 968 < `fr` 978.
+  The run’s dominant defect class was the **homograph collision** — one
+  target’s links landing on a word that carries a second sense in the
+  target language; 63 in `ar`, 45 in `fr`, 31 in `es`, 5 in `hi`, 6 in
+  `pt`, 38 in `nl`. See `../translation_instruction.md`.
 
 The invariant checks below are live for Books 1–5 and must stay
 green.

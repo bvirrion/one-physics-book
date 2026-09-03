@@ -261,9 +261,27 @@ def blank_math(text: str, findings: list, path: str) -> str:
             # ordinary TeX and appears in the English sources too; only a
             # leading space, or a trailing one after an ordinary token, is the
             # MT fingerprint we are after ("$P $ और $ Q $").
+            #
+            # A trailing RELATION or BINARY OPERATOR is the same kind of
+            # exemption, and it was missing. The canon's own idiom closes the
+            # math on the operator and lets the operand follow outside it as
+            # text or a macro -- "$\lambda_{\max}T = $ const",
+            # "$k_BT\ln n(h) + mgh = $ const", "$\Delta^{++} = $ uuu". Six
+            # such spans exist in the Book 5 ENGLISH source (four files), so
+            # the rule fired on prose no translator may touch: id_apply's math
+            # census requires the span byte-identical to English, and gate 7
+            # demanded it change. That is a hard conflict between two gates,
+            # not a defect -- found by the Hindi Book 5 agent, 2026-09-03,
+            # and confirmed by running this gate over the English canon
+            # (6 hits in 4 files, 0 after this change).
+            #
+            # It cannot mask the fingerprint it is looking for: MT spacing
+            # damage leaves the space after an ordinary TOKEN ("$P $"), never
+            # after a dangling relation, which no machine translator emits.
             bad_lead = bool(body) and body[0] == " "
             bad_trail = (bool(body) and body[-1] == " "
-                         and not re.search(r"\\[A-Za-z]+\s*$", body))
+                         and not re.search(r"\\[A-Za-z]+\s*$", body)
+                         and not re.search(r"[=+\-<>*/~]\s*$", body))
             if dollars == 1 and (bad_lead or bad_trail):
                 findings.append(
                     (path, line_of(text, i), "math-space",

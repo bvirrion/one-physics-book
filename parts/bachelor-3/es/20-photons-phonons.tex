@@ -1,0 +1,527 @@
+\chapter{Fotones y fonones}\label{ch:b3:photons-phonons}
+
+La teoría cuántica nació del asunto de este capítulo. En 1900, el
+espectro de los cuerpos incandescentes se negaba a obedecer a la física
+clásica --- y, peor aún, la física clásica predecía energía \emph{infinita} a
+longitudes de onda cortas, la ``catástrofe ultravioleta'' --- y el remedio
+desesperado de Planck, energía en paquetes de $h\nu$, resultó ser la
+llave maestra del siglo. Con la maquinaria ya montada --- el recuento de
+modos del \cref{ch:b3:schrodinger-three-dimensions} y la termodinámica del
+oscilador del \cref{ch:b3:canonical-ensemble} ---, la \omterm{thm:b3:photons-phonons:planck}{ley de Planck}
+ocupa media página: un gas de fotones, un oscilador ocupado a la manera de
+Bose por cada modo de la cavidad. Esa misma media página, con sonido en lugar de luz,
+es la teoría de los sólidos de Debye y la capacidad calorífica en $T^3$ que se
+le escapó al modelo de Einstein. Y llenando cada centímetro cúbico del universo está
+la obra maestra del asunto: el fondo cósmico de microondas a 2.725 kelvin,
+el cuerpo negro más perfecto jamás medido --- la
+radiación térmica del universo joven, que aún sigue llegando.
+
+\section{La ley de Planck, deducida}
+
+\begin{theorem}[El espectro del cuerpo negro]\label{thm:b3:photons-phonons:planck}
+\index{ley de Planck}\index{radiación del cuerpo negro}
+Una cavidad a temperatura $T$ admite modos electromagnéticos ---
+ondas estacionarias contadas exactamente como en la
+\cref{prop:b3:schrodinger-three-dimensions:counting}, por duplicado por la
+polarización:
+\[
+g(\nu)\,\dd\nu = \frac{8\pi V}{c^3}\,\nu^2\,\dd\nu .
+\]
+Cada modo es un oscilador cuántico que alberga, en el equilibrio,
+$\bar n = 1/(\eu^{h\nu/k_{\text{B}}T} - 1)$ fotones
+(\cref{exo:b3:canonical-ensemble:5}; equivalentemente, bosones con $\mu =
+0$). La energía por unidad de volumen y de frecuencia es, por tanto,
+\[
+u(\nu, T) = \frac{8\pi h\nu^3}{c^3}\,
+\frac{1}{\eu^{h\nu/k_{\text{B}}T} - 1} :
+\]
+la \emph{\omterm{thm:b3:photons-phonons:planck}{ley de Planck}} (1900). Sus consecuencias, todas tal como se miden:
+el máximo en $\lambda_{\max}T = \qty{2898}{\micro m.K}$ (la ley del
+desplazamiento de Wien del volumen del Año 2, ahora deducida); el flujo total
+de una superficie negra $\Phi = \sigma T^4$ con
+\[
+\sigma = \frac{2\pi^5k_{\text{B}}^4}{15h^3c^2}
+ = \qty{5.67e-8}{W.m^{-2}.K^{-4}}
+\]
+(Stefan--Boltzmann, con su constante ahora construida a partir de $h$, $c$ y
+$k_{\text{B}}$); y la densidad de fotones $n_\gamma \approx
+\num{2.03e7}\,(T/\unit{K})^3$ por metro cúbico.
+\end{theorem}
+
+\begin{proof}[Demostración parcial]
+Multiplíquese el recuento de modos por $h\nu\,\bar n$. La integral de la
+energía total, con $x = h\nu/k_{\text{B}}T$ y $\int_0^\infty
+x^3\dd x/(\eu^x - 1) = \pi^4/15$ (admitida), da $u_{\text{tot}}
+= aT^4$ y, con el factor de flujo habitual $c/4$, la
+$\sigma$ enunciada. La ley de Wien es la maximización del
+\cref{exo:b3:photons-phonons:1}. A baja frecuencia ($h\nu \ll
+k_{\text{B}}T$), cada modo lleva $k_{\text{B}}T$ ---
+Rayleigh--Jeans, correcta para la radio, catastrófica si se extiende a toda
+$\nu$: el corte de Planck es la licencia de la equipartición
+(\cref{thm:b3:canonical-ensemble:equipartition}) revocada
+modo a modo.
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}
+  \begin{axis}[omaxis, axis x line=bottom, axis y line=left,
+    width=11.4cm, height=6.0cm, xmin=0, xmax=4.4, ymin=0, ymax=1.5,
+    xlabel={$\nu$ (unidades de $10^{14}$ Hz)}, ylabel={$u(\nu)$ (a escala)},
+    xlabel style={at={(axis description cs:0.5,-0.09)}, anchor=north},
+    xtick={1,2,3,4}, ytick=\empty, clip=false,
+    legend style={font=\scriptsize, at={(0.97,0.93)}, anchor=north east,
+      draw=none, fill=none}]
+    \addplot[omDef, very thick, domain=0.01:4.4, samples=200]
+      {1.42*x^3/(exp(x/1.208)-1)/8.3};
+    \addlegendentry{$T = \qty{5800}{K}$ (el Sol)}
+    \addplot[omThm, thick, domain=0.01:4.4, samples=200]
+      {1.42*x^3/(exp(x/0.833)-1)/2.72};
+    \addlegendentry{$T = \qty{4000}{K}$}
+    \addplot[omExo, thick, domain=0.01:4.4, samples=200]
+      {1.42*x^3/(exp(x/0.625)-1)/1.15};
+    \addlegendentry{$T = \qty{3000}{K}$}
+    \addplot[gray, dashed, domain=0.01:1.9, samples=100]
+      {1.42*x^2*1.208/8.3};
+    \node[gray, font=\scriptsize, anchor=west, rotate=48] at (axis cs:1.28,0.62)
+      {Rayleigh--Jeans};
+  \end{axis}
+\end{tikzpicture}
+
+{\small Espectros de Planck a tres temperaturas (cada uno escalado a una
+altura comparable: las áreas verdaderas crecen como $T^4$). La recta clásica
+de Rayleigh--Jeans sigue el flanco de baja frecuencia y luego
+se dispara hacia la catástrofe ultravioleta; el peaje $h\nu$ de Planck
+cierra los modos de alta frecuencia y dobla la curva hacia abajo.}
+\end{omfigure}
+
+\begin{example}[Tres termómetros]\label{ex:b3:photons-phonons:thermometers}
+El Sol ($T = \qty{5800}{K}$): máximo en \qty{0.50}{\micro m} ---
+nuestros ojos evolucionaron sobre su máximo. Un cuerpo a \qty{310}{K}: máximo
+cerca de \qty{9.4}{\micro m}, que radia $\sigma T^4 \approx
+\qty{520}{W/m^2}$ desde cada metro cuadrado de piel (por fortuna, la
+habitación radia de vuelta;
+\cref{exo:b3:photons-phonons:2}). El universo ($T =
+\qty{2.725}{K}$): máximo cerca de \qty{1.9}{mm} en forma de frecuencia
+(\qty{160}{GHz}) y $411$ fotones por centímetro cúbico ---
+el fondo cósmico de microondas, el gran ejemplo de este capítulo
+(\cref{pb:b3:photons-phonons:1}).
+\end{example}
+
+\begin{proposition}[Termodinámica de la luz]\label{prop:b3:photons-phonons:thermo}
+\index{presión de radiación!térmica}
+El gas de fotones tiene densidad de energía $u = aT^4$ (con $a =
+4\sigma/c$), presión
+\[
+P = \frac u3 ,
+\]
+densidad de entropía $\tfrac43 aT^3$ y número de fotones $\propto T^3$.
+Consecuencias: una caja llena de radiación que se expande adiabáticamente
+se enfría como $T \propto 1/L$ --- los fotones del universo en expansión
+se enfriaron de $3000$ K a los $2.725$ K de hoy por un factor de estiramiento
+$\approx1100$ \emph{conservando} un espectro de Planck perfecto; y
+en las estrellas masivas, el crecimiento en $T^4$ permite a la presión de
+radiación rivalizar con la del gas, y fija un límite superior a las masas
+estelares (\cref{ch:b3:astrophysics}).
+\end{proposition}
+
+\begin{proof}[Demostración parcial]
+$P = u/3$: un gas isótropo de partículas a velocidad $c$ entrega
+un tercio de su densidad de energía como presión (el factor $\langle
+\cos^2\theta\rangle = 1/3$, como en la teoría cinética del volumen del
+Año 1). La entropía sale de $\dd U = T\dd S - P\dd V$ aplicado a $U =
+aT^4V$. Adiabática: $S \propto T^3V$ constante da $T \propto
+V^{-1/3}$.
+\end{proof}
+
+\section{Fonones: la culminación de Debye}
+
+\begin{theorem}[El modelo de Debye]\label{thm:b3:photons-phonons:debye}
+\index{modelo de Debye}\index{fonón}
+Las vibraciones de un cristal son \omterm{prop:b3:continuum-elasticity:waves}{ondas elásticas} cuantizadas exactamente como
+la luz: los \emph{fonones}, con tres polarizaciones a la velocidad del sonido
+$c_{\text{s}}$, contados como los fotones pero con el total limitado a
+$3N$ modos --- el tope que define la \emph{temperatura de Debye}
+\[
+k_{\text{B}}\theta_{\text{D}} = \hbar c_{\text{s}}
+(6\pi^2n)^{1/3} .
+\]
+La capacidad calorífica interpola entre las dos leyes clásicas:
+\[
+C \to 3Nk_{\text{B}} \;(T \gg \theta_{\text{D}})
+\qquad\text{(Dulong--Petit)} ,
+\qquad
+C \to \frac{12\pi^4}{5}\,Nk_{\text{B}}
+\Big(\frac{T}{\theta_{\text{D}}}\Big)^3
+\;(T \ll \theta_{\text{D}}) :
+\]
+la ley $T^3$ que la calorimetría a baja temperatura exigía y que
+la frecuencia única de Einstein no podía dar
+(\cref{exo:b3:canonical-ensemble:6}). La razón es la misma que
+para la luz: por frío que esté el cristal, existen cuantos de sonido de
+longitud de onda larga arbitrariamente baratos, y su recuento al estilo de los
+fotones da el $T^3$ al estilo de los fotones.
+\end{theorem}
+
+\begin{proof}[Demostración parcial]
+Repítase el cálculo de los fotones con $c \to c_{\text{s}}$, tres
+polarizaciones y el total de modos $\int g\,\dd\nu = 3N$ fijando el
+corte. Para $T \ll \theta_{\text{D}}$, el corte es invisible y
+la integral de energía en $T^4$ da $C \propto T^3$; a $T$ alta, cada
+uno de los $3N$ modos lleva $k_{\text{B}}T$. La integral completa de
+interpolación se admite.
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}
+  \begin{axis}[omaxis, axis x line=bottom, axis y line=left,
+    width=11.0cm, height=5.6cm, xmin=0, xmax=1.5, ymin=0, ymax=1.15,
+    xlabel={$T/\theta_{\text{D}}$}, ylabel={$C/3Nk_{\text{B}}$},
+    xlabel style={at={(axis description cs:0.5,-0.1)}, anchor=north},
+    xtick={0.5,1,1.5}, ytick={0.5,1}, clip=false,
+    legend style={font=\scriptsize, at={(0.95,0.42)}, anchor=north east,
+      draw=none, fill=none}]
+    \addplot[gray, dashed, domain=0:1.5, forget plot] {1};
+    \addplot[omDef, very thick, domain=0.02:1.5, samples=200]
+      {1/(1+0.01283/(x*x*x))};
+    \addlegendentry{Debye}
+    \addplot[omExo, thick, dashed, domain=0.02:1.5, samples=200]
+      {(0.75/x)^2*exp(-0.75/x)/(1-exp(-0.75/x))^2};
+    \addlegendentry{Einstein}
+    \node[omDef, font=\scriptsize, anchor=west] at (axis cs:0.2,0.28)
+      {$\propto T^3$};
+    \draw[->, omDef] (axis cs:0.2,0.24) -- (axis cs:0.13,0.13);
+  \end{axis}
+\end{tikzpicture}
+
+{\small Capacidad calorífica de un cristal: ambos modelos alcanzan
+Dulong--Petit, pero a baja temperatura la curva de frecuencia única de
+Einstein muere exponencialmente mientras que los baratos fonones de longitud
+de onda larga de Debye sostienen el $T^3$ medido --- la región de $T$ baja es
+``física de fotones'' pura, con sonido.}
+\end{omfigure}
+
+\begin{example}[Los fonones son partículas de verdad]\label{ex:b3:photons-phonons:phonon-real}
+Los fonones dispersan neutrones y rayos X con conservación de la energía y del
+momento (cristalino) --- las curvas de dispersión medidas
+$\omega(\vect k)$ del \cref{ch:b3:crystalline-solids} son su
+espectroscopia. Transportan calor: la conductividad térmica de un aislante
+es la $\kappa = \tfrac13 Cc_{\text{s}}\ell$ de un gas de fonones, y
+el diamante --- rígido, ligero, puro --- conduce cinco veces mejor que el cobre
+a temperatura ambiente por medio de fonones solamente
+(\cref{exo:b3:photons-phonons:12}). Y se extinguen a baja
+temperatura como $T^3$, y por eso los ingenieros criogénicos hablan de
+cristales que se quedan ``acústicamente en silencio''.
+\end{example}
+
+\begin{method}[El oficio del gas de radiación]\label{met:b3:photons-phonons:method}
+(1) Cuéntense los modos ($\propto\nu^2$ por polarización en 3D); ocúpense
+con $1/(\eu^{\beta h\nu} - 1)$; intégrese --- espérense energías en $T^4$
+y recuentos y capacidades en $T^3$. (2) Los máximos, por Wien;
+los totales, por Stefan; el $k_{\text{B}}T$ clásico por modo solo por debajo de
+$h\nu \sim k_{\text{B}}T$. (3) Para los sólidos, tópense los modos en $3N$
+($\theta_{\text{D}}$); la forma de Einstein para los modos de la rama óptica y
+la de Debye para los acústicos. (4) Radiación adiabática: $T \propto
+V^{-1/3}$. (5) Compruébense las dos constantes del oficio: $\lambda_{
+\max}T = \qty{2898}{\micro m.K}$ y $\sigma =
+\qty{5.67e-8}{W/m^2K^4}$.
+\end{method}
+
+\begin{omfigure}
+\includegraphics[width=0.58\linewidth]{images/book5/ai/b5-09-thermal-house.png}
+
+{\small Una casa vista con una cámara térmica: cada superficie radia su espectro de Planck, y la cámara lee la temperatura directamente del infrarrojo --- Stefan, Boltzmann y Wien auditando la factura de la calefacción.}
+\end{omfigure}
+
+\section{Ejercicios}
+
+\begin{exercise}[$\star$]\label{exo:b3:photons-phonons:1}
+(a) A partir de la \omterm{thm:b3:photons-phonons:planck}{ley de Planck} en forma de longitud de onda, muéstrese que el máximo cumple
+$\lambda_{\max}T = $ const. (la ecuación trascendente puede
+citarse: $x = 4.965$). (b) Calcúlense las longitudes de onda del máximo para el
+Sol, un filamento a \qty{2700}{K}, un cuerpo a \qty{310}{K} y el cielo a
+\qty{2.725}{K}. (c) ¿Cuál de los cuatro muestrea bien el ojo humano
+y qué fracción de la emisión de un filamento es visible
+(estímese: pequeña)? (d) ¿Por qué son las ``cámaras de infrarrojos'' la
+herramienta adecuada para personas y edificios?
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b3:photons-phonons:2}
+Balances radiativos. (a) Una persona ($\qty{1.7}{m^2}$, con la piel a
+\qty{306}{K}) en una habitación a \qty{293}{K}: potencia radiada neta
+$\sigma A(T_1^4 - T_2^4)$. (b) Compárese con el metabolismo de
+\qty{100}{W} del cuerpo: ¿por qué lo toleramos (la ropa, y la
+habitación que radia de vuelta)? (c) La Tierra absorbe la luz solar sobre $\pi
+R^2$ y radia sobre $4\pi R^2$: dedúzcase $T_{\text{ef}}
+= [(1-A)\,\Phi_\odot/4\sigma]^{1/4}$ con $\Phi_\odot =
+\qty{1361}{W/m^2}$ y albedo $A = 0.30$, y evalúese. (d) La
+media superficial medida es de \qty{288}{K}: nómbrese el mecanismo de
+la diferencia de \qty{33}{K}
+(\cref{pb:b3:harmonic-oscillator:1}).
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b3:photons-phonons:3}
+Contar fotones. (a) Con $n_\gamma = \num{2.03e7}\,T^3$ por
+metro cúbico: la densidad de fotones del fondo a \qty{2.725}{K}.
+(b) La luz solar en la Tierra: a partir de $\Phi_\odot$ y de una energía media por fotón
+$\approx 2.7\,k_{\text{B}}T_\odot \approx \qty{1.35}{eV}$,
+calcúlese el flujo de fotones por metro cuadrado y por segundo. (c) Una
+bombilla incandescente de \qty{60}{W} (con un 5\% visible): fotones visibles por
+segundo. (d) ¿Por qué es rutinario ``contar fotones'' para los astrónomos
+y absurdo para los radiadores?
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b3:photons-phonons:4}
+La catástrofe y su cola. (a) Muéstrese que la equipartición clásica
+($k_{\text{B}}T$ por modo) da $u(\nu) =
+8\pi\nu^2k_{\text{B}}T/c^3$, divergente al integrarla. (b) ¿Dónde
+se reduce a ella la \omterm{thm:b3:photons-phonons:planck}{ley de Planck}? (c) Los radioastrónomos miden
+el fondo cósmico a \qty{1.4}{GHz}: compruébese que allí $h\nu/k_{\text{B}}T \ll 1$ y
+justifíquese su costumbre de la ``temperatura de antena'', que da las intensidades
+en kelvin. (d) En el máximo del fondo, a \qty{160}{GHz}, evalúese
+$h\nu/k_{\text{B}}T$: ¿es clásico el máximo?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b3:photons-phonons:5}
+Presión de radiación. (a) Dedúzcase $P = u/3$ de la isotropía (o acéptese
+el factor cinético) y evalúese la presión de la luz solar en la
+órbita terrestre; compárese con la presión atmosférica. (b) Dentro del
+Sol ($T \approx \qty{1.5e7}{K}$): calcúlense $P_{\text{rad}} =
+aT^4/3$ y compárese con la presión del gas, $\sim\qty{2e16}{Pa}$.
+(c) La presión de radiación crece como $T^4$ y la del gas como $T$: muéstrese
+por qué las estrellas suficientemente masivas (y por tanto más calientes) pasan
+a estar dominadas por la radiación y se vuelven inestables --- el techo de
+Eddington cerca de $\sim100\,M_\odot$. (d) Láseres: un haz de \qty{1}{kW} enfocado
+para empujar, ¿qué fuerza da? ¿Por qué se quedan los ``rayos tractores'' en el cine mientras
+que las \emph{pinzas} ópticas (gradientes, piconewtons) son herramientas reales?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b3:photons-phonons:6}
+El estiramiento del universo. El fondo cósmico se emitió en la recombinación
+($T \approx \qty{3000}{K}$, terreno del
+\cref{exo:b3:grand-canonical:12}) y llega a \qty{2.725}{K}. (a) A partir de $T \propto
+1/a$, el factor de estiramiento de todas las longitudes desde la emisión. (b) Muéstrese
+que un espectro de Planck sigue siendo de Planck bajo un estiramiento uniforme de todas
+las longitudes de onda (¿qué le ocurre a $T$?). (c) El máximo emitido (¡luz visible
+anaranjada!), ¿adónde llega? (d) ¿Por qué es entonces oscuro el cielo
+para el ojo y deslumbrante para un receptor de microondas?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b3:photons-phonons:7}
+Temperaturas de Debye a partir del sonido. (a) Evalúese $\theta_{\text{D}} =
+\hbar c_{\text{s}}(6\pi^2n)^{1/3}/k_{\text{B}}$ para el cobre
+($c_{\text{s}} \approx \qty{3800}{m/s}$, $n =
+\qty{8.5e28}{m^{-3}}$) y compárese con los
+\qty{343}{K} calorimétricos. (b) El diamante: $c_{\text{s}} \approx
+\qty{13000}{m/s}$, $n = \qty{1.76e29}{m^{-3}}$: calcúlese y
+compárese con los $\approx\qty{2200}{K}$. (c) El plomo: blando y pesado ---
+explíquese su $\theta_{\text{D}} \approx \qty{90}{K}$ en una
+frase. (d) Enúnciese la regla que conecta la rigidez de un sólido, su
+masa atómica y su temperatura de congelación cuántica.
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b3:photons-phonons:8}
+El cobre a un kelvin. (a) Usando $C = \gamma T + \beta T^3$ con
+la $\gamma$ del \cref{ex:b3:quantum-statistics:heat} y el coeficiente
+$T^3$ de Debye para $\theta_{\text{D}} = \qty{343}{K}$: calcúlense
+ambos términos por mol a \qty{1}{K}. (b) ¿Cuál gana, y por cuánto? (c) ¿A qué
+temperatura se cruzan? (d) ¿Por qué es este
+régimen la ventana del calorimetrista a la densidad electrónica de
+estados?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b3:photons-phonons:9}
+Efecto invernadero de una capa. Sitúese la superficie (a temperatura $T_s$)
+bajo una única capa atmosférica delgada (a temperatura $T_a$) transparente
+a la luz solar pero opaca al infrarrojo térmico. (a) Escríbase el balance
+de energía de la capa (que absorbe $\sigma T_s^4$ y radia
+$2\sigma T_a^4$) y el de la superficie (que absorbe la luz solar $S$ más
+$\sigma T_a^4$). (b) Muéstrese que $T_s = 2^{1/4}\,T_{\text{ef}}$, donde
+$\sigma T_{\text{ef}}^4 = S$. (c) Con $T_{\text{ef}} =
+\qty{255}{K}$: evalúense $T_s$ y compárese con \qty{288}{K}
+(la atmósfera real es una manta parcial y de muchas capas). (d)
+Conéctese con el \cref{pb:b3:harmonic-oscillator:1}: ¿qué física
+molecular hace la capa opaca en el infrarrojo y transparente en
+el visible?
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b3:photons-phonons:10}
+La constante de Stefan desde cero. (a) Móntese $u_{\text{tot}} =
+\int u(\nu)\dd\nu$ con $x = h\nu/k_{\text{B}}T$ y el
+$\pi^4/15$ dado, y obténgase $u = aT^4$ con $a =
+8\pi^5k_{\text{B}}^4/15h^3c^3$. (b) El flujo de una superficie
+negra es $c\,u/4$ (acéptese el cuarto geométrico): fórmese
+$\sigma$ y evalúese numéricamente a partir de $h$, $c$ y
+$k_{\text{B}}$. (c) Compárese con \qty{5.67e-8}{W.m^{-2}.K^{-4}}.
+(d) Inversión histórica: Planck ajustó su ley a los espectros y
+extrajo \emph{a la vez} $h$ y $k_{\text{B}}$ (y con ella el número de
+Avogadro) en 1900 --- dígase por qué la curva del cuerpo negro fija dos
+constantes a la vez.
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b3:photons-phonons:11}
+Los coeficientes A y B de Einstein (1917). Átomos de dos niveles (energías $0,
+h\nu_0$; poblaciones $N_1, N_2$) se hallan en radiación de densidad
+espectral $u(\nu_0)$. Tasa de absorción: $B_{12}uN_1$; emisión
+estimulada: $B_{21}uN_2$; espontánea: $AN_2$. (a) Escríbase el
+balance de equilibrio. (b) Exíjase que la razón de Boltzmann
+$N_2/N_1 = \eu^{-h\nu_0/k_{\text{B}}T}$ y la $u$ de Planck valgan
+a la vez para \emph{toda} $T$: dedúzcase $B_{12} = B_{21}$ y
+\[
+\frac{A}{B} = \frac{8\pi h\nu_0^3}{c^3} .
+\]
+(c) Interprétese: ¿por qué \emph{obliga} el equilibrio térmico a que
+exista la emisión espontánea, y fija su tasa a partir de la
+estimulada? (d) El $\nu^3$: conéctese con los tiempos de vida del
+\cref{exo:b3:perturbation-theory:8} y con por qué es difícil hacer láseres
+a frecuencias de rayos X.
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b3:photons-phonons:12}
+El diamante, la autopista de los fonones. Conductividad térmica de un
+aislante: $\kappa = \tfrac13 C_v c_{\text{s}}\ell$ por unidad de volumen,
+con $\ell$ el recorrido libre medio de los fonones. (a) Para el diamante a
+\qty{300}{K} ($C_v \approx \qty{1.8e6}{J.m^{-3}K^{-1}}$, es decir,
+parcialmente congelada; $c_{\text{s}} = \qty{13000}{m/s}$; $\ell
+\approx \qty{0.3}{\micro m}$): calcúlense $\kappa$ y compárese con los
+\qty{400}{W/(m.K)} del cobre. (b) ¿Por qué es $\ell$ tan largo en el diamante
+(rígido, ligero, isotópicamente limpio --- qué dispersa a los fonones)?
+(c) El diamante purificado isotópicamente casi duplica $\kappa$: ¿qué
+revela eso sobre la dispersión de fonones por el desorden de masas
+isotópicas? (d) Dos usos: disipadores de calor en electrónica; y por qué un
+diamante se siente frío en el labio --- explíquese la sensación.
+\end{exercise}
+
+\begin{omfigure}
+\includegraphics[width=0.62\linewidth]{images/book5/photo-cmb-wmap.png}
+
+{\small Todo el cielo en microondas (NASA/WMAP, dominio público): la radiación de Planck a \qty{2.7}{K} del fondo cósmico, cartografiada. El moteado es de una parte en $10^5$ --- las semillas de las galaxias, impresas sobre el cuerpo negro de este capítulo.}
+\end{omfigure}
+
+\section{Problema: la luz más antigua}
+
+\begin{problem}[{Problema de fin de semana --- leer el fondo cósmico
+de microondas}]\label{pb:b3:photons-phonons:1}
+Apúntese cualquier receptor de ondas milimétricas a cualquier trozo de cielo y
+dará la misma señal: un espectro de Planck a $T =
+\qty{2.72548(57)}{K}$, más liso que cualquier horno que la humanidad haya
+construido. Es el fogonazo de la recombinación del universo
+(\cref{exo:b3:grand-canonical:12}), estirado mil cien veces,
+y lleva consigo el censo del cosmos. Datos: $T_0 =
+\qty{2.725}{K}$; $n_\gamma = \num{2.03e7}\,T^3\,\unit{m^{-3}}$;
+$u = aT^4$, $a = \qty{7.56e-16}{J.m^{-3}.K^{-4}}$; densidad bariónica
+actual $n_{\text{b}} \approx \qty{0.25}{m^{-3}}$; densidad crítica
+$\rho_{\text{c}} \approx \qty{8.6e-27}{kg/m^3}$.
+
+\medskip\noindent\textbf{Parte I --- El espectro.}
+\begin{enumerate}
+  \item Calcúlese la longitud de onda del máximo (Wien) del fondo cósmico y su
+        densidad de fotones por centímetro cúbico.
+  \item Calcúlense su densidad de energía, en $\unit{J/m^3}$ y en
+        $\unit{eV/cm^3}$, y la fracción equivalente en masa de la
+        densidad crítica.
+  \item El espectro de COBE (1990) coincidió con el de Planck en unas pocas partes
+        en $10^4$ --- el público aplaudió la gráfica. ¿Por qué es tan difícil
+        explicar un espectro \emph{térmico perfecto} procedente del cielo vacío
+        por algo que no sea un pasado caliente y denso?
+  \item En la emisión, esos mismos fotones formaban un cuerpo negro a
+        \qty{3000}{K}: compruébese el factor de estiramiento $1 + z =
+        T_{\text{entonces}}/T_0$.
+  \item ¿Por qué se volvió transparente el universo justo a esa
+        temperatura (recuérdese qué equilibrio del
+        \cref{ch:b3:grand-canonical} se apagó)?
+  \item El cielo nocturno es oscuro (la paradoja de Olbers de la vieja
+        astronomía): ¿en qué sentido preciso es en realidad
+        \emph{brillante}, y a qué longitud de onda y temperatura?
+\end{enumerate}
+
+\medskip\noindent\textbf{Parte II --- El censo.}
+\begin{enumerate}[resume]
+  \item Calcúlese la razón de fotones a bariones $\eta^{-1} =
+        n_\gamma/n_{\text{b}}$.
+  \item Ese número --- unos dos mil millones de fotones por protón ---
+        es uno de los datos fundamentales de la cosmología: dígase qué
+        mide sobre la asimetría entre materia y antimateria (recuérdese el
+        \cref{exo:b3:grand-canonical:12}: los fotones son en su mayoría
+        productos de aniquilación).
+  \item Compárese la densidad de energía del fondo cósmico con la de la luz
+        de las estrellas ($\sim\qty{2e-15}{J/m^3}$ promediada sobre el universo):
+        ¿qué luz domina el cosmos?
+  \item El fondo cósmico supera en fotones a todo lo que las estrellas han
+        alumbrado jamás: ¿por qué hace esto que el universo primitivo
+        estuviera ``dominado por la radiación'', y qué tomó el relevo después (los
+        escalados $T^4$ frente a $T^3$ contra el $a^{-3}$ de la materia)?
+  \item Estímese la época de la igualdad entre materia y radiación: con la
+        densidad de radiación escalando como $(1+z)^4$ y la materia como
+        $(1+z)^3$, y con la razón actual
+        $u_{\text{rad}}/\rho_{\text{m}}c^2 \approx 1/3400$, hállese
+        $z_{\text{eq}}$.
+  \item Los neutrinos se desacoplaron antes y se enfriaron algo más
+        (se perdieron el recalentamiento por aniquilación de $e^+e^-$ del
+        \cref{exo:b3:grand-canonical:12}): la predicción
+        $T_\nu = (4/11)^{1/3}T_\gamma$ --- evalúese y
+        maravíllese ante la predicción de un mar de neutrinos a \qty{1.95}{K}
+        que nadie ha detectado aún de forma directa.
+\end{enumerate}
+
+\medskip\noindent\textbf{Parte III --- Las anisotropías.}
+\begin{enumerate}[resume]
+  \item El fondo cósmico está \qty{3.4}{mK} más caliente en una dirección y
+        más frío en la opuesta: interprétese con la física Doppler del
+        \cref{ch:b3:relativistic-kinematics} y extráigase nuestra
+        velocidad ($\Delta T/T = v/c$).
+  \item Quitado ese dipolo, quedan ondulaciones de $\Delta T/T \sim
+        \num{e-5}$ (COBE en 1992, y después WMAP y Planck): ¿qué
+        cartografían en $z = 1100$?
+  \item Esas semillas de densidad de $10^{-5}$ crecieron hasta ser galaxias: ¿por qué
+        amplifica la gravedad las sobredensidades (qué inestabilidad)
+        y por qué necesitó el crecimiento la igualdad entre materia y radiación
+        para arrancar de veras?
+  \item El tamaño de ondulación más intenso (alrededor de un grado en el cielo)
+        es una longitud de onda acústica --- sonido en el
+        plasma de fotones y bariones (¡el gas de este capítulo más
+        las ondas del \cref{ch:b3:continuum-elasticity}!): ¿qué fija
+        su escala (la distancia que recorre el sonido antes de la
+        recombinación)?
+  \item Medir ese ángulo frente a la escala física conocida
+        triangula la geometría del universo: enúnciese el
+        resultado (plana, con precisión del uno por ciento).
+  \item El monopolo a \qty{2.7}{K}, el dipolo de \qty{3}{mK} y las
+        ondulaciones de \qty{e-5}: ordénese lo que ha enseñado cada uno (un pasado
+        caliente; nuestro movimiento; las semillas y la geometría de todo).
+\end{enumerate}
+
+\medskip\noindent\textbf{Parte IV --- La herencia.}
+\begin{enumerate}[resume]
+  \item Penzias y Wilson hallaron la señal en 1965 como
+        ruido de antena que no había manera de quitar (tras desalojar a las palomas):
+        ¿por qué era inexplicable un exceso \emph{isótropo} e independiente de la
+        estación a \qty{3}{K} como fuente local o galáctica?
+  \item Alrededor del $1\%$ de la nieve de un televisor analógico sin sintonizar
+        era esta señal: reflexiónese en una frase.
+  \item El fondo cósmico atraviesa los cúmulos de galaxias y los electrones
+        calientes lo empujan ligeramente hacia frecuencias más altas (el efecto
+        Sunyaev--Zeldóvich): ¿por qué hace esto visibles a los cúmulos
+        como \emph{sombras} a baja frecuencia, y cuál es la virtud especial
+        de una sombra así (independiente de la
+        distancia)?
+  \item La frontera de hoy busca en la polarización del fondo cósmico la
+        huella de las ondas gravitatorias primordiales: ¿qué capítulos
+        de este libro casaría ese descubrimiento
+        (la polarización del \cref{ch:b3:covariant-electromagnetism}
+        y las ondas de la gravedad)?
+  \item Calcúlese el flujo de fotones del fondo cósmico a través de su cuerpo
+        ($n_\gamma c/4$ por unidad de área, con una sección del cuerpo
+        de $\sim\qty{0.5}{m^2}$): ¿cuántas reliquias del Big Bang
+        lo atraviesan cada segundo?
+  \item El fondo cósmico señala un sistema de reposo (aquel en el que el
+        dipolo se anula): explíquese por qué esto \emph{no}
+        contradice a la relatividad --- qué clase de sistema privilegia
+        el contenido material, y no las leyes.
+  \item Resúmase el resultado con nombre propio: una curva de Planck de
+        $2.725$ kelvin llenando el cielo --- $411$ fotones por centímetro
+        cúbico, dos mil millones por barión y máximo en
+        \qty{160}{GHz} --- es el recibo térmico del comienzo
+        caliente: la física estadística como piedra fundacional de la
+        cosmología.
+\end{enumerate}
+\end{problem}

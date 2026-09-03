@@ -37,6 +37,13 @@ $out_dir = 'build';
     'one_physics_book_4_university_year_2_ar.tex',
     'one_physics_book_4_university_year_2_id.tex',
     'one_physics_book_5_university_year_3.tex',
+    'one_physics_book_5_university_year_3_fr.tex',
+    'one_physics_book_5_university_year_3_nl.tex',
+    'one_physics_book_5_university_year_3_es.tex',
+    'one_physics_book_5_university_year_3_pt.tex',
+    'one_physics_book_5_university_year_3_hi.tex',
+    'one_physics_book_5_university_year_3_ar.tex',
+    'one_physics_book_5_university_year_3_id.tex',
 );
 # Hindi editions (*_hi.tex) need XeLaTeX for OpenType Devanagari, and Arabic
 # editions (*_ar.tex) need LuaLaTeX for babel's Lua bidi engine (bidi=basic); every other

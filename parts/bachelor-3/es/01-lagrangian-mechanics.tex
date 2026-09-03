@@ -1,0 +1,801 @@
+\chapter{Mecánica lagrangiana}\label{ch:b3:lagrangian-mechanics}
+
+Inténtese escribir la ley de Newton para un péndulo doble: dos fuerzas de
+tensión, ninguna conocida de antemano, ambas cambiando de dirección a cada
+instante, y cuatro ecuaciones escalares que desenredar solo para averiguar
+cómo evolucionan dos ángulos. Hágase lo mismo ahora con una cuenta ensartada
+en un aro que gira, con una cadena de resortes acoplados, con el brazo de un
+robot. Las fuerzas que mantienen unido un sistema --- varillas, carriles,
+bisagras --- no realizan trabajo y, sin embargo, el método de Newton nos
+obliga a arrastrarlas por todo el cálculo. Este capítulo presenta la
+reformulación que Lagrange publicó en 1788: describir el sistema mediante
+las pocas coordenadas que realmente pueden variar, escribir una única
+función $L = E_k - E_p$ y aplicar una sola receta que produce las ecuaciones
+del movimiento en cualesquiera coordenadas, con todas las varillas y todos
+los carriles ya eliminados. Mejor aún: la nueva formulación hace visible lo
+que la de Newton oculta, pues cada simetría de $L$ proporciona una magnitud
+conservada --- la cantidad de movimiento nace de la uniformidad del espacio,
+la energía de la uniformidad del tiempo ---, un resultado de Emmy Noether
+que se ha convertido en el principio organizador de la física mucho más allá
+de la mecánica.
+
+\section{De las fuerzas a las coordenadas}
+
+\begin{definition}[Ligaduras, grados de libertad, coordenadas generalizadas]\label{def:b3:lagrangian-mechanics:coordinates}
+\index{ligadura}\index{grados de libertad}\index{coordenadas generalizadas}
+Una \emph{ligadura} es una condición geométrica impuesta sobre las
+posiciones de un sistema --- una cuenta permanece en su alambre, la varilla
+de un péndulo conserva una longitud fija, dos ruedas de un mismo eje giran
+solidariamente. Una ligadura que puede expresarse como una ecuación
+$f(\vect r_1, \dots, \vect r_N, t) = 0$ entre las coordenadas (y
+eventualmente el tiempo) se llama \emph{holónoma}. El número de maneras
+independientes en que la configuración todavía puede variar es el número de
+\emph{grados de libertad} $n$; todo conjunto de $n$ magnitudes
+independientes $q_1, \dots, q_n$ que fije por completo la configuración es
+un conjunto de \emph{coordenadas generalizadas} --- ángulos, longitudes o
+cualquier mezcla cómoda. Sus derivadas temporales $\dot q_1, \dots, \dot q_n$
+son las \emph{velocidades generalizadas}\index{velocidades generalizadas}.
+\end{definition}
+
+\begin{example}[Recuento de grados de libertad]\label{ex:b3:lagrangian-mechanics:counting}
+Un punto sobre una mesa: $n = 2$. Un péndulo plano de longitud fija: un
+ángulo, $n = 1$. Un péndulo doble: dos ángulos, $n = 1 + 1 = 2$. Una cuenta
+sobre un aro rígido: un ángulo, $n = 1$ --- incluso si se obliga al aro a
+girar, pues la rotación impuesta no añade libertad alguna. Un sólido rígido
+libre en el espacio: tres coordenadas de su centro más tres ángulos,
+$n = 6$. Un gas de $N$ moléculas libres (puntuales): $n = 3N$. Cada \omterm{def:b3:lagrangian-mechanics:coordinates}{ligadura}
+holónoma suprime un grado de libertad: dos puntos unidos por una varilla
+tienen $3 + 3 - 1 = 5$.
+\end{example}
+
+\begin{omfigure}
+\begin{tikzpicture}[font=\small, >=Stealth]
+  % (a) plane pendulum
+  \begin{scope}
+    \draw[thick] (-1,0) -- (1,0);
+    \foreach \i in {-0.8,-0.5,-0.2,0.1,0.4,0.7} \draw (\i,0) -- (\i+0.18,0.16);
+    \fill (0,0) circle (1.5pt);
+    \draw[dashed] (0,0) -- (0,-2.2);
+    \draw[thick] (0,0) -- (-55:2.1);
+    \fill[omDef] (-55:2.1) circle (3pt);
+    \draw[->] (0,-1.0) arc (-90:-55:1.0);
+    \node at (-72:1.35) {$\theta$};
+    \node at (-55:2.5) {$m$};
+    \node at ($(-55:1.35)+(0.28,0.12)$) {$\ell$};
+    \node at (0,-2.9) {una coordenada: $\theta$};
+  \end{scope}
+  % (b) bead on rotating hoop
+  \begin{scope}[xshift=6.2cm]
+    \coordinate (C) at (0,-2.35);
+    \draw[thick] (C) circle (1.55);
+    \draw[dashed] (0,-0.3) -- (0,-4.6);
+    \draw[->, thick] (0.35,-0.15) arc (20:160:0.37);
+    \node at (0,0.25) {$\omega$};
+    \fill (C) circle (1pt);
+    \draw (C) -- ++(-50:1.55);
+    \fill[omDef] ($(C)+(-50:1.55)$) circle (3pt);
+    \draw[->] ($(C)+(0,-0.85)$) arc (-90:-50:0.85);
+    \node at ($(C)+(-70:1.18)$) {$\theta$};
+    \node at ($(C)+(-38:2.0)$) {$m$};
+    \draw (C) -- ++(135:1.55);
+    \node at (-1.35,-1.35) {$R$};
+    \node at (0,-4.95) {una coordenada: $\theta$};
+  \end{scope}
+  % (c) double pendulum
+  \begin{scope}[xshift=11.4cm]
+    \draw[thick] (-0.9,0) -- (0.9,0);
+    \foreach \i in {-0.7,-0.4,-0.1,0.2,0.5} \draw (\i,0) -- (\i+0.18,0.16);
+    \fill (0,0) circle (1.5pt);
+    \draw[dashed] (0,0) -- (0,-1.7);
+    \draw[thick] (0,0) -- (-65:1.5) coordinate (m1);
+    \fill[omDef] (m1) circle (2.6pt);
+    \draw[dashed] (m1) -- ++(0,-1.5);
+    \draw[thick] (m1) -- ++(-40:1.5) coordinate (m2);
+    \fill[omThm] (m2) circle (2.6pt);
+    \draw[->] (0,-0.8) arc (-90:-65:0.8);
+    \node at (-80:1.1) {$\theta_1$};
+    \draw[->] ($(m1)+(0,-0.75)$) arc (-90:-40:0.75);
+    \node at ($(m1)+(-68:1.05)$) {$\theta_2$};
+    \node at (0.3,-3.4) {dos coordenadas: $\theta_1, \theta_2$};
+  \end{scope}
+\end{tikzpicture}
+
+{\small \omterm{def:b3:lagrangian-mechanics:coordinates}{Coordenadas generalizadas}: cada sistema queda descrito por los
+ángulos que realmente pueden variar, no por las coordenadas cartesianas de
+sus masas. Las tensiones de las varillas y la reacción normal del aro no
+aparecen jamás.}
+\end{omfigure}
+
+\section{El principio de mínima acción}
+
+\begin{definition}[Lagrangiano y acción]\label{def:b3:lagrangian-mechanics:action}
+\index{lagrangiano}\index{acción}
+El \emph{lagrangiano} de un sistema mecánico cuyas fuerzas derivan de una
+energía potencial $E_p$ es la función de las coordenadas, de las velocidades
+y, eventualmente, del tiempo
+\[
+L(q, \dot q, t) = E_k - E_p ,
+\]
+energía cinética \emph{menos} energía potencial, ambas expresadas en las
+\omterm{def:b3:lagrangian-mechanics:coordinates}{coordenadas generalizadas}. La \emph{acción} de un movimiento concebible
+$q(t)$ entre extremos fijos $q(t_1)$ y $q(t_2)$ es el número
+\[
+S[q] = \int_{t_1}^{t_2} L\big(q(t), \dot q(t), t\big)\,\dd t .
+\]
+$S$ es un \emph{funcional}: se traga un camino entero y devuelve un solo
+número, en julios-segundo --- las unidades de la constante de Planck.
+\end{definition}
+
+\begin{theorem}[Principio de Hamilton y ecuaciones de Euler--Lagrange]\label{thm:b3:lagrangian-mechanics:euler-lagrange}
+\index{principio de Hamilton}\index{ecuaciones de Euler--Lagrange}\index{mínima acción}
+Entre todos los movimientos concebibles que unen los mismos dos extremos en
+el mismo tiempo, el movimiento real es aquel que hace la \omterm{def:b3:lagrangian-mechanics:action}{acción}
+\emph{estacionaria} (\emph{\omterm{thm:b3:lagrangian-mechanics:euler-lagrange}{principio de Hamilton}}, o principio de
+\emph{\omterm{thm:b3:lagrangian-mechanics:euler-lagrange}{mínima acción}}). Equivalentemente, el movimiento obedece a las
+\emph{\omterm{thm:b3:lagrangian-mechanics:euler-lagrange}{ecuaciones de Euler--Lagrange}}
+\[
+\frac{\dd}{\dd t}\frac{\partial L}{\partial\dot q_i}
+ - \frac{\partial L}{\partial q_i} = 0 ,
+\qquad i = 1, \dots, n :
+\]
+una ecuación de segundo orden por grado de libertad, en las coordenadas que
+se hayan elegido.
+\end{theorem}
+
+\begin{proof}
+Deformemos el camino: $q_i(t) \to q_i(t) + \delta q_i(t)$ con
+$\delta q_i(t_1) = \delta q_i(t_2) = 0$. A primer orden,
+\[
+\delta S = \int_{t_1}^{t_2}\sum_i\Big(
+  \frac{\partial L}{\partial q_i}\,\delta q_i
+ + \frac{\partial L}{\partial\dot q_i}\,\delta\dot q_i\Big)\dd t
+ = \int_{t_1}^{t_2}\sum_i\Big(
+  \frac{\partial L}{\partial q_i}
+ - \frac{\dd}{\dd t}\frac{\partial L}{\partial\dot q_i}\Big)\delta q_i\,\dd t ,
+\]
+tras integrar por partes el segundo término ($\delta\dot q_i =
+\dd(\delta q_i)/\dd t$) y suprimir el término de borde, que se anula en los
+extremos fijos. Si $\delta S = 0$ para \emph{toda} deformación, el corchete
+debe anularse en cada instante y para cada $i$: si fuera positivo en algún
+punto, una protuberancia $\delta q_i$ concentrada allí daría
+$\delta S \neq 0$. El recíproco se lee en la misma línea.
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}[font=\small, >=Stealth]
+  \draw[->] (0,0) -- (7.6,0) node[right] {$t$};
+  \draw[->] (0,0) -- (0,3.4) node[above] {$q$};
+  \fill (0.8,0.7) circle (2pt) node[below left] {$q(t_1)$};
+  \fill (6.8,2.3) circle (2pt) node[above right] {$q(t_2)$};
+  \draw[omDef, very thick] (0.8,0.7) .. controls (2.6,2.6) and (5.0,1.4) .. (6.8,2.3);
+  \draw[omExo, dashed] (0.8,0.7) .. controls (2.2,0.6) and (5.4,0.9) .. (6.8,2.3);
+  \draw[omExo, dashed] (0.8,0.7) .. controls (3.0,3.6) and (5.2,2.9) .. (6.8,2.3);
+  \node[omDef] at (1.9,3.35) {camino real};
+  \draw[->, omDef] (2.25,3.15) -- (2.85,2.3);
+  \node[omExo] at (3.4,0.42) {caminos variados};
+  \draw[<->] (4.1,1.62) -- (4.1,2.62);
+  \node at (4.55,2.15) {$\delta q$};
+\end{tikzpicture}
+
+{\small \omterm{thm:b3:lagrangian-mechanics:euler-lagrange}{Principio de Hamilton}: entre todos los caminos con los mismos
+extremos y la misma duración, el real hace estacionaria $S = \int L\,\dd t$
+--- las deformaciones $\delta q$ de primer orden cambian $S$ solo a segundo
+orden.}
+\end{omfigure}
+
+\begin{proposition}[Newton recuperado]\label{prop:b3:lagrangian-mechanics:newton}
+Para una partícula en coordenadas cartesianas, $L = \tfrac12 m(\dot x^2 +
+\dot y^2 + \dot z^2) - E_p(x,y,z)$, y las \omterm{thm:b3:lagrangian-mechanics:euler-lagrange}{ecuaciones de Euler--Lagrange} se
+escriben $m\ddot x = -\partial E_p/\partial x$ y análogamente para $y$, $z$:
+exactamente $m\vect a = \vect F$. Las mecánicas lagrangiana y newtoniana
+coinciden dondequiera que ambas se apliquen; la nueva forma sobrevive sin
+más a un cambio de coordenadas, cosa que las ecuaciones en componentes de
+Newton no hacen.
+\end{proposition}
+
+\begin{proof}
+$\partial L/\partial\dot x = m\dot x$, $\partial L/\partial x =
+-\partial E_p/\partial x$; la ecuación de Euler--Lagrange es
+$\dd(m\dot x)/\dd t + \partial E_p/\partial x = 0$.
+\end{proof}
+
+\begin{remark}[Por qué desaparecen las fuerzas de ligadura]\label{rem:b3:lagrangian-mechanics:constraints}
+La tensión de una varilla o la reacción normal de un carril actúan
+perpendicularmente a todo desplazamiento que la \omterm{def:b3:lagrangian-mechanics:coordinates}{ligadura} permite: no
+realizan trabajo en ningún movimiento compatible con ella. Como la \omterm{def:b3:lagrangian-mechanics:action}{acción} se
+construye con energías evaluadas solo sobre tales movimientos, esas fuerzas
+no entran nunca en $L$; ese es el milagro práctico del método. La
+justificación general (el principio de los trabajos virtuales de d'Alembert)
+se admite aquí; para todos los sistemas de este libro la receta siguiente
+puede comprobarse directamente frente a Newton, como empezó a hacer la
+\cref{prop:b3:lagrangian-mechanics:newton}. Si lo que se quiere es la propia
+fuerza de \omterm{def:b3:lagrangian-mechanics:coordinates}{ligadura} --- ¿se romperá la varilla? ---, se vuelve a Newton solo
+para esa fuerza, con el movimiento ya conocido.
+\end{remark}
+
+\begin{method}[La receta lagrangiana]\label{met:b3:lagrangian-mechanics:recipe}
+(1) Contar los \omterm{def:b3:lagrangian-mechanics:coordinates}{grados de libertad} y elegir las coordenadas $q_i$ ---
+ángulos para las rotaciones, abscisas a lo largo de los carriles.
+(2) Expresar las posiciones $\vect r(q_i, t)$, derivarlas para obtener las
+velocidades y escribir $E_k$; escribir $E_p$. (3) $L = E_k - E_p$,
+suprimiendo cualquier constante aditiva. (4) Una ecuación de Euler--Lagrange
+por coordenada. (5) Antes de resolver, cosechar las magnitudes conservadas:
+las \omterm{def:b3:lagrangian-mechanics:momentum}{coordenadas cíclicas} (\cref{def:b3:lagrangian-mechanics:momentum}) y la
+\omterm{prop:b3:lagrangian-mechanics:energy}{función energía} (\cref{prop:b3:lagrangian-mechanics:energy}). (6) Comprobar
+los límites: ángulos pequeños, rotación desconectada, casos particulares
+conocidos.
+\end{method}
+
+\begin{example}[El péndulo, en tres líneas]\label{ex:b3:lagrangian-mechanics:pendulum}
+Una sola coordenada $\theta$; $\vect v = \ell\dot\theta\,\vect e_\theta$, de
+modo que $E_k = \tfrac12 m\ell^2\dot\theta^2$ y $E_p = -mg\ell\cos\theta$.
+Entonces $L = \tfrac12 m\ell^2\dot\theta^2 + mg\ell\cos\theta$, y
+$\dd(m\ell^2\dot\theta)/\dd t = -mg\ell\sin\theta$:
+\[
+\ddot\theta = -\frac{g}{\ell}\sin\theta ,
+\]
+la ecuación que el volumen del Año 1 obtuvo a partir del momento del peso
+--- sin mencionar jamás la tensión.
+\end{example}
+
+\begin{example}[Cuenta sobre un aro que gira]\label{ex:b3:lagrangian-mechanics:hoop}
+Una cuenta de masa $m$ desliza sobre un aro circular vertical de radio $R$
+obligado a girar en torno a su diámetro vertical con $\omega$ constante
+(\cref{ex:b3:lagrangian-mechanics:counting}). Una sola coordenada: el ángulo
+polar $\theta$ medido desde el punto más bajo. La velocidad de la cuenta
+tiene una componente $R\dot\theta$ a lo largo del aro y otra
+$\omega R\sin\theta$ debida a la rotación impuesta, perpendicular a aquella:
+\[
+L = \tfrac12 mR^2\dot\theta^2 + \tfrac12 m\omega^2R^2\sin^2\theta
+ + mgR\cos\theta ,
+\qquad
+mR^2\ddot\theta = m\omega^2R^2\sin\theta\cos\theta - mgR\sin\theta .
+\]
+Equilibrios donde $\ddot\theta = 0$: el punto más bajo $\theta = 0$ (y el
+más alto, siempre inestable) y, cuando $\omega^2 > g/R$, una nueva pareja
+$\cos\theta_{\text{eq}} = g/\omega^2R$. Escribir la ecuación en la forma
+$mR^2\ddot\theta = -\dd U_{\text{ef}}/\dd\theta$ con la \emph{energía
+potencial efectiva}\index{energía potencial efectiva}
+\[
+U_{\text{ef}}(\theta) = -mgR\cos\theta
+ - \tfrac12 m\omega^2R^2\sin^2\theta
+\]
+hace visible la geometría: por debajo del régimen crítico
+$\omega_{\text{c}} = \sqrt{g/R}$ el fondo es un pozo; por encima, el fondo
+se convierte en una cima y la cuenta se instala en la ladera, tanto más
+arriba cuanto más deprisa gira el aro --- el principio del regulador
+centrífugo que gobernaba las máquinas de vapor.
+\end{example}
+
+\begin{omfigure}
+\begin{tikzpicture}
+  \begin{axis}[omaxis, axis x line=bottom, axis y line=left,
+    width=11.4cm, height=5.6cm, xmin=-180, xmax=180,
+    ymin=-1.65, ymax=1.2, xlabel={$\theta$ (grados)},
+    xlabel style={at={(axis description cs:0.5,-0.1)}, anchor=north},
+    ylabel={$U_{\text{ef}}/mgR$}, xtick={-180,-90,0,90,180}, ytick=\empty,
+    clip=false,
+    legend style={font=\scriptsize, at={(0.5,-0.32)}, anchor=north,
+      draw=none, fill=none, legend columns=2}]
+    \addplot[omDef, thick, domain=-180:180, samples=90]
+      {-cos(x) - 0.25*sin(x)^2};
+    \addlegendentry{$\omega^2 = g/2R$ (lento): pozo en $\theta = 0$}
+    \addplot[omThm, thick, domain=-180:180, samples=90]
+      {-cos(x) - 1.0*sin(x)^2};
+    \addlegendentry{$\omega^2 = 2g/R$ (rápido): pozos en $\pm 60^\circ$}
+    \fill[omThm] (axis cs:60,-1.25) circle (1.8pt);
+    \fill[omThm] (axis cs:-60,-1.25) circle (1.8pt);
+    \fill[omDef] (axis cs:0,-1) circle (1.8pt);
+  \end{axis}
+\end{tikzpicture}
+
+{\small El potencial efectivo de la cuenta sobre el aro que gira. Cuando
+$\omega$ supera $\sqrt{g/R}$, el pozo único del fondo se desdobla en dos
+pozos simétricos: el ángulo de equilibrio crece con la velocidad de giro.}
+\end{omfigure}
+
+\section{Simetrías y leyes de conservación}
+
+\begin{definition}[Momento generalizado, coordenada cíclica]\label{def:b3:lagrangian-mechanics:momentum}
+\index{momento generalizado}\index{coordenada cíclica}
+El \emph{momento generalizado} conjugado de la coordenada $q_i$ es
+\[
+p_i = \frac{\partial L}{\partial\dot q_i} .
+\]
+Para una coordenada cartesiana es la cantidad de movimiento ordinaria
+$m\dot x$; para un ángulo es un momento angular. Una coordenada que no
+aparece en $L$ (aunque sí su velocidad) se llama \emph{cíclica}.
+\end{definition}
+
+\begin{proposition}[Las coordenadas cíclicas dan leyes de conservación]\label{prop:b3:lagrangian-mechanics:cyclic}
+Si $q_i$ es cíclica, su momento conjugado se conserva:
+$\partial L/\partial q_i = 0$ implica $\dd p_i/\dd t = 0$. Elegir las
+coordenadas de modo que sean cíclicas cuantas más mejor es el paso
+individual más eficaz para resolver un problema de mecánica.
+\end{proposition}
+
+\begin{proof}
+Inmediato a partir de la ecuación de Euler--Lagrange para $q_i$.
+\end{proof}
+
+\begin{example}[Fuerza central, resuelta por inspección]\label{ex:b3:lagrangian-mechanics:central}
+Una partícula en un potencial central $E_p(r)$, en coordenadas polares en su
+plano de movimiento:
+\[
+L = \tfrac12 m(\dot r^2 + r^2\dot\varphi^2) - E_p(r) .
+\]
+$\varphi$ es cíclica, luego $p_\varphi = mr^2\dot\varphi$ --- el momento
+angular --- se conserva: la ley de las áreas de Kepler, que el volumen del
+Año 1 dedujo de la ecuación de momentos, aparece aquí antes de resolver
+ecuación alguna. La ecuación radial restante es
+$m\ddot r = mr\dot\varphi^2 - E_p'(r)$, es decir, el movimiento
+unidimensional en el potencial efectivo $E_p(r) + p_\varphi^2/2mr^2$ de
+aquel volumen.
+\end{example}
+
+\begin{theorem}[Teorema de Noether]\label{thm:b3:lagrangian-mechanics:noether}
+\index{teorema de Noether}\index{simetría}
+A toda simetría continua del \omterm{def:b3:lagrangian-mechanics:action}{lagrangiano} le corresponde una magnitud
+conservada. Con precisión: si el desplazamiento
+$q_i \to q_i + \varepsilon\,K_i(q)$ deja $L$ invariante a primer orden en
+$\varepsilon$ para todos los movimientos,
+entonces
+\[
+Q = \sum_i p_i\,K_i(q)
+\]
+es constante a lo largo de todo movimiento real. La uniformidad del espacio
+(invariancia por traslación) da la cantidad de movimiento; la isotropía del
+espacio (invariancia por rotación) da el momento angular; la uniformidad del
+tiempo da la energía (\cref{prop:b3:lagrangian-mechanics:energy}).
+\end{theorem}
+
+\begin{proof}
+La invariancia a primer orden significa que
+$0 = \delta L = \sum_i\big(\partial_{q_i}L\,K_i +
+\partial_{\dot q_i}L\,\dot K_i\big)\varepsilon$. Sobre un movimiento real,
+$\partial_{q_i}L = \dot p_i$ por Euler--Lagrange, así que el corchete es
+$\sum_i(\dot p_iK_i + p_i\dot K_i) = \dd Q/\dd t$. Una \omterm{def:b3:lagrangian-mechanics:momentum}{coordenada cíclica}
+es el caso particular $K_i = \delta_{ij}$. El caso del desplazamiento
+temporal exige el cálculo aparte de la
+\cref{prop:b3:lagrangian-mechanics:energy}; el teorema completo, para
+transformaciones que cambian también $t$ o alteran $L$ en una derivada
+total, se demuestra en los cursos de mecánica analítica y se admite aquí en
+esa generalidad.
+\end{proof}
+
+\begin{proposition}[La función energía]\label{prop:b3:lagrangian-mechanics:energy}
+\index{función energía}
+A lo largo de todo movimiento, la \emph{\omterm{prop:b3:lagrangian-mechanics:energy}{función energía}}
+\[
+h = \sum_i \dot q_i\,\frac{\partial L}{\partial\dot q_i} - L
+\qquad\text{cumple}\qquad
+\frac{\dd h}{\dd t} = -\frac{\partial L}{\partial t} .
+\]
+Si $L$ no depende explícitamente del tiempo, $h$ se conserva. Si además las
+relaciones $\vect r(q)$ entre posiciones y coordenadas no involucran el
+tiempo --- ninguna rotación impuesta, ningún soporte móvil ---, entonces
+$E_k$ es una forma cuadrática en las $\dot q_i$ y $h = E_k + E_p$: la
+energía mecánica. Con una \omterm{def:b3:lagrangian-mechanics:coordinates}{ligadura} dependiente del tiempo, $h$ sigue
+conservándose cuando $\partial L/\partial t = 0$, pero \emph{no} es la
+energía: el motor que impone la \omterm{def:b3:lagrangian-mechanics:coordinates}{ligadura} intercambia trabajo con el sistema.
+\end{proposition}
+
+\begin{proof}
+$\dd h/\dd t = \sum_i(\ddot q_ip_i + \dot q_i\dot p_i) -
+\sum_i(\partial_{q_i}L\,\dot q_i + \partial_{\dot q_i}L\,\ddot q_i) -
+\partial_tL$. Los términos en $\ddot q_i$ se cancelan; las \omterm{thm:b3:lagrangian-mechanics:euler-lagrange}{ecuaciones de
+Euler--Lagrange} convierten $\dot p_i$ en $\partial_{q_i}L$, lo que cancela
+la pareja siguiente; queda $-\partial_tL$. Si $E_k = \tfrac12\sum a_{jk}(q)\dot
+q_j\dot q_k$, la identidad de Euler para las formas cuadráticas da $\sum\dot
+q_i\,\partial E_k/\partial\dot q_i = 2E_k$, luego $h = 2E_k - (E_k - E_p)
+= E_k + E_p$.
+\end{proof}
+
+\begin{example}[El aro que gira conserva $h$, no $E$]\label{ex:b3:lagrangian-mechanics:hoop-energy}
+Para la cuenta del \cref{ex:b3:lagrangian-mechanics:hoop}, $L$ no contiene
+$t$ explícitamente, así que $h = \tfrac12 mR^2\dot\theta^2 + U_{\text{ef}}
+(\theta)$ se conserva --- pero la energía mecánica $E = \tfrac12
+mR^2\dot\theta^2 + \tfrac12 m\omega^2R^2\sin^2\theta - mgR\cos\theta$
+no: $E = h + m\omega^2R^2\sin^2\theta$ varía a medida que la cuenta desliza.
+La diferencia es el trabajo del motor que mantiene $\omega$ constante
+mientras cambia la distancia de la cuenta al eje.
+\end{example}
+
+\section{Partículas cargadas y pequeñas oscilaciones}
+
+\begin{proposition}[Lagrangiano de una partícula cargada]\label{prop:b3:lagrangian-mechanics:charge}
+\index{potencial dependiente de la velocidad}
+En un campo electromagnético descrito por los potenciales $V$ y
+$\vect A$ (con $\vect E = -\vect\nabla V - \partial_t\vect A$ y
+$\vect B = \operatorname{\vect{curl}}\vect A$, como en el volumen del
+Año 2), el \omterm{def:b3:lagrangian-mechanics:action}{lagrangiano}
+\[
+L = \tfrac12 m\vect v^{\,2} - qV + q\,\vect v\cdot\vect A
+\]
+produce, a través de las \omterm{thm:b3:lagrangian-mechanics:euler-lagrange}{ecuaciones de Euler--Lagrange}, exactamente la
+fuerza de Lorentz $m\dot{\vect v} = q(\vect E + \vect v\wedge\vect B)$. La
+fuerza magnética, que no realiza trabajo y no deriva de ninguna energía
+potencial ordinaria, entra por un término lineal en la velocidad; el momento
+conjugado pasa a ser $\vect p = m\vect v + q\vect A$, y ya no $m\vect v$
+solo.
+\end{proposition}
+
+\begin{proof}
+Para la componente $x$: $p_x = m\dot x + qA_x$ y
+$\partial_xL = -q\,\partial_xV + q\,\vect v\cdot\partial_x\vect A$. La
+ecuación de Euler--Lagrange da $m\ddot x = -q\,\partial_xV -
+q\,\dd A_x/\dd t + q\,\vect v\cdot\partial_x\vect A$. A lo largo del
+movimiento $\dd A_x/\dd t = \partial_tA_x + (\vect v\cdot\vect\nabla)A_x$,
+luego $m\ddot x = qE_x + q\big[\vect v\cdot\partial_x\vect A - (\vect v\cdot
+\vect\nabla)A_x\big]$, y el corchete es la componente $x$ de $\vect
+v\wedge(\vect\nabla\wedge\vect A) = \vect v\wedge\vect B$ --- desarróllense
+ambos para comprobarlo.
+\end{proof}
+
+\begin{proposition}[Pequeñas oscilaciones y modos normales]\label{prop:b3:lagrangian-mechanics:modes}
+\index{modos normales}\index{pequeñas oscilaciones}
+Cerca de un equilibrio estable $q^{\text{eq}}$, desarróllese $L$ a segundo
+orden en los desplazamientos $u_i = q_i - q_i^{\text{eq}}$:
+$L \approx \tfrac12\sum m_{ij}\dot u_i\dot u_j -
+\tfrac12\sum k_{ij}u_iu_j$ con matrices simétricas constantes. Las
+ecuaciones del movimiento son lineales y todo movimiento es superposición de
+\emph{\omterm{prop:b3:lagrangian-mechanics:modes}{modos normales}}: oscilaciones colectivas $u_i(t) = a_i\cos(\Omega t
++ \phi)$ en las que todas las coordenadas vibran a una misma frecuencia
+común; las amplitudes y las frecuencias resuelven $\sum_j(k_{ij} -
+\Omega^2m_{ij})\,a_j = 0$ --- un problema matricial de valores propios, con
+$n$ modos para $n$ \omterm{def:b3:lagrangian-mechanics:coordinates}{grados de libertad}.
+\end{proposition}
+
+\begin{proof}
+Los términos lineales se anulan en un equilibrio; las \omterm{thm:b3:lagrangian-mechanics:euler-lagrange}{ecuaciones de
+Euler--Lagrange} del $L$ cuadrático dan
+$\sum_jm_{ij}\ddot u_j = -\sum_jk_{ij}u_j$. Al insertar la oscilación de
+prueba se obtiene el sistema lineal enunciado, que tiene vector de
+amplitudes no nulo solo cuando $\det(k_{ij} -
+\Omega^2m_{ij}) = 0$: $n$ valores de $\Omega^2$, todos positivos en un
+equilibrio estable. Que el movimiento general sea superposición de los modos
+es la diagonalización simultánea de dos formas cuadráticas, un resultado del
+álgebra lineal del volumen de matemáticas del Año 2; la completitud se
+admite.
+\end{proof}
+
+\begin{example}[Dos péndulos acoplados por un resorte]\label{ex:b3:lagrangian-mechanics:coupled}
+Dos péndulos iguales (masa $m$, longitud $\ell$) cuyas lentejas están unidas
+por un resorte de rigidez $k$ que queda relajado cuando ambos cuelgan
+verticales. Para ángulos pequeños,
+\[
+L = \tfrac12 m\ell^2(\dot\theta_1^2 + \dot\theta_2^2)
+ - \tfrac12 mg\ell(\theta_1^2 + \theta_2^2)
+ - \tfrac12 k\ell^2(\theta_2 - \theta_1)^2 .
+\]
+La simetría sugiere las combinaciones $s = \theta_1 + \theta_2$ y $d =
+\theta_1 - \theta_2$, que desacoplan las ecuaciones: el \emph{modo en fase}
+($\theta_1 = \theta_2$, con el resorte inerte) a $\Omega_1 =
+\sqrt{g/\ell}$, y el \emph{modo en oposición} ($\theta_1 = -\theta_2$, con
+el resorte estirado el doble) a $\Omega_2 = \sqrt{g/\ell + 2k/m}$. Láncese un
+solo péndulo --- una mezcla a partes iguales de los dos modos --- y la
+energía migrará por completo de un péndulo al otro y de vuelta con la
+frecuencia de batido $(\Omega_2 - \Omega_1)/2\pi$: la demostración de los
+péndulos acoplados y el mecanismo que hay detrás de toda transferencia
+resonante de energía, de los circuitos sintonizados a las vibraciones
+moleculares.
+\end{example}
+
+\begin{omfigure}
+\begin{tikzpicture}[font=\small, >=Stealth]
+  % in-phase mode
+  \begin{scope}
+    \draw[thick] (-0.4,0) -- (3.4,0);
+    \foreach \i in {-0.2,0.3,0.8,1.3,1.8,2.3,2.8} \draw (\i,0) -- (\i+0.18,0.16);
+    \fill (0.5,0) circle (1.2pt);
+    \fill (2.5,0) circle (1.2pt);
+    \draw[thick] (0.5,0) -- ++(-75:1.9) coordinate (a1);
+    \draw[thick] (2.5,0) -- ++(-75:1.9) coordinate (a2);
+    \fill[omDef] (a1) circle (2.6pt);
+    \fill[omDef] (a2) circle (2.6pt);
+    \draw[decorate, decoration={coil, aspect=0.6, segment length=3pt, amplitude=2pt}] (a1) -- (a2);
+    \draw[->, omDef] ($(a1)+(0.05,-0.3)$) -- ++(0.5,0);
+    \draw[->, omDef] ($(a2)+(0.05,-0.3)$) -- ++(0.5,0);
+    \node at (1.5,-2.9) {en fase: $\Omega_1 = \sqrt{g/\ell}$};
+  \end{scope}
+  % opposed mode
+  \begin{scope}[xshift=6.4cm]
+    \draw[thick] (-0.4,0) -- (3.4,0);
+    \foreach \i in {-0.2,0.3,0.8,1.3,1.8,2.3,2.8} \draw (\i,0) -- (\i+0.18,0.16);
+    \fill (0.5,0) circle (1.2pt);
+    \fill (2.5,0) circle (1.2pt);
+    \draw[thick] (0.5,0) -- ++(-105:1.9) coordinate (b1);
+    \draw[thick] (2.5,0) -- ++(-75:1.9) coordinate (b2);
+    \fill[omThm] (b1) circle (2.6pt);
+    \fill[omThm] (b2) circle (2.6pt);
+    \draw[decorate, decoration={coil, aspect=0.6, segment length=5pt, amplitude=2pt}] (b1) -- (b2);
+    \draw[->, omThm] ($(b1)+(-0.05,-0.3)$) -- ++(-0.5,0);
+    \draw[->, omThm] ($(b2)+(0.05,-0.3)$) -- ++(0.5,0);
+    \node at (1.5,-2.9) {en oposición: $\Omega_2 = \sqrt{g/\ell + 2k/m}$};
+  \end{scope}
+\end{tikzpicture}
+
+{\small Los dos \omterm{prop:b3:lagrangian-mechanics:modes}{modos normales} de los péndulos acoplados. En fase, el
+resorte no se estira nunca y la frecuencia es la del péndulo libre; en
+oposición, cada lenteja siente el resorte duplicado.}
+\end{omfigure}
+
+\begin{omfigure}
+\includegraphics[width=0.58\linewidth]{images/book5/ai/b5-01-double-pendulum-trace.png}
+
+{\small Un péndulo doble trazado con una larga exposición: dos coordenadas, un \omterm{def:b3:lagrangian-mechanics:action}{lagrangiano} y un movimiento que ninguna fórmula predice por mucho tiempo --- la maquinaria de \omterm{thm:b3:lagrangian-mechanics:euler-lagrange}{mínima acción} de este capítulo escribe las ecuaciones; el caos mantiene humildes a sus soluciones.}
+\end{omfigure}
+
+\section{Ejercicios}
+
+\begin{exercise}[$\star$]\label{exo:b3:lagrangian-mechanics:1}
+Cuéntense los \omterm{def:b3:lagrangian-mechanics:coordinates}{grados de libertad} y propónganse \omterm{def:b3:lagrangian-mechanics:coordinates}{coordenadas generalizadas}: (a) una
+partícula en el interior de un cuenco fijo; (b) un cilindro que rueda sin
+deslizar por un plano inclinado fijo; (c) un péndulo doble cuyo pivote
+superior desliza por un carril horizontal; (d) una mancuerna (dos masas y
+una varilla rígida) en el espacio; (e) dos cuentas sobre el mismo alambre
+circular fijo. ¿Cuál de estas \omterm{def:b3:lagrangian-mechanics:coordinates}{ligaduras} relaciona velocidades en lugar de
+posiciones y por qué es, pese a ello, integrable a una \omterm{def:b3:lagrangian-mechanics:coordinates}{ligadura} holónoma?
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b3:lagrangian-mechanics:2}
+Para el péndulo plano (\cref{ex:b3:lagrangian-mechanics:pendulum}):
+(a) verifíquense las dimensiones de $L$ y de $p_\theta =
+\partial L/\partial\dot\theta$; (b) identifíquese físicamente $p_\theta$;
+(c) dedúzcase el periodo para ángulos pequeños; (d) calcúlese la \omterm{def:b3:lagrangian-mechanics:action}{acción} $S$ de
+una oscilación pequeña completa de amplitud $\theta_0$ --- y explíquese la
+respuesta antes de calcular (¿cuál es el promedio temporal de $E_k - E_p$ en
+una oscilación armónica?).
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b3:lagrangian-mechanics:3}
+Una máquina de Atwood: las masas $m_1$ y $m_2$ cuelgan de un hilo ideal que
+pasa por una polea sin masa. (a) Elíjase una coordenada y escríbase $L$.
+(b) Hállese la aceleración. (c) El tratamiento de Newton necesitaba la
+tensión: ¿adónde ha ido a parar? (d) ¿Cómo recuperaría la tensión una vez
+conocido el movimiento?
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b3:lagrangian-mechanics:4}
+Una partícula libre en coordenadas cilíndricas: $L = \tfrac12 m(\dot r^2 +
+r^2\dot\varphi^2 + \dot z^2)$. (a) ¿Qué coordenadas son cíclicas y cuáles
+son los momentos conservados? (b) ¿Por qué \emph{no} se conserva $p_r$ pese
+a que no actúa ninguna fuerza? (c) Escríbase la ecuación de Euler--Lagrange
+para $r$ e interprétese el término $mr\dot\varphi^2$. (d) Compruébese que una
+recta recorrida a velocidad constante la resuelve.
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b3:lagrangian-mechanics:5}
+Un bloque de masa $m$ desliza por la cara sin rozamiento (de ángulo
+$\alpha$) de una cuña de masa $M$, libre a su vez de deslizar sobre un suelo
+sin rozamiento. (a) Elíjanse dos coordenadas: la abscisa $X$ de la cuña y la
+distancia $s$ recorrida por el bloque a lo largo de la cara; escríbase $L$.
+(b) ¿Qué coordenada es cíclica y qué ley de conservación expresa? (c) Hállense
+las dos aceleraciones. (d) Compruébense los límites $M \to \infty$ y $\alpha \to
+90^\circ$.
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b3:lagrangian-mechanics:6}
+El péndulo esférico: una lenteja en el extremo de una varilla de longitud
+$\ell$, libre en ambos ángulos ($\theta$ desde la vertical descendente y
+$\varphi$ alrededor de ella). (a) Escríbase $L$. (b) Identifíquense la \omterm{def:b3:lagrangian-mechanics:momentum}{coordenada
+cíclica} y el $p_\varphi$ conservado. (c) Redúzcase el movimiento de $\theta$ a
+un potencial efectivo y esbócese. (d) Para el movimiento cónico $\theta =
+\theta_0$, recupérese la relación del péndulo cónico $\cos\theta_0 =
+g/\ell\omega^2$ del volumen del Año 1.
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b3:lagrangian-mechanics:7}
+Un péndulo (masa $m$, longitud $\ell$) cuelga de un carro de masa $M$ libre
+de rodar sobre un carril horizontal. (a) Con las coordenadas $X$ (carro) y
+$\theta$, escríbase $L$. (b) ¿Qué se conserva y por qué, físicamente?
+(c) Linealícese para $\theta$ pequeño y muéstrese que la frecuencia de
+oscilación es $\Omega = \sqrt{(1 + m/M)\,g/\ell}$. (d) Explíquense los límites
+$M \to
+\infty$ y $M \to 0$: ¿por qué un carro ligero \emph{eleva} la frecuencia?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b3:lagrangian-mechanics:8}
+Una partícula de carga $q$ en un campo uniforme $\vect B = B\vect e_z$,
+descrito por $\vect A = \tfrac12\vect B\wedge\vect r$. (a) Escríbase $L$ en
+coordenadas cartesianas. (b) Dedúzcanse las ecuaciones del movimiento y
+compruébese que describen la circunferencia ciclotrónica a
+$\omega_{\text{c}} = qB/m$. (c) Calcúlense los momentos conjugados $p_x$,
+$p_y$: ¿son $m\dot x$, $m\dot y$? ¿Se conservan? (d) Muéstrese que $L$
+escrito en coordenadas cilíndricas tiene $\varphi$ cíclica e identifíquese el
+$p_\varphi$ conservado para una circunferencia centrada en el eje.
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b3:lagrangian-mechanics:9}
+Para la cuenta sobre el aro que gira
+(\cref{ex:b3:lagrangian-mechanics:hoop}): (a) calcúlese la \omterm{prop:b3:lagrangian-mechanics:energy}{función energía}
+$h$ y verifíquese que la ecuación del movimiento la conserva; (b) calcúlese la
+energía mecánica $E$ y muéstrese que $E - h =
+m\omega^2R^2\sin^2\theta$; (c) hállese la potencia entregada por el motor en
+función de $\theta$ y $\dot\theta$; (d) hállese la frecuencia de las \omterm{prop:b3:lagrangian-mechanics:modes}{pequeñas
+oscilaciones} en torno al equilibrio inclinado cuando $\omega^2 > g/R$ y
+muéstrese que se anula cuando $\omega^2 \to g/R$ --- la ralentización que
+anuncia el desdoblamiento del pozo.
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b3:lagrangian-mechanics:10}
+El péndulo doble de brazos iguales ($m_1 = m_2 = m$, $\ell_1 = \ell_2 = \ell$).
+(a) Muéstrese que para ángulos pequeños $L = \tfrac12 m\ell^2(2\dot\theta_1^2 +
+2\dot\theta_1\dot\theta_2 + \dot\theta_2^2) - \tfrac12 mg\ell(2
+\theta_1^2 + \theta_2^2)$. (b) Escríbanse las dos ecuaciones del movimiento.
+(c) Hállense las frecuencias normales $\Omega_\pm^2 = (2 \mp \sqrt2)\,g/\ell$ y
+la forma de cada modo ($\theta_2 = \pm\sqrt2\,\theta_1$). (d) A gran
+amplitud este sistema es un ejemplo clásico de caos: explíquese en unas líneas
+qué rompe el análisis de ángulos pequeños y por qué no se pierde ninguna ley
+de conservación.
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b3:lagrangian-mechanics:11}
+\emph{La braquistócrona.} Una cuenta desliza sin rozamiento partiendo del
+reposo en el origen por una curva $y(x)$ ($y$ hacia abajo) hasta un punto
+$(a, b)$. (a) Usando la conservación de la energía, muéstrese que el tiempo
+de descenso es $T =
+\int_0^a\sqrt{(1 + y'^2)/2gy}\,\dd x$ --- un funcional en el que $x$
+desempeña el papel del tiempo. (b) El integrando $F(y, y')$ no depende
+explícitamente de $x$: muéstrese que $h = y'\,\partial F/\partial y' - F$ es
+constante a lo largo de la curva óptima (el mismo cálculo que en la
+\cref{prop:b3:lagrangian-mechanics:energy}). (c) Dedúzcase $y(1 + y'^2) =
+2r$ para cierta constante $r$ y verifíquese que la cicloide $x = r(\phi -
+\sin\phi)$, $y = r(1 - \cos\phi)$ la satisface. (d) Muéstrese que el
+descenso de la cuenta hasta el fondo de un arco dura $\pi\sqrt{r/g}$ y
+compárese con la rampa recta hasta el mismo punto.
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b3:lagrangian-mechanics:12}
+\emph{Fermat como \omterm{thm:b3:lagrangian-mechanics:euler-lagrange}{mínima acción}.} La luz en un medio de índice $n(y)$
+viaja entre dos puntos en el tiempo mínimo (volumen del Año 2). (a) Muéstrese
+que el tiempo de recorrido a lo largo de $y(x)$ es $T = \tfrac1c\int n(y)\sqrt{1 +
+y'^2}\,\dd x$. (b) Como el integrando no depende explícitamente de $x$, úsese
+la magnitud conservada $h$ del ejercicio anterior para probar que $n(y)\big/\sqrt{1 +
+y'^2} = \text{const}$, y compruébese que es la ley de Snell $n\sin i =
+\text{const}$ para un rayo medido desde la vertical. (c) Sobre una carretera
+caliente el índice crece con la altura según $n(y) \approx n_0(1 + \beta y)$;
+muéstrese que un rayo casi horizontal se curva con radio de curvatura $R \approx
+1/\beta$. (d) Con $\beta = \qty{1.2e-5}{m^{-1}}$, ¿desde qué distancia ve un
+conductor cuyos ojos están a \qty{1.2}{m} sobre la carretera el espejismo de
+``agua'' sobre ella?
+\end{exercise}
+
+\begin{omfigure}
+\includegraphics[width=0.6\linewidth]{images/book5/photo-foucault-pantheon.jpg}
+
+{\small El péndulo de Foucault en el Panteón de París. \omterm{def:b3:lagrangian-mechanics:coordinates}{Coordenadas generalizadas}, una \omterm{def:b3:lagrangian-mechanics:coordinates}{ligadura} y un sistema de referencia que gira lentamente: la rotación de la sala aparece en las ecuaciones del movimiento --- y la deriva del plano de oscilación permite a un sótano medir el giro de la Tierra. Fotografía: Olga Khomitsevich, CC~BY~2.0.}
+\end{omfigure}
+
+\section{Problema: la escoba que se sostiene cabeza abajo}
+
+\begin{problem}[{Problema de fin de semana --- el péndulo invertido de Kapitza}]\label{pb:b3:lagrangian-mechanics:1}
+Un péndulo rígido puede mantenerse establemente \emph{por encima} de su
+pivote si se agita este arriba y abajo con suficiente rapidez --- un
+descubrimiento analizado por Kapitza en 1951, lo bastante llamativo como
+para parecer un truco de magia, y el principio por el que los campos
+eléctricos oscilantes atrapan iones aislados. Modelizamos el péndulo como
+una masa puntual $m$ en el extremo de una varilla rígida sin masa de
+longitud $\ell = \qty{40}{cm}$; $\theta$ es el ángulo medido desde la
+vertical \emph{descendente}; $g = \qty{9.81}{m/s^2}$.
+
+\medskip\noindent\textbf{Parte I --- El péndulo rígido.}
+El pivote se mantiene fijo al principio.
+\begin{enumerate}
+  \item Escríbanse el \omterm{def:b3:lagrangian-mechanics:action}{lagrangiano} y la ecuación del movimiento.
+  \item Dese la frecuencia $f_0$ de las \omterm{prop:b3:lagrangian-mechanics:modes}{pequeñas oscilaciones} en torno a $\theta =
+        0$ y su valor.
+  \item Muéstrese que aquí $h = E$ y úsese su conservación para hallar la
+        velocidad mínima de lanzamiento de la lenteja, en el punto más
+        bajo, que la lleva hasta arriba.
+  \item Linealícese la ecuación cerca de $\theta = \pi$ (hágase $\theta = \pi +
+        \epsilon$) y muéstrese que $\ddot\epsilon = +(g/\ell)\epsilon$: ¿con
+        qué rapidez crece una inclinación inicial de una milésima de grado?
+        Dese el tiempo que tarda en crecer un factor $e$.
+  \item Una escoba en equilibrio sobre la yema de un dedo cae en cosa de un
+        segundo y, sin embargo, nunca se sostiene sola: enúnciese en una
+        frase lo que la ecuación linealizada dice del equilibrio
+        $\theta = \pi$.
+\end{enumerate}
+
+\medskip\noindent\textbf{Parte II --- Agitando el pivote.}
+El pivote oscila ahora verticalmente, con altura $y_{\text{s}}(t) =
+a\cos\Omega t$, donde $a = \qty{2.0}{cm}$ y $\Omega$ es ajustable.
+\begin{enumerate}[resume]
+  \item Escríbanse las coordenadas de la lenteja y muéstrese que
+        $\vect v^{\,2} = \ell^2\dot\theta^2 -
+        2a\Omega\ell\sin(\Omega t)\sin\theta\,\dot\theta +
+        a^2\Omega^2\sin^2\Omega t$.
+  \item Muéstrese que dos \omterm{def:b3:lagrangian-mechanics:action}{lagrangianos} que difieren en una derivada temporal
+        total $\dd F(q,t)/\dd t$ dan las mismas \omterm{thm:b3:lagrangian-mechanics:euler-lagrange}{ecuaciones de
+        Euler--Lagrange}.
+  \item Usando esa libertad, redúzcase el \omterm{def:b3:lagrangian-mechanics:action}{lagrangiano} a $L = \tfrac12 m
+        \ell^2\dot\theta^2 - ma\Omega^2\ell\cos(\Omega t)\cos\theta +
+        mg\ell\cos\theta$. (Indicación: $\sin(\Omega t)\sin\theta\,\dot\theta$
+        se combina con un término $\cos(\Omega t)\cos\theta$ para dar una
+        derivada total; los términos que solo dependen de $t$ pueden
+        suprimirse).
+  \item Dedúzcase la ecuación del movimiento
+        \[
+        \ddot\theta = -\frac{g}{\ell}\sin\theta
+         + \frac{a\Omega^2}{\ell}\cos(\Omega t)\sin\theta .
+        \]
+        Interprétese el segundo término como la sustitución del peso por $g +
+        \ddot y_{\text{s}}$: el péndulo vive en un ascensor.
+  \item ¿Se conserva ahora la \omterm{prop:b3:lagrangian-mechanics:energy}{función energía} $h$? ¿Y la energía? ¿Qué
+        bombea energía hacia dentro y hacia fuera?
+  \item En el régimen de Kapitza $a \ll \ell$ y $\Omega \gg \omega_0 =
+        \sqrt{g/\ell}$: compruébense para $a = \qty{2}{cm}$, $\ell =
+        \qty{40}{cm}$, $\Omega/2\pi = \qty{40}{Hz}$, y explíquese
+        físicamente por qué la lenteja no puede entonces seguir la excitación.
+\end{enumerate}
+
+\medskip\noindent\textbf{Parte III --- Separar lo rápido de lo lento.}
+Búsquese el movimiento en la forma $\theta(t) = \Theta(t) + \xi(t)$: una
+deriva lenta $\Theta$ más un pequeño rizado $\xi$ a la frecuencia de la
+excitación.
+\begin{enumerate}[resume]
+  \item Conservando solo el término dominante de cada miembro, muéstrese que
+        el rizado cumple $\ddot\xi \approx +(a\Omega^2/\ell)\cos(\Omega t)
+        \sin\Theta$, con $\Theta$ congelada en la escala de tiempos de la
+        excitación.
+  \item Dedúzcase $\xi(t) = -(a/\ell)\cos(\Omega t)\sin\Theta$ y compruébese
+        que su amplitud es pequeña, del orden de $a/\ell$.
+  \item Desarróllese $\sin\theta = \sin(\Theta + \xi)$ a primer orden en
+        $\xi$ e insértese en la ecuación del movimiento.
+  \item Promédiese sobre un periodo de la excitación, con $\Theta$ fija:
+        usando $\langle\cos\Omega t\rangle = 0$ y
+        $\langle\cos^2\Omega t\rangle = \tfrac12$, muéstrese que
+        \[
+        \ddot\Theta = -\frac{g}{\ell}\sin\Theta
+         - \frac{a^2\Omega^2}{2\ell^2}\sin\Theta\cos\Theta .
+        \]
+  \item Muéstrese que se trata de un movimiento en el potencial efectivo
+        \[
+        U_{\text{ef}}(\Theta) = mg\ell\Big({-\cos\Theta}
+         + \frac{a^2\Omega^2}{4g\ell}\sin^2\Theta\Big) .
+        \]
+  \item Compárese con la cuenta sobre el aro que gira
+        (\cref{ex:b3:lagrangian-mechanics:hoop}): la misma matemática, con
+        el signo opuesto en el término nuevo. ¿Qué le hace la agitación al
+        equilibrio \emph{inferior} que la rotación no hacía?
+  \item Esbócese $U_{\text{ef}}$ para excitación lenta y para excitación
+        rápida y descríbanse todos los equilibrios y su estabilidad en cada caso.
+\end{enumerate}
+
+\medskip\noindent\textbf{Parte IV --- La escoba se pone de pie.}
+\begin{enumerate}[resume]
+  \item Desarrollando $U_{\text{ef}}$ cerca de $\Theta = \pi$, muéstrese
+        que la posición invertida es estable exactamente cuando
+        \[
+        a^2\Omega^2 > 2g\ell .
+        \]
+  \item Calcúlese la frecuencia crítica de excitación $f_{\text{c}} =
+        \Omega_{\text{c}}/2\pi$ para nuestro péndulo, así como la velocidad
+        máxima del pivote $a\Omega_{\text{c}}$ y la aceleración
+        $a\Omega_{\text{c}}^2$ (en unidades de $g$) que exige.
+  \item Para $\Omega = 2\Omega_{\text{c}}$, hállese la frecuencia del lento
+        balanceo del péndulo erguido en torno a $\Theta = \pi$, y su
+        valor; compruébese que es en efecto lenta comparada con la
+        excitación.
+  \item Todavía con $\Omega = 2\Omega_{\text{c}}$, ¿cuál es la amplitud del
+        rizado $\xi$ para $\Theta$ ligeramente apartada de $\pi$, en
+        grados, si $a/\ell = 0.05$? ¿Delataría una fotografía el truco?
+  \item ¿Cuánto puede inclinarse la escoba respecto de la vertical y volver
+        todavía? Muéstrese que el pozo de la posición erguida se extiende
+        sobre $|\Theta - \pi| <
+        \arccos(2g\ell/a^2\Omega^2)$, y evalúese en $\Omega =
+        2\Omega_{\text{c}}$.
+  \item Un malabarista que mantiene una escoba en equilibrio sobre la yema
+        quieta de un dedo también la sostiene: ¿mediante qué mecanismo
+        completamente distinto? Nómbrese la característica del péndulo de
+        Kapitza que no necesita realimentación.
+  \item Resúmase el resultado con nombre propio: un pivote agitado con
+        amplitud \qty{2}{cm} a \qty{45}{Hz} --- el doble de la frecuencia
+        crítica --- sostiene cabeza abajo un péndulo de \qty{40}{cm}, en
+        un pozo que alcanza unos $75^\circ$ desde la vertical y que se
+        balancea suavemente a unos \qty{1.4}{Hz}. ¿Dónde se usa en física
+        el mismo atrapamiento promediado para retener una única partícula
+        cargada?
+\end{enumerate}
+\end{problem}

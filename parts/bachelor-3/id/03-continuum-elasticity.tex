@@ -1,0 +1,662 @@
+\chapter{Mekanika Kontinum dan Elastisitas}\label{ch:b3:continuum-elasticity}
+
+Tempelkanlah telinga Anda pada rel baja yang panjang sementara seorang
+pekerja jauh memukulnya: terdengar dua dentang --- satu lewat bajanya,
+satu lewat udara, terpisah satu sekon atau lebih. Batu, baja, tulang dan
+karet semuanya membawa gaya dan gelombang sebagaimana fluida membawa
+tekanan, tetapi dengan sesuatu yang tak dimiliki fluida mana pun:
+semuanya melawan \emph{perubahan bentuk}, bukan hanya perubahan volume.
+Jilid Tahun 2 membangun mekanika fluida di atas dua gagasan, yaitu
+partikel bahan dan medan tekanan; bab ini memperluas keduanya ke zat
+padat. Perpindahan tiap partikel menjadi sebuah medan, distorsi
+setempatnya menjadi \emph{regangan}, gaya dalamnya menjadi
+\emph{tegangan}, dan di antara keduanya berdiri kartu tanda pengenal zat
+padat itu, yakni \omterm{thm:b3:continuum-elasticity:hooke}{hukum Hooke} dengan dua tetapan elastiknya. Hasilnya
+membentang dari hal sehari-hari --- mengapa kabel memulur, mengapa botol
+meletus, bagaimana papan loncat melentur --- sampai ke hal planet: gempa
+bumi mengirimkan lewat Bumi tepat dua jenis \omterm{prop:b3:continuum-elasticity:waves}{gelombang elastik} yang
+diramalkan bab ini, dan waktu tibanya adalah bunyi pertama yang pernah
+direkam dari perut planet kita.
+
+\section{Regangan: memerikan deformasi}
+
+\begin{definition}[Medan perpindahan dan tensor regangan]\label{def:b3:continuum-elasticity:strain}
+\index{medan perpindahan}\index{tensor regangan}\index{dilatasi}
+Ketika sebuah zat padat berdeformasi, partikel yang mula-mula di
+$\vect r$ berpindah ke
+$\vect r + \vect u(\vect r)$: $\vect u$ adalah \emph{medan
+perpindahan}. Untuk deformasi kecil, distorsi setempatnya diukur oleh
+\emph{tensor regangan}, yaitu susunan setangkup
+\[
+\varepsilon_{ij} = \frac12\Big(
+ \frac{\partial u_i}{\partial x_j} + \frac{\partial u_j}{\partial x_i}
+\Big) , \qquad i, j \in \{x, y, z\} .
+\]
+Komponen diagonal $\varepsilon_{xx}$ adalah pemuluran nisbi bahannya
+sepanjang $x$ (tak berdimensi, misalnya $\num{e-3}$ untuk kabel baja
+yang sedang dipakai); komponen taksdiagonal $\varepsilon_{xy}$ adalah
+setengah dari mengecilnya sudut antara arah bahan $x$ dan $y$ --- yakni
+sebuah \emph{geseran}. Teras tensornya adalah perubahan volume nisbi,
+yaitu \emph{dilatasi}:
+\[
+\frac{\delta V}{V} = \varepsilon_{xx} + \varepsilon_{yy} +
+\varepsilon_{zz} = \operatorname{div}\vect u .
+\]
+\end{definition}
+
+\begin{example}[Tiga deformasi dasar]\label{ex:b3:continuum-elasticity:elementary}
+\omterm{def:b3:continuum-elasticity:strain}{Dilatasi} seragam $\vect u = \alpha\vect r$: $\varepsilon_{ij} =
+\alpha\,\delta_{ij}$, perubahan volumenya $3\alpha$, tanpa geseran.
+Geseran sederhana $\vect u = (\gamma y, 0, 0)$: $\varepsilon_{xy} = \gamma/2$,
+seluruh komponen diagonalnya nol --- bentuknya berubah, volumenya tidak.
+Rotasi tegar $\vect u = (-\omega y, \omega x, 0)$: $\varepsilon_{ij} = 0$
+secara identik --- bagian antisetangkup $\partial u_i/\partial x_j$,
+yang dibuang oleh penyetangkupannya, justru merupakan bagian yang
+memutar tanpa mendeformasi. Regangan hanya mengukur deformasi.
+\end{example}
+
+\begin{omfigure}
+\begin{tikzpicture}[font=\small, >=Stealth]
+  % stretch
+  \begin{scope}
+    \draw[gray, dashed] (0,0) rectangle (1.6,1.6);
+    \draw[omDef, thick] (-0.2,0.16) rectangle (1.8,1.44);
+    \draw[->] (2.0,0.8) -- (2.55,0.8);
+    \draw[->] (-0.4,0.8) -- (-0.95,0.8);
+    \node at (0.8,-0.85) {pemuluran $\varepsilon_{xx} > 0$,};
+    \node at (0.8,-1.3) {penciutan $\varepsilon_{yy} < 0$};
+  \end{scope}
+  % shear
+  \begin{scope}[xshift=5.3cm]
+    \draw[gray, dashed] (0,0) rectangle (1.6,1.6);
+    \draw[omThm, thick] (0,0) -- (1.6,0) -- (2.0,1.6) -- (0.4,1.6) -- cycle;
+    \draw[->] (0.9,1.8) -- (1.5,1.8);
+    \draw[->] (0.7,-0.2) -- (0.1,-0.2);
+    \node at (0.9,-0.85) {geseran $\varepsilon_{xy} = \gamma/2$:};
+    \node at (0.9,-1.3) {bentuk berubah, volume tidak};
+  \end{scope}
+  % rotation
+  \begin{scope}[xshift=10.6cm]
+    \draw[gray, dashed] (0,0) rectangle (1.6,1.6);
+    \begin{scope}[rotate around={14:(0.8,0.8)}]
+      \draw[omExo, thick] (0,0) rectangle (1.6,1.6);
+    \end{scope}
+    \draw[->] (1.75,1.5) arc (30:80:1.1);
+    \node at (0.8,-0.85) {rotasi: $\varepsilon_{ij} = 0$,};
+    \node at (0.8,-1.3) {tanpa deformasi sama sekali};
+  \end{scope}
+\end{tikzpicture}
+
+{\small \omterm{def:b3:continuum-elasticity:strain}{Tensor regangan} hanya melihat deformasi yang sebenarnya:
+pemuluran (komponen diagonal), geseran (komponen taksdiagonal) --- dan
+rotasi tegar sama sekali tidak.}
+\end{omfigure}
+
+\section{Tegangan: memerikan gaya dalam}
+
+\begin{definition}[Traksi dan tensor tegangan]\label{def:b3:continuum-elasticity:stress}
+\index{tensor tegangan}\index{traksi}
+Irislah zat padat itu, dalam pikiran, sepanjang permukaan kecil $\dd S$
+bernormal $\vect n$: bahan di sisi $+\vect n$ menarik sisi yang lain
+dengan gaya $\dd\vect F = \boldsymbol\sigma(\vect n)\,\dd S$ --- itulah
+\emph{traksi}. Gaya ini bergantung secara linear pada $\vect n$
+(Cauchy), sehingga ia terkodekan oleh \emph{tensor tegangan}
+$\sigma_{ij}$:
+\[
+\dd F_i = \sum_j \sigma_{ij}\,n_j\,\dd S ,
+\]
+dalam pascal. $\sigma_{xx}$ adalah tarikan ($> 0$: tegangan tarik) atau
+dorongan ($< 0$: mampatan) melintasi muka yang bernormal $x$;
+$\sigma_{xy}$ adalah gaya sepanjang $x$ yang dipikul muka bernormal $y$
+--- yakni tegangan geser. Fluida diam adalah kasus khusus
+$\sigma_{ij} = -p\,\delta_{ij}$: tekanan mendorong sama besar pada tiap
+muka dan tidak menggeser satu pun, dan itulah sebabnya fluida mengalir
+--- ia tidak dapat memikul geseran statis.
+\end{definition}
+
+\begin{proposition}[Kesetimbangan dan kesetangkupan]\label{prop:b3:continuum-elasticity:equilibrium}
+Dalam zat padat yang setimbang di bawah gaya ruah $\vect f$ per satuan
+volume (misalnya $\rho\vect g$),
+\[
+\sum_j\frac{\partial\sigma_{ij}}{\partial x_j} + f_i = 0
+\]
+di setiap titik dalamnya; dan \omterm{def:b3:continuum-elasticity:stress}{tensor tegangannya} setangkup,
+$\sigma_{ij} = \sigma_{ji}$.
+\end{proposition}
+
+\begin{proof}[Bukti sebagian]
+Setimbangkanlah gaya pada kubus kecil bersisi $a$: \omterm{def:b3:continuum-elasticity:stress}{traksi} pada kedua
+muka yang bernormal $x$ berbeda sebesar $a\,\partial_x\sigma_{ix}$ per
+satuan luas, begitu pula untuk pasangan lainnya; gaya permukaan neto per
+satuan volume adalah $\sum_j\partial_j\sigma_{ij}$, yang harus
+meniadakan $f_i$ --- pembukuan yang sama seperti yang memberikan
+$-\vect\nabla p + \rho\vect g = \vect 0$ pada statika fluida jilid Tahun
+1. Kesetangkupannya: momen gaya tegangan geser terhadap pusat kubusnya
+adalah $(\sigma_{xy} -
+\sigma_{yx})a^3$ pada orde terdepan, sedangkan momen kelembamannya
+berskala sebagai $a^5$; tegangan yang tak setangkup akan memutar kubus
+kecil dengan laju tak hingga. Argumen kontinum lengkapnya diterima tanpa
+bukti.
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}[font=\small, >=Stealth, scale=1.05]
+  % cube in light 3D
+  \coordinate (A) at (0,0); \coordinate (B) at (2.4,0);
+  \coordinate (C) at (2.4,2.4); \coordinate (D) at (0,2.4);
+  \coordinate (E) at (0.9,0.75); \coordinate (F) at (3.3,0.75);
+  \coordinate (G) at (3.3,3.15);
+  \draw[thick] (A) -- (B) -- (C) -- (D) -- cycle;
+  \draw[thick] (B) -- (F) -- (G) -- (C);
+  \draw[thick] (D) -- (0.9,3.15) -- (G);
+  \draw[thick, dashed] (A) -- (E) -- (F);
+  \draw[thick, dashed] (E) -- (0.9,3.15);
+  % normal stress on +x face
+  \draw[->, omThm, very thick] (2.85,1.55) -- (4.05,1.55);
+  \node[omThm, anchor=west] at (4.1,1.55) {$\sigma_{xx}$};
+  % shear on +x face
+  \draw[->, omDef, very thick] (2.85,1.9) -- (2.85,3.0);
+  \node[omDef, anchor=south] at (2.85,3.05) {$\sigma_{yx}$};
+  \draw[->, omExo, very thick] (3.1,1.3) -- (2.5,0.85);
+  \node[omExo, anchor=east] at (2.35,0.48) {$\sigma_{zx}$};
+  \node at (1.2,1.2) {muka $\perp x$};
+  \node[align=left, anchor=west, font=\footnotesize] at (5.6,2.3)
+    {$\sigma_{xx}$: tarik/tekan\\[2pt]
+     $\sigma_{yx}$, $\sigma_{zx}$: tegangan geser\\[2pt]
+     yang dipikul muka yang sama};
+\end{tikzpicture}
+
+{\small Ketiga komponen \omterm{def:b3:continuum-elasticity:stress}{traksi} pada satu muka kubus bahan: satu normal
+(tarik atau tekan), dua tangensial (geser). Kesembilan komponen pada
+ketiga mukanya membentuk \omterm{def:b3:continuum-elasticity:stress}{tensor tegangan}.}
+\end{omfigure}
+
+\section{Hukum Hooke dan tetapan elastik}
+
+\begin{theorem}[Elastisitas isotropik linear]\label{thm:b3:continuum-elasticity:hooke}
+\index{hukum Hooke}\index{modulus Young}\index{nisbah Poisson}
+Untuk regangan kecil, zat padat isotropik menanggapi secara linear:
+tegangannya sebanding dengan regangannya,
+\[
+\sigma_{ij} = \lambda\,(\varepsilon_{xx} + \varepsilon_{yy} +
+\varepsilon_{zz})\,\delta_{ij} + 2\mu\,\varepsilon_{ij} ,
+\]
+dengan dua tetapan bahan, yaitu \emph{koefisien Lamé} $\lambda$ dan
+$\mu$ ($\mu$ juga ditulis $G$, yakni \emph{modulus geser}). Dalam uji
+tarik sederhana --- sebatang benda ditarik sepanjang $x$, sisinya bebas
+--- hukum yang sama mengambil bentuk yang dipakai insinyur
+\[
+\varepsilon_{xx} = \frac{\sigma_{xx}}{E} , \qquad
+\varepsilon_{yy} = \varepsilon_{zz} = -\nu\,\varepsilon_{xx} ,
+\]
+yang mendefinisikan \emph{\omterm{thm:b3:continuum-elasticity:hooke}{modulus Young}} $E$ (kekakuan terhadap
+pemuluran) dan \emph{\omterm{thm:b3:continuum-elasticity:hooke}{nisbah Poisson}} $\nu$ (penciutan menyamping), dengan
+\[
+\mu = \frac{E}{2(1 + \nu)} , \qquad
+\lambda = \frac{E\nu}{(1 + \nu)(1 - 2\nu)} .
+\]
+Inilah ``sebagaimana pemulurannya, demikian pula gayanya'' dari Hooke
+(1678), yang diangkat menjadi tensor. Hukum ini berlaku sampai
+\emph{batas elastik} yang bergantung bahan.
+\end{theorem}
+\admitted
+
+\begin{remark}[Orde besar]\label{rem:b3:continuum-elasticity:orders}
+$E \approx \qty{200}{GPa}$ untuk baja, \qty{70}{GPa} untuk aluminium dan
+kaca jendela, \qty{50}{GPa} untuk granit, \qty{15}{GPa} untuk tulang dan
+beton, \qty{10}{GPa} untuk kayu searah serat, dan hanya beberapa MPa
+untuk karet --- lima orde besar, yakni rentang antara sebuah jembatan
+dan sehelai karet gelang. $\nu$ terletak antara $0$ (gabus, hampir) dan
+$1/2$ (karet): $\nu = 1/2$ berarti deformasi yang mempertahankan volume,
+dan $\nu \approx 0.3$ lazim bagi logam. Regangan sebesar $\num{e-3}$
+pada baja sudah berarti $\sigma = \qty{200}{MPa}$, dekat dengan tegangan
+luluh mutu biasa: elastisitas sehari-hari hidup di bawah satu per
+seribu.
+\end{remark}
+
+\begin{example}[Kabel lift]\label{ex:b3:continuum-elasticity:cable}
+Kabel baja sepanjang \qty{60}{m} berpenampang \qty{2.0}{cm^2} memikul
+kereta \qty{1000}{kg}: $\sigma = mg/S = \qty{49}{MPa}$, $\varepsilon =
+\sigma/E = \num{2.5e-4}$, pemulurannya $\varepsilon L = \qty{15}{mm}$ ---
+dan kabelnya berperilaku sebagai pegas berkekakuan $k = ES/L =
+\qty{6.7e5}{N/m}$: rumus $k = ES/L$ itulah cara sebuah kontinum
+mengembalikan pegas jilid Tahun 1.
+\end{example}
+
+\begin{proposition}[Energi elastik]\label{prop:b3:continuum-elasticity:energy}
+\index{energi elastik}
+Zat padat yang teregang menyimpan, per satuan volume, kerapatan energi
+\[
+w = \frac12\sum_{i,j}\sigma_{ij}\,\varepsilon_{ij}
+\qquad\text{(tarik sederhana: } w = \tfrac12 E\varepsilon^2 =
+\sigma^2/2E\text{)} ,
+\]
+yakni $\tfrac12 kx^2$ dalam tiga dimensi.
+\end{proposition}
+
+\begin{proof}[Bukti sebagian]
+Pada tarik sederhana, membawa tegangannya dari $0$ ke $\sigma$
+melakukan usaha per satuan volume $\int_0^\varepsilon\sigma'\,\dd\varepsilon' =
+\int_0^\varepsilon E\varepsilon'\,\dd\varepsilon' = \tfrac12
+E\varepsilon^2$ --- yaitu luas di bawah garis tegangan--regangannya,
+persis seperti pada pegas. Bentuk kuadratik umumnya menyusul dengan
+menyuperposisikan komponennya; diterima tanpa bukti.
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}[font=\small, >=Stealth]
+  % traction test sketch
+  \begin{scope}[yshift=0.4cm]
+    \draw[gray, dashed] (0,0) rectangle (3.2,1.0);
+    \draw[omDef, thick] (-0.25,0.07) rectangle (3.45,0.93);
+    \draw[->, very thick] (3.65,0.5) -- (4.55,0.5) node[right] {$F$};
+    \draw[->, very thick] (-0.45,0.5) -- (-1.35,0.5) node[left] {$F$};
+    \draw[<->] (0,-0.35) -- (3.2,-0.35);
+    \node at (1.6,-0.7) {$L(1 + \varepsilon)$};
+    \node at (1.6,1.55) {penampang $S$, $\sigma = F/S$};
+  \end{scope}
+  % stress-strain curve
+  \begin{scope}[xshift=7.3cm, yshift=-0.6cm]
+  \begin{axis}[omaxis, axis x line=bottom, axis y line=left,
+    width=6.4cm, height=4.6cm, xmin=0, xmax=10, ymin=0, ymax=1.25,
+    xlabel={$\varepsilon$}, ylabel={$\sigma$},
+    xlabel style={at={(axis description cs:0.5,-0.1)}, anchor=north},
+    xtick=\empty, ytick=\empty, clip=false]
+    \addplot[omDef, very thick, domain=0:2] {0.4*x};
+    \addplot[omExo, thick, domain=2:8.7, samples=40]
+      {0.8 + 0.32*(1-exp(-(x-2)/2.2))};
+    \fill (axis cs:2,0.8) circle (1.6pt);
+    \draw (axis cs:2.05,0.83) -- (axis cs:2.55,1.1);
+    \node[font=\scriptsize, anchor=west] at (axis cs:2.55,1.14) {batas elastik};
+    \node[font=\scriptsize, omExo, anchor=west] at (axis cs:4.6,0.87) {aliran plastis};
+    \node[font=\scriptsize, anchor=west] at (axis cs:8.55,1.2) {patahan};
+    \fill[omThm] (axis cs:8.7,1.115) circle (1.6pt);
+    \node[font=\scriptsize, omDef, rotate=38, anchor=south] at (axis cs:1.15,0.48) {kemiringan $E$};
+  \end{axis}
+  \end{scope}
+\end{tikzpicture}
+
+{\small Kiri: uji tarik mendefinisikan $E$ (pemuluran nisbi) dan
+$\nu$ (penipisan menyamping, dilebih-lebihkan). Kanan: kurva
+tegangan--regangan sebuah logam --- elastisitas linear sampai batas
+elastiknya, lalu aliran plastis yang tak berbalik, lalu patahan. Bab ini
+hidup pada bagian yang lurus.}
+\end{omfigure}
+
+\begin{method}[Menyelesaikan soal elastisitas kecil]\label{met:b3:continuum-elasticity:method}
+(1) Kenalilah geometri dan pembebanannya; terkalah komponen tegangan
+mana yang tidak nol (batang yang ditarik: hanya $\sigma_{xx}$; kawat
+yang dipuntir: geseran; selongsong bertekanan: tegangan tangensial). (2)
+Tuliskanlah kesetimbangan gaya pada potongan yang dipilih baik --- separuh
+silinder, sebuah irisan, sebuah kubus. (3) Ubahlah tegangan menjadi
+regangan lewat \omterm{thm:b3:continuum-elasticity:hooke}{hukum Hooke}, lalu regangan menjadi perpindahan dengan
+mengintegralkan. (4) Energinya lewat $w = \sigma^2/2E$ (atau
+$\sigma^2/2G$ pada geseran). (5) Periksalah selalu bahwa regangannya
+tetap kecil dan tegangannya di bawah batas elastik --- kalau tidak,
+jawabannya memerikan zat padat yang sudah tidak ada lagi.
+\end{method}
+
+\section{Gelombang elastik}
+
+\begin{proposition}[Dua bunyi sebuah zat padat]\label{prop:b3:continuum-elasticity:waves}
+\index{gelombang elastik}\index{gelombang P}\index{gelombang S}
+Dalam zat padat elastik tak berbatas bermassa jenis $\rho$, gangguan
+kecil merambat sebagai dua jenis gelombang yang saling bebas: gelombang
+\emph{longitudinal} (P), yang bahannya berosilasi sepanjang arah rambat
+lewat pemampatan dan pemuaian, dengan laju
+\[
+c_{\text{P}} = \sqrt{\frac{\lambda + 2\mu}{\rho}} ,
+\]
+dan gelombang \emph{transversal} (S), yang bahannya bergeser menyamping,
+dengan laju
+\[
+c_{\text{S}} = \sqrt{\frac{\mu}{\rho}} < c_{\text{P}} .
+\]
+Fluida mempunyai $\mu = 0$: tak ada \omterm{prop:b3:continuum-elasticity:waves}{gelombang S} --- geseran tak dapat
+diteruskan --- dan laju P-nya menyusut menjadi laju bunyi jilid Tahun 2.
+Untuk $\nu = 1/4$ (lazim pada batuan), $\lambda = \mu$ dan $c_{\text{P}} =
+\sqrt3\,c_{\text{S}}$.
+\end{proposition}
+
+\begin{proof}[Bukti sebagian]
+Ambillah gangguan bidang $\vect u = \vect u(x, t)$. Hukum Newton per
+satuan volume berbunyi $\rho\,\partial_t^2u_i = \sum_j\partial_j\sigma_{ij}$
+(persamaan kesetimbangan dengan kelembamannya dipulihkan). Untuk
+komponen longitudinalnya, \omterm{thm:b3:continuum-elasticity:hooke}{hukum Hooke} memberikan $\sigma_{xx} = (\lambda +
+2\mu)\,\partial_xu_x$ (regangan menyampingnya lenyap pada gelombang
+bidang, karena bahan di sekitarnya melarang pelepasan menyamping),
+sehingga
+$\rho\,\partial_t^2u_x = (\lambda + 2\mu)\,\partial_x^2u_x$: d'Alembert
+dengan laju $c_{\text{P}}$. Untuk komponen transversalnya, $\sigma_{yx} =
+2\mu\varepsilon_{yx} = \mu\,\partial_xu_y$, sehingga
+$\rho\,\partial_t^2u_y = \mu\,\partial_x^2u_y$: berlaju $c_{\text{S}}$.
+Bahwa gangguan umum terbelah menjadi kedua keluarga ini diterima tanpa bukti.
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}[font=\small, >=Stealth]
+  % P wave: compressions along x
+  \begin{scope}
+    \foreach \x/\s in {0/1.0, 0.42/0.72, 0.76/0.5, 1.04/0.5, 1.32/0.72,
+                       1.74/1.0, 2.26/1.28, 2.86/1.44, 3.46/1.28, 3.98/1.0,
+                       4.4/0.72, 4.74/0.5, 5.02/0.5, 5.3/0.72, 5.72/1.0,
+                       6.24/1.28, 6.84/1.44, 7.44/1.28, 7.96/1.0}
+      \draw[omDef, thick] (\x,0) -- (\x,1.5);
+    \draw[->, very thick] (8.4,0.75) -- (9.2,0.75) node[right] {$c_{\text{P}}$};
+    \draw[<->, omThm, thick] (0.6,-0.35) -- (1.5,-0.35);
+    \node[anchor=west] at (3.6,-0.42) {bahan bergerak $\parallel$ arah rambat};
+  \end{scope}
+  % S wave: sheared line
+  \begin{scope}[yshift=-3.3cm]
+    \draw[omExo, thick, domain=0:8, samples=90, variable=\t]
+      plot ({\t}, {0.55*sin(deg(\t*0.785))+0.75});
+    \foreach \x in {0.5,1.5,2.5,3.5,4.5,5.5,6.5,7.5}
+      \draw[->, omExo!70] (\x,{0.55*sin(deg(\x*0.785))+0.75}) --
+        (\x,{0.9*sin(deg(\x*0.785+25))+0.75});
+    \draw[->, very thick] (8.4,0.75) -- (9.2,0.75) node[right] {$c_{\text{S}}$};
+    \node at (2.9,-0.5) {bahan bergerak $\perp$ arah rambat};
+  \end{scope}
+\end{tikzpicture}
+
+{\small Kedua \omterm{prop:b3:continuum-elasticity:waves}{gelombang elastik}. P: bidang bahan merapat dan merenggang
+sepanjang arah tempuhnya (gelombang mampatan --- ada dalam zat padat,
+zat cair dan gas). S: bahannya bergeser menyamping (hanya ada di tempat
+geseran dilawan: zat padat).}
+\end{omfigure}
+
+\begin{example}[Rel dan gempa bumi]\label{ex:b3:continuum-elasticity:rail}
+Baja: $c_{\text{P}} \approx \qty{5.9}{km/s}$ --- pukulan pada rel
+sejauh \qty{2}{km} tiba lewat bajanya dalam \qty{0.34}{s} dan lewat
+udara ($\qty{340}{m/s}$) dalam \qty{5.9}{s}: dua dentang.
+Granit ($E = \qty{75}{GPa}$, $\nu = 1/4$, $\rho =
+\qty{2.7e3}{kg/m^3}$): $c_{\text{P}} \approx \qty{5.8}{km/s}$,
+$c_{\text{S}} \approx \qty{3.3}{km/s}$. Gempa bumi karena itu
+mengumumkan dirinya dua kali: sentakan P yang tajam, lalu, beberapa
+sekon kemudian, guncangan S yang lebih lambat dan lebih kuat --- dan
+selangnya mengukur jaraknya
+(\cref{pb:b3:continuum-elasticity:1}). Sistem peringatan dini gempa
+hidup di dalam selang itu: \omterm{prop:b3:continuum-elasticity:waves}{gelombang P}, beserta pesan radio yang
+dipicunya, mendahului \omterm{prop:b3:continuum-elasticity:waves}{gelombang S} yang menimbulkan kerusakan.
+\end{example}
+
+\begin{remark}[Tali, batang dan bunyi diperoleh kembali]\label{rem:b3:continuum-elasticity:limits}
+Semua gelombang jilid Tahun 2 merupakan limit bab ini. Batang tipis yang
+bebas menipis menyamping membawa gelombang mampatan berlaju
+$\sqrt{E/\rho}$ (lebih lambat daripada $c_{\text{P}}$: pelepasan
+menyampingnya melunakkan tanggapannya); tali yang teregang membawa
+gelombang transversal berlaju $\sqrt{T/\rho_\ell}$, dengan tegangan
+talinya menggantikan kekakuan; fluida hanya menyimpan $\lambda$ ---
+yakni modulus ruahnya --- beserta satu laju bunyi $\sqrt{\lambda/\rho}$.
+\end{remark}
+
+\begin{omfigure}
+\includegraphics[width=0.58\linewidth]{images/book5/ai/b5-03-diving-board.png}
+
+{\small Papan loncat yang terbebani: tegangan dan regangan tersebar pada sebuah kontinum, terlentur menjadi profil lenturan kubik sebuah kantilever --- dan sebuah pegas yang segera mengembalikan \omterm{prop:b3:continuum-elasticity:energy}{energi elastiknya}.}
+\end{omfigure}
+
+\section{Latihan}
+
+\begin{exercise}[$\star$]\label{exo:b3:continuum-elasticity:1}
+(a) Periksalah satuannya: apakah pascal itu dalam kg, m, s, dan apakah
+satuan regangan? (b) Kabel baja bekerja pada $\sigma =
+\qty{200}{MPa}$: hitunglah regangannya. (c) Karet gelang ($E \approx
+\qty{2}{MPa}$) diregangkan sampai dua kali panjangnya: ``regangan''
+sebesar apakah itu, dan mengapa kerangka bab ini tidak sungguh-sungguh
+berlaku? (d) Urutkanlah menurut kerapatan \omterm{prop:b3:continuum-elasticity:energy}{energi elastik} yang tersimpan
+pada tegangan kerjanya: baja pada \qty{200}{MPa}, karet pada \qty{1}{MPa}.
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b3:continuum-elasticity:2}
+Hitunglah \omterm{def:b3:continuum-elasticity:strain}{tensor regangan} tiap \omterm{def:b3:continuum-elasticity:strain}{medan perpindahan} berikut lalu perikanlah
+deformasinya: (a) $\vect u = \alpha(x, y, z)$; (b) $\vect u =
+(\gamma y, 0, 0)$; (c) $\vect u = (-\omega y, \omega x, 0)$; (d)
+$\vect u = (\varepsilon x, -\nu\varepsilon y, -\nu\varepsilon z)$ ---
+percobaan apa yang mewujudkannya?
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b3:continuum-elasticity:3}
+Dasar sebuah tiang granit setinggi $h$ memikul tegangan $\sigma
+= \rho gh$. (a) Turunkanlah hal ini dari persamaan kesetimbangan dengan
+gravitasi. (b) Granit hancur pada sekitar \qty{200}{MPa}: berapakah
+tiang yang tertinggi? (c) Everest setinggi \qty{8.8}{km}: berilah
+ulasan. (d) Mengapa sebuah gunung dapat sedikit lebih tinggi daripada
+tiang yang terbuat dari batuannya sendiri (pikirkanlah bentuknya)?
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b3:continuum-elasticity:4}
+Sebatang baja ($E = \qty{200}{GPa}$, $\nu = 0.30$) diregangkan sebesar
+$\varepsilon = \num{e-3}$. (a) Berapa regangan menyampingnya? (b) Berapa
+perubahan volume nisbinya? (c) Untuk $\nu$ berapakah volumenya tidak
+berubah sama sekali, dan bahan lazim apa yang mendekatinya? (d) Mengapa
+$\nu > 1/2$ mustahil (tinjaulah mampatan hidrostatik)?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b3:continuum-elasticity:5}
+Tegangan lingkar. Sebuah silinder berdinding tipis (jejari $R$, tebal
+dinding $t \ll
+R$) menahan tekanan $p$. (a) Dengan menyetimbangkan gaya pada separuh
+silinder sepanjang satu satuan, tunjukkanlah bahwa dindingnya memikul
+tegangan tangensial $\sigma_\theta = pR/t$. (b) Tunjukkanlah bahwa
+tegangan longitudinalnya (kesetimbangan pada sebuah penampang) adalah
+$pR/2t$: sebuah silinder tertegang dua kali lebih kuat melingkar
+daripada memanjang --- ke arah manakah sosis pecah? (c) Tabung selam: $p =
+\qty{200}{bar}$, $R = \qty{9}{cm}$, $t = \qty{5}{mm}$: hitunglah
+$\sigma_\theta$ lalu bandingkanlah dengan tegangan luluh baja
+\qty{700}{MPa}. (d) Mengapa tangki bertekanan tinggi berujung setengah
+bola?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b3:continuum-elasticity:6}
+Sebuah balok karet ($E = \qty{3.0}{MPa}$, $\nu \approx 0.5$), beralas $10
+\times \qty{10}{cm}$, setinggi \qty{2}{cm}, dilekatkan di antara dua
+pelat; pelat atasnya didorong menyamping dengan \qty{150}{N}. (a)
+Hitunglah $G$. (b) Berapa tegangan geser dan sudut geser
+$\gamma = \sigma_{xy}/G$; berapa perpindahan menyamping pelat atasnya?
+(c) Mengapa $\nu \approx 1/2$ bagi karet (apa yang sukar dan apa yang
+mudah bagi seikat rantai polimer)? (d) Balok karet semacam itu memikul
+seluruh gedung di daerah gempa: sifat mana dari tumpuan ini yang
+melindungi gedungnya, kekakuan terhadap mampatan atau kelunakan terhadap
+geseran?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b3:continuum-elasticity:7}
+Tali panjat, panjang $L = \qty{20}{m}$, penampang $S =
+\qty{80}{mm^2}$, modulus efektif $E = \qty{1.2}{GPa}$. (a) Berapa
+kekakuannya $k = ES/L$? (b) Pemanjat \qty{80}{kg} jatuh bebas
+\qty{4}{m} sebelum talinya bekerja: dengan menyamakan energinya,
+carilah pemuluran tali maksimumnya (selesaikanlah persamaan kuadratnya;
+abaikanlah lanjutan jatuhnya selama pengereman pada langkah pertama).
+(c) Simpulkanlah gaya puncaknya dan perlambatan puncaknya dalam $g$. (d)
+Mengapa tali yang pernah menahan jatuh berat harus dipensiunkan (ke mana
+energinya pergi, dan apa kata kurva tegangan--regangannya)?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b3:continuum-elasticity:8}
+Puntiran. Sebuah kawat berjejari $a$, panjang $L$, bermodulus geser $G$
+dipuntir sebesar sudut $\theta$. (a) Tunjukkanlah bahwa tabung berjejari
+$r$ di dalamnya mengalami sudut geser $\gamma(r) = r\theta/L$. (b)
+Tegangan gesernya $G\gamma$: integralkanlah $r \times$ tegangan pada
+penampangnya untuk memperoleh momen gaya pemulih $\Gamma = (\pi Ga^4/2L)\,\theta$.
+(c) Perhatikan $a^4$: separuhkanlah jejarinya, dan sebesar faktor
+berapakah kekakuan puntirnya turun? (d) Kelunakan ekstrem inilah
+sebabnya Cavendish (1798) menggantung neracanya pada kawat halus: untuk
+$a = \qty{25}{\micro m}$, $L =
+\qty{1}{m}$, $G = \qty{40}{GPa}$, hitunglah $C = \pi Ga^4/2L$ dan
+periodenya dengan batang bermomen kelembaman $I = \qty{5e-4}{kg.m^2}$.
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b3:continuum-elasticity:9}
+(a) Dari penurunan gelombang bidang pada
+\cref{prop:b3:continuum-elasticity:waves}, hitunglah $c_{\text{P}}$ dan
+$c_{\text{S}}$ untuk baja ($E = \qty{200}{GPa}$, $\nu = 0.29$, $\rho =
+\qty{7.85e3}{kg/m^3}$). (b) Bandingkanlah $c_{\text{P}}$ dengan laju
+batang tipis $\sqrt{E/\rho}$ lalu jelaskanlah selisihnya dalam satu
+kalimat. (c) Untuk air ($\mu = 0$, modulus ruah \qty{2.2}{GPa}):
+berapa laju S dan laju P-nya? (d) Pada sudut berapakah gerak bahan
+\omterm{prop:b3:continuum-elasticity:waves}{gelombang P} berbeda dari gerak bahan \omterm{prop:b3:continuum-elasticity:waves}{gelombang S}, dan bagaimana
+seismometer berkomponen tiga membedakan keduanya?
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b3:continuum-elasticity:10}
+Pelenturan. Sebuah balok dilentur sampai jejari kelengkungan $R$; serat
+dalamnya memendek, serat luarnya memulur, dan sebuah \emph{permukaan
+netral} di antaranya tetap panjangnya. (a) Tunjukkanlah bahwa serat
+berjarak $y$ dari permukaan netral mempunyai regangan $\varepsilon = y/R$,
+sehingga tegangannya $Ey/R$. (b) Dengan menjumlahkan momen pada
+penampangnya, tunjukkanlah bahwa momen lenturnya adalah
+$M = EI/R$ dengan $I = \int y^2\,\dd S$ (yakni \emph{momen kedua});
+hitunglah $I$ untuk persegi panjang selebar $b$ dan setinggi $h$. (c)
+Perhatikan $h^3$: mengapa papan yang dilentur pada sisi lebarnya melendut
+kelihatan sedangkan papan yang sama pada sisi tegaknya terasa kaku?
+Hitunglah nisbahnya untuk $b/h = 5$. (d) Untuk kantilever sepanjang $L$
+yang dibebani $F$ di ujungnya, lendutan ujungnya adalah
+$\delta = FL^3/3EI$ (diterima tanpa bukti): perkirakanlah $\delta$ untuk
+papan loncat ($L = \qty{1.8}{m}$, $b = \qty{50}{cm}$, $h = \qty{3.5}{cm}$, kayu $E
+= \qty{12}{GPa}$) di bawah peloncat \qty{75}{kg}, lalu berilah ulasan.
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b3:continuum-elasticity:11}
+Tekuk. Sebuah tiang langsing (panjang $L$, kekakuan lentur $EI$), yang
+disendikan di kedua ujungnya, memikul beban aksial $P$. Andaikanlah ia
+melengkung menyamping sebesar $y(x)$. (a) Tunjukkanlah bahwa bebannya
+kemudian mengerahkan momen lentur
+$M(x) = -Py(x)$ terhadap sumbu yang tergeser, sehingga $EI\,y'' = -Py$.
+(b) Dengan $y(0) = y(L) = 0$, tunjukkanlah bahwa lengkungan tak nol
+mula-mula menjadi mungkin pada beban kritis Euler
+$P_{\text{c}} = \pi^2EI/L^2$. (c) Hitunglah $P_{\text{c}}$ untuk
+penggaris satu meter ($b = \qty{3}{cm}$, $h = \qty{1.5}{mm}$, $E = \qty{12}{GPa}$)
+lalu bandingkanlah dengan dorongan tangan Anda. (d) Jelaskanlah dari $I$
+mengapa tulang, bambu dan kerangka sepeda berbentuk \emph{tabung}.
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b3:continuum-elasticity:12}
+Laju bunyi dalam zat padat, dari atomnya. Modelkanlah zat padat sebagai
+rantai atom berjarak $a$, yang dihubungkan ``pegas'' berkekakuan $\kappa$;
+massa atomnya $m$. (a) Tunjukkanlah bahwa meregangkan rantainya
+bersesuaian dengan tarik kontinum dengan $E = \kappa/a$ (hitunglah pegas
+per satuan luas, dan pemuluran per pegas). (b) Tunjukkanlah $\rho = m/a^3$
+lalu simpulkanlah $c =
+\sqrt{E/\rho} = a\sqrt{\kappa/m}$. (c) Perkirakanlah $\kappa$ dari
+kedalaman sebuah ikatan antaratom ($\sim\qty{3}{eV}$ pada rentang $\sim
+\qty{0.1}{nm}$): $\kappa \sim \qty{50}{N/m}$; dengan $a =
+\qty{2.5e-10}{m}$ dan $m = \qty{1e-25}{kg}$, perkirakanlah $c$. (d)
+Bandingkanlah dengan laju bunyi logam yang terukur, lalu simpulkanlah
+terbuat dari apa elastisitas sehari-hari itu.
+\end{exercise}
+
+\section{Soal: Mendengarkan Bumi}
+
+\begin{problem}[{Soal akhir pekan --- bagaimana gempa bumi menyingkapkan
+inti cair}]\label{pb:b3:continuum-elasticity:1}
+Satu gempa bumi mendentingkan seluruh planet, dan kedua \omterm{prop:b3:continuum-elasticity:waves}{gelombang
+elastik} bab ini, ketika melintasinya, menyinari-X planet itu. Soal ini
+mengikuti fisikanya dari \omterm{thm:b3:continuum-elasticity:hooke}{hukum Hooke} dalam granit sampai penemuan Oldham
+pada 1906 bahwa Bumi mempunyai inti --- lengkap dengan taksiran
+ukurannya lewat sinar lurus. Ambillah untuk batuan kerak dan mantel
+$E = \qty{75}{GPa}$, $\nu = 1/4$,
+$\rho = \qty{2.7e3}{kg/m^3}$; jejari Bumi $R_{\text{E}} =
+\qty{6371}{km}$.
+
+\medskip\noindent\textbf{Bagian I --- Batuan sebagai zat padat elastik.}
+\begin{enumerate}
+  \item Hitunglah koefisien Lamé $\mu$ dan $\lambda$ batuan ini, lalu
+        amatilah bahwa $\nu = 1/4$ membuat keduanya sama.
+  \item Hitunglah $c_{\text{P}}$ dan $c_{\text{S}}$, lalu periksalah
+        $c_{\text{P}} = \sqrt3\,c_{\text{S}}$.
+  \item Gempa bumi menggeser dua muka batuan sejauh beberapa meter dalam
+        beberapa sekon: perkirakanlah regangan yang dilepaskan jika
+        geseran \qty{2}{m} melepaskan batuan pada skala \qty{50}{km},
+        beserta tegangan yang telah menumpuk.
+  \item Dari kerapatan energi $w = \tfrac12 E\varepsilon^2$,
+        perkirakanlah \omterm{prop:b3:continuum-elasticity:energy}{energi elastik} per meter kubik, lalu energinya
+        dalam volume $50 \times 50 \times \qty{20}{km^3}$; bandingkanlah
+        dengan satu megaton (\qty{4.2e15}{J}).
+  \item Mengapa \omterm{prop:b3:continuum-elasticity:waves}{gelombang S} biasanya mengguncang gedung lebih keras
+        daripada \omterm{prop:b3:continuum-elasticity:waves}{gelombang P} (pikirkanlah arah gerak tanah bagi
+        gelombang yang tiba dari bawah)?
+  \item Pada gelombang yang manakah dari keduanya volume tanahnya
+        berubah?
+\end{enumerate}
+
+\medskip\noindent\textbf{Bagian II --- Dua kedatangan pada seismometer.}
+\begin{enumerate}[resume]
+  \item Sebuah stasiun merekam kedatangan P, lalu kedatangan S $\Delta t$
+        kemudian. Untuk sumber berjarak $d$ (cukup pendek sehingga
+        sinarnya lurus), tunjukkanlah
+        \[
+        d = \frac{\Delta t}{\dfrac{1}{c_{\text{S}}} -
+        \dfrac{1}{c_{\text{P}}}} .
+        \]
+  \item Hitunglah koefisiennya: berapa kilometer per sekon selang
+        S--P itu?
+  \item Sebuah stasiun mengukur $\Delta t = \qty{28}{s}$: seberapa jauh
+        gempanya?
+  \item Satu stasiun memberi jarak, bukan tempat: berapa stasiun yang
+        menentukan episentrumnya, dan bagaimana caranya secara geometris?
+  \item Sirene peringatan dini Jepang berbunyi beberapa sekon sebelum
+        guncangan kuat: untuk gempa \qty{80}{km} di bawah sebuah kota,
+        berapa lama peringatan yang diberikan selang P--S itu sendiri?
+  \item Peringatan modern menambahkan laju cahaya: \omterm{prop:b3:continuum-elasticity:waves}{gelombang P} yang
+        terdeteksi dekat sumbernya diradiokan mendahului kedua
+        gelombangnya. Untuk kota berjarak \qty{200}{km} dari
+        episentrum, berapa lama sesudah retakannya \omterm{prop:b3:continuum-elasticity:waves}{gelombang S} tiba,
+        dan peringatan apa yang dapat diberikan pesan radio yang
+        dikirim pada kedatangan pertama P \qty{20}{km} dari sumbernya?
+\end{enumerate}
+
+\medskip\noindent\textbf{Bagian III --- Gelombang yang melintasi planet.}
+\begin{enumerate}[resume]
+  \item Pada tekanan mantel dalam, modulusnya membesar: laju P mencapai
+        \qty{13.7}{km/s} di dasar mantelnya. Dengan mengambil rata-rata
+        kasar $c_{\text{P}} \approx \qty{10}{km/s}$, berapa lama
+        \omterm{prop:b3:continuum-elasticity:waves}{gelombang P} memerlukan waktu untuk melintasi Bumi secara
+        diametral?
+  \item Stasiun mencatat gempa dari sisi bola bumi yang berseberangan:
+        apa yang dikatakan keberadaan kedatangan ini saja tentang Bumi
+        dalam (apakah ia elastik? apakah ia lebur seluruhnya?)?
+  \item Definisikanlah sudut episentral $\Delta$ (sudut di pusat Bumi
+        antara sumber dan stasiun). Untuk sinar lurus, tunjukkanlah
+        bahwa panjang talinya adalah $2R_{\text{E}}\sin(\Delta/2)$.
+  \item Hitunglah tali busurnya dan waktu tempuh sinar lurusnya untuk
+        $\Delta = 60^\circ$ pada rata-rata $c_{\text{P}} \approx
+        \qty{10}{km/s}$.
+  \item Sekitar 1900, Oldham memperhatikan bahwa \omterm{prop:b3:continuum-elasticity:waves}{gelombang S} terekam
+        sampai $\Delta \approx 103^\circ$ lalu \emph{lenyap}: tak ada S
+        langsung di luar itu. Sifat apa dari suatu daerah jauh di dalam
+        Bumi yang mematikan \omterm{prop:b3:continuum-elasticity:waves}{gelombang S}, dan wujud zat apa yang
+        mempunyai sifat itu?
+  \item \omterm{prop:b3:continuum-elasticity:waves}{Gelombang P} di luar $103^\circ$ tidak lenyap melainkan melemah,
+        tertunda dan tergeser (sebuah ``zona bayangan'' sampai
+        $\approx 142^\circ$): mengapa daerah cair menunda dan membiaskan
+        \omterm{prop:b3:continuum-elasticity:waves}{gelombang P} tetapi tidak menghentikannya?
+  \item Simpulkanlah dalam satu kalimat apa yang berada di pusat Bumi.
+\end{enumerate}
+
+\medskip\noindent\textbf{Bagian IV --- Menimbang inti dengan penggaris.}
+\begin{enumerate}[resume]
+  \item Sinar S lurus yang meninggalkan sumbernya menyerempet intinya
+        jika jarak terdekatnya ke pusat sama dengan jejari inti
+        $R_{\text{c}}$. Tunjukkanlah bahwa sinar serempet ini mencapai
+        permukaannya pada sudut episentral $\Delta^* =
+        2\arccos(R_{\text{c}}/R_{\text{E}})$.
+  \item Dari $\Delta^* = 103^\circ$, hitunglah $R_{\text{c}}$.
+  \item Nilai modernnya \qty{3480}{km}: hitunglah galat Anda, lalu
+        jelaskanlah \emph{tandanya}: sinar yang sebenarnya melengkung
+        kembali ke arah permukaan ketika lajunya bertambah seiring
+        kedalaman --- kemukakanlah apakah sinar lurus menaksir intinya
+        terlalu besar atau terlalu kecil.
+  \item Pada 1936 Inge Lehmann menemukan kedatangan P yang lemah
+        \emph{di dalam} zona bayangannya: apa yang disimpulkannya berada
+        di dalam inti cair itu?
+  \item Jejari inti dalamnya \qty{1220}{km} dan ia padat: usulkanlah
+        pengamatan gelombang yang dapat memastikan kepadatannya
+        (gelombang mana yang ada di sana yang dilarang inti luarnya?).
+  \item Ringkaslah hasil bernama itu: dua laju \omterm{prop:b3:continuum-elasticity:waves}{gelombang elastik} dalam
+        batuan ($5.8$ dan \qty{3.3}{km/s}), satu gelombang yang hilang
+        di luar $103^\circ$, dan sebuah penggaris memberikan inti cair
+        berjejari $\approx \qty{4000}{km}$ --- dalam selisih $15\%$ dari
+        nilai modern \qty{3480}{km}, yang terukur menembus \qty{6000}{km}
+        batuan padat.
+\end{enumerate}
+\end{problem}

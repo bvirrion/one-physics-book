@@ -1,0 +1,521 @@
+\chapter{O ensemble microcanônico}\label{ch:b3:microcanonical-ensemble}
+
+Um centímetro cúbico de ar contém $2.5\times10^{19}$ moléculas.
+Computador algum jamais integrará as equações de movimento delas, e
+experimento algum poderia fornecer as condições iniciais --- e, no
+entanto, o gás obedece a leis de esplêndida simplicidade, e a
+termodinâmica do volume do primeiro ano as descreveu sem jamais
+mencionar uma molécula. Este capítulo constrói a ponte: a \emph{física
+estatística}, que deduz as leis do calor a partir da mecânica mais uma
+contagem honesta. Todo o edifício se apoia num único postulado --- um
+sistema isolado tem igual probabilidade de estar em qualquer estado
+microscópico compatível com sua energia --- legitimado pelo teorema de
+Liouville (\cref{ch:b3:hamiltonian-mechanics}) e tornado poderoso pelo
+puro tamanho dos números: quando as configurações se contam em unidades
+de $10^{10^{20}}$, ``avassaladoramente provável'' e ``certo'' ficam
+indistinguíveis, e a probabilidade endurece em lei. Da contagem saem a
+entropia, a temperatura, a pressão e a segunda lei --- e, no fim do
+capítulo, a razão de um elástico de borracha puxar de volta.
+
+\section{Microestados, macroestados e o postulado}
+
+\begin{definition}[Microestados e macroestados]\label{def:b3:microcanonical-ensemble:states}
+\index{microestado}\index{macroestado}\index{multiplicidade}
+Um \emph{microestado} é uma especificação microscópica completa de um
+sistema --- todo número quântico de toda partícula (ou, classicamente,
+toda posição e todo momento, contados em células de $h^3$ do \omterm{def:b3:hamiltonian-mechanics:hamiltonian}{espaço de
+fases} por partícula,
+\cref{prop:b3:schrodinger-three-dimensions:counting}).
+Um \emph{macroestado} é o que a termodinâmica consegue ver: energia
+$E$, volume $V$, número de partículas $N$, magnetização\dots\ A
+\emph{multiplicidade} $\Omega(E, V, N)$ é o número de microestados que
+vestem o mesmo macroestado.
+\end{definition}
+
+\begin{theorem}[O postulado fundamental]\label{thm:b3:microcanonical-ensemble:postulate}
+\index{ensemble microcanônico}\index{postulado fundamental}
+Um sistema isolado em equilíbrio é encontrado com igual probabilidade
+em cada um dos seus $\Omega(E, V, N)$ \omterm{def:b3:microcanonical-ensemble:states}{microestados} acessíveis. Toda a
+física estatística de equilíbrio decorre dessa única frase. Suas
+credenciais: o teorema de Liouville mostra que a distribuição uniforme
+sobre a casca de energia é a que a dinâmica preserva --- escoamento
+algum jamais aglomera a probabilidade no \omterm{def:b3:hamiltonian-mechanics:hamiltonian}{espaço de fases} --- e um
+século e meio de consequências nunca discordou de um experimento.
+\end{theorem}
+\admitted
+
+\begin{example}[Um ímã de $N$ moedas]\label{ex:b3:microcanonical-ensemble:spins}
+$N$ spins independentes, cada um para cima ou para baixo: $2^N$
+\omterm{def:b3:microcanonical-ensemble:states}{microestados}. O \omterm{def:b3:microcanonical-ensemble:states}{macroestado} ``$n$ para cima'' tem \omterm{def:b3:microcanonical-ensemble:states}{multiplicidade}
+$\Omega(n) = \binom Nn$, avassaladoramente concentrado em $n = N/2$,
+com largura relativa $\sim1/\sqrt N$. Para $N = 100$: o estado com
+todos para cima é um só; o \omterm{def:b3:microcanonical-ensemble:states}{macroestado} equilibrado contém
+$\num{1e29}$. Para $N = 10^{20}$, desvios de até $10^{-8}$ na fração
+para cima são suprimidos por fatores como $\eu^{-10^4}$: o sistema
+\emph{está} no seu pico, e o que chamamos de equilíbrio é o \omterm{def:b3:microcanonical-ensemble:states}{macroestado}
+com mais \omterm{def:b3:microcanonical-ensemble:states}{microestados}.
+\end{example}
+
+\begin{omfigure}
+\begin{tikzpicture}
+  \begin{axis}[omaxis, axis x line=bottom, axis y line=left,
+    width=11.4cm, height=5.4cm, xmin=0, xmax=1, ymin=0, ymax=1.15,
+    xlabel={fração de spins para cima}, ylabel={probabilidade (reescalada)},
+    xlabel style={at={(axis description cs:0.5,-0.1)}, anchor=north},
+    xtick={0.25,0.5,0.75}, ytick=\empty, clip=false,
+    legend style={font=\scriptsize, at={(0.03,0.95)}, anchor=north west,
+      draw=none, fill=none}]
+    \addplot[omExo, thick, domain=0:1, samples=120]
+      {exp(-(x-0.5)^2*2*10)};
+    \addlegendentry{$N = 10$}
+    \addplot[omThm, thick, domain=0:1, samples=200]
+      {exp(-(x-0.5)^2*2*100)};
+    \addlegendentry{$N = 100$}
+    \addplot[omDef, very thick, domain=0.3:0.7, samples=300]
+      {exp(-(x-0.5)^2*2*3000)};
+    \addlegendentry{$N = 3000$}
+  \end{axis}
+\end{tikzpicture}
+
+{\small A \omterm{def:b3:microcanonical-ensemble:states}{multiplicidade} do sistema de spins contra sua fração para
+cima, para $N$ crescente: o pico se estreita como $1/\sqrt N$. Em $N \sim
+10^{20}$ a ``distribuição'' é, para todo efeito prático, um
+único valor --- definição macroscópica saída da democracia
+microscópica.}
+\end{omfigure}
+
+\section{A entropia é uma contagem}
+
+\begin{definition}[Entropia de Boltzmann]\label{def:b3:microcanonical-ensemble:entropy}
+\index{entropia!estatística}
+A \emph{entropia estatística} de um \omterm{def:b3:microcanonical-ensemble:states}{macroestado} é
+\[
+S = k_{\text{B}}\ln\Omega , \qquad
+k_{\text{B}} = \qty{1.38e-23}{J/K} .
+\]
+O logaritmo torna a entropia \emph{aditiva} onde as \omterm{def:b3:microcanonical-ensemble:states}{multiplicidades}
+\emph{se multiplicam}: para sistemas independentes,
+$\Omega = \Omega_1\Omega_2$ e $S = S_1 + S_2$; a constante de Boltzmann
+calibra a contagem nas unidades de kelvin e joule que a termodinâmica
+já havia escolhido. Este $S$, como verificaremos, é a entropia da
+segunda lei do volume do primeiro ano --- agora com um significado
+microscópico: a entropia mede, em moeda logarítmica, \emph{de quantos
+modos} o \omterm{def:b3:microcanonical-ensemble:states}{macroestado} pode ser realizado.
+\end{definition}
+
+\begin{proposition}[Entropia do gás ideal]\label{prop:b3:microcanonical-ensemble:gas}
+\index{fórmula de Sackur--Tetrode}
+Contar os estados quânticos de $N$ átomos idênticos numa caixa
+(\cref{prop:b3:schrodinger-three-dimensions:counting}, uma célula de
+$h^3$ por átomo no \omterm{def:b3:hamiltonian-mechanics:hamiltonian}{espaço de fases}, dividida por $N!$ pela identidade
+--- \cref{exo:b3:identical-particles:10}) dá
+\[
+S = Nk_{\text{B}}\Big[\ln\Big(\frac VN\,\frac1{\lambda_T^3}\Big)
+ + \frac52\Big] , \qquad
+\lambda_T = \frac{h}{\sqrt{2\pi mk_{\text{B}}T}}
+\]
+(a \emph{fórmula de Sackur--Tetrode}; $\lambda_T$, o comprimento de
+onda térmico de de Broglie, é o tamanho do pacote de onda de um átomo à
+temperatura $T$). Duas auditorias notáveis: a fórmula é extensiva
+\emph{apenas} graças ao $N!$; e seu valor absoluto --- o $h$ incluído --- coincide
+com as entropias calorimétricas dos gases reais
+(\cref{exo:b3:microcanonical-ensemble:11}): a termodinâmica clássica,
+medida no século XIX, já conhecia a constante de Planck sem o saber.
+\end{proposition}
+\admitted
+
+\section{A temperatura é uma derivada da contagem}
+
+\begin{theorem}[Equilíbrio e temperatura]\label{thm:b3:microcanonical-ensemble:temperature}
+\index{temperatura!definição estatística}
+Deixe dois sistemas trocarem energia, com o total $E = E_1 + E_2$
+fixo. A \omterm{def:b3:microcanonical-ensemble:states}{multiplicidade} conjunta $\Omega_1(E_1)\,\Omega_2(E - E_1)$ é
+máxima --- avassaladoramente --- na partilha em que
+\[
+\frac{\partial S_1}{\partial E_1} =
+\frac{\partial S_2}{\partial E_2} .
+\]
+Definindo
+\[
+\frac1T = \frac{\partial S}{\partial E}\bigg|_{V,N} ,
+\]
+o equilíbrio é a \emph{igualdade das temperaturas}, e a energia flui
+espontaneamente do $T$ alto para o $T$ baixo porque essa direção
+aumenta a contagem total. A mesma lógica, aplicada à troca de volume e
+de partículas, dá $P/T = \partial S/\partial V$ e $-\mu/T
+= \partial S/\partial N$: todas as grandezas intensivas da
+termodinâmica são derivadas da contagem.
+\end{theorem}
+
+\begin{proof}
+Maximize $\ln\Omega_1 + \ln\Omega_2$ em relação a $E_1$: a condição de
+estacionariedade é a igualdade enunciada. Nitidez: a largura do pico é
+$\sim E/\sqrt N$ (\cref{exo:b3:microcanonical-ensemble:7}), de modo que
+o máximo é o estado observado. Se $\partial S_1/\partial E_1 >
+\partial S_2/\partial E_2$, mover energia \emph{para dentro} de 1 eleva
+$S_{\text{tot}}$: o corpo mais frio (o de $\partial S/\partial E$
+maior) absorve --- o calor flui do quente ao frio como enunciado de
+contagem. Verificação no gás ideal: $S \propto \tfrac32 Nk_{\text{B}}\ln E + \cdots$
+dá $1/T = \tfrac32 Nk_{\text{B}}/E$, isto é, $E = \tfrac32
+Nk_{\text{B}}T$ --- o resultado da teoria cinética do volume do
+primeiro ano, recuperado de pura contagem.
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}
+  \begin{axis}[omaxis, axis x line=bottom, axis y line=left,
+    width=11.2cm, height=5.2cm, xmin=0, xmax=1, ymin=0, ymax=1.2,
+    xlabel={parcela da energia no sistema 1},
+    ylabel={$\Omega_1\Omega_2$ (reescalado)},
+    xlabel style={at={(axis description cs:0.5,-0.1)}, anchor=north},
+    xtick={0.4}, xticklabels={$E_1^{\text{eq}}$}, ytick=\empty, clip=false]
+    \addplot[omDef, very thick, domain=0:1, samples=250]
+      {exp(-(x-0.4)^2*900)};
+    \node[omDef, font=\scriptsize, anchor=west] at (axis cs:0.47,0.75)
+      {largura $\sim 1/\sqrt N$};
+  \end{axis}
+\end{tikzpicture}
+
+{\small Dois sistemas repartindo energia: a contagem conjunta contra a
+divisão. A partilha de equilíbrio --- temperaturas iguais --- não é
+apenas a mais provável; para $N$ macroscópico, é a única jamais
+observada.}
+\end{omfigure}
+
+\section{A segunda lei, e coisas mais estranhas}
+
+\begin{proposition}[A irreversibilidade é aritmética]\label{prop:b3:microcanonical-ensemble:second-law}
+\index{segunda lei!estatística}
+Um \omterm{def:b3:lagrangian-mechanics:coordinates}{vínculo} liberado (uma parede removida, uma válvula aberta) só pode
+ampliar a contagem acessível: $\Omega$ cresce, $S$ cresce --- a segunda
+lei do volume do primeiro ano, agora como um enunciado sobre
+probabilidade. As reversões não são proibidas, mas \emph{descontadas}:
+um gás de $N$ moléculas que se reúna de novo na metade esquerda tem
+probabilidade $2^{-N}$, e para um centímetro cúbico de ar o tempo de
+espera excede a idade do universo por um fator com $10^{19}$
+algarismos. A flecha do tempo, neste nível, é a direção em que as
+contagens crescem.
+\end{proposition}
+
+\begin{proof}[Demonstração parcial]
+Remover um \omterm{def:b3:lagrangian-mechanics:coordinates}{vínculo} mantém acessível todo \omterm{def:b3:microcanonical-ensemble:states}{microestado} antes acessível e
+acrescenta outros: $\Omega$ não pode diminuir. A contagem da expansão
+livre: cada molécula dobra o volume acessível, $\Omega \to 2^N\Omega$,
+de modo que $\Delta S = Nk_{\text{B}}\ln2$ --- exatamente o resultado
+termodinâmico da duplicação livre isotérmica.
+\end{proof}
+
+\begin{example}[Temperatura negativa]\label{ex:b3:microcanonical-ensemble:negative}
+\index{temperatura negativa}
+Um sistema cuja energia é \emph{limitada superiormente} --- $N$ spins
+num campo, com energia de $-N\epsilon$ a $+N\epsilon$ --- tem
+$\Omega(E)$ crescente e depois \emph{decrescente}: além do ponto
+equilibrado, acrescentar energia reduz a contagem. Ali
+$\partial S/\partial E < 0$: a temperatura é \emph{negativa}. Tais
+estados existem (as inversões de população --- o estado de trabalho de
+todo meio de laser --- e sistemas de spins preparados por inversão de
+campo) e não são frios, mas \emph{mais quentes que toda temperatura
+positiva}: a energia flui de qualquer corpo com $T < 0$ para qualquer
+corpo com $T > 0$. A ordenação honesta das temperaturas corre
+$+0, \dots, +\infty \equiv -\infty, \dots, -0$: o que $1/T$ ordena
+naturalmente, $T$ embaralha
+(\cref{exo:b3:microcanonical-ensemble:9}).
+\end{example}
+
+\begin{omfigure}
+\begin{tikzpicture}
+  \begin{axis}[omaxis, axis x line=bottom, axis y line=left,
+    width=10.8cm, height=5.4cm, xmin=-1.05, xmax=1.05, ymin=0, ymax=0.78,
+    xlabel={$E/N\epsilon$}, ylabel={$S/Nk_{\text{B}}$},
+    xlabel style={at={(axis description cs:0.5,-0.1)}, anchor=north},
+    xtick={-1,0,1}, ytick=\empty, clip=false]
+    \addplot[omDef, very thick, domain=-0.999:0.999, samples=250]
+      {-0.5*(1+x)*ln(0.5*(1+x)) - 0.5*(1-x)*ln(0.5*(1-x))};
+    \node[font=\scriptsize, anchor=south] at (axis cs:-0.62,0.6)
+      {$\partial S/\partial E > 0$: $T > 0$};
+    \node[font=\scriptsize, anchor=south] at (axis cs:0.62,0.6)
+      {$\partial S/\partial E < 0$: $T < 0$};
+    \draw[gray, dashed] (axis cs:0,0) -- (axis cs:0,0.7);
+    \node[font=\scriptsize, anchor=south] at (axis cs:0,0.71) {$T = \pm\infty$};
+  \end{axis}
+\end{tikzpicture}
+
+{\small Entropia do sistema de spins de dois níveis contra a energia.
+No flanco ascendente a temperatura é positiva; na crista ela passa pelo
+infinito; no flanco descendente --- população invertida --- ela é
+negativa, e mais quente que qualquer coisa à esquerda.}
+\end{omfigure}
+
+\begin{method}[Ofício microcanônico]\label{met:b3:microcanonical-ensemble:method}
+(1) Enumere: o que é um \omterm{def:b3:microcanonical-ensemble:states}{microestado} aqui, e o que o \omterm{def:b3:microcanonical-ensemble:states}{macroestado} fixa?
+(2) Conte $\Omega$ --- combinatória para unidades discretas, volume de
+\omterm{def:b3:hamiltonian-mechanics:hamiltonian}{espaço de fases} sobre $h^{3N}N!$ para gases. (3) Tome o logaritmo cedo:
+Stirling ($\ln N! \approx N\ln N - N$) transforma produtos em somas
+tratáveis. (4) Derive $S$: a derivada em energia dá $T$, a em volume dá
+$P$, a em número dá $\mu$; derivadas em comprimento ou magnetização dão
+\omterm{def:b3:continuum-elasticity:stress}{trações} e campos (\cref{pb:b3:microcanonical-ensemble:1}). (5) Confie
+no pico: as flutuações caem por $1/\sqrt N$, de modo que se pode
+trocar ``mais provável'' por ``igual'' sem pedir desculpa a ninguém.
+\end{method}
+
+\begin{omfigure}
+\includegraphics[width=0.58\linewidth]{images/book5/ai/b5-16-laser-sheet-smoke.png}
+
+{\small Fumaça agitada numa caixa, cortada por uma lâmina de laser: micromovimento além de qualquer contabilidade, com a estatística assumindo o comando --- o momento em que um problema de mecânica vira um problema de entropia.}
+\end{omfigure}
+
+\section{Exercícios}
+
+\begin{exercise}[$\star$]\label{exo:b3:microcanonical-ensemble:1}
+Quatro spins. (a) Liste as \omterm{def:b3:microcanonical-ensemble:states}{multiplicidades} $\Omega(n)$ dos
+\omterm{def:b3:microcanonical-ensemble:states}{macroestados} ``$n$ para cima''. (b) A probabilidade de cada \omterm{def:b3:microcanonical-ensemble:states}{macroestado}
+sob o postulado. (c) A entropia (em unidades de $k_{\text{B}}$) de cada
+um. (d) Que \omterm{def:b3:microcanonical-ensemble:states}{macroestado} é o ``equilíbrio'', e quão ruim é a aproximação
+``o sistema com certeza está lá'' quando $N = 4$?
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b3:microcanonical-ensemble:2}
+Stirling na prática. (a) Compare $\ln N!$ com $N\ln N - N$ para
+$N = 10$ e $N = 100$ (use $\ln10! = 15.10$, $\ln100! = 363.7$).
+(b) Mostre que o erro relativo cai como $\ln N/N$. (c) Use Stirling
+para mostrar que $\ln\binom N{N/2} \approx N\ln2 - \tfrac12\ln N + $
+const. (d) Por que descartar o $\tfrac12\ln N$ é absolutamente seguro
+num mol?
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b3:microcanonical-ensemble:3}
+(a) Mostre que, para dois sistemas independentes, $S = S_1 + S_2$. (b)
+O $\Omega$ de um sistema dobra: de quanto sobe $S$ --- e a que ato
+físico (\cref{prop:b3:microcanonical-ensemble:second-law}) isso
+corresponde para uma partícula? (c) Calcule a entropia, em
+$k_{\text{B}}$ e em J/K, de um baralho embaralhado de 52 cartas
+($\ln52! \approx 156.4$). (d) Por que a entropia das cartas é
+termodinamicamente desprezível e a molecular não é?
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b3:microcanonical-ensemble:4}
+Expansão livre, auditada. Um mol dobra o seu volume para o vácuo.
+(a) $\Delta S$ pelo argumento de contagem. (b) A probabilidade de
+observar o gás de volta na metade original. (c) Estime a escala de
+tempo de uma flutuação dessas, dados tempos de rearranjo molecular de
+\qty{e-10}{s} --- e compare com a idade do universo
+(\qty{4e17}{s}). (d) Em que sentido preciso a segunda lei é ``apenas''
+probabilística?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b3:microcanonical-ensemble:5}
+Contagem do gás ideal. Partindo de
+$\Omega \propto \dfrac{V^N}{N!\,h^{3N}}\times$ (volume da casca de
+momentos $\propto E^{3N/2}$): (a) mostre que $S = Nk_{\text{B}}[\ln V +
+\tfrac32\ln E] - k_{\text{B}}\ln N! + $ const. (b) Mostre que, sem o
+$N!$, dobrar o sistema (tanto $V$ quanto $N$) \emph{não} dobraria $S$
+--- a falha de extensividade do
+\cref{exo:b3:identical-particles:10}. (c) Com Stirling, ponha o
+resultado na forma $S = Nk_{\text{B}}[\ln(V/N) + \tfrac32\ln(E/N)]
++ $ const$\cdot N$. (d) Que dados físicos fixaram as duas ``consts''
+que a história deixou indeterminadas (o tamanho quântico da célula; a
+identidade das partículas)?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b3:microcanonical-ensemble:6}
+Termodinâmica a partir de derivadas. Usando a forma do
+\cref{exo:b3:microcanonical-ensemble:5}(c): (a) calcule $1/T =
+\partial S/\partial E$ e recupere $E = \tfrac32 Nk_{\text{B}}T$;
+(b) calcule $P/T = \partial S/\partial V$ e recupere $PV =
+Nk_{\text{B}}T$; (c) deduza o \omterm{prop:b3:hamiltonian-mechanics:adiabatic}{invariante adiabático}: a $S$ e $N$
+constantes, mostre que $VE^{3/2}$ é fixo, isto é, $TV^{2/3}$ --- e case
+com o $PV^{5/3}$ do volume do primeiro ano; (d) diga o que foi
+alcançado: que leis empíricas acabaram de virar teoremas de contagem.
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b3:microcanonical-ensemble:7}
+Nitidez do equilíbrio. Dois blocos iguais de gás ideal repartem a
+energia total $E$. (a) Mostre que $\ln[\Omega_1\Omega_2]$ é máximo na
+divisão igual. (b) Expanda até segunda ordem no desequilíbrio $x =
+(E_1 - E_2)/E$ e mostre que a probabilidade é
+$\propto\eu^{-3Nx^2/4}$ (cada bloco com $\tfrac32 N$ \omterm{def:b3:lagrangian-mechanics:coordinates}{graus de
+liberdade} --- mantenha os fatores frouxos). (c) Para $N = 10^{22}$: o
+desequilíbrio quadrático médio. (d) A diferença de temperatura que esse
+desequilíbrio representa, para um gás a \qty{300}{K}: algum termômetro
+poderia vê-la?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b3:microcanonical-ensemble:8}
+O sólido de dois níveis (de Schottky): $N$ sítios, cada um de energia
+$0$ ou $\epsilon$; $n$ excitados. (a) $\Omega(n)$ e $S(n)$. (b) Com $E =
+n\epsilon$ e Stirling, deduza
+\[
+\frac1T = \frac{k_{\text{B}}}{\epsilon}\,
+\ln\frac{N - n}{n} ,
+\qquad\text{e portanto}\qquad
+\frac nN = \frac{1}{\eu^{\epsilon/k_{\text{B}}T} + 1} .
+\]
+(c) Esboce $E(T)$ e a capacidade térmica: uma corcova (a \emph{anomalia
+de Schottky}) perto de $k_{\text{B}}T \sim \epsilon/2$ --- por que $C$
+se anula nas duas pontas? (d) Onde a forma da fórmula de ocupação já
+apareceu antes, e onde ela voltará
+(\cref{ch:b3:quantum-statistics})?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b3:microcanonical-ensemble:9}
+Abaixo de zero. Para o sistema de spins do
+\cref{ex:b3:microcanonical-ensemble:negative} com separação de níveis
+$\epsilon$: (a) mostre que $T < 0$ exatamente quando mais da metade dos
+spins está para cima (população invertida). (b) Calcule $T$ para uma
+inversão 60:40 com $\epsilon = \qty{e-4}{eV}$. (c) Mostre que a energia
+sempre flui de corpos de $T$ negativo para corpos de $T$ positivo
+(compare os $\partial
+S/\partial E$). (d) Por que um sistema de energia
+ilimitada (um gás) jamais pode alcançar $T < 0$?
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b3:microcanonical-ensemble:10}
+Mistura, quantitativamente. Dois gases diferentes ($N$ cada, volumes
+$V$) são unidos. (a) Calcule $\Delta S$ por contagem. (b) Mesmo gás:
+mostre, com os $N!$ incluídos, que $\Delta S = 0$. (c) O hélio-3 e o
+hélio-4 são diferentes: uni-los \emph{de fato} cria
+$2Nk_{\text{B}}\ln2$ --- e, no entanto, calor algum flui e trabalho
+algum é feito: onde está fisicamente o aumento de entropia (o que
+custaria separá-los de novo)? (d) O trabalho mínimo para reseparar à
+temperatura $T$: exprima-o e nomeie a indústria moderna construída
+sobre pagá-lo (a separação de isótopos).
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b3:microcanonical-ensemble:11}
+As tabelas já sabiam do $h$. Sackur--Tetrode para o argônio ($m =
+\qty{6.6e-26}{kg}$) a \qty{300}{K} e \qty{1}{bar} ($V/N =
+k_{\text{B}}T/P$): (a) calcule $\lambda_T$; (b) calcule $S/N
+k_{\text{B}}$; (c) compare com o valor calorimétrico
+$S_{\text{molar}} = \qty{154.8}{J/(mol.K)}$, isto é, $S/Nk_{\text{B}}
+= 18.6$; (d) explique o que está sendo testado: que
+dois ingredientes quânticos moram dentro de um número medido com
+calorímetros de gelo antes de 1912?
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b3:microcanonical-ensemble:12}
+Flutuações que se podem ver. O número de moléculas num pequeno volume
+$v$ de gás flutua; a probabilidade de um desvio relativo $\delta$ é
+$\propto\eu^{-\bar n\delta^2/2}$ ($\bar n = Nv/V$ --- aceite essa
+gaussiana, ou deduza-a da binomial). (a) Para $v$ igual a um cubo de
+aresta \qty{550}{nm} à densidade atmosférica: $\bar n$ e o $\delta$
+quadrático médio. (b) Por que essas ondulações permanentes de densidade,
+de alguns por mil em escalas ópticas, são exatamente o que o
+\cref{pb:b3:perturbation-theory:1} precisava para que o ar espalhasse
+alguma coisa? (c) Em que $\bar n$ (e, portanto, em que escala) as
+flutuações chegariam a $10\%$? (d) Feche o círculo numa frase: o azul
+do céu é um enunciado sobre a estatística do $\sqrt N$.
+\end{exercise}
+
+\section{Problema: A mola entrópica}
+
+\begin{problem}[{Problema de fim de semana --- por que a borracha puxa de volta}]\label{pb:b3:microcanonical-ensemble:1}
+Estique um elástico de borracha e ele volta com um estalo --- e, no
+entanto, as ligações de suas moléculas mal se deformam, e sua energia
+interna mal muda. A força restauradora da borracha não é a energia
+buscando um mínimo, mas a \emph{entropia buscando um máximo}: a
+primeira grande vitória da contagem pura sobre o mecanismo, com a mesma
+matemática que hoje governa os experimentos de molécula única com DNA.
+Modelo: uma cadeia de $N$ elos rígidos, cada um de comprimento $b$,
+cada um apontando para a esquerda ou para a direita ao longo do eixo de
+\omterm{def:b3:continuum-elasticity:stress}{tração}; extensão de ponta a ponta $x = (n_+ - n_-)\,b$.
+
+\medskip\noindent\textbf{Parte I --- Contar configurações.}
+\begin{enumerate}
+  \item Exprima $n_\pm$ em função de $N$ e $x$, e escreva a
+        \omterm{def:b3:microcanonical-ensemble:states}{multiplicidade} $\Omega(x)$.
+  \item Onde $\Omega$ é máximo, e o que isso diz sobre a extensão
+        preferida de uma cadeia livre?
+  \item Com Stirling, mostre que, para $x \ll Nb$:
+        \[
+        S(x) \approx S(0) - \frac{k_{\text{B}}x^2}{2Nb^2} .
+        \]
+  \item A energia da cadeia é (neste modelo) independente de $x$:
+        justifique chamar de ``entrópica'' qualquer força
+        restauradora.
+  \item A extensão quadrática média da cadeia livre é $b\sqrt N$
+        (caminhada aleatória): para $N = 10^4$ e $b = \qty{0.5}{nm}$,
+        compare o tamanho do novelo com o comprimento esticado $Nb$.
+  \item A borracha real é uma rede de cadeias assim entre ligações
+        cruzadas: que único parâmetro do modelo a vulcanização (mais
+        ligações cruzadas) altera?
+\end{enumerate}
+
+\medskip\noindent\textbf{Parte II --- A força da contagem.}
+\begin{enumerate}[resume]
+  \item Para um sistema mantido à temperatura $T$, a \omterm{def:b3:continuum-elasticity:stress}{tração}
+        necessária para manter a extensão $x$ vale
+        $f = -T\,\partial S/\partial x$ (aceite isso de
+        $\dd E = T\dd S + f\dd x$ a energia constante): deduza
+        \[
+        f = \frac{k_{\text{B}}T\,x}{Nb^2} .
+        \]
+  \item A \omterm{thm:b3:continuum-elasticity:hooke}{lei de Hooke} emergiu, com constante de mola $k =
+        k_{\text{B}}T/Nb^2$: avalie-a para uma cadeia com $N =
+        \num{e4}$ e $b = \qty{0.5}{nm}$ a \qty{300}{K}.
+  \item O fator surpreendente é $T$: o que um elástico sob carga fixa
+        deveria fazer ao ser \emph{aquecido}? Contraste com uma mola de
+        aço.
+  \item Estime a força para esticar uma cadeia até metade do seu
+        comprimento total, e a escala de força $k_{\text{B}}T/b$ em que
+        o modelo linear falha.
+  \item Um elástico de \omterm{def:b3:scattering-theory:cross-section}{seção de choque} \qty{1}{mm^2} contém
+        $\sim\num{e14}$ cadeias efetivas em paralelo: estime a
+        constante de mola dele e compare com a experiência.
+  \item Por que a borracha enrijece (e não amolece) com a temperatura,
+        grama por grama, enquanto os metais amolecem?
+\end{enumerate}
+
+\medskip\noindent\textbf{Parte III --- A cozinha de Gough e Joule.}
+\begin{enumerate}[resume]
+  \item Estique um elástico depressa (adiabaticamente) contra o
+        lábio: ele esquenta. Explique pelo orçamento de entropia:
+        esticar \emph{reduz} a entropia configuracional, e por isso a
+        entropia (o calor) precisa ir para onde, a total constante?
+  \item Solte-o depressa: ele esfria. Complete o argumento simétrico.
+  \item Um elástico com um peso é aquecido suavemente (secador de
+        cabelo): para que lado o peso se move, e por que essa é a
+        assinatura limpa da elasticidade entrópica?
+  \item Projete o contraexperimento com uma mola de aço: o que
+        acontece em vez disso, e por quê (que tipo de elasticidade)?
+  \item Um motor: uma roda de raios de borracha, aquecida de um lado,
+        gira sem parar. Trace a lógica de um ciclo (os raios aquecidos
+        se contraem, desequilibrando a roda).
+  \item A mesma lei $f = k_{\text{B}}Tx/Nb^2$, medida com pinças
+        ópticas sobre moléculas únicas de DNA (com $b \approx
+        \qty{100}{nm}$ e $N \approx 500$ para um fragmento de genoma
+        bacteriano), dá forças em que faixa? (Calcule
+        $k_{\text{B}}T/b$.) Por que isso tornou o modelo
+        \emph{diretamente} testável numa única molécula?
+\end{enumerate}
+
+\medskip\noindent\textbf{Parte IV --- A moral.}
+\begin{enumerate}[resume]
+  \item O modelo de cadeia não tem interações nem escala de energia e,
+        ainda assim, produz uma lei de força: diga com precisão de onde
+        a força ``vem'', na linguagem microcanônica deste capítulo.
+  \item Por que a força se anula em $T = 0$ --- e o que isso diz sobre
+        a natureza da elasticidade num mundo sem agitação térmica?
+  \item Compare a linearidade em $T$ da constante de mola entrópica com
+        a linearidade em $T$ da pressão do gás ideal: mostre que as
+        duas são o mesmo fenômeno (contar configurações contra um
+        \omterm{def:b3:lagrangian-mechanics:coordinates}{vínculo}) em roupagens diferentes.
+  \item O elástico aquecido levanta um peso, realizando trabalho real:
+        trace a fonte e o percurso da energia (calor que entra do
+        secador, contabilidade de entropia, trabalho que sai) e
+        confirme que a primeira lei fica intacta.
+  \item A cadeia ideal ignora a autoexclusão e a energia de dobramento
+        dos elos: nomeie uma característica medida da borracha real que
+        cada omissão esconde (o enrijecimento abrupto perto da extensão
+        máxima; a cristalização induzida por deformação e a histerese).
+  \item As proteínas se dobram, as membranas tremulam, os polímeros se
+        enovelam: por que o $k_{\text{B}}T$ à temperatura do corpo é a
+        moeda natural de força ($k_{\text{B}}T/\unit{nm}$ em
+        piconewtons --- calcule) de toda a matéria mole e viva?
+  \item Resuma o resultado central: uma cadeia de $10^4$ elos cegos,
+        contada honestamente, produz a \omterm{thm:b3:continuum-elasticity:hooke}{lei de Hooke} com $k =
+        k_{\text{B}}T/Nb^2$, prevê que a borracha esquenta ao ser
+        esticada e levanta pesos ao ser aquecida --- a entropia agindo
+        como força, verificada de câmaras de ar de bicicleta a
+        moléculas únicas de DNA em escalas de $\sim\qty{0.04}{pN}$.
+\end{enumerate}
+\end{problem}

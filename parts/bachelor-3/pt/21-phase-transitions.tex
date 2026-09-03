@@ -1,0 +1,559 @@
+\chapter{Transições de fase}\label{ch:b3:phase-transitions}
+
+Aqueça a água um grau e não acontece grande coisa --- até que, a uma
+temperatura nitidamente definida, o líquido se rasga em vapor.
+Resfrie o ferro através de \qty{1043}{K} e, sem mudança alguma de
+composição, ele se magnetiza espontaneamente. Nada numa única molécula
+ou num único spin anuncia essas revoluções: elas são \emph{coletivas}
+--- $10^{23}$ agentes, cada um interagindo com alguns vizinhos,
+conspirando para mudar de uma vez a fase da sociedade deles. O volume
+do primeiro ano catalogou as transições; este capítulo explica o
+mecanismo delas com as ferramentas dos cinco últimos: competição de
+\omterm{prop:b3:canonical-ensemble:machine}{energias livres}, \omterm{def:b3:phase-transitions:order}{parâmetros de ordem}, \omterm{def:b3:phase-transitions:order}{quebra de simetria} e a espantosa
+descoberta de que perto de um \omterm{prop:b3:phase-transitions:vdw}{ponto crítico} os detalhes microscópicos
+deixam de importar --- um ímã e um fluido em ebulição compartilham os
+mesmos \omterm{prop:b3:phase-transitions:landau}{expoentes críticos}. As ideias deste capítulo vão hoje das
+panelas de pressão aos supercondutores e ao campo de Higgs do
+\cref{ch:b3:particle-physics}.
+
+\section{Parâmetros de ordem e competição de energias livres}
+
+\begin{definition}[Fases e parâmetros de ordem]\label{def:b3:phase-transitions:order}
+\index{transição de fase}\index{parâmetro de ordem}\index{quebra de simetria}
+Uma \emph{transição de fase} é uma mudança não suave do estado de
+equilíbrio de um sistema quando um parâmetro de controle ($T$, $P$,
+$B$) cruza uma fronteira. O contador dela é o \emph{parâmetro de
+ordem}: uma grandeza nula na fase desordenada e não nula na ordenada ---
+a magnetização $m$ de um ferromagneto, a diferença de densidades
+$\rho_{\text{liq}} - \rho_{\text{gas}}$ de um fluido, a fração
+condensada do \cref{ch:b3:quantum-statistics}. As transições vêm em
+dois tipos: as de \emph{primeira ordem} (o parâmetro de ordem salta;
+calor latente; fases coexistem --- ebulição, fusão) e as
+\emph{contínuas} (o parâmetro de ordem cresce a partir de zero; sem
+calor latente; flutuações selvagens --- o ponto de Curie, o \omterm{prop:b3:phase-transitions:vdw}{ponto
+crítico}, o hélio superfluido). Quando o estado ordenado tem de
+\emph{escolher} entre opções equivalentes --- o norte de um ímã precisa
+apontar para algum lado --- a transição \emph{quebra uma simetria} que
+as leis subjacentes respeitam: um tema que voltará, com as apostas mais
+altas, no mecanismo de Higgs.
+O motor por trás de todos os casos é a \omterm{prop:b3:canonical-ensemble:machine}{energia livre} $F = E - TS$
+(\cref{prop:b3:canonical-ensemble:machine}): a energia favorece a
+ordem, a entropia favorece a desordem, e $T$ fixa a taxa de câmbio ---
+as fronteiras de fase são onde as contas empatam.
+\end{definition}
+
+\section{A transição líquido--gás: van der Waals}
+
+\begin{proposition}[Isotermas de van der Waals]\label{prop:b3:phase-transitions:vdw}
+\index{equação de van der Waals}\index{ponto crítico}
+A equação dos gases reais do volume do primeiro ano,
+\[
+\Big(P + \frac{aN^2}{V^2}\Big)(V - Nb) = Nk_{\text{B}}T ,
+\]
+codifica a atração ($a$) e os caroços duros ($b$). Acima de uma
+temperatura crítica $T_{\text{c}} = 8a/27bk_{\text{B}}$, as isotermas
+dela são monótonas: uma só fase fluida. Abaixo dela, desenvolvem um laço
+que contém um trecho mecanicamente \emph{instável} ($\partial P/\partial V >
+0$): ali o fluido se separa em líquido e gás
+coexistentes, à pressão fixada pela igualdade dos \omterm{thm:b3:grand-canonical:distribution}{potenciais químicos}
+(a regra das áreas iguais de Maxwell). A região de coexistência se
+fecha no \omterm{prop:b3:phase-transitions:vdw}{ponto crítico} ($P_{\text{c}}, V_{\text{c}}, T_{\text{c}}$),
+onde líquido e gás ficam \emph{indistinguíveis}: ao se aproximar dele,
+a diferença de densidades se anula, a compressibilidade diverge e as
+flutuações de densidade crescem até o tamanho óptico --- a
+opalescência crítica do \cref{pb:b3:perturbation-theory:1}.
+\end{proposition}
+\admitted
+
+\begin{omfigure}
+\begin{tikzpicture}
+  \begin{axis}[omaxis, axis x line=bottom, axis y line=left,
+    width=10.8cm, height=6.0cm, xmin=0.32, xmax=5, ymin=0, ymax=2.1,
+    xlabel={$V/V_{\text{c}}$}, ylabel={$P/P_{\text{c}}$},
+    xlabel style={at={(axis description cs:0.5,-0.09)}, anchor=north},
+    xtick={1,2,3,4}, ytick={1}, clip=true,
+    legend pos=north east,
+    legend style={font=\scriptsize, draw=none, fill=none}]
+    % reduced vdw: P = 8T/(3V-1) - 3/V^2 (T in units of Tc)
+    \addplot[omDef, very thick, domain=0.42:5, samples=250]
+      {8*1.05/(3*x-1) - 3/(x*x)};
+    \addplot[omThm, very thick, domain=0.42:5, samples=250]
+      {8/(3*x-1) - 3/(x*x)};
+    \addplot[omExo, very thick, domain=0.44:5, samples=300]
+      {8*0.9/(3*x-1) - 3/(x*x)};
+    \legend{$T > T_{\text{c}}$, $T = T_{\text{c}}$, $T < T_{\text{c}}$}
+    % coexistence dome (schematic)
+    \addplot[gray, dashed, domain=0.5:2.9, samples=100, forget plot]
+      {1 - 0.62*(ln(x/1.06))^2};
+    \fill (axis cs:1,1) circle (1.8pt);
+    \draw[gray, ->] (axis cs:1.55,1.5) -- (axis cs:1.05,1.06);
+    \node[font=\scriptsize, anchor=west] at (axis cs:1.6,1.55)
+      {ponto crítico};
+    \node[gray, font=\scriptsize, anchor=north] at (axis cs:1.7,0.62)
+      {domo de coexistência};
+  \end{axis}
+\end{tikzpicture}
+
+{\small Isotermas de van der Waals em unidades reduzidas. Acima de
+$T_{\text{c}}$: um só fluido. Abaixo: o meio instável do laço é
+substituído pela coexistência plana de duas fases dentro do domo
+tracejado. No cume do domo, líquido e gás se fundem --- o \omterm{prop:b3:phase-transitions:vdw}{ponto
+crítico}, onde as flutuações deixam o fluido leitoso.}
+\end{omfigure}
+
+\begin{proposition}[Clausius--Clapeyron]\label{prop:b3:phase-transitions:clapeyron}
+\index{relação de Clausius--Clapeyron}
+Ao longo de qualquer linha de coexistência de primeira ordem, a
+igualdade dos \omterm{thm:b3:grand-canonical:distribution}{potenciais químicos} dos dois lados
+(\cref{def:b3:grand-canonical:mu}) obriga a inclinação da linha a ser
+\[
+\frac{\dd P}{\dd T} = \frac{L}{T\,\Delta v} ,
+\]
+com $L$ o calor latente e $\Delta v$ a variação de volume por
+partícula (ou por quilograma, de modo consistente). Tudo o que há sobre
+as linhas de coexistência está nesta única fórmula: a linha de ebulição
+da água sobe a $\approx\qty{3.6}{kPa/K}$ perto de \qty{100}{\celsius}
+(panelas de pressão, cozinhar em altitude ---
+\cref{pb:b3:phase-transitions:1}); e a linha de \emph{fusão} da água
+se inclina para trás ($\Delta v < 0$: o gelo flutua), de modo que a
+pressão derrete o gelo --- raridade entre as substâncias, com
+consequências que vão das geleiras às pistas de patinação.
+\end{proposition}
+
+\begin{proof}
+Sobre a linha, $\mu_1(T, P) = \mu_2(T, P)$; ande ao longo dela:
+$-s_1\dd T + v_1\dd P = -s_2\dd T + v_2\dd P$ (por partícula, usando
+$\dd\mu = -s\,\dd T + v\,\dd P$). Resolva para $\dd P/\dd T$ e use
+$L = T(s_2 - s_1)$.
+\end{proof}
+
+\section{O ferromagneto: teoria de campo médio}
+
+\begin{theorem}[Transição de Ising em campo médio]\label{thm:b3:phase-transitions:meanfield}
+\index{modelo de Ising}\index{teoria de campo médio}\index{temperatura de Curie}
+Modele um ímã como spins $s_i = \pm1$ numa rede, com vizinhos
+acoplados pela energia de troca $-J\,s_is_j$
+(\cref{exo:b3:identical-particles:12}), tendo cada spin $q$
+vizinhos. Substitua os vizinhos de cada spin pela média deles, $m =
+\langle s\rangle$ (a aproximação de \emph{campo médio}): o spin
+fica então no campo efetivo $qJm$, e
+o \cref{exo:b3:canonical-ensemble:11} dá a condição de
+autoconsistência
+\[
+m = \tanh\!\Big(\frac{T_{\text{c}}}{T}\,m\Big) , \qquad
+k_{\text{B}}T_{\text{c}} = qJ .
+\]
+Acima de $T_{\text{c}}$, a única solução é $m = 0$; abaixo dele
+aparecem duas soluções simétricas $\pm m(T)$, e são elas as estáveis: o
+ímã \emph{tem} de se magnetizar, escolhendo uma direção ao acaso ---
+quebra espontânea de simetria. Perto de $T_{\text{c}}$, $m \propto
+(T_{\text{c}} - T)^{1/2}$, e acima dele a suscetibilidade obedece à
+lei de Curie--Weiss $\chi \propto 1/(T - T_{\text{c}})$:
+divergente na transição --- um ímã infinitamente prestativo.
+\end{theorem}
+
+\begin{proof}[Demonstração parcial]
+Um spin no campo $B_{\text{eff}} = qJm/\mu$ tem $\langle s\rangle =
+\tanh(\beta qJm)$; exigir $\langle s\rangle = m$ dá a
+equação enunciada. Graficamente: a reta $y = m$ corta a curva $y =
+\tanh(T_{\text{c}}m/T)$ só na origem quando a inclinação inicial da
+curva $T_{\text{c}}/T < 1$, e também em $\pm m^* \neq 0$ quando
+$T < T_{\text{c}}$. Expandir $\tanh$ para $m$ pequeno
+dá $m^2 = 3(1 - T/T_{\text{c}})$, o crescimento em raiz quadrada;
+acrescentar um pequeno campo aplicado e expandir do mesmo modo dá
+Curie--Weiss (\cref{exo:b3:phase-transitions:6}).
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}
+  \begin{axis}[omaxis, axis x line=bottom, axis y line=left,
+    width=6.6cm, height=5.2cm, xmin=0, xmax=1.6, ymin=0, ymax=1.15,
+    xlabel={$m$}, ylabel={},
+    xlabel style={at={(axis description cs:0.5,-0.11)}, anchor=north},
+    xtick=\empty, ytick=\empty, clip=false]
+    \addplot[gray, thick, domain=0:1.1] {x};
+    \addplot[omDef, very thick, domain=0:1.6, samples=100]
+      {tanh(1.5*x)};
+    \addplot[omExo, thick, dashed, domain=0:1.6, samples=100]
+      {tanh(0.7*x)};
+    \fill[omDef] (axis cs:0.858,0.858) circle (1.8pt);
+    \node[omDef, font=\scriptsize, anchor=north west] at (axis cs:0.88,0.84)
+      {$m^*$};
+    \node[omDef, font=\scriptsize, anchor=south east] at (axis cs:1.55,1.0)
+      {$T < T_{\text{c}}$};
+    \node[omExo, font=\scriptsize, anchor=north] at (axis cs:1.32,0.62)
+      {$T > T_{\text{c}}$};
+    \node[gray, font=\scriptsize, anchor=west, rotate=38] at (axis cs:0.3,0.38)
+      {$y = m$};
+  \end{axis}
+  \begin{axis}[omaxis, axis x line=bottom, axis y line=left,
+    width=6.6cm, height=5.2cm, xmin=0, xmax=1.25, ymin=0, ymax=1.15,
+    xshift=7.2cm,
+    xlabel={$T/T_{\text{c}}$}, ylabel={$m(T)$},
+    xlabel style={at={(axis description cs:0.5,-0.11)}, anchor=north},
+    xtick={0.5,1}, ytick={1}, clip=false]
+    \addplot[omThm, very thick, domain=0.02:0.999, samples=250]
+      {(1-x^3.4)^0.42};
+    \addplot[omThm, very thick, domain=1:1.18] {0};
+    \node[omThm, font=\scriptsize, anchor=east] at (axis cs:0.88,0.45)
+      {$\propto(T_{\text{c}} - T)^{1/2}$ perto de $T_{\text{c}}$};
+  \end{axis}
+\end{tikzpicture}
+
+{\small À esquerda: a autoconsistência $m = \tanh(T_{\text{c}}m/T)$ ---
+abaixo de $T_{\text{c}}$ a inclinação inicial da curva supera um e
+existe um cruzamento não nulo $m^*$. À direita: a magnetização
+espontânea resultante, subindo como uma raiz quadrada abaixo do ponto
+de Curie e identicamente nula acima.}
+\end{omfigure}
+
+\section{O ponto de vista de Landau e a universalidade}
+
+\begin{proposition}[Teoria de Landau]\label{prop:b3:phase-transitions:landau}
+\index{teoria de Landau}\index{expoentes críticos}\index{universalidade}
+Perto de uma transição contínua, expanda a \omterm{prop:b3:canonical-ensemble:machine}{energia livre} no pequeno
+\omterm{def:b3:phase-transitions:order}{parâmetro de ordem}, guardando só o que a simetria permite ($m \to -m$,
+aqui):
+\[
+F(m) = a\,(T - T_{\text{c}})\,m^2 + b\,m^4 , \qquad a, b > 0 .
+\]
+Acima de $T_{\text{c}}$: um único poço em $m = 0$. Abaixo: a origem
+vira um cume e aparecem dois poços simétricos em $m = \pm
+\sqrt{a(T_{\text{c}} - T)/2b}$ --- a mesma raiz quadrada do campo
+médio, agora só por simetria. É por isso que sistemas radicalmente
+diferentes se comportam de modo idêntico perto dos \omterm{prop:b3:phase-transitions:vdw}{pontos críticos}
+deles: a \emph{universalidade}. Os expoentes medidos (por exemplo, $m \propto |T -
+T_{\text{c}}|^\beta$ com $\beta \approx 0.33$ tanto para
+fluidos \emph{quanto} para ímãs uniaxiais) diferem do $1/2$ de campo
+médio porque perto de $T_{\text{c}}$ as flutuações se enfurecem em
+todas as escalas --- a domesticação delas, o grupo de renormalização
+(Wilson, Nobel de 1982), mostrou que só a dimensionalidade e a
+simetria, nunca os detalhes microscópicos, decidem os expoentes. A
+própria imagem do poço duplo tem carreira além dos ímãs: dê ao
+\omterm{def:b3:phase-transitions:order}{parâmetro de ordem} o papel de um campo que preenche o espaço, e o poço
+de \omterm{def:b3:phase-transitions:order}{quebra de simetria} dele é o mecanismo de Higgs
+(\cref{ch:b3:particle-physics}).
+\end{proposition}
+\admitted
+
+\begin{omfigure}
+\begin{tikzpicture}
+  \begin{axis}[omaxis, axis x line=bottom, axis y line=left,
+    width=11.6cm, height=5.2cm, xmin=-1.6, xmax=1.6, ymin=-0.45, ymax=0.85,
+    xlabel={parâmetro de ordem $m$}, ylabel={$F(m)$},
+    xlabel style={at={(axis description cs:0.5,-0.11)}, anchor=north},
+    xtick={0}, ytick=\empty, clip=false,
+    legend style={font=\scriptsize, at={(0.5,0.98)}, anchor=north,
+      draw=none, fill=none}]
+    \addplot[omDef, very thick, domain=-1.07:1.07, samples=120]
+      {0.5*x*x + 0.2*x^4};
+    \addlegendentry{$T > T_{\text{c}}$: um poço}
+    \addplot[omExo, thick, domain=-1.31:1.31, samples=120]
+      {0.28*x^4};
+    \addlegendentry{$T = T_{\text{c}}$: fundo chato}
+    \addplot[omThm, very thick, domain=-1.6:1.6, samples=150]
+      {-0.55*x*x + 0.28*x^4 + 0.27};
+    \addlegendentry{$T < T_{\text{c}}$: dois poços}
+    \fill[omThm] (axis cs:0.99,0.0) circle (1.6pt);
+    \fill[omThm] (axis cs:-0.99,0.0) circle (1.6pt);
+  \end{axis}
+\end{tikzpicture}
+
+{\small A \omterm{prop:b3:canonical-ensemble:machine}{energia livre} de Landau: resfriar através de $T_{\text{c}}$
+transforma um poço em dois. O sistema tem de rolar para dentro de um
+deles --- equivalentes por simetria, distinguíveis de fato: quebra
+espontânea de simetria, dos ímãs ao campo de Higgs.}
+\end{omfigure}
+
+\begin{method}[Lendo uma transição]\label{met:b3:phase-transitions:method}
+(1) Identifique o \omterm{def:b3:phase-transitions:order}{parâmetro de ordem} e se ele salta
+(primeira ordem: calor latente, coexistência, histerese, nucleação) ou
+cresce continuamente (\omterm{prop:b3:phase-transitions:vdw}{ponto crítico}: divergências, opalescência,
+universalidade). (2) Linhas de primeira ordem: Clausius--Clapeyron para
+a inclinação; igualdade de $\mu$ para a coexistência. (3) Contínuas:
+campo médio primeiro ($\tanh$ ou Landau) para a forma do diagrama de
+fases; confie na \emph{topologia} dele, não nos expoentes. (4) Abaixo
+de $T_{\text{c}}$, lembre a escolha: simetria quebrada significa
+domínios, defeitos e dependência da história. (5) Estimativas:
+$k_{\text{B}}T_{\text{c}} \sim$ (acoplamento por vizinho) $\times$
+(número de vizinhos).
+\end{method}
+
+\begin{omfigure}
+\includegraphics[width=0.58\linewidth]{images/book5/ai/b5-26-liquid-crystal.png}
+
+{\small Um cristal líquido entre polarizadores cruzados: um \omterm{def:b3:phase-transitions:order}{parâmetro de ordem} (o eixo molecular) redemoinhando por defeitos onde as escovas se encontram. As fases da matéria entre o líquido e o sólido --- e a substância de trabalho da maioria das telas.}
+\end{omfigure}
+
+\section{Exercícios}
+
+\begin{exercise}[$\star$]\label{exo:b3:phase-transitions:1}
+Classifique (primeira ordem ou contínua), nomeando o \omterm{def:b3:phase-transitions:order}{parâmetro de ordem}
+e a simetria quebrada, se houver: (a) a ebulição a \qty{1}{atm}; (b)
+o ponto de Curie; (c) o ponto $\lambda$ do superfluido; (d) a ebulição
+\emph{exatamente no} \omterm{prop:b3:phase-transitions:vdw}{ponto crítico}.
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b3:phase-transitions:2}
+Calores latentes como entropia. (a) Água: $L_{\text{vap}} =
+\qty{2.26e6}{J/kg}$ a \qty{373}{K}: calcule o $\Delta S$ por
+molécula em unidades de $k_{\text{B}}$. (b) O mesmo para a fusão
+($L_{\text{fus}} = \qty{3.3e5}{J/kg}$ a \qty{273}{K}). (c) A maioria
+dos líquidos vaporiza com $\Delta S \approx 10$--$11\,k_{\text{B}}$
+(regra de Trouton): o que o número mais ou menos conta (o
+$\ln$ de que razão de volumes)? (d) Por que o salto de entropia da
+fusão é tanto menor que o da ebulição?
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b3:phase-transitions:3}
+Constantes críticas de van der Waals ($V_{\text{c}} = 3Nb$,
+$k_{\text{B}}T_{\text{c}} = 8a/27b$, $P_{\text{c}} = a/27b^2$ ---
+aceite). (a) Mostre que $P_{\text{c}}V_{\text{c}}/Nk_{\text{B}}T_{\text{
+c}} = 3/8$, um número universal do modelo; os valores medidos
+se agrupam perto de $0.29$ --- comente. (b) Para o CO$_2$
+($T_{\text{c}} = \qty{304}{K}$, $P_{\text{c}} = \qty{73.8}{bar}$):
+extraia $a$ e $b$. (c) A partir de $b$, estime o diâmetro
+molecular. (d) Por que o CO$_2$ à temperatura ambiente liquefaz sob
+pressão enquanto o N$_2$ à temperatura ambiente ($T_{\text{c}} =
+\qty{126}{K}$) nunca liquefaz?
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b3:phase-transitions:4}
+\omterm{def:b3:phase-transitions:order}{Parâmetros de ordem}, depressa: dê um para (a) um ferromagneto; (b)
+a transição líquido--gás; (c) a \omterm{thm:b3:quantum-statistics:bec}{condensação de Bose--Einstein}; (d)
+um antiferromagneto (duas sub-redes --- que grandeza se ordena enquanto
+a magnetização total permanece nula?).
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b3:phase-transitions:5}
+Campo médio à mão. (a) Deduza $m = \tanh(\beta qJm)$ de um spin
+no campo médio dos $q$ vizinhos dele. (b) Mostre que existe solução não
+nula exatamente quando $T < qJ/k_{\text{B}}$. (c) Expanda até
+terceira ordem e deduza $m(T) \approx \sqrt{3(1 -
+T/T_{\text{c}})}$. (d) Ferro: $T_{\text{c}} = \qty{1043}{K}$, $q =
+8$: extraia $J$ em eV e confira a escala de troca do
+\cref{exo:b3:identical-particles:12}.
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b3:phase-transitions:6}
+Curie--Weiss. Acrescente um pequeno campo: $m = \tanh[\beta(qJm + \mu B)]$.
+(a) Linearize acima de $T_{\text{c}}$ e deduza $\chi = \partial
+m/\partial B \propto 1/(T - T_{\text{c}})$. (b) Compare com a
+lei de Curie de spins livres: o que dá traçar $1/\chi$ contra $T$
+em cada caso, e como o intercepto diagnostica acoplamento
+ferromagnético? (c) A reta de $1/\chi$ do níquel bate em zero a \qty{631}{K}:
+interprete. (d) Para um antiferromagneto o intercepto é
+\emph{negativo}: que sinal de $J$ isso denuncia?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b3:phase-transitions:7}
+Clausius--Clapeyron na prática. (a) Água a \qty{100}{\celsius}
+($\Delta v = \qty{1.67}{m^3/kg}$): calcule $\dd P/\dd T$. (b)
+Use $\dd\ln P/\dd T = Lm_{\text{w}}/k_{\text{B}}T^2$ para estimar
+a temperatura de ebulição a $P = \qty{0.7}{atm}$ (um cume de
+\qty{3000}{m}). (c) Fusão: com $\Delta v = \qty{-9.1e-5}{m^3/kg}$ e
+$L = \qty{3.3e5}{J/kg}$, calcule $\dd T/\dd P$ e a pressão
+necessária para baixar o ponto de fusão do gelo em \qty{5}{K}. (d) Um
+patinador de \qty{70}{kg} sobre \qty{30}{mm^2} de lâmina: a pressão e
+o deslocamento do ponto de fusão dela --- a fusão por pressão explica a
+patinação? (O que explica: o atrito e a pré-fusão superficial.)
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b3:phase-transitions:8}
+Contas de Landau. (a) Minimize $F = a(T - T_{\text{c}})m^2 +
+bm^4$ abaixo de $T_{\text{c}}$. (b) Calcule $F$ no mínimo e
+mostre que a capacidade térmica tem um \emph{salto} finito $\Delta C =
+a^2T_{\text{c}}/2b$ na transição. (c) Esboce $C(T)$:
+o degrau de campo médio contra o pico quase logarítmico medido do
+ponto $\lambda$ do hélio --- o que as flutuações reais acrescentam? (d)
+Acrescente um termo de campo $-hm$: mostre que a transição se arredonda
+--- a simetria tem de ser exata para poder quebrar.
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b3:phase-transitions:9}
+Nucleação. Uma gotícula de raio $r$ em vapor supersaturado
+ganha \omterm{prop:b3:canonical-ensemble:machine}{energia livre} de volume $-\tfrac43\pi r^3\,n\,\delta\mu$, mas paga
+tensão superficial $4\pi r^2\sigma$. (a) Mostre que a barreira tem
+máximo em $r^* = 2\sigma/n\,\delta\mu$. (b) Explique: por que vapores
+supersaturados limpos e líquidos superaquecidos persistem
+(metaestabilidade), e o que a poeira, os íons e os arranhões fornecem?
+(c) As câmaras de nuvens (os detectores ancestrais do
+\cref{ch:b3:particle-physics}) e as câmaras de bolhas funcionam
+\emph{com} esta física: que papel a trilha de íons da partícula que
+passa desempenha? (d) Por que se põem ``pedras de ebulição'' nos balões
+de laboratório?
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b3:phase-transitions:10}
+Não há transição em uma dimensão. Considere uma cadeia de Ising 1D com
+$N$ spins, todos para cima, e insira uma ``parede de domínio'' (todos os
+spins além de certa ligação invertidos). (a) Custo em energia da parede:
+$2J$, independente da posição. (b) Ganho de entropia: a parede pode
+ficar em qualquer uma de $\sim N$ ligações --- $\Delta S = k_{\text{B}}\ln N$. (c)
+Mostre que $\Delta F = 2J - k_{\text{B}}T\ln N < 0$ para qualquer $T > 0$ com
+$N$ grande: as paredes sempre proliferam, e a ordem de longo alcance é
+impossível --- o \omterm{thm:b3:phase-transitions:meanfield}{modelo de Ising} 1D tem $T_{\text{c}} = 0$. (d) Em
+2D, uma parede é uma linha de comprimento $\ell$ que custa $2J\ell$, mas com
+$\sim3^\ell$ formas: refaça a estimativa e mostre que a ordem
+\emph{sobrevive} abaixo de um $T_{\text{c}}$ finito --- o
+argumento de Peierls por trás do $2.269\,J/k_{\text{B}}$ exato de Onsager.
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b3:phase-transitions:11}
+Universalidade auditada. O campo médio prevê $\beta = 1/2$, $\gamma
+= 1$ ($\chi \sim |t|^{-\gamma}$) e $\delta = 3$ ($m \sim h^{1/3}$
+em $T_{\text{c}}$). Medidos, tanto para o \omterm{prop:b3:phase-transitions:vdw}{ponto crítico} líquido--gás
+\emph{quanto} para ímãs uniaxiais tridimensionais: $\beta
+\approx 0.326$, $\gamma \approx 1.237$, $\delta \approx 4.79$.
+(a) O que justifica comparar um fluido com um ímã, para começo de
+conversa (o que os \omterm{def:b3:phase-transitions:order}{parâmetros de ordem} deles compartilham --- uma única
+escolha de sinal)? (b)
+Por que o campo médio falha perto de $T_{\text{c}}$ (o que diverge e
+invalida o descarte das flutuações)? (c) Por que ele falha
+\emph{menos} em dimensões mais altas (número de vizinhos contra
+alcance das flutuações; o campo médio fica exato acima de quatro
+dimensões)? (d) Enuncie a moral do grupo de renormalização em duas
+frases: o que está sendo mediado escala por escala, e por que só
+simetria e dimensão sobrevivem à mediação.
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b3:phase-transitions:12}
+Dos ímãs ao Higgs. Promova o \omterm{def:b3:phase-transitions:order}{parâmetro de ordem} a um campo
+$\phi(\vect r)$ com densidade de energia de Landau $\alpha(T -
+T_{\text{c}})\phi^2 + b\phi^4$ mais um termo de gradiente. (a) Abaixo de
+$T_{\text{c}}$ o campo fica em $\pm\phi_0$: as \omterm{prop:b3:lagrangian-mechanics:modes}{pequenas oscilações}
+\emph{ao longo} do poço têm uma curvatura restauradora --- calcule
+$F''(\phi_0)$ e interprete-a, na linguagem de campos, como uma
+\emph{massa}. (b) Para um \omterm{def:b3:phase-transitions:order}{parâmetro de ordem} \emph{complexo} (um
+círculo de mínimos --- o ``chapéu mexicano''), as oscilações \emph{em
+torno} da borda não custam energia potencial: um modo sem massa ---
+nomeie os análogos em matéria condensada (ondas de spin, fônons de
+superfluido). (c)
+Na teoria eletrofraca, o próprio vácuo fica num poço de simetria
+quebrada assim; as partículas ganham massa do valor não nulo do campo,
+e a oscilação radial \emph{é} o bóson de Higgs: mapeie cada elemento
+sobre (a)--(b). (d) Em uma frase: o que a física da matéria condensada
+ensinou aqui à física de partículas (a exportação, via Anderson, da
+\omterm{def:b3:phase-transitions:order}{quebra de simetria})?
+\end{exercise}
+
+\begin{omfigure}
+\includegraphics[width=0.58\linewidth]{images/book5/ai/b5-17-pressure-cooker.png}
+
+{\small Uma panela de pressão soltando vapor: duas atmosferas dentro movem a linha de coexistência líquido--vapor para \qty{121}{\celsius} --- Clausius e Clapeyron, cozinhando o jantar mais depressa.}
+\end{omfigure}
+
+\section{Problema: o diagrama de fases da cozinha}
+
+\begin{problem}[{Problema de fim de semana --- panelas de pressão, chá
+de montanha e o fim da ebulição}]\label{pb:b3:phase-transitions:1}
+O diagrama de fases da água paira, despercebido, sobre todo fogão. Este
+problema percorre as três linhas dele com Clausius--Clapeyron em mãos
+--- de por que uma panela de pressão corta pela metade o tempo de
+cozimento, passando por que o chá decepciona em altitude, até o mundo
+estranho para além do \omterm{prop:b3:phase-transitions:vdw}{ponto crítico}, onde a própria ebulição deixa de
+existir. Dados: $L_{\text{vap}}
+= \qty{2.26e6}{J/kg}$, $L_{\text{fus}} = \qty{3.34e5}{J/kg}$;
+vapor de água a \qty{373}{K} e \qty{1}{atm}: $\Delta v_{\text{vap}}
+= \qty{1.67}{m^3/kg}$; fusão: $\Delta v = \qty{-9.1e-5}{m^3/kg}$;
+massa molecular $m_{\text{w}} = \qty{3.0e-26}{kg}$; \omterm{prop:b3:phase-transitions:vdw}{ponto crítico}:
+$T_{\text{c}} = \qty{647}{K}$, $P_{\text{c}} = \qty{221}{bar}$.
+
+\medskip\noindent\textbf{Parte I --- A linha de ebulição.}
+\begin{enumerate}
+  \item O que define ``ferver'' a uma dada pressão (que dois
+        \omterm{thm:b3:grand-canonical:distribution}{potenciais químicos} empatam)?
+  \item Calcule a inclinação $\dd P/\dd T$ da linha de vaporização
+        a \qty{100}{\celsius}.
+  \item Uma panela de pressão guarda \qty{2}{atm}: integre a inclinação
+        (ou use a forma exponencial com $Lm_{\text{w}}/
+        k_{\text{B}} \approx \qty{4900}{K}$) para achar a
+        temperatura de ebulição dela.
+  \item Com a regra de Arrhenius de cozinha do
+        \cref{exo:b3:canonical-ensemble:9} (as taxas dobram a cada
+        \qty{10}{K}), estime a aceleração em relação ao cozimento em
+        panela aberta.
+  \item Em La Paz (\qty{3600}{m}, $P \approx \qty{0.65}{atm}$):
+        a temperatura de ebulição, e por que o chá fica ruim.
+  \item Por que acrescentar sal eleva o ponto de ebulição (o $\mu$ de
+        quem o soluto abaixa --- lembre o
+        \cref{exo:b3:grand-canonical:8})?
+\end{enumerate}
+
+\medskip\noindent\textbf{Parte II --- A linha de fusão.}
+\begin{enumerate}[resume]
+  \item Calcule $\dd T/\dd P$ para a fusão e note o sinal.
+  \item Que observação do dia a dia codifica $\Delta v < 0$ (o que
+        o gelo faz no seu copo), e por que essa anomalia é rara
+        entre as substâncias?
+  \item Uma geleira de \qty{300}{m} de espessura: a pressão na
+        base dela e a depressão do ponto de fusão --- a fusão por
+        pressão basal importa para o escoamento da geleira?
+  \item Volte ao patinador do
+        \cref{exo:b3:phase-transitions:7}(d): o que de fato
+        lubrifica a lâmina?
+  \item Se o gelo afundasse (inclinação positiva, como quase todo outro
+        sólido), o que o inverno faria aos lagos e aos peixes deles ---
+        trace a cadeia de consequências.
+  \item A inclinação negativa termina em alta pressão, onde outras
+        formas cristalinas de gelo assumem (gelo III, V, VI): o que a
+        existência de uma dúzia de gelos diz sobre a paisagem de \omterm{prop:b3:canonical-ensemble:machine}{energia
+        livre} de uma molécula simples?
+\end{enumerate}
+
+\medskip\noindent\textbf{Parte III --- O fim da linha.}
+\begin{enumerate}[resume]
+  \item A linha de ebulição termina em ($T_{\text{c}},
+        P_{\text{c}}$): o que acontece com o calor latente e com a
+        diferença de densidades quando o fim se aproxima?
+  \item Para além do \omterm{prop:b3:phase-transitions:vdw}{ponto crítico}, dá para levar a água de
+        ``parecida com líquido'' a ``parecida com gás'' \emph{sem}
+        transição alguma: descreva o caminho no plano $(P, T)$.
+  \item Aproximando-se do \omterm{prop:b3:phase-transitions:vdw}{ponto crítico}, o fluido fica leitoso:
+        conecte essa opalescência ao
+        \cref{exo:b3:microcanonical-ensemble:12} e ao
+        \cref{pb:b3:perturbation-theory:1}.
+  \item O CO$_2$ supercrítico ($T_{\text{c}} = \qty{304}{K}$,
+        $P_{\text{c}} = \qty{74}{bar}$) dissolve como um líquido
+        e penetra como um gás: nomeie o uso industrial que
+        descafeína o café, e por que o solvente não deixa
+        resíduo.
+  \item Água supercrítica (nas caldeiras das usinas, acima de
+        \qty{221}{bar}): por que eliminar a ebulição ---
+        bolhas, filmes, queima --- agrada aos engenheiros de caldeira?
+  \item As fontes hidrotermais do fundo do oceano emitem água a
+        \qty{400}{\celsius} que não ferve: confira contra a
+        pressão local ($\sim\qty{300}{bar}$ a \qty{3}{km}) e
+        o diagrama de fases.
+\end{enumerate}
+
+\medskip\noindent\textbf{Parte IV --- Lendo o mapa inteiro.}
+\begin{enumerate}[resume]
+  \item Esboce (em palavras) o diagrama $(P, T)$ da água: as três
+        linhas, o ponto triplo ($\qty{0.01}{\celsius}$,
+        \qty{611}{Pa}) e o \omterm{prop:b3:phase-transitions:vdw}{ponto crítico}.
+  \item Abaixo de \qty{611}{Pa}, o gelo sublima sem derreter: que
+        eletrodoméstico (a liofilização) e que calotas polares de
+        que planeta (Marte, CO$_2$ e H$_2$O) vivem desse fato?
+  \item Por que o ponto triplo da água --- exatamente
+        \qty{273.16}{K} por definição até 2019 --- era um padrão
+        de temperatura tão bom (quantas fases coexistentes fixam
+        quantos \omterm{def:b3:lagrangian-mechanics:coordinates}{graus de liberdade})?
+  \item Cada linha do mapa é uma transição de primeira ordem; só
+        o ponto final dela é crítico: reformule a distinção com
+        \omterm{def:b3:phase-transitions:order}{parâmetros de ordem} e calor latente.
+  \item A linha de orvalho do ar úmido é a mesma física rodada ao
+        contrário: explique o orvalho, a névoa e a bruma matinal numa
+        janela fria com uma frase de cruzamento de $\mu$.
+  \item Toda tampa de panela é um experimento: gotículas condensam
+        nela e chovem de volta --- identifique as duas \omterm{def:b3:phase-transitions:order}{transições de
+        fase} do ciclo da água em miniatura e o vaivém de calor latente
+        que faz uma panela tampada ferver antes.
+  \item Resuma o resultado nomeado: uma só fórmula de inclinação, $\dd P/
+        \dd T = L/T\Delta v$, explica os \qty{121}{\celsius} da
+        panela de pressão, o chá a \qty{88}{\celsius} da
+        montanha, o gelo flutuando para trás pela linha de fusão dele e
+        a chaleira supercrítica onde a ebulição termina em
+        $\qty{647}{K}, \qty{221}{bar}$.
+\end{enumerate}
+\end{problem}

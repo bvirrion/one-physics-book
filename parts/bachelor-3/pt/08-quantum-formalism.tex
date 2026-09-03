@@ -1,0 +1,589 @@
+\chapter{O formalismo da mecânica quântica}\label{ch:b3:quantum-formalism}
+
+Pegue três filtros polarizadores. Dois deles, cruzados a $90^\circ$,
+bloqueiam a luz por completo; deslize o terceiro entre eles a
+$45^\circ$ e a luz \emph{passa} --- acrescentar um obstáculo abre o
+caminho. Nenhuma imagem de filtros como peneiras sobrevive a esse
+experimento; o que sobrevive é a álgebra linear: a polarização de um
+fóton é um \emph{vetor}, cada filtro a mede ao longo de um eixo e a
+projeta, e as probabilidades são componentes ao quadrado. Este capítulo
+instala essa álgebra como o verdadeiro fundamento da mecânica quântica.
+As funções de onda dos capítulos anteriores eram uma vestimenta
+concreta de um corpo mais abstrato: os estados são vetores num \omterm{def:b3:quantum-formalism:state}{espaço
+de Hilbert}, os observáveis são \omterm{def:b3:quantum-formalism:observable}{operadores hermitianos}, os valores
+medidos são \omterm{def:b3:quantum-formalism:observable}{autovalores}, as probabilidades são produtos escalares ao
+quadrado, e a evolução é gerada pela \omterm{def:b3:hamiltonian-mechanics:hamiltonian}{hamiltoniana}. Cinco postulados,
+todos já em ação em tudo o que calculamos --- e, uma vez enunciados com
+clareza, poderosos o bastante para tratar sistemas que nenhuma onda
+sobre uma reta descreve: a polarização do fóton, o spin do elétron e os
+neutrinos cuja identidade oscila ao atravessar a Terra.
+
+\section{Os estados são vetores}
+
+\begin{definition}[Espaço de estados, kets e produtos escalares]\label{def:b3:quantum-formalism:state}
+\index{espaço de Hilbert}\index{ket}\index{bra}
+Os estados de um sistema quântico formam um espaço vetorial complexo
+com produto interno --- um \emph{espaço de Hilbert} $\mathcal H$ (a
+matemática é desenvolvida no volume de matemática do terceiro ano). Um
+estado é um vetor, escrito como um \emph{ket} $\ket\psi$, normalizado:
+$\braket\psi\psi = 1$. O produto interno de dois estados é o número
+complexo $\braket\varphi\psi$, antilinear na primeira posição, com
+$\braket\varphi\psi = \braket\psi\varphi^*$. Numa base ortonormal
+$\{\ket{e_i}\}$,
+\[
+\ket\psi = \sum_i c_i\ket{e_i} , \qquad
+c_i = \braket{e_i}\psi , \qquad
+\sum_i|c_i|^2 = 1 .
+\]
+A função de onda dos capítulos anteriores é a família das componentes
+de $\ket\psi$ ao longo da posição: $\psi(x) =
+\braket{x}{\psi}$; nada se perde, e sistemas de espaço de estados
+\emph{finito} --- inimagináveis como ondas --- tornam-se descritíveis.
+\end{definition}
+
+\begin{example}[A polarização do fóton: um mundo bidimensional]\label{ex:b3:quantum-formalism:polarization}
+Um fóton que segue pelo eixo $z$ carrega um estado de polarização num
+\omterm{def:b3:quantum-formalism:state}{espaço de Hilbert} \emph{bidimensional}, com base $\ket H$
+(horizontal) e $\ket V$ (vertical). A luz polarizada num ângulo
+$\theta$ é a superposição
+\[
+\ket\theta = \cos\theta\,\ket H + \sin\theta\,\ket V ,
+\]
+e a polarização circular é a combinação complexa $(\ket H \pm
+\iu\ket V)/\sqrt2$: o fato de os coeficientes serem complexos não é
+enfeite, é física. Todo sistema quântico de dois níveis --- o spin, a
+molécula de amônia, um qubit supercondutor --- é este mesmo espaço
+vetorial em outra roupagem.
+\end{example}
+
+\begin{omfigure}
+\begin{tikzpicture}[font=\small, >=Stealth]
+  \draw[->] (-0.3,0) -- (3.3,0) node[right] {$\ket H$};
+  \draw[->] (0,-0.3) -- (0,3.3) node[above] {$\ket V$};
+  \draw[->, omDef, very thick] (0,0) -- (35:2.9);
+  \node[omDef, anchor=west] at (35:3.0) {$\ket\theta$};
+  \draw[dashed, omThm] (35:2.9) -- ({2.9*cos(35)},0);
+  \draw[dashed, omExo] (35:2.9) -- (0,{2.9*sin(35)});
+  \node[omThm, anchor=north] at ({2.9*cos(35)},-0.08) {$\cos\theta$};
+  \node[omExo, anchor=east] at (-0.08,{2.9*sin(35)}) {$\sin\theta$};
+  \draw (1.0,0) arc (0:35:1.0);
+  \node at (17:1.35) {$\theta$};
+  \node[align=left, anchor=west] at (5.3,1.7)
+    {probabilidade ao longo de $\ket H$: $\cos^2\theta$\\[2pt]
+     probabilidade ao longo de $\ket V$: $\sin^2\theta$};
+  \node[align=left, anchor=west, font=\footnotesize] at (5.3,0.45)
+    {(a lei de Malus do volume do primeiro ano,\\relida como regra de Born)};
+\end{tikzpicture}
+
+{\small Um estado de polarização como vetor: suas componentes ao
+quadrado na base de um analisador são as probabilidades dos resultados
+--- a geometria tornada probabilidade.}
+\end{omfigure}
+
+\section{Os observáveis são operadores}
+
+\begin{definition}[Observáveis]\label{def:b3:quantum-formalism:observable}
+\index{observável}\index{operador hermitiano}\index{autovalor}
+Um \emph{observável} é um operador linear $\hat A$ sobre $\mathcal H$
+que é \emph{hermitiano}: $\braket{\varphi}{\hat A\psi} =
+\braket{\hat A\varphi}{\psi}$ para todos os estados (em linguagem
+matricial, $A = A^{*\top}$). Seus \emph{autovetores} e
+\emph{autovalores}, $\hat A\ket{a} = a\ket{a}$, carregam a física: os
+$a$ são os valores que se podem medir. Casos familiares: a posição
+($\hat x$: multiplicação por $x$), o momento
+($\hat p = -\iu\hbar\,\dd/\dd x$), a energia
+($\hat H = \hat p^2/2m + V(\hat x)$) --- e, em duas dimensões,
+qualquer matriz hermitiana $2\times2$.
+\end{definition}
+
+\begin{theorem}[Por que hermitiano]\label{thm:b3:quantum-formalism:hermitian}
+Um \omterm{def:b3:quantum-formalism:observable}{operador hermitiano} tem \omterm{def:b3:quantum-formalism:observable}{autovalores} reais, e autovetores de
+\omterm{def:b3:quantum-formalism:observable}{autovalores} distintos são ortogonais; nos espaços deste livro, seus
+autovetores formam uma base ortonormal de $\mathcal H$ (o
+\emph{teorema espectral}, demonstrado em dimensão finita no volume de
+matemática do segundo ano; para os operadores ilimitados $\hat x$,
+$\hat p$ e $\hat H$, o enunciado completo pertence à teoria espectral
+do terceiro ano e é admitido). Os valores medidos têm de ser reais, e
+resultados distinguíveis têm de ser ortogonais: a hermiticidade é
+exatamente a condição para que um operador possa representar uma
+medida.
+\end{theorem}
+
+\begin{proof}[Demonstração parcial]
+$a\braket aa = \braket{a}{\hat Aa} = \braket{\hat Aa}{a} =
+a^*\braket aa$: $a$ é real. Para $\hat A\ket a = a\ket a$ e $\hat A\ket b
+= b\ket b$: $a\braket ba = \braket{b}{\hat Aa} = \braket{\hat
+Ab}{a} = b\braket ba$, logo $(a - b)\braket ba = 0$.
+\end{proof}
+
+\begin{example}[Um observável de dois níveis]\label{ex:b3:quantum-formalism:twolevel}
+No espaço de polarização, na base $(\ket H, \ket V)$, considere
+\[
+\hat A = \begin{pmatrix} 0 & 1\\ 1 & 0\end{pmatrix} :
+\]
+hermitiana; \omterm{def:b3:quantum-formalism:observable}{autovalores} $\pm1$; autovetores $(\ket H \pm
+\ket V)/\sqrt2$ --- as polarizações a $\pm45^\circ$. Medir
+$\hat A$ \emph{significa} perguntar ``diagonal ou antidiagonal?'', e a
+base de autovetores é o par de respostas dessas perguntas. Cada
+polarizador a $45^\circ$ do experimento de abertura é esta matriz feita
+de vidro.
+\end{example}
+
+\section{Os postulados}
+
+\begin{theorem}[As regras da mecânica quântica]\label{thm:b3:quantum-formalism:postulates}
+\index{postulados da mecânica quântica}\index{regra de Born}\index{colapso}
+\emph{(P1)} O estado de um sistema é um \omterm{def:b3:quantum-formalism:state}{ket} normalizado $\ket\psi$ em
+seu \omterm{def:b3:quantum-formalism:state}{espaço de Hilbert}.
+\emph{(P2)} Toda grandeza mensurável é um \omterm{def:b3:quantum-formalism:observable}{operador hermitiano}
+$\hat A$.
+\emph{(P3)} Os únicos resultados possíveis de medir $\hat A$ são seus
+\omterm{def:b3:quantum-formalism:observable}{autovalores}.
+\emph{(P4)} Num estado $\ket\psi$, o resultado $a$ ocorre com
+probabilidade $\mathcal P(a) = |\braket a\psi|^2$ (a regra de Born;
+para um \omterm{def:b3:quantum-formalism:observable}{autovalor} degenerado, some as componentes ao quadrado sobre o
+autoespaço dele). A média de muitas repetições é $\langle\hat A\rangle =
+\bra\psi\hat A\ket\psi$.
+\emph{(P5)} Imediatamente após uma medida que deu $a$, o estado é a
+projeção (normalizada) de $\ket\psi$ sobre o autoespaço de $a$ --- o
+\emph{colapso}: a medida é uma interação que deixa o sistema no estado
+correspondente à sua própria resposta.
+\emph{(P6)} Entre medidas, o estado evolui de modo unitário segundo a
+equação de Schrödinger
+$\iu\hbar\,\dfrac{\dd}{\dd t}\ket{\psi(t)} = \hat H\ket{\psi(t)}$.
+\end{theorem}
+\admitted
+
+\begin{example}[Os três polarizadores, calculados]\label{ex:b3:quantum-formalism:threepolarizers}
+Luz vertical encontra um analisador cruzado a $90^\circ$: $|\braket
+HV|^2 = 0$ --- extinção. Insira um polarizador a $45^\circ$: o estado
+$\ket V$ o atravessa com probabilidade $|\braket{45^\circ}{V}|^2 =
+\tfrac12$ e \emph{colapsa} em $\ket{45^\circ}$ (P5); esse estado
+atravessa então o analisador horizontal com probabilidade
+$|\braket{H}{45^\circ}|^2 = \tfrac12$. Transmissão líquida $\tfrac14$
+em vez de zero: o filtro do meio não ``abre um buraco'' --- ele
+realiza uma medida, e o colapso reprepara o fóton. Nenhuma peneira
+clássica faz isso; uma projeção não faz outra coisa.
+\end{example}
+
+\begin{omfigure}
+\begin{tikzpicture}[font=\small, >=Stealth]
+  % light path
+  \draw[->, omExo, very thick] (-0.9,0) -- (0.35,0);
+  \draw[->, omExo, very thick] (0.65,0) -- (2.85,0);
+  \draw[->, omExo, thick] (3.15,0) -- (5.35,0);
+  \draw[->, omExo, thin] (5.65,0) -- (7.4,0);
+  % polarizers
+  \foreach \x/\ang/\lab in {0.5/90/{$V$}, 3.0/45/{$45^\circ$}, 5.5/0/{$H$}}
+   {\draw[thick, fill=omDef!12] (\x,-1.05) ellipse (0.16 and 1.05);
+    \draw[very thick, omDef] ($(\x,-1.05)+({\ang}:0.85)$) -- ($(\x,-1.05)-({\ang}:0.85)$);
+    \node at (\x,-2.5) {\lab};}
+  \node at (-0.9,0.45) {$I_0$};
+  \node at (1.8,0.45) {$I_0$};
+  \node at (4.3,0.45) {$I_0/2$};
+  \node at (6.9,0.45) {$I_0/4$};
+  \node[align=center, font=\footnotesize] at (3.0,1.5)
+    {cada filtro projeta o estado sobre o seu eixo:\\
+     retire o do meio e a saída é nula};
+\end{tikzpicture}
+
+{\small O experimento dos três polarizadores como três medidas
+sucessivas: projetar, colapsar, projetar de novo. Um filtro a mais
+\emph{aumenta} a luz transmitida --- impossível para peneiras,
+automático para projeções.}
+\end{omfigure}
+
+\begin{remark}[O que o colapso não permite]\label{rem:b3:quantum-formalism:nosignal}
+O colapso é instantâneo no formalismo, e as correlações quânticas
+entre partículas distantes são reais e medidas --- mas nenhuma
+\emph{mensagem} viaja sobre elas: os resultados num detector, lidos
+isoladamente, são indistinguíveis de lançamentos de moeda, faça-se o
+que se fizer longe dali. A aleatoriedade quântica também é
+irredutível: a regra de Born dá probabilidades mesmo quando o estado é
+conhecido \emph{por completo} --- não há mais nada a saber. Os dois
+enunciados são teoremas do formalismo, testados com alta precisão; o
+desconforto com eles é respeitável e moveu um século de experimentos,
+todos os quais a mecânica quântica venceu.
+\end{remark}
+
+\section{Comutadores e incerteza}
+
+\begin{definition}[Comutador; observáveis compatíveis]\label{def:b3:quantum-formalism:commutator}
+\index{comutador}\index{observáveis compatíveis}
+O \emph{comutador} de dois operadores é $[\hat A, \hat B] = \hat
+A\hat B - \hat B\hat A$. O exemplo fundador, a partir de $\hat p =
+-\iu\hbar\,\dd/\dd x$:
+\[
+[\hat x, \hat p] = \iu\hbar .
+\]
+Dois observáveis são \emph{compatíveis} quando $[\hat A, \hat B] = 0$:
+eles admitem então uma base comum de autovetores e podem ser
+conhecidos simultaneamente; medir um não perturba um estado bem
+definido no outro. Um conjunto de observáveis que comutam e cuja base
+comum de autovetores é única (um \emph{CCOC}) é o que significa
+``rotular completamente um estado'' --- os rótulos $(n_1, n_2, n_3)$
+da caixa eram exatamente isso.
+\end{definition}
+
+\begin{theorem}[A relação de incerteza, no caso geral]\label{thm:b3:quantum-formalism:uncertainty}
+\index{relação de incerteza}
+Em qualquer estado, os desvios padrão de dois observáveis obedecem a
+\[
+\Delta A\;\Delta B \ \ge\ \tfrac12\,\big|\langle[\hat A, \hat
+B]\rangle\big| .
+\]
+Para $\hat x$ e $\hat p$: $\Delta x\,\Delta p \ge \hbar/2$ --- a
+relação de Heisenberg, agora um teorema de álgebra linear, e não uma
+heurística. A incompatibilidade é quantitativa: o tamanho do \omterm{def:b3:quantum-formalism:commutator}{comutador}
+fixa o piso da nitidez conjunta.
+\end{theorem}
+
+\begin{proof}[Demonstração parcial]
+Sejam $\hat\alpha = \hat A - \langle A\rangle$ e $\hat\beta = \hat B -
+\langle B\rangle$. A desigualdade de Cauchy--Schwarz do volume de
+matemática do terceiro ano dá $\Delta A^2\Delta B^2 =
+\|\hat\alpha\psi\|^2\|\hat\beta\psi\|^2 \ge
+|\braket{\hat\alpha\psi}{\hat\beta\psi}|^2$; a parte imaginária desse
+produto é $\tfrac1{2\iu}\langle[\hat A, \hat B]\rangle$, e
+$|z|^2 \ge (\operatorname{Im}z)^2$.
+\end{proof}
+
+\begin{remark}[A sombra clássica]\label{rem:b3:quantum-formalism:poisson}
+Divida por $\iu\hbar$ e faça $\hbar \to 0$: os \omterm{def:b3:quantum-formalism:commutator}{comutadores} se tornam
+os \omterm{def:b3:hamiltonian-mechanics:poisson}{colchetes de Poisson} do \cref{ch:b3:hamiltonian-mechanics}, com
+$\{x, p\} =
+1$ ecoando $[\hat x, \hat p] = \iu\hbar$, e os colchetes de momento
+angular ali calculados voltarão como \omterm{def:b3:quantum-formalism:commutator}{comutadores}, inalterados, no
+\cref{ch:b3:quantum-angular-momentum}. A regra de Dirac --- colchete
+clássico vezes $\iu\hbar$ --- é como o esqueleto da mecânica
+sobreviveu à revolução.
+\end{remark}
+
+\section{Evolução e conservação}
+
+\begin{proposition}[Evolução das médias; grandezas conservadas]\label{prop:b3:quantum-formalism:evolution}
+\index{teorema de Ehrenfest}
+Para um \omterm{def:b3:quantum-formalism:observable}{observável} sem dependência explícita do tempo,
+\[
+\frac{\dd\langle\hat A\rangle}{\dd t}
+ = \frac{\iu}{\hbar}\,\big\langle[\hat H, \hat A]\big\rangle .
+\]
+Um \omterm{def:b3:quantum-formalism:observable}{observável} que comuta com a \omterm{def:b3:hamiltonian-mechanics:hamiltonian}{hamiltoniana} se conserva --- suas
+probabilidades, e não apenas sua média, ficam congeladas; de novo as
+simetrias entregam leis de conservação, agora sob a forma de comutação.
+Os estados estacionários são os autovetores de $\hat H$, que evoluem
+apenas pela fase $\eu^{-\iu Et/\hbar}$; uma superposição de dois níveis
+bate na frequência de Bohr $(E_2 - E_1)/h$, como os poços do volume do
+segundo ano já mostravam.
+\end{proposition}
+
+\begin{proof}
+Derive $\bra\psi\hat A\ket\psi$ e insira P6 e sua conjugada:
+\[
+\frac{\dd\langle\hat A\rangle}{\dd t}
+ = \frac{\iu}{\hbar}\bra\psi\hat H\hat A\ket\psi
+ - \frac{\iu}{\hbar}\bra\psi\hat A\hat H\ket\psi
+ = \frac{\iu}{\hbar}\,\langle[\hat H, \hat A]\rangle .
+\qedhere
+\]
+\end{proof}
+
+\begin{method}[Mecânica quântica matricial]\label{met:b3:quantum-formalism:method}
+Para qualquer problema de número finito de níveis: (1) escolha uma base
+adequada à pergunta (os eixos do analisador, os autoestados de
+energia); (2) escreva os estados como vetores coluna e os observáveis
+como matrizes hermitianas; (3) diagonalize o que é medido --- os
+\omterm{def:b3:quantum-formalism:observable}{autovalores} são os resultados, e as componentes ao quadrado, as
+probabilidades; (4) faça os autoestados de energia evoluírem pelas
+fases $\eu^{-\iu E_it/\hbar}$ e reexprima-os na base da medida; (5)
+depois de uma medida, recomece do estado projetado. Todo o
+\cref{pb:b3:quantum-formalism:1} é esta receita aplicada a um universo
+de dois níveis.
+\end{method}
+
+\begin{omfigure}
+\includegraphics[width=0.58\linewidth]{images/book5/ai/b5-08-three-polarizers.png}
+
+{\small Três polarizadores sobre uma bancada: cada um é uma medida, que projeta o estado da luz sobre um eixo. Cruze dois e nada passa; deslize um terceiro entre eles, em ângulo, e a luz volta --- os postulados deste capítulo, executados sobre uma mesa.}
+\end{omfigure}
+
+\section{Exercícios}
+
+\begin{exercise}[$\star$]\label{exo:b3:quantum-formalism:1}
+Numa base ortonormal $(\ket1, \ket2)$, sejam $\ket\psi = (2\ket1 +
+\iu\ket2)/\sqrt5$ e $\ket\varphi = (\ket1 - \ket2)/\sqrt2$. (a)
+Verifique as normalizações. (b) Calcule $\braket\varphi\psi$ e
+$\braket\psi\varphi$. (c) A probabilidade de encontrar $\ket\psi$ no
+estado $\ket\varphi$. (d) Construa o estado ortogonal a $\ket\psi$ (a
+menos de fase).
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b3:quantum-formalism:2}
+Quais destas matrizes são hermitianas e, para as que são, quais são os
+\omterm{def:b3:quantum-formalism:observable}{autovalores} e os autovetores normalizados?
+\[
+\begin{pmatrix}0 & 1\\ 1 & 0\end{pmatrix} , \quad
+\begin{pmatrix}0 & -\iu\\ \iu & 0\end{pmatrix} , \quad
+\begin{pmatrix}1 & 1\\ -1 & 1\end{pmatrix} , \quad
+\begin{pmatrix}2 & 1-\iu\\ 1+\iu & 3\end{pmatrix} .
+\]
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b3:quantum-formalism:3}
+Luz polarizada num ângulo $\alpha$ encontra um analisador num ângulo
+$\beta$. (a) Escreva os dois estados na base $(\ket H, \ket V)$ e
+calcule a probabilidade de transmissão. (b) Recupere a lei de Malus.
+(c) Para um fluxo de $N$ fótons, qual é a variância do número
+transmitido? (d) Luz circular $(\ket H + \iu\ket V)/\sqrt2$ sobre um
+analisador linear em ângulo qualquer: transmissão? Explique a
+independência da resposta em relação ao ângulo.
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b3:quantum-formalism:4}
+(a) Demonstre que $[\hat x, \hat p] = \iu\hbar$ agindo sobre uma função
+de teste. (b) Calcule $[\hat x^2, \hat p]$ e $[\hat x, \hat p^2]$. (c)
+Mostre que $[\hat A, \hat B\hat C] = [\hat A, \hat B]\hat C + \hat B[\hat A,
+\hat C]$. (d) Deduza $[\hat x, \hat p^n] = \iu\hbar\,n\hat p^{n-1}$ e
+interprete: que operação clássica $[\hat x, \cdot\,]$ imita?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b3:quantum-formalism:5}
+Medidas sucessivas. Um fóton começa como $\ket V$. (a) Ele encontra
+polarizadores a $45^\circ$ e depois a $0^\circ$ (horizontal): calcule a
+probabilidade de sobreviver aos dois, com o colapso intermediário
+explicitado. (b) Substitua o polarizador do meio por dois, a
+$30^\circ$ e $60^\circ$: transmissão? (c) Com $N - 1$ polarizadores
+intermediários em passos de $90^\circ/N$: mostre que a probabilidade de
+sobrevivência é $\cos^{2N}(\pi/2N)$ e avalie-a para $N = 2, 5, 20$. (d)
+O limite $N \to \infty$ gira a polarização \emph{sem} perda alguma:
+comente (essa rotação ``de Zenão quântico'' é usada em qubits reais).
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b3:quantum-formalism:6}
+No espaço de dois níveis, $\hat A = \begin{pmatrix}0&1\\1&0
+\end{pmatrix}$ e $\hat B = \begin{pmatrix}1&0\\0&-1\end{pmatrix}$.
+(a) Calcule $[\hat A, \hat B]$: são compatíveis? (b) O estado é
+$\ket1$: dê a estatística dos resultados de medir $\hat B$ e depois a
+de medir $\hat A$ \emph{depois} de uma medida de $\hat B$ ter dado
+$+1$. (c) Meça $\hat A$ primeiro (resultado $+1$), depois $\hat B$,
+depois $\hat A$ de novo: com que probabilidade o $\hat A$ final
+\emph{contradiz} o primeiro? (d) O que um \omterm{def:b3:quantum-formalism:commutator}{comutador} nulo teria
+implicado para (c)?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b3:quantum-formalism:7}
+(a) Para o estado gaussiano do
+\cref{exo:b3:schrodinger-three-dimensions:1} restrito a uma dimensão,
+calcule $\Delta x$ e $\Delta p$ (use o par de Fourier ou integre) e
+verifique a igualdade na relação de Heisenberg. (b) Que estados saturam
+o teorema geral de incerteza (enuncie a condição a partir do caso de
+igualdade em Cauchy--Schwarz)? (c) Um elétron confinado a
+$\Delta x = \qty{0.1}{nm}$: qual a escala mínima de energia cinética?
+(d) O mesmo para uma bolinha de gude ($\qty{10}{g}$) localizada num
+mícron: conclua.
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b3:quantum-formalism:8}
+(a) A partir da \cref{prop:b3:quantum-formalism:evolution}, recupere o
+par de Ehrenfest para $\hat x$ e $\hat p$ com $\hat H = \hat
+p^2/2m + V$. (b) Mostre que a paridade $\hat\Pi$ ($\hat\Pi\psi(x) =
+\psi(-x)$) é hermitiana, tem quadrado igual à identidade e tem
+\omterm{def:b3:quantum-formalism:observable}{autovalores} $\pm1$. (c) Mostre que $[\hat H, \hat\Pi] = 0$ para um
+potencial simétrico e conclua que os níveis não degenerados têm
+paridade definida. (d) Que fato observado sobre os níveis de um poço
+duplo simétrico isso explica (lembre o dubleto da amônia do volume do
+segundo ano)?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b3:quantum-formalism:9}
+Um CCOC em ação. Na caixa quadrada bidimensional, o nível $E
+\propto 5$ é gerado por $\ket{1,2}$ e $\ket{2,1}$. (a) Mostre que a
+energia sozinha não rotula os estados. (b) Seja $\hat S$ a troca $x
+\leftrightarrow y$: mostre que $\hat S$ é hermitiano, comuta com $\hat
+H$ e encontre seus autoestados dentro do nível. (c) Verifique que o par $(\hat H, \hat S)$ rotula
+univocamente cada estado desse nível. (d) Dê a moral geral: a
+degenerescência significa que o conjunto de rótulos ainda não estava
+completo, e a simetria fornece o rótulo que falta.
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b3:quantum-formalism:10}
+Incerteza energia--tempo, honestamente. Para um \omterm{def:b3:quantum-formalism:observable}{observável} $\hat A$
+qualquer, defina o tempo de evolução $\tau_A = \Delta A\,/\,|\dd\langle\hat
+A\rangle/\dd t|$ --- o tempo que a média leva para se deslocar de um
+desvio padrão. (a) A partir do
+\cref{thm:b3:quantum-formalism:uncertainty} e da
+\cref{prop:b3:quantum-formalism:evolution}, demonstre que $\Delta
+E\;\tau_A \ge \hbar/2$. (b) Por que isso \emph{não} é uma incerteza
+entre dois observáveis (o que é o tempo, no formalismo)? (c) Aplique-a
+a um estado atômico excitado de vida média \qty{10}{ns}: largura de
+linha. (d) Aplique-a ao seu relógio de pulso: quão bem definida pode
+ser a energia de um sistema em que algo muda visivelmente a cada
+segundo?
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b3:quantum-formalism:11}
+Demonstração do teorema de incerteza. Com $\hat\alpha, \hat\beta$ como
+no texto: (a) justifique $\Delta A^2 = \|\hat\alpha\ket\psi\|^2$ usando
+a hermiticidade; (b) aplique Cauchy--Schwarz e separe
+$\braket{\hat\alpha\psi}{\hat\beta\psi}$ em partes hermitiana e
+anti-hermitiana, identificando-as com as médias do anticomutador e do
+\omterm{def:b3:quantum-formalism:commutator}{comutador}; (c) conclua e diga quando vale a igualdade;
+(d) mostre que, para $[\hat A, \hat B] = \iu\hbar$, nenhum estado pode
+ser autovetor de qualquer um dos observáveis mantendo finitos os dois
+desvios --- e reconcilie isso com as ondas planas.
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b3:quantum-formalism:12}
+A panela vigiada. Um sistema de dois níveis começa em $\ket1$ e sua
+\omterm{def:b3:hamiltonian-mechanics:hamiltonian}{hamiltoniana} impõe uma oscilação do tipo Rabi: após um tempo $t$, o
+estado é $\cos(\omega t)\ket1 + \sin(\omega t)\ket2$ (tome isso como
+dado). (a) Sem medida alguma, quando a transferência para $\ket2$ é
+completa? (b) Meça ``em que estado?'' nos instantes $T/N, 2T/N, \dots$
+com $T =
+\pi/2\omega$: mostre que a probabilidade de encontrar o sistema
+\emph{ainda} em $\ket1$ em todas as verificações é $[\cos^2(\pi/2N)]^N$.
+(c) Avalie-a para $N = 1, 4, 20, 100$ e mostre que ela tende a $1$: a
+observação frequente congela a evolução (o efeito Zenão quântico,
+observado com íons aprisionados em 1990). (d) Explique numa frase que
+postulado faz o congelamento.
+\end{exercise}
+
+\begin{omfigure}
+\includegraphics[width=0.62\linewidth]{images/book5/photo-solvay-1927.jpg}
+
+{\small O congresso Solvay de 1927 (fotografia de Benjamin Couprie, domínio público): as pessoas que construíram os postulados deste capítulo, numa só sala --- e ainda discutindo, naquela mesma semana, o que significa medir.}
+\end{omfigure}
+
+\section{Problema: Neutrinos que trocam de traje em pleno voo}
+
+\begin{problem}[{Problema de fim de semana --- oscilações de dois
+níveis através da Terra}]\label{pb:b3:quantum-formalism:1}
+Os neutrinos nascem em reações nucleares como estados de \emph{sabor}
+--- neutrino do elétron $\ket{\nu_e}$ ou neutrino do múon
+$\ket{\nu_\mu}$ --- mas \emph{se propagam} como autoestados de energia
+(de massa) $\ket{\nu_1},
+\ket{\nu_2}$. As duas bases não coincidem:
+estão giradas por um \emph{ângulo de mistura} $\theta$,
+\[
+\ket{\nu_e} = \cos\theta\,\ket{\nu_1} + \sin\theta\,\ket{\nu_2} ,
+\qquad
+\ket{\nu_\mu} = -\sin\theta\,\ket{\nu_1} + \cos\theta\,\ket{\nu_2} .
+\]
+A descoberta de que os neutrinos, por isso, \emph{oscilam} entre
+sabores em pleno voo --- e portanto têm massa --- rendeu o Prêmio Nobel
+de 2015. Este problema deduz o efeito sem nada além deste capítulo. Um
+neutrino ultrarrelativístico de momento $p$ e massa $m_i$ tem energia
+$E_i \approx pc + m_i^2c^4/2pc \approx E +
+m_i^2c^4/2E$.
+
+\medskip\noindent\textbf{Parte I --- Montando o formalismo.}
+\begin{enumerate}
+  \item Verifique que, sendo $(\ket{\nu_1}, \ket{\nu_2})$ ortonormal,
+        $(\ket{\nu_e}, \ket{\nu_\mu})$ também o é.
+  \item Por que a base de propagação tem de ser a base de autoestados
+        de \emph{energia}, qualquer que seja a base em que o neutrino
+        nasceu? (Que postulado governa o voo livre?)
+  \item Um neutrino do múon nasce em $t = 0$. Escreva $\ket{\psi(0)}$
+        na base de massa.
+  \item Escreva $\ket{\psi(t)}$, com cada componente de massa
+        carregando sua fase $\eu^{-\iu E_it/\hbar}$.
+  \item Mostre que uma fase \emph{global} é irrelevante e fatore
+        $\eu^{-\iu E_1t/\hbar}$: só a fase \emph{relativa}
+        $\Delta\phi = (E_2 - E_1)t/\hbar$ dirige a física.
+  \item Exprima $E_2 - E_1$ em função de $\Delta m^2 = m_2^2 - m_1^2$
+        e de $E$, para neutrinos ultrarrelativísticos.
+\end{enumerate}
+
+\medskip\noindent\textbf{Parte II --- A fórmula da oscilação.}
+\begin{enumerate}[resume]
+  \item Calcule a amplitude $\braket{\nu_e}{\psi(t)}$.
+  \item Mostre que a probabilidade de aparecimento é
+        \[
+        \mathcal P_{\nu_\mu \to \nu_e}(t) =
+        \sin^2(2\theta)\,\sin^2\Big(\frac{\Delta\phi}{2}\Big) .
+        \]
+        (Use $2\sin\theta\cos\theta = \sin2\theta$.)
+  \item Verifique os dois limites de sanidade: $\theta = 0$ e
+        $m_1 = m_2$. O que, portanto, qualquer oscilação observada
+        prova?
+  \item Com $t \approx L/c$, mostre que
+        \[
+        \mathcal P = \sin^2(2\theta)\,
+        \sin^2\Big(\frac{\Delta m^2c^4}{4\hbar c}\,\frac{L}{E}\Big) ,
+        \]
+        e defina o comprimento de oscilação $L_{\text{osc}} =
+        4\pi\hbar cE/\Delta m^2c^4$.
+  \item Mostre que a probabilidade de sobrevivência é
+        $\mathcal P_{\nu_\mu \to
+        \nu_\mu} = 1 - \mathcal P_{\nu_\mu\to\nu_e}$: onde a
+        unitariedade foi usada?
+  \item Por que a oscilação mede apenas $\Delta m^2$, nunca as massas
+        em si?
+\end{enumerate}
+
+\medskip\noindent\textbf{Parte III --- Ler os experimentos.}
+Neutrinos atmosféricos do múon ($E \approx \qty{1}{GeV}$) chovem sobre
+um detector, vindos de cima ($L \approx \qty{15}{km}$) e de baixo,
+atravessando a Terra ($L \approx \qty{12800}{km}$). O
+Super-Kamiokande (1998) achou o fluxo de baixo reduzido à metade e o
+fluxo de cima intacto.
+\begin{enumerate}[resume]
+  \item Usando $\hbar c = \qty{197}{MeV.fm}$, mostre a forma prática
+        $\dfrac{\Delta m^2c^4\,L}{4\hbar cE} = 1.27\,
+        \dfrac{\Delta m^2c^4\,[\unit{eV^2}]\ L\,[\unit{km}]}
+        {E\,[\unit{GeV}]}$.
+  \item Se a oscilação deve estar \emph{bem desenvolvida} em $L =
+        \qty{12800}{km}$, mas ser \emph{desprezível} a \qty{15}{km}
+        para $E = \qty{1}{GeV}$, delimite grosseiramente
+        $\Delta m^2c^4$.
+  \item O valor medido é $\Delta m^2c^4 \approx
+        \qty{2.5e-3}{eV^2}$: calcule o comprimento de oscilação a
+        \qty{1}{GeV} e confira-o contra as duas linhas de base.
+  \item A supressão de baixo é próxima de $1/2$, e não de $0$:
+        mostre que \emph{fazer a média} de $\sin^2$ sobre muitos
+        comprimentos de oscilação (e sobre as energias) dá
+        $\tfrac12\sin^22\theta$, e deduza que a mistura atmosférica é
+        quase \emph{máxima} ($\theta \approx 45^\circ$).
+  \item O que $\Delta m^2c^4 = \qty{2.5e-3}{eV^2}$ dá para a massa
+        mais pesada sozinha, se a mais leve for desprezível --- e
+        compare com a massa do elétron: quão estranhamente leves são
+        os neutrinos?
+  \item Os antineutrinos de reator têm $E \approx \qty{4}{MeV}$.
+        Usando a mesma fórmula do $1.27$, mostre que uma linha de base
+        de um a dois quilômetros está sintonizada com a separação de
+        $\qty{2.5e-3}{eV^2}$ (o experimento Daya Bay), enquanto
+        $L \approx \qty{180}{km}$ (KamLAND) está sintonizada com a
+        separação ``solar'' menor, $\qty{7.5e-5}{eV^2}$ --- verifique
+        as duas numericamente.
+\end{enumerate}
+
+\medskip\noindent\textbf{Parte IV --- O que isso significa.}
+\begin{enumerate}[resume]
+  \item O Sol emite $\nu_e$; durante décadas os detectores contaram
+        apenas um terço do previsto. Explique o ``problema dos
+        neutrinos solares'' e sua resolução, em uma frase cada.
+  \item Por que as oscilações forçaram a conclusão de que os
+        neutrinos \emph{têm massa}, contra a contabilidade original do
+        Modelo Padrão?
+  \item Um sistema quântico que mantém coerência de fase ao longo de
+        $12800$ quilômetros: o que isso diz sobre quão fracamente os
+        neutrinos interagem, e por que o detector precisa ser enorme?
+  \item O sabor é um \omterm{def:b3:quantum-formalism:observable}{observável}: por que o operador dele não comuta
+        com a \omterm{def:b3:hamiltonian-mechanics:hamiltonian}{hamiltoniana} livre, e que lei de conservação, portanto,
+        \emph{não} está disponível para o sabor (enquanto a energia e
+        o momento continuam conservados)?
+  \item A natureza tem três sabores e três massas: por que, ainda
+        assim, o tratamento de dois níveis descreve tão bem cada
+        experimento? (Considere a hierarquia dos dois $\Delta m^2$ e
+        qual deles cada linha de base resolve.)
+  \item No formalismo deste capítulo, nomeie exatamente que
+        ingredientes produziram a oscilação: que descompasso de
+        bases, que postulado, que fase.
+  \item Resuma o resultado central: um ângulo de rotação perto de
+        $45^\circ$ e uma separação $\Delta m^2c^4 =
+        \qty{2.5e-3}{eV^2}$ fazem desaparecer um neutrino do múon de
+        GeV com comprimento de oscilação $\sim\qty{1000}{km}$ ---
+        álgebra linear de dois níveis, confirmada através do corpo da
+        Terra.
+\end{enumerate}
+\end{problem}

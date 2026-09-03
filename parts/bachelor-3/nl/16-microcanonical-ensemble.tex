@@ -1,0 +1,515 @@
+\chapter{Het microkanonieke ensemble}\label{ch:b3:microcanonical-ensemble}
+
+Een kubieke centimeter lucht bevat $2.5\times10^{19}$ moleculen. Geen
+computer zal ooit hun bewegingsvergelijkingen integreren, en geen proef zou
+de begincondities kunnen leveren --- en toch gehoorzaamt het gas aan wetten
+van schitterende eenvoud, en de thermodynamica van het volume van jaar 1
+beschreef ze zonder ooit een molecuul te noemen. Dit hoofdstuk slaat de
+brug: de \emph{statistische fysica}, die de wetten van de warmte uit de
+mechanica plus eerlijk tellen afleidt. Het hele bouwwerk rust op één
+postulaat --- een geïsoleerd stelsel bevindt zich even waarschijnlijk in
+elke microscopische toestand die met zijn energie verenigbaar is ---
+gerechtvaardigd door de \omterm{thm:b3:hamiltonian-mechanics:liouville}{stelling van Liouville}
+(\cref{ch:b3:hamiltonian-mechanics}) en machtig gemaakt door de pure
+omvang van de getallen: wanneer configuraties in eenheden van
+$10^{10^{20}}$ worden geteld, worden ``overweldigend waarschijnlijk'' en
+``zeker'' ononderscheidbaar, en verhardt de waarschijnlijkheid tot wet. Uit
+het tellen komen entropie, temperatuur, druk en de tweede hoofdwet ---
+en, aan het slot van het hoofdstuk, de reden dat een elastiekje terugtrekt.
+
+\section{Microtoestanden, macrotoestanden en het postulaat}
+
+\begin{definition}[Microtoestanden en macrotoestanden]\label{def:b3:microcanonical-ensemble:states}
+\index{microtoestand}\index{macrotoestand}\index{multipliciteit}
+Een \emph{microtoestand} is een volledige microscopische beschrijving van
+een stelsel --- elk kwantumgetal van elk deeltje (of, klassiek, elke
+positie en impuls, geteld in cellen van $h^3$ per deeltje in de
+\omterm{def:b3:hamiltonian-mechanics:hamiltonian}{faseruimte}, \cref{prop:b3:schrodinger-three-dimensions:counting}). Een
+\emph{macrotoestand} is wat de thermodynamica kan zien: energie $E$, volume
+$V$, aantal deeltjes $N$, magnetisatie\dots\ De \emph{multipliciteit}
+$\Omega(E, V, N)$ is het aantal microtoestanden dat dezelfde macrotoestand
+draagt.
+\end{definition}
+
+\begin{theorem}[Het grondpostulaat]\label{thm:b3:microcanonical-ensemble:postulate}
+\index{microkanoniek ensemble}\index{grondpostulaat}
+Een geïsoleerd stelsel in evenwicht wordt met gelijke kans in elk van zijn
+$\Omega(E, V, N)$ toegankelijke \omterm{def:b3:microcanonical-ensemble:states}{microtoestanden} aangetroffen. De hele
+evenwichtsstatistische fysica volgt uit die ene zin. Haar
+geloofsbrieven: de \omterm{thm:b3:hamiltonian-mechanics:liouville}{stelling van Liouville} toont dat de uniforme verdeling
+over de energieschil degene is die de dynamica behoudt --- geen enkele
+stroming hoopt kans in de \omterm{def:b3:hamiltonian-mechanics:hamiltonian}{faseruimte} op --- en anderhalve eeuw aan gevolgen
+heeft nooit een proef tegengesproken.
+\end{theorem}
+\admitted
+
+\begin{example}[Een magneet van $N$ munten]\label{ex:b3:microcanonical-ensemble:spins}
+$N$ onafhankelijke spins, elk op of neer: $2^N$ \omterm{def:b3:microcanonical-ensemble:states}{microtoestanden}. De
+\omterm{def:b3:microcanonical-ensemble:states}{macrotoestand} ``$n$ op'' heeft \omterm{def:b3:microcanonical-ensemble:states}{multipliciteit} $\Omega(n) = \binom Nn$,
+overweldigend gepiekt bij $n = N/2$ met relatieve breedte $\sim1/\sqrt N$.
+Voor $N = 100$: de toestand met alles op is er één; de gebalanceerde
+\omterm{def:b3:microcanonical-ensemble:states}{macrotoestand} bevat er $\num{1e29}$. Voor $N = 10^{20}$ worden afwijkingen
+van zelfs $10^{-8}$ in de opfractie onderdrukt met factoren als
+$\eu^{-10^4}$: het stelsel \emph{is} op zijn piek, en wat wij evenwicht
+noemen is de \omterm{def:b3:microcanonical-ensemble:states}{macrotoestand} met de meeste \omterm{def:b3:microcanonical-ensemble:states}{microtoestanden}.
+\end{example}
+
+\begin{omfigure}
+\begin{tikzpicture}
+  \begin{axis}[omaxis, axis x line=bottom, axis y line=left,
+    width=11.4cm, height=5.4cm, xmin=0, xmax=1, ymin=0, ymax=1.15,
+    xlabel={fractie spins op}, ylabel={kans (geschaald)},
+    xlabel style={at={(axis description cs:0.5,-0.1)}, anchor=north},
+    xtick={0.25,0.5,0.75}, ytick=\empty, clip=false,
+    legend style={font=\scriptsize, at={(0.03,0.95)}, anchor=north west,
+      draw=none, fill=none}]
+    \addplot[omExo, thick, domain=0:1, samples=120]
+      {exp(-(x-0.5)^2*2*10)};
+    \addlegendentry{$N = 10$}
+    \addplot[omThm, thick, domain=0:1, samples=200]
+      {exp(-(x-0.5)^2*2*100)};
+    \addlegendentry{$N = 100$}
+    \addplot[omDef, very thick, domain=0.3:0.7, samples=300]
+      {exp(-(x-0.5)^2*2*3000)};
+    \addlegendentry{$N = 3000$}
+  \end{axis}
+\end{tikzpicture}
+
+{\small De \omterm{def:b3:microcanonical-ensemble:states}{multipliciteit} van het spinstelsel tegen zijn opfractie, voor
+groeiende $N$: de piek verscherpt als $1/\sqrt N$. Bij $N \sim
+10^{20}$ is
+de ``verdeling'' voor elk praktisch doel één enkele waarde --- macroscopische
+bepaaldheid uit microscopische democratie.}
+\end{omfigure}
+
+\section{Entropie is een telling}
+
+\begin{definition}[Boltzmannentropie]\label{def:b3:microcanonical-ensemble:entropy}
+\index{entropie!statistisch}
+De \emph{statistische entropie} van een \omterm{def:b3:microcanonical-ensemble:states}{macrotoestand} is
+\[
+S = k_{\text{B}}\ln\Omega , \qquad
+k_{\text{B}} = \qty{1.38e-23}{J/K} .
+\]
+De logaritme maakt de entropie \emph{optelbaar} waar \omterm{def:b3:microcanonical-ensemble:states}{multipliciteiten}
+\emph{vermenigvuldigen}: voor onafhankelijke stelsels is $\Omega = \Omega_1\Omega_2$ en $S = S_1 + S_2$; de constante van Boltzmann ijkt de
+telling op de eenheden kelvin en joule die de thermodynamica al had
+gekozen. Deze $S$, zo zullen we nagaan, is de entropie van de tweede
+hoofdwet uit het volume van jaar 1 --- nu met een microscopische
+betekenis: de entropie meet, in logaritmische munt, op \emph{hoeveel
+manieren} de \omterm{def:b3:microcanonical-ensemble:states}{macrotoestand} kan worden verwezenlijkt.
+\end{definition}
+
+\begin{proposition}[Entropie van het ideale gas]\label{prop:b3:microcanonical-ensemble:gas}
+\index{formule van Sackur--Tetrode}
+De kwantumtoestanden van $N$ identieke atomen in een doos tellen
+(\cref{prop:b3:schrodinger-three-dimensions:counting}, één cel van $h^3$
+per atoom in de \omterm{def:b3:hamiltonian-mechanics:hamiltonian}{faseruimte}, gedeeld door $N!$ wegens de identiteit ---
+\cref{exo:b3:identical-particles:10}) geeft
+\[
+S = Nk_{\text{B}}\Big[\ln\Big(\frac VN\,\frac1{\lambda_T^3}\Big)
+ + \frac52\Big] , \qquad
+\lambda_T = \frac{h}{\sqrt{2\pi mk_{\text{B}}T}}
+\]
+(de \emph{\omterm{prop:b3:microcanonical-ensemble:gas}{formule van Sackur--Tetrode}}; $\lambda_T$, de thermische
+debrogliegolflengte, is de afmeting van het golfpakket van een atoom bij
+temperatuur $T$). Twee opmerkelijke controles: de formule is
+\emph{uitsluitend} dankzij de $N!$ extensief; en haar absolute waarde ---
+inclusief de $h$ --- komt overeen met calorimetrisch gemeten entropieën van
+echte gassen (\cref{exo:b3:microcanonical-ensemble:11}): de klassieke
+thermodynamica, in de negentiende eeuw gemeten, kende de constante van
+Planck al zonder het te weten.
+\end{proposition}
+\admitted
+
+\section{Temperatuur is een afgeleide van een telling}
+
+\begin{theorem}[Evenwicht en temperatuur]\label{thm:b3:microcanonical-ensemble:temperature}
+\index{temperatuur!statistische definitie}
+Laat twee stelsels energie uitwisselen, met het totaal $E = E_1 + E_2$
+vast. De gezamenlijke \omterm{def:b3:microcanonical-ensemble:states}{multipliciteit} $\Omega_1(E_1)\,\Omega_2(E - E_1)$ is
+maximaal --- en dat overweldigend --- bij de verdeling waar
+\[
+\frac{\partial S_1}{\partial E_1} =
+\frac{\partial S_2}{\partial E_2} .
+\]
+Definiëren we
+\[
+\frac1T = \frac{\partial S}{\partial E}\bigg|_{V,N} ,
+\]
+dan is evenwicht \emph{gelijkheid van temperatuur}, en stroomt de energie
+spontaan van hoge $T$ naar lage $T$ omdat die richting de totale telling
+verhoogt. Dezelfde logica toegepast op het uitwisselen van volume en
+deeltjes levert $P/T = \partial S/\partial V$ en $-\mu/T
+= \partial S/\partial N$: alle intensieve grootheden van de thermodynamica zijn
+afgeleiden van de telling.
+\end{theorem}
+
+\begin{proof}
+Maximaliseer $\ln\Omega_1 + \ln\Omega_2$ over $E_1$: de
+stationariteitsvoorwaarde is de aangegeven gelijkheid. Scherpte: de piek
+heeft breedte $\sim E/\sqrt N$ (\cref{exo:b3:microcanonical-ensemble:7}),
+dus is het maximum de waargenomen toestand. Is $\partial S_1/\partial E_1 >
+\partial S_2/\partial E_2$, dan verhoogt energie \emph{naar} 1
+verplaatsen $S_{\text{tot}}$: het koudere lichaam (grotere $\partial S/\partial E$) slikt --- warmte stroomt van heet naar koud als een
+telkundige uitspraak. Toets op het ideale gas: $S \propto \tfrac32 Nk_{\text{B}}\ln E + \cdots$ geeft $1/T = \tfrac32 Nk_{\text{B}}/E$, dus
+$E = \tfrac32
+Nk_{\text{B}}T$ --- het resultaat uit de kinetische
+gastheorie van het volume van jaar 1, teruggevonden uit puur tellen.
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}
+  \begin{axis}[omaxis, axis x line=bottom, axis y line=left,
+    width=11.2cm, height=5.2cm, xmin=0, xmax=1, ymin=0, ymax=1.2,
+    xlabel={aandeel van de energie in stelsel 1},
+    ylabel={$\Omega_1\Omega_2$ (geschaald)},
+    xlabel style={at={(axis description cs:0.5,-0.1)}, anchor=north},
+    xtick={0.4}, xticklabels={$E_1^{\text{eq}}$}, ytick=\empty, clip=false]
+    \addplot[omDef, very thick, domain=0:1, samples=250]
+      {exp(-(x-0.4)^2*900)};
+    \node[omDef, font=\scriptsize, anchor=west] at (axis cs:0.47,0.75)
+      {breedte $\sim 1/\sqrt N$};
+  \end{axis}
+\end{tikzpicture}
+
+{\small Twee stelsels die energie delen: de gezamenlijke telling tegen de
+verdeling. De evenwichtsverdeling --- gelijke temperaturen --- is niet
+alleen de waarschijnlijkste; bij macroscopische $N$ is zij de enige die
+ooit is waargenomen.}
+\end{omfigure}
+
+\section{De tweede hoofdwet, en vreemder}
+
+\begin{proposition}[Onomkeerbaarheid is rekenkunde]\label{prop:b3:microcanonical-ensemble:second-law}
+\index{tweede hoofdwet!statistisch}
+Een losgelaten beperking (een wand weggehaald, een klep geopend) kan de
+toegankelijke telling alleen vergroten: $\Omega$ groeit, $S$ groeit --- de
+tweede hoofdwet van het volume van jaar 1, nu als uitspraak over
+waarschijnlijkheid. Omkeringen zijn niet verboden maar
+\emph{verdisconteerd}: een gas van $N$ moleculen dat zich weer in de
+linkerhelft verzamelt heeft kans $2^{-N}$, en voor één kubieke centimeter
+lucht overtreft de wachttijd de leeftijd van het heelal met een factor van
+$10^{19}$ cijfers. De pijl van de tijd is op dit niveau de richting waarin
+de tellingen toenemen.
+\end{proposition}
+
+\begin{proof}[Gedeeltelijk bewijs]
+Een beperking weghalen laat elke voorheen toegankelijke \omterm{def:b3:microcanonical-ensemble:states}{microtoestand}
+toegankelijk en voegt er nieuwe aan toe: $\Omega$ kan niet dalen. De
+telling voor vrije uitzetting: elk molecuul verdubbelt zijn toegankelijke
+volume, $\Omega \to 2^N\Omega$, dus $\Delta S = Nk_{\text{B}}\ln2$ ---
+precies het thermodynamische resultaat voor isotherme vrije verdubbeling.
+\end{proof}
+
+\begin{example}[Negatieve temperatuur]\label{ex:b3:microcanonical-ensemble:negative}
+\index{negatieve temperatuur}
+Een stelsel waarvan de energie \emph{naar boven begrensd} is --- $N$ spins
+in een veld, met energie van $-N\epsilon$ tot $+N\epsilon$ --- heeft een
+$\Omega(E)$ die eerst stijgt en dan \emph{daalt}: voorbij het gebalanceerde
+punt verlaagt energie toevoegen de telling. Daar is $\partial S/\partial E < 0$: de temperatuur is \emph{negatief}. Zulke toestanden bestaan
+(bezettingsinversies --- de werktoestand van elk lasermedium --- en
+spinstelsels die door veldomkering zijn bereid) en zij zijn niet koud maar
+\emph{heter dan elke positieve temperatuur}: energie stroomt van elk
+lichaam met $T < 0$ naar elk lichaam met $T > 0$. De eerlijke ordening van
+temperaturen loopt $+0, \dots, +\infty \equiv -\infty, \dots, -0$: wat
+$1/T$ vanzelf ordent, verhaspelt $T$
+(\cref{exo:b3:microcanonical-ensemble:9}).
+\end{example}
+
+\begin{omfigure}
+\begin{tikzpicture}
+  \begin{axis}[omaxis, axis x line=bottom, axis y line=left,
+    width=10.8cm, height=5.4cm, xmin=-1.05, xmax=1.05, ymin=0, ymax=0.78,
+    xlabel={$E/N\epsilon$}, ylabel={$S/Nk_{\text{B}}$},
+    xlabel style={at={(axis description cs:0.5,-0.1)}, anchor=north},
+    xtick={-1,0,1}, ytick=\empty, clip=false]
+    \addplot[omDef, very thick, domain=-0.999:0.999, samples=250]
+      {-0.5*(1+x)*ln(0.5*(1+x)) - 0.5*(1-x)*ln(0.5*(1-x))};
+    \node[font=\scriptsize, anchor=south] at (axis cs:-0.62,0.6)
+      {$\partial S/\partial E > 0$: $T > 0$};
+    \node[font=\scriptsize, anchor=south] at (axis cs:0.62,0.6)
+      {$\partial S/\partial E < 0$: $T < 0$};
+    \draw[gray, dashed] (axis cs:0,0) -- (axis cs:0,0.7);
+    \node[font=\scriptsize, anchor=south] at (axis cs:0,0.71) {$T = \pm\infty$};
+  \end{axis}
+\end{tikzpicture}
+
+{\small De entropie van het spinstelsel met twee niveaus tegen de energie.
+Op de stijgende flank is de temperatuur positief; op de top gaat zij door
+oneindig; op de dalende flank --- met de bezetting geïnverteerd --- is zij
+negatief, en heter dan alles links ervan.}
+\end{omfigure}
+
+\begin{method}[Microkanoniek ambacht]\label{met:b3:microcanonical-ensemble:method}
+(1) Inventariseer: wat is hier een \omterm{def:b3:microcanonical-ensemble:states}{microtoestand}, en wat legt de \omterm{def:b3:microcanonical-ensemble:states}{macrotoestand}
+vast? (2) Tel $\Omega$ --- combinatoriek voor discrete eenheden, een volume
+in de \omterm{def:b3:hamiltonian-mechanics:hamiltonian}{faseruimte} gedeeld door $h^{3N}N!$ voor gassen. (3) Neem de logaritme
+vroeg: Stirling ($\ln N! \approx N\ln N - N$) maakt van producten
+hanteerbare sommen. (4) Differentieer $S$: naar de energie voor $T$, naar
+het volume voor $P$, naar het aantal voor $\mu$; naar lengte of
+magnetisatie voor spankrachten en velden
+(\cref{pb:b3:microcanonical-ensemble:1}). (5) Vertrouw de piek: fluctuaties
+zijn met $1/\sqrt N$ onderdrukt, dus vervang ``het waarschijnlijkst'' door
+``gelijk aan'' en bied niemand excuses aan.
+\end{method}
+
+\begin{omfigure}
+\includegraphics[width=0.58\linewidth]{images/book5/ai/b5-16-laser-sheet-smoke.png}
+
+{\small Rook in een doos geroerd en door een laservlak gesneden: microbeweging voorbij elke boekhouding, waarbij de statistiek het overneemt --- het ogenblik waarop een mechanicavraagstuk een entropievraagstuk wordt.}
+\end{omfigure}
+
+\section{Opgaven}
+
+\begin{exercise}[$\star$]\label{exo:b3:microcanonical-ensemble:1}
+Vier spins. (a) Geef de \omterm{def:b3:microcanonical-ensemble:states}{multipliciteiten} $\Omega(n)$ van de
+\omterm{def:b3:microcanonical-ensemble:states}{macrotoestanden} ``$n$ op''. (b) De kans op elke \omterm{def:b3:microcanonical-ensemble:states}{macrotoestand} volgens het
+postulaat. (c) De entropie (in eenheden $k_{\text{B}}$) van elk. (d) Welke
+\omterm{def:b3:microcanonical-ensemble:states}{macrotoestand} is het ``evenwicht'', en hoe slecht is de benadering ``het
+stelsel is er zeker'' bij $N = 4$?
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b3:microcanonical-ensemble:2}
+Stirling in de praktijk. (a) Vergelijk $\ln N!$ met $N\ln N - N$ voor
+$N = 10$ en $N = 100$ (gebruik $\ln10! = 15.10$, $\ln100! = 363.7$).
+(b) Toon aan dat de relatieve fout als $\ln N/N$ daalt. (c) Toon met
+Stirling aan dat $\ln\binom N{N/2} \approx N\ln2 - \tfrac12\ln N + $ const.
+(d) Waarom is het weglaten van de $\tfrac12\ln N$ in een mol volstrekt
+veilig?
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b3:microcanonical-ensemble:3}
+(a) Toon aan dat voor twee onafhankelijke stelsels $S = S_1 + S_2$. (b) De
+$\Omega$ van een stelsel verdubbelt: met hoeveel stijgt $S$ --- en welke
+natuurkundige handeling
+(\cref{prop:b3:microcanonical-ensemble:second-law}) komt daarmee voor één
+deeltje overeen? (c) Bereken de entropie, in $k_{\text{B}}$ en in J/K, van
+een geschud spel van 52 kaarten ($\ln52! \approx 156.4$). (d) Waarom is de
+kaartentropie thermodynamisch verwaarloosbaar en de moleculaire entropie
+niet?
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b3:microcanonical-ensemble:4}
+Vrije uitzetting, gecontroleerd. Eén mol verdubbelt zijn volume het vacuüm
+in. (a) $\Delta S$ uit het telargument. (b) De kans om het gas terug in de
+oorspronkelijke helft aan te treffen. (c) Schat de tijdschaal voor zo'n
+fluctuatie bij moleculaire herschikkingstijden van \qty{e-10}{s} --- en
+vergelijk met de leeftijd van het heelal (\qty{4e17}{s}). (d) In welke
+precieze zin is de tweede hoofdwet ``slechts'' waarschijnlijkheidsleer?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b3:microcanonical-ensemble:5}
+Het ideale gas geteld. Uitgaande van $\Omega \propto \dfrac{V^N}{N!\,h^{3N}}\times$ (het volume van de impulsschil $\propto E^{3N/2}$): (a) toon aan dat $S = Nk_{\text{B}}[\ln V +
+\tfrac32\ln E] - k_{\text{B}}\ln N! + $ const. (b) Toon aan dat zonder de $N!$ het
+verdubbelen van het stelsel (zowel $V$ als $N$) $S$ \emph{niet} zou
+verdubbelen --- het falen van de extensiviteit uit
+\cref{exo:b3:identical-particles:10}. (c) Breng het resultaat met Stirling
+in de vorm $S = Nk_{\text{B}}[\ln(V/N) + \tfrac32\ln(E/N)]
++ $
+const$\cdot N$. (d) Welke natuurkundige gegevens legden de twee
+``constanten'' vast die de geschiedenis onbepaald had gelaten (de
+kwantumcelgrootte; de identiteit van de deeltjes)?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b3:microcanonical-ensemble:6}
+Thermodynamica uit afgeleiden. Gebruik de vorm van
+\cref{exo:b3:microcanonical-ensemble:5}(c): (a) bereken $1/T =
+\partial S/\partial E$ en vind $E = \tfrac32 Nk_{\text{B}}T$ terug; (b) bereken
+$P/T = \partial S/\partial V$ en vind $PV =
+Nk_{\text{B}}T$ terug; (c) leid
+de \omterm{prop:b3:hamiltonian-mechanics:adiabatic}{adiabatische invariant} af: toon bij constante $S$ en $N$ aan dat
+$VE^{3/2}$ vastligt, dus $TV^{2/3}$ --- en breng dat in verband met de
+$PV^{5/3}$ van het volume van jaar 1; (d) zeg wat er is bereikt: welke
+empirische wetten zijn zojuist stellingen over tellen geworden?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b3:microcanonical-ensemble:7}
+De scherpte van het evenwicht. Twee gelijke blokken ideaal gas delen de
+totale energie $E$. (a) Toon aan dat $\ln[\Omega_1\Omega_2]$ maximaal is
+bij de gelijke verdeling. (b) Ontwikkel tot tweede orde in de
+onbalans $x =
+(E_1 - E_2)/E$ en toon aan dat de kans $\propto\eu^{-3Nx^2/4}$
+is (elk blok $\tfrac32 N$ \omterm{def:b3:lagrangian-mechanics:coordinates}{vrijheidsgraden} --- houd de factoren los). (c)
+Voor $N = 10^{22}$: de effectieve onbalans. (d) Het temperatuurverschil dat
+die onbalans voorstelt, voor gas bij \qty{300}{K}: zou enige thermometer
+het kunnen zien?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b3:microcanonical-ensemble:8}
+De vaste stof met twee niveaus (Schottky): $N$ plaatsen, elk met energie
+$0$ of $\epsilon$; $n$ aangeslagen. (a) $\Omega(n)$ en $S(n)$. (b) Leid met
+$E =
+n\epsilon$ en Stirling af dat
+\[
+\frac1T = \frac{k_{\text{B}}}{\epsilon}\,
+\ln\frac{N - n}{n} ,
+\qquad\text{dus}\qquad
+\frac nN = \frac{1}{\eu^{\epsilon/k_{\text{B}}T} + 1} .
+\]
+(c) Schets $E(T)$ en de warmtecapaciteit: een bult (de \emph{schottkyanomalie})
+nabij $k_{\text{B}}T \sim \epsilon/2$ --- waarom verdwijnt $C$ aan beide
+uiteinden? (d) Waar is de vorm van de bezettingsformule eerder opgedoken,
+en waar keert zij terug (\cref{ch:b3:quantum-statistics})?
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b3:microcanonical-ensemble:9}
+Onder nul. Voor het spinstelsel van
+\cref{ex:b3:microcanonical-ensemble:negative} met niveausplitsing
+$\epsilon$: (a) toon aan dat $T < 0$ precies wanneer meer dan de helft van
+de spins op staat (bezetting geïnverteerd). (b) Bereken $T$ voor een
+inversie 60:40 met $\epsilon = \qty{e-4}{eV}$. (c) Toon aan dat energie
+altijd van lichamen met negatieve $T$ naar lichamen met positieve $T$
+stroomt (vergelijk $\partial
+S/\partial E$). (d) Waarom kan een stelsel met
+onbegrensde energie (een gas) nooit $T < 0$ halen?
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b3:microcanonical-ensemble:10}
+Mengen, kwantitatief. Twee verschillende gassen (elk $N$ deeltjes,
+volumes $V$) worden verbonden. (a) Bereken $\Delta S$ door te tellen. (b)
+Hetzelfde gas: toon aan dat, met de $N!$ meegerekend, $\Delta S = 0$. (c)
+Helium-3 en helium-4 zijn verschillend: ze samenvoegen schept \emph{wel}
+$2Nk_{\text{B}}\ln2$ --- en toch stroomt er geen warmte en wordt er geen
+arbeid verricht: waar zit de entropietoename natuurkundig (wat zou ze weer
+scheiden kosten)? (d) De minimale arbeid om ze bij temperatuur $T$ weer te
+scheiden: druk haar uit en noem de moderne bedrijfstak die haar betaalt
+(isotopenscheiding).
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b3:microcanonical-ensemble:11}
+De tabellen wisten van $h$. Sackur--Tetrode voor argon ($m =
+\qty{6.6e-26}{kg}$) bij \qty{300}{K} en \qty{1}{bar} ($V/N =
+k_{\text{B}}T/P$): (a) bereken $\lambda_T$; (b) bereken $S/N
+k_{\text{B}}$; (c) vergelijk met de calorimetrische waarde
+$S_{\text{molair}} = \qty{154.8}{J/(mol.K)}$, dus $S/Nk_{\text{B}}
+= 18.6$;
+(d) leg uit wat er wordt getoetst: welke twee kwantumgegevens zitten
+binnen in een getal dat vóór 1912 met ijscalorimeters werd gemeten?
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b3:microcanonical-ensemble:12}
+Fluctuaties die u kunt zien. Het aantal moleculen in een klein volume $v$
+gas fluctueert; de kans op een relatieve afwijking $\delta$ is
+$\propto\eu^{-\bar n\delta^2/2}$ (met $\bar n = Nv/V$ --- neem deze
+gaussfunctie aan, of leid haar uit de binomiaalverdeling af). (a) Voor $v$
+een kubus met ribbe \qty{550}{nm} bij atmosferische dichtheid: $\bar n$ en
+de effectieve $\delta$. (b) Waarom zijn deze blijvende dichtheidsrimpels
+van enkele promille op optische schaal precies wat
+\cref{pb:b3:perturbation-theory:1} nodig had opdat lucht überhaupt
+verstrooit? (c) Bij welke $\bar n$ (en dus welke schaal) zouden de
+fluctuaties $10\%$ halen? (d) Sluit de cirkel in één zin: het blauw van de
+hemel is een uitspraak over statistiek in $\sqrt N$.
+\end{exercise}
+
+\section{Vraagstuk: De entropische veer}
+
+\begin{problem}[{Weekendvraagstuk --- waarom rubber terugtrekt}]\label{pb:b3:microcanonical-ensemble:1}
+Rek een elastiekje uit en het schiet terug --- en toch zijn de bindingen
+van zijn moleculen nauwelijks vervormd en verandert zijn inwendige energie
+nauwelijks. De terugdrijvende kracht van rubber is geen energie die een
+minimum zoekt maar \emph{entropie die een maximum zoekt}: de eerste grote
+zege van het pure tellen op het mechanisme, met dezelfde wiskunde die
+vandaag de proeven aan losse DNA-moleculen aandrijft. Model: een keten van
+$N$ starre schakels, elk met lengte $b$, die elk links- of rechtsaf langs
+de trekas wijzen; de uitrekking van uiteinde tot uiteinde is $x = (n_+ - n_-)\,b$.
+
+\medskip\noindent\textbf{Deel I --- Configuraties tellen.}
+\begin{enumerate}
+  \item Druk $n_\pm$ uit in $N$ en $x$, en schrijf de \omterm{def:b3:microcanonical-ensemble:states}{multipliciteit}
+        $\Omega(x)$ op.
+  \item Waar is $\Omega$ maximaal, en wat zegt dat over de
+        voorkeursuitrekking van een vrije keten?
+  \item Toon met Stirling aan dat voor $x \ll Nb$ geldt:
+        \[
+        S(x) \approx S(0) - \frac{k_{\text{B}}x^2}{2Nb^2} .
+        \]
+  \item De energie van de keten hangt (in dit model) niet van $x$ af:
+        rechtvaardig dat elke terugdrijvende kracht ``entropisch'' wordt
+        genoemd.
+  \item De effectieve uitrekking van de vrije keten is $b\sqrt N$
+        (toevalspad): vergelijk voor $N = 10^4$ en $b = \qty{0.5}{nm}$ de
+        afmeting van de kluwen met de gestrekte lengte $Nb$.
+  \item Echt rubber is een netwerk van zulke ketens tussen dwarsverbindingen:
+        welke enkele parameter van het model verandert het vulkaniseren
+        (meer dwarsverbindingen)?
+\end{enumerate}
+
+\medskip\noindent\textbf{Deel II --- De kracht van het tellen.}
+\begin{enumerate}[resume]
+  \item Voor een stelsel dat op temperatuur $T$ wordt gehouden is de
+        spankracht die nodig is om de uitrekking $x$ vast te houden $f = -T\,\partial S/\partial x$ (neem dit aan uit $\dd E = T\dd S + f\dd x$ bij constante energie): leid af dat
+        \[
+        f = \frac{k_{\text{B}}T\,x}{Nb^2} .
+        \]
+  \item De \omterm{thm:b3:continuum-elasticity:hooke}{wet van Hooke} is tevoorschijn gekomen met veerconstante $k =
+        k_{\text{B}}T/Nb^2$: reken haar uit voor één keten met $N =
+        \num{e4}$ en $b = \qty{0.5}{nm}$ bij \qty{300}{K}.
+  \item De verbluffende factor is $T$: wat zou een elastiekje onder vaste
+        belasting moeten doen wanneer het wordt \emph{verwarmd}? Zet dat
+        af tegen een stalen veer.
+  \item Schat de kracht om één keten tot de helft van haar volle lengte te
+        rekken, en de krachtschaal $k_{\text{B}}T/b$ waarbij het lineaire
+        model faalt.
+  \item Een elastiekje met doorsnede \qty{1}{mm^2} bevat $\sim\num{e14}$
+        effectieve ketens naast elkaar: schat zijn veerconstante en
+        vergelijk met de ervaring.
+  \item Waarom wordt rubber, gram voor gram, met de temperatuur stijver
+        (en niet zachter) terwijl metalen zachter worden?
+\end{enumerate}
+
+\medskip\noindent\textbf{Deel III --- De keuken van Gough en Joule.}
+\begin{enumerate}[resume]
+  \item Rek een elastiekje snel (adiabatisch) uit tegen uw lip: het wordt
+        warm. Verklaar dat met de entropiebalans: uitrekken \emph{verlaagt}
+        de configuratie-entropie, dus waar moet de entropie (de warmte)
+        bij een vast totaal heen?
+  \item Laat het snel los: het wordt koud. Voltooi het symmetrische
+        argument.
+  \item Een belast elastiekje wordt zachtjes verwarmd (met een föhn):
+        welke kant beweegt het gewicht op, en waarom is dat de zuivere
+        handtekening van entropische elasticiteit?
+  \item Ontwerp de tegenproef met een stalen veer: wat gebeurt er in
+        plaats daarvan, en waarom (welk soort elasticiteit)?
+  \item Een motor: een wiel met rubberen spaken, aan één kant verwarmd,
+        draait gestaag rond. Volg de logica van één cyclus (verwarmde
+        spaken trekken samen en brengen het wiel uit balans).
+  \item Dezelfde wet $f = k_{\text{B}}Tx/Nb^2$, met optische pincetten aan
+        losse DNA-moleculen gemeten (met $b \approx
+        \qty{100}{nm}$, $N \approx 500$ voor een fragment van een bacterieel genoom), geeft
+        krachten in welk bereik? (Bereken $k_{\text{B}}T/b$.) Waarom maakte
+        dit het model \emph{rechtstreeks} toetsbaar op één molecuul?
+\end{enumerate}
+
+\medskip\noindent\textbf{Deel IV --- De moraal.}
+\begin{enumerate}[resume]
+  \item Het ketenmodel kent geen wisselwerkingen en geen energieschaal, en
+        brengt toch een krachtwet voort: zeg precies waar de kracht in de
+        microkanonieke taal van dit hoofdstuk ``vandaan komt''.
+  \item Waarom verdwijnt de kracht bij $T = 0$ --- en wat zegt dat over de
+        aard van elasticiteit in een wereld zonder thermische beweging?
+  \item Vergelijk de lineariteit in $T$ van de entropische veerconstante
+        met de lineariteit in $T$ van de druk van een ideaal gas: toon aan
+        dat beide hetzelfde
+        verschijnsel zijn (configuraties tellen tegen een beperking in) in
+        andere kleren.
+  \item Het verwarmde elastiekje tilt een gewicht op en verricht echte
+        arbeid: volg de bron en de route van de energie (warmte in van de
+        föhn, entropieboekhouding, arbeid eruit) en bevestig dat de eerste
+        hoofdwet onaangeroerd blijft.
+  \item De ideale keten verwaarloost zelfvermijding en de buigenergie van
+        de schakels: noem bij elke weglating één gemeten kenmerk van echt
+        rubber dat zij verbergt (het scherp stijver worden nabij de volle
+        uitrekking; kristallisatie door rek en hysterese).
+  \item Eiwitten vouwen, membranen flikkeren, polymeren rollen zich op:
+        waarom is $k_{\text{B}}T$ bij lichaamstemperatuur de natuurlijke
+        krachtmunt ($k_{\text{B}}T/\unit{nm}$ in piconewton --- reken haar
+        uit) van alle zachte en levende materie?
+  \item Vat het genoemde resultaat samen: een keten van $10^4$ blinde
+        schakels, eerlijk geteld, levert de \omterm{thm:b3:continuum-elasticity:hooke}{wet van Hooke} met $k =
+        k_{\text{B}}T/Nb^2$, voorspelt dat rubber warm wordt bij uitrekken
+        en gewichten optilt bij verwarmen --- entropie die als kracht
+        optreedt, geverifieerd van binnenbanden tot losse DNA-moleculen op
+        schalen van $\sim\qty{0.04}{pN}$.
+\end{enumerate}
+\end{problem}
