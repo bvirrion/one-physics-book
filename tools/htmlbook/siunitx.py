@@ -30,6 +30,8 @@ UNIT_MACROS = {
     "gram": "\\mathrm{g}",
     "percent": "\\%",
     "delta": "\\delta",      # dioptre (physics book 3, optics)
+    "angstrom": "\\text{\u00c5}",
+    "Omega": "\\Omega",
 }
 
 SI_COMMANDS = {"qty": 2, "num": 1, "unit": 1, "ang": 1,
@@ -51,6 +53,10 @@ def format_number(value):
     """siunitx number: decimal point, digit grouping, e-notation,
     \\pm uncertainties."""
     v = value.strip()
+    mu = re.fullmatch(r"([+-]?\d*(?:\.\d+)?)\((\d+)\)", v)
+    if mu:
+        # compact uncertainty 2.72548(57): printed as written
+        return format_number(mu.group(1)) + f"({mu.group(2)})"
     if "\\pm" in v:
         lo, hi = v.split("\\pm", 1)
         if not lo.strip():
@@ -134,11 +140,19 @@ def format_unit(body):
             out.append(f"\\mathrm{{{s[i:j]}}}")
             i = j
         elif c == "^":
-            m = re.match(r"\^(\{[^{}]*\}|[+-]?\d)", s[i:])
+            # exponents, and ionic charges (H^+, Ca^{2+})
+            m = re.match(r"\^(\{[^{}]*\}|[+-]?\d|[+-])", s[i:])
             if not m:
                 raise ParseError(f"unsupported exponent in unit {body!r}")
             exp = m.group(1).strip("{}")
             out.append(f"^{{{exp}}}")
+            i += m.end()
+        elif c == "_":
+            # chemical formula subscripts (O_2, CO_2)
+            m = re.match(r"_(\{[^{}]*\}|\d+|[a-zA-Z])", s[i:])
+            if not m:
+                raise ParseError(f"unsupported subscript in unit {body!r}")
+            out.append(f"_{{{m.group(1).strip('{}')}}}")
             i += m.end()
         elif c in ".~":
             out.append("\\,")

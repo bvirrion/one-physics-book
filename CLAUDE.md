@@ -256,6 +256,14 @@ are not built — the quality gate before pushing is the local log.
 
 ## Invariants (once content is written)
 
+AI illustrations and large photographs are **JPEG, never PNG**
+(`ffmpeg -i x.png -q:v 3 -pix_fmt yuvj420p x.jpg`, then delete the PNG) —
+see "Stored as JPEG" in `../book_style.md` for the why (a lossless PNG costs
+~2–4 MB in each of the eight language PDFs; the 97 PNGs of Books 1/3–5 were
+transcoded on 2026-09-06). Only `images/book3/hydrogen-emission-spectrum.png`
+and `images/book5/photo-bec-nist.png` (line art / 40 KB) stay PNG:
+`ls images/book*/ai/*.png` must print nothing.
+
 Every exercise (and every university-volume weekend `problem`, label
 `pb:...`) has exactly one solution, keyed by label. Per chapter:
 

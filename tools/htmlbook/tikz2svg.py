@@ -28,6 +28,7 @@ PREAMBLE = r"""
 \usepgfplotslibrary{fillbetween}
 \usetikzlibrary{arrows.meta,calc,angles,quotes,patterns}
 \usetikzlibrary{decorations.pathmorphing,decorations.markings,positioning,intersections}
+\usetikzlibrary{shapes.geometric,shapes.misc,fit,backgrounds,matrix}
 \usepackage[european]{circuitikz}
 % standalone only auto-crops tikzpicture; register circuitikz too (after
 % the package, which defines the env), else its figures come out as full
@@ -146,7 +147,27 @@ ARABIC_FACES = ("NotoNaskhArabic-Regular.ttf", "NotoNaskhArabic-Bold.ttf")
 
 def tikz_hash(tikz):
     normalized = re.sub(r"\s+", " ", tikz).strip()
+    # pictures embedded in the tikz (\\includegraphics inside a node, the
+    # biology label overlays) are part of the figure: key on their bytes too
+    for m in RASTER_RE.finditer(tikz):
+        path = Path(m.group(2).strip())
+        if path.exists():
+            normalized += hashlib.sha1(path.read_bytes()).hexdigest()
     return hashlib.sha1(normalized.encode("utf-8")).hexdigest()[:12]
+
+
+def stage_rasters(tikz, tmp):
+    """Rewrite \\includegraphics inside a tikzpicture to web-sized JPEGs
+    copied beside fig.tex (the compile runs in a temp dir, and the
+    embedded bitmap should be as light as a standalone photo)."""
+    def repl(m):
+        opts, path = m.group(1), m.group(2).strip()
+        data, _, _ = build_raster(path, "")
+        name = f"img-{hashlib.sha1(data).hexdigest()[:12]}.jpg"
+        (tmp / name).write_bytes(data)
+        return "\\includegraphics" + (f"[{opts}]" if opts else "") \
+            + "{" + name + "}"
+    return RASTER_RE.sub(repl, tikz)
 
 
 def _run(cmd, cwd):
@@ -175,6 +196,9 @@ def build_svg(tikz):
             engine = "lualatex"
             for face in ARABIC_FACES:
                 shutil.copy(FONTS_DIR / face, tmp / face)
+        has_raster = bool(RASTER_RE.search(tikz))
+        if has_raster:
+            tikz = stage_rasters(tikz, tmp)
         (tmp / "fig.tex").write_text(
             preamble + tikz + "\n\\end{document}\n", encoding="utf-8")
         res = _run([engine, "-interaction=nonstopmode", "fig.tex"], tmp)
@@ -185,6 +209,11 @@ def build_svg(tikz):
         svg_path = tmp / "fig.svg"
         res = _run(["dvisvgm", "--pdf", "--no-fonts", "--exact-bbox",
                     "-o", str(svg_path), "fig.pdf"], tmp)
+        if has_raster and svg_path.exists() \
+                and "<image" not in svg_path.read_text(encoding="utf-8"):
+            # dvisvgm dropped the embedded bitmap: let cairo embed it
+            svg_path.unlink()
+            res = _run(["pdftocairo", "-svg", "fig.pdf", str(svg_path)], tmp)
         if res.returncode != 0 or not svg_path.exists():
             res = _run(["pdftocairo", "-svg", "fig.pdf", str(svg_path)], tmp)
             if res.returncode != 0 or not svg_path.exists():

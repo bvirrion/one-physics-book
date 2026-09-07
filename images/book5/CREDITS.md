@@ -10,7 +10,7 @@ Licenses verified via the Commons API (`extmetadata`) at download time.
 | `photo-positron-anderson.jpg` | [File:PositronDiscovery.jpg](https://commons.wikimedia.org/wiki/File:PositronDiscovery.jpg) | Carl D. Anderson | Public domain |
 | `photo-solvay-1927.jpg` | [File:Solvay conference 1927.jpg](https://commons.wikimedia.org/wiki/File:Solvay_conference_1927.jpg) | Benjamin Couprie | Public domain |
 | `photo-bec-nist.png` | [File:Bose Einstein condensate.png](https://commons.wikimedia.org/wiki/File:Bose_Einstein_condensate.png) | NIST/JILA/CU-Boulder | Public domain |
-| `photo-cmb-wmap.png` | [File:Ilc 9yr moll4096.png](https://commons.wikimedia.org/wiki/File:Ilc_9yr_moll4096.png) | NASA / WMAP Science Team | Public domain |
+| `photo-cmb-wmap.jpg` | [File:Ilc 9yr moll4096.png](https://commons.wikimedia.org/wiki/File:Ilc_9yr_moll4096.png) | NASA / WMAP Science Team | Public domain |
 | `photo-first-transistor.jpg` | [File:Replica-of-first-transistor.jpg](https://commons.wikimedia.org/wiki/File:Replica-of-first-transistor.jpg) | Federal employee (Bell Labs display) | Public domain |
 | `photo-marie-curie.jpg` | [File:Marie Curie c1920.jpg](https://commons.wikimedia.org/wiki/File:Marie_Curie_c1920.jpg) | Henri Manuel | Public domain |
 | `photo-cms-construction.jpg` | [File:CMS Under Construction Apr 05.jpg](https://commons.wikimedia.org/wiki/File:CMS_Under_Construction_Apr_05.jpg) | Julian Williams | Copyrighted free use |
