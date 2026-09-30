@@ -4,8 +4,9 @@ KaTeX has no siunitx support, so \\qty, \\num, \\unit, \\qtyrange,
 \\qtylist and \\ang are rewritten here, mirroring what siunitx prints with
 the book's setup (styles/onephysics.sty: per-mode=symbol,
 output-decimal-marker={.}, range-units=single, everything else default:
-thin-space products, digit groups of 3 from 5 digits, English range/list
-phrases, repeated list units).
+thin-space products, digit groups of 3 from 5 digits, repeated list units;
+range/list phrases are the edition's own, English by default) — plus
+\\numrange.
 
 Units are written in siunitx literal shorthand throughout the book
 (``m/s``, ``kW.h``, ``\\micro s``, ``s^{-1}``); the handful of macro unit
@@ -34,8 +35,28 @@ UNIT_MACROS = {
     "Omega": "\\Omega",
 }
 
+# Macro-form units (\milli\second, \giga\bit\per\second — the quant books):
+# siunitx joins a prefix to its unit, separates units with a thin space and
+# prints \per as "/" (per-mode=symbol). Market units are the
+# \DeclareSIUnit's of styles/onequant.sty.
+SI_PREFIXES = {
+    "pico": "p", "nano": "n", "milli": "m", "kilo": "k", "mega": "M",
+    "giga": "G", "tera": "T",
+}
+SI_UNITS = {
+    "second": "s", "metre": "m", "watt": "W", "hour": "h", "hertz": "Hz",
+    "bit": "bit", "byte": "B", "decibel": "dB",
+    "bp": "bp", "tick": "tick", "share": "sh", "contract": "ct",
+    "barrel": "bbl", "mmbtu": "MMBtu", "therm": "th", "bushel": "bu",
+    "troyounce": "oz\\,t", "flop": "flop", "msg": "msg",
+}
+
 SI_COMMANDS = {"qty": 2, "num": 1, "unit": 1, "ang": 1,
-               "qtyrange": 3, "qtylist": 2}
+               "qtyrange": 3, "qtylist": 2, "numrange": 2}
+
+# range/list words; the emitter passes the edition's own (LangStrings
+# reads them from the \sisetup line of styles/lang/<lang>.tex)
+DEFAULT_PHRASES = {"range": " to ", "pair": " and ", "final": " and "}
 
 
 def _group_digits(digits, from_right):
@@ -52,7 +73,9 @@ def _group_digits(digits, from_right):
 def format_number(value):
     """siunitx number: decimal point, digit grouping, e-notation,
     \\pm uncertainties."""
-    v = value.strip()
+    # an explicit \, digit group (1\,528) is input-ignored by siunitx: the
+    # number is regrouped by the usual rule (1528, 97 690)
+    v = value.strip().replace("\\,", "")
     mu = re.fullmatch(r"([+-]?\d*(?:\.\d+)?)\((\d+)\)", v)
     if mu:
         # compact uncertainty 2.72548(57): printed as written
@@ -88,11 +111,43 @@ def format_unit(body):
     products, symbol \\per)."""
     out = []
     i, s = 0, body.strip()
+    prev_unit = False    # last token was a macro-form unit (\second, \bit)
     while i < len(s):
         c = s[i]
         if c == "\\":
             if s.startswith("\\%", i):
                 out.append("\\%")
+                i += 2
+                continue
+            if s.startswith("\\$", i):
+                # currency in a unit: \qty{80}{\$/\barrel} -> 80 $/bbl
+                out.append("\\$")
+                i += 2
+                continue
+            m = re.match(r"\\([a-zA-Z]+)", s[i:])
+            if m and m.group(1) in SI_PREFIXES:
+                if prev_unit:
+                    out.append("\\,")
+                out.append(f"\\mathrm{{{SI_PREFIXES[m.group(1)]}}}")
+                prev_unit = False
+                i += m.end()
+                continue
+            if m and m.group(1) in SI_UNITS:
+                if prev_unit:
+                    out.append("\\,")
+                out.append(f"\\mathrm{{{SI_UNITS[m.group(1)]}}}")
+                prev_unit = True
+                i += m.end()
+                continue
+            if m and m.group(1) == "per":
+                out.append("/")
+                prev_unit = False
+                i += m.end()
+                continue
+            prev_unit = False
+            if s.startswith("\\,", i):
+                # explicit thin-space product (mol\,m^{-2}\,s^{-1})
+                out.append("\\,")
                 i += 2
                 continue
             m = re.match(r"\\([a-zA-Z]+)", s[i:])
@@ -180,8 +235,13 @@ def _sep(unit_body):
     return "" if (u.startswith("\\degree") or u.startswith("'")) else "\\,"
 
 
-def expand_command(name, args):
+def expand_command(name, args, phrases=None):
     """One siunitx call -> LaTeX."""
+    phrases = phrases or DEFAULT_PHRASES
+    if name == "numrange":
+        lo, hi = args
+        return (format_number(lo) + f"\\text{{{phrases['range']}}}"
+                + format_number(hi))
     if name == "num":
         return format_number(args[0])
     if name == "unit":
@@ -198,7 +258,8 @@ def expand_command(name, args):
     if name == "qtyrange":
         lo, hi, unit = args
         # range-units=single: one unit after the upper bound
-        return (format_number(lo) + "\\text{ to }" + format_number(hi)
+        return (format_number(lo) + f"\\text{{{phrases['range']}}}"
+                + format_number(hi)
                 + _sep(unit) + format_unit(unit))
     if name == "qtylist":
         values, unit = args
@@ -207,8 +268,9 @@ def expand_command(name, args):
                     for v in values.split(";")]
         if len(rendered) == 1:
             return rendered[0]
+        last = phrases["pair" if len(rendered) == 2 else "final"]
         return ("\\text{, }".join(rendered[:-1])
-                + "\\text{ and }" + rendered[-1])
+                + f"\\text{{{last}}}" + rendered[-1])
     raise ParseError(f"unknown siunitx command \\{name}")
 
 
@@ -236,12 +298,12 @@ def _in_text(tex, pos):
     return any(stack)
 
 
-def expand(tex):
+def expand(tex, phrases=None):
     """Rewrite every siunitx call inside a math string."""
     out = []
     i = 0
     while i < len(tex):
-        m = re.compile(r"\\(qtyrange|qtylist|qty|num|unit|ang)(?![a-zA-Z])"
+        m = re.compile(r"\\(qtyrange|qtylist|qty|numrange|num|unit|ang)(?![a-zA-Z])"
                        ).search(tex, i)
         if not m:
             out.append(tex[i:])
@@ -265,7 +327,7 @@ def expand(tex):
                 raise ParseError(f"unbalanced braces in {tex!r}")
             args.append(tex[j + 1:k - 1])
             j = k
-        expanded = expand_command(m.group(1), args)
+        expanded = expand_command(m.group(1), args, phrases)
         if _in_text(tex, m.start()):
             expanded = f"${expanded}$"
         out.append(expanded)
