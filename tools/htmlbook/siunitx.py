@@ -33,6 +33,11 @@ UNIT_MACROS = {
     "delta": "\\delta",      # dioptre (physics book 3, optics)
     "angstrom": "\\text{\u00c5}",
     "Omega": "\\Omega",
+    # \DeclareSIUnit's of styles/onechemistry.sty
+    "debye": "\\mathrm{D}",
+    "ppm": "\\mathrm{ppm}",
+    "hartree": "E_\\mathrm{h}",
+    "bohr": "a_0",
 }
 
 # Macro-form units (\milli\second, \giga\bit\per\second — the quant books):
@@ -52,7 +57,8 @@ SI_UNITS = {
 }
 
 SI_COMMANDS = {"qty": 2, "num": 1, "unit": 1, "ang": 1,
-               "qtyrange": 3, "qtylist": 2, "numrange": 2}
+               "qtyrange": 3, "qtylist": 2, "numrange": 2,
+               "si": 1}    # siunitx v2 name of \\unit (chemistry books)
 
 # range/list words; the emitter passes the edition's own (LangStrings
 # reads them from the \sisetup line of styles/lang/<lang>.tex)
@@ -183,6 +189,12 @@ def format_unit(body):
                            else inner)
                 i = j
                 continue
+            if name in ("squared", "cubed") and out:
+                # macro-form power of the unit before (\bohr\squared)
+                power = "2" if name == "squared" else "3"
+                out[-1] = f"{{{out[-1]}}}^{{{power}}}"
+                i += m.end()
+                continue
             if name not in UNIT_MACROS:
                 raise ParseError(f"unknown unit macro \\{name} "
                                  f"in siunitx unit {body!r}")
@@ -238,6 +250,8 @@ def _sep(unit_body):
 def expand_command(name, args, phrases=None):
     """One siunitx call -> LaTeX."""
     phrases = phrases or DEFAULT_PHRASES
+    if name == "si":
+        name = "unit"
     if name == "numrange":
         lo, hi = args
         return (format_number(lo) + f"\\text{{{phrases['range']}}}"
@@ -303,7 +317,8 @@ def expand(tex, phrases=None):
     out = []
     i = 0
     while i < len(tex):
-        m = re.compile(r"\\(qtyrange|qtylist|qty|numrange|num|unit|ang)(?![a-zA-Z])"
+        m = re.compile(r"\\(qtyrange|qtylist|qty|numrange|num|unit|ang|si)"
+                       r"(?![a-zA-Z])"
                        ).search(tex, i)
         if not m:
             out.append(tex[i:])
