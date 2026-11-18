@@ -39,6 +39,7 @@ DEFAULTS = dict(
                             "law of", "paradox", "problem"),
     DERIVED={}, PRIMARY_OK=set(), AMBIG_POLICY="drop", EXTRA={}, DROP=set(),
     NO_CAPITAL=set(), MAX_TERM_WORDS=None, MAX_TERM_CHARS=None, EXTRA_PROTECT=[],
+    INDEX_CJK=False,   # CJK editions: index-only keys of 2+ characters are terms (harvest.py)
 )
 
 
@@ -52,7 +53,7 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("--book", type=int, required=True, choices=sorted(books.ENTRY))
     ap.add_argument("--lang", default="en",
-                    choices=("en", "fr", "nl", "es", "pt", "hi", "ar", "id"))
+                    choices=("en", "fr", "nl", "es", "pt", "hi", "ar", "id", "zh"))
     ap.add_argument("--apply", action="store_true", help="rewrite the sources")
     ap.add_argument("--unwrap", action="store_true",
                     help="strip existing links instead of adding them")

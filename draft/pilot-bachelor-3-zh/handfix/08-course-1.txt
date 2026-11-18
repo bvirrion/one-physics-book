@@ -1,0 +1,116 @@
+1| \chapter{量子力学的形式体系}\label{ch:b3:quantum-formalism}
+2| 
+3| 取三片偏振片。其中两片以 $90^\circ$ 交叉放置，
+4| 完全挡光；把第三片插入二者之间，使其成 $45^\circ$，
+5| 光便\emph{穿过}——增加一个障碍，反而打开了通路。
+6| 把偏振片看作筛子的图像经不起这个实验；
+7| 留下来的是线性代数：光子的偏振是一个
+8| \emph{矢量}，每片偏振片沿某一轴对其测量并投影，
+9| 而概率即分量的模方。本章将这套代数确立为
+10| 量子力学真正的基础。前几章的波函数
+11| 只是一件具体的外衣，
+12| 包裹着更抽象的本体：态是希尔伯特空间中的矢量，
+13| 可观测量是厄米算符，测量值是本征值，
+14| 概率是标量积的模方，演化由
+15| 哈密顿量生成。五条基本假设，在我们已经计算过的一切中都已起作用，
+16| ——一经清楚表述，它们便足够强大，
+17| 足以处理直线上的波无法描述的系统：光子的
+18| 偏振、电子的自旋，以及中微子——其身份会
+19| 在穿越地球时发生振荡。
+20| 
+21| \section{态是矢量}
+22| 
+23| \begin{definition}[态空间、右矢与左矢]\label{def:b3:quantum-formalism:state}
+24| \index{希尔伯特空间}\index{右矢}\index{左矢}
+25| 量子系统的态构成一个带内积的复矢量空间，
+26| 即\emph{希尔伯特空间} $\mathcal H$（其数学
+27| 在本科三年级数学分册中展开）。态
+28| 是一个矢量，记作\emph{右矢} $\ket\psi$，并归一化：
+29| $\braket\psi\psi = 1$。两态的内积为复数
+30| $\braket\varphi\psi$，对第一个变元共轭线性，
+31| 且 $\braket\varphi\psi = \braket\psi\varphi^*$。取标准正交
+32| 基 $\{\ket{e_i}\}$，
+33| \[
+34| \ket\psi = \sum_i c_i\ket{e_i} , \qquad
+35| c_i = \braket{e_i}\psi , \qquad
+36| \sum_i|c_i|^2 = 1 .
+37| \]
+38| 前几章的波函数是
+39| $\ket\psi$ 沿位置方向分量的族：$\psi(x) =
+40| \braket{x}{\psi}$；并未丢失任何信息，而具有\emph{有限}
+41| 态空间——这在波的图像中不可想象——也变得可以描述。
+42| \end{definition}
+43| 
+44| \begin{example}[光子的偏振：二维世界]\label{ex:b3:quantum-formalism:polarization}
+45| 沿 $z$ 轴传播的光子，其偏振态位于一个
+46| \emph{二维}希尔伯特空间中，基为 $\ket H$（水平）
+47| 与 $\ket V$（竖直）。偏振角为
+48| $\theta$ 的光为叠加态：
+49| \[
+50| \ket\theta = \cos\theta\,\ket H + \sin\theta\,\ket V ,
+51| \]
+52| 圆偏振则为复组合 $(\ket H \pm
+53| \iu\ket V)/\sqrt2$：系数为复数，并非
+54| 装饰，而是物理。一切量子两能级系统——自旋、氨
+55| 分子、超导量子比特——都属于同一矢量空间，
+56| 只是以不同的外衣出现。
+57| \end{example}
+58| 
+59| \begin{omfigure}
+60| \begin{tikzpicture}[font=\small, >=Stealth]
+61|   \draw[->] (-0.3,0) -- (3.3,0) node[right] {$\ket H$};
+62|   \draw[->] (0,-0.3) -- (0,3.3) node[above] {$\ket V$};
+63|   \draw[->, omDef, very thick] (0,0) -- (35:2.9);
+64|   \node[omDef, anchor=west] at (35:3.0) {$\ket\theta$};
+65|   \draw[dashed, omThm] (35:2.9) -- ({2.9*cos(35)},0);
+66|   \draw[dashed, omExo] (35:2.9) -- (0,{2.9*sin(35)});
+67|   \node[omThm, anchor=north] at ({2.9*cos(35)},-0.08) {$\cos\theta$};
+68|   \node[omExo, anchor=east] at (-0.08,{2.9*sin(35)}) {$\sin\theta$};
+69|   \draw (1.0,0) arc (0:35:1.0);
+70|   \node at (17:1.35) {$\theta$};
+71|   \node[align=left, anchor=west] at (5.3,1.7)
+72|     {沿 $\ket H$ 的概率：$\cos^2\theta$\\[2pt]
+73|      沿 $\ket V$ 的概率：$\sin^2\theta$};
+74|   \node[align=left, anchor=west, font=\footnotesize] at (5.3,0.45)
+75|     {（本科一年级分册中的马吕斯定律，\\改读为玻恩定则）};
+76| \end{tikzpicture}
+77| 
+78| {\small 偏振态作为矢量：其分量在
+79| 检偏器基下的平方即为各测量结果的概率——几何变为
+80| 概率。}
+81| \end{omfigure}
+82| 
+83| \section{可观测量是算符}
+84| 
+85| \begin{definition}[可观测量]\label{def:b3:quantum-formalism:observable}
+86| \index{可观测量}\index{厄米算符}\index{本征值}
+87| 一个\emph{可观测量}是线性算符 $\hat A$，作用于 $\mathcal H$，
+88| 且为\emph{厄米的}：$\braket{\varphi}{\hat A\psi} =
+89| \braket{\hat A\varphi}{\psi}$，对所有态成立（用矩阵语言，
+90| $A = A^{*\top}$）。其\emph{本征态}与\emph{本征值}，
+91| $\hat A\ket{a} = a\ket{a}$，承载着全部物理：$a$ 即为
+92| 可能的测量值。常见例子：位置（$\hat x$：
+93| 乘以 $x$）、动量（$\hat p = -\iu\hbar\,\dd/\dd x$），
+94| 能量（$\hat H = \hat p^2/2m + V(\hat x)$）——以及二维中的
+95| 任一厄米 $2\times2$ 矩阵。
+96| \end{definition}
+97| 
+98| \begin{theorem}[为何要求厄米]\label{thm:b3:quantum-formalism:hermitian}
+99| 厄米算符的本征值为实数，且本征值不同的本征态
+100| 彼此正交；在本书涉及的空间中，其
+101| 本征态构成 $\mathcal H$ 的一组标准正交基（
+102| \emph{谱定理}，有限维情形已在本科二年级
+103| 数学分册中证明；对无界算符 $\hat x$、$\hat p$，
+104| $\hat H$ 的完整表述属于本科三年级谱理论，且
+105| 在本阶段不加证明地承认）。测量值必须为实数，且可区分的结果
+106| 必须彼此正交：厄米性恰好是使算符
+107| 能够表示测量的条件。
+108| \end{theorem}
+109| 
+110| \begin{proof}[部分证明]
+111| $a\braket aa = \braket{a}{\hat Aa} = \braket{\hat Aa}{a} =
+112| a^*\braket aa$：$a$ 为实数。对于 $\hat A\ket a = a\ket a$，$\hat A\ket b
+113| = b\ket b$: $a\braket ba = \braket{b}{\hat Aa} = \braket{\hat
+114| Ab}{a} = b\braket ba$，故 $(a - b)\braket ba = 0$。
+115| \end{proof}
+116| 

@@ -1,0 +1,440 @@
+\chapter{自由电振荡：RLC}\label{ch:g12:rlc-oscillations}
+
+转动阁楼里老收音机那沉重的旋钮，电台便依次掠过
+指针：一段人声、小提琴、杂音，又是人声。面板之后
+并没有电动机，也没有计算机——只有\omterm{def:g11:magnetic-fields:solenoid}{线圈}、一个\omterm{def:g12:rc-rl-circuits:capacitor}{电容器}，其交错的
+极板由旋钮转动，还有一段天线导线。本章
+将上一章的两个储能元件（\cref{ch:g12:rc-rl-circuits}）
+首尾相连，找到了有史以来最快的“摆”：电荷
+来回振荡，每秒可达数百万次，节奏由旋钮
+选定。
+
+\section{电摆：LC 电路}
+
+将\omterm{def:g12:rc-rl-circuits:capacitor}{电容器} $C$ 充电至\omterm{def:g11:circuits-and-power:voltage}{电压} $U_0$——此时其极板带
+$\pm Q_0$，且 $Q_0 = C U_0$——然后在 $t = 0$ 时将其接入
+\emph{理想}\omterm{def:g11:magnetic-fields:solenoid}{线圈} $L$（\omterm{def:g11:circuits-and-power:resistance}{电阻}为零）。回路中没有电源，
+接下来的一切都由电路自身决定。
+
+\begin{omfigure}
+\begin{circuitikz}[font=\small]
+  \draw (0,0) to[C=$C$, v=$u$] (0,2.4) to[nos, l=$K$] (2.6,2.4)
+    -- (3.8,2.4) to[L=$L$, i=$i$] (3.8,0) -- (0,0);
+  \node[right, font=\footnotesize] at (0.18,1.5) {$+q$};
+  \node[right, font=\footnotesize] at (0.18,0.9) {$-q$};
+\end{circuitikz}
+
+{\small LC 电路：充电至 $Q_0$ 的\omterm{def:g12:rc-rl-circuits:capacitor}{电容器}、开关和
+一个理想\omterm{def:g11:magnetic-fields:solenoid}{线圈}。闭合 $K$，电荷经\omterm{def:g11:magnetic-fields:solenoid}{线圈}泄出——而\omterm{def:g11:magnetic-fields:solenoid}{线圈}
+厌恶变化，不肯让电流停下来。}
+\end{omfigure}
+
+\begin{proposition}[LC 方程]\label{prop:g12:rlc-oscillations:equation}
+\index{LC 电路}
+在理想 LC 回路中，上极板的电荷 $q(t)$ 满足
+\[
+L\,\frac{d^2q}{dt^2} + \frac{q}{C} = 0,
+\qquad\text{即}\qquad
+\frac{d^2q}{dt^2} = -\frac{1}{LC}\,q .
+\]
+\end{proposition}
+
+\begin{proof}
+沿回路各\omterm{def:g11:circuits-and-power:voltage}{电压}之和为零
+由\cref{prop:g11:circuits-and-power:laws}可知：$u_L + u_C = 0$。
+\omterm{def:g12:rc-rl-circuits:capacitor}{电容器}给出 $u_C = q/C$，\omterm{def:g11:magnetic-fields:solenoid}{线圈}给出 $u_L = L\,di/dt$
+（见\cref{def:g12:rc-rl-circuits:inductor}），$i = dq/dt$ 按
+流入上极板的电荷计，
+（见\cref{prop:g12:rc-rl-circuits:cdudt}）；代入即可。
+\end{proof}
+
+\begin{theorem}[LC 电路的自由振荡]\label{thm:g12:rlc-oscillations:oscillation}
+\index{电振荡}
+在 $t = 0$ 时释放，且 $q(0) = Q_0$，$i(0) = 0$，
+电路做振荡：
+\[
+q(t) = Q_0 \cos\!\left(\frac{2\pi t}{T_0}\right),
+\qquad
+i(t) = -I_0 \sin\!\left(\frac{2\pi t}{T_0}\right),
+\qquad
+T_0 = 2\pi\sqrt{LC},
+\]
+其中峰值电流为 $I_0 = 2\pi Q_0/T_0 = Q_0/\sqrt{LC}$。
+\end{theorem}
+
+\begin{proof}
+代入验证。求导可得
+$i = dq/dt = -\frac{2\pi}{T_0} Q_0 \sin(2\pi t/T_0)$——即所给的
+$i(t)$；再求一次导，$\frac{d^2q}{dt^2} = -(\frac{2\pi}{T_0})^2 q$，
+它恰好等于 $-q/(LC)$，当且仅当 $(2\pi/T_0)^2 = 1/(LC)$，
+即 $T_0 = 2\pi\sqrt{LC}$。又 $q(0) = Q_0$，$i(0) = 0$。满足方程与初始条件的
+\emph{其他}函数不存在这一点，在本阶段不加证明地承认，
+与弹簧的情形完全相同
+（见\cref{rem:g12:oscillators-and-time:uniqueness}）。
+\end{proof}
+
+\begin{definition}[固有周期与频率]\label{def:g12:rlc-oscillations:period}
+LC 电路的\emph{固有周期}\index{固有周期!LC 电路}为
+$T_0 = 2\pi\sqrt{LC}$；其
+\emph{固有频率}\index{固有频率!LC 电路}为
+\[
+f_0 = \frac{1}{T_0} = \frac{1}{2\pi\sqrt{LC}} .
+\]
+量纲检验：$\qty{1}{H} = \qty{1}{V.s/A}$，且
+$\qty{1}{F} = \qty{1}{C/V}$，因此 $LC$ 的量纲为
+$\unit{s} \times \unit{C/A} = \unit{s^2}$——$\sqrt{LC}$ 是时间，
+这正合要求。
+\end{definition}
+
+\begin{example}[几个数值]\label{ex:g12:rlc-oscillations:firstnumbers}
+取 $L = \qty{10}{mH}$，$C = \qty{1.0}{\micro F}$：
+则 $\sqrt{LC} = \qty{1.0e-4}{s}$，$T_0 = \qty{0.63}{ms}$，且
+$f_0 \approx \qty{1.6}{kHz}$——这是可闻的\omterm{def:g12:sound-acoustics:pitch-loudness}{音调}。取 $L = \qty{1.0}{mH}$，
+$C = \qty{100}{pF}$：$T_0 = \qty{2.0}{\micro s}$，
+$f_0 \approx \qty{0.50}{MHz}$——这是无线电\omterm{def:g12:oscillators-and-time:oscillator}{频率}。只有
+\emph{乘积} $LC$ 才决定节奏。
+\end{example}
+
+\begin{remark}[相差四分之一周期]\label{rem:g12:rlc-oscillations:quarter}
+电流与电荷相差四分之一\omterm{def:g12:oscillators-and-time:oscillator}{周期}：$i = 0$
+对应 $q = \pm Q_0$（极板充满，电流反向），而 $i = \pm I_0$
+对应 $q = 0$（极板空，电流最大）——恰如
+\omterm{def:g12:oscillators-and-time:pendulum}{单摆}一样：在两端静止，在最低点最快。
+\end{remark}
+
+\begin{omfigure}
+\begin{tikzpicture}
+\begin{axis}[omaxis, width=9.2cm, height=5.0cm, xlabel={$t$},
+    xmin=0, xmax=2, ymin=-1.4, ymax=1.75, xtick={0,0.5,1,1.5,2},
+    xticklabels={$0$,$T_0/2$,$T_0$,$3T_0/2$,$2T_0$},
+    ytick={-1,0,1}, legend pos=north east]
+  \addplot[omDef, thick, domain=0:2, samples=200] {cos(360*x)};
+  \addplot[omThm, thick, domain=0:2, samples=200] {-sin(360*x)};
+  \legend{$q/Q_0$, $i/I_0$}
+\end{axis}
+\end{tikzpicture}
+
+{\small 自由 LC 电路的电荷与电流：每当电荷穿过零点时，电流达到峰值，
+二者\omterm{def:g12:oscillators-and-time:phase}{相位}相差四分之一\omterm{def:g12:oscillators-and-time:oscillator}{周期}。}
+\end{omfigure}
+
+\section{能量华尔兹}
+
+\begin{proposition}[储存能量守恒]\label{prop:g12:rlc-oscillations:energy}
+\index{能量!LC 电路的}
+在理想 LC 电路中，储存的总\omterm{def:g10:energy-conservation:energy}{能量}
+(\cref{prop:g12:rc-rl-circuits:energy})
+\[
+E \;=\; E_C + E_L \;=\; \frac{q^2}{2C} + \tfrac12\,L i^2
+\;=\; \frac{Q_0^2}{2C} \;=\; \tfrac12\,L I_0^2
+\]
+保持不变：$q = \pm Q_0$ 时全部在\omterm{def:g12:rc-rl-circuits:capacitor}{电容器}中，
+$i = \pm I_0$ 时全部在\omterm{def:g11:magnetic-fields:solenoid}{线圈}中。
+\end{proposition}
+
+\begin{proof}
+求导：$\frac{dE}{dt} = \frac{q}{C}\frac{dq}{dt} +
+Li\frac{di}{dt} = i\left(\frac{q}{C} + L\frac{d^2q}{dt^2}\right) = 0$
+由\cref{prop:g12:rlc-oscillations:equation}可知，其值取于
+$t = 0$ 时（\omterm{def:g10:energy-conservation:energy}{能量}全在\omterm{def:g12:rc-rl-circuits:capacitor}{电容器}中），以及\omterm{def:g10:energy-conservation:energy}{能量}全在电流中的时刻
+$q = 0$ 时——由此 $\tfrac12 L I_0^2 = Q_0^2/2C$，
+仅凭\omterm{def:g10:energy-conservation:energy}{能量}即可再得 $I_0 = Q_0/\sqrt{LC}$。
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}
+\begin{axis}[omaxis, width=8.6cm, height=4.6cm, xlabel={$t/T_0$},
+    ylabel={能量 $/\,E$}, xmin=0, xmax=1, ymin=0, ymax=1.3,
+    legend pos=south east]
+  \addplot[omDef, thick, domain=0:1, samples=120] {cos(360*x)^2};
+  \addplot[omProp, thick, domain=0:1, samples=120] {sin(360*x)^2};
+  \addplot[omThm, dashed, thick, domain=0:1, samples=2] {1};
+  \legend{$E_C$, $E_L$, $E$}
+\end{axis}
+\end{tikzpicture}
+
+{\small 华尔兹的一个\omterm{def:g12:oscillators-and-time:oscillator}{周期}：\omterm{def:g10:energy-conservation:energy}{能量}从极板流向\omterm{def:g11:magnetic-fields:solenoid}{线圈}，
+再流回极板，每\omterm{def:g12:oscillators-and-time:oscillator}{周期}往返两次，总和固定为 $Q_0^2/2C$——正是
+弹簧–质量\omterm{def:g12:oscillators-and-time:oscillator}{振子}的图，只是换了标签。}
+\end{omfigure}
+
+\begin{example}[华尔兹的测量]\label{ex:g12:rlc-oscillations:waltz}
+$C = \qty{1.0}{\micro F}$ 的\omterm{def:g12:rc-rl-circuits:capacitor}{电容器}充电至 $U_0 = \qty{10}{V}$，然后接到
+$L = \qty{10}{mH}$ 的\omterm{def:g11:magnetic-fields:solenoid}{线圈}上：\omterm{def:g10:energy-conservation:energy}{能量} $E = \tfrac12 C U_0^2 = \qty{5.0e-5}{J}$，
+\omterm{def:g12:oscillators-and-time:oscillator}{周期} $T_0 = \qty{0.63}{ms}$，峰值电流
+$I_0 = U_0\sqrt{C/L} = \qty{0.10}{A}$，于开关闭合后
+经过四分之一\omterm{def:g12:oscillators-and-time:oscillator}{周期}（\qty{0.16}{ms}）时达到。
+\end{example}
+
+\section{实际电路：阻尼振荡}
+
+每个实际\omterm{def:g11:magnetic-fields:solenoid}{线圈}都由有\omterm{def:g11:circuits-and-power:resistance}{电阻}的导线绕制：真实的回路是
+一个串联 \emph{RLC} 电路，\omterm{def:g11:circuits-and-power:resistance}{电阻}会消耗\omterm{def:g10:energy-conservation:energy}{能量}。
+
+\begin{definition}[准周期与非周期状态]\label{def:g12:rlc-oscillations:regimes}
+\index{RLC 电路}\index{准周期状态}\index{非周期状态}
+在串联 RLC 电路中，\omterm{def:g11:circuits-and-power:resistance}{电阻}器通过\omterm{def:g11:work-of-force:work}{焦耳}
+热效应\omterm{def:g11:mechanical-energy:dissipation}{耗散}\omterm{def:g10:energy-conservation:energy}{能量}（见\cref{ch:g11:circuits-and-power}）：自由振荡是
+\emph{\omterm{def:g12:oscillators-and-time:damping}{阻尼}的}。两种状态可由\omterm{def:g10:signals-and-waves:oscilloscope}{示波器}读出：
+\begin{itemize}
+  \item \emph{准\omterm{def:g12:oscillators-and-time:oscillator}{周期}的}（$R$ 较小）：电路仍在
+        逐渐缩小的包络线内振荡，并有一个重复时间——
+        \emph{准周期}\index{准周期!电学的}——
+        在\omterm{def:g12:oscillators-and-time:damping}{阻尼}较轻时接近 $T_0 = 2\pi\sqrt{LC}$；
+  \item \emph{非\omterm{def:g12:oscillators-and-time:oscillator}{周期}的}（$R$ 较大）：电荷缓慢回到零，
+        不会过冲——根本不发生振荡。
+\end{itemize}
+这恰好是\omterm{def:g12:oscillators-and-time:damping}{阻尼}机械\omterm{def:g12:oscillators-and-time:oscillator}{振子}
+（见\cref{def:g12:oscillators-and-time:damping}）的精确对应。
+\end{definition}
+
+\begin{omfigure}
+\begin{tikzpicture}
+\begin{axis}[omaxis, width=9.2cm, height=5.2cm,
+    xlabel={$t$（\unit{\micro s}）}, ylabel={$u$（\unit{V}）},
+    xmin=0, xmax=10, ymin=-6.6, ymax=8.2, legend pos=north east]
+  \addplot[omDef, thick, domain=0:10, samples=300]
+    {6*exp(-x/3)*cos(deg(2*pi*x/1.6))};
+  \addplot[omProp, thick, domain=0:10, samples=100] {6*exp(-x/1.2)};
+  \legend{准周期（$R$ 较小）, 非周期（$R$ 较大）}
+  \addplot[omThm, dashed, domain=0:10, samples=80, forget plot]
+    {6*exp(-x/3)};
+  \addplot[omThm, dashed, domain=0:10, samples=80, forget plot]
+    {-6*exp(-x/3)};
+\end{axis}
+\end{tikzpicture}
+
+{\small 实际 RLC 电路的两种归宿：振荡在
+\omterm{def:g10:orders-of-magnitude:scinot}{指数}型包络线（虚线）内逐渐消失，或无振荡地缓慢趋于零。
+轻\omterm{def:g12:oscillators-and-time:damping}{阻尼}时，\omterm{def:g12:rlc-oscillations:regimes}{准周期}仍保持 $\approx T_0$。}
+\end{omfigure}
+
+\begin{remark}[维持振荡]\label{rem:g12:rlc-oscillations:maintain}
+\index{维持振荡}
+要保持\omterm{def:g12:oscillators-and-time:oscillator}{振幅}不\omterm{def:g12:mechanical-waves:attenuation}{衰减}，需向电路恰好补充
+\omterm{def:g11:circuits-and-power:resistance}{电阻}所\omterm{def:g11:mechanical-energy:dissipation}{耗散}的\omterm{def:g10:energy-conservation:energy}{能量}，每\omterm{def:g12:oscillators-and-time:oscillator}{周期}补充一次，并与摆动\emph{同步}：一个
+放大器对 RLC 回路的作用，恰如擒纵机构对\omterm{def:g12:oscillators-and-time:pendulum}{单摆}的推动
+（见\cref{ch:g12:oscillators-and-time}）。每只石英表
+和每台无线电发射机都是这样的维持振荡器，以其
+\omterm{def:g12:rlc-oscillations:period}{固有频率} $f_0$ 工作。
+\end{remark}
+
+\section{力学对应}
+
+\begin{proposition}[电学–力学对照表]\label{prop:g12:rlc-oscillations:analogy}
+\index{电学–力学类比}
+LC 方程即弹簧–质量方程
+（见\cref{prop:g12:oscillators-and-time:spring-period}），逐字相同：
+\begin{center}\small
+\begin{tabular}{lcl}
+LC 电路 & & 弹簧–质量滑块 \\[2pt]
+电荷 $q$ & $\longleftrightarrow$ & 位置 $x$\\
+电流 $i = dq/dt$ & $\longleftrightarrow$ & 速度 $v = dx/dt$\\
+\omterm{def:g12:rc-rl-circuits:inductor}{电感} $L$ & $\longleftrightarrow$ & 质量 $m$\\
+\omterm{def:g12:rc-rl-circuits:capacitor}{电容}的倒数 $1/C$ & $\longleftrightarrow$ & \omterm{def:g12:oscillators-and-time:spring}{劲度系数} $k$\\
+\omterm{def:g11:circuits-and-power:resistance}{电阻} $R$ & $\longleftrightarrow$ & \omterm{def:g10:inertia:inventory}{摩擦力} \\
+$L\,\frac{d^2q}{dt^2} + \frac{q}{C} = 0$ & $\longleftrightarrow$ &
+  $m\,\frac{d^2x}{dt^2} + kx = 0$\\[2pt]
+$T_0 = 2\pi\sqrt{LC}$ & $\longleftrightarrow$ &
+  $T_0 = 2\pi\sqrt{m/k}$\\[2pt]
+$E_C = q^2/2C$ & $\longleftrightarrow$ & $E_p = \tfrac12 kx^2$\\
+$E_L = \tfrac12 Li^2$ & $\longleftrightarrow$ & $E_k = \tfrac12 mv^2$
+\end{tabular}
+\end{center}
+方程相同，解也相同：关于任一\omterm{def:g12:oscillators-and-time:oscillator}{振子}的结论，
+都可立即译成另一\omterm{def:g12:oscillators-and-time:oscillator}{振子}的语言。
+\end{proposition}
+
+\begin{proof}
+比较 \cref{prop:g12:rlc-oscillations:equation} 与
+$m\,d^2x/dt^2 = -kx$：代入 $q \to x$、$L \to m$、$1/C \to k$，
+即可将一式化为另一式，并由 $LC \to m/k$ 将
+$2\pi\sqrt{LC}$ 化为 $2\pi\sqrt{m/k}$。
+\end{proof}
+
+\begin{example}[调谐收音机]\label{ex:g12:rlc-oscillations:tuning}
+天线把\emph{每一个}电台的微弱\omterm{def:g10:signals-and-waves:signal}{信号}送入 LC 回路，但
+只有发射\omterm{def:g12:oscillators-and-time:oscillator}{频率}接近 $f_0$ 的那一个电台能与之同步地推动，使振荡增强——
+\omterm{def:g12:oscillators-and-time:resonance}{共振}（见\cref{def:g12:oscillators-and-time:resonance}）。调谐旋钮
+转动可变\omterm{def:g12:rc-rl-circuits:capacitor}{电容器}的极板：改变 $C$ 会使
+$f_0 = 1/(2\pi\sqrt{LC})$ 变化，指针每次只把一个
+电台送至耳机。在发射端，一个维持振动的\omterm{def:g12:oscillators-and-time:oscillator}{振子}
+（见\cref{rem:g12:rlc-oscillations:maintain}）设定广播
+\omterm{def:g12:oscillators-and-time:oscillator}{频率}；在手表中，石英晶体——一种刚度惊人的机械
+孪生体——起着同样的作用。
+\end{example}
+
+\section{练习}
+
+\begin{exercise}[$\star$]\label{exo:g12:rlc-oscillations:1}
+计算下列各情形的 $T_0$ 与 $f_0$：(a) $L = \qty{10}{mH}$，
+$C = \qty{1.0}{\micro F}$；(b) $L = \qty{1.0}{mH}$，
+$C = \qty{100}{pF}$。两个\omterm{def:g12:oscillators-and-time:oscillator}{频率}相差几倍？
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:g12:rlc-oscillations:2}
+利用 $\qty{1}{H} = \qty{1}{V.s/A}$ 与 $\qty{1}{F} = \qty{1}{C/V}$，
+逐步检验\omterm{def:g10:orders-of-magnitude:unit}{单位}，证明 $\sqrt{LC}$ 是一个时间量。为什么 $2\pi$
+不影响这一结论？
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:g12:rlc-oscillations:3}
+一个 \qty{470}{nF} \omterm{def:g12:rc-rl-circuits:capacitor}{电容器}被充电至 \qty{6.0}{V}，计算 $Q_0$
+及其储存的\omterm{def:g10:energy-conservation:energy}{能量}；不做计算，描述当它接入一个理想\omterm{def:g11:magnetic-fields:solenoid}{线圈}时
+会出现什么现象。
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:g12:rlc-oscillations:4}
+某 LC 电路的电荷（以微\omterm{def:g11:fundamental-interactions:charge}{库仑}计）为 $q(t) = 2.0\cos(2\pi t/T_0)$，
+其中 $T_0 = \qty{4.0}{ms}$。读出 $Q_0$；计算 $f_0$、$q(T_0/2)$、
+$i(0)$，以及峰值电流 $I_0 = 2\pi Q_0/T_0$。
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:g12:rlc-oscillations:5}
+在一个\omterm{def:g12:oscillators-and-time:oscillator}{周期}的哪些时刻，\omterm{def:g10:energy-conservation:energy}{能量}全部集中在
+\omterm{def:g12:rc-rl-circuits:capacitor}{电容器}中？全部在\omterm{def:g11:magnetic-fields:solenoid}{线圈}中？这两个时刻在\omterm{def:g12:oscillators-and-time:pendulum}{单摆}中
+分别对应什么力学状态？
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:g12:rlc-oscillations:6}
+将 $q(t) = Q_0\cos(2\pi t/T_0)$ 代入，验证它满足
+$L\,d^2q/dt^2 + q/C = 0$，当且仅当 $T_0 = 2\pi\sqrt{LC}$ 时成立。
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:g12:rlc-oscillations:7}
+某长波电台以 \qty{198}{kHz} 的\omterm{def:g12:oscillators-and-time:oscillator}{频率}广播。若
+$C = \qty{220}{pF}$，应取多大的\omterm{def:g12:rc-rl-circuits:inductor}{电感}才能与之调谐？
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:g12:rlc-oscillations:8}
+$C = \qty{1.0}{\micro F}$ 的\omterm{def:g12:rc-rl-circuits:capacitor}{电容器}充电至 \qty{10}{V} 后，
+向 $L = \qty{10}{mH}$ 放电。计算储存的\omterm{def:g10:energy-conservation:energy}{能量}、峰值电流（由
+\omterm{def:g10:energy-conservation:energy}{能量}守恒求得），以及峰值电流首次达到的时刻。
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:g12:rlc-oscillations:9}
+解释为何 $E_C$ 与 $E_L$ 以\omterm{def:g12:oscillators-and-time:oscillator}{频率} $2f_0$ 振荡，而非 $f_0$。
+证明在 $t = T_0/8$ 时（从 $q = Q_0$ 开始计）\omterm{def:g10:energy-conservation:energy}{能量}
+恰好平分。
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:g12:rlc-oscillations:10}
+在一个弱\omterm{def:g12:oscillators-and-time:damping}{阻尼} RLC 电路的\omterm{def:g10:signals-and-waves:oscilloscope}{示波图}上，相邻极大值
+依次读数为 \qty{4.0}{V} 与 \qty{3.0}{V}。假设比值保持
+不变，预测 \qty{4.0}{V} 那个极大值之后的第六个极大值。每经过
+一个\omterm{def:g12:rlc-oscillations:regimes}{准周期}，\emph{\omterm{def:g10:energy-conservation:energy}{能量}}的剩余比例为多少？关于\omterm{def:g12:rlc-oscillations:regimes}{准周期}本身，
+能得出什么结论？
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:g12:rlc-oscillations:11}
+一个 LC 电路中 $L = \qty{0.50}{H}$，$C = \qty{20}{\micro F}$。
+计算 $T_0$；然后利用对应关系
+（见\cref{prop:g12:rlc-oscillations:analogy}），求\omterm{def:g12:oscillators-and-time:spring}{劲度系数} $k$，
+使质量为 \qty{0.50}{kg} 的滑块具有相同的\omterm{def:g12:oscillators-and-time:oscillator}{周期}，并加以检验。
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:g12:rlc-oscillations:12}
+某调谐器采用 $L = \qty{0.20}{mH}$，并配以可变\omterm{def:g12:rc-rl-circuits:capacitor}{电容器}，
+\omterm{def:g12:rc-rl-circuits:capacitor}{电容}在 \qtyrange{50}{500}{pF} 之间变化。计算两个极端\omterm{def:g12:oscillators-and-time:oscillator}{频率}。证明
+$f_0 \propto 1/\sqrt{C}$，因此 $C$ 扩大十倍时，\omterm{def:g12:oscillators-and-time:oscillator}{频率}仅
+变为原来的 $\sqrt{10} \approx 3.2$ 倍。
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:g12:rlc-oscillations:13}
+实际\omterm{def:g11:magnetic-fields:solenoid}{线圈}使电路每个
+\omterm{def:g12:rlc-oscillations:regimes}{准周期}损失其\omterm{def:g10:energy-conservation:energy}{能量}的 $5.0\%$。经过多少个\omterm{def:g12:oscillators-and-time:oscillator}{周期}\omterm{def:g10:energy-conservation:energy}{能量}减半？此时
+\omterm{def:g12:oscillators-and-time:oscillator}{振幅}为初始值的几分之几？在
+$f_0 = \qty{1.0}{MHz}$ 时，这段时间为多少微秒？
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:g12:rlc-oscillations:14}
+手表\omterm{def:g12:oscillators-and-time:oscillator}{振子}储存的\omterm{def:g10:energy-conservation:energy}{能量}为 $E = \qty{1.0e-9}{J}$，每个\omterm{def:g12:oscillators-and-time:oscillator}{周期}损失其中的 $2.0\%$，
+振荡\omterm{def:g12:oscillators-and-time:oscillator}{频率}为 $f_0 = \qty{32768}{Hz}$。维持电路须提供多大的平均\omterm{def:g11:work-of-force:power}{功率}？
+为何推动必须与振动
+同步到达？
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:g12:rlc-oscillations:15}
+方波\omterm{def:g10:signals-and-waves:signal}{信号}的每个跳变沿之后，实验者的布线会“振铃”，
+\omterm{def:g12:oscillators-and-time:oscillator}{频率}约为 \qty{25}{MHz}；杂散\omterm{def:g12:rc-rl-circuits:inductor}{电感}约为 \qty{1.0}{\micro H}。
+估算引起这一现象的杂散\omterm{def:g12:rc-rl-circuits:capacitor}{电容}。若在电路中串联一个小\omterm{def:g11:circuits-and-power:resistance}{电阻}，
+应使电路进入何种\omterm{def:g12:oscillators-and-time:damping}{阻尼}状态？这为何能
+消除振铃？
+\end{exercise}
+
+\section{问题：制作矿石收音机}
+
+\begin{problem}[{周末问题——制作矿石收音机：一个线圈、一个可变电容器、
+一只二极管和一只耳机——不用电池、不用放大器，
+晚间新闻全靠波本身的能量送达
+}]
+\label{pb:g12:rlc-oscillations:1}
+一套来自祖父母阁楼的器材：一个绕在纸筒上的\omterm{def:g11:magnetic-fields:solenoid}{线圈} $L = \qty{0.20}{mH}$，
+一个可变\omterm{def:g12:rc-rl-circuits:capacitor}{电容器}，其极板可从
+\qty{20}{pF}转到 \qty{480}{pF}，一只晶体二极管、一只耳机，以及
+长 \qty{20}{m} 的天线导线。待接收的广播电台
+\omterm{def:g12:oscillators-and-time:oscillator}{频率}介于 \qty{530}{kHz} 与 \qty{1700}{kHz} 之间。
+
+\medskip
+\noindent\textbf{第一部分——调谐回路。}
+\begin{enumerate}
+  \item 让充电后的\omterm{def:g12:rc-rl-circuits:capacitor}{电容器}向\omterm{def:g11:magnetic-fields:solenoid}{线圈}放电：
+        写出回路定律，并将其化为关于
+        $q(t)$ 的微分方程。
+  \item 代入验证 $q(t) = Q_0\cos(2\pi t/T_0)$
+        是方程的解，前提是 $T_0 = 2\pi\sqrt{LC}$。
+  \item 用量纲分析检验 $\sqrt{LC}$ 是时间量。
+  \item 将旋钮调至 $C = \qty{330}{pF}$，计算 $T_0$ 与 $f_0$。
+        回路调谐\omterm{def:g12:oscillators-and-time:oscillator}{频率}是否落在波段内？
+  \item 求恰好调谐到 \qty{1.00}{MHz} 的\omterm{def:g12:rc-rl-circuits:capacitor}{电容}值。
+\end{enumerate}
+
+\medskip
+\noindent\textbf{第二部分——可变\omterm{def:g12:rc-rl-circuits:capacitor}{电容器}。}
+\begin{enumerate}[resume]
+  \item 计算接收 \qty{530}{kHz} 所需的\omterm{def:g12:rc-rl-circuits:capacitor}{电容}。
+  \item 计算接收 \qty{1700}{kHz} 所需的\omterm{def:g12:rc-rl-circuits:capacitor}{电容}。
+  \item 计算该套件的 \qtyrange{20}{480}{pF}
+        \omterm{def:g12:rc-rl-circuits:capacitor}{电容器}实际所能达到的两个\omterm{def:g12:oscillators-and-time:oscillator}{频率}，并判断其是否覆盖整个波段。
+  \item 证明 $f_0 \propto 1/\sqrt{C}$（$L$ 固定）；
+        $C$ 须变为原来的多少倍，才能使 $f_0$ 加倍？
+  \item 极板线性张开，因此转动旋钮时 $C$ 持续减小，
+        试解释为何电台会集中在刻度盘的一端——
+        并指出是哪一端。
+\end{enumerate}
+
+\medskip
+\noindent\textbf{第三部分——\omterm{def:g10:energy-conservation:energy}{能量}与\omterm{def:g12:oscillators-and-time:damping}{阻尼}。}
+调谐至 \qty{1.00}{MHz}（$C = \qty{127}{pF}$）时，天线瞬间
+使\omterm{def:g12:rc-rl-circuits:capacitor}{电容器}充电至 $U_0 = \qty{20}{mV}$。
+\begin{enumerate}[resume]
+  \item 计算电荷 $Q_0$ 与储存的\omterm{def:g10:energy-conservation:energy}{能量} $E$。
+  \item 利用\omterm{def:g10:energy-conservation:energy}{能量}守恒计算峰值电流 $I_0$。
+  \item \omterm{def:g11:magnetic-fields:solenoid}{线圈}\omterm{def:g11:circuits-and-power:resistance}{电阻}每\omterm{def:g12:oscillators-and-time:oscillator}{周期}\omterm{def:g11:mechanical-energy:dissipation}{耗散}储存\omterm{def:g10:energy-conservation:energy}{能量}的 $4.0\%$，
+        问经过多少个\omterm{def:g12:oscillators-and-time:oscillator}{周期}后\omterm{def:g10:energy-conservation:energy}{能量}减半？
+  \item 这需要多长时间（以微秒计）？为何这种“振铃”
+        本身不能播放晚间新闻？
+  \item 试解释为何到达的波只有在调谐到该电台时才能使回路持续振荡——
+        以及是什么维持了
+        \emph{发射机}处的振荡
+        （\cref{rem:g12:rlc-oscillations:maintain}）。
+\end{enumerate}
+
+\medskip
+\noindent\textbf{第四部分——力学类比模型。}
+\begin{enumerate}[resume]
+  \item 利用类比对应关系（\cref{prop:g12:rlc-oscillations:analogy}），
+        对质量为 $m = \qty{0.20}{kg}$ 的滑块，计算
+        与该调谐回路相匹配的弹簧\omterm{def:g12:oscillators-and-time:spring}{劲度系数} $k$。
+  \item 某汽车的硬弹簧 $k \approx \qty{5e4}{N/m}$。请评论：
+        台式弹簧–质量系统能否在兆\omterm{def:g10:signals-and-waves:frequency}{赫兹}量级振动？
+  \item 改用合理的 $k = \qty{100}{N/m}$：
+        质量为多大时，振动\omterm{def:g12:oscillators-and-time:oscillator}{频率}为 \qty{1.00}{MHz}？
+  \item 这种极轻、超硬的力学\omterm{def:g12:oscillators-and-time:oscillator}{振子}究竟是什么真实物体，
+        你今年早些时候曾在何处见过它
+        （\cref{ch:g12:oscillators-and-time}）？
+  \item 用一句话写出技术参数：收音机所覆盖的波段、
+        选中 \qty{1.00}{MHz} 所需的\omterm{def:g12:rc-rl-circuits:capacitor}{电容}、单独一次振铃持续的时间，
+        以及最终靠什么播放新闻。
+\end{enumerate}
+\end{problem}

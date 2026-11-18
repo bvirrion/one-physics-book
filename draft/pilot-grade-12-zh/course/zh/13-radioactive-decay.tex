@@ -1,0 +1,440 @@
+\chapter{放射性衰变}\label{ch:g12:radioactive-decay}
+
+在一家博物馆的地下室里，盖革计数器正对着一小片取自法老棺木的木片，
+咔嗒作响。每一次咔嗒都毫无规律，事先毫无预兆，
+下一次也无从预测。然而到周五，实验室即可打印出精确到一个世纪的年代。
+本章将解开这一悖论：单个完全随机的事件，
+积少成多，以万亿计，竟形成了我们所拥有的最稳定的时钟。
+
+\section{逐个无规律，成摩尔则如钟表般精确}
+
+上一年（\cref{ch:g11:nucleus-radioactivity}）我们认识了不稳定的
+原子核，配平了它们的 $\alpha$ 与 $\beta$ 方程，并看到任一大样本中
+每经过一个半衰期 $T_{1/2}$ 便有一半消失。当时无法回答的是
+\emph{台阶之间究竟何时发生}，也无法说明随机过程为何竟能保持某种规律。
+这两个问题有同一个答案。
+
+\begin{definition}[衰变常数]\label{def:g12:radioactive-decay:lambda}
+对于每一种不稳定核素，存在一个常数 $\lambda$，称为其\emph{衰变常数}\index{衰变常数}
+（单位 \unit{s^{-1}}），使得在任一
+短时间间隔 $\dd t$ 内，每个原子核衰变的概率为 $p = \lambda\,\dd t$——
+对该种原子核中的每一个都相同，无论其年龄如何，
+且不受温度、压强或化学作用的影响。
+\end{definition}
+
+\begin{remark}[单个无规律，成群则精确]\label{rem:g12:radioactive-decay:crowds}
+一个已经“等待”了一万年的原子核，与今早才生成的原子核，在这一秒内衰变的可能性完全相同：
+没有磨损，也没有任何预警——哪一个先衰变，
+确实无法预测。但成群则是另一回事。抛掷
+$100$ 枚硬币：预期得到 $50$ 次正面，但得到 $43$ 次也不足为奇——
+涨落量级为 $\sqrt n$，此处约为 $10\%$。抛掷 $10^{20}$ 枚，
+相对涨落 $1/\sqrt n$ 为 $10^{-10}$，结果
+一克物质约含 $10^{22}$ 个原子核：无规律性
+在大量平均之中化为钟表般精确的规律，$N(t)$ 所满足的精确定律，
+其中的数目即时刻 $t$ 时仍未衰变的原子核数。
+\end{remark}
+
+\begin{omfigure}
+\begin{tikzpicture}
+\begin{axis}[omaxis, width=8.8cm, height=5.0cm,
+    xlabel={$t$（以 $T_{1/2}$ 为单位）}, ylabel={存活数},
+    xmin=0, xmax=4.3, ymin=0, ymax=21, xtick={0,1,2,3,4},
+    legend pos=north east, legend style={font=\small}]
+  \addplot[omDef, thick, domain=0:4.2, samples=60] {20*exp(-0.6931*x)};
+  \addplot[omProp, only marks, mark=x] coordinates
+    {(0,20) (0.5,17) (1,11) (1.5,8) (2,6) (2.5,4) (3,3) (3.5,2) (4,1)};
+  \addplot[omExo, only marks, mark=o] coordinates
+    {(0,20) (0.5,14) (1,9) (1.5,7) (2,4) (2.5,4) (3,2) (3.5,1) (4,1)};
+  \legend{期望值，样本 1, 样本 2}
+\end{axis}
+\end{tikzpicture}
+
+{\small 两份各含 $20$ 个原子核的实际样本，在期望曲线附近无规律地起伏下降，
+而一摩尔原子核则会紧贴该曲线，精确到小数点后十位。}
+\end{omfigure}
+
+\section{衰变定律}
+
+\begin{proposition}[演化方程]\label{prop:g12:radioactive-decay:ode}
+对于含 $N$ 个原子核的大样本，在 $\dd t$ 内数目的改变量为
+\[
+\dd N = -\lambda N\,\dd t, \qquad\text{即}\qquad \frac{\dd N}{\dd t} = -\lambda N :
+\]
+数目以与其自身成正比的速率减少。
+\end{proposition}
+
+\begin{proof}
+这 $N$ 个原子核中的每一个在 $\dd t$ 内衰变的概率为
+$\lambda\,\dd t$，期望衰变数为 $N\lambda\,\dd t$；当 $N$ 很大时，
+实际计数紧贴期望值
+（见\cref{rem:g12:radioactive-decay:crowds}），每次衰变减少一个原子核。
+\end{proof}
+
+\begin{theorem}[放射性衰变定律]\label{thm:g12:radioactive-decay:law}
+若样本含有 $N_0$ 个原子核，取 $t = 0$，则在时刻 $t$ 时，样本中含有
+\[
+N(t) = N_0 \, e^{-\lambda t}.
+\]
+\end{theorem}
+
+\begin{proof}
+代入检验：
+$\dd N/\dd t = N_0(-\lambda)\,e^{-\lambda t} = -\lambda N(t)$，且
+$N(0) = N_0 e^0 = N_0$：方程与初值均正确。（说明没有
+\emph{其他}函数也满足，这需借助积分证明，
+见本科分册。）
+\end{proof}
+
+\begin{definition}[指数衰减]\label{def:g12:radioactive-decay:exponential}
+遵循 $N_0\,e^{-\lambda t}$ 规律的量发生\emph{指数衰减}\index{指数衰减}：
+在相等的时间内，损失的总是相同的\emph{比例}。
+它恰是\cref{ch:g12:rc-rl-circuits}中放电的电容器，
+其中 $\lambda$ 相当于 $1/(RC)$：一个微分方程，
+学一次即可同时用于电路与原子核。
+\end{definition}
+
+\begin{proposition}[半衰期]\label{prop:g12:radioactive-decay:halflife}
+某一核素的半衰期（见\cref{def:g11:nucleus-radioactivity:halflife}）
+由其衰变常数决定：$T_{1/2} = \ln 2/\lambda$；且经过 $n$
+个半衰期后 $N = N_0/2^{\,n}$，无论 $n$ 是否为整数。
+\end{proposition}
+
+\begin{proof}
+$N(T_{1/2}) = N_0/2$ 要求 $e^{-\lambda T_{1/2}} = \tfrac12$，即\
+$\lambda T_{1/2} = \ln 2$；且 $N(n\,T_{1/2}) = N_0\,e^{-n\ln 2} =
+N_0/2^{\,n}$ 对任意 $n$ 成立：指数函数串起了台阶，
+并填补了台阶之间的空隙。
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}
+\begin{axis}[omaxis, width=8.8cm, height=5.2cm,
+    xlabel={$t$（以 $T_{1/2}$ 为单位）}, ylabel={$N/N_0$},
+    xmin=0, xmax=5, ymin=0, ymax=1.08, xtick={0,1,2,3,4,5},
+    ytick={0.125,0.25,0.5,1}, yticklabels={$\tfrac18$,$\tfrac14$,$\tfrac12$,$1$}]
+  \addplot[omDef, thick, domain=0:5, samples=80] {exp(-0.6931*x)};
+  \addplot[omExo, dashed] coordinates {(0,0.5) (1,0.5) (1,0)};
+  \addplot[omExo, dashed] coordinates {(0,0.25) (2,0.25) (2,0)};
+  \addplot[omExo, dashed] coordinates {(0,0.125) (3,0.125) (3,0)};
+\end{axis}
+\end{tikzpicture}
+
+{\small $N(t) = N_0\,e^{-\lambda t}$ 穿过阶梯图中的每一级台阶，
+而现在说明台阶之间发生的事。}
+\end{omfigure}
+
+\begin{example}[二十个数量级]\label{ex:g12:radioactive-decay:range}
+取 $1$ 年 $= \qty{3.156e7}{s}$：
+\begin{center}\small
+\begin{tabular}{llll}
+核素 & $T_{1/2}$ & $\lambda$ (\unit{s^{-1}}) & \\
+钋-214 & \qty{1.6e-4}{s} & \num{4.2e3} & 铀衰变链中的一环 \\
+锝-99m & $6.0$ 小时 & \num{3.2e-5} & 医学成像 \\
+碘-131 & $8.0$ 天 & \num{1.0e-6} & 甲状腺治疗 \\
+铯-137 & $30$ 年 & \num{7.3e-10} & 反应堆裂变产物 \\
+碳-14 & \num{5730} 年 & \num{3.8e-12} & 考古 \\
+钾-40 & \num{1.25e9} 年 & \num{1.8e-17} & 岩石年代测定 \\
+铀-238 & \num{4.5e9} 年 & \num{4.9e-18} & 地球内部热量 \\
+\end{tabular}
+\end{center}
+一条定律，$\lambda$ 的取值跨越二十个数量级。
+\end{example}
+
+\section{活度：数“咔嗒”声}
+
+\begin{proposition}[活度]\label{prop:g12:radioactive-decay:activity}
+样品的活度——即每秒的衰变数，以贝可勒尔为单位
+（见\cref{def:g11:nucleus-radioactivity:activity}）——为
+\[
+\mathcal A = \lambda N, \qquad\text{则}\qquad \mathcal A(t) = \mathcal A_0 \, e^{-\lambda t}:
+\]
+与存留的原子核数成正比，同样呈指数衰减。
+\end{proposition}
+
+\begin{proof}
+$N$ 个原子核，每个原子核每秒衰变的概率为 $\lambda$，则每秒衰变 $\lambda N$ 个；
+由\cref{thm:g12:radioactive-decay:law}两边乘以 $\lambda$，
+可得 $\mathcal A(t) = \mathcal A_0 e^{-\lambda t}$。
+\end{proof}
+
+\begin{example}[$N$ 很大，$\lambda$ 很小]\label{ex:g12:radioactive-decay:body}
+一根香蕉的计数率约为 \qty{15}{Bq}，人体约为
+\qty{8000}{Bq}，一立方米花岗岩约为 \qty{e6}{Bq}
+（见\cref{ch:g11:nucleus-radioactivity}）。这些微弱的计数背后，
+隐藏着天文数量的原子核：人体中的钾-40 贡献
+$\mathcal A \approx \qty{4.4e3}{Bq}$，$\lambda =
+\qty{1.8e-17}{s^{-1}}$：$N = \mathcal A/\lambda \approx \num{2.5e20}$
+个原子核，其中每秒真正发生衰变的仅有几千个。
+\end{example}
+
+\begin{method}[测量半衰期]\label{met:g12:radioactive-decay:semilog}
+\begin{enumerate}
+  \item 用盖革计数器在相等的连续时间间隔内计数衰变：
+        这样便可得到不同时刻的 $\mathcal A$ 值。
+  \item 作 $\ln \mathcal A$ 对 $t$ 的图像：
+        由于 $\ln \mathcal A = \ln \mathcal A_0 - \lambda t$，
+        指数衰减表现为一条\emph{直线}——
+        弯曲的数据则说明另有规律，或存在多种核素的混合。
+  \item 读出斜率的负值即为 $\lambda$；$T_{1/2} = \ln 2/\lambda$。
+\end{enumerate}
+\end{method}
+
+\begin{omfigure}
+\begin{tikzpicture}
+\begin{axis}[omaxis, width=8.8cm, height=5.0cm,
+    xlabel={$t$（\unit{s}）}, ylabel={$\ln \mathcal A$},
+    xmin=0, xmax=260, ymin=0, ymax=6.8, xtick={0,60,120,180,240}, ytick={2,4,6}]
+  \addplot[omDef, thick, domain=0:250, samples=2] {5.99-0.00958*x};
+  \addplot[omProp, only marks, mark=*, mark size=1.6pt] coordinates
+    {(0,5.99) (60,5.42) (120,4.84) (180,4.26) (240,3.69)};
+  \draw[omExo, dashed] (axis cs:60,5.42) -| (axis cs:180,4.26);
+  \node[font=\small, above right] at (axis cs:110,4.28) {斜率 $= -\lambda$};
+\end{axis}
+\end{tikzpicture}
+
+{\small 某短寿命核素的盖革计数：在半对数坐标轴上，指数规律
+化为一条直线；由斜率可得
+$\lambda \approx \qty{9.6e-3}{s^{-1}}$，故 $T_{1/2} \approx \qty{72}{s}$。}
+\end{omfigure}
+
+\begin{remark}[贝可勒尔不等于危害]\label{rem:g12:radioactive-decay:dose}
+贝可勒尔计量的是衰变次数，而非损伤。衡量危害的是以
+希沃特为单位的剂量（见\cref{ch:g11:nucleus-radioactivity}），按
+各类辐射的破坏力，对每千克组织所吸收的能量加权：一
+\qty{5e8}{Bq} 的锝扫描属常规操作，而吸入的
+$\alpha$ 发射体即便贝可勒尔数少得多，也绝非常规；将 \unit{Bq} 换算为 \unit{Sv} 属于
+大学课程的内容。
+\end{remark}
+
+\section{测年：由比值读出时间}
+
+将衰变定律倒过来用，便是一只时钟：测得存留的比例，
+指数关系即可给出所经历的时间。
+
+\begin{method}[放射性碳测年法]\label{met:g12:radioactive-decay:carbon}
+\begin{enumerate}
+  \item \emph{生存时：}生物组织与大气交换碳，
+        并保持碳-14 的比例——约每 $10^{12}$ 个原子中有一个，
+        由此每克碳每分钟衰变 $\mathcal A_0 = 13.6$ 次。
+  \item \emph{死亡时开始计时：}停止摄入，此后该比例
+        以 $T_{1/2} = \num{5730}$ 年的半衰期衰变。
+  \item 测量样品每克碳的活度 $\mathcal A$；
+        由 $\mathcal A = \mathcal A_0 e^{-\lambda t}$ 反解得
+        $t = \frac{1}{\lambda}\ln(\mathcal A_0/\mathcal A)
+        = T_{1/2}\,\ln(\mathcal A_0/\mathcal A)/\ln 2$。
+\end{enumerate}
+\end{method}
+
+\begin{example}[洞穴中的一处火塘]\label{ex:g12:radioactive-decay:hearth}
+掩埋火塘中取出的木炭，每克每分钟衰变 $5.0$ 次：
+$\mathcal A_0/\mathcal A = 13.6/5.0 = 2.72$，于是
+$t = \num{5730} \times \ln(2.72)/\ln 2 \approx \num{8.3e3}$ 年。
+这堆火早在八千年前就已熄灭——木炭本身就是一份档案。
+\end{example}
+
+\begin{omfigure}
+\begin{tikzpicture}
+\begin{axis}[omaxis, width=8.8cm, height=5.0cm,
+    xlabel={年龄（千年）}, ylabel={$\mathcal A/\mathcal A_0$},
+    xmin=0, xmax=32, ymin=0, ymax=1.08, xtick={0,10,20,30},
+    ytick={0.25,0.37,0.5,1}, yticklabels={$\tfrac14$,$0.37$,$\tfrac12$,$1$}]
+  \addplot[omDef, thick, domain=0:31, samples=80] {exp(-0.6931*x/5.73)};
+  \addplot[omExo, dashed] coordinates {(0,0.37) (8.3,0.37) (8.3,0)};
+  \fill[omThm] (axis cs:8.3,0.37) circle (1.6pt);
+\end{axis}
+\end{tikzpicture}
+
+{\small 衰变曲线：从测得的比值出发，向下读出
+年龄。圆点即\cref{ex:g12:radioactive-decay:hearth}中的火塘：
+比值 $0.37$，年龄 \num{8.3e3} 年。}
+\end{omfigure}
+
+\begin{example}[岩石的时钟]\label{ex:g12:radioactive-decay:rocks}
+碳-14 在约 \num{50000} 年之后便无法测定；地质学依靠
+更慢的时钟。\emph{钾–氩法}：钾-40（$T_{1/2} = \num{1.25e9}$
+年）衰变为氩，氩是一种能从熔岩中逸出的气体，而岩石
+结晶后氩即被封存——凝固使时钟归零。\emph{铀–铅法}：
+铀-238 是一系列衰变的起点，最终生成稳定的铅-206
+（\cref{ch:g11:nucleus-radioactivity}），晶体中铅与铀的比值
+可用来测定其年代。两种时钟对最古老的矿物
+（$\approx \num{4.4e9}$ 年）给出一致结果，并借助陨石，对太阳系的
+年龄也得出一致结论。
+\end{example}
+
+\begin{remark}[衰变链与地窖中的气体]\label{rem:g12:radioactive-decay:radon}
+从铀到铅的衰变链经过镭，然后是氡-222，
+它是一种放射性\emph{气体}（$T_{1/2} = 3.8$ 天）。它产生于花岗岩和
+土壤之中，会渗入地下室并积聚；其发射 $\alpha$ 粒子的
+子体在肺部衰变——这是大多数人最大的天然剂量，并且
+最容易降低：打开地窖的窗户即可。
+\end{remark}
+
+\section{练习}
+
+\begin{exercise}[$\star$]\label{exo:g12:radioactive-decay:1}
+碘-131 的 $\lambda = \qty{1.0e-6}{s^{-1}}$。求其半衰期，分别以
+秒和天为单位。
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:g12:radioactive-decay:2}
+氡-222 的 $T_{1/2} = 3.8$ 天。求 $\lambda$（以 \unit{s^{-1}} 为单位），
+再求 \num{1.0e10} 个原子核样品的放射性活度。
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:g12:radioactive-decay:3}
+通过代入验证 $N(t) = N_0\,e^{-\lambda t}$ 满足
+$\dd N/\dd t = -\lambda N$ 和 $N(0) = N_0$；然后求 $N(T_{1/2})/N_0$。
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:g12:radioactive-decay:4}
+一个铯-137 源（$T_{1/2} = 30$ 年）当前放射性活度为 \qty{4.0e5}{Bq}，
+求其 $90$ 年后的活度，再求 $300$ 年后的活度。
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:g12:radioactive-decay:5}
+锝样品的 $\ln \mathcal A$ 对 $t$ 的半对数图为
+一条直线，经过 $(0, 20.00)$ 和 $(\qty{10}{hours}, 18.85)$。求
+$\lambda$（分别以 \unit{h^{-1}} 和 \unit{s^{-1}} 为单位）以及 $T_{1/2}$。
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:g12:radioactive-decay:6}
+一克镭-226（$T_{1/2} = 1600$ 年；摩尔质量
+\qty{226}{g/mol}；$N_A = \qty{6.02e23}{mol^{-1}}$）：求其原子核数目
+，再求 $\lambda$，然后求放射性活度——历史上第一个放射性活度单位
+即居里。
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:g12:radioactive-decay:7}
+两名学生分别封存了 $20$ 个和 \num{2.0e20} 个同一种核素的
+原子核。经过一个半衰期后，两人各自预计的结果是什么？谁的预测
+更可靠？（分别估算相对涨落 $1/\sqrt n$。）
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:g12:radioactive-decay:8}
+一个人体内约含 \qty{140}{g} 钾，其中 $0.012\%$ 为
+钾-40（$T_{1/2} = \num{1.25e9}$ 年，摩尔质量 \qty{40}{g/mol}）。
+求钾-40 原子核的数目，再求其放射性活度；并与
+人体总放射性活度 \qty{8000}{Bq} 作比较。
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:g12:radioactive-decay:9}
+一位患者接受了 \qty{500}{MBq} 的锝-99m（$T_{1/2} = 6.0$
+小时）。求 $15$ 小时后的放射性活度，再求其降至
+\qty{1}{MBq} 以下所需的时间。
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:g12:radioactive-decay:10}
+某炭坑中的木炭显示每克碳每分钟衰变 $3.4$ 次；
+另一处的骨骼所示衰变率为活体水平的 $30\%$（$\mathcal A_0 = 13.6$
+次每分钟每克，$T_{1/2} = \num{5730}$ 年）。测定这两个样品的年代。
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:g12:radioactive-decay:11}
+一间地窖内封存了一批氡-222（$T_{1/2} = 3.8$
+天）。经过多长时间，这批氡的放射性活度降至 $1\%$？实际的
+地窖可以数十年保持放射性：新的氡从何而来，
+为什么通风必须是长期的，而不能只做一次？
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:g12:radioactive-decay:12}
+由 $N = N_0 e^{-\lambda t}$ 证明 $t = T_{1/2}\ln(N_0/N)/\ln 2$。一
+块骨骼保留了其活体碳-14 的 $5.0\%$：测定其年代。
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:g12:radioactive-decay:13}
+在凝固时未封存氩的晶体中，每个衰变的
+钾-40 原子核都会在原位留下一个氩原子。证明
+$N_{\mathrm{Ar}}/N_{\mathrm K} = e^{\lambda t} - 1$；某岩石显示该比值为
+$3.0$，求其年龄（$T_{1/2} = \num{1.25e9}$ 年）。
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:g12:radioactive-decay:14}
+盖革计数器在 $t = 0$、$60$、$120$、$180$、$240$ 秒时，
+计数率分别为 $400$、$225$、$127$、$71$、$40$ 每秒计数。计算
+各时刻的 $\ln \mathcal A$，检验各点是否共线，并推出 $\lambda$ 和
+$T_{1/2}$。
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:g12:radioactive-decay:15}
+对单个原子核，存活 $n$ 个半衰期的概率为
+$1/2^{\,n}$。计算下列概率：（a）某一给定原子核存活
+$10$ 个半衰期；（b）所观测的 $8$ 个原子核全部存活一个半衰期。
+（c）\num{1000} 个原子核经过 $3$ 个半衰期后，预计还剩多少个——
+该定律能否说明\emph{哪些}原子核尚存？总结该定律的预测。
+\end{exercise}
+
+\section{问题：万物的年代}
+
+\begin{problem}[{周末问题——万物的年代：一间博物馆实验室
+校准碳钟、测定一尊雕像与一卷纸草的年代，弄清为什么任何钟表都
+无法读出超出表盘范围的时间，并把一块火山岩的年代上推十亿年}]
+\label{pb:g12:radioactive-decay:1}
+一周内在博物馆的测年实验室。数据：活体组织显示
+$\mathcal A_0 = 13.6$，即每克碳每分钟碳-14 的衰变数；
+$T_{1/2} = \num{5730}$ 年（碳-14），\num{1.25e9} 年
+（钾-40）；$1$ 年 $= \qty{3.156e7}{s}$；
+$N_A = \qty{6.02e23}{mol^{-1}}$；碳的摩尔质量为 \qty{12}{g/mol}；
+计数器的分辨能力约为每分钟每克 $0.2$ 次衰变。
+
+\medskip
+\noindent\textbf{第一部分——周一：校准碳钟。}
+\begin{enumerate}
+  \item 为什么活体组织中碳-14 的比例保持不变，
+        死亡后又发生了什么变化？
+  \item 计算碳-14 的 $\lambda$，单位为 \unit{s^{-1}}。
+  \item 将 $N_0 e^{-\lambda t}$ 代入，验证其满足
+        $\dd N/\dd t = -\lambda N$。
+  \item 由 $\mathcal A_0$，计算活体组织中每克碳所含
+        碳-14 原子的个数。
+  \item 一克碳含有多少个碳原子？由此推出碳-14 的比例，
+        并与“每 $10^{12}$ 个中有一个”比较。
+  \item 证明：测得的放射性活度 $\mathcal A$ 给出的样品年代为
+        $t = T_{1/2}\,\ln(\mathcal A_0/\mathcal A)/\ln 2$。
+\end{enumerate}
+
+\medskip
+\noindent\textbf{第二部分——周二：雕像与纸草。}
+\begin{enumerate}[resume]
+  \item 一尊木制雕像给出每分钟每克 $9.1$ 次衰变。测定
+        该木材的年代。
+  \item 这一年代究竟标记了什么事件——是雕刻，
+        还是别的事件？由此应注意什么？
+  \item 一卷埃及纸草给出每分钟每克 $10.4$ 次衰变。测定
+        其年代。二十二个世纪前的抄写员是否合理？
+  \item 测得的活度误差为每分钟 $\pm 0.2$ 次衰变。估算
+        纸草年代的不确定度，取
+        $\Delta t \approx \Delta\mathcal A/(\lambda \mathcal A)$。
+  \item 某商人的“古代”羊皮纸给出
+        每分钟每克 $13.4$ 次衰变。作出判断。
+\end{enumerate}
+
+\medskip
+\noindent\textbf{第三部分——周四：碳钟的极限。}
+\begin{enumerate}[resume]
+  \item 经过多少个半衰期，样品的活度会降至
+        计数器能分辨的每分钟每克 $0.2$ 次衰变以下？对应的年代是多少？
+  \item 最好的实验室能测到约十个半衰期。放射性碳测年的
+        实际极限（以年计）是多少？
+  \item 一块恐龙骨骼约 \num{6.6e7} 年：它经过了多少个
+        碳-14 半衰期？利用第 4 题，经过多少个半衰期后
+        一克碳中连\emph{一个}碳-14 原子都不剩？
+        对“碳测年恐龙”作出结论。
+  \item 改用何种核素，才能测定恐龙所在岩石的年代？
+\end{enumerate}
+
+\medskip
+\noindent\textbf{第四部分——周五：火山岩。}
+\begin{enumerate}[resume]
+  \item 氩是气体，钾则始终留存于固体之中：解释
+        为何熔岩的凝固会使钾–氩钟归零。
+  \item 假设每个发生衰变的钾-40 原子核都留下一个被封存的
+        氩原子，证明
+        $N_{\mathrm{Ar}}/N_{\mathrm K} = e^{\lambda t} - 1$。
+  \item 博物馆化石下方的岩石显示
+        $N_{\mathrm{Ar}}/N_{\mathrm K} = 0.60$。测定该岩石的年代。
+  \item 碳-14 能否测定这块岩石，或钾–氩法能否测定
+        那尊雕像？以半衰期为单位，给出两种钟各自的有效测量区间。
+  \item 周五报告，用一句话概括：本周求得的三个年代，以及
+        用来解读它们的那一条定律。
+\end{enumerate}
+\end{problem}

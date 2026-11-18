@@ -1,0 +1,440 @@
+\chapter{RC 电路与 RL 电路}\label{ch:g12:rc-rl-circuits}
+
+按下相机快门至一半：一声细微的嗡鸣持续两秒，
+一盏灯变绿——只有此时闪光灯才会点亮，在一毫秒内释放
+它用两秒钟积蓄的能量。本章将介绍使电路具有“记忆”与“时钟”功能的两种元件
+——电容器与线圈——并
+引入物理学中第一批微分方程，可用本年度所学的导数加以检验。
+
+\section{电容器}
+
+\begin{definition}[电容器与电容]\label{def:g12:rc-rl-circuits:capacitor}
+\emph{电容器}\index{电容器}是一对相对放置的金属极板，
+中间隔以薄的绝缘体。接入电源后，两极板分别带
+等量异号的电荷 $+q$ 与 $-q$——两板之间的间隙中充满电场
+（见\cref{ch:g11:electric-gravitational-fields}），两极板间的电压 $u$
+与所储存的电荷成正比：
+\[ q = C\,u . \]
+常数 $C$ 称为\emph{电容}\index{电容}，其单位为
+\emph{法拉}\index{法拉}（\unit{F}）：$\qty{1}{F} = \qty{1}{C/V}$。
+\end{definition}
+
+\begin{example}[数量级]\label{ex:g12:rc-rl-circuits:orders}
+一法拉非常大，相当于每伏特储存一库仑电荷。无线电电路中的陶瓷电容器
+：\unit{pF} 至 \unit{nF}；电源与
+闪光灯中的电解电容器：\unit{\micro F} 至 \unit{mF}；超级电容器：可达数千法拉。
+\end{example}
+
+\begin{proposition}[流入电容器的电流]\label{prop:g12:rc-rl-circuits:cdudt}
+流入电容器某一极板的电流，等于其电荷
+增长的变化率：
+\[
+i = \frac{dq}{dt} = C\,\frac{du}{dt} ,
+\]
+小写字母表示随时间变化的量（$U$、$I$ 保持不变，
+见\cref{ch:g11:circuits-and-power}）。
+\end{proposition}
+
+\begin{proof}
+电流是单位时间内输送的电荷
+（见\cref{def:g11:circuits-and-power:current}）：在极短的时间间隔内，
+$i$ 即为 $q$ 对时间的导数；由 $q = Cu$，且 $C$ 为常数，
+得 $C\,du/dt$。
+\end{proof}
+
+\begin{remark}[两个推论]\label{rem:g12:rc-rl-circuits:continuity}
+若 $u$ 为常数，则 $i = 0$：已充电的电容器不会有稳定的电流通过。
+此外，$u$ 不可能突变——若发生突变，则需要无穷大的电流：
+电容器两端的电压即是电路的“记忆”。
+\end{remark}
+
+\section{电容器的充电：RC 电路}
+
+一个回路由电源 $\mathcal{E}$（见\cref{def:g11:circuits-and-power:emf}）、
+开关、电阻器与不带电的电容器组成：闭合 $K$ 的时刻为 $t = 0$。
+
+\begin{omfigure}
+\begin{circuitikz}[font=\small]
+  \draw (0,0) to[battery1, l=$\mathcal{E}$] (0,2.4) to[nos, l=$K$] (2.1,2.4)
+    to[R=$R$, i=$i$] (4.2,2.4) -- (5.4,2.4) to[C=$C$, v=$u$] (5.4,0) -- (0,0);
+\end{circuitikz}
+
+{\small RC 充电电路：闭合 $K$ 后，电源推动电荷
+经 $R$ 流到 $C$ 的极板上。}
+\end{omfigure}
+
+\begin{theorem}[RC 电路的充电规律]\label{thm:g12:rc-rl-circuits:charging}
+\index{RC 电路}
+开关闭合后，电容器两端的电压满足下式，并由
+$u(0) = 0$ 得出其解：
+\[
+RC\,\frac{du}{dt} + u = \mathcal{E},
+\qquad
+u(t) = \mathcal{E}\left(1 - e^{-t/\tau}\right),
+\qquad \tau = RC .
+\]
+\end{theorem}
+
+\begin{proof}
+沿回路的电压相加（见\cref{prop:g11:circuits-and-power:laws}）：
+任一时刻均有 $\mathcal{E} = u_R + u = Ri + u$；代入
+$i = C\,du/dt$（见\cref{prop:g12:rc-rl-circuits:cdudt}）。现\emph{验证}
+该试探解：$du/dt = (\mathcal{E}/\tau)e^{-t/\tau}$，于是
+$RC\,(\mathcal{E}/RC)\,e^{-t/\tau} + \mathcal{E}(1 - e^{-t/\tau}) =
+\mathcal{E}$，对所有 $t$ 成立；且 $u(0) = \mathcal{E}(1-1) = 0$。
+至于除此之外没有\emph{其他}曲线满足该方程，
+以及解的唯一性，将在本年度的数学课程《微分方程》中加以证明。
+\end{proof}
+
+\begin{definition}[时间常数]\label{def:g12:rc-rl-circuits:tau}
+RC 电路的\emph{时间常数}\index{时间常数}为
+$\tau = RC$。单位：$\unit{\ohm} \times \unit{F} =
+(\unit{V/A})(\unit{C/V}) = \unit{C/A} = \unit{s}$——该电路
+自身的节奏。
+\end{definition}
+
+\begin{method}[在曲线上读出 $\tau$]\label{met:g12:rc-rl-circuits:reading}
+由图像直接读出，有三种等价的方法：
+\begin{enumerate}
+  \item \emph{原点处的切线：}$u'(0) = \mathcal{E}/\tau$，因此
+        初始切线在 $t = \tau$ 处与渐近线相交；
+  \item \emph{63\%：}$u(\tau) = \mathcal{E}(1 - e^{-1}) \approx
+        0.63\,\mathcal{E}$；
+  \item \emph{95\%：}$u(3\tau) \approx 0.95\,\mathcal{E}$——已充电，
+        就实际应用而言已充满（$5\tau$ 时为 $99\%$）。
+\end{enumerate}
+\end{method}
+
+\begin{proposition}[放电]\label{prop:g12:rc-rl-circuits:discharge}
+电容器充电至 $U_0$ 后，仅与电阻 $R$ 相连，满足
+$RC\,du/dt + u = 0$，其解为
+\[
+u(t) = U_0\,e^{-t/\tau}, \qquad \tau = RC
+\]
+——剩余 $37\%$（$\tau$ 时刻），$5\%$（$3\tau$ 时刻）。
+\end{proposition}
+
+\begin{proof}
+同样由回路定律，无电源；再次代入：
+$RC(-U_0/\tau)e^{-t/\tau} + U_0 e^{-t/\tau} = 0$，且 $u(0) = U_0$。
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}
+\begin{axis}[omaxis, width=9.2cm, height=5.4cm, xlabel={$t$}, ylabel={$u$},
+    xmin=0, xmax=5, ymin=0, ymax=7.4, xtick={0,1,2,3,4,5},
+    xticklabels={$0$,$\tau$,$2\tau$,$3\tau$,$4\tau$,$5\tau$},
+    ytick={0,2.21,3.79,6.0},
+    yticklabels={$0$,$0.37\,\mathcal{E}$,$0.63\,\mathcal{E}$,$\mathcal{E}$}]
+  \addplot[omExo, dashed, domain=0:5, samples=2] {6};
+  \addplot[omExo, dashed, domain=0:1.18, samples=2] {6*x};
+  \addplot[omExo, dashed, domain=0:1.1, samples=2] {6-6*x};
+  \addplot[omDef, thick, domain=0:5, samples=80] {6*(1-exp(-x))};
+  \addplot[omThm, thick, domain=0:5, samples=80] {6*exp(-x)};
+  \draw[dashed, omExo] (1,0) -- (1,3.79) -- (0,3.79);
+  \draw[dashed, omExo] (3,0) -- (3,5.70);
+\end{axis}
+\end{tikzpicture}
+
+{\small 充电（蓝色，自 $u = 0$ 趋向 $\mathcal{E}$）与
+放电（红色，自 $U_0 = \mathcal{E}$）。两条初切线均
+在 $t = \tau$ 处与各自渐近线相交；$63\%$ 于 $\tau$ 时完成，$95\%$ 于 $3\tau$ 时完成。}
+\end{omfigure}
+
+\begin{example}[闪光灯的数据]\label{ex:g12:rc-rl-circuits:flashrc}
+相机闪光灯的电容器 $C = \qty{800}{\micro F}$ 经
+$R = \qty{1.0}{k\ohm}$: $\tau = 10^3 \times 8.0\times10^{-4} =
+\qty{0.80}{s}$，故“就绪”指示灯接线设定在 $95\%$ 时动作——
+需等待 $3\tau \approx \qty{2.4}{s}$：这便是等待时的嗡嗡声。
+经闪光管放电时，仅有 \qty{0.50}{\ohm} 的电阻，\emph{同一}
+电容器以 $\tau' = \qty{0.40}{ms}$ 放空，
+比充电快两千倍。
+\end{example}
+
+\section{线圈：电感与 RL 电路}
+
+\begin{definition}[电感器与电感]\label{def:g12:rc-rl-circuits:inductor}
+称\emph{电感器}\index{电感器}为一圈导线绕成的线圈，其电流
+在自身各匝中产生磁场
+（见\cref{ch:g11:magnetic-fields}）；只要它\emph{变化}，线圈两端
+便会出现电压：
+\[
+u = L\,\frac{di}{dt} .
+\]
+常量 $L$ 称为\emph{电感}\index{电感}，单位为
+\emph{亨利}\index{亨利}（\unit{H}）：$\qty{1}{H} = \qty{1}{V.s/A}$。
+\end{definition}
+\admitted
+
+\begin{remark}[线圈阻碍变化]\label{rem:g12:rc-rl-circuits:oppose}
+变化的电流为何产生电压——即电磁感应——在
+大学分册中推导；这里仅取定律及其性质：线圈
+\emph{阻碍}其电流的变化。两者可作对照：电容器的
+$u$ 不能跃变，线圈的 $i$ 也不能跃变。
+\end{remark}
+
+\begin{omfigure}
+\begin{circuitikz}[font=\small]
+  \draw (0,0) to[battery1, l=$\mathcal{E}$] (0,2.4) to[nos, l=$K$] (2.1,2.4)
+    to[R=$R$] (4.2,2.4) -- (5.4,2.4) to[L=$L$, i=$i$, v=$u$] (5.4,0) -- (0,0);
+\end{circuitikz}
+
+{\small RL 电路：开关 $K$ 闭合后，线圈使电流
+只能按自身节奏上升，时间常数 $\tau = L/R$。}
+\end{omfigure}
+
+\begin{proposition}[RL 电路中的电流上升]\label{prop:g12:rc-rl-circuits:rl}
+\index{RL 电路}
+闭合开关，使电源 $\mathcal{E}$、电阻器 $R$
+与线圈 $L$ 串联，得 $\mathcal{E} = Ri + L\,di/dt$，即
+\[
+\frac{L}{R}\,\frac{di}{dt} + i = \frac{\mathcal{E}}{R},
+\qquad\text{其解为}\quad
+i(t) = \frac{\mathcal{E}}{R}\left(1 - e^{-t/\tau}\right),
+\quad \tau = \frac{L}{R} .
+\]
+\end{proposition}
+
+\begin{proof}
+同样由回路定律，它与\emph{同一方程}一致，
+即\cref{thm:g12:rc-rl-circuits:charging} 中的方程，令 $u \to i$，
+$\mathcal{E} \to \mathcal{E}/R$，$RC \to L/R$；同一代换也验证其解，
+凡是
+\cref{met:g12:rc-rl-circuits:reading}中的读法均可移用。
+\end{proof}
+
+\begin{example}[电磁铁开始工作]\label{ex:g12:rc-rl-circuits:rl}
+一只继电器线圈，$L = \qty{0.30}{H}$ 与 $R = \qty{6.0}{\ohm}$，接在
+\qty{12}{V} 电源上：终态电流 $\mathcal{E}/R = \qty{2.0}{A}$，电流按
+$\tau = 0.30/6.0 = \qty{50}{ms}$ 的节奏上升——约在 $3\tau \approx
+\qty{0.15}{s}$ 时工作。
+\end{example}
+
+\begin{remark}[断开开关时的火花]\label{rem:g12:rc-rl-circuits:spark}
+在通电线圈上断开开关，$i$ 必须在
+不到一毫秒内骤降为零：$di/dt$ 极大，$u = L\,di/dt$ 可达数百
+甚至数千伏特——火花会跨过触点。汽车点火
+线圈正是有意如此，每分钟数千次。
+\end{remark}
+
+\section{储存的能量}
+
+\begin{proposition}[电容器中的能量与线圈中的能量]\label{prop:g12:rc-rl-circuits:energy}
+\index{能量!电容器中的}\index{能量!线圈中的}
+电容器 $C$ 充电至电压 $u$，线圈 $L$ 通有电流
+$i$ 时，所储存的能量为
+\[
+E_C = \tfrac12\,C u^2 = \frac{q^2}{2C},
+\qquad
+E_L = \tfrac12\,L i^2 .
+\]
+\end{proposition}
+
+\begin{proof}
+将微小电荷 $dq$ 移到电压已为 $u$ 的极板上，
+所需的功为 $u\,dq$（见\cref{def:g11:circuits-and-power:voltage}）；累加这些
+功，总功即直线 $u = q/C$ 之下的面积——即下图中的三角形，
+因此 $E_C = \tfrac12 qu = \tfrac12 Cu^2$。对线圈，同样的三角形
+（使 $i$ 增加 $di$ 需做功 $Li\,di$）给出
+$E_L = \tfrac12 Li^2$。
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}[font=\small, x=1.35cm, y=1.05cm]
+  \fill[omDef!25] (0,0) -- (4,0) -- (4,2.6) -- cycle;
+  \fill[omDef!60] (2.4,0) rectangle (2.7,1.658);
+  \draw[omDef, thick] (0,0) -- (4,2.6);
+  \draw[-Stealth] (0,0) -- (4.8,0) node[right] {$q$};
+  \draw[-Stealth] (0,0) -- (0,3.1) node[above] {$u = q/C$};
+  \draw[dashed] (4,0) -- (4,2.6) -- (0,2.6);
+  \node[below] at (4,0) {$q_0$}; \node[left] at (0,2.6) {$u_0$};
+  \node[below, font=\footnotesize] at (2.55,0) {$dq$};
+  \node[omDef!50!black, font=\footnotesize] at (2.9,0.85)
+    {$E_C$};
+\end{tikzpicture}
+
+{\small 每个微元电荷 $dq$ 所需的功为 $u\,dq$；整个电荷所需的功
+即三角形面积 $E_C = \tfrac12 q_0 u_0$——先移入的电荷
+在低电压下便已就位。}
+\end{omfigure}
+
+\begin{example}[能量的数量级]\label{ex:g12:rc-rl-circuits:energies}
+\cref{ex:g12:rc-rl-circuits:flashrc}中的闪光灯电容器：
+$\tfrac12 \times 8.0\times10^{-4} \times 300^2 = \qty{36}{J}$。一个
+\qty{3000}{F} 超级电容器在 \qty{2.7}{V} 下储能 \qty{1.1e4}{J}，相当于一节
+五号电池的储能。\qty{10}{mH} 线圈通有 \qty{10}{A} 电流时储能 \qty{0.50}{J}。
+储能少于电池，但可在毫秒内释放。
+\end{example}
+
+\begin{remark}[两类计时电路的用途]\label{rem:g12:rc-rl-circuits:applications}
+\index{平滑}\index{计时电路}
+“慢充快放”的特性用于驱动相机闪光灯和除颤器。
+延迟 $\tau = RC$ 用于计时电路，如间歇式雨刷、
+闪烁信标和楼道灯。跨接在电源两端的电容器能\emph{平滑}
+电压（$u$ 不能突变）；串联线圈能平滑电流（$i$ 不能
+突变）。线圈与电容器组合即构成振荡器
+（见\cref{ch:g12:rlc-oscillations}）。
+\end{remark}
+
+\section{练习}
+
+\begin{exercise}[$\star$]\label{exo:g12:rc-rl-circuits:1}
+将一个 \qty{470}{\micro F} 的电容器充电至 \qty{12}{V}，求它所带的电荷；
+并求使 \qty{100}{\micro F} 电容器带有 \qty{2.0}{mC} 电荷所需的电压。
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:g12:rc-rl-circuits:2}
+将 \qty{47}{pF}、\qty{2200}{\micro F} 和 \qty{10}{F} 分别归入
+电源滤波器、收音机调谐器与超级电容器中，
+并计算最后一个在 \qty{2.7}{V} 时所储存的能量。
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:g12:rc-rl-circuits:3}
+一个 \qty{220}{\micro F} 电容器两端的电压从 $0$ 均匀上升
+至 \qty{5.0}{V}，历时 \qty{10}{ms}，求此时流入的电流；
+电压保持不变后电流为多少，并说明理由。
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:g12:rc-rl-circuits:4}
+求 $\tau$，当 $R = \qty{10}{k\ohm}$、$C = \qty{100}{\micro F}$ 时；
+再求 $L = \qty{0.10}{H}$、$R = \qty{50}{\ohm}$ 时的值。逐项检查单位，
+验证两种组合的单位都是秒。
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:g12:rc-rl-circuits:5}
+一个电容器向 \qty{6.0}{V} 充电，电压在
+$t = \qty{2.0}{s}$ 时为 \qty{3.8}{V}。读出时间常数；电荷何时达到终值的 $95\%$？
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:g12:rc-rl-circuits:6}
+一个 RC 电路：$\mathcal{E} = \qty{9.0}{V}$、$R = \qty{4.7}{k\ohm}$、
+$C = \qty{220}{\micro F}$。求 $\tau$、$u(\tau)$、$u(3\tau)$，以及
+开关刚闭合时的电流。
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:g12:rc-rl-circuits:7}
+通过代入验证 $u(t) = \mathcal{E}(1 - e^{-t/RC})$
+满足 $RC\,du/dt + u = \mathcal{E}$；它在 $t = 0$ 时的值
+及 $t$ 很大时的极限分别蕴含怎样的物理意义？
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:g12:rc-rl-circuits:8}
+一个 \qty{100}{\micro F} 电容器充电至 \qty{12}{V} 后，经
+\qty{47}{k\ohm} 的电阻放电。求 $\tau$、$u(\tau)$，以及 $u$ 降至
+\qty{0.60}{V} 以下所需的时间。
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:g12:rc-rl-circuits:9}
+一个 \qty{0.50}{H} 线圈中的电流从 $0$ 均匀增至
+\qty{2.0}{A}，历时 \qty{40}{ms}。求线圈两端的电压；
+由 $u = L\,di/dt$ 说明，为何\emph{断开}线圈电路中的开关时会产生火花，而闭合时不会？
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:g12:rc-rl-circuits:10}
+\cref{ex:g12:rc-rl-circuits:rl}中的继电器：通过代入验证
+$i(t) = (\mathcal{E}/R)(1 - e^{-Rt/L})$ 满足
+$L\,di/dt + Ri = \mathcal{E}$，然后求 $i(\tau)$ 和 $i(3\tau)$。
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:g12:rc-rl-circuits:11}
+证明 $u'(0) = \mathcal{E}/\tau$，并由此推出曲线在原点处的切线
+与渐近线交于 $t = \tau$ 处。若在一条实测曲线上，
+测得 $\tau = \qty{0.50}{s}$、$R = \qty{2.0}{k\ohm}$，求 $C$。
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:g12:rc-rl-circuits:12}
+按储存能量给各器件排序，并逐一计算：一只 \qty{3000}{F} 的超级电容器，
+电压为 \qty{2.7}{V}；一只闪光灯电容器，\qty{800}{\micro F}，
+电压为 \qty{300}{V}；一只 \qty{10}{mH} 的线圈，电流为 \qty{10}{A}；一节 AA 电池
+（$E \approx \qty{1.3e4}{J}$）。前三者能提供哪些
+电池不能提供的东西？
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:g12:rc-rl-circuits:13}
+楼梯定时灯在其充电电容器两端电压 $u < 0.63\,\mathcal{E}$ 时点亮，
+在 $t = \tau$ 时熄灭。要使灯亮持续
+\qty{5.0}{s}，取 $C = \qty{100}{\micro F}$，求 $R$ 应为多少？
+若阈值取 $0.50\,\mathcal{E}$，证明延迟时间为 $\tau \ln 2$，并求其值。
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:g12:rc-rl-circuits:14}
+一只 \qty{2200}{\micro F} 的电容器用于平滑电源：两次充电之间，
+它单独为一个负载供电，负载电流为 \qty{0.50}{A}，持续 \qty{10}{ms}。由
+$i = C\,du/dt$ 求电压降落，然后求
+使降落低于 \qty{0.50}{V} 的电容。
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:g12:rc-rl-circuits:15}
+一只点火线圈，$L = \qty{0.80}{H}$，通有 \qty{2.0}{A} 电流时，
+断路器约在 \qty{1.0}{ms} 内将其切断。估算切断期间的线圈电压，
+以及火花的能量；为什么缓慢切断
+不会产生火花？
+\end{exercise}
+
+\section{问题：相机闪光灯}
+
+\begin{problem}[{周末问题——相机闪光灯：两秒的
+嗡鸣，一毫秒的辉煌，壁挂式的“近亲”，能重启
+心脏——一个指数函数统领全部}]
+\label{pb:g12:rc-rl-circuits:1}
+一台小型闪光灯将能量储存在一只电容器中，
+$C = \qty{800}{\micro F}$，经 $R = \qty{1.0}{k\ohm}$ 充电，电源为
+视为理想电源的转换器，$\mathcal{E} = \qty{300}{V}$；
+“就绪”指示灯在满电压的 $95\%$ 时亮起。闪光时，
+电容器仅与闪光管相连，$R_f = \qty{0.50}{\ohm}$。已知：一节
+AA 电池电压为 \qty{1.5}{V}，容量为 \qty{2.4}{A.h}；$e = \qty{1.60e-19}{C}$。
+
+\medskip
+\noindent\textbf{第一部分——能量库。}
+\begin{enumerate}
+  \item 计算电压为 \qty{300}{V} 时电容器上的电荷量。
+  \item 这相当于多少个元电荷？
+  \item 计算储存的能量 $E_C$。
+  \item AA 电池储存的电荷量为 $q = It \approx \qty{8.6e3}{C}$，因此约
+        \qty{1.3e4}{J}。这是电容器能量的多少倍？
+  \item 那么何必使用电容器？用一句话作答，并使用“功率”一词。
+\end{enumerate}
+
+\medskip
+\noindent\textbf{第二部分——等待绿灯。}
+\begin{enumerate}[resume]
+  \item 写出回路定律，并将其化为
+        关于 $u(t)$ 的微分方程。
+  \item 代入验证 $u(t) = \mathcal{E}(1 - e^{-t/RC})$
+        是否满足该方程，初始条件为 $u(0) = 0$。
+  \item 计算时间常数 $\tau$。
+  \item 经过多长时间“就绪”指示灯变为绿色，此时
+        电压为多少？并说明两秒嗡鸣的来源。
+  \item 计算初始充电电流；为什么它之后会
+        逐渐衰减？
+\end{enumerate}
+
+\medskip
+\noindent\textbf{第三部分——一毫秒的辉煌。}
+\begin{enumerate}[resume]
+  \item 写出经闪光管放电的规律 $u(t)$，并计算
+        新的时间常数 $\tau'$。
+  \item 计算通过闪光管的峰值电流。
+  \item 计算峰值功率，并将其与一只 \qty{2.2}{kW} 的电水壶作比较。
+  \item 取闪光在 $3\tau'$ 时结束，求其持续时间与
+        平均功率。
+  \item 求充电时间与闪光时间之比：同一电容器，
+        同样的电荷量——有何变化，这使电容器成为
+        一个能量储存器，还是一根功率杠杆？
+\end{enumerate}
+
+\medskip
+\noindent\textbf{第四部分——壁挂式的“近亲”。}
+除颤器须释放 $E_C = \qty{200}{J}$ 的能量，所用电压为
+$U_0 = \qty{1500}{V}$；胸部与电极板的电阻约为 \qty{50}{\ohm}。
+\begin{enumerate}[resume]
+  \item 计算所需的电容。
+  \item 计算储存的电荷量。
+  \item 计算放电的时间常数与持续时间（$3\tau$）；
+        并与闪光灯作比较。
+  \item 计算患者体内的峰值电流与峰值功率。
+  \item 再充电电路须使设备在
+        \qty{6.0}{s} 内达到就绪（$95\%$）。求所需的充电电阻和
+        初始充电电流——设计者据此订购器件所需的数值。
+\end{enumerate}
+\end{problem}

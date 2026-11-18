@@ -38,6 +38,9 @@ UNIT_MACROS = {
     "ppm": "\\mathrm{ppm}",
     "hartree": "E_\\mathrm{h}",
     "bohr": "a_0",
+    # \DeclareSIUnit's of styles/oneearth.sty
+    "permil": "\\text{‰}",
+    "ppb": "\\mathrm{ppb}",
 }
 
 # Macro-form units (\milli\second, \giga\bit\per\second — the quant books):
@@ -45,20 +48,29 @@ UNIT_MACROS = {
 # prints \per as "/" (per-mode=symbol). Market units are the
 # \DeclareSIUnit's of styles/onequant.sty.
 SI_PREFIXES = {
-    "pico": "p", "nano": "n", "milli": "m", "kilo": "k", "mega": "M",
-    "giga": "G", "tera": "T",
+    "pico": "p", "nano": "n", "milli": "m", "centi": "c", "deci": "d",
+    "hecto": "h", "kilo": "k", "mega": "M", "giga": "G", "tera": "T",
 }
+# \square\metre, \cubic\centi\metre: a power of the (prefixed) unit after it
+SI_POWERS = {"square": "2", "cubic": "3"}
 SI_UNITS = {
     "second": "s", "metre": "m", "watt": "W", "hour": "h", "hertz": "Hz",
     "bit": "bit", "byte": "B", "decibel": "dB",
     "bp": "bp", "tick": "tick", "share": "sh", "contract": "ct",
     "barrel": "bbl", "mmbtu": "MMBtu", "therm": "th", "bushel": "bu",
     "troyounce": "oz\\,t", "flop": "flop", "msg": "msg",
+    "joule": "J", "kelvin": "K", "kilogram": "kg", "mole": "mol",
+    "day": "d", "km": "km",
+    # \DeclareSIUnit's of styles/oneearth.sty (\year: format_unit's `year`)
+    "Ma": "Ma", "Ga": "Ga", "ka": "ka", "Myr": "Myr", "au": "au",
+    "lightyear": "ly", "parsec": "pc", "knot": "kn", "hPa": "hPa",
+    "sverdrup": "Sv", "gal": "Gal", "mag": "mag", "dex": "dex", "darcy": "D",
 }
 
 SI_COMMANDS = {"qty": 2, "num": 1, "unit": 1, "ang": 1,
-               "qtyrange": 3, "qtylist": 2, "numrange": 2,
-               "si": 1}    # siunitx v2 name of \\unit (chemistry books)
+               "qtyrange": 3, "qtylist": 2, "numrange": 2, "qtyproduct": 2,
+               "si": 1,    # siunitx v2 name of \\unit (chemistry books)
+               "SI": 2}    # siunitx v2 name of \\qty (Earth books)
 
 # range/list words; the emitter passes the edition's own (LangStrings
 # reads them from the \sisetup line of styles/lang/<lang>.tex)
@@ -92,7 +104,7 @@ def format_number(value):
             # \qty{\pm 6}{dB}: a signed number, not an uncertainty
             return "\\pm " + format_number(hi)
         return format_number(lo) + " \\pm " + format_number(hi)
-    m = re.fullmatch(r"([+-]?)(\d*(?:\.\d+)?)(?:[eE]([+-]?\d+))?", v)
+    m = re.fullmatch(r"([+-]?)(\d*(?:\.\d+)?)\s*(?:[eE]([+-]?\d+))?", v)
     if not m or (not m.group(2) and m.group(3) is None):
         raise ParseError(f"unsupported siunitx number {value!r}")
     sign, mantissa, exponent = m.groups()
@@ -112,12 +124,14 @@ def format_number(value):
     return out
 
 
-def format_unit(body):
+def format_unit(body, year="yr"):
     """siunitx literal unit shorthand -> LaTeX (upright, thin-space
-    products, symbol \\per)."""
+    products, symbol \\per). `year` is the edition's symbol for \\year
+    (\\omunitYear in styles/lang/<lang>.tex; French: an)."""
     out = []
     i, s = 0, body.strip()
     prev_unit = False    # last token was a macro-form unit (\second, \bit)
+    power, power_start = None, 0    # pending \square / \cubic
     while i < len(s):
         c = s[i]
         if c == "\\":
@@ -131,6 +145,13 @@ def format_unit(body):
                 i += 2
                 continue
             m = re.match(r"\\([a-zA-Z]+)", s[i:])
+            if m and m.group(1) in SI_POWERS:
+                if prev_unit:
+                    out.append("\\,")
+                power, power_start = SI_POWERS[m.group(1)], len(out)
+                prev_unit = False
+                i += m.end()
+                continue
             if m and m.group(1) in SI_PREFIXES:
                 if prev_unit:
                     out.append("\\,")
@@ -138,10 +159,25 @@ def format_unit(body):
                 prev_unit = False
                 i += m.end()
                 continue
-            if m and m.group(1) in SI_UNITS:
+            if m and m.group(1) == "text" and s.startswith("{", i + m.end()):
+                # a counted word in the unit (Spanish: \text{átomos}.g^{-1})
+                end = s.index("}", i + m.end())
                 if prev_unit:
                     out.append("\\,")
-                out.append(f"\\mathrm{{{SI_UNITS[m.group(1)]}}}")
+                out.append(s[i:end + 1])
+                prev_unit = True
+                i = end + 1
+                continue
+            if m and (m.group(1) in SI_UNITS or m.group(1) == "year"):
+                if prev_unit:
+                    out.append("\\,")
+                symbol = year if m.group(1) == "year" \
+                    else SI_UNITS[m.group(1)]
+                out.append(f"\\mathrm{{{symbol}}}")
+                if power:
+                    out[power_start:] = [
+                        "{" + "".join(out[power_start:]) + f"}}^{{{power}}}"]
+                    power = None
                 prev_unit = True
                 i += m.end()
                 continue
@@ -184,7 +220,7 @@ def format_unit(body):
                                          f"unit {body!r}")
                     groups.append(s[j + 1:k - 1])
                     j = k
-                inner = format_unit(groups[-1])
+                inner = format_unit(groups[-1], year)
                 out.append(f"\\sqrt{{{inner}}}" if name == "sqrt"
                            else inner)
                 i = j
@@ -216,7 +252,8 @@ def format_unit(body):
             i += m.end()
         elif c == "_":
             # chemical formula subscripts (O_2, CO_2)
-            m = re.match(r"_(\{[^{}]*\}|\d+|[a-zA-Z])", s[i:])
+            # … and the solar mass, M_\odot
+            m = re.match(r"_(\{[^{}]*\}|\d+|\\odot|[a-zA-Z])", s[i:])
             if not m:
                 raise ParseError(f"unsupported subscript in unit {body!r}")
             out.append(f"_{{{m.group(1).strip('{}')}}}")
@@ -247,11 +284,55 @@ def _sep(unit_body):
     return "" if (u.startswith("\\degree") or u.startswith("'")) else "\\,"
 
 
-def expand_command(name, args, phrases=None):
+def _separate_uncertainty(value):
+    """2.72548(57) -> 2.72548 \\pm 0.00057, as uncertainty-mode=separate
+    prints it; a value already written with \\pm is unchanged."""
+    m = re.fullmatch(r"\s*([+-]?\d*(?:\.(\d+))?)\((\d+)\)\s*", value)
+    if not m:
+        return value
+    number, frac, digits = m.groups()
+    if frac:
+        padded = digits.rjust(len(frac) + 1, "0")
+        digits = padded[:-len(frac)] + "." + padded[-len(frac):]
+    return f"{number} \\pm {digits}"
+
+
+def _apply_options(options, args):
+    """The \\qty[…] options the books use; anything else raises."""
+    for option in filter(None, (o.strip() for o in options.split(","))):
+        if option in ("uncertainty-mode=separate",
+                      "separate-uncertainty=true"):
+            args = [_separate_uncertainty(args[0]), *args[1:]]
+        elif option != "text-series-to-math=true":   # bold text only: no-op
+            raise ParseError(f"unsupported siunitx option {option!r}")
+    return args
+
+
+def _format_angle(value):
+    """\\ang{d;m;s}: \\ang{;;0.19} -> 0.19″, each part with its own mark."""
+    parts = value.split(";")
+    if len(parts) > 3:
+        raise ParseError(f"unsupported siunitx angle {value!r}")
+    marks = ("{}^{\\circ}", "{}^{\\prime}", "{}^{\\prime\\prime}")
+    return "".join(format_number(part) + mark
+                   for part, mark in zip(parts, marks) if part.strip())
+
+
+def expand_command(name, args, phrases=None, options=""):
     """One siunitx call -> LaTeX."""
     phrases = phrases or DEFAULT_PHRASES
+    args = _apply_options(options, args)
+    year = phrases.get("year", "yr")
     if name == "si":
         name = "unit"
+    if name == "SI":
+        name = "qty"
+    if name == "qtyproduct":
+        # siunitx default product-units=repeat: 3 m × 3 m
+        values, unit = args
+        return " \\times ".join(
+            format_number(v) + _sep(unit) + format_unit(unit, year)
+            for v in re.split(r"\s+x\s+", values.strip()))
     if name == "numrange":
         lo, hi = args
         return (format_number(lo) + f"\\text{{{phrases['range']}}}"
@@ -259,8 +340,10 @@ def expand_command(name, args, phrases=None):
     if name == "num":
         return format_number(args[0])
     if name == "unit":
-        return format_unit(args[0])
+        return format_unit(args[0], year)
     if name == "ang":
+        if ";" in args[0]:
+            return _format_angle(args[0])
         return format_number(args[0]) + "{}^{\\circ}"
     if name == "qty":
         value, unit = args
@@ -268,17 +351,17 @@ def expand_command(name, args, phrases=None):
         if "\\pm" in value and value.split("\\pm", 1)[0].strip():
             # siunitx brackets an uncertainty before its unit
             number = f"({number})"
-        return number + _sep(unit) + format_unit(unit)
+        return number + _sep(unit) + format_unit(unit, year)
     if name == "qtyrange":
         lo, hi, unit = args
         # range-units=single: one unit after the upper bound
         return (format_number(lo) + f"\\text{{{phrases['range']}}}"
                 + format_number(hi)
-                + _sep(unit) + format_unit(unit))
+                + _sep(unit) + format_unit(unit, year))
     if name == "qtylist":
         values, unit = args
         # siunitx default list-units=repeat: unit after every value
-        rendered = [format_number(v) + _sep(unit) + format_unit(unit)
+        rendered = [format_number(v) + _sep(unit) + format_unit(unit, year)
                     for v in values.split(";")]
         if len(rendered) == 1:
             return rendered[0]
@@ -317,14 +400,19 @@ def expand(tex, phrases=None):
     out = []
     i = 0
     while i < len(tex):
-        m = re.compile(r"\\(qtyrange|qtylist|qty|numrange|num|unit|ang|si)"
-                       r"(?![a-zA-Z])"
+        m = re.compile(r"\\(qtyrange|qtylist|qtyproduct|qty|numrange|num|unit"
+                       r"|ang|si|SI)(?![a-zA-Z])"
                        ).search(tex, i)
         if not m:
             out.append(tex[i:])
             break
         out.append(tex[i:m.start()])
-        args, j = [], m.end()
+        args, j, options = [], m.end(), ""
+        if tex[j:j + 1] == "[":
+            end = tex.find("]", j)
+            if end < 0:
+                raise ParseError(f"unbalanced siunitx options in {tex!r}")
+            options, j = tex[j + 1:end], end + 1
         for _ in range(SI_COMMANDS[m.group(1)]):
             while j < len(tex) and tex[j] in " \t\n":
                 j += 1
@@ -342,7 +430,7 @@ def expand(tex, phrases=None):
                 raise ParseError(f"unbalanced braces in {tex!r}")
             args.append(tex[j + 1:k - 1])
             j = k
-        expanded = expand_command(m.group(1), args, phrases)
+        expanded = expand_command(m.group(1), args, phrases, options)
         if _in_text(tex, m.start()):
             expanded = f"${expanded}$"
         out.append(expanded)

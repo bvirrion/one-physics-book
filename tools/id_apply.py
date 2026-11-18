@@ -161,7 +161,8 @@ def strip_comments(text: str) -> str:
     return "\n".join(out)
 
 
-TEXT_IN_MATH = re.compile(r"\\(?:text|mathrm|textrm|mbox|textup)\s*\{")
+# \index inside a display is a translated key (math Book 4 zh: \index{谱定理} at the end of a \[...\])
+TEXT_IN_MATH = re.compile(r"\\(?:text|mathrm|textrm|mbox|textup|index)\s*\{")
 
 
 def _blank_text_macros(s: str) -> str:
@@ -271,7 +272,11 @@ def emph_signature(text):
 
 
 DRAW_ENVS = ("tikzpicture", "axis", "circuitikz")
-NODE_TEXT = re.compile(r"node\s*(\[[^\]]*\])?\s*(\([^)]*\))?\s*(at\s*\([^)]*\))?\s*\{")
+# A coordinate may hold one level of parentheses: `at ($(35:3.4)+(0.25,0)$)` made the
+# node's visible label compare as drawing code (ported from chemistry, where it was
+# fixed 2026-10-04; met again by the physics zh Book 5 run, 2026-11-18).
+_PAREN1 = r"\((?:[^()]|\([^()]*\))*\)"
+NODE_TEXT = re.compile(r"node\s*(\[[^\]]*\])?\s*(" + _PAREN1 + r")?\s*(at\s*" + _PAREN1 + r")?\s*(\[[^\]]*\])?\s*\{")
 # pgfplots' \legend{...} and \addlegendentry{...} MACROS. AXIS_STR below only knows the KEY form,
 # "legend entries=", so a legend used to be compared BYTE-FOR-BYTE as drawing
 # code: translating one -- which you must, it is visible text -- forced
@@ -514,6 +519,7 @@ PROSE_GATES = {
     "id": "check_indonesian_prose",
     "hi": "check_hindi_prose",
     "ar": "check_arabic_prose",
+    "zh": "check_chinese_prose",
 }
 
 

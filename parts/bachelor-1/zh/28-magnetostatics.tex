@@ -1,0 +1,669 @@
+\chapter{磁静力学：场、力与偶极子}\label{ch:b1:magnetostatics}
+
+附近导线通有电流时，指南针的指针会偏转：这一
+奥斯特于 1820 年的这一观察，把原本各自发展的两门学科
+——电学与磁学——联系了起来。几个月内，\omterm{def:b1:dc-circuits:current}{安培}便得出了电流之间相互作用力的定律，
+毕奥与萨伐尔则得到了\omterm{prop:b1:magnetostatics:three}{直导线的场}。
+本章讨论磁场的静力学：电流产生怎样的磁场（场图、毕奥–萨伐尔定律，
+以及\omterm{thm:b1:magnetostatics:ampere}{安培环路定理}，它是\omterm{thm:b1:electrostatics-gauss:gauss}{高斯定理}的磁学对应），磁场对电流的作用
+（\omterm{thm:b1:magnetostatics:laplace}{拉普拉斯力}，驱动着每一台电动机和每一块电表），
+以及\omterm{def:b1:magnetostatics:moment}{磁偶极子}——
+即解释指南针、磁铁与
+地球自身磁场的那个电流环。
+
+\begin{omfigure}
+\includegraphics[width=0.34\linewidth]{images/book3/compass.jpg}
+
+{\small 最古老的磁学仪器：指南针的指针是一个小\omterm{def:b1:magnetostatics:moment}{磁偶极子}，与地球磁场取向一致。}
+\end{omfigure}
+
+\begin{omfigure}
+\includegraphics[width=0.58\linewidth]{images/book3/ai/b3-28-oersted-compass-wire.jpg}
+
+{\small 奥斯特实验：接通电路，指针偏转——电流产生磁场，环绕导线分布。}
+\end{omfigure}
+
+\section{场源与场图}
+
+\begin{definition}[磁静场]\label{def:b1:magnetostatics:field}
+\index{磁场}\index{场线!磁}\index{特斯拉}
+恒定电流（即稳定运动的电荷）在空间每一点产生一个
+\emph{磁场} $\vect B$（单位为特斯拉，\unit{T}），由它对运动试探电荷施加的力
+$q\vect v\wedge\vect B$ 所定义（见\cref{def:b1:charged-particles:lorentz}）。它的\emph{\omterm{def:b1:electrostatics-gauss:field}{场线}}
+与 $\vect B$ 相切，
+并沿其方向取向。永磁体产生的场性质相同，
+源于其原子中的微观电流。
+\omterm{def:b1:units-dimensions:oom}{数量级}：地球 \qty{5e-5}{T}；冰箱磁铁
+\qty{0.01}{T}；核磁共振扫描仪 \qty{1.5}{T} 至 \qty{3}{T}；实验室稳恒磁场
+最强可达 \qty{45}{T}。
+\end{definition}
+
+\begin{proposition}[场图]\label{prop:b1:magnetostatics:maps}
+\index{右手定则}\index{磁通量守恒}
+\begin{enumerate}
+  \item 直导线：以导线为中心的圆，位于与导线垂直的平面内，
+        由\emph{\omterm{prop:b1:magnetostatics:maps}{右手定则}}确定取向
+        （拇指沿电流方向，四指沿 $\vect B$ 方向）。
+  \item 圆形线圈：\omterm{def:b1:electrostatics-gauss:field}{场线}沿其轴穿过线圈，
+        在外部闭合；远处的场图与小磁铁的相同。
+  \item 长螺线管：内部为平行、密集、均匀的\omterm{def:b1:electrostatics-gauss:field}{场线}，
+        外部几乎无场；条形磁铁的场图中，“北”极面
+        即\omterm{def:b1:electrostatics-gauss:field}{场线}离开的那一面。
+  \item 磁感线既无起点也无终点：它们
+        或自行闭合，或延伸至无穷远。等价地，\emph{穿过任意闭合曲面的
+        $\vect B$ 通量为零}——即不存在
+        磁荷。
+\end{enumerate}
+\end{proposition}
+\admitted
+
+\begin{omfigure}
+\begin{tikzpicture}[font=\small, x=1cm, y=1cm, >=Stealth]
+  % wire seen end-on
+  \begin{scope}
+    \foreach \r in {0.5,1.0,1.5,2.0} \draw[omDef, thick, postaction={decorate, decoration={markings, mark=at position 0.125 with {\arrow{>}}, mark=at position 0.625 with {\arrow{>}}}}] (0,0) circle (\r);
+    \fill[omThm] (0,0) circle (3pt); \draw[omThm] (0,0) circle (5pt);
+    \node[font=\footnotesize] at (0,-2.55) {直导线（$I$ 指向读者）};
+  \end{scope}
+  % loop seen from the side
+  \begin{scope}[xshift=5.6cm, fl/.style={omDef, thick, postaction={decorate, decoration={markings, mark=at position 0.06 with {\arrow{>}}}}}]
+    \draw[omDef, thick, -Stealth] (-2.3,0) -- (2.3,0);
+    \foreach \s in {1,-1} {
+      \draw[fl] plot[smooth cycle] coordinates {(0,{0.5*\s}) (0.8,{0.55*\s}) (1.5,{0.9*\s}) (1.7,{1.5*\s}) (1.2,{2.0*\s}) (0,{2.1*\s}) (-1.2,{2.0*\s}) (-1.7,{1.5*\s}) (-1.5,{0.9*\s}) (-0.8,{0.55*\s})};
+      \draw[fl] plot[smooth cycle] coordinates {(0,{0.8*\s}) (0.5,{0.85*\s}) (0.75,{1.0*\s}) (0.75,{1.3*\s}) (0.5,{1.5*\s}) (0,{1.55*\s}) (-0.5,{1.5*\s}) (-0.75,{1.3*\s}) (-0.75,{1.0*\s}) (-0.5,{0.85*\s})};
+    }
+    \draw[omThm, very thick] (0,1) circle (4pt); \draw[omThm, very thick] (0,-1) circle (4pt);
+    \fill[white] (0,1) circle (3.5pt); \fill[white] (0,-1) circle (3.5pt);
+    \fill[omThm] (0,1) circle (1.2pt); \node[omThm, font=\scriptsize] at (0,-1) {$\times$};
+    \node[font=\footnotesize] at (0,-2.55) {线圈（剖面）：场线穿过其中};
+  \end{scope}
+  % solenoid
+  \begin{scope}[xshift=10.9cm]
+    \foreach \x in {-1.6,-1.2,...,1.6} {\fill[omThm] (\x,0.9) circle (2pt); \node[omThm, font=\scriptsize] at (\x,-0.9) {$\times$};}
+    \foreach \y in {-0.6,-0.2,0.2,0.6} \draw[omDef, thick, -Stealth] (-2.3,\y) -- (2.3,\y);
+    \draw[omDef, thick, postaction={decorate, decoration={markings, mark=at position 0.5 with {\arrow{>}}}}] (2.3,0.6) .. controls (3.0,0.9) and (3.0,2.0) .. (0,2.1) .. controls (-3.0,2.0) and (-3.0,0.9) .. (-2.3,0.6);
+    \draw[omDef, thick, postaction={decorate, decoration={markings, mark=at position 0.5 with {\arrow{>}}}}] (2.3,-0.6) .. controls (3.0,-0.9) and (3.0,-2.0) .. (0,-2.1) .. controls (-3.0,-2.0) and (-3.0,-0.9) .. (-2.3,-0.6);
+    \node[font=\footnotesize] at (0,-2.55) {螺线管（剖面）：内部均匀};
+  \end{scope}
+\end{tikzpicture}
+
+{\small 三幅场图。圆点表示指向读者的电流，叉号
+表示背离读者的电流。\omterm{prop:b1:magnetostatics:three}{直导线的场}线为圆；线圈的\omterm{def:b1:electrostatics-gauss:field}{场线}
+穿过线圈并在外部闭合；长\omterm{prop:b1:magnetostatics:three}{螺线管的场}线在内部平直均匀，
+在远处闭合，那里的场较弱——三种情形中，
+\omterm{def:b1:electrostatics-gauss:field}{场线}都既无源也无汇。}
+\end{omfigure}
+
+\begin{proposition}[$\vect B$ 的对称性]\label{prop:b1:magnetostatics:symmetry}
+\index{场的对称性!磁}
+$\vect B$ 在镜像反演下的行为与 $\vect E$ \emph{相反}
+（它是\emph{赝矢量}，由叉乘构成）：对于电流的\emph{对称}平面上的点，
+$\vect B$ 与该平面\emph{垂直}；对于
+\emph{反对称}平面上的点（镜像会使电流反向），$\vect B$
+位于该平面\emph{之内}。
+不变性的传递方式与 $\vect E$ 相同。
+\end{proposition}
+
+\begin{proof}
+电流元产生的场 $\propto I\,\dd\vect l\wedge\vect e_r$
+（见下文）；镜像使叉积中的一个因子相对于真矢量的像反号，
+因而 $\vect B$ 的像与箭头镜像方向
+相反。对称平面上，$\vect B$ 必须等于其自身镜像的相反量，
+因而与该平面垂直；在反对称平面上，
+相当于两次取反，故位于平面内。
+\end{proof}
+
+\begin{example}[使用对称性]\label{ex:b1:magnetostatics:symmetryuse}
+对于直导线，任何包含导线的平面都是\omterm{prop:b1:electrostatics-gauss:symmetry}{对称面}，
+因此在每一点 $\vect B$ 都垂直于过
+导线与该点的平面，即沿环向：$\vect B = B(r)\,\vect e_\theta$，
+由沿导线及绕导线的不变性可得。对于圆环，其所在平面为\omterm{prop:b1:electrostatics-gauss:symmetry}{对称面}，
+该面上 $\vect B$ 与圆环垂直；轴线
+位于包含它的每个\omterm{prop:b1:electrostatics-gauss:symmetry}{反对称面}内：在轴上 $\vect B$
+沿轴线方向。
+\end{example}
+
+\section{毕奥–萨伐尔定律}
+
+\begin{theorem}[毕奥–萨伐尔]\label{thm:b1:magnetostatics:biotsavart}
+\index{毕奥–萨伐尔定律}\index{真空磁导率}
+载有电流 $I$ 的电路在 $M$ 点产生的场为
+\[
+\vect B(M) = \frac{\mu_0}{4\pi}\sum_{\text{回路}} \frac{I\,\dd\vect l\wedge\vect e_{PM}}{PM^2} ,
+\]
+对电路上各电流元 $\dd\vect l$（位于点 $P$）求和，
+其方向沿电流方向，$\vect e_{PM}$ 为由
+$P$ 指向 $M$ 的单位矢量，$\mu_0 = 4\pi \times 10^{-7}\,\unit{T.m/A}$ 称为
+\emph{\omterm{thm:b1:magnetostatics:biotsavart}{真空磁导率}}。每个电流元产生一个场，
+其方向垂直于电流元本身及直线 $PM$，并以 $1/PM^2$ 的规律衰减。
+\end{theorem}
+\admitted
+
+\begin{proposition}[直导线、圆环与螺线管]\label{prop:b1:magnetostatics:three}
+\index{直导线的场}\index{圆环的场}\index{螺线管的场}
+\begin{enumerate}
+  \item 无限长直导线，距离为 $r$ 处：$B = \dfrac{\mu_0I}{2\pi r}$。
+  \item 半径为 $R$ 的圆环，其轴线上距圆心 $z$
+        处：$B_z = \dfrac{\mu_0IR^2}{2(R^2 + z^2)^{3/2}} = \dfrac{\mu_0I}{2R}
+        \sin^3\alpha$，式中 $\alpha$ 为由
+        $M$ 看圆环所张的半角；圆心处 $B = \mu_0I/2R$。
+  \item 螺线管每米 $n$ 匝，其轴线上：$B = \tfrac12\mu_0nI
+        (\cos\alpha_1 - \cos\alpha_2)$，式中 $\alpha_1, \alpha_2$ 为
+        两端所张的角；对长螺线管，$B = \mu_0nI$
+        管内，端点处则为其一半。
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+(1) 设 $M$ 距导线为 $r$，$P$ 位于导线上横坐标为 $z$ 处：
+$\dd\vect l\wedge\vect e_{PM}$ 的大小为 $\dd z\,\sin\beta = \dd z\cdot r/PM$，
+其中 $PM = \sqrt{r^2 + z^2}$，所有贡献都沿环向：
+$B = \dfrac{\mu_0I}{4\pi}\displaystyle\int_{-\infty}^{\infty}\dfrac{r\,\dd z}{(r^2 + z^2)^{3/2}}
+= \dfrac{\mu_0I}{4\pi}\,\dfrac{2}{r}$。(2) 圆环上每个电流元
+距离都为 $\sqrt{R^2 + z^2}$（对 $M$ 而言），且垂直于
+$\vect e_{PM}$；其场的大小为 $\mu_0I\,\dd l/4\pi(R^2 + z^2)$，且
+只有轴向分量，即其中 $R/\sqrt{R^2 + z^2}$ 的那部分，
+在绕圆环求和后保留：$B_z = \mu_0I\cdot2\pi R\cdot R/4\pi(R^2 +
+z^2)^{3/2}$。(3) 螺线管中的一薄层 $\dd z'$ 相当于电流为
+$nI\,\dd z'$ 的圆环；取 $z' - z = R/\tan\alpha$，$\dd z' = -R\,\dd\alpha/\sin^2\alpha$，
+于是 $B = \dfrac{\mu_0nI}{2}\displaystyle\int\sin^3\alpha\,\dfrac{\dd\alpha}{\sin^2\alpha}$ 沿
+整个螺线管积分，得 $= \tfrac12\mu_0nI(\cos\alpha_1 - \cos\alpha_2)$；无限长时
+则 $\alpha_1 \to 0$，$\alpha_2 \to \pi$。
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}[font=\small, x=1cm, y=1cm, >=Stealth]
+  \begin{scope}
+    \draw[omThm, very thick, -Stealth] (0,-2.2) -- (0,2.4) node[right] {$I$};
+    \fill[omThm] (0,0.4) circle (1.5pt) node[left, font=\footnotesize] {$P$};
+    \draw[omThm, very thick] (0,0.4) -- (0,0.75);
+    \node[omThm, font=\footnotesize, anchor=east] at (-0.1,0.85) {$\dd\vect l$};
+    \fill (2.2,-0.6) circle (1.5pt) node[below right, font=\footnotesize] {$M$};
+    \draw[dashed] (0,0.4) -- (2.2,-0.6) node[midway, above, font=\footnotesize] {$\vect e_{PM}$};
+    \draw[dashed] (0,-0.6) -- (2.2,-0.6) node[midway, below, font=\footnotesize] {$r$};
+    \node[omDef, font=\footnotesize] at (2.2,-0.6) [xshift=14pt, yshift=10pt] {$\odot\ \dd\vect B$};
+    \node[font=\footnotesize] at (1.0,-2.55) {直导线的毕奥–萨伐尔定律};
+  \end{scope}
+  \begin{scope}[xshift=6.6cm]
+    \draw[omThm, very thick] (0,0) ellipse (0.45 and 1.3);
+    \draw[dashed] (-0.3,0) -- (3.6,0);
+    \fill (2.6,0) circle (1.5pt) node[below, font=\footnotesize] {$M$};
+    \draw[dashed] (0,1.3) -- (2.6,0); \draw[dashed] (0,-1.3) -- (2.6,0);
+    \draw (2.0,0) arc[start angle=180, end angle=153.4, radius=0.6];
+    \node[font=\footnotesize] at (1.75,0.22) {$\alpha$};
+    \draw[<->] (0,0) -- (0,1.3) node[midway, left, font=\footnotesize] {$R$};
+    \draw[<->] (0,-1.5) -- (2.6,-1.5) node[midway, below, font=\footnotesize] {$z$};
+    \draw[omDef, thick, -Stealth] (2.6,0) -- (3.4,0) node[above, font=\footnotesize] {$\vect B$};
+    \node[font=\footnotesize] at (1.6,-2.55) {圆环：$B = \frac{\mu_0 I}{2R}\sin^3\alpha$};
+  \end{scope}
+  \begin{scope}[xshift=12.4cm]
+    \draw[omThm, thick] (-1.6,0.8) rectangle (1.6,0.9); \draw[omThm, thick] (-1.6,-0.9) rectangle (1.6,-0.8);
+    \draw[dashed] (-2.2,0) -- (2.2,0);
+    \fill (0.3,0) circle (1.5pt) node[below, font=\footnotesize] {$M$};
+    \draw[dashed] (0.3,0) -- (-1.6,0.85); \draw[dashed] (0.3,0) -- (1.6,0.85);
+    \draw (-0.3,0) arc[start angle=180, end angle=156, radius=0.6];
+    \node[font=\footnotesize] at (-0.5,0.32) {$\alpha_1$};
+    \draw (0.9,0) arc[start angle=0, end angle=33, radius=0.6];
+    \node[font=\footnotesize] at (1.15,0.32) {$\alpha_2$};
+    \node[font=\footnotesize] at (0,-2.55) {螺线管：$\frac12\mu_0 nI(\cos\alpha_1 - \cos\alpha_2)$};
+  \end{scope}
+\end{tikzpicture}
+
+{\small 本章的三个毕奥–萨伐尔计算：导线的电流元
+$\dd\vect l$ 在 $M$ 处的贡献，方向垂直于
+图面；由 $M$ 看圆环时的半角
+为 $\alpha$；螺线管两端所张的角为 $\alpha_1$ 和
+$\alpha_2$。}
+\end{omfigure}
+
+\begin{example}[数量级]\label{ex:b1:magnetostatics:orders}
+电流为 \qty{10}{A} 的导线，距导线 \qty{1}{cm} 处：$B = 2 \times 10^{-7} \times 10/0.01 =
+\qty{2e-4}{T}$，是地磁场的四倍——指南针确实会偏转。
+一个匝数为 $100$ 的线圈，半径 \qty{5}{cm}，电流 \qty{2}{A}：$\mu_0NI/2R =
+\qty{2.5}{mT}$，位于其中心。一个每米 $1000$ 匝的螺线管，
+电流为 \qty{5}{A}：\qty{6.3}{mT}；若加入相对磁导率为
+$1000$ 的铁芯，则可得数\omterm{def:b1:magnetostatics:field}{特斯拉}的磁场，前提是铁不在
+\qty{2}{T} 附近饱和——这正是所有电磁铁的上限，也正因如此，
+最强的磁场来自无铁芯的超导线圈。
+\end{example}
+
+\section{安培环路定理}
+
+\begin{theorem}[安培]\label{thm:b1:magnetostatics:ampere}
+\index{安培环路定理}\index{环流!磁场的}
+$\vect B$ 沿任一闭合有向曲线 $\Gamma$ 的环流，
+等于 $\mu_0$ 乘以穿过任一以 $\Gamma$ 为边界的曲面的总电流，
+穿过方向与按\omterm{prop:b1:magnetostatics:maps}{右手定则}由 $\Gamma$ 的定向所给出的方向一致时，
+该电流计为正：
+\[
+\oint_\Gamma \vect B\cdot\dd\vect l = \mu_0 I_{\text{所包围}} .
+\]
+\end{theorem}
+
+\begin{proof}
+对圆心位于直导线上、半径为 $r$ 的圆，
+$\vect B$ 与圆相切，大小处处为 $\mu_0I/2\pi r$，
+环流为 $2\pi r \times \mu_0I/2\pi r = \mu_0I$，与 $r$ 无关；对不包围导线的曲线，
+各部分贡献相互抵消。一般情形
+在本阶段不加证明地承认，证明见本科二年级分册。
+\end{proof}
+
+\begin{method}[安培环路定理的应用]\label{meth:b1:magnetostatics:ampere}
+参照\omterm{thm:b1:electrostatics-gauss:gauss}{高斯定理}：（1）对称性给出 $\vect B$ 的方向及其依赖的变量；
+（2）选取\emph{\omterm{def:b1:dc-circuits:current}{安培}回路}，使其经过 $M$，
+回路上 $\vect B$ 或与之相切且大小恒定，或与之垂直；
+（3）数出穿过它的电流；（4）求解。该方法适用于无限长直导线、
+圆柱体、无限长螺线管与环形螺线管，以及
+无限大电流面。
+\end{method}
+
+\begin{proposition}[圆柱、螺线管、环形螺线管]\label{prop:b1:magnetostatics:ampereapps}
+\begin{enumerate}
+  \item 半径为 $a$、均匀通有电流 $I$ 的圆柱形导线：
+        内部 $B = \dfrac{\mu_0Ir}{2\pi a^2}$，外部 $\dfrac{\mu_0I}{2\pi r}$
+——最大值位于表面。
+  \item 每米 $n$ 匝的无限长螺线管：$\vect B = \mu_0nI\,
+        \vect e_z$，内部均匀，外部为 $\vect 0$，与
+        其横截面形状无关。
+  \item 匝数为 $N$ 的环形螺线管：$B = \dfrac{\mu_0NI}{2\pi r}$，
+        线圈内部，外部为零——即闭合于自身的螺线管，
+        没有杂散场。
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+（1）半径为 $r$ 的圆：$2\pi rB = \mu_0I(r/a)^2$ 或 $\mu_0I$。（2）$\vect B$
+沿轴向（由对称性）；对两长边均在外部的矩形应用\omterm{thm:b1:magnetostatics:ampere}{安培环路定理}，
+外部场均匀，故为零（在无穷远处为零）；一条长边在内部、
+长为 $\ell$ 的矩形给出 $B\ell =
+\mu_0n\ell I$。（3）位于环形螺线管内、半径为 $r$ 的圆：$2\pi rB =
+\mu_0NI$；外部所包围的电流为零。
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}
+\begin{axis}[omaxis, axis x line=bottom, axis y line=left, width=7.4cm, height=5.2cm,
+    xlabel={$r/a$}, ylabel={$B$（单位为 $\mu_0I/2\pi a$）},
+    xlabel style={at={(axis description cs:0.5,-0.1)}, anchor=north},
+    xmin=0, xmax=4, ymin=0, ymax=1.25, xtick={1,2,3}, ytick={0.5,1}, samples=60]
+  \addplot[omDef, very thick, domain=0:1] {x};
+  \addplot[omDef, very thick, domain=1:4] {1/x} node[pos=0.3, above right, font=\footnotesize] {$\propto 1/r$};
+  \node[omDef, font=\footnotesize, anchor=north west] at (axis cs:0.1,0.9) {$\propto r$};
+\end{axis}
+\end{tikzpicture}\hfill
+\begin{tikzpicture}[font=\small, x=1cm, y=1cm, >=Stealth]
+  \foreach \x in {-2.0,-1.6,...,2.0} {\fill[omThm] (\x,0.9) circle (2pt); \node[omThm, font=\scriptsize] at (\x,-0.9) {$\times$};}
+  \foreach \y in {-0.55,-0.15,0.25,0.65} \draw[omDef, thick, -Stealth] (-2.6,\y) -- (2.6,\y);
+  \draw[omProp, very thick, dashed, -Stealth] (-1.2,0.2) -- (1.2,0.2) node[midway, below, font=\footnotesize] {$\ell$};
+  \draw[omProp, very thick, dashed] (1.2,0.2) -- (1.2,1.5) -- (-1.2,1.5) -- (-1.2,0.2);
+  \node[omProp, font=\footnotesize] at (0,1.85) {安培矩形：$B\ell = \mu_0 n\ell I$};
+  \node[font=\footnotesize] at (0,-1.5) {外部 $\vect B = \vect 0$，内部 $\mu_0 nI$};
+\end{tikzpicture}
+
+{\small 左：粗导线的磁场，内部线性，外部按 $1/r$
+变化，表面处最大。右：用于求无限长螺线管磁场的\omterm{def:b1:dc-circuits:current}{安培}矩形
+——仅其位于内部的一边
+对环流有贡献。}
+\end{omfigure}
+
+\section{拉普拉斯力}
+
+\begin{theorem}[拉普拉斯力]\label{thm:b1:magnetostatics:laplace}
+\index{拉普拉斯力}
+导体元 $\dd\vect l$ 载有电流 $I$，置于磁场 $\vect B$ 中，
+受力为 $\dd\vect F = I\,\dd\vect l\wedge\vect B$；均匀磁场中的直线段
+$\vect L$ 所受的力为 $\vect F = I\vect L\wedge\vect B$，
+大小为 $ILB\sin\theta$，方向同时垂直于导线和
+磁场。
+\end{theorem}
+
+\begin{proof}
+$\dd\vect l$ 中的载流子（数目 $n\,S\,\dd l$，电荷 $q$，
+漂移速度 $\vect v$）各受 $q\vect v\wedge\vect B$ 的力，其和为
+$nSq\,\dd l\,\vect v\wedge\vect B = I\,\dd\vect l\wedge\vect B$，因 $I = nqvS$
+且 $\vect v$ 沿 $\dd\vect l$。载流子通过碰撞将力
+传给导线的晶格。
+\end{proof}
+
+\begin{proposition}[平行导线间的作用力]\label{prop:b1:magnetostatics:parallel}
+\index{安培（定义）}
+两根相距为 $d$ 的长平行导线，分别通有电流 $I_1$ 和 $I_2$，
+若电流同向则相互吸引，反向则相互排斥，
+单位长度所受的力为
+\[
+\frac{F}{\ell} = \frac{\mu_0I_1I_2}{2\pi d} .
+\]
+相距 \qty{1}{m}、各通有 \qty{1}{A} 电流的两根导线，每
+米受力 $2 \times 10^{-7}$~N——即 1948 年至 2019 年间\omterm{def:b1:dc-circuits:current}{安培}的定义，并
+$\mu_0 = 4\pi \times 10^{-7}$ 这一数值的来源。
+\end{proposition}
+
+\begin{proof}
+导线~1 在导线~2 处产生大小为 $\mu_0I_1/2\pi d$ 的磁场，方向与导线~2 垂直；
+导线~2 长 $\ell$ 的一段所受的\omterm{thm:b1:magnetostatics:laplace}{拉普拉斯力}为 $I_2\ell \times \mu_0I_1/2\pi d$，
+当电流平行时指向导线~1（可用
+\omterm{prop:b1:magnetostatics:maps}{右手定则}检验）。
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}[font=\small, x=1cm, y=1cm, >=Stealth]
+  \begin{scope}
+    \draw[omThm, very thick, -Stealth] (-0.8,-1.6) -- (-0.8,1.6) node[above] {$I_1$};
+    \draw[omThm, very thick, -Stealth] (0.8,-1.6) -- (0.8,1.6) node[above] {$I_2$};
+    \draw[omDef, thick, ->] (-0.8,0) -- (-0.1,0) node[midway, above, font=\footnotesize] {$\vect F$};
+    \draw[omDef, thick, ->] (0.8,0) -- (0.1,0);
+    \node[omProp, font=\scriptsize] at (0.8,-0.5) [xshift=10pt] {$\odot\ \vect B_1$};
+    \node[font=\footnotesize] at (0,-2.1) {平行电流相互吸引};
+  \end{scope}
+  \begin{scope}[xshift=4.6cm]
+    \draw[omThm, very thick, -Stealth] (-0.8,-1.6) -- (-0.8,1.6) node[above] {$I_1$};
+    \draw[omThm, very thick, -Stealth] (0.8,1.6) node[above] {$I_2$} -- (0.8,-1.6);
+    \draw[omDef, thick, ->] (-0.8,0) -- (-1.5,0) node[midway, above, font=\footnotesize] {$\vect F$};
+    \draw[omDef, thick, ->] (0.8,0) -- (1.5,0);
+    \node[font=\footnotesize] at (0,-2.1) {反平行：相互排斥};
+  \end{scope}
+  \begin{scope}[xshift=10.2cm]
+    \draw[omThm, very thick] (-2.2,0.9) -- (2.2,0.9); \draw[omThm, very thick] (-2.2,-0.9) -- (2.2,-0.9);
+    \draw[omThm, very thick, -Stealth] (0.3,0.9) -- (0.3,-0.9) node[midway, right, font=\footnotesize] {$I$};
+    \draw[omThm, very thick] (0.15,0.9) rectangle (0.45,-0.9);
+    \foreach \x in {-1.8,-1.2,-0.6,1.0,1.6} \foreach \y in {-0.45,0.45} \node[omProp, font=\scriptsize] at (\x,\y) {$\times$};
+    \node[omProp, font=\footnotesize] at (-1.2,1.25) {$\vect B$ 垂直纸面向里};
+    \draw[omDef, very thick, ->] (0.3,0) -- (1.6,0);
+    \node[omDef, font=\footnotesize, anchor=north west] at (0.85,-0.2) {$\vect F = I\vect L\wedge\vect B$};
+    \node[font=\footnotesize] at (0,-2.1) {导轨：最简单的电动机};
+  \end{scope}
+\end{tikzpicture}
+
+{\small \omterm{thm:b1:magnetostatics:laplace}{拉普拉斯力}：平行导线之间（左、中），以及
+通有电流、横跨磁场的滑动导体棒上（右）——拉普拉斯
+导轨，其能量平衡正是\cref{ch:b1:induction}的主题。}
+\end{omfigure}
+
+\section{磁偶极子}
+
+\begin{definition}[磁矩]\label{def:b1:magnetostatics:moment}
+\index{磁矩}\index{磁偶极子}
+面积为 $S$、通有电流 $I$ 的平面回路，按\omterm{prop:b1:magnetostatics:maps}{右手定则}取向
+（法向 $\vect n$ 沿拇指方向，四指沿 $I$ 的方向），具有
+\emph{磁矩}为 $\vect m = IS\,\vect n$（\unit{A.m^2}）；若有 $N$
+匝，则为 $NIS\,\vect n$。在距离 $r \gg \sqrt S$ 处观察，该回路即为一个
+\emph{磁偶极子}：其场与\omterm{def:b1:potential-capacitors:dipole}{电偶极子}的场形式完全一致，
+只需作替换 $\vect p/\varepsilon_0 \to \mu_0\vect m$：
+\[
+B_r = \frac{\mu_0}{4\pi}\,\frac{2m\cos\theta}{r^3}, \qquad
+B_\theta = \frac{\mu_0}{4\pi}\,\frac{m\sin\theta}{r^3} .
+\]
+条形磁铁、原子和地球都是磁偶极子：地球的
+磁矩为 \qty{8e22}{A.m^2}，电子的磁矩为 \qty{9.3e-24}{A.m^2}（
+玻尔磁子）。
+\end{definition}
+
+\begin{proof}
+在轴线上，回路场 $\mu_0IR^2/2z^3$（$z \gg R$）等于
+$\mu_0 \cdot 2m/4\pi z^3$，其中 $m = I\pi R^2$，与 $B_r$ 在 $\theta = 0$ 处相符；
+完整的角度形式在本阶段不加证明地承认。
+\end{proof}
+
+\begin{theorem}[场中的偶极子]\label{thm:b1:magnetostatics:dipoleinfield}
+\index{磁偶极子!力矩}\index{磁偶极子!能量}
+\omterm{def:b1:magnetostatics:moment}{磁矩}为 $\vect m$ 的偶极子置于均匀磁场 $\vect B$ 中时，不受合力，
+受到力矩 $\vect\Gamma = \vect m\wedge\vect B$，使其与磁场方向趋于一致，
+并具有\omterm{def:b1:work-and-energy:conservative}{势能} $E_p = -\vect m\cdot\vect B$。在非均匀场中，
+当与磁场方向一致时，它被拉向强场区域（
+反向时则被推离）。
+\end{theorem}
+
+\begin{proof}
+考虑边长为 $a \times b$ 的矩形回路，$\vect n$ 与磁场方向成 $\theta$ 角
+（磁场为 $\vect B$）：与转轴平行的两条长为 $b$ 的边所受的\omterm{thm:b1:magnetostatics:laplace}{拉普拉斯力}
+为 $\pm IbB$，方向相反，相距 $a\sin\theta$，
+构成力偶，其力矩为 $IabB\sin\theta = mB\sin\theta$，其趋势是
+减小 $\theta$；另外两条边所受的力方向相反且
+共线。能量方面：由 $\Gamma = -\dd E_p/\dd\theta$ 及 $\Gamma = -mB\sin\theta$
+可得 $E_p = -mB\cos\theta$。任意平面回路都可看作若干小矩形之和；
+非均匀场的情形在本阶段不加证明地承认。
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}[font=\small, x=1cm, y=1cm, >=Stealth]
+  \begin{scope}
+    % rectangular loop seen from above, B horizontal
+    \foreach \y in {-1.4,-0.7,0,0.7,1.4} \draw[omProp, ->] (-2.8,\y) -- (2.8,\y);
+    \node[omProp, font=\footnotesize] at (2.5,1.7) {$\vect B$};
+    \draw[omThm, very thick] (-0.9,-0.55) -- (0.9,0.55);
+    \fill[omThm] (-0.9,-0.55) circle (3pt); \node[omThm, font=\footnotesize] at (0.9,0.55) {$\otimes$};
+    \draw[omDef, very thick, ->] (-0.9,-0.55) -- (-0.9,-1.6) node[left, font=\footnotesize] {$\vect F$};
+    \draw[omDef, very thick, ->] (0.9,0.55) -- (0.9,1.6) node[right, font=\footnotesize] {$-\vect F$};
+    \draw[very thick, ->] (0,0) -- (-0.66,1.08) node[above left, font=\footnotesize] {$\vect m$};
+    \draw (0,0.6) arc[start angle=90, end angle=121.4, radius=0.6] node[midway, above, font=\footnotesize] {$\theta$};
+    \node[font=\footnotesize] at (0,-2.95) {力偶 $mB\sin\theta$：线圈转动使 $\vect m$ 与 $\vect B$ 趋于一致};
+  \end{scope}
+  \begin{scope}[xshift=8.6cm]
+    % compass / dipole field lines of a magnet
+    \draw[fill=omThm!20, draw=omThm, thick] (-1.0,-0.3) rectangle (0,0.3); \node[omThm, font=\footnotesize] at (-0.5,0) {S};
+    \draw[fill=omDef!20, draw=omDef, thick] (0,-0.3) rectangle (1.0,0.3); \node[omDef, font=\footnotesize] at (0.5,0) {N};
+    \foreach \K in {1.4,2.0,2.6} {
+      \draw[omDef, thick, domain=8:172, samples=90, postaction={decorate, decoration={markings, mark=at position 0.5 with {\arrow{>}}}}] plot ({\K*sin(\x)*sin(\x)*cos(\x)}, {\K*sin(\x)*sin(\x)*sin(\x)});
+      \draw[omDef, thick, domain=188:352, samples=90, postaction={decorate, decoration={markings, mark=at position 0.5 with {\arrow{<}}}}] plot ({\K*sin(\x)*sin(\x)*cos(\x)}, {\K*sin(\x)*sin(\x)*sin(\x)});
+    }
+    \draw[->, very thick] (-0.6,0) -- (0.6,0); \node[font=\footnotesize] at (0,-0.5) {$\vect m$};
+    \node[font=\footnotesize] at (0,-2.95) {磁铁：偶极子的场，磁感线从 N 极绕至 S 极};
+  \end{scope}
+\end{tikzpicture}
+
+{\small 左：匀强磁场中的一个电流环，沿其转轴方向观察——两侧
+的\omterm{thm:b1:magnetostatics:laplace}{拉普拉斯力}构成一个力偶，使\omterm{def:b1:magnetostatics:moment}{磁矩}与磁场方向一致。右：条形磁铁
+的磁感线即\omterm{def:b1:magnetostatics:moment}{磁偶极子}的磁感线，
+形状与\omterm{def:b1:potential-capacitors:dipole}{电偶极子}的相同，
+从 N 极出发，回到 S 极。}
+\end{omfigure}
+
+\begin{example}[指南针与地球]\label{ex:b1:magnetostatics:compass}
+指南针的指针是一个小磁铁，\omterm{def:b1:magnetostatics:moment}{磁矩} $m \sim \qty{0.1}{A.m^2}$；在
+地磁场的水平分量 $B_h \approx \qty{2e-5}{T}$ 中，
+力矩 $mB_h\sin\theta$ 使其指向北方，并在北方附近振动，
+周期 $2\pi\sqrt{J/mB_h} \sim \qty{1}{s}$（见\cref{exo:b1:magnetostatics:9}）。
+地球自身的偶极子，\omterm{def:b1:magnetostatics:moment}{磁矩}为 \qty{8e22}{A.m^2}，相当于
+液态铁质地核中环绕流动的几十亿\omterm{def:b1:dc-circuits:current}{安培}电流；它在地表
+产生的磁场是全章最弱的，
+也是人类最先利用的磁场。
+\end{example}
+
+\section{练习}
+
+\begin{exercise}[$\star$]\label{exo:b1:magnetostatics:1}
+求通有 \qty{10}{A} 电流的直导线在距其 \qty{1.0}{cm} 处的磁场；
+在该距离处要使磁场达到 \qty{1}{T}，所需电流为多大；
+求使通有 \qty{100}{A} 电流的导线的磁场与地磁场 \qty{5e-5}{T} 相等的距离。
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b1:magnetostatics:2}
+求匝数为 $100$、半径为 \qty{5.0}{cm} 的线圈在中心处的磁场，
+该线圈通有 \qty{2.0}{A} 电流；求其轴线上距中心
+\qty{5.0}{cm} 和 \qty{50}{cm} 处的磁场。
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b1:magnetostatics:3}
+螺线管每米绕 $1000$ 匝，通有 \qty{5.0}{A} 电流。求其内部
+远离两端处的磁场，以及端点处的磁场。用 \qty{0.5}{mm} 的导线
+单层密绕时，每米最多能绕多少匝，并求此时
+在 \qty{5}{A} 电流下的磁场。
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b1:magnetostatics:4}
+求长 \qty{1.0}{m}、通有 \qty{10}{A} 电流的导线，置于与
+\qty{0.10}{T} 的磁场垂直时所受的力；同一导线与磁场成 \qty{30}{\degree} 时所受的力。
+一台电动机的转子半径为 \qty{5}{cm}，其上装有 $100$ 根这样的导线，
+求其所受力矩的\omterm{def:b1:units-dimensions:oom}{数量级}。
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b1:magnetostatics:5}
+求一有限长直导线段在距其所在直线 $d$ 处的磁场，其两端在该点
+所张的角分别为 $\alpha_1$ 和 $\alpha_2$（自垂线量起）：
+$B = \dfrac{\mu_0I}{4\pi d}(\sin\alpha_2 - \sin\alpha_1)$。验证
+无限长导线的极限情形；求边长为
+$a$ 的正方形线圈中心处的磁场。
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b1:magnetostatics:6}
+\emph{亥姆霍兹线圈。}两个相同的线圈（匝数为 $N$，半径为 $R$）共轴放置，
+相距 $R$，通以方向相同、大小相等的电流。求中点处的磁场；证明
+沿轴线的 $B$ 的一阶\emph{与二阶}导数在该点均为零。
+数值：$N = 100$，
+$R = \qty{15}{cm}$，$I = \qty{1.0}{A}$。
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b1:magnetostatics:7}
+一根半径为 \qty{2.0}{mm} 的铜导线通有 \qty{100}{A} 电流。求
+导线表面处、距轴线 \qty{1.0}{mm} 处及 \qty{1.0}{cm} 处的磁场；画出 $B(r)$ 的草图。
+现将该导线作为同轴电缆的内导体，其外皮
+通有回流电流；求外皮之外的磁场。
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b1:magnetostatics:8}
+求两根相距 \qty{1}{m}、各通 \qty{1}{A} 电流的导线每米所受的力；两根
+相距 \qty{10}{cm}、各通 \qty{10}{kA} 电流的母线之间的力；在
+\qty{100}{kA} 短路电流下的情形。是什么必须固定住母线？
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b1:magnetostatics:9}
+指南针的指针，\omterm{def:b1:magnetostatics:moment}{磁矩} $m = \qty{0.10}{A.m^2}$，\omterm{prop:b1:angular-momentum:inertia}{转动惯量}
+$J = \qty{1.0e-7}{kg.m^2}$，置于水平磁场 $B_h = \qty{2.0e-5}{T}$ 中。
+求其在 \qty{90}{\degree} 处的力矩；将其从北转到南所需的功；\omterm{prop:b1:work-and-energy:stability}{小振动}的
+周期；如何利用它测量 $B_h$？
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b1:magnetostatics:10}
+\emph{把地球视为偶极子。}（a）证明：电流回路在其轴线上远处的
+磁场为 $B = \mu_0m/2\pi z^3$，其中 $m = I\pi R^2$；比较
+\omterm{def:b1:potential-capacitors:dipole}{电偶极子}的结果。（b）磁极处的磁场约为
+\qty{6e-5}{T}：推算地球的\omterm{def:b1:potential-capacitors:dipole}{偶极矩}。（c）
+求产生该\omterm{def:b1:potential-capacitors:dipole}{偶极矩}所需的、半径为 \qty{3000}{km}（地核）的回路中的电流。（d）求
+赤道处偶极子模型下的磁场；磁场在
+纬度 \qty{45}{\degree} 处的磁倾角（用 $B_r$ 和 $B_\theta$）。
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b1:magnetostatics:11}
+\emph{有限长螺线管。}长 $L = \qty{20}{cm}$，半径 $R = \qty{2.0}{cm}$，
+$n = \qty{2000}{m^{-1}}$，$I = \qty{3.0}{A}$。求中心处以及
+一端处的磁场（用本课程公式计算）；二者各占无限长螺线管值的比例；
+在轴线外侧距离多远处，磁场已降为
+中心值的 $1\%$？画出沿轴线的 $B(z)$ 草图。
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b1:magnetostatics:12}
+\emph{磁压强。}在长螺线管中，内部磁场为 $B$，
+外部为 $0$；线圈载有的面电流 $K = nI$，每
+米长度上的电流。（a）证明：线圈\emph{处}的磁场，即内外磁场的平均，
+为 $B/2$，并证明作用在线圈上的\omterm{thm:b1:magnetostatics:laplace}{拉普拉斯力}
+是向外的压强 $p = B^2/2\mu_0$。（b）取
+\qty{1}{T}、\qty{10}{T}、\qty{45}{T} 时的数值，并与大气压强及
+钢的抗拉强度（\qty{1}{GPa}）作比较。（c）是什么限制了
+最强的稳恒磁体？
+\end{exercise}
+
+\begin{omfigure}
+\includegraphics[width=0.50\linewidth]{images/book3/transmission-line.jpg}
+
+{\small 高压输电线：每回路有三根导线，其电流之和为零，因此它们的磁场在远处相互抵消。照片：Stefan Andrej Shambora，CC~BY~2.0。}
+\end{omfigure}
+
+\section{问题：电缆、线路与电表}
+
+\begin{problem}[{周末问题——同轴电缆上的安培环路定理，
+输电线上的拉普拉斯力与动圈式
+电流计的设计}]
+\label{pb:b1:magnetostatics:1}
+$\mu_0 = 4\pi \times 10^{-7}$ \omterm{def:b1:units-dimensions:si}{国际单位制}；铜的电阻率 $\rho = \qty{1.7e-8}{\ohm.m}$。
+
+\medskip
+\noindent\textbf{第一部分——同轴电缆。}
+一根电缆载有 $I = \qty{1.0}{A}$ 的电流，沿
+半径为 $a = \qty{0.50}{mm}$ 的实心铜芯流动，电流沿内半径为 $b =
+\qty{2.5}{mm}$ 的护套反向流回，护套外半径为 $c = \qty{3.0}{mm}$；
+各导体截面上的电流均匀分布。
+\begin{enumerate}
+  \item 对称性与不变性：$\vect B$ 的方向，以及它所依赖的
+        变量。
+  \item 由\omterm{thm:b1:magnetostatics:ampere}{安培环路定理}求 $B(r)$ 在芯线内、导体之间以及
+        电缆外部的表达式。
+  \item 求 $r = a$ 与 $r = b$ 处的值。
+  \item 若芯线换成同半径
+        $a$ 的薄铜管，载有同样的电流：各区域有何变化？
+  \item 求 $B(r)$ 在护套内（$b < r < c$）的表达式；检验 $b$ 处
+        与 $c$ 处的值是否相符，并画出 $B(r)$ 从 $0$ 到 \qty{4}{mm} 的图像。
+  \item 护套所受\omterm{thm:b1:magnetostatics:laplace}{拉普拉斯力}：方向（是吸引还是排斥芯线？）
+        以及单位面积上的大小，取护套处的磁场为
+        $b$ 与 $c$ 处磁场值的平均。
+        对 \qty{10}{kA} 的脉冲电流，求同样的量。
+  \item 为何\omterm{def:b1:wave-propagation:signal}{信号}传输采用同轴结构？与
+        相距 $d = \qty{2}{mm}$ 的一对平行导线作比较：
+        距这对导线 $D = \qty{10}{cm}$ 处的磁场（叠加两根导线的场）。
+\end{enumerate}
+
+\medskip
+\noindent\textbf{第二部分——输电线路。}
+两根水平导线相距 $d = \qty{1.0}{m}$，离地高度为 $h = \qty{10}{m}$，
+通有方向相反的电流，大小均为 $I = \qty{500}{A}$。
+\begin{enumerate}[resume]
+  \item 求一根导线在地面上位于两导线中点正下方处的磁场；
+        证明两导线的磁场合成为竖直方向的磁场，
+        并求其值，与地磁场及
+        \qty{100}{\micro T} 的暴露限值作比较。
+  \item 证明在 $D \gg d$ 处，这对导线的磁场按
+        $\mu_0Id/2\pi D^2$ 衰减：为何比单根导线衰减得更快？
+  \item 求一根导线正下方 \qty{1.0}{m} 处的磁场，
+        即技术人员可能工作的位置。
+  \item 求两导线间每米所受的力，
+        是吸引还是排斥？若短路电流为 \qty{20}{kA}，结论相同吗？
+  \item 求长为 \qty{300}{m} 的档距内导线所受的力，分别对正常与短路两种情形；
+        与该档距的重力（\qty{1.0}{kg/m}）作比较；
+        短路时导线会发生什么？
+  \item 三相线路载有三个\omterm{def:b1:wave-propagation:signal}{振幅}相同的电流，
+        彼此相差 \qty{120}{\degree}：证明其和在任一时刻均为零，
+        并说明这对远场意味着什么。
+  \item 在第~8 题所指的位置放一个指南针，该处地磁场的水平分量为
+        \qty{2.0e-5}{T}：线路的磁场会使它偏转吗？
+        （考虑其方向。）
+\end{enumerate}
+
+\medskip
+\noindent\textbf{第三部分——动圈式电流计。}
+一个矩形线圈，匝数 $N = 200$，边长 $a = \qty{2.0}{cm}$（与
+转轴平行）与 $b = \qty{3.0}{cm}$，绕其轴在
+圆柱形极靴之间的缝隙中转动，该处磁场 $B = \qty{0.20}{T}$，
+是\emph{径向}的：始终位于线圈所在平面内，且垂直于其
+边 $a$。一根螺旋弹簧提供回复力矩 $-C\theta$，其中
+$C = \qty{1.0e-5}{N.m/rad}$。线圈与指针的\omterm{prop:b1:angular-momentum:inertia}{转动惯量}为
+$J = \qty{6.7e-8}{kg.m^2}$。
+\begin{enumerate}[resume]
+  \item 求四条边所受的\omterm{thm:b1:magnetostatics:laplace}{拉普拉斯力}；
+        其中哪些边产生绕轴的力矩？
+  \item 求电流 $I$ 对应的力矩；为何径向磁场使其
+        与 $\theta$ 无关？
+  \item 求平衡时的偏转角 $\theta$，以及灵敏度（每毫安的弧度数）；
+        使偏转达到满刻度 \qty{1.2}{rad} 时所需的电流。
+  \item 线圈由直径为 \qty{0.10}{mm} 的铜线绕成：
+        求线圈电阻，以及满偏时线圈两端的\omterm{def:b1:dc-circuits:voltage}{电压}与
+        耗散的功率。
+  \item 写出线圈的运动方程；求其绕平衡位置振荡的
+        固有周期。
+  \item 线圈在磁场中运动会感应出制动力矩
+        $-\alpha\dot\theta$（见\cref{ch:b1:induction}）；求临界阻尼所对应的
+        $\alpha$ 值，并说明为何需要它。
+  \item 串联一个\omterm{def:b1:dc-circuits:resistor}{电阻器}，使之成为满偏 \qty{10}{V} 的\omterm{def:b1:dc-circuits:voltage}{电压}表；
+        再并联一个分流\omterm{def:b1:dc-circuits:resistor}{电阻器}，使之成为满偏 \qty{1.0}{A} 的电流表。
+  \item 求满偏时线圈的\omterm{def:b1:magnetostatics:moment}{磁矩}；线圈沿磁场方向排列、处于均匀 \qty{0.20}{T} 磁场中时的能量为 $-\vect m\cdot
+        \vect B$；
+        并与满偏时弹簧中储存的能量作比较。
+  \item 若磁场不是径向而是\emph{均匀}的，证明
+        刻度将不再是线性的：写出平衡条件，
+        其中 $\theta$ 从线圈平面
+        包含 $\vect B$ 的位置量起。
+  \item 将一个 \qty{50}{Hz}、\omterm{def:b1:wave-propagation:signal}{振幅}为 \qty{0.5}{mA} 的交流电流输入电表：
+        指针会显示什么，为什么？（将 \qty{50}{Hz}
+        与\omterm{def:b1:oscillators-resonance:harmonic}{固有频率}作比较。）
+  \item 用三个数值概括上述三个场景，
+        并说明各自由哪一条定律导出。
+\end{enumerate}
+\end{problem}

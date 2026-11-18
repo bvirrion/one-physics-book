@@ -1,0 +1,130 @@
+114| \begin{omfigure}
+115| \begin{tikzpicture}[font=\small, x=1cm, y=1cm, >=Stealth, scale=0.9, every node/.style={transform shape}]
+116|   \begin{scope}
+117|     \node[draw, thick, minimum width=1.4cm, minimum height=0.8cm] (A) at (0,0) {$\underline A$};
+118|     \node[draw, thick, minimum width=1.4cm, minimum height=0.8cm] (B) at (0,-1.7) {$\underline\beta$};
+119|     \draw[thick] (-2.3,0) circle (0.2); \node at (-2.3,0) {$+$};
+120|     \draw[thick, ->] (-3.2,0) -- (-2.5,0) node[above, pos=0.3, font=\footnotesize] {$\underline e$};
+121|     \draw[thick, ->] (-2.1,0) -- (A.west);
+122|     \draw[thick, ->] (A.east) -- (2.0,0) node[above, pos=0.6, font=\footnotesize] {$\underline s$};
+123|     \draw[thick] (1.4,0) -- (1.4,-1.7) -- (B.east);
+124|     \draw[thick, ->] (B.west) -- (-2.3,-1.7) -- (-2.3,-0.2);
+125|     \node[font=\footnotesize] at (-0.3,-2.7) {$\underline H = \dfrac{\underline A}{1 - \underline A\underline\beta}$};
+126|   \end{scope}
+127| \end{tikzpicture}
+128| \hfill
+129| \begin{tikzpicture}[font=\small, scale=0.78, every node/.style={transform shape}]
+130|     \draw (0,0) node[op amp, noinv input down] (oa) {};
+131|     % negative feedback: R2 from output to - input, R1 from - input to ground
+132|     \coordinate (M) at ($(oa.-)+(-0.7,0)$);
+133|     \draw (oa.-) -- (M);
+134|     \draw (M) to[R, l_=$R_1$] ++(-1.6,0) node[ground, rotate=-90]{};
+135|     \draw (M) -- ++(0,1.4) coordinate (T) to[R, l=$R_2$] (T -| oa.out) -- (oa.out);
+136|     % Wien network: from output down, series C and R to node P, P to + input; P to ground via R and via C
+137|     \coordinate (P) at (-3.4,-2.3);
+138|     \draw (oa.out) -- ++(0.6,0) coordinate (O) -- (O |- P) to[C, l=$C$] ++(-1.6,0) to[R, l=$R$] (P);
+139|     \draw (P) -- (P |- oa.+) -- (oa.+);
+140|     \draw (P) to[R, l_=$R$] ++(0,-1.6) node[ground]{};
+141|     \draw (P) -- ++(-1.1,0) coordinate (Q) to[C, l_=$C$] ++(0,-1.6) node[ground]{};
+142|     \draw (O) to[short, -o] ++(0.5,0) node[right, font=\footnotesize] {$s$};
+143| \end{tikzpicture}
+144| 
+145| {\small 左：反馈环路——输出经
+146| $\underline\beta$ 回送到放大器输入端。右：维恩桥
+147| 振子——同相放大器，增益为 $1 + R_2/R_1$，其
+148| 输出回送到其 $+$ 输入端，经串并联 $RC$
+149| 网络；当增益达到 3 时，以 $1/2\pi RC$ 的频率振荡。}
+150| \end{omfigure}
+151| 
+152| \begin{example}[1 kHz 信号源]\label{ex:b2:feedback-oscillators:wiennumbers}
+153| $R = \qty{15.9}{k\ohm}$，$C = \qty{10}{nF}$：$f_0 = \qty{1.00}{kHz}$。取 $R_1 =
+154| \qty{10}{k\ohm}$，$R_2 = \qty{21}{k\ohm}$，$K = 3.1$：振幅
+155| 每增大 $\eu$ 倍所需时间为 $2RC/0.1 = \qty{3.2}{ms}$，由开关接通时的噪声起振，
+156| 几十毫秒内达到饱和；限幅后的正弦波
+157| 富含谐波。换用一只小型白炽灯泡代替 $R_1$，其
+158| 电阻随温度升高而增大，使 $K$ 恰好降至 $3$，
+159| 即在适中振幅处得到失真度小于 $0.1\%$ 的正弦波，
+160| 这正是最早的实验室信号发生器所用的电路。
+161| \end{example}
+162| 
+163| \section{带迟滞的比较器；无稳态多谐振荡器}
+164| 
+165| \begin{proposition}[迟滞比较器]\label{prop:b2:feedback-oscillators:schmitt}
+166| \index{迟滞比较器}\index{施密特触发器}
+167| 具有\emph{正}反馈的运算放大器——输出端接至 $+$ 输入端，
+168| 其间经分压器 $R_1$、$R_2$ 相连（此时 $+$ 输入端电位为 $\beta s$，其中
+169| $\beta = R_1/(R_1 + R_2)$，信号 $e$ 加在 $-$ 输入端）
+170| ——它没有稳定的线性区：输出停留在 $+V_{\text{sat}}$ 或
+171| $-V_{\text{sat}}$ 之一，并在以下条件下翻转：
+172| \begin{align*}
+173| &\text{由 } +V_{\text{sat}} \text{ 变为 } -V_{\text{sat}} \text{，条件是 } e \text{ 升至高于 } +\beta V_{\text{sat}} ,\\
+174| &\text{由 } -V_{\text{sat}} \text{ 变为 } +V_{\text{sat}} \text{，条件是 } e \text{ 降至低于 } -\beta V_{\text{sat}} .
+175| \end{align*}
+176| 两个阈值不同：\emph{迟滞}量 $2\beta V_{\text{sat}}$ 使比较器
+177| 对小于该值的噪声不敏感，其在 $(e, s)$ 平面中的循环是一个
+178| 沿顺时针方向运行的矩形。
+179| \end{proposition}
+180| 
+181| \begin{proof}
+182| 当 $s = +V_{\text{sat}}$ 时，$+$ 输入端电位为 $+\beta V_{\text{sat}}$；只要 $e < \beta V_{\text{sat}}$，
+183| 输出就保持为正，$e$ 越过该值时即翻转——
+184| 此后 $+$ 输入端电位为 $-\beta V_{\text{sat}}$，因此 $e$ 必须
+185| 降到该值以下才能使其翻回。（在线性区内，正反馈会使任何偏差增大，
+186| 即该状态是不稳定的。）
+187| \end{proof}
+188| 
+189| \begin{proposition}[无稳态多谐振荡器]\label{prop:b2:feedback-oscillators:astable}
+190| \index{无稳态多谐振荡器}\index{弛豫振子}
+191| 将迟滞比较器的输出回送到其自身的 $-$ 输入端，
+192| 经一个 $RC$ 电路（$R$ 从 $s$ 接到 $-$ 输入端，$C$ 从该处
+193| 接到地）。电容器向 $\pm V_{\text{sat}}$ 充电，
+194| 每当电压达到阈值便使比较器翻转：$s$ 处为方波，
+195| $C$ 上为近似三角波，其周期为
+196| \[
+197| T = 2RC\,\ln\frac{1 + \beta}{1 - \beta} .
+198| \]
+199| 当 $\beta = 1/2$ 时，$T = 2RC\ln3 \approx 2.2RC$。这类\emph{弛豫
+200| 振子}可为微控制器提供时钟、使指示灯闪烁，
+201| 并产生函数发生器中的三角波和方波。
+202| \end{proposition}
+203| 
+204| \begin{proof}
+205| 当 $s = +V_{\text{sat}}$ 时，电容电压 $v_C$ 从
+206| $-\beta V_{\text{sat}}$ 向 $+V_{\text{sat}}$ 按 $v_C = V_{\text{sat}} - (1 + \beta)
+207| V_{\text{sat}}\eu^{-t/RC}$ 变化，电压达到 $+\beta V_{\text{sat}}$ 时所经时间为 $RC\ln[(1 + \beta)
+208| /(1 - \beta)]$；比较器翻转，随后是对称的半循环。
+209| \end{proof}
+210| 
+211| \begin{omfigure}
+212| \begin{tikzpicture}
+213| \begin{axis}[omaxis, axis x line=middle, axis y line=middle, width=5.6cm, height=4.6cm,
+214|     xlabel={$e$}, ylabel={$s$}, xmin=-1.6, xmax=1.6, ymin=-1.5, ymax=1.5,
+215|     xtick=\empty, ytick=\empty, clip=false]
+216|   \node[font=\scriptsize, anchor=north] at (axis cs:-0.5,-1.55) {$-\beta V_{\text{sat}}$};
+217|   \node[font=\scriptsize, anchor=north] at (axis cs:0.5,-1.55) {$\beta V_{\text{sat}}$};
+218|   \node[font=\scriptsize, anchor=east] at (axis cs:-1.55,1) {$V_{\text{sat}}$};
+219|   \node[font=\scriptsize, anchor=east] at (axis cs:-1.55,-1) {$-V_{\text{sat}}$};
+220|   \draw[dotted] (axis cs:-0.5,0) -- (axis cs:-0.5,-1.5); \draw[dotted] (axis cs:0.5,0) -- (axis cs:0.5,-1.5);
+221|   \addplot[omDef, very thick] coordinates {(-1.5,1) (0.5,1)};
+222|   \addplot[omDef, very thick, ->] coordinates {(0.5,1) (0.5,-1)};
+223|   \addplot[omDef, very thick] coordinates {(0.5,-1) (-0.5,-1)};
+224|   \addplot[omDef, very thick, ->] coordinates {(-0.5,-1) (-0.5,1)};
+225|   \addplot[omDef, very thick] coordinates {(-0.5,-1) (1.5,-1)};
+226| \end{axis}
+227| \end{tikzpicture}
+228| \hfill
+229| \begin{tikzpicture}
+230| \begin{axis}[omaxis, axis x line=middle, axis y line=left, width=8.0cm, height=4.6cm,
+231|     xlabel={$t$}, ylabel={}, xmin=0, xmax=4.4, ymin=-1.4, ymax=1.4, xtick=\empty, ytick={-1,-0.5,0.5,1},
+232|     yticklabels={$-V_{\text{sat}}$, $-\beta V_{\text{sat}}$, $\beta V_{\text{sat}}$, $V_{\text{sat}}$}, tick label style={font=\scriptsize}, samples=60,
+233|     xlabel style={at={(axis description cs:1.0,0.5)}, anchor=west},
+234|     legend style={font=\scriptsize, at={(0.5,1.02)}, anchor=south, legend columns=2, draw=none, fill=none}]
+235|   \addplot[omThm, thick] coordinates {(0,1) (1.1,1) (1.1,-1) (2.2,-1) (2.2,1) (3.3,1) (3.3,-1) (4.4,-1)};
+236|   \addplot[omDef, thick, domain=0:1.1] {1-1.5*exp(-x)};
+237|   \addplot[omDef, thick, domain=1.1:2.2] {-1+1.5*exp(-(x-1.1))};
+238|   \addplot[omDef, thick, domain=2.2:3.3] {1-1.5*exp(-(x-2.2))};
+239|   \addplot[omDef, thick, domain=3.3:4.4] {-1+1.5*exp(-(x-3.3))};
+240|   \legend{$s$（方波），$v_C$}
+241| \end{axis}
+242| \end{tikzpicture}
+243| 

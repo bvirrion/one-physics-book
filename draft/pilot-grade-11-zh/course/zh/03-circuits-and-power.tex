@@ -1,0 +1,461 @@
+\chapter{电路与功率}\label{ch:g11:circuits-and-power}
+
+合上开关，灯就亮了，因为远在数千米之外的发电机
+通过墙内的铜导线回路推动电荷运动。
+早些年级已经描绘过这个电路——电流、电压、欧姆定律。本章将
+借助\cref{ch:g10:energy-conservation}中的能量账本重新审视它：电表究竟在计量什么，
+细导线为何发热发光，电网为何要用 \qty{400}{kV} 的高压输电。
+
+\section{运动的电荷}
+
+\begin{definition}[电流与库仑]\label{def:g11:circuits-and-power:current}
+\emph{电流}\index{电流}是电荷的定向
+流动（在金属中为电子）。其强度 $I$ 的单位为
+\emph{安培}\index{安培}（\unit{A}），是单位时间内通过导线
+任一横截面的电荷量：若恒定电流 $I$ 在
+时间 $t$ 内流动，则输运的电荷量为
+\[ q = I\,t , \]
+单位为\emph{库仑}\index{库仑}（\unit{C}），且 $\qty{1}{C} =
+\qty{1}{A.s}$。基本电荷为 $e = \qty{1.6e-19}{C}$。电流
+用电流表测量，电流表须串联接入电路。
+\end{definition}
+
+\begin{example}[闪电与手机]\label{ex:g11:circuits-and-power:coulomb}
+一次闪电携带约 $\qty{3.0e4}{A}$ 的电流，持续
+约 $\qty{1.0e-4}{s}$：$q = 3.0\times10^{4} \times 10^{-4} = \qty{3.0}{C}$。
+你的手机电流为 \qty{2.0}{A}，每 $1.5$ 秒便输运与闪电相同的电荷量。
+\end{example}
+
+\begin{definition}[电压与伏特]\label{def:g11:circuits-and-power:voltage}
+电路中两点之间的\emph{电压}\index{电压} $U$，以
+\emph{伏特}\index{伏特}（\unit{V}）为单位，等于单位电荷在两点间移动时交换的能量，即
+$\qty{1}{V} = \qty{1}{J/C}$。因此，电荷
+$q$ 穿过电压为 $U$ 的元件时，与之交换的能量为 $E = qU$。
+电压用电压表测量，电压表应并联接入电路。
+\end{definition}
+
+\begin{proposition}[电路定律]\label{prop:g11:circuits-and-power:laws}
+在稳定运行的电路中：
+\begin{enumerate}
+  \item \emph{节点定律：}流入节点的电流之和
+        等于流出该节点的电流之和；
+  \item \emph{串联定律：}沿一条路径的电压相加：
+        $U_{AC} = U_{AB} + U_{BC}$；
+  \item \emph{并联定律：}连接同一两点的两条支路
+        电压相同。
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+在稳定状态下，电荷不会在任何地方堆积，因此
+流入节点的电荷必然流出。沿路径每库仑的能量可加，且
+只取决于两个端点，而与两点之间所取的支路无关。
+\end{proof}
+
+\section{欧姆定律与电阻网络}
+
+\begin{definition}[电阻]\label{def:g11:circuits-and-power:resistance}
+导体的\emph{电阻}\index{电阻}是其两端电压与通过它的电流之比
+$R = U/I$，其单位为
+\emph{欧姆}\index{欧姆}（\unit{\ohm}）：$\qty{1}{\ohm} = \qty{1}{V/A}$。
+\end{definition}
+
+\begin{proposition}[欧姆定律]\label{prop:g11:circuits-and-power:ohm}
+\index{欧姆定律}
+对于温度保持不变的金属导体，$R$ 为常数：
+电压与电流成正比，
+\[ U = R\,I . \]
+\end{proposition}
+\admitted
+
+\begin{remark}\label{rem:g11:circuits-and-power:ohm-limits}
+这是一条实验定律，并非普遍成立：二极管、加热灯泡的
+灯丝或人体皮肤都不遵守它。金属为何遵守，将在
+大学分册中推导。
+\end{remark}
+
+\begin{proposition}[串联与并联电阻]\label{prop:g11:circuits-and-power:networks}
+\index{等效电阻}
+两个电阻串联，等效于一个电阻 $R_{\text{s}} =
+R_1 + R_2$；两个电阻并联，等效于一个电阻 $R_{\text{p}}$，满足
+\[
+\frac{1}{R_{\text{p}}} = \frac{1}{R_1} + \frac{1}{R_2} ,
+\qquad\text{即}\quad
+R_{\text{p}} = \frac{R_1 R_2}{R_1 + R_2} < \min(R_1, R_2) .
+\]
+\end{proposition}
+
+\begin{proof}
+串联：两者通过相同的电流 $I$，电压相加
+（见\cref{prop:g11:circuits-and-power:laws}），故 $U = (R_1 + R_2)\,I$。
+并联：两者承受相同的电压 $U$，电流相加，故
+$I = \frac{U}{R_1} + \frac{U}{R_2}$。
+\end{proof}
+
+\begin{omfigure}
+\begin{circuitikz}[font=\small]
+  \draw (0,0) to[battery1, l=$U$] (0,2.2)
+        to[ammeter] (1.9,2.2)
+        to[R=$R_1$] (3.7,2.2)
+        to[R=$R_2$] (5.5,2.2) -- (5.5,0) -- (0,0);
+  \draw (3.7,2.2) -- (3.7,3.3) to[voltmeter] (5.5,3.3) -- (5.5,2.2);
+\end{circuitikz}\qquad
+\begin{circuitikz}[font=\small]
+  \draw (0,0) to[battery1, l=$U$] (0,2.2)
+        to[ammeter, l=$I$] (2.2,2.2);
+  \draw (2.2,2.2) to[R=$R_1$, i=$I_1$] (2.2,0) -- (0,0);
+  \draw (2.2,2.2) -- (4.0,2.2) to[R=$R_2$, i=$I_2$] (4.0,0) -- (2.2,0);
+\end{circuitikz}
+
+{\small 串联（左）：电流处处相同，电压相加。并联（右）：电压处处相同，
+电流相加。}
+\end{omfigure}
+
+\begin{example}[等效电阻]\label{ex:g11:circuits-and-power:networks}
+$R_1 = \qty{100}{\ohm}$ 与 $R_2 = \qty{150}{\ohm}$：串联时为
+\qty{250}{\ohm}；并联时为 $\frac{100 \times 150}{250} =
+\qty{60}{\ohm}$——小于其中任一电阻：电流多了一条通路。
+\end{example}
+
+\section{电路中的能量与功率}
+
+\begin{proposition}[电功率]\label{prop:g11:circuits-and-power:power}
+\index{电功率}
+两端电压为 $U$、通过电流为 $I$ 的用电器，
+以如下速率获得能量：
+\[ P = U\,I , \qquad\text{即}\quad E = U\,I\,t \ \text{在时间 } t . \]
+\end{proposition}
+
+\begin{proof}
+在时间 $t$ 内，电荷 $q = It$ 通过该用电器
+（见\cref{def:g11:circuits-and-power:current}），每库仑电荷交出
+$U$ 焦耳（见\cref{def:g11:circuits-and-power:voltage}）：$E = qU = UIt$。
+\end{proof}
+
+\begin{proposition}[电阻的功率]\label{prop:g11:circuits-and-power:ri2}
+电阻 $R$ 通过电流 $I$ 时耗散功率
+\[ P = R\,I^2 = \frac{U^2}{R} . \]
+\end{proposition}
+
+\begin{proof}
+将欧姆定律代入 $P = UI$：$P = (RI)I = RI^2 = U(U/R) = U^2/R$。
+\end{proof}
+
+\begin{example}[读取铭牌]\label{ex:g11:circuits-and-power:nameplate}
+一只标有“\qty{230}{V} -- \qty{2200}{W}”的电水壶，其电流为 $I = P/U =
+2200/230 = \qty{9.6}{A}$，电阻为 $R = U^2/P = 230^2/2200 =
+\qty{24}{\ohm}$。工作 \qty{150}{s} 时消耗 $E = 2200 \times 150 =
+\qty{3.3e5}{J} \approx \qty{0.09}{kW.h}$——约合两角钱。
+\end{example}
+
+\begin{remark}[焦耳与千瓦时]\label{rem:g11:circuits-and-power:kwh}
+电表计量的是千瓦时（见\cref{def:g10:energy-conservation:kwh}）：
+$\qty{1}{kW.h} = \qty{3.6e6}{J}$。焦耳是物理学家使用的单位；
+千瓦时则用于电费结算。
+\end{remark}
+
+\begin{omfigure}
+\begin{tikzpicture}[font=\small, x=1.5cm, y=0.42cm]
+  \draw[-Stealth] (0,0) -- (4.6,0) node[right] {$P$};
+  \foreach \x/\t in {1/\qty{10}{W}, 2/\qty{100}{W}, 3/\qty{1}{kW}, 4/\qty{10}{kW}}
+    {\draw (\x,-0.3) -- (\x,0.3); \node[below, font=\footnotesize] at (\x,-0.35) {\t};}
+  \fill[omDef!70] (0,1) rectangle (1.0,1.75);
+  \node[right] at (1.05,1.4) {LED 灯（\qty{10}{W}）};
+  \fill[omDef!70] (0,2.35) rectangle (1.78,3.1);
+  \node[right] at (1.83,2.75) {笔记本电脑（\qty{60}{W}）};
+  \fill[omThm!70] (0,3.7) rectangle (2.95,4.45);
+  \node[right] at (3.0,4.1) {烤面包机（\qty{900}{W}）};
+  \fill[omThm!70] (0,5.05) rectangle (3.34,5.8);
+  \node[right] at (3.39,5.45) {电水壶（\qty{2.2}{kW}）};
+  \fill[omThm!70] (0,6.4) rectangle (3.95,7.15);
+  \node[right] at (4.0,6.8) {电热淋浴器（\qty{9}{kW}）};
+\end{tikzpicture}
+
+{\small 各类电器的功率（对数坐标轴）：所有发热的电器
+（红色）比所有计算或发光的电器
+（蓝色）高出一个数量级。}
+\end{omfigure}
+
+\section{焦耳效应：从烤面包机到输电塔}
+
+\begin{definition}[焦耳效应]\label{def:g11:circuits-and-power:joule}
+每个电阻中将电能转化为热能的耗散功率 $P = RI^2$，
+称为\emph{焦耳效应}\index{焦耳效应}。电暖器、
+电水壶、烤面包机以及老式灯泡，按设计都是电阻；一个
+\emph{保险丝}\index{保险丝}是一根细导线，经标定在电流超过额定值时熔断——
+从而断开电路。
+\end{definition}
+
+\begin{example}[为什么输电要用高压]\label{ex:g11:circuits-and-power:transmission}
+某村庄需要 $P = \qty{100}{kW}$ 的功率，经电阻为
+$R_\ell = \qty{5.0}{\ohm}$ 的线路输送。以 $U = \qty{500}{V}$ 输送时：$I = P/U =
+\qty{200}{A}$，线路损耗为 $R_\ell I^2 = \qty{200}{kW}$——恰为
+输送功率的两倍：荒谬。若以 $U = \qty{20}{kV}$ 输送，则 $I = \qty{5.0}{A}$，
+$R_\ell I^2 = \qty{125}{W}$。电流减小为原来的四十分之一，损耗则减小为原来的
+$1600$ 分之一。
+\end{example}
+
+\begin{omfigure}
+\begin{circuitikz}[font=\small]
+  \draw (0,0) to[sV, l=发电站] (0,2)
+        to[R, l_=$R_\ell$, i=$I$] (3.4,2) -- (4.8,2)
+        to[lamp, l=村庄] (4.8,0) -- (0,0);
+  \node[font=\footnotesize, omThm] at (1.7,2.75) {损耗 $R_\ell I^2$};
+\end{circuitikz}
+
+{\small \cref{ex:g11:circuits-and-power:transmission} 的输电过程：
+提高 $U$（$P = UI$ 固定）时，$I$ 随之减小，损耗随 $I^2$ 下降。}
+\end{omfigure}
+
+\begin{remark}[电网的铁律]\label{rem:g11:circuits-and-power:grid}
+在输送功率 $P = UI$ 固定时，线路损耗 $R_\ell I^2 = R_\ell
+P^2/U^2$，随输电电压的\emph{平方}增大而减小。因此：
+升压（\qty{400}{kV}）以便远送，降压（\qty{230}{V}）供日常使用。
+\end{remark}
+
+\begin{remark}[家庭用电安全]\label{rem:g11:circuits-and-power:safety}
+一条标称 \qty{230}{V}、配有 \qty{16}{A} 保险丝的线路，最多提供 $230 \times 16
+\approx \qty{3.7}{kW}$ 的功率：两只电水壶同时工作便会熔断保险丝——这是有意设计的
+最薄弱环节，远比墙内起火便宜得多。
+\end{remark}
+
+\section{真实电池：电动势}
+
+\begin{definition}[电动势与内阻]\label{def:g11:circuits-and-power:emf}
+电池将化学能转化为电能。其
+\emph{电动势}\index{电动势}（EMF）
+$\mathcal{E}$，以伏特为单位，是电池对每一穿过它的库仑电荷所提供的能量；
+其\emph{内阻}\index{内阻} $r$ 反映
+电池内部化学过程中的焦耳效应。模型：理想电源
+$\mathcal{E}$ 与 $r$ 串联（花体 $\mathcal{E}$ 为电动势，$E$ 表示能量）。
+\end{definition}
+
+\begin{proposition}[端电压]\label{prop:g11:circuits-and-power:terminal}
+电池输出电流 $I$ 时，其接线柱两端的电压为
+\[ U = \mathcal{E} - r\,I . \]
+\end{proposition}
+
+\begin{proof}
+化学作用提供 $\mathcal{E}I$，内阻消耗
+$rI^2$，电路获得 $UI$。由能量守恒
+（见\cref{ch:g10:energy-conservation}）可得 $UI = \mathcal{E}I - rI^2$。
+\end{proof}
+
+\begin{example}[负载下的电池]\label{ex:g11:circuits-and-power:discharge}
+一节电池（$\mathcal{E} = \qty{9.0}{V}$，$r = \qty{1.0}{\ohm}$）为
+一只电阻为 $R = \qty{8.0}{\ohm}$ 的灯泡供电。回路满足 $\mathcal{E} =
+rI + RI$，故 $I = \mathcal{E}/(R + r) = \qty{1.0}{A}$，$U = 9.0 -
+1.0 \times 1.0 = \qty{8.0}{V}$：灯泡获得 \qty{8.0}{W}，
+而电池因自身发热损耗 \qty{1.0}{W}。
+\end{example}
+
+\begin{omfigure}
+\begin{tikzpicture}
+\begin{axis}[omaxis, width=8cm, height=5cm,
+    xlabel={$I$ (\unit{A})}, ylabel={$U$ (\unit{V})},
+    xmin=0, xmax=4.6, ymin=0, ymax=10.8,
+    xtick={0,1,2,3,4}, ytick={0,3,6,9}]
+  \addplot[omThm, thick, domain=0:4.3] {9 - x};
+  \addplot[omDef, only marks, mark=*, mark size=1.5pt]
+    coordinates {(0.5,8.5) (1.0,8.0) (2.0,7.0) (3.0,6.0) (4.0,5.0)};
+  \node[font=\small, anchor=west] at (axis cs:0.2,10.1)
+    {截距 $\mathcal{E} = \qty{9.0}{V}$};
+\end{axis}
+\end{tikzpicture}
+
+{\small 电池的放电特性曲线（见
+\cref{ex:g11:circuits-and-power:discharge}）：测量点位于直线
+$U = \mathcal{E} - rI$ 上，斜率为 $-r = \qty{-1.0}{V/A}$。}
+\end{omfigure}
+
+\begin{remark}[用电器]\label{rem:g11:circuits-and-power:receivers}
+电动机或正在充电的电池使能量转换逆向进行：它在
+$U = \mathcal{E}' + r'I$ 的电压下吸收能量，将 $\mathcal{E}'I$ 转化为机械运动或
+化学能，并损耗 $r'I^2$。电源向外推动，用电器则向回推。
+\end{remark}
+
+\begin{example}[电池的效率]\label{ex:g11:circuits-and-power:efficiency}
+上述放电过程的效率（见\cref{def:g10:energy-conservation:efficiency}）：
+有用功率 $UI = \qty{8.0}{W}$，占 $\mathcal{E}I =
+\qty{9.0}{W}$，故 $\eta = U/\mathcal{E} = 8/9 \approx 0.89$——
+随电流增大而下降：工作负荷重的电池温度高。
+\end{example}
+
+\section{练习}
+
+\begin{exercise}[$\star$]\label{exo:g11:circuits-and-power:1}
+一块手机电池以稳定的 \qty{2.0}{A} 电流充电 \qty{90}{min}。通过
+电缆的电荷量为多少（以库仑为单位）？相当于多少个元电荷
+（$e = \qty{1.6e-19}{C}$）？
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:g11:circuits-and-power:2}
+一个 \qty{220}{\ohm} 的电阻器接在 \qty{12}{V} 电压两端，通过的电流为多少？另有
+一个加热元件在 \qty{230}{V} 下的电流为 \qty{0.50}{A}：其电阻为多少？
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:g11:circuits-and-power:3}
+求 $R_1 = \qty{120}{\ohm}$ 与 $R_2 =
+\qty{60}{\ohm}$ 串联及并联时的等效电阻；哪一个小于两者，
+并说明理由。
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:g11:circuits-and-power:4}
+一台便携式电熨斗在 \qty{230}{V} 下的电流为 \qty{8.7}{A}。求其功率，再求
+在 \qty{4.0}{min} 内消耗的能量，分别以焦耳和千瓦时表示。
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:g11:circuits-and-power:5}
+一个笔记本电脑充电器每天输出 \qty{60}{W} 的功率，持续 \qty{5.0}{h}：每日
+能量分别以千瓦时和焦耳计，费用按每
+\unit{kW.h} $0.25$ 欧元计算，为多少？
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:g11:circuits-and-power:6}
+一个电热器的额定电压为 \qty{230}{V}，额定功率为 \qty{1200}{W}。
+\begin{enumerate}
+  \item 求其电阻及工作时的电流。
+  \item 保持电阻不变，接入 \qty{115}{V} 电源，
+        其功率为多少？为什么不是一半？
+\end{enumerate}
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:g11:circuits-and-power:7}
+$R_1 = \qty{40}{\ohm}$ 与 $R_2 = \qty{20}{\ohm}$ 串联后接在
+\qty{12}{V} 两端：求电流、每个电阻两端的电压，以及
+每个电阻耗散的功率，并验证功率之和等于 $UI$。
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:g11:circuits-and-power:8}
+$R_1 = \qty{60}{\ohm}$ 与 $R_2 = \qty{30}{\ohm}$ 并联后接在
+\qty{12}{V} 两端：求各支路电流、总电流，以及
+用两种方法求等效电阻。
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:g11:circuits-and-power:9}
+某电池输出 $U = \qty{5.5}{V}$，对应 $I = \qty{0.50}{A}$；
+又输出 $U = \qty{4.0}{V}$，对应 $I = \qty{2.0}{A}$。求其电动势 $\mathcal{E}$ 与
+内阻 $r$，再求短路电流 $\mathcal{E}/r$。
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:g11:circuits-and-power:10}
+一条 \qty{230}{V} 的厨房线路由 \qty{16}{A} 的保险丝保护。
+一台 \qty{2.2}{kW} 的电水壶和一台 \qty{1.0}{kW} 的烤面包机同时工作，
+保险丝能否保持完好？若再加入一台 \qty{1.5}{kW} 的电暖器，请证明保险丝会熔断。
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:g11:circuits-and-power:11}
+某车间需通过一根馈线输送 \qty{10}{kW} 的功率，馈线的电阻为
+\qty{2.0}{\ohm}。分别计算功率以 \qty{200}{V} 输送与以 \qty{4.0}{kV} 输送时的电流和焦耳损耗，
+并比较两种损耗，
+并解释二者比值的原因。
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:g11:circuits-and-power:12}
+用全部三个相同的 \qty{60}{\ohm} 电阻器，列出所有
+不同的等效电阻（串联、并联、混联），并逐一计算。
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:g11:circuits-and-power:13}
+一个电池（$\mathcal{E} = \qty{4.5}{V}$，$r = \qty{1.5}{\ohm}$）向一只
+电阻器 $R = \qty{6.0}{\ohm}$ 供电。
+\begin{enumerate}
+  \item 求 $I$、$U$、$R$ 上的有用功率，$r$ 上损耗的功率，
+        以及效率。
+  \item 证明：可变电阻 $R$ 接收的功率
+        $P = \mathcal{E}^2 R/(R+r)^2$ 在 $R = r$ 时取最大值（提示：
+        $(R+r)^2/R = (R-r)^2/R + 4r$），并求出该最大值。
+\end{enumerate}
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:g11:circuits-and-power:14}
+效率为 $0.90$ 的 \qty{2.2}{kW} 电水壶将 \qty{1.0}{kg} 的水
+从 \qty{20}{\degreeCelsius} 加热至沸腾（每千克水每升高一度需要
+\qty{4180}{J} 的热量）。求所需热量、
+所耗电能、加热时间，以及电价为 $0.25$ 欧元
+每 \unit{kW.h} 时的费用。
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:g11:circuits-and-power:15}
+一汽车电池：$\mathcal{E} = \qty{12.7}{V}$，$r = \qty{0.020}{\ohm}$，
+容量为 \qty{60}{A.h}。
+\begin{enumerate}
+  \item 将容量换算为库仑，并估算储存的能量
+        （$E \approx \mathcal{E} q$），分别以焦耳和千瓦时表示。
+  \item 启动机吸取 \qty{150}{A} 的电流：求接线柱电压、
+        输出功率以及内部损耗的功率。
+  \item 解释发动机启动时车灯为何变暗。
+\end{enumerate}
+\end{exercise}
+
+\section{周末问题：从大坝到烤面包机}
+
+\begin{problem}[{周末问题——一千瓦时的千公里旅程，
+从落水到烤至金黄的面包，
+附全程完整账单}]
+\label{pb:g11:circuits-and-power:1}
+一座山区水坝蓄水，水位高出涡轮机 \qty{200}{m}，涡轮机每秒
+吞吐 \qty{50}{m^3}——\qty{5.0e4}{kg}——；涡轮机与交流发电机的
+能量转换效率为 $0.90$。经总电阻为
+$R_\ell = \qty{32}{\ohm}$（往返 \qty{1000}{km}）的线路，电站向
+一座城市供电，你的 \qty{900}{W} 烤面包机在 \qty{230}{V} 下待用。
+交流发电机输出 \qty{20}{kV}；变压器（每台效率为 $0.99$）
+可任意变换电压。电价为 $0.25$ 欧元
+每 \unit{kW.h}；$g = \qty{9.81}{N/kg}$。
+
+\medskip
+\noindent\textbf{第一部分——在大坝处。}
+\begin{enumerate}
+  \item 落水每秒释放多少势能？
+        由此推出可用于涡轮机的功率。
+  \item 交流发电机输出的电功率是多少？
+  \item 若直接以 \qty{20}{kV} 从交流发电机输出，电流为多大？
+  \item 求该电流下的焦耳损耗 $R_\ell I^2$，并与
+        电站的输出功率相比较，并作出结论。
+  \item 城市所需功率 $P = UI$ 由需求决定，要减小 $I$，
+        唯一的办法是什么？由哪种装置完成？
+\end{enumerate}
+
+\medskip
+\noindent\textbf{第二部分——在输电线上。}
+\begin{enumerate}[resume]
+  \item 将变压器视为本题中无损耗，它把
+        \qty{88}{MW} 升压至 \qty{400}{kV}，此时电流为多大？
+  \item 求新的线路损耗，以兆瓦为单位。
+  \item 电站输出功率中有多大比例损失在线路上？
+  \item 证明损耗比例等于 $R_\ell P/U^2$，并检验
+        它是否解释第 4 题与第 7 题之间的倍数关系。
+  \item 求沿线路的电压降 $R_\ell I$，设电压为
+        \qty{400}{kV}。它是否与第 8 题一致？
+\end{enumerate}
+
+\medskip
+\noindent\textbf{第三部分——在厨房里。}
+\begin{enumerate}[resume]
+  \item 将 \qty{1}{kW.h} 换算为焦耳；电表计算的是哪些量的乘积？
+  \item 求烤面包机在 \qty{230}{V} 下的电流和电阻。
+  \item 烤三分钟：以焦耳和
+        千瓦时表示的能量及其费用。
+  \item 烤面包机耗散的功率为 $RI^2$，用一句话说明为何
+        同一公式既是线路上的损耗，也是厨房里的耗散功率。
+  \item 烤面包机与 \qty{2.2}{kW} 的电水壶共用一个 \qty{16}{A} 的保险丝：
+        保险丝能否保持完好？若再接入一台 \qty{2.0}{kW} 的电暖器，情况如何？
+\end{enumerate}
+
+\medskip
+\noindent\textbf{第四部分——核算。}
+\begin{enumerate}[resume]
+  \item 住宅自身布线（电阻为 \qty{0.05}{\ohm}）通过第 15 题中的
+        \qty{13.5}{A} 电流：求其损耗，以及它占
+        约 \qty{3.1}{kW} 输送功率的比例。
+  \item 将各环节效率（涡轮机–交流发电机、升压、线路、
+        降压、住宅布线）相乘，得出电网的总效率。
+  \item 需要下落多少千克（或多少立方米）的大坝水，
+        才能使\emph{一}千瓦时的电能送达你的烤面包机？
+  \item 求第 9 题中的损耗比例 $R_\ell P/U^2$，取
+        $U = \qty{20}{kV}$ 时的数值。该值大于 $1$ 意味着什么？
+  \item 点睛之笔——\emph{距离的代价}：用两句话说明，
+        一千瓦时用于烤面包的电能，使大山付出了什么代价，
+        途中有多大比例被损耗，以及哪一个关键手段使之得以实现？
+\end{enumerate}
+\end{problem}

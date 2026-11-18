@@ -1,0 +1,638 @@
+\chapter{连续介质力学与弹性}\label{ch:b3:continuum-elasticity}
+
+把耳朵贴在一根长钢轨上，远处有工人敲击它：
+你会听到两声敲击——一声经由钢轨传来，一声经由空气传来，
+两声相隔一秒或更久。岩石、钢铁、骨骼和橡胶都能像流体传递压强那样传递力
+与波，但它们具有流体所没有的特性：
+它们抵抗的不仅是\emph{形状的改变}，
+还有体积的改变。本科二年级分册以两个概念建立了流体力学，
+即物质质点与压强场；本章将其推广
+到固体。每个质点的位移成为一个场，其
+局部畸变即\emph{应变}，内力即\emph{应力}，
+二者之间立着固体的“身份证”——胡克定律及其
+两个弹性常数。其应用从日常现象——为何缆绳会伸长，为何瓶子会炸裂，
+跳板如何弯曲——直至行星尺度：
+地震恰以本章预言的两类弹性波穿过地球，
+而它们的到达时刻，
+曾是人类首次“听到”地球内部的声音。
+
+\section{应变：描述形变}
+
+\begin{definition}[位移场与应变张量]\label{def:b3:continuum-elasticity:strain}
+\index{位移场}\index{应变张量}\index{体应变}
+固体发生形变时，原位于 $\vect r$ 处的质点移动到
+$\vect r + \vect u(\vect r)$ 处：$\vect u$ 即\emph{位移
+场}。对于小形变，局部畸变由
+\emph{应变张量}度量，即对称阵列
+\[
+\varepsilon_{ij} = \frac12\Big(
+ \frac{\partial u_i}{\partial x_j} + \frac{\partial u_j}{\partial x_i}
+\Big) , \qquad i, j \in \{x, y, z\} .
+\]
+对角分量 $\varepsilon_{xx}$ 为材料沿
+$x$ 方向的相对伸长（无量纲，在役钢缆中例如取 $\num{e-3}$）；
+非对角分量 $\varepsilon_{xy}$ 为
+$x$ 与 $y$ 材料方向之间夹角的减小量的一半，
+即\emph{剪切}。迹即体积的相对变化，
+称为\emph{体应变}：
+\[
+\frac{\delta V}{V} = \varepsilon_{xx} + \varepsilon_{yy} +
+\varepsilon_{zz} = \operatorname{div}\vect u .
+\]
+\end{definition}
+
+\begin{example}[三种基本形变]\label{ex:b3:continuum-elasticity:elementary}
+均匀膨胀 $\vect u = \alpha\vect r$：$\varepsilon_{ij} =
+\alpha\,\delta_{ij}$，体积变化为 $3\alpha$，无剪切。简单剪切
+$\vect u = (\gamma y, 0, 0)$：$\varepsilon_{xy} = \gamma/2$，所有
+对角分量为零——形状改变而体积不变。刚性
+转动 $\vect u = (-\omega y, \omega x, 0)$：$\varepsilon_{ij} = 0$
+恒成立——$\partial u_i/\partial x_j$ 的反对称部分，
+经对称化被舍去的部分，恰是只转动而
+不形变的部分。应变只度量形变。
+\end{example}
+
+\begin{omfigure}
+\begin{tikzpicture}[font=\small, >=Stealth]
+  % stretch
+  \begin{scope}
+    \draw[gray, dashed] (0,0) rectangle (1.6,1.6);
+    \draw[omDef, thick] (-0.2,0.16) rectangle (1.8,1.44);
+    \draw[->] (2.0,0.8) -- (2.55,0.8);
+    \draw[->] (-0.4,0.8) -- (-0.95,0.8);
+    \node at (0.8,-0.85) {伸长 $\varepsilon_{xx} > 0$，};
+    \node at (0.8,-1.3) {收缩 $\varepsilon_{yy} < 0$};
+  \end{scope}
+  % shear
+  \begin{scope}[xshift=5.3cm]
+    \draw[gray, dashed] (0,0) rectangle (1.6,1.6);
+    \draw[omThm, thick] (0,0) -- (1.6,0) -- (2.0,1.6) -- (0.4,1.6) -- cycle;
+    \draw[->] (0.9,1.8) -- (1.5,1.8);
+    \draw[->] (0.7,-0.2) -- (0.1,-0.2);
+    \node at (0.9,-0.85) {剪切 $\varepsilon_{xy} = \gamma/2$：};
+    \node at (0.9,-1.3) {形状改变，体积不变};
+  \end{scope}
+  % rotation
+  \begin{scope}[xshift=10.6cm]
+    \draw[gray, dashed] (0,0) rectangle (1.6,1.6);
+    \begin{scope}[rotate around={14:(0.8,0.8)}]
+      \draw[omExo, thick] (0,0) rectangle (1.6,1.6);
+    \end{scope}
+    \draw[->] (1.75,1.5) arc (30:80:1.1);
+    \node at (0.8,-0.85) {转动：$\varepsilon_{ij} = 0$，};
+    \node at (0.8,-1.3) {完全无形变};
+  \end{scope}
+\end{tikzpicture}
+
+{\small 应变张量只反映真实的形变：伸长
+（对角分量）、剪切（非对角分量）——而
+刚性转动则完全不计入。}
+\end{omfigure}
+
+\section{应力：描述内力}
+
+\begin{definition}[面力与应力张量]\label{def:b3:continuum-elasticity:stress}
+\index{应力张量}\index{面力}
+设想沿一小面元 $\dd S$ 将固体切开，其法向为
+$\vect n$：$+\vect n$ 一侧的材料对另一侧施加
+大小为 $\dd\vect F = \boldsymbol\sigma(\vect n)\,\dd S$ 的力——
+即\emph{面力}。该力线性依赖于 $\vect n$（柯西），
+故由\emph{应力张量} $\sigma_{ij}$ 来刻画：
+\[
+\dd F_i = \sum_j \sigma_{ij}\,n_j\,\dd S ,
+\]
+单位为帕斯卡。$\sigma_{xx}$ 为拉（$> 0$，张力）或推（$< 0$，
+压缩）通过法向为 $x$ 的面传递；$\sigma_{xy}$ 是
+沿 $x$ 方向、由法向为 $y$ 的面承载的力，即切应力。静止流体
+是其特例：$\sigma_{ij} = -p\,\delta_{ij}$，压强
+在各个面上等值施压而不产生切应力，这正是流体
+会流动的原因——它们无法承受静切应力。
+\end{definition}
+
+\begin{proposition}[平衡与对称性]\label{prop:b3:continuum-elasticity:equilibrium}
+设固体在单位
+体积体力 $\vect f$（例如 $\rho\vect g$）作用下处于平衡，
+\[
+\sum_j\frac{\partial\sigma_{ij}}{\partial x_j} + f_i = 0
+\]
+在每一内点处成立；且应力张量对称，
+$\sigma_{ij} = \sigma_{ji}$。
+\end{proposition}
+
+\begin{proof}[部分证明]
+对边长为 $a$ 的小立方体作受力平衡分析：法向为 $x$ 的两个面上的
+面力之差为 $a\,\partial_x\sigma_{ix}$（按单位面积计），
+其余各对面同理；单位体积的净表面力为
+$\sum_j\partial_j\sigma_{ij}$，它必须与 $f_i$ 抵消——
+这与本科一年级分册流体静力学中得出 $-\vect\nabla p + \rho\vect g = \vect 0$ 的推算方法一致。
+对称性：切应力绕立方体中心的
+力矩为 $(\sigma_{xy} -
+\sigma_{yx})a^3$（取首阶），其转动惯量
+按 $a^5$ 标度；非对称应力会使小立方体无限快地旋转。
+完整的连续介质论证在本阶段不加证明地承认。
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}[font=\small, >=Stealth, scale=1.05]
+  % cube in light 3D
+  \coordinate (A) at (0,0); \coordinate (B) at (2.4,0);
+  \coordinate (C) at (2.4,2.4); \coordinate (D) at (0,2.4);
+  \coordinate (E) at (0.9,0.75); \coordinate (F) at (3.3,0.75);
+  \coordinate (G) at (3.3,3.15);
+  \draw[thick] (A) -- (B) -- (C) -- (D) -- cycle;
+  \draw[thick] (B) -- (F) -- (G) -- (C);
+  \draw[thick] (D) -- (0.9,3.15) -- (G);
+  \draw[thick, dashed] (A) -- (E) -- (F);
+  \draw[thick, dashed] (E) -- (0.9,3.15);
+  % normal stress on +x face
+  \draw[->, omThm, very thick] (2.85,1.55) -- (4.05,1.55);
+  \node[omThm, anchor=west] at (4.1,1.55) {$\sigma_{xx}$};
+  % shear on +x face
+  \draw[->, omDef, very thick] (2.85,1.9) -- (2.85,3.0);
+  \node[omDef, anchor=south] at (2.85,3.05) {$\sigma_{yx}$};
+  \draw[->, omExo, very thick] (3.1,1.3) -- (2.5,0.85);
+  \node[omExo, anchor=east] at (2.35,0.48) {$\sigma_{zx}$};
+  \node at (1.2,1.2) {$\perp x$ 面};
+  \node[align=left, anchor=west, font=\footnotesize] at (5.6,2.3)
+    {$\sigma_{xx}$：拉伸/压缩 \\[2pt]
+     $\sigma_{yx}$、$\sigma_{zx}$：切应力 \\[2pt]
+     由同一个面承载};
+\end{tikzpicture}
+
+{\small 材料立方体某一面上面力的三个分量：一个法向分量
+（拉伸或压缩），两个切向分量（切应力）。
+三个面上的九个分量共同构成应力张量。}
+\end{omfigure}
+
+\section{胡克定律与弹性常数}
+
+\begin{theorem}[线性各向同性弹性]\label{thm:b3:continuum-elasticity:hooke}
+\index{胡克定律}\index{杨氏模量}\index{泊松比}
+对于小应变，各向同性固体呈线性响应，应力
+与应变成正比，
+\[
+\sigma_{ij} = \lambda\,(\varepsilon_{xx} + \varepsilon_{yy} +
+\varepsilon_{zz})\,\delta_{ij} + 2\mu\,\varepsilon_{ij} ,
+\]
+含两个材料常数，即\emph{拉梅系数} $\lambda$ 和
+$\mu$（$\mu$ 亦记作 $G$，即\emph{剪切模量}）。
+在简单拉伸试验——沿 $x$ 方向拉伸、侧面自由的杆——
+同一规律取工程形式
+\[
+\varepsilon_{xx} = \frac{\sigma_{xx}}{E} , \qquad
+\varepsilon_{yy} = \varepsilon_{zz} = -\nu\,\varepsilon_{xx} ,
+\]
+定义\emph{杨氏模量} $E$（抗拉伸刚度）和
+\emph{泊松比} $\nu$（横向收缩），其中
+\[
+\mu = \frac{E}{2(1 + \nu)} , \qquad
+\lambda = \frac{E\nu}{(1 + \nu)(1 - 2\nu)} .
+\]
+这即胡克（1678）的“伸长多少，受力便多大”，推广为
+张量。它只在依材料而定的\emph{弹性极限}以内成立。
+\end{theorem}
+\admitted
+
+\begin{remark}[数量级]\label{rem:b3:continuum-elasticity:orders}
+钢约为 $E \approx \qty{200}{GPa}$，铝和窗玻璃约为 \qty{70}{GPa}，
+花岗岩约为 \qty{50}{GPa}，骨与
+混凝土约为 \qty{15}{GPa}，顺纹方向的木材约为 \qty{10}{GPa}，
+而橡胶仅约几 MPa——五个数量级，
+即桥梁与弹力带之间的跨度。$\nu$ 介于 $0$（近于软木）与 $1/2$
+（橡胶）：$\nu = 1/2$ 表示保体积形变，
+而 $\nu \approx 0.3$ 为金属的典型值。钢中应变为 $\num{e-3}$ 时，
+应力 $\sigma = \qty{200}{MPa}$ 已接近
+普通牌号钢的屈服应力：日常弹性处于
+千分之一以内。
+\end{remark}
+
+\begin{example}[电梯缆绳]\label{ex:b3:continuum-elasticity:cable}
+一根截面积为 \qty{2.0}{cm^2}、长 \qty{60}{m} 的钢缆承载一
+辆质量为 \qty{1000}{kg} 的轿厢：$\sigma = mg/S = \qty{49}{MPa}$，$\varepsilon =
+\sigma/E = \num{2.5e-4}$，伸长量 $\varepsilon L = \qty{15}{mm}$——
+而钢缆相当于劲度系数为 $k = ES/L =
+\qty{6.7e5}{N/m}$：公式 $k = ES/L$ 正是连续介质理论
+还原本科一年级分册中弹簧模型的方式。
+\end{example}
+
+\begin{proposition}[弹性能]\label{prop:b3:continuum-elasticity:energy}
+\index{弹性能}
+受应变的固体，单位体积内储存的能量密度为
+\[
+w = \frac12\sum_{i,j}\sigma_{ij}\,\varepsilon_{ij}
+\qquad\text{ (简单拉伸： } w = \tfrac12 E\varepsilon^2 =
+\sigma^2/2E\text{)} ,
+\]
+三维情形下的 $\tfrac12 kx^2$。
+\end{proposition}
+
+\begin{proof}[部分证明]
+在简单拉伸中，将应力由 $0$ 增至 $\sigma$ 的过程中，
+单位体积所做的功为 $\int_0^\varepsilon\sigma'\,\dd\varepsilon' =
+\int_0^\varepsilon E\varepsilon'\,\dd\varepsilon' = \tfrac12
+E\varepsilon^2$——即应力–应变直线下的面积，与
+弹簧的情形完全一致。一般二次型可由各分量叠加得到，
+此结论在本阶段不加证明地承认。
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}[font=\small, >=Stealth]
+  % traction test sketch
+  \begin{scope}[yshift=0.4cm]
+    \draw[gray, dashed] (0,0) rectangle (3.2,1.0);
+    \draw[omDef, thick] (-0.25,0.07) rectangle (3.45,0.93);
+    \draw[->, very thick] (3.65,0.5) -- (4.55,0.5) node[right] {$F$};
+    \draw[->, very thick] (-0.45,0.5) -- (-1.35,0.5) node[left] {$F$};
+    \draw[<->] (0,-0.35) -- (3.2,-0.35);
+    \node at (1.6,-0.7) {$L(1 + \varepsilon)$};
+    \node at (1.6,1.55) {截面 $S$，$\sigma = F/S$};
+  \end{scope}
+  % stress-strain curve
+  \begin{scope}[xshift=7.3cm, yshift=-0.6cm]
+  \begin{axis}[omaxis, axis x line=bottom, axis y line=left,
+    width=6.4cm, height=4.6cm, xmin=0, xmax=10, ymin=0, ymax=1.25,
+    xlabel={$\varepsilon$}, ylabel={$\sigma$},
+    xlabel style={at={(axis description cs:0.5,-0.1)}, anchor=north},
+    xtick=\empty, ytick=\empty, clip=false]
+    \addplot[omDef, very thick, domain=0:2] {0.4*x};
+    \addplot[omExo, thick, domain=2:8.7, samples=40]
+      {0.8 + 0.32*(1-exp(-(x-2)/2.2))};
+    \fill (axis cs:2,0.8) circle (1.6pt);
+    \draw (axis cs:2.05,0.83) -- (axis cs:2.55,1.1);
+    \node[font=\scriptsize, anchor=west] at (axis cs:2.55,1.14) {弹性极限};
+    \node[font=\scriptsize, omExo, anchor=west] at (axis cs:4.6,0.87) {塑性流动};
+    \node[font=\scriptsize, anchor=west] at (axis cs:8.55,1.2) {断裂};
+    \fill[omThm] (axis cs:8.7,1.115) circle (1.6pt);
+    \node[font=\scriptsize, omDef, rotate=38, anchor=south] at (axis cs:1.15,0.48) {斜率 $E$};
+  \end{axis}
+  \end{scope}
+\end{tikzpicture}
+
+{\small 左：拉伸试验定义了 $E$（相对伸长）和
+$\nu$（横向变细，已夸大）。右：金属的应力–应变
+曲线——弹性极限以内为线性弹性，此后
+为不可逆的塑性流动，最后断裂。本章主要
+讨论其中的直线部分。}
+\end{omfigure}
+
+\begin{method}[小形变弹性问题的求解]\label{met:b3:continuum-elasticity:method}
+(1) 判断几何形状与受力情况，猜测哪些应力
+分量非零（受拉杆只有 $\sigma_{xx}$；扭转
+金属丝为剪切；受压壳体为切向张力）。(2) 在恰当选取的部分上列写
+力平衡方程：取半圆柱、薄片或
+立方体。(3) 由胡克定律把应力化为应变，再通过积分由应变求位移。
+(4) 能量由 $w = \sigma^2/2E$ 计算（剪切时
+用 $\sigma^2/2G$）。(5) 始终检验应变保持为小量，且应力低于弹性极限
+——否则所得答案描述的将是
+一个已不复存在的固体。
+\end{method}
+
+\section{弹性波}
+
+\begin{proposition}[固体中的两类波]\label{prop:b3:continuum-elasticity:waves}
+\index{弹性波}\index{P 波}\index{S 波}
+在密度为 $\rho$ 的无界弹性固体中，微小扰动
+以两种相互独立的波的形式传播：
+\emph{纵波}（P 波）中，物质沿传播方向
+通过压缩与膨胀振动，速率为
+\[
+c_{\text{P}} = \sqrt{\frac{\lambda + 2\mu}{\rho}} ,
+\]
+以及\emph{横波}（S 波），其中物质横向剪切，速率为
+\[
+c_{\text{S}} = \sqrt{\frac{\mu}{\rho}} < c_{\text{P}} .
+\]
+流体有 $\mu = 0$：不存在 S 波——剪切无法传递——
+且 P 波速率退化为本科二年级分册中的声速。对于
+$\nu = 1/4$（典型岩石），$\lambda = \mu$，且 $c_{\text{P}} =
+\sqrt3\,c_{\text{S}}$.
+\end{proposition}
+
+\begin{proof}[部分证明]
+取平面扰动 $\vect u = \vect u(x, t)$。牛顿定律的单位体积形式为
+$\rho\,\partial_t^2u_i = \sum_j\partial_j\sigma_{ij}$
+（即计入惯性的平衡方程）。对纵向分量，由胡克定律
+得 $\sigma_{xx} = (\lambda +
+2\mu)\,\partial_xu_x$（平面波中横向应变为零，
+相邻物质阻止横向松弛），于是
+$\rho\,\partial_t^2u_x = (\lambda + 2\mu)\,\partial_x^2u_x$：达朗贝尔方程，
+波速为 $c_{\text{P}}$。对横向分量，$\sigma_{yx} =
+2\mu\varepsilon_{yx} = \mu\,\partial_xu_y$，于是
+$\rho\,\partial_t^2u_y = \mu\,\partial_x^2u_y$：速率为 $c_{\text{S}}$。
+一般扰动可分解为这两族波，这一点在本阶段不加证明地承认。
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}[font=\small, >=Stealth]
+  % P wave: compressions along x
+  \begin{scope}
+    \foreach \x/\s in {0/1.0, 0.42/0.72, 0.76/0.5, 1.04/0.5, 1.32/0.72,
+                       1.74/1.0, 2.26/1.28, 2.86/1.44, 3.46/1.28, 3.98/1.0,
+                       4.4/0.72, 4.74/0.5, 5.02/0.5, 5.3/0.72, 5.72/1.0,
+                       6.24/1.28, 6.84/1.44, 7.44/1.28, 7.96/1.0}
+      \draw[omDef, thick] (\x,0) -- (\x,1.5);
+    \draw[->, very thick] (8.4,0.75) -- (9.2,0.75) node[right] {$c_{\text{P}}$};
+    \draw[<->, omThm, thick] (0.6,-0.35) -- (1.5,-0.35);
+    \node[anchor=west] at (3.6,-0.42) {物质运动 $\parallel$ 传播方向};
+  \end{scope}
+  % S wave: sheared line
+  \begin{scope}[yshift=-3.3cm]
+    \draw[omExo, thick, domain=0:8, samples=90, variable=\t]
+      plot ({\t}, {0.55*sin(deg(\t*0.785))+0.75});
+    \foreach \x in {0.5,1.5,2.5,3.5,4.5,5.5,6.5,7.5}
+      \draw[->, omExo!70] (\x,{0.55*sin(deg(\x*0.785))+0.75}) --
+        (\x,{0.9*sin(deg(\x*0.785+25))+0.75});
+    \draw[->, very thick] (8.4,0.75) -- (9.2,0.75) node[right] {$c_{\text{S}}$};
+    \node at (2.9,-0.5) {物质运动 $\perp$ 传播方向};
+  \end{scope}
+\end{tikzpicture}
+
+{\small 两种弹性波。P 波：物质的平面层沿传播方向
+聚集与疏散（压缩波——存在于固体、液体和气体中）。
+S 波：物质发生横向剪切，
+这只在能抵抗剪切的固体中才会发生。}
+\end{omfigure}
+
+\begin{example}[铁轨与地震]\label{ex:b3:continuum-elasticity:rail}
+钢：$c_{\text{P}} \approx \qty{5.9}{km/s}$。在铁轨上相距
+\qty{2}{km} 处敲击一下，振动经钢材传来需 \qty{0.34}{s}，
+经空气（$\qty{340}{m/s}$）传来需 \qty{5.9}{s}，于是会听到两次撞击声。
+花岗岩（$E = \qty{75}{GPa}$，$\nu = 1/4$，$\rho =
+\qty{2.7e3}{kg/m^3}$）：$c_{\text{P}} \approx \qty{5.8}{km/s}$，
+$c_{\text{S}} \approx \qty{3.3}{km/s}$。因此，地震会先后两次显现：
+先是一阵剧烈的 P 波颠簸，数秒之后，
+传播较慢、破坏更强的 S 波震动随之到来，而这段延迟可用来测定距离
+（见\cref{pb:b3:continuum-elasticity:1}）。地震预警系统正是依托这段延迟：
+P 波及其触发的无线电信号，
+会先于造成破坏的 S 波抵达。
+\end{example}
+
+\begin{remark}[弦、杆与声音的回顾]\label{rem:b3:continuum-elasticity:limits}
+本科二年级分册中的各类波动，都是本章理论的极限情形。一根细杆可横向自由变细，
+其中压缩波的速度为
+$\sqrt{E/\rho}$（慢于 $c_{\text{P}}$，因为横向释放使响应变软）；
+拉紧的弦中横波的速度为
+$\sqrt{T/\rho_\ell}$，张力在此代替劲度系数的作用；流体则只保留
+$\lambda$——其体积模量——以及唯一的声速
+$\sqrt{\lambda/\rho}$。
+\end{remark}
+
+\begin{omfigure}
+\includegraphics[width=0.58\linewidth]{images/book5/ai/b5-03-diving-board.jpg}
+
+{\small 载荷作用下的跳板：应力与应变分布于连续体中，弯曲成悬臂梁的三次挠度形状——以及一根即将释放弹性势能的弹簧。}
+\end{omfigure}
+
+\section{练习}
+
+\begin{exercise}[$\star$]\label{exo:b3:continuum-elasticity:1}
+(a) 检查单位：用 kg、m、s 表示，帕斯卡是什么，
+应变的单位又是什么？(b) 一根钢索在应力 $\sigma =
+\qty{200}{MPa}$ 下工作，求其应变。(c) 一根橡皮筋（$E \approx
+\qty{2}{MPa}$）被拉伸至原长的两倍，这算什么“应变”，
+以及为何本章的框架并不真正适用？(d)
+按各自工作应力下单位体积的弹性势能密度排序：钢
+在 \qty{200}{MPa} 时，橡胶在 \qty{1}{MPa} 时。
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b3:continuum-elasticity:2}
+求各位移场的应变张量，并描述其形变：
+(a) $\vect u = \alpha(x, y, z)$；(b) $\vect u =
+(\gamma y, 0, 0)$；(c) $\vect u = (-\omega y, \omega x, 0)$；(d)
+$\vect u = (\varepsilon x, -\nu\varepsilon y, -\nu\varepsilon z)$ ——
+哪一个实验能实现它？
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b3:continuum-elasticity:3}
+高为 $h$ 的花岗岩柱，其底部承受应力 $\sigma
+= \rho gh$。(a) 由含重力的平衡方程推导此式；
+(b) 花岗岩约在 \qty{200}{MPa} 时压碎，最高的柱子有多高？
+(c) 珠穆朗玛峰高 \qty{8.8}{km}，请加以评述。(d) 为什么
+一座山为何能比由自身岩石构成的柱子略高一些
+（想想其形状）？
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b3:continuum-elasticity:4}
+一根钢棒（$E = \qty{200}{GPa}$，$\nu = 0.30$）被拉伸，
+应变为 $\varepsilon = \num{e-3}$。(a) 横向应变为多少？(b) 相对体积
+变化是多少？(c) 对于何种 $\nu$，体积完全不变，
+而哪种常见材料接近此值？(d) 为什么 $\nu > 1/2$
+不可能（考虑静水压缩）？
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b3:continuum-elasticity:5}
+环向应力。一根薄壁圆柱（半径 $R$，壁厚 $t \ll
+R$）承受压强 $p$。(a) 对单位长度的半圆柱做受力分析，
+证明壁内承受切向应力
+$\sigma_\theta = pR/t$。(b) 证明纵向应力（对横截面取平衡）
+为 $pR/2t$：圆柱周向承受的应力是轴向的两倍，
+故香肠沿哪个方向开裂？(c) 一只潜水气瓶：$p =
+\qty{200}{bar}$，$R = \qty{9}{cm}$，$t = \qty{5}{mm}$：求
+$\sigma_\theta$，并与钢的屈服应力
+\qty{700}{MPa} 比较。(d) 为什么高压储罐的两端做成半球形
+封头？
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b3:continuum-elasticity:6}
+一块橡胶块（$E = \qty{3.0}{MPa}$，$\nu \approx 0.5$），底面为 $10
+\times \qty{10}{cm}$，高 \qty{2}{cm}，粘接于两块板之间；
+顶板受到 \qty{150}{N} 的水平推力。(a) 求 $G$。
+(b) 求切应力与剪切角 $\gamma = \sigma_{xy}/G$；顶板的侧向
+位移。(c) 为什么橡胶的 $\nu \approx 1/2$
+（对缠结的聚合物链而言，什么难变、什么易变）？
+(d) 地震区的建筑常由这类橡胶支座承托整座楼房：
+此支座的哪一性质保护建筑，
+是压缩时的刚度，还是剪切时的柔软性？
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b3:continuum-elasticity:7}
+一根攀岩绳，长 $L = \qty{20}{m}$，横截面积 $S =
+\qty{80}{mm^2}$，有效模量 $E = \qty{1.2}{GPa}$。(a) 其
+劲度系数 $k = ES/L$。(b) 一名 \qty{80}{kg} 的攀登者自由下落
+\qty{4}{m} 后绳子开始受力：由能量守恒，求
+绳的最大伸长量（解二次方程。第一次计算时
+可忽略制动期间的继续下落）。(c) 推出峰值力与
+以 $g$ 计的峰值减速度。(d) 为何承受过一次严重坠落的绳子必须报废
+（能量去了哪里，
+以及应力–应变曲线说明了什么）？
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b3:continuum-elasticity:8}
+扭转。半径为 $a$、长为 $L$、切变模量为 $G$ 的细丝
+被扭转了角度 $\theta$。(a) 证明其内部半径为 $r$ 的一层圆柱面
+承受的切应变为 $\gamma(r) = r\theta/L$。(b) 其切应力为
+$G\gamma$：对截面上的 $r \times$ 应力积分，得到恢复力矩
+$\Gamma = (\pi Ga^4/2L)\,\theta$。(c) 关于 $a^4$：
+若半径减半，扭转劲度将下降为原来的多少倍？
+(d) 正是这种极端的柔软性，使卡文迪什（1798）
+得以用细丝悬挂其扭秤。取 $a = \qty{25}{\micro m}$，$L =
+\qty{1}{m}$，$G = \qty{40}{GPa}$，计算 $C = \pi Ga^4/2L$，并求转动惯量为
+$I = \qty{5e-4}{kg.m^2}$ 的细杆所对应的周期。
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b3:continuum-elasticity:9}
+(a) 由
+\cref{prop:b3:continuum-elasticity:waves}中的平面波推导，计算钢的 $c_{\text{P}}$ 与
+$c_{\text{S}}$（$E = \qty{200}{GPa}$，$\nu = 0.29$，$\rho =
+\qty{7.85e3}{kg/m^3}$）。(b) 将 $c_{\text{P}}$ 与细杆中的波速
+$\sqrt{E/\rho}$ 比较，用一句话说明二者之差异。(c)
+对水（$\mu = 0$，体模量 \qty{2.2}{GPa}）：求 S 波的传播速度与
+P 波的传播速度。(d) P 波与 S 波的质点运动
+方向相差多大角度？三分量地震仪如何
+区分二者？
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b3:continuum-elasticity:10}
+弯曲。梁被弯成曲率半径为 $R$ 的曲线；其内侧纤维
+缩短，外侧纤维伸长，二者之间有一\emph{中性面}，
+其长度保持不变。(a) 证明距中性面为 $y$ 处的纤维应变
+为 $\varepsilon = y/R$，于是应力为 $Ey/R$。
+(b) 对截面上的力矩求和，证明弯矩为
+$M = EI/R$，其中 $I = \int y^2\,\dd S$（称为\emph{截面二次矩}）；
+求矩形截面的 $I$，宽为 $b$、高为 $h$。(c) 关于
+$h^3$：为何平放弯曲的木板下垂明显，而同一块木板竖放时却很坚硬？
+对 $b/h = 5$ 计算二者比值。(d) 对长为 $L$、端部受力 $F$ 的悬臂梁，
+其端部下垂量为
+$\delta = FL^3/3EI$（在本阶段不加证明地承认）：估算跳水板的 $\delta$
+（$L = \qty{1.8}{m}$，$b = \qty{50}{cm}$，$h = \qty{3.5}{cm}$，木材 $E
+= \qty{12}{GPa}$），在 \qty{75}{kg} 跳水者的作用下，并加以评论。
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b3:continuum-elasticity:11}
+屈曲。细长柱（长为 $L$，抗弯刚度为 $EI$），
+两端铰支，承受轴向载荷 $P$。设柱子向侧面弯曲了
+$y(x)$。(a) 证明此时载荷相对于弯曲后的轴线产生的弯矩为
+$M(x) = -Py(x)$，故 $EI\,y'' = -Py$。(b)
+在 $y(0) = y(L) = 0$ 的条件下，证明非零弯曲首次可能出现于
+欧拉临界载荷
+$P_{\text{c}} = \pi^2EI/L^2$。(c) 计算一把米尺的 $P_{\text{c}}$，
+其中 $b = \qty{3}{cm}$，$h = \qty{1.5}{mm}$，$E = \qty{12}{GPa}$，
+并与你手的推力相比较。(d) 由 $I$ 说明骨骼、
+竹竿与自行车车架为何都是\emph{管状}的。
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b3:continuum-elasticity:12}
+固体中的声速，由原子出发。将固体建模为原子链，
+原子间距为 $a$，由劲度为 $\kappa$ 的“弹簧”相连；
+原子质量为 $m$。(a) 证明拉伸原子链等价于
+连续介质中的面力，其中 $E = \kappa/a$（按单位面积的弹簧数、
+每根弹簧的伸长量计）。(b) 证明 $\rho = m/a^3$，并得出 $c =
+\sqrt{E/\rho} = a\sqrt{\kappa/m}$。(c) 由原子间键的势阱深度估算 $\kappa$：
+（势阱深约 $\sim\qty{3}{eV}$，键长约 $\sim
+\qty{0.1}{nm}$），则 $\kappa \sim \qty{50}{N/m}$；取 $a =
+\qty{2.5e-10}{m}$，$m = \qty{1e-25}{kg}$，估算 $c$。(d)
+将其与实测金属声速相比较，并说明日常弹性
+究竟由何构成。
+\end{exercise}
+
+\section{问题：倾听地球}
+
+\begin{problem}[{周末问题——地震如何揭示
+液态地核}]\label{pb:b3:continuum-elasticity:1}
+一次地震即可使整个星球“振响”，本章所述的两种弹性波
+穿越地球，恰如对其做 X 光透视。本题沿着从花岗岩中的胡克定律
+出发，一直讲到奥尔德姆于 1906 年发现地球具有地核——
+并以直线射线估算其尺寸。
+取地壳与地幔岩石的参数：$E = \qty{75}{GPa}$，$\nu = 1/4$，
+$\rho = \qty{2.7e3}{kg/m^3}$；地球半径 $R_{\text{E}} =
+\qty{6371}{km}$。
+
+\medskip\noindent\textbf{第一部分——岩石作为弹性固体。}
+\begin{enumerate}
+  \item 计算该岩石的拉梅系数 $\mu$ 和 $\lambda$，
+        并注意到 $\nu = 1/4$ 时二者相等。
+  \item 计算 $c_{\text{P}}$ 与 $c_{\text{S}}$，并验证
+        $c_{\text{P}} = \sqrt3\,c_{\text{S}}$。
+  \item 一次地震使两侧岩面在数秒内错动数米：
+        估算若一次 \qty{2}{m} 的错动使岩石在
+        \qty{50}{km} 尺度上松弛，所释放的应变以及此前积累的应力。
+  \item 由能量密度 $w = \tfrac12 E\varepsilon^2$，
+        估算每立方米的弹性能，再求
+        $50 \times 50 \times \qty{20}{km^3}$ 体积内的能量，并与
+        一兆吨当量（\qty{4.2e15}{J}）相比较。
+  \item 为何 S 波通常比 P 波更剧烈地晃动建筑物
+        （想一想：对从下方传来的波，地面的运动
+        方向如何）？
+  \item 地面的体积变化出现在两种波中的哪一种？
+\end{enumerate}
+
+\medskip\noindent\textbf{第二部分——地震仪记录的两次到达。}
+\begin{enumerate}[resume]
+  \item 某台站先记录到 P 波到达，S 波
+        到达比其晚 $\Delta t$。设震源距离为 $d$（足够近，可用直线射线近似），
+        证明：
+        \[
+        d = \frac{\Delta t}{\dfrac{1}{c_{\text{S}}} -
+        \dfrac{1}{c_{\text{P}}}} .
+        \]
+  \item 计算该系数：每秒 S--P 延迟对应
+        多少千米？
+  \item 某台站测得 $\Delta t = \qty{28}{s}$：
+        此次地震的震源距该台站多远？
+  \item 单个台站只能给出距离而非位置：需要几个台站
+        才能确定震中，其几何方法又如何？
+  \item 日本的早期预警警报在强烈震动到来前数秒响起。
+        若震源位于城市下方 \qty{80}{km} 处，
+        仅 P--S 延迟本身能提供多少预警时间？
+  \item 现代预警还利用了光速：在震源附近探测到的 P 波
+        会经无线电提前发出，早于两种波的到达。若一座城市
+        距震中 \qty{200}{km}，破裂发生后多久
+        S 波才会到达，以及在 P 波首次到达时发出的
+        无线电消息，于距震源 \qty{20}{km} 处能给出
+        多少预警时间？
+\end{enumerate}
+
+\medskip\noindent\textbf{第三部分——穿越地球的波。}
+\begin{enumerate}[resume]
+  \item 在地幔深部压强下，模量增大：P 波速
+        在地幔底部可达 \qty{13.7}{km/s}。取粗略平均值
+        $c_{\text{P}} \approx \qty{10}{km/s}$，问 P 波
+        沿直径穿过地球需要多长时间？
+  \item 台站记录到来自地球另一侧的地震：
+        仅凭这些波的到达，能说明地球深部的何种
+        性质（它是否弹性？是否熔融贯通？）？
+  \item 定义震中角 $\Delta$（地心处震源与台站之间的
+        夹角）。对直线射线，证明弦长
+        为 $2R_{\text{E}}\sin(\Delta/2)$。
+  \item 求弦长及其沿直线射线的走时，
+        取 $\Delta = 60^\circ$，平均 $c_{\text{P}} \approx
+        \qty{10}{km/s}$。
+  \item 约 1900 年，奥尔德姆注意到 S 波可记录到
+        $\Delta \approx 103^\circ$ 为止，超过后\emph{消失}：
+        便再无直达 S 波。地球内部深处某区域
+        的何种性质能使 S 波消失？该性质对应何种
+        物态？
+  \item 超过 $103^\circ$ 的 P 波并非完全缺失，而是减弱、
+        延迟并发生偏移（“影区”可延伸至 $\approx 142^\circ$）：
+        为何液体区域能使 P 波延迟并折射，
+        却不能将其阻断？
+  \item 用一句话总结地球中心处存在的是
+        何种物态。
+\end{enumerate}
+
+\medskip\noindent\textbf{第四部分——用尺子称量地核。}
+\begin{enumerate}[resume]
+  \item 自震源发出的直线 S 射线，若其距地心的最近距离
+        恰等于地核半径，则该射线掠过地核。
+        $R_{\text{c}}$。证明该掠射线到达地表时的震中角
+        为 $\Delta^* =
+        2\arccos(R_{\text{c}}/R_{\text{E}})$。
+  \item 由 $\Delta^* = 103^\circ$，计算 $R_{\text{c}}$。
+  \item 现代值为 \qty{3480}{km}，计算你的误差，并
+        解释其\emph{正负}：实际射线因速率随深度增大而向地表弯回——
+        试论证直线射线会高估还是低估
+        地核半径。
+  \item 于 1936 年，英格·莱曼在\emph{影区内}发现微弱的 P 波到达，
+        她由此推断，液态地核之内存在的是
+        什么？
+  \item 内核半径为 \qty{1220}{km}，且为固体：
+        请提出一种能证实其固态性的波动观测，
+        （内核中存在、而外核所禁止的是哪种波？）。
+  \item 归纳这一结论：岩石中两种弹性波的速率
+        （$5.8$ 与 \qty{3.3}{km/s}）、超过 $103^\circ$ 后缺失的一种波，
+        以及一把尺子，给出一个半径
+        $\approx \qty{4000}{km}$ 的液态地核——
+        与现代值 \qty{3480}{km} 相差在 $15\%$ 以内，
+        此结果是经 \qty{6000}{km} 厚的固态岩石测得。
+\end{enumerate}
+\end{problem}

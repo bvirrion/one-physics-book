@@ -205,10 +205,14 @@ def build_svg(tikz):
         preamble, engine = PREAMBLE, "pdflatex"
         if GUILLEMETS.search(tikz):
             # « » only exist in T1 (the books load [T1]{fontenc}); opt in
-            # per figure so every other SVG stays byte-stable on OT1
+            # per figure so every other SVG stays byte-stable on OT1.
+            # lmodern with it, as the books do: without it T1 text is set
+            # in bitmap (Type 3) EC fonts, which dvisvgm drops — the figure
+            # came out with its lines and no label at all.
             preamble = PREAMBLE.replace(
                 "\\begin{document}",
-                "\\usepackage[T1]{fontenc}\n\\begin{document}")
+                "\\usepackage[T1]{fontenc}\n\\usepackage{lmodern}\n"
+                "\\begin{document}")
         if DEVANAGARI.search(tikz):
             preamble = PREAMBLE.replace(
                 "\\begin{document}", FONTSPEC_BLOCK + "\\begin{document}")
@@ -219,6 +223,13 @@ def build_svg(tikz):
             engine = "lualatex"
             for face in ARABIC_FACES:
                 shutil.copy(FONTS_DIR / face, tmp / face)
+        if "\\up{" in tikz:
+            # \up{e}: babel-french's superscript in a French label
+            # (99\up{e} centile); defined per figure, like T1 above
+            preamble = preamble.replace(
+                "\\begin{document}",
+                "\\providecommand{\\up}[1]{\\textsuperscript{#1}}\n"
+                "\\begin{document}")
         has_raster = bool(RASTER_RE.search(tikz))
         if has_raster:
             tikz = stage_rasters(tikz, tmp)
@@ -246,6 +257,9 @@ def build_svg(tikz):
                     "both dvisvgm and pdftocairo failed to convert a "
                     f"figure:\n{res.stderr[-2000:]}")
         svg = svg_path.read_text(encoding="utf-8")
+        if "<g id='page1'/>" in svg:
+            # dvisvgm wrote an empty page (0pt x 0pt): never publish it
+            raise ParseError("a figure converted to an empty SVG")
         return svg, *_svg_size(svg)
 
 

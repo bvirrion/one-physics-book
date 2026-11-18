@@ -1,0 +1,566 @@
+\chapter{运算放大器}\label{ch:b1:operational-amplifier}
+
+粘在桥梁大梁上的应变片，卡车经过时其电阻变化千分之一；
+而它所在的惠斯通电桥
+（\cref{ch:b1:dc-circuits}）把这一变化转换为两毫伏的电压。
+两毫伏的信号无法驱动任何东西。在应变片与
+那套将桥梁封闭以禁止通行的报警装置之间，
+有一块指甲盖大小的芯片，售价只需几分钱，它能把信号放大一千倍、
+对其进行滤波、与阈值比较，并点亮一盏灯——四项任务，一个元件，
+四种不同的接线方式。本章通过理想模型引入
+运算放大器，推导每台仪器都会用到的几种基本电路，
+并说明
+移除反馈后会发生什么。
+
+\section{元件及其理想模型}
+
+\begin{definition}[运算放大器]\label{def:b1:operational-amplifier:opamp}
+\index{运算放大器}\index{饱和电压}\index{开环增益}
+\emph{运算放大器}是一种集成电路，有两个输入端——
+电势为 $V_+$ 的\emph{同相}输入端与
+电势为 $V_-$ 的\emph{反相}输入端——以及电势为 $V_s$ 的一个输出端，
+由两路电源 $\pm V_{\mathrm{cc}}$ 供电（通常为
+$\pm\qty{15}{V}$），图中一般不画出这两路电源。它放大
+两输入端之差 $\epsilon = V_+ - V_-$：
+\[
+V_s = \mu\,\epsilon \quad\text{只要 } \abs{V_s} < V_{\mathrm{sat}},
+\]
+其中\emph{开环增益} $\mu$ 的量级为 $10^5$，
+\emph{饱和电压} $V_{\mathrm{sat}}$ 略低于
+$V_{\mathrm{cc}}$。当 $\mu\abs\epsilon$ 将超过 $V_{\mathrm{sat}}$ 时，
+输出被钳位在 $+V_{\mathrm{sat}}$ 或 $-V_{\mathrm{sat}}$，
+此状态称为\emph{饱和}状态。
+\end{definition}
+
+\begin{definition}[理想运算放大器]\label{def:b1:operational-amplifier:ideal}
+\index{理想运算放大器}\index{虚短路}\index{线性区}
+\emph{理想}模型假设：（i）两输入端均无电流流入，
+$i_+ = i_- = 0$（输入阻抗无穷大）；（ii）输出端的电压
+不受所流出电流的影响（输出阻抗为零）；（iii）
+增益无穷大，$\mu \to \infty$。在\emph{线性区}（$\abs{V_s}
+< V_{\mathrm{sat}}$）中，第三条假设迫使
+\[
+\epsilon = V_+ - V_- = 0 :
+\]
+两输入端电势相等（称为“虚短路”），
+但两者之间并无电流通过。
+\end{definition}
+
+\begin{omfigure}
+\begin{tikzpicture}[font=\small]
+  \node[op amp] (oa) at (0,0) {};
+  \draw (oa.-) -- ++(-0.8,0) node[left] {$V_-$};
+  \draw (oa.+) -- ++(-0.8,0) node[left] {$V_+$};
+  \draw (oa.out) -- ++(0.6,0) node[right] {$V_s$};
+  \draw (oa.up) -- ++(0,0.3) node[above, font=\footnotesize] {$+V_{\mathrm{cc}}$};
+  \draw (oa.down) -- ++(0,-0.3) node[below, font=\footnotesize] {$-V_{\mathrm{cc}}$};
+  \begin{scope}[xshift=6.2cm]
+  \begin{axis}[omaxis, axis y line=left, width=6.4cm, height=4.6cm, xlabel={$\epsilon$}, ylabel={$V_s$},
+      xmin=-2.2, xmax=2.2, ymin=-1.5, ymax=1.5, xtick={-0.15,0.15}, xticklabels={,},
+      ytick={-1,1}, yticklabels={$-V_{\mathrm{sat}}$,$+V_{\mathrm{sat}}$}, anchor=origin, at={(0,0)}]
+    \addplot[omThm, thick, domain=-2.2:-0.15, samples=2] {-1};
+    \addplot[omThm, thick, domain=-0.15:0.15, samples=2] {x/0.15};
+    \addplot[omThm, thick, domain=0.15:2.2, samples=2] {1};
+    \node[omThm, font=\footnotesize] at (axis cs:1.3,0.6) {饱和};
+    \node[omThm, font=\footnotesize] at (axis cs:-1.2,-0.6) {饱和};
+    \node[omThm, font=\footnotesize, right] at (axis cs:0.2,-0.55) {线性区，斜率 $\mu$};
+  \end{axis}
+  \end{scope}
+\end{tikzpicture}
+
+{\small 运算放大器的符号（带两个输入端），以及其
+传输特性 $V_s(\epsilon)$——一段陡峭的线性段，
+斜率为 $\mu \sim 10^5$（图中画得远比实际平缓），随后
+在 $\pm V_{\mathrm{sat}}$ 处进入饱和。在理想模型中，线性段
+是竖直的：$\epsilon = 0$。}
+\end{omfigure}
+
+\begin{proposition}[负反馈与线性区]\label{prop:b1:operational-amplifier:feedback}
+\index{负反馈}\index{正反馈}
+若输出端经由某一网络接回\emph{反相}输入端（负反馈），
+则电路有一个稳定的线性工作点，
+位于 $\epsilon = 0$ 处，且适用理想放大器的规则。若
+输出端接回同相输入端（正反馈），或根本不接反馈，则放大器饱和：
+$V_s = \pm V_{\mathrm{sat}}$，
+取决于 $\epsilon$ 的符号。
+\end{proposition}
+
+\begin{proof}[部分证明]
+在负反馈下，设 $V_s$ 略高于其平衡值；经由反馈网络，
+$V_-$ 升高，$\epsilon$ 减小，放大器将 $V_s$ 拉回，
+扰动被修正。在正反馈下，同样的扰动抬高 $V_+$，
+使 $\epsilon$ 增大，
+并推动 $V_s$ 进一步远离，直至饱和。
+完整论证（包括放大器的一阶模型 $\mu(j\omega)
+= \mu_0/(1 + j\omega/\omega_0)$，以及由此得到的微分方程的稳定性）
+属于本科二年级分册的内容，
+此处只需使用上述规则。
+\end{proof}
+
+\begin{remark}[实际放大器]\label{rem:b1:operational-amplifier:real}
+\index{增益带宽积}\index{压摆率}\index{输入失调电压}
+实际中有三点偏离理想模型的情况需要注意。开环增益随频率下降，
+关系为 $\mu_0/(1 + jf/f_0)$，其中 $f_0 \sim \qty{10}{Hz}$：
+乘积 $\mu_0 f_0 = f_T \sim \qty{1}{MHz}$（即\emph{增益带宽
+积}）即为跟随器可用的带宽，
+闭环增益为 $G$ 的电路其带宽为 $f_T/G$。输出电压的变化速度
+不能超过\emph{压摆率}，约为 $\sim\qty{1}{V/\micro s}$。另外，
+一个较小的\emph{输入失调电压}（$\sim\qty{1}{mV}$）会像信号一样被放大，
+对于毫伏量级的输入而言，若不加校正，这将是致命的。
+\end{remark}
+
+\section{基本线性电路}
+
+\begin{method}[线性区中理想运算放大器电路的分析]\label{met:b1:operational-amplifier:method}
+\begin{enumerate}
+  \item 检查反馈是否接到反相输入端。
+  \item 令 $i_+ = i_- = 0$：输入节点服从基尔霍夫节点定律，
+        即流入放大器的电流为零（分压与米尔曼
+        定理均适用）。
+  \item 令 $V_+ = V_-$，解出 $V_s$。
+  \item 事后检验 $\abs{V_s} < V_{\mathrm{sat}}$ 是否成立，若不成立，
+        则放大器已饱和，结果为 $\pm V_{\mathrm{sat}}$。
+\end{enumerate}
+\end{method}
+
+\begin{proposition}[跟随器、同相放大器与反相放大器]\label{prop:b1:operational-amplifier:basic}
+\index{电压跟随器}\index{同相放大器}\index{反相放大器}\index{虚地}
+\begin{itemize}
+  \item \emph{跟随器}：输出端接 $V_-$，输入端接在 $V_+$ 上：
+        $V_s = V_e$；输入阻抗无穷大，输出阻抗为零。
+  \item \emph{同相放大器}：输出端接 $V_-$，经
+        由 $R_2$（反馈）与 $R_1$（接地）构成的分压器，输入接在 $V_+$ 上：
+        \[
+        V_s = \left(1 + \frac{R_2}{R_1}\right)V_e .
+        \]
+  \item \emph{反相放大器}：$V_+$ 接地，输入信号经
+        $R_1$ 接到 $V_-$，反馈电阻 $R_2$ 从输出端接回 $V_-$：
+        \[
+        V_s = -\frac{R_2}{R_1}\,V_e ,
+        \]
+        此时 $V_-$ 保持地电势（称为\emph{虚地}），
+        输入阻抗为 $R_1$。
+\end{itemize}
+\end{proposition}
+
+\begin{proof}
+跟随器：$V_- = V_s$，$V_+ = V_e$；由 $\epsilon = 0$ 得 $V_s = V_e$。
+同相放大器：$V_-$ 处无电流流入，故由分压关系得 $V_- =
+V_sR_1/(R_1 + R_2)$，令其等于 $V_+ = V_e$。反相放大器：$V_- = V_+ = 0$；
+在 $V_-$ 处列节点方程（取 $i_- = 0$）：$(V_e - 0)/R_1 + (V_s - 0)/R_2 = 0$。
+信号源提供的电流为 $V_e/R_1$，输入阻抗为 $R_1$。
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}[font=\small]
+  % follower (+ input up)
+  \node[op amp, noinv input up] (a) at (0,0) {};
+  \draw (a.+) -- ++(-0.6,0) node[left] {$V_e$};
+  \draw (a.out) -- ++(0.5,0) node[right] {$V_s$};
+  \draw (a.out) ++(0.25,0) -- ++(0,-1.3) -| ($(a.-)+(-0.4,0)$) -- (a.-);
+  \node[below, font=\footnotesize] at (0,-1.7) {跟随器：$V_s = V_e$};
+  % non-inverting (+ input up)
+  \begin{scope}[xshift=5.6cm]
+  \node[op amp, noinv input up] (b) at (0,0) {};
+  \draw (b.+) -- ++(-0.8,0) node[left] {$V_e$};
+  \draw (b.out) -- ++(0.6,0) node[right] {$V_s$};
+  \coordinate (j) at ($(b.-)+(-0.5,0)$);
+  \draw (b.-) -- (j);
+  \coordinate (f) at ($(j)+(0,-1.0)$);
+  \coordinate (o) at ($(b.out)+(0.3,0)$);
+  \draw (o) -- (o |- f) to[R=$R_2$] (f) -- (j);
+  \draw (f) to[R=$R_1$] ++(0,-1.6) node[ground]{};
+  \node[below, font=\footnotesize] at (0,-3.7) {同相放大器：$V_s = (1 + R_2/R_1)V_e$};
+  \end{scope}
+  % inverting (- input up)
+  \begin{scope}[xshift=11.3cm]
+  \node[op amp] (c) at (0,0) {};
+  \draw (c.+) -- ++(-0.4,0) node[ground]{};
+  \coordinate (m) at ($(c.-)+(-0.5,0)$);
+  \draw (c.-) -- (m) to[R=$R_1$] ++(-1.5,0) node[left] {$V_e$};
+  \draw (c.out) -- ++(0.6,0) node[right] {$V_s$};
+  \coordinate (f2) at ($(m)+(0,1.3)$);
+  \coordinate (o2) at ($(c.out)+(0.3,0)$);
+  \draw (o2) -- (o2 |- f2) to[R=$R_2$] (f2) -- (m);
+  \node[below, font=\footnotesize] at (0,-1.7) {反相放大器：$V_s = -(R_2/R_1)V_e$};
+  \end{scope}
+\end{tikzpicture}
+
+{\small 三种基本放大器。在每一种中，输出端都接回
+反相输入端，放大器工作在线性区，增益
+仅由电阻之比决定——而不取决于放大器自身
+巨大且不确定的 $\mu$。}
+\end{omfigure}
+
+\begin{example}[为何使用跟随器]\label{ex:b1:operational-amplifier:follower}
+一个戴维南电阻为 \qty{10}{k\ohm} 的传感器，接上
+\qty{1}{k\ohm} 负载后，只能输出其开路电压的 $1/11$
+（见\cref{rem:b1:dc-circuits:loading}）。接入跟随器后，它几乎不从
+传感器汲取电流，并以零输出阻抗驱动负载，
+使满电压得以传递。跟随器是一种\emph{阻抗
+变换器}——它还使得
+\cref{prop:b1:filters-transfer-functions:cascade}中的级联规则严格成立。
+\end{example}
+
+\begin{proposition}[求和放大器与差分放大器]\label{prop:b1:operational-amplifier:sumdiff}
+\index{求和放大器}\index{差分放大器}
+输入 $V_1, V_2$ 分别经 $R_1, R_2$ 接到反相节点，
+反馈电阻为 $R_f$，$V_+$ 接地：
+\[
+V_s = -R_f\left(\frac{V_1}{R_1} + \frac{V_2}{R_2}\right)
+\quad (\text{求和放大器}).
+\]
+若 $V_1$ 经 $R_1$ 接到 $V_-$（反馈为 $R_2$），$V_2$ 经
+$R_1$ 接到 $V_+$，并经 $R_2$ 将 $V_+$ 接地：
+\[
+V_s = \frac{R_2}{R_1}\,(V_2 - V_1)
+\quad (\text{差分放大器}).
+\]
+\end{proposition}
+
+\begin{proof}
+求和：在虚地处列节点方程，$V_1/R_1 + V_2/R_2 + V_s/R_f =
+0$。差分：$V_+ = V_2R_2/(R_1 + R_2)$（分压）；在 $V_-$ 处列节点方程：
+$(V_1 - V_-)/R_1 + (V_s - V_-)/R_2 = 0$，于是 $V_s = V_-(1 + R_2/R_1) -
+V_1R_2/R_1$；令 $V_- = V_+$ 并化简。
+\end{proof}
+
+\section{积分器与微分器}
+
+\begin{proposition}[积分器]\label{prop:b1:operational-amplifier:integrator}
+\index{积分器（运算放大器）}
+输入经 $R$ 接至 $V_-$，以电容 $C$ 作反馈，$V_+$
+接地：
+\[
+V_s(t) = -\frac{1}{RC}\int_0^t V_e(t')\,\dd t' + V_s(0),
+\qquad
+\underline H = -\frac{1}{jRC\omega} .
+\]
+在所有频率上，增益每十倍频程下降 \qty{20}{dB}，
+相位为 $+90^\circ$：这是一个理想积分器——直到最小的失调或偏置
+电压被无限积分，最终把输出推入饱和。
+\end{proposition}
+
+\begin{proof}
+虚地：电流 $V_e/R$ 流入电容，该电容的
+电压（从 $V_-$ 到输出端）为 $-V_s$；因此 $C\,\dd(-V_s)/\dd t
+= V_e/R$，用复数表示为 $\underline H = -1/(jRC\omega)$。
+\end{proof}
+
+\begin{remark}[驯服积分器]\label{rem:b1:operational-amplifier:pseudo}
+\index{伪积分器}
+电阻 $R'$ 与 $C$ 并联，得
+\[
+\underline H = -\frac{R'/R}{1 + jR'C\omega},
+\]
+这是一阶低通滤波器，直流增益为 $-R'/R$，截止频率为 $1/R'C$，它
+在 $\omega \gg 1/R'C$ 时起积分作用，但输出不会漂移至饱和。类似地，微分器（输入端接电容，
+反馈端接电阻：$V_s = -RC\,\dd V_e/\dd t$，$\underline H =
+-jRC\omega$）会无限制地放大高频噪声，除非
+在输入端串联一个小电阻以限制其增益。
+\end{remark}
+
+\begin{omfigure}
+\begin{tikzpicture}[font=\small]
+  \node[op amp] (c) at (0,0) {};
+  \draw (c.+) -- ++(-0.4,0) node[ground]{};
+  \draw (c.-) -- ++(-0.3,0) coordinate (m1) to[R=$R$] ++(-1.8,0) node[left] {$V_e$};
+  \draw (c.out) -- ++(0.5,0) node[right] {$V_s$};
+  \draw (c.out) ++(0.25,0) |- ++(0,1.2) to[C=$C$] ++(-2.1,0) -| (m1);
+  \begin{scope}[xshift=7.3cm, yshift=-1.2cm]
+  \begin{axis}[omaxis, axis x line=bottom, axis y line=left, xlabel style={at={(axis description cs:0.5,-0.16)}, anchor=north},
+      width=6.4cm, height=4.2cm, xmode=log, xlabel={$\omega$ ($\log$)}, ylabel={$G_{\mathrm{dB}}$},
+      xmin=0.01, xmax=100, ymin=-45, ymax=48, ytick={40,20,0,-20,-40}, xtick={0.01,0.1,1,10,100},
+      xticklabels={$0.01$,$0.1$,$1$,$10$,$100$}, anchor=origin, at={(0,0)}]
+    \addplot[omDef, thick, domain=0.01:100, samples=2] {-20*log10(x)};
+    \addplot[omThm, thick, domain=0.01:100, samples=200] {20 - 10*log10(1 + (x/0.1)^2)};
+    \node[omDef, font=\footnotesize, rotate=-32] at (axis cs:8,-10) {积分器};
+    \node[omThm, font=\footnotesize, anchor=west] at (axis cs:0.012,29) {伪积分器};
+  \end{axis}
+  \end{scope}
+\end{tikzpicture}
+
+{\small 积分器及其伯德图（蓝色，全程 \qty{-20}{dB/decade}
+直流处增益无穷大）；在 $C$ 两端并联电阻后，低频增益
+受到限制（红色）：这是一个在
+截止频率以上起积分作用的低通滤波器。}
+\end{omfigure}
+
+\begin{example}[由方波得三角波]\label{ex:b1:operational-amplifier:triangle}
+$R = \qty{10}{k\ohm}$, $C = \qty{100}{nF}$, $1/RC = \qty{1000}{s^{-1}}$.
+一个频率为 \qty{1}{kHz}、幅值为 $\pm\qty{1}{V}$ 的方波，得到斜率为
+$\mp\qty{1000}{V/s}$、振幅为 $ET/4RC = \qty{0.25}{V}$ 的三角波——没有
+无源 RC 电路所具有的 $1/\omega$ 衰减，且
+输出阻抗为零，可驱动下一级。
+\end{example}
+
+\section{有源滤波器}
+
+\begin{proposition}[一阶有源低通滤波器]\label{prop:b1:operational-amplifier:activelp}
+\index{有源滤波器}
+反相放大器中，电容 $C$ 并联在
+反馈电阻 $R_2$ 两端，其传递函数为
+\[
+\underline H = -\frac{R_2/R_1}{1 + jR_2C\omega}:
+\]
+这是一个低通滤波器，直流增益为 $-R_2/R_1$（其绝对值可大于 $1$），截止
+频率为 $\omega_c = 1/R_2C$，输出阻抗为零——多级串接时，
+各级传递函数直接相乘。
+\end{proposition}
+
+\begin{proof}
+反相放大器，以反馈阻抗 $R_2 \parallel 1/jC\omega
+= R_2/(1 + jR_2C\omega)$ 代替 $R_2$。
+\end{proof}
+
+\section{无负反馈：比较器}
+
+\begin{proposition}[比较器]\label{prop:b1:operational-amplifier:comparator}
+\index{比较器}
+无反馈时，理想放大器处于饱和状态：
+$V_s = +V_{\mathrm{sat}}$（若 $V_+ > V_-$），$-V_{\mathrm{sat}}$（若
+$V_+ < V_-$）。一输入端接参考电压 $V_{\mathrm{ref}}$，
+另一输入端接信号，输出即可判断信号是否超过
+参考值——这是一个一位转换器。
+\end{proposition}
+
+\begin{proof}
+$\mu\epsilon$ 超过 $V_{\mathrm{sat}}$，对任意 $\abs\epsilon >
+V_{\mathrm{sat}}/\mu \sim \qty{0.1}{mV}$ 均成立。
+\end{proof}
+
+\begin{proposition}[施密特触发器]\label{prop:b1:operational-amplifier:schmitt}
+\index{施密特触发器}\index{滞回}
+将输出的一部分 $\beta = R_1/(R_1 + R_2)$ 反馈至 $V_+$
+（$R_1$ 接地，$R_2$ 接输出端，构成分压），将信号
+$V_e$ 接至 $V_-$。输出由 $+V_{\mathrm{sat}}$ 跳变为
+$-V_{\mathrm{sat}}$，当 $V_e$ 上升超过 $+\beta V_{\mathrm{sat}}$ 时，
+而 $V_e$ 下降低于 $-\beta V_{\mathrm{sat}}$ 时，输出跳回：两个阈值，
+形成一个\emph{滞回}，宽度为 $2\beta V_{\mathrm{sat}}$，
+小于该宽度的噪声不会引起输出变化。
+\end{proposition}
+
+\begin{proof}
+正反馈：饱和。若 $V_s = +V_{\mathrm{sat}}$，则 $V_+ =
+\beta V_{\mathrm{sat}}$，且 $\epsilon = \beta V_{\mathrm{sat}} - V_e$
+保持为正，直到 $V_e$ 超过 $\beta V_{\mathrm{sat}}$；此时
+输出翻转，$V_+$ 降至 $-\beta V_{\mathrm{sat}}$，新状态
+保持到 $V_e$ 降至该值以下。
+\end{proof}
+
+\begin{omfigure}
+\begin{tikzpicture}[font=\small]
+  \node[op amp] (s) at (0,0) {};
+  \draw (s.-) -- ++(-0.8,0) node[left] {$V_e$};
+  \draw (s.out) -- ++(0.6,0) node[right] {$V_s$};
+  \coordinate (j) at ($(s.+)+(-0.6,0)$);
+  \coordinate (f) at ($(j)+(0,-1.0)$);
+  \coordinate (o) at ($(s.out)+(0.3,0)$);
+  \draw (s.+) -- (j);
+  \draw (o) -- (o |- f) to[R=$R_2$] (f) -- (j);
+  \draw (f) to[R=$R_1$] ++(0,-1.6) node[ground]{};
+  \begin{scope}[xshift=7.8cm, yshift=-0.9cm]
+  \begin{axis}[omaxis, axis x line=bottom, axis y line=left, width=6.4cm, height=4.6cm, xlabel={$V_e$}, ylabel={$V_s$},
+      xlabel style={at={(axis description cs:0.5,-0.12)}, anchor=north},
+      xmin=-2.2, xmax=2.2, ymin=-1.5, ymax=1.5, xtick={-1,1}, xticklabels={$-\beta V_{\mathrm{sat}}$,$\beta V_{\mathrm{sat}}$},
+      ytick={-1,1}, yticklabels={$-V_{\mathrm{sat}}$,$+V_{\mathrm{sat}}$}, anchor=origin, at={(0,0)}]
+    \draw[omThm, thick, -Stealth] (axis cs:-2.2,1) -- (axis cs:0.2,1);
+    \draw[omThm, thick] (axis cs:0.2,1) -- (axis cs:1,1) -- (axis cs:1,-1);
+    \draw[omThm, thick, -Stealth] (axis cs:2.2,-1) -- (axis cs:-0.2,-1);
+    \draw[omThm, thick] (axis cs:-0.2,-1) -- (axis cs:-1,-1) -- (axis cs:-1,1);
+  \end{axis}
+  \end{scope}
+\end{tikzpicture}
+
+{\small 施密特触发器：经 $R_1$、$R_2$ 的正反馈
+给出两个阈值 $\pm\beta V_{\mathrm{sat}}$。输出
+在 $V_e$ 上升超过上阈值时由高变低，
+在下降至下阈值以下时由低变高（箭头所示），形成一个滞回循环。}
+\end{omfigure}
+
+\begin{example}[弛豫振荡器]\label{ex:b1:operational-amplifier:astable}
+\index{弛豫振荡器}
+将施密特触发器的输出接回其自身的反相输入端，
+经 $R$ 接入，并将 $C$ 从 $V_-$ 接至地。
+电容器向 $\pm V_{\mathrm{sat}}$ 充电，每次达到
+$\pm\beta V_{\mathrm{sat}}$ 时使触发器翻转：输出为方波，
+电容器电压为一串指数弧段，周期为
+\[
+T = 2RC\ln\frac{1 + \beta}{1 - \beta}
+\]
+（见\cref{exo:b1:operational-amplifier:12}）：$2.2\,RC$，对应 $\beta = \tfrac12$。
+无输入、一个电容器和一个时钟——一个系统，
+因无法稳定而振荡，这一主题将在
+本科二年级分册的反馈振荡器中再次出现。
+\end{example}
+
+\section{练习}
+
+\begin{exercise}[$\star$]\label{exo:b1:operational-amplifier:1}
+同相放大器中 $R_1 = \qty{1.0}{k\ohm}$，$R_2 =
+\qty{9.0}{k\ohm}$，$V_{\mathrm{sat}} = \qty{15}{V}$。求增益？
+当 $V_e = \qty{0.50}{V}$ 时的输出？饱和前的最大输入为多少？
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b1:operational-amplifier:2}
+反相放大器中 $R_1 = \qty{10}{k\ohm}$，$R_2 = \qty{100}{k\ohm}$。
+求增益、输入阻抗、从 \qty{1.0}{V} 电源汲取的电流以及输出。
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b1:operational-amplifier:3}
+一个内阻为 \qty{10}{k\ohm}、开路电压为
+\qty{1.0}{V} 的传感器需驱动一个 \qty{1.0}{k\ohm} 的负载。
+在两者之间不接和接入跟随器两种情况下，负载两端的电压各为多少？
+\end{exercise}
+
+\begin{exercise}[$\star$]\label{exo:b1:operational-amplifier:4}
+求和放大器中 $R_f = \qty{10}{k\ohm}$，两输入端分别经
+\qty{10}{k\ohm} 和 \qty{20}{k\ohm} 接入。写出 $V_s$；并计算
+$V_1 = \qty{1.0}{V}$、$V_2 = \qty{2.0}{V}$ 时的值。
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b1:operational-amplifier:5}
+推导差分放大器的 $V_s = (R_2/R_1)(V_2 - V_1)$。取
+$R_1 = \qty{10}{k\ohm}$，$R_2 = \qty{100}{k\ohm}$，$V_1 = \qty{1.00}{V}$，
+$V_2 = \qty{1.05}{V}$：求输出？两输入端共有的
+\qty{1}{V} 电压发生了什么变化？
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b1:operational-amplifier:6}
+积分器中 $R = \qty{10}{k\ohm}$，$C = \qty{100}{nF}$，输出
+初始为零。施加一个 \qty{1.0}{V} 阶跃：求输出的斜率，
+以及达到饱和（\qty{15}{V}）所需的时间。施加一个 \qty{1.0}{kHz} 的方波，
+幅值为 $\pm\qty{1.0}{V}$：求输出的形状与振幅。
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b1:operational-amplifier:7}
+在前述积分器的电容器两端并联一个 \qty{1.0}{M\ohm} 的电阻。
+求传递函数、直流增益、截止频率，
+以及 \qty{1.0}{kHz} 处的增益；
+该电路在哪一频率范围内仍能积分？
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b1:operational-amplifier:8}
+设计一个反相有源低通滤波器，使其通带增益为 \qty{20}{dB}，
+截止频率为 \qty{500}{Hz}，并取 $R_1 = \qty{1.0}{k\ohm}$。
+\end{exercise}
+
+\begin{exercise}[$\star\star$]\label{exo:b1:operational-amplifier:9}
+一个实际放大器的 $\mu_0 = 10^5$，$f_T = \qty{1.0}{MHz}$。对于设计增益为
+$100$ 的同相放大器：求实际直流增益
+（分析中保留有限的 $\mu_0$），以及带宽；
+跟随器的带宽是多少？
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b1:operational-amplifier:10}
+比较器中 $V_{\mathrm{ref}} = \qty{2.0}{V}$ 接在 $V_-$ 端，用于监视
+一个缓慢上升且含有 \qty{50}{mV} 噪声的信号。
+描述信号越过 \qty{2.0}{V} 时输出的变化，并提出补救办法。
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b1:operational-amplifier:11}
+施密特触发器，$R_1 = \qty{1.0}{k\ohm}$，$R_2 = \qty{9.0}{k\ohm}$，
+$V_{\mathrm{sat}} = \qty{15}{V}$，推导并计算两个阈值。
+画出 $V_s$ 草图，其中 $V_e$ 为幅值 \qty{3}{V} 的三角波。
+\end{exercise}
+
+\begin{exercise}[$\star\star\star$]\label{exo:b1:operational-amplifier:12}
+弛张振荡器，$R_1 = R_2$（$\beta = \tfrac12$）。推导
+周期 $T = 2RC\ln\frac{1 + \beta}{1 - \beta}$，依据是 $C$ 经 $R$ 在两阈值之间的充电过程，
+并选取 $R$，使频率为 \qty{1.0}{kHz}；
+取 $C = \qty{100}{nF}$，画出 $V_s(t)$ 和 $V_C(t)$ 的草图。
+\end{exercise}
+
+\section{问题：应变片的测量链}
+
+\begin{problem}[{周末问题——从桥梁主梁上的两毫伏信号
+到一盏红灯：跟随器、差分放大器、有源滤波器
+与施密特触发器，以及决定链路能否工作的
+两个非理想因素}]
+\label{pb:b1:operational-amplifier:1}
+一个电阻为 $R(1 + \epsilon)$ 的应变片，$R = \qty{1.00}{k\ohm}$，
+$0 \leq \epsilon \leq \num{2.0e-3}$，与三个 \qty{1.00}{k\ohm} 的固定电阻
+组成惠斯通电桥，由 $E = \qty{5.00}{V}$ 供电。
+电桥输出 $u = V_B - V_A$（两中点之间）为
+$u \approx E\epsilon/4$（符号由接线决定）。放大器
+除非另有说明均视为理想；$V_{\mathrm{sat}} = \qty{15}{V}$；必要时
+取 $f_T = \qty{1.0}{MHz}$，压摆率为 \qty{0.5}{V/\micro s}，输入失调电压为
+\qty{1}{mV}。
+
+\medskip
+\noindent\textbf{第一部分——电桥及其负载。}
+\begin{enumerate}
+  \item 回顾 $u \approx E\epsilon/4$ 在 $\epsilon$ 较小时成立的原因。
+  \item 求 $u$ 在满量程（$\epsilon = \num{2.0e-3}$）时的值。
+  \item 给出零应变与满量程时各中点的电势
+        （相对于电桥的负接线柱），
+        它们的共同值叫作什么？
+  \item 每个中点都是由两个 \qty{1}{k\ohm} 电阻组成的分压器的输出，
+        则两中点之间所见的戴维南电阻
+        为多少？
+  \item 若一台输入电阻为 \qty{10}{k\ohm} 的放大器
+        接在电桥输出两端，
+        则它接收到的是 $u$ 的几分之几？
+  \item 为何在每个中点接一个跟随器就能解决这一问题？说明所用的
+        两条性质。
+  \item 跟随器的输出电压（以 $V_A$、
+        $V_B$ 表示）各为多少，它们从电桥汲取多大电流？
+\end{enumerate}
+
+\medskip
+\noindent\textbf{第二部分——放大差分信号。}
+\begin{enumerate}[resume]
+  \item 跟随器的输出接入差分放大器（两个输入端各接 $R_1$，
+        $R_2$ 作反馈并接地）。推导 $V_s =
+        (R_2/R_1)(V_B - V_A)$。
+  \item 取 $R_1 = \qty{10}{k\ohm}$，并选取 $R_2$ 使增益为 $100$。
+  \item 第二级为同相放大器，放大倍数为 $10$：给出其电阻，
+        并求总增益及满量程时的输出。
+  \item 两个中点都接近 $E/2 = \qty{2.5}{V}$（即共模电压）。
+        完全匹配的差分放大器对共模电压有何作用？
+        若某一电阻比值偏差 $1\%$，估算折合到输入端的
+        虚假电压，并与信号相比较。
+  \item 第一级放大器具有 \qty{1}{mV} 的输入失调电压，
+        经总增益放大后将产生多大的输出误差？并给出结论。
+  \item 取 $f_T = \qty{1}{MHz}$，每一级的带宽是多少？
+        对于低于 \qty{5}{Hz} 的信号，该带宽是否足够？
+  \item 卡车驶近时，输出须在约 \qty{10}{ms} 内变化 \qty{2.5}{V}，
+        压摆率是否会构成限制？
+\end{enumerate}
+
+\medskip
+\noindent\textbf{第三部分——滤波。}
+放大后的信号中混有一个 \qty{50}{Hz} 的交流声，
+它是从电网拾取的。
+\begin{enumerate}[resume]
+  \item 设计一个增益为 $-1$ 的反相有源低通滤波器，
+        截止频率为 \qty{10}{Hz}，取 $R_1 = R_2 = \qty{16}{k\ohm}$，求 $C$。
+  \item 计算其在 \qty{50}{Hz} 处以分贝表示的衰减量。
+  \item 计算 \qty{5}{Hz} 处的相移及相应的
+        延迟。对于报警器是否可接受？
+  \item 此处为何宜选有源滤波器而非无源 RC
+        滤波器（两条理由）？
+  \item 再级联一个相同的级，在 \qty{50}{Hz} 处的衰减量是多少？
+        为何此处可以精确应用乘积法则？
+\end{enumerate}
+
+\medskip
+\noindent\textbf{第四部分——阈值与报警。}
+应变超过 \num{1.6e-3} 时，报警器必须动作。
+\begin{enumerate}[resume]
+  \item 这对应于测量链的哪一输出电压？取该参考电压的比较器，
+        其输出状态如何？
+  \item 滤波后的信号在阈值附近仍含有 \qty{50}{mV} 的噪声，
+        普通比较器将如何动作？
+  \item 一个施密特触发器，参考电压接在一个输入端，反馈系数为
+        $\beta$，证明其阈值为 $V_{\mathrm{ref}} \pm
+        \beta V_{\mathrm{sat}}$；取 $\beta$ 使阈值为 $\pm\qty{0.10}{V}$，
+        并给出 $R_1$、$R_2$。
+  \item 分别以伏特和应变给出两个阈值。
+  \item 输出经一只电阻驱动发光二极管（\qty{2.0}{V}，\qty{13}{mA}），
+        求该电阻的阻值。输出处于
+        $-V_{\mathrm{sat}}$ 时，发光二极管由什么来保护？
+  \item 逐级概括整个测量链，并指出决定其实际极限的两个
+        非理想因素。
+\end{enumerate}
+\end{problem}

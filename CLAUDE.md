@@ -56,6 +56,16 @@ and `id`. Books 1–3 landed earlier; Book 4 was written and translated
   gated by `tools/check_translation.sh` and self-scored under
   `translation_scores/book_<N>/<lang>/`. See the workspace-root
   `translation_instruction.md` before touching any of them.
+- **Simplified Chinese (`zh`) for all five books, 2026-11-18, by the pilot method**
+  (`../pilot_translation_instruction.md`): Haiku 5.5 one call per section, one Opus 5.5
+  coordinator, no subagents; pilot tier 88 each, not read in full; 398 / 319 / 308 / 313 /
+  273 pp, all 0/0/0 with 0 missing characters, `check_translation.sh <year> zh` green
+  (gate 9 is `tools/check_chinese_prose.py`). XeLaTeX + xeCJK with TeX Live's Fandol
+  fonts, pinyin index (upmendex), Greek and Ⅰ–Ⅻ declared a CJK class, `\ohm` from the maths font
+  (the lost Ω). The term linker's CJK mode needs `INDEX_CJK = True` in
+  `tools/term_config/book<N>_zh.py` (index-only keys have no space in Chinese) and a
+  STOP/DROP calibration against the English counts; one-character terms (波, 场, 力, 焓)
+  cannot be linked. Run file `sources/TRANSLATION_BOOKS_1-5_ZH.md`; uncommitted.
 - **`tools/id_apply.py` is how a translated body should be written.** A
   translated chapter is a set of line-range replacements on the English
   canon; every line not named is copied byte-identically, so labels,
