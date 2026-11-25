@@ -395,8 +395,30 @@ def _in_text(tex, pos):
     return any(stack)
 
 
+MONEY_RE = re.compile(r"\\(usd|eur|gbp|jpy|dal|kst)\s*\{([^{}]*)\}")
+MONEY_SIGNS = {"usd": "\\$", "eur": "€", "gbp": "£", "jpy": "¥"}
+MONEY_WORDS = {"dal": "dalens", "kst": "kests"}
+
+
+def _expand_money(tex):
+    """Economics books (oneeconomics.sty): a money macro inside a formula,
+    in math or in a \\text{…} run of it — \\usd{750} is $750, \\dal{48000}
+    is "48 000 dalens". The amount stays a \\num for the pass below."""
+    def repl(m):
+        name, num = m.group(1), f"\\num{{{m.group(2)}}}"
+        in_text = _in_text(tex, m.start())
+        if name in MONEY_WORDS:
+            word = MONEY_WORDS[name]
+            return f"{num} {word}" if in_text else f"{num}\\text{{ {word}}}"
+        sign = MONEY_SIGNS[name]
+        return f"{sign}{num}" if in_text else f"\\text{{{sign}}}{num}"
+    return MONEY_RE.sub(repl, tex)
+
+
 def expand(tex, phrases=None):
     """Rewrite every siunitx call inside a math string."""
+    if MONEY_RE.search(tex):
+        tex = _expand_money(tex)
     out = []
     i = 0
     while i < len(tex):
