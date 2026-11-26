@@ -1,7 +1,7 @@
 # One Physics Book
 
 <p align="center">
-  <a href="https://www.one-course.com">
+  <a href="https://one-course.com">
     <img src="assets/one-course-logo.svg" alt="One Course — one-course.com" width="420">
   </a>
 </p>
@@ -10,7 +10,7 @@
   <a href="https://github.com/bvirrion/one-physics-book/releases/latest"><img src="https://img.shields.io/github/v/release/bvirrion/one-physics-book?label=latest%20release" alt="Latest release"></a>
   <a href="https://github.com/bvirrion/one-physics-book/releases"><img src="https://img.shields.io/github/downloads/bvirrion/one-physics-book/total?label=PDF%20downloads" alt="PDF downloads"></a>
   <a href="https://github.com/bvirrion/one-physics-book/actions/workflows/release.yml"><img src="https://img.shields.io/github/actions/workflow/status/bvirrion/one-physics-book/release.yml?label=build" alt="Build status"></a>
-  <a href="https://www.one-course.com/books"><img src="https://img.shields.io/badge/read%20online-one--course.com-1f6feb" alt="Read online"></a>
+  <a href="https://one-course.com/books"><img src="https://img.shields.io/badge/read%20online-one--course.com-1f6feb" alt="Read online"></a>
 </p>
 
 *The One Physics Book to Rule Them All.*
@@ -18,9 +18,13 @@
 > **One Physics Book** is part of the **One Course** project — one coherent
 > course covering each subject from kindergarten to the end of the
 > bachelor's degree. Discover the whole project at
-> **[www.one-course.com](https://www.one-course.com)**, and see the siblings
+> **[one-course.com](https://one-course.com)**, and see the siblings
 > [One Math Book](https://github.com/bvirrion/one-math-book),
-> [One Biology Book](https://github.com/bvirrion/one-biology-book) and
+> [One Chemistry Book](https://github.com/bvirrion/one-chemistry-book),
+> [One Biology Book](https://github.com/bvirrion/one-biology-book),
+> [One Earth and Space Sciences Book](https://github.com/bvirrion/one-earth-and-space-sciences-book),
+> [One Computer Science Book](https://github.com/bvirrion/one-computer-science-book),
+> [One Economics Book](https://github.com/bvirrion/one-economics-book) and
 > [One Quant Book](https://github.com/bvirrion/one-quant-book).
 
 A series of five **free physics textbooks** forming a
@@ -28,8 +32,9 @@ single coherent course **from Grade 1 to the end of the bachelor's
 degree** — one notation, one voice, every year building on the previous
 one. **All five books are complete**, each in eight editions:
 **English, French, Dutch, Spanish, Portuguese, Hindi, Arabic and
-Indonesian** — free to read online or download for students, parents,
-teachers and homeschooling families:
+Indonesian**, plus a **Simplified Chinese** edition (PDF only for now) —
+free to read online or download for students, parents, teachers and
+homeschooling families:
 
 1. **Primary & Middle School Physics** — Grades 1–9;
 2. **High School Physics** — Grades 10–12;
@@ -37,13 +42,8 @@ teachers and homeschooling families:
 4. **University Physics — Year 2**;
 5. **University Physics — Year 3**.
 
-The contents follow the old French physics programs: the physics parts of
-the collège and lycée « S » (scientifique) track for the school years, the
-PCSI and PC\* classes préparatoires for the first two university years, and
-a Licence 3 de physique for the third. Unlike those programs, this course
-is **physics only** (no chemistry), and the early grades — where French
-schools taught no physics — are covered by age-adapted chapters so that the
-course truly starts in Grade 1.
+The course is **physics only** (no chemistry), and it truly starts in
+Grade 1: the early grades are covered by age-adapted chapters.
 
 The style is concise and rigorous: courses built from **definitions,
 examples, propositions, theorems and methods**, with derivations whenever
@@ -64,14 +64,15 @@ solution.
 
 | Book | Read online | Download PDF |
 |------|-------------|--------------|
-| **1. Primary & Middle School** (Grades 1–9) | [EN](https://www.one-course.com/books/physics/1/en) · [ES](https://www.one-course.com/books/physics/1/es) · [FR](https://www.one-course.com/books/physics/1/fr) · [HI](https://www.one-course.com/books/physics/1/hi) · [AR](https://www.one-course.com/books/physics/1/ar) · [ID](https://www.one-course.com/books/physics/1/id) · [NL](https://www.one-course.com/books/physics/1/nl) · [PT](https://www.one-course.com/books/physics/1/pt) | [EN](https://github.com/bvirrion/one-physics-book/releases/latest/download/one_physics_book_1_primary_middle_school.pdf) · [ES](https://github.com/bvirrion/one-physics-book/releases/latest/download/one_physics_book_1_primary_middle_school_es.pdf) · [FR](https://github.com/bvirrion/one-physics-book/releases/latest/download/one_physics_book_1_primary_middle_school_fr.pdf) · [HI](https://github.com/bvirrion/one-physics-book/releases/latest/download/one_physics_book_1_primary_middle_school_hi.pdf) · [AR](https://github.com/bvirrion/one-physics-book/releases/latest/download/one_physics_book_1_primary_middle_school_ar.pdf) · [ID](https://github.com/bvirrion/one-physics-book/releases/latest/download/one_physics_book_1_primary_middle_school_id.pdf) · [NL](https://github.com/bvirrion/one-physics-book/releases/latest/download/one_physics_book_1_primary_middle_school_nl.pdf) · [PT](https://github.com/bvirrion/one-physics-book/releases/latest/download/one_physics_book_1_primary_middle_school_pt.pdf) |
-| **2. High School** (Grades 10–12) | [EN](https://www.one-course.com/books/physics/2/en) · [ES](https://www.one-course.com/books/physics/2/es) · [FR](https://www.one-course.com/books/physics/2/fr) · [HI](https://www.one-course.com/books/physics/2/hi) · [AR](https://www.one-course.com/books/physics/2/ar) · [ID](https://www.one-course.com/books/physics/2/id) · [NL](https://www.one-course.com/books/physics/2/nl) · [PT](https://www.one-course.com/books/physics/2/pt) | [EN](https://github.com/bvirrion/one-physics-book/releases/latest/download/one_physics_book_2_high_school.pdf) · [ES](https://github.com/bvirrion/one-physics-book/releases/latest/download/one_physics_book_2_high_school_es.pdf) · [FR](https://github.com/bvirrion/one-physics-book/releases/latest/download/one_physics_book_2_high_school_fr.pdf) · [HI](https://github.com/bvirrion/one-physics-book/releases/latest/download/one_physics_book_2_high_school_hi.pdf) · [AR](https://github.com/bvirrion/one-physics-book/releases/latest/download/one_physics_book_2_high_school_ar.pdf) · [ID](https://github.com/bvirrion/one-physics-book/releases/latest/download/one_physics_book_2_high_school_id.pdf) · [NL](https://github.com/bvirrion/one-physics-book/releases/latest/download/one_physics_book_2_high_school_nl.pdf) · [PT](https://github.com/bvirrion/one-physics-book/releases/latest/download/one_physics_book_2_high_school_pt.pdf) |
-| **3. University — Year 1** | [EN](https://www.one-course.com/books/physics/3/en) · [ES](https://www.one-course.com/books/physics/3/es) · [FR](https://www.one-course.com/books/physics/3/fr) · [HI](https://www.one-course.com/books/physics/3/hi) · [AR](https://www.one-course.com/books/physics/3/ar) · [ID](https://www.one-course.com/books/physics/3/id) · [NL](https://www.one-course.com/books/physics/3/nl) · [PT](https://www.one-course.com/books/physics/3/pt) | [EN](https://github.com/bvirrion/one-physics-book/releases/latest/download/one_physics_book_3_university_year_1.pdf) · [ES](https://github.com/bvirrion/one-physics-book/releases/latest/download/one_physics_book_3_university_year_1_es.pdf) · [FR](https://github.com/bvirrion/one-physics-book/releases/latest/download/one_physics_book_3_university_year_1_fr.pdf) · [HI](https://github.com/bvirrion/one-physics-book/releases/latest/download/one_physics_book_3_university_year_1_hi.pdf) · [AR](https://github.com/bvirrion/one-physics-book/releases/latest/download/one_physics_book_3_university_year_1_ar.pdf) · [ID](https://github.com/bvirrion/one-physics-book/releases/latest/download/one_physics_book_3_university_year_1_id.pdf) · [NL](https://github.com/bvirrion/one-physics-book/releases/latest/download/one_physics_book_3_university_year_1_nl.pdf) · [PT](https://github.com/bvirrion/one-physics-book/releases/latest/download/one_physics_book_3_university_year_1_pt.pdf) |
-| **4. University — Year 2** | [EN](https://www.one-course.com/books/physics/4/en) · [ES](https://www.one-course.com/books/physics/4/es) · [FR](https://www.one-course.com/books/physics/4/fr) · [HI](https://www.one-course.com/books/physics/4/hi) · [AR](https://www.one-course.com/books/physics/4/ar) · [ID](https://www.one-course.com/books/physics/4/id) · [NL](https://www.one-course.com/books/physics/4/nl) · [PT](https://www.one-course.com/books/physics/4/pt) | [EN](https://github.com/bvirrion/one-physics-book/releases/latest/download/one_physics_book_4_university_year_2.pdf) · [ES](https://github.com/bvirrion/one-physics-book/releases/latest/download/one_physics_book_4_university_year_2_es.pdf) · [FR](https://github.com/bvirrion/one-physics-book/releases/latest/download/one_physics_book_4_university_year_2_fr.pdf) · [HI](https://github.com/bvirrion/one-physics-book/releases/latest/download/one_physics_book_4_university_year_2_hi.pdf) · [AR](https://github.com/bvirrion/one-physics-book/releases/latest/download/one_physics_book_4_university_year_2_ar.pdf) · [ID](https://github.com/bvirrion/one-physics-book/releases/latest/download/one_physics_book_4_university_year_2_id.pdf) · [NL](https://github.com/bvirrion/one-physics-book/releases/latest/download/one_physics_book_4_university_year_2_nl.pdf) · [PT](https://github.com/bvirrion/one-physics-book/releases/latest/download/one_physics_book_4_university_year_2_pt.pdf) |
-| **5. University — Year 3** | [EN](https://www.one-course.com/books/physics/5/en) · [ES](https://www.one-course.com/books/physics/5/es) · [FR](https://www.one-course.com/books/physics/5/fr) · [HI](https://www.one-course.com/books/physics/5/hi) · [AR](https://www.one-course.com/books/physics/5/ar) · [ID](https://www.one-course.com/books/physics/5/id) · [NL](https://www.one-course.com/books/physics/5/nl) · [PT](https://www.one-course.com/books/physics/5/pt) | [EN](https://github.com/bvirrion/one-physics-book/releases/latest/download/one_physics_book_5_university_year_3.pdf) · [ES](https://github.com/bvirrion/one-physics-book/releases/latest/download/one_physics_book_5_university_year_3_es.pdf) · [FR](https://github.com/bvirrion/one-physics-book/releases/latest/download/one_physics_book_5_university_year_3_fr.pdf) · [HI](https://github.com/bvirrion/one-physics-book/releases/latest/download/one_physics_book_5_university_year_3_hi.pdf) · [AR](https://github.com/bvirrion/one-physics-book/releases/latest/download/one_physics_book_5_university_year_3_ar.pdf) · [ID](https://github.com/bvirrion/one-physics-book/releases/latest/download/one_physics_book_5_university_year_3_id.pdf) · [NL](https://github.com/bvirrion/one-physics-book/releases/latest/download/one_physics_book_5_university_year_3_nl.pdf) · [PT](https://github.com/bvirrion/one-physics-book/releases/latest/download/one_physics_book_5_university_year_3_pt.pdf) |
+| **1. Primary & Middle School** (Grades 1–9) | [EN](https://one-course.com/books/physics/1/en) · [ES](https://one-course.com/books/physics/1/es) · [FR](https://one-course.com/books/physics/1/fr) · [HI](https://one-course.com/books/physics/1/hi) · [AR](https://one-course.com/books/physics/1/ar) · [ID](https://one-course.com/books/physics/1/id) · [NL](https://one-course.com/books/physics/1/nl) · [PT](https://one-course.com/books/physics/1/pt) | [EN](https://github.com/bvirrion/one-physics-book/releases/latest/download/one_physics_book_1_primary_middle_school.pdf) · [ES](https://github.com/bvirrion/one-physics-book/releases/latest/download/one_physics_book_1_primary_middle_school_es.pdf) · [FR](https://github.com/bvirrion/one-physics-book/releases/latest/download/one_physics_book_1_primary_middle_school_fr.pdf) · [HI](https://github.com/bvirrion/one-physics-book/releases/latest/download/one_physics_book_1_primary_middle_school_hi.pdf) · [AR](https://github.com/bvirrion/one-physics-book/releases/latest/download/one_physics_book_1_primary_middle_school_ar.pdf) · [ID](https://github.com/bvirrion/one-physics-book/releases/latest/download/one_physics_book_1_primary_middle_school_id.pdf) · [NL](https://github.com/bvirrion/one-physics-book/releases/latest/download/one_physics_book_1_primary_middle_school_nl.pdf) · [PT](https://github.com/bvirrion/one-physics-book/releases/latest/download/one_physics_book_1_primary_middle_school_pt.pdf) · [ZH](https://github.com/bvirrion/one-physics-book/releases/latest/download/one_physics_book_1_primary_middle_school_zh.pdf) |
+| **2. High School** (Grades 10–12) | [EN](https://one-course.com/books/physics/2/en) · [ES](https://one-course.com/books/physics/2/es) · [FR](https://one-course.com/books/physics/2/fr) · [HI](https://one-course.com/books/physics/2/hi) · [AR](https://one-course.com/books/physics/2/ar) · [ID](https://one-course.com/books/physics/2/id) · [NL](https://one-course.com/books/physics/2/nl) · [PT](https://one-course.com/books/physics/2/pt) | [EN](https://github.com/bvirrion/one-physics-book/releases/latest/download/one_physics_book_2_high_school.pdf) · [ES](https://github.com/bvirrion/one-physics-book/releases/latest/download/one_physics_book_2_high_school_es.pdf) · [FR](https://github.com/bvirrion/one-physics-book/releases/latest/download/one_physics_book_2_high_school_fr.pdf) · [HI](https://github.com/bvirrion/one-physics-book/releases/latest/download/one_physics_book_2_high_school_hi.pdf) · [AR](https://github.com/bvirrion/one-physics-book/releases/latest/download/one_physics_book_2_high_school_ar.pdf) · [ID](https://github.com/bvirrion/one-physics-book/releases/latest/download/one_physics_book_2_high_school_id.pdf) · [NL](https://github.com/bvirrion/one-physics-book/releases/latest/download/one_physics_book_2_high_school_nl.pdf) · [PT](https://github.com/bvirrion/one-physics-book/releases/latest/download/one_physics_book_2_high_school_pt.pdf) · [ZH](https://github.com/bvirrion/one-physics-book/releases/latest/download/one_physics_book_2_high_school_zh.pdf) |
+| **3. University — Year 1** | [EN](https://one-course.com/books/physics/3/en) · [ES](https://one-course.com/books/physics/3/es) · [FR](https://one-course.com/books/physics/3/fr) · [HI](https://one-course.com/books/physics/3/hi) · [AR](https://one-course.com/books/physics/3/ar) · [ID](https://one-course.com/books/physics/3/id) · [NL](https://one-course.com/books/physics/3/nl) · [PT](https://one-course.com/books/physics/3/pt) | [EN](https://github.com/bvirrion/one-physics-book/releases/latest/download/one_physics_book_3_university_year_1.pdf) · [ES](https://github.com/bvirrion/one-physics-book/releases/latest/download/one_physics_book_3_university_year_1_es.pdf) · [FR](https://github.com/bvirrion/one-physics-book/releases/latest/download/one_physics_book_3_university_year_1_fr.pdf) · [HI](https://github.com/bvirrion/one-physics-book/releases/latest/download/one_physics_book_3_university_year_1_hi.pdf) · [AR](https://github.com/bvirrion/one-physics-book/releases/latest/download/one_physics_book_3_university_year_1_ar.pdf) · [ID](https://github.com/bvirrion/one-physics-book/releases/latest/download/one_physics_book_3_university_year_1_id.pdf) · [NL](https://github.com/bvirrion/one-physics-book/releases/latest/download/one_physics_book_3_university_year_1_nl.pdf) · [PT](https://github.com/bvirrion/one-physics-book/releases/latest/download/one_physics_book_3_university_year_1_pt.pdf) · [ZH](https://github.com/bvirrion/one-physics-book/releases/latest/download/one_physics_book_3_university_year_1_zh.pdf) |
+| **4. University — Year 2** | [EN](https://one-course.com/books/physics/4/en) · [ES](https://one-course.com/books/physics/4/es) · [FR](https://one-course.com/books/physics/4/fr) · [HI](https://one-course.com/books/physics/4/hi) · [AR](https://one-course.com/books/physics/4/ar) · [ID](https://one-course.com/books/physics/4/id) · [NL](https://one-course.com/books/physics/4/nl) · [PT](https://one-course.com/books/physics/4/pt) | [EN](https://github.com/bvirrion/one-physics-book/releases/latest/download/one_physics_book_4_university_year_2.pdf) · [ES](https://github.com/bvirrion/one-physics-book/releases/latest/download/one_physics_book_4_university_year_2_es.pdf) · [FR](https://github.com/bvirrion/one-physics-book/releases/latest/download/one_physics_book_4_university_year_2_fr.pdf) · [HI](https://github.com/bvirrion/one-physics-book/releases/latest/download/one_physics_book_4_university_year_2_hi.pdf) · [AR](https://github.com/bvirrion/one-physics-book/releases/latest/download/one_physics_book_4_university_year_2_ar.pdf) · [ID](https://github.com/bvirrion/one-physics-book/releases/latest/download/one_physics_book_4_university_year_2_id.pdf) · [NL](https://github.com/bvirrion/one-physics-book/releases/latest/download/one_physics_book_4_university_year_2_nl.pdf) · [PT](https://github.com/bvirrion/one-physics-book/releases/latest/download/one_physics_book_4_university_year_2_pt.pdf) · [ZH](https://github.com/bvirrion/one-physics-book/releases/latest/download/one_physics_book_4_university_year_2_zh.pdf) |
+| **5. University — Year 3** | [EN](https://one-course.com/books/physics/5/en) · [ES](https://one-course.com/books/physics/5/es) · [FR](https://one-course.com/books/physics/5/fr) · [HI](https://one-course.com/books/physics/5/hi) · [AR](https://one-course.com/books/physics/5/ar) · [ID](https://one-course.com/books/physics/5/id) · [NL](https://one-course.com/books/physics/5/nl) · [PT](https://one-course.com/books/physics/5/pt) | [EN](https://github.com/bvirrion/one-physics-book/releases/latest/download/one_physics_book_5_university_year_3.pdf) · [ES](https://github.com/bvirrion/one-physics-book/releases/latest/download/one_physics_book_5_university_year_3_es.pdf) · [FR](https://github.com/bvirrion/one-physics-book/releases/latest/download/one_physics_book_5_university_year_3_fr.pdf) · [HI](https://github.com/bvirrion/one-physics-book/releases/latest/download/one_physics_book_5_university_year_3_hi.pdf) · [AR](https://github.com/bvirrion/one-physics-book/releases/latest/download/one_physics_book_5_university_year_3_ar.pdf) · [ID](https://github.com/bvirrion/one-physics-book/releases/latest/download/one_physics_book_5_university_year_3_id.pdf) · [NL](https://github.com/bvirrion/one-physics-book/releases/latest/download/one_physics_book_5_university_year_3_nl.pdf) · [PT](https://github.com/bvirrion/one-physics-book/releases/latest/download/one_physics_book_5_university_year_3_pt.pdf) · [ZH](https://github.com/bvirrion/one-physics-book/releases/latest/download/one_physics_book_5_university_year_3_zh.pdf) |
 
-All eight editions of every book can be read online, chapter by chapter, and
-the PDF links always point at the newest release. Spotted a mistake? Please
+All eight editions of every book can be read online, chapter by chapter (the
+Chinese edition is PDF only for now), and the PDF links always point at the
+newest release. Spotted a mistake? Please
 [report an erratum](https://github.com/bvirrion/one-physics-book/issues/new?template=errata.yml) —
 fixes usually ship within days.
 
@@ -110,11 +111,12 @@ The PDFs are produced at
 build/one_physics_book_<N>_<slug>[_<lang>].pdf
 ```
 
-with `N` = 1–5 and `lang` ∈ {`fr`, `nl`, `es`, `pt`, `hi`, `ar`, `id`}
-(no suffix for English) — 40 PDFs in total. The Hindi editions compile
+with `N` = 1–5 and `lang` ∈ {`fr`, `nl`, `es`, `pt`, `hi`, `ar`, `id`, `zh`}
+(no suffix for English) — 45 PDFs in total. The Hindi editions compile
 with XeLaTeX (Devanagari) and the Arabic editions with
 LuaLaTeX (right-to-left, via babel `bidi=basic`); both have their fonts
-bundled under `assets/fonts/`, and everything else is pdflatex.
+bundled under `assets/fonts/`. The Simplified Chinese editions compile with
+XeLaTeX and xeCJK (Fandol fonts from TeX Live). Everything else is pdflatex.
 
 `make clean` removes auxiliary files, `make distclean` removes the whole
 `build/` directory. To build a single book, e.g.\
@@ -125,7 +127,7 @@ bundled under `assets/fonts/`, and everything else is pdflatex.
 ```
 one_physics_book_<N>_*.tex   entry file per book / language (N = series number)
 styles/onephysics.sty        packages, theorem environments, macros
-styles/lang/<lang>.tex       UI strings (en, fr, nl, es, pt, hi, ar, id)
+styles/lang/<lang>.tex       UI strings (en, fr, nl, es, pt, hi, ar, id, zh)
 frontmatter/                 title page, preface (shared layout)
 parts/<year>/part.tex        shared structure for a school year
 parts/<year>/NN-*.tex        English chapter
